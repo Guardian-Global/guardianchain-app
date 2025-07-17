@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/runner/workspace/solidity/contracts/GTTToken.sol": {
-      "lastModificationDate": 1752742630090,
-      "contentHash": "9623676e62c9205209d6e778b4c083b1",
+      "lastModificationDate": 1752753211613,
+      "contentHash": "0f4d9f03075755026e9d8ce0e416e95a",
       "sourceName": "solidity/contracts/GTTToken.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -31,8 +31,7 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-        "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/utils/Pausable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -307,8 +306,8 @@
       ]
     },
     "/home/runner/workspace/solidity/contracts/TruthVault.sol": {
-      "lastModificationDate": 1752742606691,
-      "contentHash": "9199c16aa3b434581de010ddd12c4bb7",
+      "lastModificationDate": 1752753215285,
+      "contentHash": "e3d1a07c0625e596bf74ec090cd54bf9",
       "sourceName": "solidity/contracts/TruthVault.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -334,12 +333,7 @@
           }
         }
       },
-      "imports": [
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/access/AccessControl.sol",
-        "@openzeppelin/contracts/utils/Pausable.sol",
-        "./GTTToken.sol"
-      ],
+      "imports": [],
       "versionPragmas": [
         "^0.8.20"
       ],
@@ -531,6 +525,42 @@
       ],
       "artifacts": [
         "IERC165"
+      ]
+    },
+    "/home/runner/workspace/solidity/contracts/CapsuleFactory.sol": {
+      "lastModificationDate": 1752753253965,
+      "contentHash": "51debe877f40dbc29085047bd86d1c0b",
+      "sourceName": "solidity/contracts/CapsuleFactory.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CapsuleFactory"
       ]
     }
   }

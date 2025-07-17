@@ -23,6 +23,7 @@ import Governance from "@/pages/governance";
 import PrivateFeed from "@/pages/private";
 import Dashboard from "@/pages/dashboard";
 import Commander from "@/pages/commander";
+import ContractDemo from "@/pages/contract-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -46,6 +47,7 @@ function Router() {
         <Route path="/private" component={PrivateFeed} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/commander" component={Commander} />
+        <Route path="/contract-demo" component={ContractDemo} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

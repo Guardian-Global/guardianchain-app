@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import MintGTTButton from "@/components/web3/MintGTTButton";
 
 export default function CommanderView() {
   const [mintAmount, setMintAmount] = useState("");
@@ -129,53 +130,59 @@ export default function CommanderView() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* GTT Mint Controls */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-yellow-400" />
-                  GTT Token Controls
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="mintAmount" className="text-slate-300">
-                    Amount to Mint
-                  </Label>
-                  <Input
-                    id="mintAmount"
-                    type="number"
-                    placeholder="100.0"
-                    value={mintAmount}
-                    onChange={(e) => setMintAmount(e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="targetWallet" className="text-slate-300">
-                    Target Wallet
-                  </Label>
-                  <Input
-                    id="targetWallet"
-                    placeholder="0x..."
-                    value={targetWallet}
-                    onChange={(e) => setTargetWallet(e.target.value)}
-                    className="bg-slate-700 border-slate-600 text-white"
-                  />
-                </div>
-                <Button 
-                  onClick={handleMintGTT}
-                  disabled={mintGTTMutation.isPending}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700"
-                >
-                  {mintGTTMutation.isPending ? "Minting..." : "Mint GTT Tokens"}
-                </Button>
-                <div className="text-xs text-slate-400 space-y-1">
-                  <p>• Current Supply: {protocolStats?.totalGTT || 0} GTT</p>
-                  <p>• Circulating: {protocolStats?.circulatingGTT || 0} GTT</p>
-                  <p>• Vault Holdings: {protocolStats?.vaultGTT || 0} GTT</p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="space-y-4">
+              <MintGTTButton 
+                variant="card"
+                amount={mintAmount}
+                recipient={targetWallet}
+                onMintSuccess={(txHash, amount) => {
+                  toast({
+                    title: "On-Chain Mint Successful",
+                    description: `Minted ${amount} GTT tokens via smart contract`,
+                  });
+                  queryClient.invalidateQueries({ queryKey: ["/api/protocol/stats"] });
+                }}
+              />
+              
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <Zap className="h-4 w-4 text-blue-400" />
+                    Alternative: API Mint (Development)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input
+                      type="number"
+                      placeholder="100.0"
+                      value={mintAmount}
+                      onChange={(e) => setMintAmount(e.target.value)}
+                      className="bg-slate-700 border-slate-600 text-white text-sm"
+                    />
+                    <Input
+                      placeholder="0x..."
+                      value={targetWallet}
+                      onChange={(e) => setTargetWallet(e.target.value)}
+                      className="bg-slate-700 border-slate-600 text-white text-sm"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleMintGTT}
+                    disabled={mintGTTMutation.isPending}
+                    variant="outline"
+                    className="w-full border-slate-600 text-xs"
+                  >
+                    {mintGTTMutation.isPending ? "Minting..." : "Simulate API Mint"}
+                  </Button>
+                  <div className="text-xs text-slate-400 space-y-1">
+                    <p>• Current Supply: {protocolStats?.totalGTT || 0} GTT</p>
+                    <p>• Circulating: {protocolStats?.circulatingGTT || 0} GTT</p>
+                    <p>• Vault Holdings: {protocolStats?.vaultGTT || 0} GTT</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* System Controls */}
             <Card className="bg-slate-800/50 border-slate-700">

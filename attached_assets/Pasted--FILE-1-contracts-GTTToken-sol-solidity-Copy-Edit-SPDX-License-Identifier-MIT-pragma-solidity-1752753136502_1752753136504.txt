@@ -1,0 +1,138 @@
+📁 FILE 1: contracts/GTTToken.sol
+solidity
+Copy
+Edit
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract GTTToken is ERC20, Ownable {
+    constructor() ERC20("Guardian Truth Token", "GTT") {}
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+}
+📁 FILE 2: contracts/TruthVault.sol
+solidity
+Copy
+Edit
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract TruthVault {
+    struct Seal {
+        address sealedBy;
+        uint256 timestamp;
+        string metadataHash;
+    }
+
+    mapping(uint256 => Seal) public sealedCapsules;
+    event CapsuleSealed(uint256 capsuleId, address indexed sealedBy, string metadataHash);
+
+    function sealCapsule(uint256 capsuleId, string calldata metadataHash) public {
+        sealedCapsules[capsuleId] = Seal(msg.sender, block.timestamp, metadataHash);
+        emit CapsuleSealed(capsuleId, msg.sender, metadataHash);
+    }
+
+    function getSeal(uint256 capsuleId) public view returns (Seal memory) {
+        return sealedCapsules[capsuleId];
+    }
+}
+📁 FILE 3: contracts/CapsuleFactory.sol
+solidity
+Copy
+Edit
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract CapsuleFactory {
+    struct Capsule {
+        uint256 id;
+        string contentHash;
+        address creator;
+        bool sealed;
+    }
+
+    uint256 public capsuleCounter;
+    mapping(uint256 => Capsule) public capsules;
+
+    event CapsuleCreated(uint256 id, address creator);
+    event CapsuleSealed(uint256 id);
+
+    function createCapsule(string calldata contentHash) public returns (uint256) {
+        capsuleCounter += 1;
+        capsules[capsuleCounter] = Capsule(capsuleCounter, contentHash, msg.sender, false);
+        emit CapsuleCreated(capsuleCounter, msg.sender);
+        return capsuleCounter;
+    }
+
+    function sealCapsule(uint256 id) public {
+        require(msg.sender == capsules[id].creator, "Not creator");
+        capsules[id].sealed = true;
+        emit CapsuleSealed(id);
+    }
+}
+📁 FILE 4: scripts/deploy.ts
+ts
+Copy
+Edit
+// scripts/deploy.ts
+
+import { ethers } from "hardhat";
+
+async function main() {
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying with:", deployer.address);
+
+  const GTT = await ethers.getContractFactory("GTTToken");
+  const gtt = await GTT.deploy();
+  await gtt.deployed();
+  console.log("GTTToken deployed to:", gtt.address);
+
+  const Vault = await ethers.getContractFactory("TruthVault");
+  const vault = await Vault.deploy();
+  await vault.deployed();
+  console.log("TruthVault deployed to:", vault.address);
+
+  const Factory = await ethers.getContractFactory("CapsuleFactory");
+  const factory = await Factory.deploy();
+  await factory.deployed();
+  console.log("CapsuleFactory deployed to:", factory.address);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+📁 FILE 5: lib/contracts.ts
+ts
+Copy
+Edit
+// lib/contracts.ts
+
+export const CONTRACTS = {
+  sepolia: {
+    chainId: 11155111,
+    gtt: "0x...",          // Replace after deploy
+    vault: "0x...",        // Replace after deploy
+    factory: "0x..."       // Replace after deploy
+  }
+};
+
+export function getContractAddress(chainId: number, name: keyof typeof CONTRACTS.sepolia) {
+  return CONTRACTS.sepolia[name];
+}
+📁 FILE 6: .env.example (for Replit secrets)
+env
+Copy
+Edit
+# Deployer Config
+PRIVATE_KEY=your_private_key
+RPC_URL=https://sepolia.infura.io/v3/your_project_id
+
+# Optional Frontend Keys
+NEXT_PUBLIC_INFURA_API_KEY=your_project_id
+NEXT_PUBLIC_CHAIN_ID=11155111

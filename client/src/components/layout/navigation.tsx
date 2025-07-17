@@ -14,6 +14,7 @@ const navigation = [
   { name: "Private", href: "/private" },
   { name: "Dashboard", href: "/dashboard" },
   { name: "Commander", href: "/commander" },
+  { name: "Contracts", href: "/contract-demo" },
   { name: "Governance", href: "/governance" },
 ];
 
