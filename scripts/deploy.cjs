@@ -47,12 +47,22 @@ async function main() {
   const daoAddress = await truthDAO.getAddress();
   console.log("TruthDAO deployed to:", daoAddress);
 
+  // Deploy FeeManager (using vault as treasury for now)
+  console.log("\nDeploying FeeManager...");
+  const FeeManager = await ethers.getContractFactory("FeeManager");
+  const feeManager = await FeeManager.deploy(gttAddress, vaultAddress);
+  await feeManager.waitForDeployment();
+  const feeManagerAddress = await feeManager.getAddress();
+  console.log("FeeManager deployed to:", feeManagerAddress);
+
   console.log("\n=== DEPLOYMENT SUMMARY ===");
   console.log("GTTToken:", gttAddress);
   console.log("TruthVault:", vaultAddress);
   console.log("CapsuleFactory:", factoryAddress);
   console.log("VeritasCapsuleNFT:", nftAddress);
   console.log("TruthDAO:", daoAddress);
+  console.log("FeeManager:", feeManagerAddress);
+  console.log("Treasury (TruthVault):", vaultAddress);
   console.log("Network: Sepolia");
   console.log("Deployer:", deployer.address);
 }

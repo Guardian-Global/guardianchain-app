@@ -1174,6 +1174,43 @@
         "IGTTToken",
         "TruthDAO"
       ]
+    },
+    "/home/runner/workspace/solidity/contracts/FeeManager.sol": {
+      "lastModificationDate": 1752758343223,
+      "contentHash": "8f989854535f480062e0801248fe8025",
+      "sourceName": "solidity/contracts/FeeManager.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "FeeManager",
+        "IGTT"
+      ]
     }
   }
 }

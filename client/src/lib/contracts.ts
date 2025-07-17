@@ -7,6 +7,8 @@ export interface ContractAddresses {
   factory: string;
   nft: string;
   dao: string;
+  feeManager: string;
+  treasury: string;
 }
 
 export const CONTRACTS: Record<string, ContractAddresses> = {
@@ -17,7 +19,9 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     vault: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 
     factory: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
     nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-    dao: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+    dao: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    feeManager: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+    treasury: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
   },
   
   // Sepolia Testnet
@@ -27,7 +31,9 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     vault: "0x...",        // Replace after deploy
     factory: "0x...",      // Replace after deploy
     nft: "0x...",          // Replace after deploy
-    dao: "0x..."           // Replace after deploy
+    dao: "0x...",          // Replace after deploy
+    feeManager: "0x...",   // Replace after deploy
+    treasury: "0x..."      // Replace after deploy
   },
   
   // Polygon Amoy Testnet  
@@ -37,7 +43,9 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     vault: "0x...",        // Will be updated after deployment
     factory: "0x...",      // Will be updated after deployment
     nft: "0x...",          // Will be updated after deployment
-    dao: "0x..."           // Will be updated after deployment
+    dao: "0x...",          // Will be updated after deployment
+    feeManager: "0x...",   // Will be updated after deployment
+    treasury: "0x..."      // Will be updated after deployment
   }
 };
 
@@ -170,6 +178,25 @@ export const CONTRACT_ABIS = {
     "event ProposalCreated(uint256 indexed id, address indexed proposer, string title, string description)",
     "event Voted(uint256 indexed id, address indexed voter, bool support, uint256 weight)",
     "event ProposalExecuted(uint256 indexed id, bool passed)"
+  ],
+
+  FeeManager: [
+    "function payFee(string memory action)",
+    "function getFee(string memory action) view returns (uint256)",
+    "function setFee(string memory action, uint256 amount)",
+    "function updateTreasury(address newTreasury)",
+    "function getTotalFeesCollected(string memory action) view returns (uint256)",
+    "function getUserFeePaid(address user, string memory action) view returns (uint256)",
+    "function getUserTotalFeePaid(address user) view returns (uint256)",
+    "function getAllFees() view returns (uint256, uint256, uint256, uint256)",
+    "function treasury() view returns (address)",
+    "function mintFee() view returns (uint256)",
+    "function sealFee() view returns (uint256)",
+    "function proposalFee() view returns (uint256)",
+    "function verificationFee() view returns (uint256)",
+    "event FeePaid(address indexed user, string indexed action, uint256 amount)",
+    "event FeeUpdated(string indexed action, uint256 oldAmount, uint256 newAmount)",
+    "event TreasuryUpdated(address indexed oldTreasury, address indexed newTreasury)"
   ]
 };
 
@@ -208,7 +235,9 @@ export function areContractsDeployed(chainId: number): boolean {
          contracts.vault !== "0x..." && 
          contracts.factory !== "0x..." &&
          contracts.nft !== "0x..." &&
-         contracts.dao !== "0x...";
+         contracts.dao !== "0x..." &&
+         contracts.feeManager !== "0x..." &&
+         contracts.treasury !== "0x...";
 }
 
 /**

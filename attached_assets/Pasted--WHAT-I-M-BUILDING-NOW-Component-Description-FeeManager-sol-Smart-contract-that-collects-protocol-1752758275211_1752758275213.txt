@@ -1,0 +1,94 @@
+🛠️ WHAT I’M BUILDING NOW
+Component	Description
+FeeManager.sol	Smart contract that collects protocol fees in GTT (minting, sealing, proposal creation)
+client/src/lib/feeConfig.ts	Fee constants (GTT + USD equivalent) mapped per action
+UI Enhancements	Transparent cost explanation on /mint-nft, /seal, /govern, /commander
+DAO Treasury Integration	Fees route to TreasuryDAO or multisig wallet
+
+📄 FILE #1: contracts/FeeManager.sol
+📁 Path: contracts/FeeManager.sol
+
+solidity
+Copy
+Edit
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+interface IGTT {
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+}
+
+contract FeeManager {
+    address public treasury;
+    IGTT public gtt;
+    address public owner;
+
+    // Fee types
+    uint256 public mintFee = 50 * 1e18;
+    uint256 public sealFee = 100 * 1e18;
+    uint256 public proposalFee = 500 * 1e18;
+
+    event FeePaid(address indexed user, string action, uint256 amount);
+
+    constructor(address _gtt, address _treasury) {
+        owner = msg.sender;
+        gtt = IGTT(_gtt);
+        treasury = _treasury;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not authorized");
+        _;
+    }
+
+    function payFee(string memory action) external {
+        uint256 fee;
+
+        if (keccak256(bytes(action)) == keccak256("mint")) {
+            fee = mintFee;
+        } else if (keccak256(bytes(action)) == keccak256("seal")) {
+            fee = sealFee;
+        } else if (keccak256(bytes(action)) == keccak256("proposal")) {
+            fee = proposalFee;
+        } else {
+            revert("Invalid fee type");
+        }
+
+        require(gtt.transferFrom(msg.sender, treasury, fee), "GTT transfer failed");
+        emit FeePaid(msg.sender, action, fee);
+    }
+
+    function setFee(string memory action, uint256 amount) external onlyOwner {
+        if (keccak256(bytes(action)) == keccak256("mint")) {
+            mintFee = amount;
+        } else if (keccak256(bytes(action)) == keccak256("seal")) {
+            sealFee = amount;
+        } else if (keccak256(bytes(action)) == keccak256("proposal")) {
+            proposalFee = amount;
+        }
+    }
+
+    function updateTreasury(address newTreasury) external onlyOwner {
+        treasury = newTreasury;
+    }
+}
+🧠 This contract is lightweight, upgradeable, and routes GTT to a treasury multisig or DAO-controlled vault.
+
+✅ Next Up:
+If you’ve deployed FeeManager.sol, reply:
+
+✅ FEE MANAGER DEPLOYED
+
+Then I’ll deliver:
+
+lib/feeConfig.ts constants
+
+UI additions to /mint-nft, /seal, and /govern showing:
+
+Fee amount in GTT
+
+Justification tooltip (why this fee exists)
+
+GTT approval + fee payment logic
+
+Treasury display component showing how much has been earned

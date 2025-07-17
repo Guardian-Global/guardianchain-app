@@ -12,6 +12,9 @@ import { useToast } from '@/hooks/use-toast';
 import { getContractAddress, CONTRACT_ABIS } from '@/lib/contracts';
 import { formatEther } from 'viem';
 import VoteModal from '@/components/dao/VoteModal';
+import FeeDisplay from '@/components/fees/FeeDisplay';
+import TreasuryDisplay from '@/components/fees/TreasuryDisplay';
+import { getFeeAmount } from '@/lib/feeConfig';
 
 interface Proposal {
   id: number;
@@ -334,6 +337,17 @@ export default function Govern() {
               </CardContent>
             </Card>
           )}
+
+          {/* Fee Information */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <FeeDisplay
+              action="proposal"
+              feeAmount={getFeeAmount('proposal')}
+              userBalance={gttBalance?.toString()}
+              className="mb-0"
+            />
+            <TreasuryDisplay chainId={chainId} className="mb-0" />
+          </div>
 
           {/* Proposals List */}
           <div className="space-y-6">
