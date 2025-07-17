@@ -32,6 +32,10 @@ import Explorer from "@/pages/explorer";
 import Certify from "@/pages/certify";
 import InsightPage from "@/pages/insight";
 import CapsuleForgePage from "@/pages/capsule-forge";
+import StakePage from "@/pages/stake";
+import LaunchpadPage from "@/pages/launchpad";
+import ReferralPage from "@/pages/referral";
+import AirdropPage from "@/pages/airdrop";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 
@@ -66,6 +70,10 @@ function Router() {
         <Route path="/certify" component={Certify} />
         <Route path="/insight" component={InsightPage} />
         <Route path="/capsule-forge" component={CapsuleForgePage} />
+        <Route path="/stake" component={StakePage} />
+        <Route path="/launchpad" component={LaunchpadPage} />
+        <Route path="/referral" component={ReferralPage} />
+        <Route path="/airdrop" component={AirdropPage} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

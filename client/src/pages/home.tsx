@@ -31,10 +31,11 @@ export default function Home() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-hero">
-              Truth, Verified.
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>
+              <span style={{ color: "#2CB67D" }}>CHAIN</span>
               <br />
-              <span className="gradient-text">Forever.</span>
+              <span className="gradient-text">Truth, Verified Forever.</span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               Create immutable truth capsules, earn rewards for accuracy, and build reputation in the world's first Web3 truth verification ecosystem.

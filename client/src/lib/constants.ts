@@ -1,64 +1,54 @@
-// Contract addresses - update these after deployment
-export const CONTRACT_ADDRESSES = {
-  // Local Hardhat network
-  31337: {
-    GTT_TOKEN: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    TRUTH_VAULT: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-  },
-  // Sepolia testnet
-  11155111: {
-    GTT_TOKEN: "", // To be filled after deployment
-    TRUTH_VAULT: "", // To be filled after deployment
-  },
-  // Polygon Mumbai testnet
-  80001: {
-    GTT_TOKEN: "", // To be filled after deployment
-    TRUTH_VAULT: "", // To be filled after deployment
-  },
-  // Polygon Amoy testnet
-  80002: {
-    GTT_TOKEN: "", // To be filled after deployment
-    TRUTH_VAULT: "", // To be filled after deployment
-  },
-} as const;
+// GUARDIANCHAIN Protocol Constants
+export const BRAND_NAME = "GUARDIANCHAIN";
+export const BRAND_COLORS = {
+  GUARDIAN: "#7F5AF0", // purple
+  CHAIN: "#2CB67D", // green
+};
 
-// Get contract address for current network
-export function getContractAddress(chainId: number, contract: 'GTT_TOKEN' | 'TRUTH_VAULT'): string {
-  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES];
-  if (!addresses) {
-    throw new Error(`Contracts not deployed on chain ${chainId}`);
+export const PROTOCOL_CONFIG = {
+  NAME: "GUARDIANCHAIN",
+  TAGLINE: "Decentralized Truth Verification Protocol",
+  DOMAIN: "guardianchain.app",
+  SOCIAL: {
+    TWITTER: "@guardianchain",
+    DISCORD: "discord.gg/guardianchain",
+    TELEGRAM: "t.me/guardianchain"
   }
-  
-  const address = addresses[contract];
-  if (!address) {
-    throw new Error(`${contract} not deployed on chain ${chainId}`);
-  }
-  
-  return address;
-}
+};
 
-// Contract ABIs - these will be generated after compilation
-export const GTT_TOKEN_ABI = [
-  "function name() view returns (string)",
-  "function symbol() view returns (string)",
-  "function totalSupply() view returns (uint256)",
-  "function balanceOf(address) view returns (uint256)",
-  "function transfer(address to, uint256 amount) returns (bool)",
-  "function allowance(address owner, address spender) view returns (uint256)",
-  "function approve(address spender, uint256 amount) returns (bool)",
-  "function transferFrom(address from, address to, uint256 amount) returns (bool)",
-  "event Transfer(address indexed from, address indexed to, uint256 value)",
-  "event Approval(address indexed owner, address indexed spender, uint256 value)"
-] as const;
+export const TOKEN_CONFIG = {
+  SYMBOL: "GTT",
+  NAME: "Guardian Truth Token",
+  DECIMALS: 18,
+  INITIAL_SUPPLY: 1000000
+};
 
-export const TRUTH_VAULT_ABI = [
-  "function gttToken() view returns (address)",
-  "function capsules(uint256) view returns (tuple(address creator, bool isVerified, bool isSealed, uint256 truthYield, uint256 totalClaimed, uint256 lastClaimTime, string ipfsHash, string veritasSealUrl))",
-  "function claimYield(uint256 capsuleId, uint256 yieldAmount) payable",
-  "function registerCapsule(uint256 capsuleId, address creator, string ipfsHash)",
-  "function verifyCapsule(uint256 capsuleId, bool isVerified, bool isSealed)",
-  "function updateTruthYield(uint256 capsuleId, uint256 newYield)",
-  "event YieldClaimed(address indexed user, uint256 indexed capsuleId, uint256 yieldAmount, uint256 gttAmount, string reason)",
-  "event CapsuleRegistered(uint256 indexed capsuleId, address indexed creator, string ipfsHash)",
-  "event CapsuleVerified(uint256 indexed capsuleId, bool isVerified, bool isSealed)"
-] as const;
+export const FEE_STRUCTURE = {
+  MINT_BASE: 50,
+  SEAL_PREMIUM: 100,
+  MULTIMEDIA: 25,
+  GOVERNANCE: 500,
+  VERIFICATION: 25
+};
+
+export const EARLY_ADOPTER_REWARDS = {
+  FIRST_100_STAKERS: 1000, // GTT bonus
+  FIRST_500_USERS: 500, // GTT airdrop
+  REFERRAL_BONUS: 100, // GTT per referral
+  PIONEER_BADGE_THRESHOLD: 10 // minimum capsules sealed
+};
+
+export const STAKING_TIERS = {
+  BRONZE: { min: 1000, multiplier: 1.1, color: "#CD7F32" },
+  SILVER: { min: 5000, multiplier: 1.25, color: "#C0C0C0" },
+  GOLD: { min: 10000, multiplier: 1.5, color: "#FFD700" },
+  PLATINUM: { min: 25000, multiplier: 2.0, color: "#E5E4E2" },
+  DIAMOND: { min: 50000, multiplier: 3.0, color: "#B9F2FF" }
+};
+
+export const LAUNCHPAD_CONFIG = {
+  FEATURED_SLOTS: 3,
+  VOTING_PERIOD: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
+  MIN_VOTES: 100,
+  FEATURED_REWARD: 2000 // GTT bonus for featured creators
+};
