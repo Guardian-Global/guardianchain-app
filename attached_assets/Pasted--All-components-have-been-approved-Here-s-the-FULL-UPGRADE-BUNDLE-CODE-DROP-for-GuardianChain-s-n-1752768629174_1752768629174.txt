@@ -1,0 +1,151 @@
+🔥 All components have been approved! Here's the FULL UPGRADE BUNDLE CODE DROP for GuardianChain’s next-gen governance and truth-certification system.
+
+✅ FILE: client/src/components/DaoXpGraph.tsx
+tsx
+Copy
+Edit
+import React from 'react';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from 'recharts';
+
+const data = [
+  { name: 'Genesis', XP: 120 },
+  { name: 'Vote 1', XP: 300 },
+  { name: 'Vote 2', XP: 500 },
+  { name: 'Proposal', XP: 800 },
+  { name: 'Vote 3', XP: 1300 },
+];
+
+export default function DaoXpGraph() {
+  return (
+    <div className="container">
+      <h2>📈 DAO Reputation Tracker</h2>
+      <p>Visualize GTT governance XP and participation metrics</p>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid stroke="#ccc" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Line type="monotone" dataKey="XP" stroke="#00c7b7" strokeWidth={2} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+✅ FILE: client/src/components/CapsuleTimeline.tsx
+tsx
+Copy
+Edit
+import React from 'react';
+
+const CapsuleTimeline = () => {
+  const events = [
+    { label: 'Submitted', date: '2025-06-01' },
+    { label: 'GTT Staked', date: '2025-06-02' },
+    { label: 'Sealed', date: '2025-06-05' },
+    { label: 'Verified NFT Issued', date: '2025-06-07' },
+  ];
+
+  return (
+    <div className="container">
+      <h2>📜 Capsule Evolution</h2>
+      <ul>
+        {events.map((event, i) => (
+          <li key={i} style={{ marginBottom: '1rem' }}>
+            <strong>{event.label}:</strong> {event.date}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default CapsuleTimeline;
+✅ FILE: client/src/components/SealStudio.tsx
+tsx
+Copy
+Edit
+import React, { useState } from 'react';
+
+const SealStudio = () => {
+  const [title, setTitle] = useState('');
+  const [summary, setSummary] = useState('');
+  const [generated, setGenerated] = useState(false);
+
+  return (
+    <div className="container">
+      <h2>📄 Veritas Seal Generator</h2>
+      <p>Design & preview your capsule's certification seal</p>
+      <input type="text" placeholder="Certificate Title" value={title} onChange={e => setTitle(e.target.value)} />
+      <textarea placeholder="One-line summary..." value={summary} onChange={e => setSummary(e.target.value)} />
+      <button onClick={() => setGenerated(true)}>Generate</button>
+
+      {generated && (
+        <div style={{ border: '1px solid #ccc', padding: '1rem', marginTop: '1rem', background: '#f9f9f9' }}>
+          <h3>✅ {title || "Veritas Certified Capsule"}</h3>
+          <p>{summary || "This content has been authenticated under GuardianChain's Seal Framework."}</p>
+          <small>🔗 Soulbound NFT issued · Powered by Veritas Chain</small>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default SealStudio;
+✅ FILE: client/src/pages/insight.tsx
+tsx
+Copy
+Edit
+import React from 'react';
+import DaoXpGraph from '../components/DaoXpGraph';
+import CapsuleTimeline from '../components/CapsuleTimeline';
+import SealStudio from '../components/SealStudio';
+
+const InsightPage = () => (
+  <main className="container">
+    <h1>🧠 Insights & Reputation Center</h1>
+    <DaoXpGraph />
+    <hr />
+    <CapsuleTimeline />
+    <hr />
+    <SealStudio />
+  </main>
+);
+
+export default InsightPage;
+✅ EDIT: Add Nav Link in client/src/components/layout/navigation.tsx
+tsx
+Copy
+Edit
+<ul>
+  <li><a href="/insight">Insights</a></li>
+</ul>
+🚀 REPLIT DEPLOYMENT INSTRUCTIONS
+Upload the 4 new files:
+
+DaoXpGraph.tsx
+
+CapsuleTimeline.tsx
+
+SealStudio.tsx
+
+insight.tsx
+
+Modify navigation to include:
+/insight → Insights & DAO XP
+
+In your Replit shell, run:
+
+bash
+Copy
+Edit
+cd client
+npm run dev
+Open in browser:
+
+arduino
+Copy
+Edit
+https://your-repl-name.replit.app/insight
