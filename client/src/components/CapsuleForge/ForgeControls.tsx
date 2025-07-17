@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { mintCapsuleNFT } from '@/lib/web3/mint';
+import { useAccount } from 'wagmi';
 
 interface CapsuleData {
   title: string;
@@ -21,6 +23,8 @@ interface ForgeControlsProps {
 
 export default function ForgeControls({ capsuleData }: ForgeControlsProps) {
   const { toast } = useToast();
+  const { address } = useAccount();
+  const [isMinting, setIsMinting] = useState(false);
 
   const fees = {
     mint: 50,
@@ -75,18 +79,38 @@ export default function ForgeControls({ capsuleData }: ForgeControlsProps) {
       return;
     }
 
+    if (!address) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet to mint a capsule",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsMinting(true);
     toast({
       title: "Minting Started",
       description: "Your capsule is being sealed and minted...",
     });
 
-    // Simulate minting process
-    setTimeout(() => {
+    try {
+      const { hash, tokenId } = await mintCapsuleNFT(capsuleData, address);
+      
       toast({
         title: "Capsule Minted Successfully!",
-        description: `NFT minted for ${getTotalFee()} GTT`,
+        description: `NFT #${tokenId} minted for ${getTotalFee()} GTT. Transaction: ${hash.slice(0, 10)}...`,
       });
-    }, 3000);
+    } catch (error) {
+      console.error("Minting failed:", error);
+      toast({
+        title: "Minting Failed",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsMinting(false);
+    }
   };
 
   const handleSaveDraft = () => {
@@ -182,11 +206,15 @@ export default function ForgeControls({ capsuleData }: ForgeControlsProps) {
             
             <Button
               onClick={handleSealAndMint}
-              disabled={!isValid()}
+              disabled={!isValid() || isMinting}
               className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              <Shield className="w-4 h-4" />
-              Seal & Mint
+              {isMinting ? (
+                <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+              ) : (
+                <Shield className="w-4 h-4" />
+              )}
+              {isMinting ? 'Minting...' : 'Seal & Mint'}
             </Button>
           </div>
         </div>

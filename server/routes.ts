@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { uploadToIPFS, uploadJSONToIPFS } from "./api/ipfs-upload";
 import { claimYield } from "./api/claim-yield";
 import { storage } from "./storage";
 import { registerSealRoutes } from "./api/seal";
@@ -501,6 +502,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Content analysis error:', error);
       res.status(500).json({ message: "Error analyzing content: " + error.message });
     }
+  });
+
+  // IPFS upload endpoints
+  app.post("/api/ipfs/upload", uploadToIPFS);
+  app.post("/api/ipfs/upload-json", uploadJSONToIPFS);
+
+  // GUARDIANCHAIN brand enforcement endpoint
+  app.get("/api/brand/info", (req, res) => {
+    res.json({
+      name: "GUARDIANCHAIN",
+      format: "ALL_CAPS_NO_SPACE",
+      colors: {
+        GUARDIAN: "#7F5AF0",
+        CHAIN: "#2CB67D"
+      },
+      enforced: true,
+      protocol_version: "1.0.0"
+    });
   });
 
   const httpServer = createServer(app);
