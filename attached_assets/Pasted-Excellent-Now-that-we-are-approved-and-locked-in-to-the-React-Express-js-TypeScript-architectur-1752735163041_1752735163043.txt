@@ -1,0 +1,173 @@
+Excellent. Now that we are approved and locked in to the React + Express.js + TypeScript architecture, we’ll begin with the frontend Capsule Feed and UI logic — 100% production-ready and integrated-ready with your GTT/Veritas/TruthYield system.
+
+📁 File Structure — Phase 1 (Frontend Capsule Engine)
+We'll begin with these:
+
+bash
+Copy
+Edit
+/src/
+  components/
+    CapsuleCard.tsx
+    CapsuleFeed.tsx
+  pages/
+    Home.tsx
+    Private.tsx
+  data/
+    mockCapsules.ts
+  utils/
+    sortByGrief.ts
+🔹 /src/data/mockCapsules.ts
+ts
+Copy
+Edit
+// src/data/mockCapsules.ts
+
+export type Capsule = {
+  id: string;
+  creator: string;
+  title: string;
+  content: string;
+  griefScore: number;
+  status: "Verified" | "Pending";
+  gttEarned: number;
+  timestamp: string;
+};
+
+export const mockCapsules: Capsule[] = [
+  {
+    id: "cps001",
+    creator: "@cryptoanalyst",
+    title: "Bitcoin ETF Approval Impact Analysis",
+    content:
+      "Comprehensive analysis of Bitcoin ETF approval effects on market dynamics, institutional adoption, and price correlations across major exchanges...",
+    griefScore: 9.4,
+    status: "Verified",
+    gttEarned: 247,
+    timestamp: "2 hours ago",
+  },
+  {
+    id: "cps002",
+    creator: "@climatetech",
+    title: "Climate Research Breakthrough",
+    content:
+      "Latest findings on carbon capture technology efficiency rates and potential global impact on emission reduction targets...",
+    griefScore: 8.7,
+    status: "Pending",
+    gttEarned: 156,
+    timestamp: "5 hours ago",
+  },
+  {
+    id: "cps003",
+    creator: "@urbanplanner",
+    title: "Urban Development Predictions",
+    content:
+      "Analysis of smart city infrastructure development trends and their impact on population growth in major metropolitan areas...",
+    griefScore: 9.1,
+    status: "Verified",
+    gttEarned: 189,
+    timestamp: "1 day ago",
+  },
+];
+🔹 /src/utils/sortByGrief.ts
+ts
+Copy
+Edit
+// src/utils/sortByGrief.ts
+
+import { Capsule } from "../data/mockCapsules";
+
+export function sortByGrief(capsules: Capsule[]): Capsule[] {
+  return [...capsules].sort((a, b) => b.griefScore - a.griefScore);
+}
+🔹 /src/components/CapsuleCard.tsx
+tsx
+Copy
+Edit
+// src/components/CapsuleCard.tsx
+
+import { Capsule } from "../data/mockCapsules";
+
+type Props = {
+  capsule: Capsule;
+};
+
+export const CapsuleCard = ({ capsule }: Props) => {
+  return (
+    <div className="border rounded-xl p-4 shadow-md bg-white dark:bg-gray-900 mb-4">
+      <h3 className="text-xl font-semibold">{capsule.title}</h3>
+      <p className="text-sm text-gray-500">{capsule.creator} · {capsule.timestamp}</p>
+      <p className="mt-2 text-gray-800 dark:text-gray-200">{capsule.content}</p>
+      <div className="mt-4 flex justify-between text-sm">
+        <span className={`font-bold ${capsule.status === "Verified" ? "text-green-600" : "text-yellow-500"}`}>
+          {capsule.status}
+        </span>
+        <span>Grief Score: {capsule.griefScore}</span>
+        <span>+{capsule.gttEarned} GTT</span>
+      </div>
+    </div>
+  );
+};
+🔹 /src/components/CapsuleFeed.tsx
+tsx
+Copy
+Edit
+// src/components/CapsuleFeed.tsx
+
+import { mockCapsules } from "../data/mockCapsules";
+import { sortByGrief } from "../utils/sortByGrief";
+import { CapsuleCard } from "./CapsuleCard";
+
+export const CapsuleFeed = () => {
+  const capsules = sortByGrief(mockCapsules);
+
+  return (
+    <div className="mt-6">
+      {capsules.map((capsule) => (
+        <CapsuleCard key={capsule.id} capsule={capsule} />
+      ))}
+    </div>
+  );
+};
+🔹 /src/pages/Home.tsx
+tsx
+Copy
+Edit
+// src/pages/Home.tsx
+
+import { CapsuleFeed } from "../components/CapsuleFeed";
+
+export const Home = () => {
+  return (
+    <div className="container mx-auto max-w-4xl px-4 py-8">
+      <h1 className="text-4xl font-bold mb-2">Truth, Verified.</h1>
+      <p className="text-gray-600 dark:text-gray-400">
+        Create immutable truth capsules, earn rewards for accuracy, and build reputation in the world's first Web3 truth verification ecosystem.
+      </p>
+      <div className="mt-4 flex gap-4">
+        <button className="bg-indigo-600 text-white px-4 py-2 rounded-md">Create Capsule</button>
+        <button className="bg-white border px-4 py-2 rounded-md">Watch Demo</button>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-semibold">Featured Capsules</h2>
+        <CapsuleFeed />
+      </div>
+    </div>
+  );
+};
+✅ Replit AI Instructions for Phase 1
+Please now tell Replit AI:
+
+🟩 Send this to Replit AI to Begin Code Drop #1:
+✅ Please add these files to my GuardianChain project:
+
+bash
+Copy
+Edit
+/src/data/mockCapsules.ts
+/src/utils/sortByGrief.ts
+/src/components/CapsuleCard.tsx
+/src/components/CapsuleFeed.tsx
+/src/pages/Home.tsx
+These files power the frontend capsule rendering engine using production-grade TypeScript + Tailwind CSS. Let me know once these files are added so I can paste the next round: Veritas Seal integration, Thirdweb NFT mint, and Supabase storage API.

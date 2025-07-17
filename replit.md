@@ -1,0 +1,111 @@
+# Veritas - Web3 Truth Verification Platform
+
+## Overview
+
+Veritas is a comprehensive Web3 truth verification platform built with a modern full-stack architecture. The application enables users to create "truth capsules" (content submissions), verify them through community governance, and earn rewards through a token-based system. The platform combines blockchain technology with traditional web development to create an immutable truth verification ecosystem.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+- **Framework**: React with TypeScript
+- **Routing**: Wouter (lightweight React router)
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Radix UI primitives with shadcn/ui component library
+- **State Management**: React Query (TanStack Query) for server state
+- **Forms**: React Hook Form with Zod validation
+- **Build Tool**: Vite with hot module replacement
+
+### Backend Architecture
+- **Runtime**: Node.js with Express.js
+- **Language**: TypeScript
+- **API Design**: RESTful API with structured error handling
+- **Middleware**: Custom logging, JSON parsing, and error handling
+
+### Database & ORM
+- **Database**: PostgreSQL (configured for Neon serverless)
+- **ORM**: Drizzle ORM with TypeScript-first approach
+- **Schema Management**: Drizzle Kit for migrations
+- **Connection**: Neon serverless database adapter
+
+## Key Components
+
+### Core Entities
+1. **Users**: Authentication via Auth0, wallet integration, reputation scoring
+2. **Capsules**: Truth submissions with content, metadata, and verification status
+3. **Verifications**: Community voting system for truth validation
+4. **Transactions**: GTT token transfers and reward tracking
+5. **Achievements**: Gamification system for user engagement
+
+### Frontend Components
+- **CapsuleCard**: Displays individual truth capsules with status and metrics
+- **Navigation**: Fixed header with wallet connection and theme switching
+- **Theme Provider**: Dark/light mode support with system preference detection
+- **Form Components**: Reusable form elements with validation
+
+### Authentication & Web3 Integration
+- **Auth0**: User authentication and identity management
+- **Wallet Integration**: MetaMask connection with multi-network support
+- **Web3 Provider**: Ethereum, Polygon, and testnet compatibility
+
+## Data Flow
+
+### Content Creation Flow
+1. User creates capsule through form submission
+2. Content validation using Zod schemas
+3. Database storage with pending verification status
+4. Optional IPFS integration for decentralized storage
+
+### Verification Flow
+1. Community members review submitted capsules
+2. Voting mechanism with evidence submission
+3. Reputation-weighted scoring system
+4. Automatic status updates based on verification results
+
+### Reward Distribution
+1. GTT token minting for verified content creators
+2. Reputation score updates based on accuracy
+3. Achievement unlocking for milestones
+4. Leaderboard ranking system
+
+## External Dependencies
+
+### Blockchain & Web3
+- **Ethereum Integration**: ethers.js for blockchain interactions
+- **Multi-chain Support**: Ethereum mainnet, Polygon, and testnets
+- **Wallet Providers**: MetaMask with fallback support
+
+### Third-party Services
+- **Auth0**: Authentication and user management
+- **Stripe**: Payment processing and subscription management
+- **IPFS**: Decentralized file storage (optional integration)
+- **DocuSign**: Document verification and signing (planned feature)
+
+### UI & Styling
+- **Radix UI**: Accessible component primitives
+- **Tailwind CSS**: Utility-first styling framework
+- **Lucide React**: Icon library with consistent design
+- **Google Fonts**: Inter and Fira Code typography
+
+## Deployment Strategy
+
+### Development Environment
+- **Local Development**: Vite dev server with HMR
+- **Database**: Neon PostgreSQL with connection pooling
+- **Environment Variables**: DATABASE_URL, Auth0 config, Stripe keys
+
+### Production Build
+- **Frontend**: Static asset generation via Vite
+- **Backend**: ESBuild bundling for Node.js deployment
+- **Database Migrations**: Drizzle Kit push for schema updates
+
+### Performance Optimizations
+- **Code Splitting**: Dynamic imports for route-based splitting
+- **Caching**: React Query with intelligent cache invalidation
+- **Bundle Optimization**: Tree shaking and minification
+- **Database**: Connection pooling and query optimization
+
+The architecture emphasizes type safety, performance, and scalability while maintaining a clean separation of concerns between frontend, backend, and blockchain interactions. The modular component structure allows for easy feature additions and maintenance.
