@@ -14,6 +14,7 @@ import { formatEther } from 'viem';
 import VoteModal from '@/components/dao/VoteModal';
 import FeeDisplay from '@/components/fees/FeeDisplay';
 import TreasuryDisplay from '@/components/fees/TreasuryDisplay';
+import AdminFeePanel from '@/components/fees/AdminFeePanel';
 import { getFeeAmount } from '@/lib/feeConfig';
 
 interface Proposal {
@@ -458,6 +459,13 @@ export default function Govern() {
           </div>
         </div>
       </section>
+
+      {/* Admin Fee Management Panel */}
+      {address && (
+        <section className="mt-8">
+          <AdminFeePanel />
+        </section>
+      )}
 
       {/* Vote Modal */}
       {selectedProposal && (
