@@ -17,6 +17,7 @@ import NFTDemo from "@/pages/nft-demo";
 import CapsuleDetail from "@/pages/capsule-detail";
 import ShareDemo from "@/pages/share-demo";
 import AnalyticsDemo from "@/pages/analytics-demo";
+import Web3Demo from "@/pages/web3-demo";
 import Governance from "@/pages/governance";
 import NotFound from "@/pages/not-found";
 
@@ -35,6 +36,7 @@ function Router() {
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/share-demo" component={ShareDemo} />
         <Route path="/analytics-demo" component={AnalyticsDemo} />
+        <Route path="/web3-demo" component={Web3Demo} />
         <Route path="/governance" component={Governance} />
         <Route component={NotFound} />
       </Switch>

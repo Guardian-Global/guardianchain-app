@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title Guardian Truth Token (GTT)
@@ -22,15 +22,14 @@ contract GTTToken is ERC20, Ownable, Pausable {
         _;
     }
     
-    constructor(address initialOwner) ERC20("Guardian Truth Token", "GTT") {
-        _transferOwnership(initialOwner);
+    constructor() ERC20("Guardian Truth Token", "GTT") Ownable(msg.sender) {
     }
     
     /**
      * @dev Set the TruthVault contract address
      * @param _truthVault Address of the TruthVault contract
      */
-    function setTruthVault(address _truthVault) external onlyOwner {
+    function setVault(address _truthVault) external onlyOwner {
         require(_truthVault != address(0), "GTT: TruthVault cannot be zero address");
         address oldVault = truthVault;
         truthVault = _truthVault;
@@ -92,12 +91,12 @@ contract GTTToken is ERC20, Ownable, Pausable {
     /**
      * @dev Override transfer to respect pause state
      */
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
-        uint256 amount
+        uint256 value
     ) internal override whenNotPaused {
-        super._beforeTokenTransfer(from, to, amount);
+        super._update(from, to, value);
     }
     
     /**

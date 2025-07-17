@@ -6,12 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  CONTRACTS, 
   TRUTH_VAULT_ABI, 
   GTT_TOKEN_ABI, 
-  getContractAddress, 
-  isSupportedNetwork 
-} from '@/lib/web3-config';
+  getContractAddress
+} from '@/lib/constants';
 import { 
   Coins, 
   Wallet, 
@@ -38,34 +36,43 @@ export default function CapsuleClaimButton({
   const { toast } = useToast();
   const [isClaiming, setIsClaiming] = useState(false);
 
-  // Contract addresses for current chain
-  const truthVaultAddress = chainId && isSupportedNetwork(chainId) 
-    ? getContractAddress('TRUTH_VAULT', chainId)
-    : null;
-  
-  const gttTokenAddress = chainId && isSupportedNetwork(chainId)
-    ? getContractAddress('GTT_TOKEN', chainId)
-    : null;
+  // Check if connected to supported network and get contract addresses
+  let vaultAddress, tokenAddress;
+  try {
+    vaultAddress = getContractAddress(chainId, 'TRUTH_VAULT');
+    tokenAddress = getContractAddress(chainId, 'GTT_TOKEN');
+  } catch (error) {
+    return (
+      <Card className="bg-yellow-950 border-yellow-800">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-2 text-yellow-200">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="text-sm">Please switch to a supported network (Hardhat local: 31337)</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
-  // Read capsule claim info from smart contract
-  const { data: claimInfo, isLoading: isLoadingClaimInfo, refetch } = useReadContract({
-    address: truthVaultAddress as `0x${string}`,
+  // Read capsule verification info from smart contract
+  const { data: capsuleInfo } = useReadContract({
+    address: vaultAddress as `0x${string}`,
     abi: TRUTH_VAULT_ABI,
-    functionName: 'getCapsuleClaimInfo',
+    functionName: 'capsules',
     args: [BigInt(capsule.id)],
     query: {
-      enabled: !!truthVaultAddress && isConnected
+      enabled: !!vaultAddress && isConnected
     }
   });
 
   // Read user's GTT balance
   const { data: gttBalance } = useReadContract({
-    address: gttTokenAddress as `0x${string}`,
+    address: tokenAddress as `0x${string}`,
     abi: GTT_TOKEN_ABI,
     functionName: 'balanceOf',
     args: [address as `0x${string}`],
     query: {
-      enabled: !!gttTokenAddress && !!address && isConnected
+      enabled: !!tokenAddress && !!address && isConnected
     }
   });
 
@@ -73,7 +80,7 @@ export default function CapsuleClaimButton({
   const { writeContract, isPending } = useWriteContract();
 
   const handleClaimYield = async () => {
-    if (!truthVaultAddress || !isConnected || !address) {
+    if (!vaultAddress || !isConnected || !address) {
       toast({
         title: "Wallet Not Connected",
         description: "Please connect your wallet to claim yield",
@@ -82,7 +89,9 @@ export default function CapsuleClaimButton({
       return;
     }
 
-    if (!isSupportedNetwork(chainId)) {
+    try {
+      getContractAddress(chainId, 'TRUTH_VAULT');
+    } catch (error) {
       toast({
         title: "Unsupported Network",
         description: "Please switch to a supported network",
@@ -94,12 +103,16 @@ export default function CapsuleClaimButton({
     try {
       setIsClaiming(true);
 
+      // Calculate yield amount from capsule data
+      const yieldAmount = parseFloat(capsule.truthYield || "0");
+      const yieldInWei = parseEther(yieldAmount.toString());
+
       // Call smart contract claim function
       writeContract({
-        address: truthVaultAddress as `0x${string}`,
+        address: vaultAddress as `0x${string}`,
         abi: TRUTH_VAULT_ABI,
         functionName: 'claimYield',
-        args: [BigInt(capsule.id)],
+        args: [BigInt(capsule.id), yieldInWei],
       });
 
       // Note: Transaction confirmation and success handling would be done

@@ -11,6 +11,8 @@ const navigation = [
   { name: "Create", href: "/create" },
   { name: "Leaderboard", href: "/leaderboard" },
   { name: "Profile", href: "/profile" },
+  { name: "Governance", href: "/governance" },
+  { name: "Web3 Demo", href: "/web3-demo" },
 ];
 
 export default function Navigation() {
