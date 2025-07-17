@@ -3,6 +3,7 @@ import { Shield, Plus, Play, Star, User, Coins, Check, Clock } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import CapsuleCard from "@/components/capsule/capsule-card";
+import ExplainerVideo from "@/components/ExplainerVideo";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -45,7 +46,7 @@ export default function Home() {
                   Create Capsule
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="border-slate-600 hover:border-slate-400 px-8 py-4 text-lg font-semibold hover:bg-slate-800 transition-all duration-200">
+              <Button variant="outline" size="lg" className="border-slate-600 hover:border-slate-400 px-8 py-4 text-lg font-semibold hover:bg-slate-800 transition-all duration-200" onClick={() => document.getElementById('explainer-video')?.scrollIntoView({ behavior: 'smooth' })}>
                 <Play className="mr-2 h-5 w-5" />
                 Watch Demo
               </Button>
@@ -87,6 +88,21 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Explainer Video Section */}
+      <section id="explainer-video" className="py-20 bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text">
+              See GuardianChain in Action
+            </h2>
+            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+              Watch how truth capsules are created, verified, and sealed into immutable digital proof using blockchain technology.
+            </p>
+          </div>
+          <ExplainerVideo />
         </div>
       </section>
 
