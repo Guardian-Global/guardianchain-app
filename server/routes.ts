@@ -2,15 +2,15 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema } from "@shared/schema";
-import { registerCapsuleRoutes } from "./api/capsules";
-import { registerVeritasRoutes } from "./api/veritas";
-import { registerMintRoutes } from "./api/mint";
+import capsulesRouter from "./api/capsules";
+import veritasRouter from "./api/veritas";
+import mintRouter from "./api/mint";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register GuardianChain API routes
-  registerCapsuleRoutes(app);
-  registerVeritasRoutes(app);
-  registerMintRoutes(app);
+  app.use("/api/capsules", capsulesRouter);
+  app.use("/api/veritas", veritasRouter);
+  app.use("/api/mint", mintRouter);
 
   // Stats endpoint
   app.get("/api/stats", async (req, res) => {
