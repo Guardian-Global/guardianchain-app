@@ -20,6 +20,7 @@ import AnalyticsDemo from "@/pages/analytics-demo";
 import Web3Demo from "@/pages/web3-demo";
 import SmartContractDemo from "@/pages/smart-contract-demo";
 import Governance from "@/pages/governance";
+import PrivateFeed from "@/pages/private";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
         <Route path="/web3-demo" component={Web3Demo} />
         <Route path="/smart-contract-demo" component={SmartContractDemo} />
         <Route path="/governance" component={Governance} />
+        <Route path="/private" component={PrivateFeed} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

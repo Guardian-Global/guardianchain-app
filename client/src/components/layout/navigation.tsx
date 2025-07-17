@@ -11,6 +11,7 @@ const navigation = [
   { name: "Create", href: "/create" },
   { name: "Leaderboard", href: "/leaderboard" },
   { name: "Profile", href: "/profile" },
+  { name: "Private", href: "/private" },
   { name: "Governance", href: "/governance" },
   { name: "Web3 Demo", href: "/web3-demo" },
   { name: "Contract Demo", href: "/smart-contract-demo" },

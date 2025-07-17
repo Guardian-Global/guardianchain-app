@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { claimYield } from "./api/claim-yield";
 import { storage } from "./storage";
+import { registerSealRoutes } from "./api/seal";
 import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema } from "@shared/schema";
 import capsulesRouter from "./api/capsules";
 import veritasRouter from "./api/veritas";
@@ -14,6 +15,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/veritas", veritasRouter);
   app.use("/api/mint", mintRouter);
   app.use("/api/analytics", analyticsRouter);
+  
+  // Register Veritas Seal routes
+  registerSealRoutes(app);
 
   // Stats endpoint
   app.get("/api/stats", async (req, res) => {
@@ -223,6 +227,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Claim GTT yield for verified capsules
   app.post("/api/claim-yield", claimYield);
+
+  // Private feed endpoints for friends-only content
+  app.get("/api/capsules/private", async (req, res) => {
+    try {
+      const privateCapsules = [
+        {
+          id: 101,
+          creator: 'Leila Chen',
+          creatorId: 1,
+          title: 'Private: Family Recipe Truth',
+          content: 'This is the real story behind our family\'s secret recipe that was stolen by a major corporation...',
+          griefScore: 87,
+          isSealed: true,
+          isPrivate: true,
+          tags: ['family', 'corporate-theft', 'recipes'],
+          createdAt: '2024-01-20T08:30:00Z',
+          verificationStatus: 'verified',
+          truthYield: '125.5',
+          viewCount: 0,
+          shareCount: 0,
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=leila'
+        },
+        {
+          id: 102,
+          creator: 'Nuru Makena',
+          creatorId: 2,
+          title: 'Private: Whistleblower Evidence',
+          content: 'Documented proof of environmental violations by mining company in Kenya. Sharing privately first...',
+          griefScore: 94,
+          isSealed: true,
+          isPrivate: true,
+          tags: ['environment', 'whistleblower', 'kenya'],
+          createdAt: '2024-01-19T14:15:00Z',
+          verificationStatus: 'pending',
+          truthYield: '200.0',
+          viewCount: 0,
+          shareCount: 0,
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=nuru'
+        }
+      ];
+      res.json(privateCapsules);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching private capsules: " + error.message });
+    }
+  });
+
+  // Friend requests endpoint
+  app.get("/api/friends/requests", async (req, res) => {
+    try {
+      const requests = {
+        pending: 2,
+        accepted: 3,
+        total: 5
+      };
+      res.json(requests);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching friend requests: " + error.message });
+    }
+  });
+
+  // Friend stats endpoint
+  app.get("/api/friends/stats", async (req, res) => {
+    try {
+      const stats = {
+        activeFriends: 3,
+        pendingRequests: 2,
+        privateCapsules: 2,
+        totalConnections: 5
+      };
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching friend stats: " + error.message });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
