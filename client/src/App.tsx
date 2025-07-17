@@ -15,6 +15,7 @@ import SealDemo from "@/pages/seal-demo";
 import NFTDemo from "@/pages/nft-demo";
 import CapsuleDetail from "@/pages/capsule-detail";
 import ShareDemo from "@/pages/share-demo";
+import AnalyticsDemo from "@/pages/analytics-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -31,6 +32,7 @@ function Router() {
         <Route path="/nft-demo" component={NFTDemo} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/share-demo" component={ShareDemo} />
+        <Route path="/analytics-demo" component={AnalyticsDemo} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

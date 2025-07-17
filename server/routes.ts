@@ -5,12 +5,14 @@ import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema 
 import capsulesRouter from "./api/capsules";
 import veritasRouter from "./api/veritas";
 import mintRouter from "./api/mint";
+import analyticsRouter from "./api/analytics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register GuardianChain API routes
   app.use("/api/capsules", capsulesRouter);
   app.use("/api/veritas", veritasRouter);
   app.use("/api/mint", mintRouter);
+  app.use("/api/analytics", analyticsRouter);
 
   // Stats endpoint
   app.get("/api/stats", async (req, res) => {

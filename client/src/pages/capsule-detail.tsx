@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ShareButtons from "@/components/social/share-buttons";
+import CapsuleAnalytics from "@/components/analytics/capsule-analytics";
 import DynamicMeta, { generateCapsuleStructuredData } from "@/components/seo/dynamic-meta";
 import { Star, User, Coins, Check, Clock, Eye, MessageCircle, ExternalLink, Shield, Image, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
@@ -27,6 +28,14 @@ export default function CapsuleDetail() {
     },
     enabled: !!id
   });
+
+  // Track view when capsule loads
+  useEffect(() => {
+    if (capsule?.id) {
+      apiRequest("POST", `/api/analytics/${capsule.id}/view`)
+        .catch(error => console.log("View tracking failed:", error));
+    }
+  }, [capsule?.id]);
 
   const handleMintNFT = async () => {
     if (!capsule) return;
@@ -328,6 +337,13 @@ export default function CapsuleDetail() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Analytics */}
+            <CapsuleAnalytics 
+              capsule={capsule}
+              walletAddress="0x1234567890abcdef1234567890abcdef12345678"
+              showClaimButton={true}
+            />
 
             {/* Share */}
             <Card className="bg-slate-800 border-slate-700">

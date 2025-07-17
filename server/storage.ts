@@ -88,6 +88,7 @@ export class MemStorage implements IStorage {
     const user: User = {
       ...insertUser,
       id,
+      walletAddress: insertUser.walletAddress || null,
       griefScore: "0.0",
       gttBalance: "0.00",
       totalCapsules: 0,
@@ -141,7 +142,7 @@ export class MemStorage implements IStorage {
       capsules = capsules.filter(c => c.category === filters.category);
     }
 
-    capsules.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    capsules.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
 
     if (filters.offset) {
       capsules = capsules.slice(filters.offset);
@@ -163,12 +164,19 @@ export class MemStorage implements IStorage {
       griefScore: "0.0",
       verificationCount: 0,
       replayCount: 0,
+      viewCount: 0,
+      shareCount: 0,
+      minted: false,
+      truthYield: "0.00",
       gttReward: "0.00",
       imageUrl: null,
       ipfsHash: null,
       nftTokenId: null,
       docusignEnvelopeId: null,
+      veritasSealUrl: null,
       isPublic: true,
+      tags: null,
+      evidence: null,
       metadata: null,
       createdAt: now,
       updatedAt: now,
@@ -178,7 +186,7 @@ export class MemStorage implements IStorage {
     // Update user stats
     const user = this.users.get(insertCapsule.creatorId);
     if (user) {
-      await this.updateUser(user.id, { totalCapsules: user.totalCapsules + 1 });
+      await this.updateUser(user.id, { totalCapsules: (user.totalCapsules || 0) + 1 });
     }
     
     return capsule;
@@ -203,7 +211,7 @@ export class MemStorage implements IStorage {
   async getTrendingCapsules(limit: number = 10): Promise<Capsule[]> {
     return Array.from(this.capsules.values())
       .filter(c => c.isPublic)
-      .sort((a, b) => (b.verificationCount + b.replayCount) - (a.verificationCount + a.replayCount))
+      .sort((a, b) => ((b.verificationCount || 0) + (b.replayCount || 0)) - ((a.verificationCount || 0) + (a.replayCount || 0)))
       .slice(0, limit);
   }
 
@@ -224,6 +232,9 @@ export class MemStorage implements IStorage {
     const verification: Verification = {
       ...insertVerification,
       id,
+      evidence: insertVerification.evidence || null,
+      comment: insertVerification.comment || null,
+      reputationStake: insertVerification.reputationStake || null,
       createdAt: new Date(),
     };
     this.verifications.set(id, verification);
@@ -243,6 +254,9 @@ export class MemStorage implements IStorage {
     const transaction: Transaction = {
       ...insertTransaction,
       id,
+      description: insertTransaction.description || null,
+      capsuleId: insertTransaction.capsuleId || null,
+      txHash: insertTransaction.txHash || null,
       createdAt: new Date(),
     };
     this.transactions.set(id, transaction);
@@ -262,6 +276,7 @@ export class MemStorage implements IStorage {
     const achievement: Achievement = {
       ...insertAchievement,
       id,
+      metadata: insertAchievement.metadata || null,
       earnedAt: new Date(),
     };
     this.achievements.set(id, achievement);

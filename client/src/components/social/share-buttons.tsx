@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { Share2, Copy, MessageCircle, Mail, ExternalLink } from "lucide-react";
 import { FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 
@@ -74,7 +75,19 @@ export default function ShareButtons({
     }
   };
 
-  const handleSocialShare = (platform: string, link: string) => {
+  const handleSocialShare = async (platform: string, link: string) => {
+    // Track share analytics if capsuleId is available
+    if (url.includes('/capsule/')) {
+      try {
+        const capsuleId = url.split('/capsule/')[1];
+        await apiRequest("POST", `/api/analytics/${capsuleId}/share`, {
+          platform
+        });
+      } catch (error) {
+        console.log("Share tracking failed:", error);
+      }
+    }
+    
     window.open(link, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
   };
 

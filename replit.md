@@ -110,13 +110,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
-### July 17, 2025 - Social Sharing Integration
+### July 17, 2025 - TruthYield ROI Analytics & Social Sharing Integration
 - **Dynamic OpenGraph Metadata**: Implemented automatic meta tag injection for capsule routes with title, description, image, and URL
 - **Twitter Card Support**: Added summary_large_image cards for rich social media previews
 - **ShareButtons Component**: Created comprehensive social sharing interface supporting Twitter, Facebook, LinkedIn, WhatsApp, email, and native mobile sharing
 - **Capsule Detail Pages**: Built dedicated capsule view pages with full social sharing integration and SEO optimization
 - **Structured Data**: Added JSON-LD structured data for improved search engine indexing
-- **Viral Growth Foundation**: Truth capsules now support viral sharing with proper branding and immutable proof attribution
+- **TruthYield Analytics**: Implemented ROI calculation engine with engagement tracking (views, shares, verifications, minting)
+- **GTT Token Rewards**: Created yield-to-token conversion system with tier-based multipliers
+- **CapsuleAnalytics Component**: Built comprehensive analytics dashboard with real-time metrics and claim functionality
+- **Share Tracking**: Integrated analytics tracking into social sharing buttons for viral growth measurement
+- **Creator Monetization**: Enabled GTT token claiming for verified capsule creators based on Truth Yield scores
 
 ### Previous Implementation
 - **NFT Minting Integration**: Complete workflow from Veritas Seal to IPFS metadata upload
