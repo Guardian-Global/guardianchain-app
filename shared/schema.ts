@@ -35,6 +35,8 @@ export const capsules = pgTable("capsules", {
   minted: boolean("minted").default(false),
   truthYield: decimal("truth_yield", { precision: 10, scale: 2 }).default("0.00"),
   gttReward: decimal("gtt_reward", { precision: 10, scale: 2 }).default("0.00"),
+  gttClaimed: decimal("gtt_claimed", { precision: 10, scale: 2 }).default("0.00"),
+  claimTxHash: text("claim_tx_hash"),
   imageUrl: text("image_url"),
   ipfsHash: text("ipfs_hash"),
   nftTokenId: text("nft_token_id"),

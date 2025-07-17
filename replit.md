@@ -123,6 +123,11 @@ Preferred communication style: Simple, everyday language.
 - **Creator Monetization**: Enabled GTT token claiming for verified capsule creators based on Truth Yield scores
 
 ### Previous Implementation
+- **GTT Smart Contract System**: Complete ERC-20 token with TruthVault DAO-controlled yield distribution
+- **Web3 Integration**: Wagmi + Viem configuration with wallet connection and blockchain interaction
+- **CapsuleClaimButton Component**: Smart contract integration for GTT yield claiming with verification
+- **Governance UI**: DAO proposal system with voting interface and treasury management
+- **Claim Backend API**: Validation endpoint for GTT yield claiming with transaction tracking
 - **NFT Minting Integration**: Complete workflow from Veritas Seal to IPFS metadata upload
 - **DocuSign Veritas Integration**: Legal document verification and sealing for truth capsules
 - **Database Schema**: PostgreSQL with Drizzle ORM for type-safe data operations

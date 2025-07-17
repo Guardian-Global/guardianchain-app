@@ -68,6 +68,136 @@ export class MemStorage implements IStorage {
     this.verifications = new Map();
     this.transactions = new Map();
     this.achievements = new Map();
+    
+    // Initialize with demo data for analytics
+    this.initializeDemoData();
+  }
+
+  private initializeDemoData() {
+    // Create demo users
+    const demoUsers = [
+      { id: 1, auth0Id: "auth0|user1", username: "climate_researcher", email: "researcher@climate.org", walletAddress: "0x1234567890abcdef1234567890abcdef12345678" },
+      { id: 2, auth0Id: "auth0|user2", username: "supply_chain_investigator", email: "investigator@transparency.org", walletAddress: "0x2345678901bcdef0123456789abcdef012345679" },
+      { id: 3, auth0Id: "auth0|user3", username: "healthcare_whistleblower", email: "whistleblower@healthcare.org", walletAddress: "0x3456789012cdef01234567890abcdef0123456780" }
+    ];
+
+    demoUsers.forEach(userData => {
+      const user = {
+        ...userData,
+        griefScore: "0.2",
+        gttBalance: "0.00",
+        totalCapsules: 1,
+        verifiedCapsules: 1,
+        isVerified: true,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      this.users.set(user.id, user);
+    });
+
+    // Create demo capsules
+    const demoCapsules = [
+      {
+        id: 101,
+        title: "Climate Change Evidence: Arctic Ice Sheet Melting Acceleration",
+        description: "Comprehensive analysis of arctic ice sheet data from 2020-2024 showing unprecedented melting rates.",
+        content: "Detailed scientific analysis of satellite data, temperature readings, and ice thickness measurements from multiple Arctic research stations. The data shows a 340% acceleration in ice loss compared to the 1990-2010 baseline period.",
+        category: "science",
+        status: "sealed",
+        creatorId: 1,
+        griefScore: "0.2",
+        verificationCount: 15,
+        replayCount: 89,
+        viewCount: 342,
+        shareCount: 67,
+        minted: true,
+        truthYield: "45.60",
+        gttReward: "4.56",
+        gttClaimed: "0.00",
+        claimTxHash: null,
+        imageUrl: "https://api.dicebear.com/7.x/shapes/svg?seed=101&backgroundColor=1e293b",
+        ipfsHash: "QmX9ZV7Y8W6U5T4R3Q2P1O0N9M8L7K6J5I4H3G2F1E0D9",
+        nftTokenId: "12345",
+        docusignEnvelopeId: "env_climate_2024",
+        veritasSealUrl: "https://demo.docusign.net/climate-seal",
+        isPublic: true,
+        tags: ["climate", "science", "arctic"],
+        evidence: null,
+        metadata: null,
+        createdAt: new Date("2024-01-15T10:30:00Z"),
+        updatedAt: new Date("2024-02-20T14:45:00Z")
+      },
+      {
+        id: 102,
+        title: "Supply Chain Transparency: Fast Fashion Environmental Impact",
+        description: "Investigation into hidden environmental costs of major fast fashion brands' supply chains.",
+        content: "Detailed investigation revealing toxic chemical usage, water pollution, and labor violations across 50+ factories in Southeast Asia. Includes photo evidence, chemical analysis reports, and worker testimonies.",
+        category: "investigation",
+        status: "verified",
+        creatorId: 2,
+        griefScore: "0.8",
+        verificationCount: 23,
+        replayCount: 156,
+        viewCount: 1204,
+        shareCount: 189,
+        minted: false,
+        truthYield: "78.30",
+        gttReward: "7.83",
+        gttClaimed: "0.00",
+        claimTxHash: null,
+        imageUrl: "https://api.dicebear.com/7.x/shapes/svg?seed=102&backgroundColor=2563eb",
+        ipfsHash: null,
+        nftTokenId: null,
+        docusignEnvelopeId: null,
+        veritasSealUrl: null,
+        isPublic: true,
+        tags: ["environment", "fashion", "supply-chain"],
+        evidence: null,
+        metadata: null,
+        createdAt: new Date("2024-02-10T09:15:00Z"),
+        updatedAt: new Date("2024-02-25T16:20:00Z")
+      },
+      {
+        id: 103,
+        title: "Corporate Whistleblower: Healthcare Data Privacy Violations",
+        description: "Internal documents revealing systematic patient data privacy violations at major healthcare provider.",
+        content: "Leaked internal emails, database access logs, and compliance reports showing deliberate HIPAA violations affecting 2.3 million patients. Includes executive correspondence authorizing illegal data sharing practices.",
+        category: "whistleblowing",
+        status: "sealed",
+        creatorId: 3,
+        griefScore: "0.1",
+        verificationCount: 45,
+        replayCount: 267,
+        viewCount: 2891,
+        shareCount: 423,
+        minted: true,
+        truthYield: "156.75",
+        gttReward: "23.51",
+        gttClaimed: "0.00",
+        claimTxHash: null,
+        imageUrl: "https://api.dicebear.com/7.x/shapes/svg?seed=103&backgroundColor=7c3aed",
+        ipfsHash: "QmP8M7L6K5J4I3H2G1F0E9D8C7B6A5Z9Y8X7W6V5U4T3",
+        nftTokenId: "67890",
+        docusignEnvelopeId: "env_healthcare_2024",
+        veritasSealUrl: "https://demo.docusign.net/healthcare-seal",
+        isPublic: true,
+        tags: ["healthcare", "privacy", "whistleblowing"],
+        evidence: null,
+        metadata: null,
+        createdAt: new Date("2024-01-05T14:22:00Z"),
+        updatedAt: new Date("2024-03-15T11:30:00Z")
+      }
+    ];
+
+    demoCapsules.forEach(capsuleData => {
+      this.capsules.set(capsuleData.id, capsuleData);
+    });
+
+    // Update counters
+    this.currentUserId = 4;
+    this.currentCapsuleId = 104;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -169,6 +299,8 @@ export class MemStorage implements IStorage {
       minted: false,
       truthYield: "0.00",
       gttReward: "0.00",
+      gttClaimed: "0.00",
+      claimTxHash: null,
       imageUrl: null,
       ipfsHash: null,
       nftTokenId: null,

@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { claimYield } from "./api/claim-yield";
 import { storage } from "./storage";
 import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema } from "@shared/schema";
 import capsulesRouter from "./api/capsules";
@@ -219,6 +220,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error fetching achievements: " + error.message });
     }
   });
+
+  // Claim GTT yield for verified capsules
+  app.post("/api/claim-yield", claimYield);
 
   const httpServer = createServer(app);
   return httpServer;

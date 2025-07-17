@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import CapsuleClaimButton from "@/components/web3/capsule-claim-button";
 import { apiRequest } from "@/lib/queryClient";
 import { getYieldTier } from "@shared/utils/roi";
 import { 
@@ -317,6 +318,30 @@ export default function CapsuleAnalytics({
               <span className="text-green-400">{metrics.truthYield}</span>
             </div>
           </div>
+
+          {/* Web3 GTT Claim Integration */}
+          {showClaimButton && walletAddress && (
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <CapsuleClaimButton 
+                capsule={capsule}
+                isCreator={true}
+                showDetails={false}
+              />
+            </div>
+          )}
+
+          {/* Fallback for Demo when no wallet */}
+          {showClaimButton && !walletAddress && (
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <Button
+                disabled
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 opacity-50"
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                Connect Wallet to Claim GTT
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
