@@ -14,6 +14,17 @@ const config = {
     hardhat: {
       chainId: 31337,
     },
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      chainId: 31337,
+    },
+    mumbai: {
+      url: process.env.POLYGON_RPC_URL || "https://rpc-mumbai.maticvigil.com",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 80002,
+      gas: 2100000,
+      gasPrice: 8000000000,
+    },
     sepolia: {
       url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.VITE_ALCHEMY_API_KEY}`,
       accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : [],

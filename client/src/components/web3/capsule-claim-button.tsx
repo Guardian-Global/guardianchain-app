@@ -8,8 +8,10 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   TRUTH_VAULT_ABI, 
   GTT_TOKEN_ABI, 
-  getContractAddress
-} from '@/lib/constants';
+  getContractAddress,
+  getNetworkName,
+  getExplorerUrl
+} from '@/lib/contracts';
 import { 
   Coins, 
   Wallet, 
@@ -35,6 +37,7 @@ export default function CapsuleClaimButton({
   const chainId = useChainId();
   const { toast } = useToast();
   const [isClaiming, setIsClaiming] = useState(false);
+  const [lastClaimTime, setLastClaimTime] = useState<number>(0);
 
   // Check if connected to supported network and get contract addresses
   let vaultAddress, tokenAddress;
@@ -47,7 +50,7 @@ export default function CapsuleClaimButton({
         <CardContent className="p-4">
           <div className="flex items-center gap-2 text-yellow-200">
             <AlertTriangle className="h-4 w-4" />
-            <span className="text-sm">Please switch to a supported network (Hardhat local: 31337)</span>
+            <span className="text-sm">Please switch to a supported network (Hardhat local, Mumbai, or Amoy)</span>
           </div>
         </CardContent>
       </Card>

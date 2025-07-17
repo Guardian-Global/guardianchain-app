@@ -11,8 +11,10 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   TRUTH_VAULT_ABI, 
   GTT_TOKEN_ABI, 
-  getContractAddress 
-} from '@/lib/constants';
+  getContractAddress,
+  getNetworkName,
+  getExplorerUrl
+} from '@/lib/contracts';
 import {
   Vote,
   Users,

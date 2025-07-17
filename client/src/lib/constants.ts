@@ -10,6 +10,11 @@ export const CONTRACT_ADDRESSES = {
     GTT_TOKEN: "", // To be filled after deployment
     TRUTH_VAULT: "", // To be filled after deployment
   },
+  // Polygon Mumbai testnet
+  80001: {
+    GTT_TOKEN: "", // To be filled after deployment
+    TRUTH_VAULT: "", // To be filled after deployment
+  },
   // Polygon Amoy testnet
   80002: {
     GTT_TOKEN: "", // To be filled after deployment
