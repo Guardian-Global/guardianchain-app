@@ -18,6 +18,9 @@ const navigation = [
   { name: "Mint NFT", href: "/mint-nft" },
   { name: "Govern", href: "/govern" },
   { name: "AI Recommendations", href: "/recommendations" },
+  { name: "Enhanced Profile", href: "/enhanced-profile" },
+  { name: "Explorer", href: "/explorer" },
+  { name: "Enhanced Leaderboard", href: "/enhanced-leaderboard" },
   { name: "Governance", href: "/governance" },
 ];
 
