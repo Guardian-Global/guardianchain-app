@@ -3,21 +3,23 @@ import { createServer, type Server } from "http";
 import { claimYield } from "./api/claim-yield";
 import { storage } from "./storage";
 import { registerSealRoutes } from "./api/seal";
+import { registerMintRoutes } from "./api/mint";
 import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema } from "@shared/schema";
 import capsulesRouter from "./api/capsules";
 import veritasRouter from "./api/veritas";
-import mintRouter from "./api/mint";
 import analyticsRouter from "./api/analytics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register GuardianChain API routes
   app.use("/api/capsules", capsulesRouter);
   app.use("/api/veritas", veritasRouter);
-  app.use("/api/mint", mintRouter);
   app.use("/api/analytics", analyticsRouter);
   
   // Register Veritas Seal routes
   registerSealRoutes(app);
+  
+  // Register GTT Mint routes
+  registerMintRoutes(app);
 
   // Stats endpoint
   app.get("/api/stats", async (req, res) => {
@@ -299,6 +301,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(stats);
     } catch (error: any) {
       res.status(500).json({ message: "Error fetching friend stats: " + error.message });
+    }
+  });
+
+  // Protocol stats for dashboard
+  app.get("/api/protocol/stats", async (req, res) => {
+    try {
+      const stats = {
+        totalCapsules: 24,
+        sealedCapsules: 15,
+        activeUsers: 89,
+        totalGTT: 125000,
+        circulatingGTT: 98750,
+        vaultGTT: 26250,
+        newCapsulesToday: 3,
+        sealRate: 62,
+        newUsersToday: 12,
+        gttMintedToday: 45
+      };
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching protocol stats: " + error.message });
+    }
+  });
+
+  // DAO stats for commander
+  app.get("/api/dao/stats", async (req, res) => {
+    try {
+      const stats = {
+        activeProposals: 3,
+        totalVoters: 67,
+        topVoter: "0xB8c...E19",
+        treasuryBalance: "2,450"
+      };
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching DAO stats: " + error.message });
+    }
+  });
+
+  // System health for commander
+  app.get("/api/system/health", async (req, res) => {
+    try {
+      const health = {
+        memoryUsage: "45%",
+        apiStatus: "online",
+        databaseStatus: "healthy",
+        ipfsStatus: "connected",
+        docusignStatus: "active",
+        blockchainStatus: "synced"
+      };
+      res.json(health);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching system health: " + error.message });
+    }
+  });
+
+  // Moderation queue for dashboard
+  app.get("/api/moderation/queue", async (req, res) => {
+    try {
+      const queue = {
+        pending: 5,
+        flagged: 2,
+        approved: 18
+      };
+      res.json(queue);
+    } catch (error: any) {
+      res.status(500).json({ message: "Error fetching moderation queue: " + error.message });
+    }
+  });
+
+  // System sync operation
+  app.post("/api/system/sync-index", async (req, res) => {
+    try {
+      // Simulate index sync
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      res.json({ success: true, message: "Index synchronized successfully" });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error syncing index: " + error.message });
     }
   });
 

@@ -21,6 +21,8 @@ import Web3Demo from "@/pages/web3-demo";
 import SmartContractDemo from "@/pages/smart-contract-demo";
 import Governance from "@/pages/governance";
 import PrivateFeed from "@/pages/private";
+import Dashboard from "@/pages/dashboard";
+import Commander from "@/pages/commander";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -42,6 +44,8 @@ function Router() {
         <Route path="/smart-contract-demo" component={SmartContractDemo} />
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/commander" component={Commander} />
         <Route component={NotFound} />
       </Switch>
       <Footer />

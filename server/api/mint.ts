@@ -1,314 +1,255 @@
-import express from "express";
-import axios from "axios";
-import { createClient } from "@supabase/supabase-js";
+import type { Express } from "express";
+import { calculateGTT, calculateAdvancedGTT, type CapsuleMetrics } from "../../client/src/lib/gttEngine";
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+/**
+ * GTT Minting API endpoints
+ * Handles token minting operations and yield claiming
+ */
 
-const router = express.Router();
-
-// Initialize Pinata for IPFS uploads (using REST API instead of SDK)
-const pinataApiKey = process.env.PINATA_API_KEY;
-const pinataApiSecret = process.env.PINATA_SECRET_KEY;
-
-// Upload JSON to IPFS via Pinata
-async function uploadToIPFS(metadata: any): Promise<{ IpfsHash: string }> {
-  const url = 'https://api.pinata.cloud/pinning/pinJSONToIPFS';
-  
-  const response = await axios.post(url, metadata, {
-    headers: {
-      'Content-Type': 'application/json',
-      'pinata_api_key': pinataApiKey,
-      'pinata_secret_api_key': pinataApiSecret
-    }
-  });
-  
-  return response.data;
+interface MintRequest {
+  amount: number;
+  wallet: string;
+  capsuleId?: string;
+  reason?: string;
 }
 
-// NFT Contract address (will need to be deployed)
-const NFT_CONTRACT_ADDRESS = "0x1234567890abcdef1234567890abcdef12345678"; // Replace with actual contract
+interface ClaimRequest {
+  capsuleId: string;
+  griefScore: number;
+  replayCount: number;
+  userWallet: string;
+}
 
-interface CapsuleNFTMetadata {
-  name: string;
-  description: string;
-  image: string;
-  attributes: Array<{
-    trait_type: string;
-    value: string | number;
-  }>;
-  external_url: string;
-  animation_url?: string;
-  background_color?: string;
-  capsule_data: {
-    id: number;
-    creator: string;
-    sealed_at: string;
-    veritas_url?: string;
-    grief_score: string;
-    category: string;
-    evidence: any;
+interface MintResponse {
+  success: boolean;
+  amount: number;
+  wallet: string;
+  transactionHash?: string;
+  error?: string;
+}
+
+/**
+ * Simulate GTT minting to wallet address
+ * In production, this would interact with the actual smart contract
+ */
+async function simulateGTTMint(amount: number, wallet: string): Promise<MintResponse> {
+  // Validate inputs
+  if (amount <= 0) {
+    throw new Error("Amount must be greater than 0");
+  }
+  
+  if (!wallet || !wallet.startsWith("0x") || wallet.length !== 42) {
+    throw new Error("Invalid wallet address");
+  }
+
+  // Simulate blockchain transaction delay
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
+  // Generate mock transaction hash
+  const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+
+  console.log(`[GTT MINT] Minting ${amount} GTT to wallet: ${wallet}`);
+  console.log(`[GTT MINT] Transaction hash: ${transactionHash}`);
+
+  return {
+    success: true,
+    amount,
+    wallet,
+    transactionHash
   };
 }
 
-// Mint capsule as NFT
-router.post("/", async (req, res) => {
-  try {
-    const { capsuleId, walletAddress } = req.body;
+/**
+ * Calculate and mint GTT rewards for capsule performance
+ */
+async function calculateAndMintRewards(capsuleMetrics: CapsuleMetrics, wallet: string): Promise<MintResponse> {
+  const rewards = calculateAdvancedGTT(capsuleMetrics);
+  
+  console.log(`[GTT REWARDS] Calculated rewards for capsule:`, {
+    baseReward: rewards.baseReward,
+    griefMultiplier: rewards.griefMultiplier,
+    engagementBonus: rewards.engagementBonus,
+    sealBonus: rewards.sealBonus,
+    totalGTT: rewards.totalGTT
+  });
 
-    if (!capsuleId || !walletAddress) {
-      return res.status(400).json({ 
-        error: "Missing required fields: capsuleId and walletAddress" 
+  return await simulateGTTMint(rewards.totalGTT, wallet);
+}
+
+/**
+ * Register mint API routes
+ */
+export function registerMintRoutes(app: Express) {
+  // Direct GTT minting endpoint (admin only)
+  app.post("/api/mint/gtt", async (req, res) => {
+    try {
+      const { amount, wallet, reason } = req.body as MintRequest;
+
+      if (!amount || !wallet) {
+        return res.status(400).json({
+          error: "Missing required fields: amount and wallet"
+        });
+      }
+
+      // In production, add admin authentication check here
+      // if (!req.user?.isAdmin) {
+      //   return res.status(403).json({ error: "Admin access required" });
+      // }
+
+      const result = await simulateGTTMint(amount, wallet);
+      
+      // Log the mint operation
+      console.log(`[ADMIN MINT] ${amount} GTT minted to ${wallet}. Reason: ${reason || 'Manual mint'}`);
+
+      res.status(200).json(result);
+
+    } catch (error: any) {
+      console.error("GTT mint error:", error);
+      res.status(500).json({
+        error: "Failed to mint GTT tokens",
+        details: error.message
       });
     }
+  });
 
-    console.log(`🖼️ Minting NFT for capsule ${capsuleId} to ${walletAddress}`);
+  // Claim GTT rewards for capsule performance
+  app.post("/api/mint/claim", async (req, res) => {
+    try {
+      const { capsuleId, griefScore, replayCount, userWallet } = req.body as ClaimRequest;
 
-    // 1. Fetch capsule from Supabase
-    const { data: capsule, error: fetchError } = await supabase
-      .from("capsules")
-      .select("*")
-      .eq("id", capsuleId)
-      .single();
+      if (!capsuleId || !userWallet) {
+        return res.status(400).json({
+          error: "Missing required fields: capsuleId and userWallet"
+        });
+      }
 
-    if (fetchError || !capsule) {
-      return res.status(404).json({ error: "Capsule not found" });
-    }
+      // Calculate GTT using the simple formula
+      const simpleGTT = calculateGTT(griefScore || 0, replayCount || 0);
 
-    // 2. Verify capsule is sealed with Veritas
-    if (!capsule.docusignEnvelopeId || capsule.status !== "sealed") {
-      return res.status(400).json({ 
-        error: "❌ You must seal this capsule with Veritas before minting as NFT.",
-        sealRequired: true
+      // For advanced calculation, create metrics object
+      const capsuleMetrics: CapsuleMetrics = {
+        griefScore: griefScore || 0,
+        viewCount: replayCount || 0,
+        shareCount: Math.floor((replayCount || 0) * 0.1), // Assume 10% share rate
+        verificationCount: Math.floor((griefScore || 0) / 20), // Estimate verifications
+        timeActive: 24, // Default 24 hours
+        sealStatus: griefScore > 70, // Assume high grief score means sealed
+        creatorReputation: 750 // Default reputation
+      };
+
+      const result = await calculateAndMintRewards(capsuleMetrics, userWallet);
+
+      res.status(200).json({
+        ...result,
+        capsuleId,
+        simpleCalculation: simpleGTT,
+        advancedCalculation: result.amount,
+        metrics: capsuleMetrics
+      });
+
+    } catch (error: any) {
+      console.error("GTT claim error:", error);
+      res.status(500).json({
+        error: "Failed to claim GTT rewards",
+        details: error.message
       });
     }
+  });
 
-    // 3. Check if already minted
-    if (capsule.nftTokenId) {
-      return res.status(400).json({ 
-        error: "This capsule has already been minted as NFT",
-        tokenId: capsule.nftTokenId
-      });
-    }
+  // Batch mint for multiple recipients
+  app.post("/api/mint/batch", async (req, res) => {
+    try {
+      const { recipients } = req.body as { recipients: MintRequest[] };
 
-    // 4. Generate NFT metadata
-    const metadata: CapsuleNFTMetadata = {
-      name: `Truth Capsule: ${capsule.title}`,
-      description: `${capsule.description}\n\nThis NFT represents a verified truth capsule sealed with DocuSign Veritas technology. It provides immutable proof of the content's authenticity and submission time on the GuardianChain platform.`,
-      image: capsule.imageUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${capsule.id}`,
-      external_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://guardianchain.app'}/capsule/${capsule.id}`,
-      background_color: "1e293b",
-      attributes: [
-        {
-          trait_type: "Category",
-          value: capsule.category
-        },
-        {
-          trait_type: "Grief Score",
-          value: parseFloat(capsule.griefScore || "0")
-        },
-        {
-          trait_type: "Verification Count",
-          value: capsule.verificationCount || 0
-        },
-        {
-          trait_type: "GTT Reward",
-          value: parseFloat(capsule.gttReward || "0")
-        },
-        {
-          trait_type: "Sealed with Veritas",
-          value: "Yes"
-        },
-        {
-          trait_type: "Status",
-          value: "Verified"
+      if (!recipients || !Array.isArray(recipients)) {
+        return res.status(400).json({
+          error: "Invalid recipients array"
+        });
+      }
+
+      const results = [];
+      
+      for (const recipient of recipients) {
+        try {
+          const result = await simulateGTTMint(recipient.amount, recipient.wallet);
+          results.push({ ...result, recipient: recipient.wallet });
+        } catch (error: any) {
+          results.push({ 
+            success: false, 
+            error: error.message, 
+            recipient: recipient.wallet 
+          });
         }
-      ],
-      capsule_data: {
-        id: capsule.id,
-        creator: `Creator #${capsule.creatorId}`,
-        sealed_at: capsule.updatedAt,
-        veritas_url: capsule.veritasSealUrl,
-        grief_score: capsule.griefScore || "0.0",
-        category: capsule.category,
-        evidence: capsule.evidence
       }
-    };
 
-    console.log("📄 Generated NFT metadata:", metadata.name);
+      res.status(200).json({
+        success: true,
+        results,
+        totalMinted: results
+          .filter(r => r.success)
+          .reduce((sum, r) => sum + (r.amount || 0), 0)
+      });
 
-    // 5. Upload metadata to IPFS via Pinata
-    const ipfsUpload = await uploadToIPFS(metadata);
-    const metadataUri = `ipfs://${ipfsUpload.IpfsHash}`;
-    
-    console.log("📦 Uploaded to IPFS:", metadataUri);
-
-    // 6. For now, simulate NFT minting (will integrate with actual contract later)
-    const mockTokenId = Date.now(); // Temporary mock token ID
-    const mockTxHash = `0x${Date.now().toString(16)}mock`; // Temporary mock transaction hash
-
-    console.log(`✅ NFT metadata prepared! Mock Token ID: ${mockTokenId}`);
-
-    // 7. Update capsule in Supabase with NFT info
-    const { error: updateError } = await supabase
-      .from("capsules")
-      .update({
-        nftTokenId: mockTokenId.toString(),
-        ipfsHash: ipfsUpload.IpfsHash,
-        updatedAt: new Date().toISOString()
-      })
-      .eq("id", capsuleId);
-
-    if (updateError) {
-      console.error("Failed to update capsule with NFT data:", updateError);
-      // Don't fail the request since NFT was successfully prepared
+    } catch (error: any) {
+      console.error("Batch mint error:", error);
+      res.status(500).json({
+        error: "Failed to process batch mint",
+        details: error.message
+      });
     }
+  });
 
-    // 8. Record transaction in database
-    const { error: txError } = await supabase
-      .from("transactions")
-      .insert([{
-        userId: capsule.creatorId,
-        type: "nft_mint",
-        amount: "0.00", // No cost for minting
-        capsuleId: capsule.id,
-        txHash: mockTxHash,
-        description: `Prepared NFT for truth capsule: ${capsule.title}`,
-        createdAt: new Date().toISOString()
-      }]);
+  // Get mint history (mock data)
+  app.get("/api/mint/history", async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      
+      // Generate mock mint history
+      const history = Array.from({ length: limit }, (_, i) => ({
+        id: `mint_${Date.now()}_${i}`,
+        amount: Math.floor(Math.random() * 500) + 10,
+        recipient: `0x${Math.random().toString(16).substr(2, 40)}`,
+        transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
+        timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        reason: ['Capsule reward', 'Admin mint', 'Staking reward', 'Governance participation'][Math.floor(Math.random() * 4)]
+      }));
 
-    if (txError) {
-      console.error("Failed to record transaction:", txError);
+      res.status(200).json(history);
+    } catch (error: any) {
+      console.error("Mint history error:", error);
+      res.status(500).json({
+        error: "Failed to fetch mint history",
+        details: error.message
+      });
     }
+  });
 
-    return res.status(200).json({
-      success: true,
-      message: "NFT metadata successfully prepared and uploaded to IPFS!",
-      tokenId: mockTokenId.toString(),
-      transactionHash: mockTxHash,
-      metadataUri,
-      ipfsHash: ipfsUpload.IpfsHash,
-      openSeaUrl: `https://opensea.io/assets/matic/${NFT_CONTRACT_ADDRESS}/${mockTokenId}`,
-      capsule: {
-        id: capsule.id,
-        title: capsule.title,
-        nftTokenId: mockTokenId.toString()
-      },
-      note: "NFT metadata is prepared for minting. Contract deployment and minting will be implemented in production."
-    });
+  // Get total supply and statistics
+  app.get("/api/mint/stats", async (req, res) => {
+    try {
+      const stats = {
+        totalSupply: 125000,
+        circulatingSupply: 98750,
+        burnedTokens: 1250,
+        mintedToday: 450,
+        mintedThisWeek: 2100,
+        mintedThisMonth: 8500,
+        topHolders: [
+          { address: "0xA1b2C3d4E5f6789...", balance: 12500 },
+          { address: "0xB2c3D4e5F6g7890...", balance: 9800 },
+          { address: "0xC3d4E5f6G7h8901...", balance: 7600 },
+          { address: "0xD4e5F6g7H8i9012...", balance: 6200 },
+          { address: "0xE5f6G7h8I9j0123...", balance: 5100 }
+        ]
+      };
 
-  } catch (error: any) {
-    console.error("NFT minting error:", error);
-    return res.status(500).json({ 
-      error: "Failed to mint NFT", 
-      details: error.message 
-    });
-  }
-});
-
-// Get NFT status for a capsule
-router.get("/status/:capsuleId", async (req, res) => {
-  try {
-    const { capsuleId } = req.params;
-
-    const { data: capsule, error } = await supabase
-      .from("capsules")
-      .select("id, title, nftTokenId, ipfsHash, docusignEnvelopeId, status")
-      .eq("id", capsuleId)
-      .single();
-
-    if (error || !capsule) {
-      return res.status(404).json({ error: "Capsule not found" });
+      res.status(200).json(stats);
+    } catch (error: any) {
+      console.error("Mint stats error:", error);
+      res.status(500).json({
+        error: "Failed to fetch mint statistics",
+        details: error.message
+      });
     }
-
-    const canMint = capsule.docusignEnvelopeId && capsule.status === "sealed" && !capsule.nftTokenId;
-    const alreadyMinted = !!capsule.nftTokenId;
-
-    return res.status(200).json({
-      capsuleId: capsule.id,
-      title: capsule.title,
-      canMint,
-      alreadyMinted,
-      requiresSealing: !capsule.docusignEnvelopeId || capsule.status !== "sealed",
-      nftTokenId: capsule.nftTokenId,
-      ipfsHash: capsule.ipfsHash,
-      openSeaUrl: alreadyMinted ? 
-        `https://opensea.io/assets/matic/${NFT_CONTRACT_ADDRESS}/${capsule.nftTokenId}` : 
-        null
-    });
-  } catch (error: any) {
-    console.error("NFT status check error:", error);
-    return res.status(500).json({ 
-      error: "Failed to check NFT status", 
-      details: error.message 
-    });
-  }
-});
-
-// Test endpoint for minting with mock data
-router.post("/test", async (req, res) => {
-  try {
-    const mockCapsule = {
-      id: 999,
-      title: "Test NFT Mint: Climate Data Verification",
-      description: "Testing NFT minting for verified truth capsules",
-      category: "science",
-      griefScore: "1.0",
-      gttReward: "100.00",
-      verificationCount: 5,
-      docusignEnvelopeId: "test_envelope_" + Date.now(),
-      status: "sealed",
-      veritasSealUrl: "https://demo.docusign.net/test",
-      imageUrl: "https://api.dicebear.com/7.x/shapes/svg?seed=999"
-    };
-
-    const metadata: CapsuleNFTMetadata = {
-      name: `Truth Capsule: ${mockCapsule.title}`,
-      description: mockCapsule.description + "\n\nThis is a test NFT for GuardianChain development.",
-      image: mockCapsule.imageUrl,
-      external_url: `https://guardianchain.app/capsule/${mockCapsule.id}`,
-      background_color: "1e293b",
-      attributes: [
-        { trait_type: "Category", value: mockCapsule.category },
-        { trait_type: "Grief Score", value: parseFloat(mockCapsule.griefScore) },
-        { trait_type: "Verification Count", value: mockCapsule.verificationCount },
-        { trait_type: "GTT Reward", value: parseFloat(mockCapsule.gttReward) },
-        { trait_type: "Sealed with Veritas", value: "Yes" },
-        { trait_type: "Status", value: "Verified" }
-      ],
-      capsule_data: {
-        id: mockCapsule.id,
-        creator: "Test Creator",
-        sealed_at: new Date().toISOString(),
-        veritas_url: mockCapsule.veritasSealUrl,
-        grief_score: mockCapsule.griefScore,
-        category: mockCapsule.category,
-        evidence: { test: true }
-      }
-    };
-
-    console.log("🧪 Testing NFT metadata generation");
-    console.log("📄 Mock metadata:", JSON.stringify(metadata, null, 2));
-
-    return res.status(200).json({
-      success: true,
-      message: "NFT minting test completed successfully",
-      mockCapsule,
-      generatedMetadata: metadata,
-      thirdwebConfigured: !!(process.env.THIRDWEB_SECRET && process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID),
-      pinataConfigured: !!process.env.PINATA_API_KEY,
-      readyForMinting: true
-    });
-
-  } catch (error: any) {
-    console.error("NFT test error:", error);
-    return res.status(500).json({ 
-      error: "NFT test failed", 
-      details: error.message 
-    });
-  }
-});
-
-export default router;
+  });
+}

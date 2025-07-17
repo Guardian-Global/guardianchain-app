@@ -12,9 +12,9 @@ const navigation = [
   { name: "Leaderboard", href: "/leaderboard" },
   { name: "Profile", href: "/profile" },
   { name: "Private", href: "/private" },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Commander", href: "/commander" },
   { name: "Governance", href: "/governance" },
-  { name: "Web3 Demo", href: "/web3-demo" },
-  { name: "Contract Demo", href: "/smart-contract-demo" },
 ];
 
 export default function Navigation() {
