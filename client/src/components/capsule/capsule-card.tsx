@@ -1,8 +1,11 @@
-import { Star, User, Coins, Check, Clock, Eye, MessageCircle } from "lucide-react";
+import { Star, User, Coins, Check, Clock, Eye, MessageCircle, ExternalLink, Shield, Image } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { useState } from "react";
 import type { Capsule } from "@shared/schema";
 
 interface CapsuleCardProps {
@@ -11,6 +14,41 @@ interface CapsuleCardProps {
 }
 
 export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardProps) {
+  const { toast } = useToast();
+  const [isMinting, setIsMinting] = useState(false);
+  
+  const handleMintNFT = async () => {
+    setIsMinting(true);
+    try {
+      const response = await apiRequest("POST", "/api/mint", {
+        capsuleId: capsule.id,
+        walletAddress: "0x1234567890abcdef1234567890abcdef12345678" // Mock wallet for demo
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        toast({
+          title: "NFT Minting Successful!",
+          description: `NFT metadata uploaded to IPFS: ${data.ipfsHash}`,
+        });
+      } else {
+        throw new Error(data.error || "Minting failed");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Minting Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsMinting(false);
+    }
+  };
+
+  const isSealed = capsule.status === "sealed" && capsule.docusignEnvelopeId;
+  const canMint = isSealed && !capsule.nftTokenId;
+  const alreadyMinted = !!capsule.nftTokenId;
   const getStatusColor = (status: string) => {
     switch (status) {
       case "verified":
@@ -203,7 +241,51 @@ export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardP
           <span className="text-slate-500">{timeAgo(capsule.createdAt)}</span>
         </div>
         
-        <div className="mt-4 pt-4 border-t border-slate-700">
+        <div className="mt-4 pt-4 border-t border-slate-700 space-y-2">
+          {/* Veritas Seal Status */}
+          {isSealed && capsule.veritasSealUrl && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white transition-colors"
+              onClick={() => window.open(capsule.veritasSealUrl!, '_blank')}
+            >
+              <ExternalLink className="h-3 w-3 mr-2" />
+              View Veritas Certificate
+            </Button>
+          )}
+          
+          {/* NFT Minting */}
+          {canMint && (
+            <Button 
+              onClick={handleMintNFT}
+              disabled={isMinting}
+              size="sm" 
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-colors"
+            >
+              <Image className="h-3 w-3 mr-2" />
+              {isMinting ? "Minting..." : "Mint as NFT"}
+            </Button>
+          )}
+          
+          {alreadyMinted && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full border-green-600 text-green-400 hover:bg-green-600 hover:text-white transition-colors"
+              onClick={() => window.open(`https://opensea.io/assets/matic/0x1234567890abcdef1234567890abcdef12345678/${capsule.nftTokenId}`, '_blank')}
+            >
+              <ExternalLink className="h-3 w-3 mr-2" />
+              View NFT on OpenSea
+            </Button>
+          )}
+          
+          {!isSealed && (
+            <div className="text-xs text-red-400 text-center">
+              ❌ Must seal with Veritas before minting NFT
+            </div>
+          )}
+          
           <Button 
             variant="outline" 
             size="sm" 

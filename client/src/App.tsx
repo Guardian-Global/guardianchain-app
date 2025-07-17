@@ -12,6 +12,7 @@ import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
 import Profile from "@/pages/profile";
 import SealDemo from "@/pages/seal-demo";
+import NFTDemo from "@/pages/nft-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -25,6 +26,7 @@ function Router() {
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={Profile} />
         <Route path="/seal-demo" component={SealDemo} />
+        <Route path="/nft-demo" component={NFTDemo} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
