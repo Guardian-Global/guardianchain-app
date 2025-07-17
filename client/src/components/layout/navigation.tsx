@@ -23,6 +23,7 @@ const navigation = [
   { name: "Enhanced Leaderboard", href: "/enhanced-leaderboard" },
   { name: "Certify", href: "/certify" },
   { name: "Insights", href: "/insight" },
+  { name: "Capsule Forge", href: "/capsule-forge" },
   { name: "Governance", href: "/governance" },
 ];
 

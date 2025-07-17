@@ -31,6 +31,7 @@ import EnhancedLeaderboard from "@/pages/enhanced-leaderboard";
 import Explorer from "@/pages/explorer";
 import Certify from "@/pages/certify";
 import InsightPage from "@/pages/insight";
+import CapsuleForgePage from "@/pages/capsule-forge";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 
@@ -64,6 +65,7 @@ function Router() {
         <Route path="/explorer" component={Explorer} />
         <Route path="/certify" component={Certify} />
         <Route path="/insight" component={InsightPage} />
+        <Route path="/capsule-forge" component={CapsuleForgePage} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
