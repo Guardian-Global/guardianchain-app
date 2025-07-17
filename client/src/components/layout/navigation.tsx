@@ -21,6 +21,7 @@ const navigation = [
   { name: "Enhanced Profile", href: "/enhanced-profile" },
   { name: "Explorer", href: "/explorer" },
   { name: "Enhanced Leaderboard", href: "/enhanced-leaderboard" },
+  { name: "Certify", href: "/certify" },
   { name: "Governance", href: "/governance" },
 ];
 

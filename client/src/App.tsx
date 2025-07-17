@@ -29,6 +29,7 @@ import RecommendationsPage from "@/pages/recommendations";
 import EnhancedProfile from "@/pages/enhanced-profile";
 import EnhancedLeaderboard from "@/pages/enhanced-leaderboard";
 import Explorer from "@/pages/explorer";
+import Certify from "@/pages/certify";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 
@@ -60,6 +61,7 @@ function Router() {
         <Route path="/enhanced-profile" component={EnhancedProfile} />
         <Route path="/enhanced-leaderboard" component={EnhancedLeaderboard} />
         <Route path="/explorer" component={Explorer} />
+        <Route path="/certify" component={Certify} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
