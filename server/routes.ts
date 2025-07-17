@@ -8,6 +8,13 @@ import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema 
 import capsulesRouter from "./api/capsules";
 import veritasRouter from "./api/veritas";
 import analyticsRouter from "./api/analytics";
+import { 
+  generateCapsuleRecommendations,
+  analyzeCapsuleContent,
+  generateUserInterestProfile,
+  type CapsuleData,
+  type UserProfile
+} from "./lib/aiRecommendations";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register GuardianChain API routes
@@ -379,6 +386,120 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Index synchronized successfully" });
     } catch (error: any) {
       res.status(500).json({ message: "Error syncing index: " + error.message });
+    }
+  });
+
+  // AI Recommendations endpoints
+  app.get("/api/recommendations", async (req, res) => {
+    try {
+      // Mock user profile for now - in production this would come from auth/database
+      const userProfile: UserProfile = {
+        id: "user123",
+        interests: ["technology", "blockchain", "truth verification"],
+        viewHistory: [1, 2, 3],
+        verificationHistory: [1],
+        preferredCategories: ["Technology", "Science"]
+      };
+
+      // Get available capsules from storage
+      const allCapsules = await storage.getCapsules();
+      
+      // Convert to AI format
+      const capsuleData: CapsuleData[] = allCapsules.map(capsule => ({
+        id: capsule.id,
+        title: capsule.title,
+        content: capsule.content,
+        category: capsule.category || 'Uncategorized',
+        tags: capsule.tags || [],
+        verificationScore: capsule.verificationScore || 0,
+        engagement: {
+          views: capsule.views || 0,
+          shares: capsule.shares || 0,
+          verifications: capsule.verifications || 0
+        },
+        createdAt: capsule.createdAt
+      }));
+
+      const recommendations = await generateCapsuleRecommendations(userProfile, capsuleData);
+      
+      // Enhance recommendations with full capsule data
+      const enhancedRecommendations = recommendations.map(rec => ({
+        ...rec,
+        capsule: allCapsules.find(c => c.id === rec.capsuleId)
+      }));
+
+      res.json(enhancedRecommendations);
+    } catch (error: any) {
+      console.error('Recommendations error:', error);
+      res.status(500).json({ message: "Error generating recommendations: " + error.message });
+    }
+  });
+
+  app.get("/api/user-profile", async (req, res) => {
+    try {
+      // Mock view/verification history - in production get from database
+      const viewHistory = await storage.getCapsules();
+      const verificationHistory = viewHistory.slice(0, 2); // Mock some verified content
+      
+      const capsuleData: CapsuleData[] = viewHistory.map(capsule => ({
+        id: capsule.id,
+        title: capsule.title,
+        content: capsule.content,
+        category: capsule.category || 'Uncategorized',
+        tags: capsule.tags || [],
+        verificationScore: capsule.verificationScore || 0,
+        engagement: {
+          views: capsule.views || 0,
+          shares: capsule.shares || 0,
+          verifications: capsule.verifications || 0
+        },
+        createdAt: capsule.createdAt
+      }));
+
+      const profile = await generateUserInterestProfile(
+        capsuleData,
+        capsuleData.slice(0, 2) // Mock verification history
+      );
+
+      res.json(profile);
+    } catch (error: any) {
+      console.error('Profile analysis error:', error);
+      res.status(500).json({ message: "Error analyzing profile: " + error.message });
+    }
+  });
+
+  app.post("/api/analyze-capsule", async (req, res) => {
+    try {
+      const { capsuleId } = req.body;
+      if (!capsuleId) {
+        return res.status(400).json({ message: "Capsule ID required" });
+      }
+
+      const capsule = await storage.getCapsule(capsuleId);
+      if (!capsule) {
+        return res.status(404).json({ message: "Capsule not found" });
+      }
+
+      const capsuleData: CapsuleData = {
+        id: capsule.id,
+        title: capsule.title,
+        content: capsule.content,
+        category: capsule.category || 'Uncategorized',
+        tags: capsule.tags || [],
+        verificationScore: capsule.verificationScore || 0,
+        engagement: {
+          views: capsule.views || 0,
+          shares: capsule.shares || 0,
+          verifications: capsule.verifications || 0
+        },
+        createdAt: capsule.createdAt
+      };
+
+      const analysis = await analyzeCapsuleContent(capsuleData);
+      res.json(analysis);
+    } catch (error: any) {
+      console.error('Content analysis error:', error);
+      res.status(500).json({ message: "Error analyzing content: " + error.message });
     }
   });
 

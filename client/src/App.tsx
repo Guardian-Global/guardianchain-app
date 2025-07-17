@@ -25,6 +25,7 @@ import Dashboard from "@/pages/dashboard";
 import Commander from "@/pages/commander";
 import ContractDemo from "@/pages/contract-demo";
 import MintNFT from "@/pages/mint-nft";
+import RecommendationsPage from "@/pages/recommendations";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 
@@ -52,6 +53,7 @@ function Router() {
         <Route path="/contract-demo" component={ContractDemo} />
         <Route path="/mint-nft" component={MintNFT} />
         <Route path="/govern" component={Govern} />
+        <Route path="/recommendations" component={RecommendationsPage} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
