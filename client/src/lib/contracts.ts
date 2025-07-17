@@ -6,6 +6,7 @@ export interface ContractAddresses {
   vault: string;
   factory: string;
   nft: string;
+  dao: string;
 }
 
 export const CONTRACTS: Record<string, ContractAddresses> = {
@@ -15,7 +16,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     gtt: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     vault: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 
     factory: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+    nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    dao: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
   },
   
   // Sepolia Testnet
@@ -24,7 +26,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     gtt: "0x...",          // Replace after deploy
     vault: "0x...",        // Replace after deploy
     factory: "0x...",      // Replace after deploy
-    nft: "0x..."           // Replace after deploy
+    nft: "0x...",          // Replace after deploy
+    dao: "0x..."           // Replace after deploy
   },
   
   // Polygon Amoy Testnet  
@@ -33,7 +36,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     gtt: "0x...",          // Will be updated after deployment
     vault: "0x...",        // Will be updated after deployment
     factory: "0x...",      // Will be updated after deployment
-    nft: "0x..."           // Will be updated after deployment
+    nft: "0x...",          // Will be updated after deployment
+    dao: "0x..."           // Will be updated after deployment
   }
 };
 
@@ -148,6 +152,24 @@ export const CONTRACT_ABIS = {
     "function isSoulbound(uint256 tokenId) view returns (bool)",
     "function griefScore(uint256 tokenId) view returns (uint256)",
     "event VeritasSealed(address indexed minter, uint256 indexed tokenId, uint256 indexed capsuleId, bool soulbound, uint256 grief, string vault, string sig)"
+  ],
+
+  TruthDAO: [
+    "function createProposal(string memory title, string memory description)",
+    "function vote(uint256 id, bool support)",
+    "function executeProposal(uint256 id)",
+    "function proposalCount() view returns (uint256)",
+    "function getProposal(uint256 id) view returns (uint256, address, string, string, uint256, uint256, uint256, bool, uint256)",
+    "function getProposalStatus(uint256 id) view returns (bool, bool, uint256, uint256)",
+    "function hasUserVoted(uint256 id, address user) view returns (bool)",
+    "function getUserVoteWeight(uint256 id, address user) view returns (uint256)",
+    "function proposals(uint256 id) view returns (uint256, address, string, string, uint256, uint256, uint256, bool, uint256)",
+    "function hasVoted(uint256 id, address user) view returns (bool)",
+    "function votingDuration() view returns (uint256)",
+    "function minProposalBalance() view returns (uint256)",
+    "event ProposalCreated(uint256 indexed id, address indexed proposer, string title, string description)",
+    "event Voted(uint256 indexed id, address indexed voter, bool support, uint256 weight)",
+    "event ProposalExecuted(uint256 indexed id, bool passed)"
   ]
 };
 
@@ -185,7 +207,8 @@ export function areContractsDeployed(chainId: number): boolean {
   return contracts.gtt !== "0x..." && 
          contracts.vault !== "0x..." && 
          contracts.factory !== "0x..." &&
-         contracts.nft !== "0x...";
+         contracts.nft !== "0x..." &&
+         contracts.dao !== "0x...";
 }
 
 /**

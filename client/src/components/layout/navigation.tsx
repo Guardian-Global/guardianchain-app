@@ -16,6 +16,7 @@ const navigation = [
   { name: "Commander", href: "/commander" },
   { name: "Contracts", href: "/contract-demo" },
   { name: "Mint NFT", href: "/mint-nft" },
+  { name: "Govern", href: "/govern" },
   { name: "Governance", href: "/governance" },
 ];
 

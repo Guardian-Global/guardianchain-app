@@ -133,6 +133,10 @@ export default function ContractDemo() {
                 <Image className="h-4 w-4" />
                 Veritas NFT
               </TabsTrigger>
+              <TabsTrigger value="dao" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Truth DAO
+              </TabsTrigger>
             </TabsList>
 
             {/* GTT Token Tab */}
@@ -316,6 +320,53 @@ export default function ContractDemo() {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+
+            {/* Truth DAO Tab */}
+            <TabsContent value="dao" className="space-y-6">
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-blue-400" />
+                    TruthDAO Governance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-center py-8">
+                    <Users className="h-16 w-16 text-slate-600 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">DAO Interface</h3>
+                    <p className="text-slate-400 mb-4">
+                      Access full DAO functionality at the dedicated governance page
+                    </p>
+                    <Button 
+                      onClick={() => window.location.href = '/govern'}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Users className="mr-2 h-4 w-4" />
+                      Go to Governance
+                    </Button>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Contract:</span>
+                      <span className="font-mono text-xs text-white">
+                        {contracts?.dao || "Not deployed"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-slate-700 pt-4">
+                    <h4 className="font-semibold mb-2">Features</h4>
+                    <ul className="text-sm text-slate-300 space-y-1">
+                      <li>• GTT-weighted voting system</li>
+                      <li>• Proposal creation & management</li>
+                      <li>• Community governance</li>
+                      <li>• Transparent decision making</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
 

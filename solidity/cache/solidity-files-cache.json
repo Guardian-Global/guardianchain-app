@@ -1137,6 +1137,43 @@
       "artifacts": [
         "VeritasCapsuleNFT"
       ]
+    },
+    "/home/runner/workspace/solidity/contracts/TruthDAO.sol": {
+      "lastModificationDate": 1752757207219,
+      "contentHash": "a55bb2f53634226813f450819c78f3fd",
+      "sourceName": "solidity/contracts/TruthDAO.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IGTTToken",
+        "TruthDAO"
+      ]
     }
   }
 }

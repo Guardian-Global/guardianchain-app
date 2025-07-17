@@ -39,11 +39,20 @@ async function main() {
   const nftAddress = await veritasNFT.getAddress();
   console.log("VeritasCapsuleNFT deployed to:", nftAddress);
 
+  // Deploy TruthDAO
+  console.log("\nDeploying TruthDAO...");
+  const TruthDAO = await ethers.getContractFactory("TruthDAO");
+  const truthDAO = await TruthDAO.deploy(gttAddress);
+  await truthDAO.waitForDeployment();
+  const daoAddress = await truthDAO.getAddress();
+  console.log("TruthDAO deployed to:", daoAddress);
+
   console.log("\n=== DEPLOYMENT SUMMARY ===");
   console.log("GTTToken:", gttAddress);
   console.log("TruthVault:", vaultAddress);
   console.log("CapsuleFactory:", factoryAddress);
   console.log("VeritasCapsuleNFT:", nftAddress);
+  console.log("TruthDAO:", daoAddress);
   console.log("Network: Sepolia");
   console.log("Deployer:", deployer.address);
 }

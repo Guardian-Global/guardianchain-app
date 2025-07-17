@@ -1,0 +1,146 @@
+📄 FILE #2: client/src/pages/govern.tsx
+This page shows all proposals, lets users create new ones, and connects to the TruthDAO.sol contract.
+
+🗂️ Create this page: client/src/pages/govern.tsx
+
+tsx
+Copy
+Edit
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import VoteModal from "../components/dao/VoteModal";
+import { getDaoContract } from "../lib/daoHooks";
+
+export default function GovernPage() {
+  const { address } = useAccount();
+  const [proposals, setProposals] = useState<any[]>([]);
+  const [newProposal, setNewProposal] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const fetchProposals = async () => {
+    const dao = getDaoContract();
+    const count = await dao.proposalCount();
+    const all = [];
+
+    for (let i = 1; i <= count; i++) {
+      const p = await dao.proposals(i);
+      all.push({ ...p, id: i });
+    }
+    setProposals(all);
+  };
+
+  const createProposal = async () => {
+    setLoading(true);
+    try {
+      const dao = getDaoContract(true);
+      const tx = await dao.createProposal(newProposal);
+      await tx.wait();
+      setNewProposal("");
+      fetchProposals();
+    } catch (err) {
+      alert("Error creating proposal");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchProposals();
+  }, []);
+
+  return (
+    <main className="container">
+      <h2>🗳️ GuardianChain DAO</h2>
+      <p>Create and vote on protocol decisions using your GTT tokens.</p>
+
+      <div style={{ margin: "1rem 0" }}>
+        <input
+          type="text"
+          placeholder="Proposal description"
+          value={newProposal}
+          onChange={(e) => setNewProposal(e.target.value)}
+        />
+        <button disabled={loading || !newProposal} onClick={createProposal}>
+          Create Proposal
+        </button>
+      </div>
+
+      <ul>
+        {proposals.map((p) => (
+          <li key={p.id} style={{ marginBottom: "1rem" }}>
+            <strong>#{p.id}:</strong> {p.description}
+            <br />
+            <small>
+              Votes For: {p.votesFor.toString()} | Against: {p.votesAgainst.toString()} | Ends:{" "}
+              {new Date(p.deadline * 1000).toLocaleString()}
+            </small>
+            <br />
+            {!p.executed && <VoteModal proposalId={p.id} />}
+            {p.executed && <span>✅ Executed</span>}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
+📄 FILE #3: client/src/components/dao/VoteModal.tsx
+🗂️ Path: client/src/components/dao/VoteModal.tsx
+
+tsx
+Copy
+Edit
+import { useState } from "react";
+import { getDaoContract } from "../../lib/daoHooks";
+
+export default function VoteModal({ proposalId }: { proposalId: number }) {
+  const [loading, setLoading] = useState(false);
+
+  const vote = async (support: boolean) => {
+    setLoading(true);
+    try {
+      const dao = getDaoContract(true);
+      const tx = await dao.vote(proposalId, support);
+      await tx.wait();
+      alert("Vote submitted!");
+    } catch (e) {
+      alert("Error voting");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{ marginTop: "0.5rem" }}>
+      <button disabled={loading} onClick={() => vote(true)}>
+        👍 Vote For
+      </button>
+      <button disabled={loading} onClick={() => vote(false)}>
+        👎 Vote Against
+      </button>
+    </div>
+  );
+}
+📄 FILE #4: client/src/lib/daoHooks.ts
+🗂️ Path: client/src/lib/daoHooks.ts
+
+ts
+Copy
+Edit
+import { ethers } from "ethers";
+import TruthDAO from "../../abi/TruthDAO.json"; // ABI from compile output
+import { useSigner } from "wagmi";
+
+const DAO_CONTRACT = "0xYourDeployedTruthDAOAddressHere";
+
+export const getDaoContract = (withSigner = false) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  return new ethers.Contract(DAO_CONTRACT, TruthDAO.abi, withSigner ? signer : provider);
+};
+🔁 Replace "0xYourDeployedTruthDAOAddressHere" with your actual deployed address.
+
+✅ NEXT STEPS
+Paste in all three files exactly as above
+
+Make sure you have TruthDAO.json in abi/ folder (from your build)
+
+Navigate to /govern and test DAO proposals + voting
