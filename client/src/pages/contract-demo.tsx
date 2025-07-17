@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Shield, Zap, Factory, Wallet, ChevronRight, Code2, ExternalLink } from 'lucide-react';
+import { Shield, Zap, Factory, Wallet, ChevronRight, Code2, ExternalLink, Image } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import MintGTTButton from '@/components/web3/MintGTTButton';
 import SealTrackerUI from '@/components/web3/SealTrackerUI';
+import MintNFTButton from '@/components/web3/MintNFTButton';
 import { CONTRACTS, NETWORK_CONFIGS, areContractsDeployed } from '@/lib/contracts';
 import { useAccount, useBalance } from 'wagmi';
 
@@ -127,6 +128,10 @@ export default function ContractDemo() {
               <TabsTrigger value="factory" className="flex items-center gap-2">
                 <Factory className="h-4 w-4" />
                 Capsule Factory
+              </TabsTrigger>
+              <TabsTrigger value="nft" className="flex items-center gap-2">
+                <Image className="h-4 w-4" />
+                Veritas NFT
               </TabsTrigger>
             </TabsList>
 
@@ -256,6 +261,61 @@ export default function ContractDemo() {
                   </div>
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            {/* Veritas NFT Tab */}
+            <TabsContent value="nft" className="space-y-6">
+              <div className="grid lg:grid-cols-2 gap-8">
+                <div>
+                  <MintNFTButton 
+                    variant="card" 
+                    recipient={address}
+                    capsuleId="123"
+                  />
+                </div>
+                
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Image className="h-5 w-5 text-purple-400" />
+                      VeritasCapsuleNFT Info
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Token Name:</span>
+                        <span className="text-white">VeritasCapsuleNFT</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Symbol:</span>
+                        <span className="text-white">VCNFT</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Standard:</span>
+                        <span className="text-white">ERC-721</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-400">Contract:</span>
+                        <span className="font-mono text-xs text-white">
+                          {contracts?.nft || "Not deployed"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-4">
+                      <h4 className="font-semibold mb-2">Features</h4>
+                      <ul className="text-sm text-slate-300 space-y-1">
+                        <li>• Permanent NFT certificates</li>
+                        <li>• Soulbound token support</li>
+                        <li>• Grief score tracking</li>
+                        <li>• IPFS metadata storage</li>
+                        <li>• Capsule ID linking</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
 

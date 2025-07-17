@@ -1,6 +1,6 @@
 // scripts/deploy.ts
 
-import { ethers } from "hardhat";
+const { ethers } = require("hardhat");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -31,10 +31,19 @@ async function main() {
   const factoryAddress = await factory.getAddress();
   console.log("CapsuleFactory deployed to:", factoryAddress);
 
+  // Deploy VeritasCapsuleNFT
+  console.log("\nDeploying VeritasCapsuleNFT...");
+  const VeritasNFT = await ethers.getContractFactory("VeritasCapsuleNFT");
+  const veritasNFT = await VeritasNFT.deploy();
+  await veritasNFT.waitForDeployment();
+  const nftAddress = await veritasNFT.getAddress();
+  console.log("VeritasCapsuleNFT deployed to:", nftAddress);
+
   console.log("\n=== DEPLOYMENT SUMMARY ===");
   console.log("GTTToken:", gttAddress);
   console.log("TruthVault:", vaultAddress);
   console.log("CapsuleFactory:", factoryAddress);
+  console.log("VeritasCapsuleNFT:", nftAddress);
   console.log("Network: Sepolia");
   console.log("Deployer:", deployer.address);
 }

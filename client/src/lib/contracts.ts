@@ -5,6 +5,7 @@ export interface ContractAddresses {
   gtt: string;
   vault: string;
   factory: string;
+  nft: string;
 }
 
 export const CONTRACTS: Record<string, ContractAddresses> = {
@@ -13,7 +14,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     chainId: 31337,
     gtt: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     vault: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 
-    factory: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+    factory: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
   },
   
   // Sepolia Testnet
@@ -21,7 +23,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     chainId: 11155111,
     gtt: "0x...",          // Replace after deploy
     vault: "0x...",        // Replace after deploy
-    factory: "0x..."       // Replace after deploy
+    factory: "0x...",      // Replace after deploy
+    nft: "0x..."           // Replace after deploy
   },
   
   // Polygon Amoy Testnet  
@@ -29,7 +32,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     chainId: 80002,
     gtt: "0x...",          // Will be updated after deployment
     vault: "0x...",        // Will be updated after deployment
-    factory: "0x..."       // Will be updated after deployment
+    factory: "0x...",      // Will be updated after deployment
+    nft: "0x..."           // Will be updated after deployment
   }
 };
 
@@ -132,6 +136,18 @@ export const CONTRACT_ABIS = {
     "function capsules(uint256) view returns (tuple(uint256 id, string contentHash, address creator, bool isSealed))",
     "event CapsuleCreated(uint256 id, address creator)",
     "event CapsuleSealed(uint256 id)"
+  ],
+
+  VeritasCapsuleNFT: [
+    "function mintVeritasCapsule(address to, string memory tokenUri, uint256 capsuleId, bool soulbound, uint256 grief, string memory vault, string memory sig) returns (uint256)",
+    "function getTotalSupply() view returns (uint256)",
+    "function getTokenMetadata(uint256 tokenId) view returns (bool, uint256, string, string, uint256)",
+    "function tokenURI(uint256 tokenId) view returns (string)",
+    "function ownerOf(uint256 tokenId) view returns (address)",
+    "function balanceOf(address owner) view returns (uint256)",
+    "function isSoulbound(uint256 tokenId) view returns (bool)",
+    "function griefScore(uint256 tokenId) view returns (uint256)",
+    "event VeritasSealed(address indexed minter, uint256 indexed tokenId, uint256 indexed capsuleId, bool soulbound, uint256 grief, string vault, string sig)"
   ]
 };
 
@@ -168,7 +184,8 @@ export function areContractsDeployed(chainId: number): boolean {
   
   return contracts.gtt !== "0x..." && 
          contracts.vault !== "0x..." && 
-         contracts.factory !== "0x...";
+         contracts.factory !== "0x..." &&
+         contracts.nft !== "0x...";
 }
 
 /**
