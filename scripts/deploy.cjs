@@ -1,6 +1,6 @@
-// scripts/deploy.cjs
+// scripts/deploy.ts
 
-const { ethers } = require("hardhat");
+import { ethers } from "hardhat";
 
 async function main() {
   const [deployer] = await ethers.getSigners();

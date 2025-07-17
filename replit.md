@@ -1,8 +1,8 @@
-# GuardianChain - Replit Deployment Guide
+# Veritas - Web3 Truth Verification Platform
 
 ## Overview
 
-GuardianChain is a Web3 truth verification platform that enables users to create immutable "truth capsules" - content submissions that can be verified by the community and sealed using DocuSign's Veritas technology. The platform combines blockchain technology with traditional verification methods to create a decentralized truth ecosystem where users earn GTT (Guardian Truth Token) rewards for accurate submissions.
+Veritas is a comprehensive Web3 truth verification platform built with a modern full-stack architecture. The application enables users to create "truth capsules" (content submissions), verify them through community governance, and earn rewards through a token-based system. The platform combines blockchain technology with traditional web development to create an immutable truth verification ecosystem.
 
 ## User Preferences
 
@@ -11,112 +11,155 @@ Preferred communication style: Simple, everyday language.
 ## System Architecture
 
 ### Frontend Architecture
-- **Framework**: React 18 with TypeScript
-- **Routing**: Wouter (lightweight React router alternative)
-- **Styling**: Tailwind CSS with custom design system using CSS variables
+- **Framework**: React with TypeScript
+- **Routing**: Wouter (lightweight React router)
+- **Styling**: Tailwind CSS with custom design system
 - **UI Components**: Radix UI primitives with shadcn/ui component library
-- **State Management**: TanStack Query (React Query) for server state management
-- **Web3 Integration**: Wagmi v2 for Ethereum interactions
+- **State Management**: React Query (TanStack Query) for server state
+- **Forms**: React Hook Form with Zod validation
 - **Build Tool**: Vite with hot module replacement
-- **Form Handling**: React Hook Form with Zod validation
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js
-- **Language**: TypeScript with ES modules
-- **API Design**: RESTful API with structured error handling and logging middleware
-- **Authentication**: Auth0 integration (configured but not fully implemented)
-- **External Integrations**: DocuSign for Veritas sealing, Stripe for payments
+- **Language**: TypeScript
+- **API Design**: RESTful API with structured error handling
+- **Middleware**: Custom logging, JSON parsing, and error handling
 
-### Blockchain Integration
-- **Smart Contracts**: Solidity contracts deployed with Hardhat
-- **Networks**: Local Hardhat (deployed), Sepolia testnet (ready), Polygon Amoy (configured)
-- **Key Contracts**:
-  - GTTToken: ERC-20 token for governance and rewards
-  - TruthVault: Permanent capsule sealing and yield claiming
-  - CapsuleFactory: On-chain capsule creation and management
+### Database & ORM
+- **Database**: PostgreSQL (configured for Neon serverless)
+- **ORM**: Drizzle ORM with TypeScript-first approach
+- **Schema Management**: Drizzle Kit for migrations
+- **Connection**: Neon serverless database adapter
 
 ## Key Components
 
-### Core Entities (Database Schema)
-1. **Users**: Auth0 integration, wallet addresses, reputation scoring, GTT balances
-2. **Capsules**: Truth submissions with content, metadata, verification status, and rewards
+### Core Entities
+1. **Users**: Authentication via Auth0, wallet integration, reputation scoring
+2. **Capsules**: Truth submissions with content, metadata, and verification status
 3. **Verifications**: Community voting system for truth validation
 4. **Transactions**: GTT token transfers and reward tracking
 5. **Achievements**: Gamification system for user engagement
 
-### Smart Contract System
-- **GTTToken Contract**: ERC-20 token with minting capabilities for rewards
-- **TruthVault Contract**: Handles capsule sealing, yield calculations, and claim processing
-- **CapsuleFactory Contract**: On-chain capsule creation and metadata management
+### Frontend Components
+- **CapsuleCard**: Displays individual truth capsules with status and metrics
+- **Navigation**: Fixed header with wallet connection and theme switching
+- **Theme Provider**: Dark/light mode support with system preference detection
+- **Form Components**: Reusable form elements with validation
 
-### Frontend Pages
-- **Home**: Hero section with stats, featured capsules, and explainer video
-- **Create Capsule**: Form for submitting new truth claims with evidence
-- **Explore**: Capsule discovery with filtering, search, and categorization
-- **Dashboard**: Operator view for monitoring capsule activity and grief analytics
-- **Commander**: Admin control panel for GTT minting and protocol management
-- **Contract Demo**: Interactive smart contract testing interface
-- **Governance**: DAO voting and proposal management
-- **Private Feed**: Friend-only capsule sharing system
+### Authentication & Web3 Integration
+- **Auth0**: User authentication and identity management
+- **Wallet Integration**: MetaMask connection with multi-network support
+- **Web3 Provider**: Ethereum, Polygon, and testnet compatibility
 
 ## Data Flow
 
-### Capsule Lifecycle
-1. **Creation**: User submits capsule via form → stored in PostgreSQL → optional blockchain registration
-2. **Verification**: Community votes on truth claims → grief score calculation → status updates
-3. **Sealing**: High-quality capsules → DocuSign Veritas sealing → immutable PDF certificate
-4. **Rewards**: Yield calculation based on engagement → GTT token distribution → blockchain claims
-5. **Minting**: Verified capsules → NFT minting → permanent blockchain record
+### Content Creation Flow
+1. User creates capsule through form submission
+2. Content validation using Zod schemas
+3. Database storage with pending verification status
+4. Optional IPFS integration for decentralized storage
 
-### Truth Yield Calculation
-- **Base Metrics**: Views (0.5x), shares (1.5x), verifications (3.0x)
-- **Bonus Multipliers**: Minting (+10.0), Veritas sealing (+5.0), community votes (+2.0)
-- **Grief Score Impact**: Higher grief scores reduce yield (1 - grief × 0.1 multiplier)
-- **GTT Conversion**: 1 yield point = 0.1 GTT base rate with reputation bonuses
+### Verification Flow
+1. Community members review submitted capsules
+2. Voting mechanism with evidence submission
+3. Reputation-weighted scoring system
+4. Automatic status updates based on verification results
+
+### Reward Distribution
+1. GTT token minting for verified content creators
+2. Reputation score updates based on accuracy
+3. Achievement unlocking for milestones
+4. Leaderboard ranking system
 
 ## External Dependencies
 
-### Database & Storage
-- **PostgreSQL**: Primary database via Neon serverless connection
-- **Drizzle ORM**: TypeScript-first database toolkit with migrations
-- **Supabase**: File storage for media assets and metadata
+### Blockchain & Web3
+- **Ethereum Integration**: ethers.js for blockchain interactions
+- **Multi-chain Support**: Ethereum mainnet, Polygon, and testnets
+- **Wallet Providers**: MetaMask with fallback support
 
-### Blockchain Infrastructure
-- **Hardhat**: Smart contract development and local testing
-- **Wagmi**: React hooks for Ethereum interactions
-- **MetaMask**: Primary wallet connection method
-- **Alchemy/Infura**: RPC providers for mainnet/testnet connections
+### Third-party Services
+- **Auth0**: Authentication and user management
+- **Stripe**: Payment processing and subscription management
+- **IPFS**: Decentralized file storage (optional integration)
+- **DocuSign**: Document verification and signing (planned feature)
 
-### Third-Party Services
-- **DocuSign**: Veritas technology for legal document sealing
-- **Auth0**: User authentication and identity management
-- **Stripe**: Payment processing for premium features
-- **OpenAI**: Potential AI integration for content analysis
-
-### Development Tools
-- **TypeScript**: Full-stack type safety
-- **ESBuild**: Fast backend compilation
-- **Vite**: Frontend development server with HMR
-- **Tailwind CSS**: Utility-first styling approach
+### UI & Styling
+- **Radix UI**: Accessible component primitives
+- **Tailwind CSS**: Utility-first styling framework
+- **Lucide React**: Icon library with consistent design
+- **Google Fonts**: Inter and Fira Code typography
 
 ## Deployment Strategy
 
-### Current Status
-- **Local Development**: Fully functional with deployed smart contracts on Hardhat network
-- **Smart Contracts**: Deployed locally (GTTToken, TruthVault, CapsuleFactory)
-- **Database**: Connected to Neon PostgreSQL with Drizzle schema
-- **Environment**: All secrets configured for DocuSign, Stripe, and database
+### Development Environment
+- **Local Development**: Vite dev server with HMR
+- **Database**: Neon PostgreSQL with connection pooling
+- **Environment Variables**: DATABASE_URL, Auth0 config, Stripe keys
 
-### Testnet Deployment
-1. **Sepolia Deployment**: Contracts ready for deployment with wallet funding needed
-2. **Frontend Updates**: Contract addresses automatically updated via constants.ts
-3. **Verification**: Block explorer verification for transparency
+### Production Build
+- **Frontend**: Static asset generation via Vite
+- **Backend**: ESBuild bundling for Node.js deployment
+- **Database Migrations**: Drizzle Kit push for schema updates
 
-### Production Considerations
-- **Environment Variables**: All secrets properly configured for production
-- **Database Migrations**: Drizzle migrations ready for production deployment
-- **Smart Contract Security**: OpenZeppelin contracts for security standards
-- **API Rate Limiting**: Consider implementing for DocuSign and blockchain calls
-- **File Upload**: Implement IPFS integration for decentralized storage
+### Performance Optimizations
+- **Code Splitting**: Dynamic imports for route-based splitting
+- **Caching**: React Query with intelligent cache invalidation
+- **Bundle Optimization**: Tree shaking and minification
+- **Database**: Connection pooling and query optimization
 
-The application is production-ready for testnet deployment and includes comprehensive testing interfaces for validating all Web3 functionality.
+## Recent Changes
+
+### July 17, 2025 - Phase 4: Smart Contract Deployment Complete ✅
+- **Local Deployment Successful**: GTTToken, TruthVault, and CapsuleFactory deployed to Hardhat network
+- **Contract Addresses Live**: All contracts deployed and integrated with frontend components
+- **Web3 UI Components**: MintGTTButton and SealTrackerUI fully functional with real contract interaction
+- **Contract Demo Page**: Complete testing interface at `/contract-demo` with live contract binding
+- **Commander Integration**: Admin dashboard connected to live smart contracts for GTT minting
+- **Testnet Ready**: All infrastructure prepared for Sepolia deployment (pending testnet ETH funding)
+- **Transaction Monitoring**: Real-time transaction status tracking with wagmi hooks working perfectly
+- **Documentation**: Created TESTNET_DEPLOYMENT_READY.md with deployment status and next steps
+
+### July 17, 2025 - Phase 3: Complete Command Center & GTT Engine
+- **Operator Dashboard**: Real-time capsule monitoring with grief score analytics, seal status tracking, and moderation queue
+- **Commander Control Panel**: Root-level protocol management with GTT minting, system operations, and emergency controls
+- **GTT Calculation Engine**: Advanced reward mathematics with engagement bonuses, seal multipliers, and reputation factors
+- **Mint API System**: Complete GTT token minting infrastructure with batch operations, claim endpoints, and transaction simulation
+- **Protocol Metrics**: Live stats for total supply, circulation, vault holdings, and daily activity tracking
+- **System Health Monitoring**: Real-time status for API, database, IPFS, DocuSign, and blockchain connections
+- **Administrative Controls**: Emergency protocol pause, sync operations, and comprehensive reporting system
+
+### Previous - Complete Web3 Smart Contract Integration
+- **Smart Contract Deployment**: Successfully deployed GTTToken and TruthVault contracts to local Hardhat network
+- **Contract Architecture**: GTTToken with vault-controlled minting, TruthVault with role-based access control and yield distribution
+- **Web3 Integration**: Complete wagmi/viem setup with wallet connection, contract reading, and transaction handling
+- **Smart Contract Demo Pages**: Created comprehensive testing interfaces for all contract functions
+- **Governance System**: Implemented DAO-style governance page with proposal creation and voting interfaces
+- **Multi-Network Support**: Configured for Hardhat local (31337), Polygon Mumbai (80001), and Polygon Amoy (80002)
+- **Contract Utilities**: Created contracts.ts with helper functions for address resolution and network management
+- **Error Handling**: Implemented proper Web3 error handling with user-friendly toast notifications
+- **Transaction Monitoring**: Added real-time balance updates and transaction status tracking
+
+### Previous - TruthYield ROI Analytics & Social Sharing Integration
+- **Dynamic OpenGraph Metadata**: Implemented automatic meta tag injection for capsule routes with title, description, image, and URL
+- **Twitter Card Support**: Added summary_large_image cards for rich social media previews
+- **ShareButtons Component**: Created comprehensive social sharing interface supporting Twitter, Facebook, LinkedIn, WhatsApp, email, and native mobile sharing
+- **Capsule Detail Pages**: Built dedicated capsule view pages with full social sharing integration and SEO optimization
+- **Structured Data**: Added JSON-LD structured data for improved search engine indexing
+- **TruthYield Analytics**: Implemented ROI calculation engine with engagement tracking (views, shares, verifications, minting)
+- **GTT Token Rewards**: Created yield-to-token conversion system with tier-based multipliers
+- **CapsuleAnalytics Component**: Built comprehensive analytics dashboard with real-time metrics and claim functionality
+- **Share Tracking**: Integrated analytics tracking into social sharing buttons for viral growth measurement
+- **Creator Monetization**: Enabled GTT token claiming for verified capsule creators based on Truth Yield scores
+
+### Previous Implementation
+- **GTT Smart Contract System**: Complete ERC-20 token with TruthVault DAO-controlled yield distribution
+- **Web3 Integration**: Wagmi + Viem configuration with wallet connection and blockchain interaction
+- **CapsuleClaimButton Component**: Smart contract integration for GTT yield claiming with verification
+- **Governance UI**: DAO proposal system with voting interface and treasury management
+- **Claim Backend API**: Validation endpoint for GTT yield claiming with transaction tracking
+- **NFT Minting Integration**: Complete workflow from Veritas Seal to IPFS metadata upload
+- **DocuSign Veritas Integration**: Legal document verification and sealing for truth capsules
+- **Database Schema**: PostgreSQL with Drizzle ORM for type-safe data operations
+
+The architecture emphasizes type safety, performance, and scalability while maintaining a clean separation of concerns between frontend, backend, and blockchain interactions. The modular component structure allows for easy feature additions and maintenance.
