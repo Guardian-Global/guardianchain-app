@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, Zap, Factory, Wallet, ChevronRight, Code2, ExternalLink, Image } from 'lucide-react';
+import { Shield, Zap, Factory, Wallet, ChevronRight, Code2, ExternalLink, Image, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
