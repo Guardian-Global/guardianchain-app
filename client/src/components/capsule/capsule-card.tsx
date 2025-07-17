@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useState } from "react";
+import { Link } from "wouter";
+import ShareButtons from "@/components/social/share-buttons";
 import type { Capsule } from "@shared/schema";
 
 interface CapsuleCardProps {
@@ -286,13 +288,27 @@ export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardP
             </div>
           )}
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="w-full border-slate-600 hover:border-primary hover:text-primary transition-colors"
-          >
-            View Details
-          </Button>
+          <div className="space-y-2">
+            <Link href={`/capsule/${capsule.id}`}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full border-slate-600 hover:border-primary hover:text-primary transition-colors"
+              >
+                View Details
+              </Button>
+            </Link>
+            
+            <div className="pt-2 border-t border-slate-700">
+              <ShareButtons
+                title={`Immutable Truth Capsule: ${capsule.title}`}
+                url={`https://guardianchain.app/capsule/${capsule.id}`}
+                image={capsule.imageUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${capsule.id}`}
+                description={`${capsule.description} • Verified truth on GuardianChain with grief score ${capsule.griefScore}`}
+                compact={true}
+              />
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

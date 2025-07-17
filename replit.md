@@ -108,4 +108,19 @@ Preferred communication style: Simple, everyday language.
 - **Bundle Optimization**: Tree shaking and minification
 - **Database**: Connection pooling and query optimization
 
+## Recent Changes
+
+### July 17, 2025 - Social Sharing Integration
+- **Dynamic OpenGraph Metadata**: Implemented automatic meta tag injection for capsule routes with title, description, image, and URL
+- **Twitter Card Support**: Added summary_large_image cards for rich social media previews
+- **ShareButtons Component**: Created comprehensive social sharing interface supporting Twitter, Facebook, LinkedIn, WhatsApp, email, and native mobile sharing
+- **Capsule Detail Pages**: Built dedicated capsule view pages with full social sharing integration and SEO optimization
+- **Structured Data**: Added JSON-LD structured data for improved search engine indexing
+- **Viral Growth Foundation**: Truth capsules now support viral sharing with proper branding and immutable proof attribution
+
+### Previous Implementation
+- **NFT Minting Integration**: Complete workflow from Veritas Seal to IPFS metadata upload
+- **DocuSign Veritas Integration**: Legal document verification and sealing for truth capsules
+- **Database Schema**: PostgreSQL with Drizzle ORM for type-safe data operations
+
 The architecture emphasizes type safety, performance, and scalability while maintaining a clean separation of concerns between frontend, backend, and blockchain interactions. The modular component structure allows for easy feature additions and maintenance.

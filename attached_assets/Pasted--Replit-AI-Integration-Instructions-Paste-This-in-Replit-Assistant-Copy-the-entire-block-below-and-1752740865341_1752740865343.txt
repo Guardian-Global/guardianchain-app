@@ -1,0 +1,43 @@
+ Replit AI Integration Instructions (Paste This in Replit Assistant)
+Copy the entire block below and paste it into your Replit AI assistant to implement capsule sharing across social platforms with dynamic metadata:
+
+javascript
+Copy
+Edit
+✅ TASK: Implement dynamic capsule sharing support
+
+1. Add OpenGraph + Twitter Card metadata for capsule routes (/capsule/:id)
+   - Include og:title, og:description, og:image, og:url
+   - Include twitter:card for large preview
+   - Load capsule title, grief-score, and preview image dynamically from Supabase or metadata API
+   - Example:
+     <meta property="og:title" content="Climate Evidence Capsule – GuardianChain" />
+     <meta property="og:description" content="Immutable truth capsule verified via Veritas Seal and minted as NFT" />
+     <meta property="og:image" content="https://cdn.guardianchain.app/previews/capsule-273.png" />
+     <meta property="og:url" content="https://guardianchain.app/capsule/273" />
+     <meta name="twitter:card" content="summary_large_image" />
+     <meta name="twitter:site" content="@GuardianChain" />
+     <meta name="twitter:image" content="..." />
+
+2. Create <ShareButtons /> component in /client/src/components/social/share-buttons.tsx
+   - Include platforms:
+     - Twitter/X (`https://twitter.com/intent/tweet?text=${title}&url=${url}`)
+     - Facebook (`https://www.facebook.com/sharer/sharer.php?u=${url}`)
+     - LinkedIn (`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)
+     - Reddit (`https://reddit.com/submit?url=${url}&title=${title}`)
+     - WhatsApp (`https://wa.me/?text=${title} ${url}`)
+     - Email (`mailto:?subject=${title}&body=${url}`)
+   - Also detect `navigator.share()` for mobile share sheets
+
+3. Pass props to <ShareButtons />:
+   - Props:
+     - title (e.g., "Immutable Capsule: Climate Research")
+     - url (e.g., `https://guardianchain.app/capsule/${id}`)
+     - image (used in OpenGraph meta tags)
+
+4. Add <ShareButtons /> to CapsuleCard and CapsuleDetail views
+
+5. Add “Copy Link” button with click-to-copy and toast confirmation
+
+6. BONUS: When user mints a capsule NFT, offer auto-share with OpenSea link + “verified by Veritas” tag
+O
