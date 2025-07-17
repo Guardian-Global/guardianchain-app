@@ -15,6 +15,8 @@ export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardP
     switch (status) {
       case "verified":
         return "bg-emerald-600 text-white";
+      case "sealed":
+        return "bg-purple-600 text-white";
       case "pending":
         return "bg-blue-600 text-white";
       case "rejected":
@@ -28,10 +30,27 @@ export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardP
     switch (status) {
       case "verified":
         return <Check className="h-3 w-3" />;
+      case "sealed":
+        return <Star className="h-3 w-3" />;
       case "pending":
         return <Clock className="h-3 w-3" />;
       default:
         return null;
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "sealed":
+        return "Sealed with Veritas";
+      case "verified":
+        return "Verified";
+      case "pending":
+        return "Pending";
+      case "rejected":
+        return "Rejected";
+      default:
+        return status;
     }
   };
 
@@ -72,7 +91,7 @@ export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardP
                 <div className="flex items-center space-x-2">
                   <Badge className={getStatusColor(capsule.status)}>
                     {getStatusIcon(capsule.status)}
-                    <span className="ml-1 capitalize">{capsule.status}</span>
+                    <span className="ml-1">{getStatusText(capsule.status)}</span>
                   </Badge>
                   <Badge variant="outline" className="border-slate-600 text-slate-300">
                     {capsule.category}
@@ -139,7 +158,7 @@ export default function CapsuleCard({ capsule, viewMode = "grid" }: CapsuleCardP
         <div className="absolute top-3 left-3">
           <Badge className={getStatusColor(capsule.status)}>
             {getStatusIcon(capsule.status)}
-            <span className="ml-1 capitalize">{capsule.status}</span>
+            <span className="ml-1">{getStatusText(capsule.status)}</span>
           </Badge>
         </div>
         

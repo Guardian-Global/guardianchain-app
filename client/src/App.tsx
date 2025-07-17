@@ -11,6 +11,7 @@ import CreateCapsule from "@/pages/create-capsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
 import Profile from "@/pages/profile";
+import SealDemo from "@/pages/seal-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -23,6 +24,7 @@ function Router() {
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={Profile} />
+        <Route path="/seal-demo" component={SealDemo} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
