@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import SealBadge from '@/components/SealBadge';
 
 const SealStudio = () => {
   const [title, setTitle] = useState('');
@@ -172,9 +172,9 @@ const SealStudio = () => {
                     <h3 className="text-xl font-bold text-white mb-2">
                       {title || "Veritas Certified Capsule"}
                     </h3>
-                    <Badge className={`${getSealTypeColor(sealType)} text-white mb-3`}>
-                      {getSealTypeLabel(sealType)}
-                    </Badge>
+                    <div className="mb-3">
+                      <SealBadge type={sealType as 'Standard' | 'Premium' | 'Legal' | 'Diamond'} size="lg" />
+                    </div>
                   </div>
 
                   {/* Seal Content */}

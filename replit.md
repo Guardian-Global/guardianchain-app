@@ -114,6 +114,8 @@ Preferred communication style: Simple, everyday language.
 - **DaoXpGraph Component**: Advanced DAO reputation tracking with XP progression, participation metrics, and achievement badges
 - **CapsuleTimeline Component**: Complete capsule evolution timeline with status tracking, transaction details, and milestone visualization
 - **SealStudio Component**: Professional seal generation studio with custom templates, preview functionality, and download/share capabilities
+- **DaoStatsCard Component**: Premium DAO performance overview with gradient styling and interactive stat cards
+- **SealBadge Component**: Reusable seal type indicators with icons and color coding (Standard, Premium, Legal, Diamond)
 - **Insight Page**: Comprehensive analytics hub combining DAO XP tracking, capsule evolution, and seal generation tools
 - **Premium Charts Integration**: Multiple chart types using Recharts with GuardianChain styling and responsive design
 - **Navigation Integration**: Added "Insights" to main navigation for analytics and reputation tracking access

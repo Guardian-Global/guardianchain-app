@@ -1,6 +1,7 @@
 import { Brain, TrendingUp, Clock, Palette } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import DaoXpGraph from '@/components/DaoXpGraph';
+import DaoStatsCard from '@/components/DaoStatsCard';
 import CapsuleTimeline from '@/components/CapsuleTimeline';
 import SealStudio from '@/components/SealStudio';
 
@@ -50,6 +51,9 @@ export default function InsightPage() {
             </Card>
           ))}
         </div>
+
+        {/* DAO Stats Overview */}
+        <DaoStatsCard />
 
         {/* Main Content Sections */}
         <div className="space-y-8">
