@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import CapsuleTypeSelector from '@/components/CapsuleTypes/CapsuleTypeSelector';
+import { CapsuleType } from '@/types/capsule';
 import { Palette, Brain, FileText, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ForgeEditor from '@/components/CapsuleForge/ForgeEditor';
@@ -9,6 +11,7 @@ import AIAssistant from '@/components/CapsuleForge/AIAssistant';
 export default function CapsuleForgePage() {
   const [capsuleData, setCapsuleData] = useState({
     title: '',
+    type: 'STANDARD' as CapsuleType,
     blocks: [
       { id: Date.now(), type: 'text', content: '' }
     ],
@@ -66,6 +69,14 @@ export default function CapsuleForgePage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Capsule Type Selection */}
+        <div className="mb-8">
+          <CapsuleTypeSelector
+            selectedType={capsuleData.type}
+            onTypeSelect={(type) => setCapsuleData(prev => ({ ...prev, type }))}
+          />
         </div>
 
         {/* Main Content Grid */}

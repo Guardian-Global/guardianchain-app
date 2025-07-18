@@ -5,7 +5,7 @@ import { claimYield } from "./api/claim-yield";
 import { storage } from "./storage";
 import { registerSealRoutes } from "./api/seal";
 import { registerMintRoutes } from "./api/mint";
-import { insertCapsuleSchema, insertVerificationSchema, insertTransactionSchema } from "@shared/schema";
+import { insertCapsuleSchema, insertUserSchema, insertCapsuleInteractionSchema } from "@shared/schema";
 import capsulesRouter from "./api/capsules";
 import veritasRouter from "./api/veritas";
 import analyticsRouter from "./api/analytics";
@@ -507,6 +507,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // IPFS upload endpoints
   app.post("/api/ipfs/upload", uploadToIPFS);
   app.post("/api/ipfs/upload-json", uploadJSONToIPFS);
+
+  // Capsule type endpoints
+  app.get("/api/capsule-types", async (req, res) => {
+    try {
+      const { getCapsuleTypes } = await import("./api/capsule-types");
+      await getCapsuleTypes(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to load capsule types" });
+    }
+  });
+
+  app.post("/api/capsule-types/validate", async (req, res) => {
+    try {
+      const { validateCapsuleType } = await import("./api/capsule-types");
+      await validateCapsuleType(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Validation failed" });
+    }
+  });
 
   // GUARDIANCHAIN brand enforcement endpoint
   app.get("/api/brand/info", (req, res) => {

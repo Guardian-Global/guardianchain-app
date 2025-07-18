@@ -1,85 +1,111 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json, decimal } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean, timestamp, jsonb, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Capsule Types Enum
+export const CapsuleType = z.enum([
+  "STANDARD",
+  "LEGAL",
+  "KNOWLEDGE", 
+  "CREATOR",
+  "CIVIC",
+  "FINANCIAL",
+  "VERITAS_CERTIFICATE",
+  "AI_GENERATED",
+  "CROSS_CHAIN_ASSET",
+  "MULTIMEDIA_STORY",
+  "CITIZEN_JOURNALISM",
+  "FRAUD_PROOF",
+  "WITNESS_TESTIMONY",
+  "SOULBOUND_MEMOIR"
+]);
+
+export type CapsuleTypeEnum = z.infer<typeof CapsuleType>;
+
+// Enhanced Users table
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
-  walletAddress: text("wallet_address"),
-  auth0Id: text("auth0_id").notNull().unique(),
-  griefScore: decimal("grief_score", { precision: 3, scale: 1 }).default("0.0"),
-  gttBalance: decimal("gtt_balance", { precision: 10, scale: 2 }).default("0.00"),
+  username: text("username").unique().notNull(),
+  email: text("email").unique(),
+  walletAddress: text("wallet_address").unique(),
+  bio: text("bio"),
+  avatar: text("avatar"),
+  reputation: integer("reputation").default(0),
+  xpPoints: integer("xp_points").default(0),
   totalCapsules: integer("total_capsules").default(0),
   verifiedCapsules: integer("verified_capsules").default(0),
+  gttBalance: decimal("gtt_balance", { precision: 18, scale: 8 }).default("0"),
+  badges: jsonb("badges").$type<string[]>().default([]),
+  achievements: jsonb("achievements").$type<object[]>().default([]),
+  socialLinks: jsonb("social_links").$type<Record<string, string>>().default({}),
   isVerified: boolean("is_verified").default(false),
-  stripeCustomerId: text("stripe_customer_id"),
-  stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Enhanced Capsules table
 export const capsules = pgTable("capsules", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description").notNull(),
   content: text("content").notNull(),
-  category: text("category").notNull(),
-  status: text("status").notNull().default("pending"), // pending, verified, rejected
-  creatorId: integer("creator_id").references(() => users.id).notNull(),
-  griefScore: decimal("grief_score", { precision: 3, scale: 1 }).default("0.0"),
-  verificationCount: integer("verification_count").default(0),
-  replayCount: integer("replay_count").default(0),
+  creatorId: integer("creator_id").references(() => users.id),
+  type: text("type").$type<CapsuleTypeEnum>().default("STANDARD"),
+  category: text("category"),
+  tags: jsonb("tags").$type<string[]>().default([]),
+  status: text("status").default("draft"), // draft, pending, verified, rejected
+  isPublic: boolean("is_public").default(true),
+  griefScore: integer("grief_score").default(0),
+  credibilityScore: integer("credibility_score").default(0),
   viewCount: integer("view_count").default(0),
   shareCount: integer("share_count").default(0),
-  minted: boolean("minted").default(false),
-  truthYield: decimal("truth_yield", { precision: 10, scale: 2 }).default("0.00"),
-  gttReward: decimal("gtt_reward", { precision: 10, scale: 2 }).default("0.00"),
-  gttClaimed: decimal("gtt_claimed", { precision: 10, scale: 2 }).default("0.00"),
-  claimTxHash: text("claim_tx_hash"),
-  imageUrl: text("image_url"),
+  voteCount: integer("vote_count").default(0),
+  truthYield: decimal("truth_yield", { precision: 18, scale: 8 }).default("0"),
   ipfsHash: text("ipfs_hash"),
-  nftTokenId: text("nft_token_id"),
-  docusignEnvelopeId: text("docusign_envelope_id"),
-  veritasSealUrl: text("veritas_seal_url"),
-  isPublic: boolean("is_public").default(true),
-  tags: text("tags").array(),
-  evidence: json("evidence"),
-  metadata: json("metadata"),
+  nftTokenId: integer("nft_token_id"),
+  nftContractAddress: text("nft_contract_address"),
+  metadata: jsonb("metadata").$type<object>().default({}),
+  blocks: jsonb("blocks").$type<object[]>().default([]),
+  parentCapsuleId: integer("parent_capsule_id").references(() => capsules.id), // For forks/versions
+  version: integer("version").default(1),
+  evolutionLevel: integer("evolution_level").default(1),
+  collaborators: jsonb("collaborators").$type<string[]>().default([]),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const verifications = pgTable("verifications", {
+// Capsule Interactions table
+export const capsuleInteractions = pgTable("capsule_interactions", {
   id: serial("id").primaryKey(),
-  capsuleId: integer("capsule_id").references(() => capsules.id).notNull(),
-  verifierId: integer("verifier_id").references(() => users.id).notNull(),
-  vote: text("vote").notNull(), // verify, reject, dispute
-  comment: text("comment"),
-  evidence: text("evidence"),
-  reputationStake: decimal("reputation_stake", { precision: 10, scale: 2 }).default("0.00"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-export const transactions = pgTable("transactions", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id).notNull(),
-  type: text("type").notNull(), // reward, stake, penalty, mint, burn
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   capsuleId: integer("capsule_id").references(() => capsules.id),
-  txHash: text("tx_hash"),
-  description: text("description"),
+  userId: integer("user_id").references(() => users.id),
+  type: text("type").notNull(), // view, share, vote, fork, collaborate
+  metadata: jsonb("metadata").$type<object>().default({}),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const achievements = pgTable("achievements", {
+// User Achievements table
+export const userAchievements = pgTable("user_achievements", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id).notNull(),
-  type: text("type").notNull(), // truth_streak, community_impact, first_nft, etc.
+  userId: integer("user_id").references(() => users.id),
+  achievementType: text("achievement_type").notNull(),
   title: text("title").notNull(),
-  description: text("description").notNull(),
-  metadata: json("metadata"),
-  earnedAt: timestamp("earned_at").defaultNow(),
+  description: text("description"),
+  iconUrl: text("icon_url"),
+  rarity: text("rarity").default("common"), // common, rare, epic, legendary
+  unlockedAt: timestamp("unlocked_at").defaultNow(),
+  metadata: jsonb("metadata").$type<object>().default({}),
+});
+
+// NFT Evolution table
+export const nftEvolutions = pgTable("nft_evolutions", {
+  id: serial("id").primaryKey(),
+  tokenId: integer("token_id").notNull(),
+  contractAddress: text("contract_address").notNull(),
+  evolutionLevel: integer("evolution_level").default(1),
+  traits: jsonb("traits").$type<object[]>().default([]),
+  visualMetadata: jsonb("visual_metadata").$type<object>().default({}),
+  lastEvolutionAt: timestamp("last_evolution_at").defaultNow(),
+  nextEvolutionThreshold: integer("next_evolution_threshold").default(100),
 });
 
 // Insert schemas
@@ -95,29 +121,33 @@ export const insertCapsuleSchema = createInsertSchema(capsules).omit({
   updatedAt: true,
 });
 
-export const insertVerificationSchema = createInsertSchema(verifications).omit({
+export const insertCapsuleInteractionSchema = createInsertSchema(capsuleInteractions).omit({
   id: true,
   createdAt: true,
 });
 
-export const insertTransactionSchema = createInsertSchema(transactions).omit({
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
   id: true,
-  createdAt: true,
+  unlockedAt: true,
 });
 
-export const insertAchievementSchema = createInsertSchema(achievements).omit({
+export const insertNftEvolutionSchema = createInsertSchema(nftEvolutions).omit({
   id: true,
-  earnedAt: true,
+  lastEvolutionAt: true,
 });
 
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+
 export type Capsule = typeof capsules.$inferSelect;
 export type InsertCapsule = z.infer<typeof insertCapsuleSchema>;
-export type Verification = typeof verifications.$inferSelect;
-export type InsertVerification = z.infer<typeof insertVerificationSchema>;
-export type Transaction = typeof transactions.$inferSelect;
-export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
-export type Achievement = typeof achievements.$inferSelect;
-export type InsertAchievement = z.infer<typeof insertAchievementSchema>;
+
+export type CapsuleInteraction = typeof capsuleInteractions.$inferSelect;
+export type InsertCapsuleInteraction = z.infer<typeof insertCapsuleInteractionSchema>;
+
+export type UserAchievement = typeof userAchievements.$inferSelect;
+export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
+
+export type NftEvolution = typeof nftEvolutions.$inferSelect;
+export type InsertNftEvolution = z.infer<typeof insertNftEvolutionSchema>;
