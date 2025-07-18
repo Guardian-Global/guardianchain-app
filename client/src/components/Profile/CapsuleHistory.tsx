@@ -6,12 +6,13 @@ import {
   CheckCircle, Clock, AlertCircle, XCircle 
 } from 'lucide-react';
 import { BRAND_COLORS, BRAND_NAME } from '@/lib/constants';
-import { CapsuleType } from '@/types/capsule';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserCapsules } from '@/lib/api';
 
 interface CapsuleHistoryItem {
   id: string;
   title: string;
-  type: CapsuleType;
+  type: string;
   status: 'draft' | 'pending' | 'verified' | 'rejected';
   createdAt: string;
   stats: {
@@ -99,11 +100,32 @@ const getTypeColor = (type: CapsuleType) => {
   }
 };
 
-export default function CapsuleHistory({ userAddress, capsules = defaultCapsules }: CapsuleHistoryProps) {
-  const totalViews = capsules.reduce((sum, cap) => sum + cap.stats.views, 0);
-  const totalShares = capsules.reduce((sum, cap) => sum + cap.stats.shares, 0);
-  const verifiedCount = capsules.filter(cap => cap.status === 'verified').length;
-  const totalYield = capsules.reduce((sum, cap) => sum + cap.truthYield, 0);
+export default function CapsuleHistory({ userAddress }: CapsuleHistoryProps) {
+  const { data: capsules, isLoading, error } = useQuery({
+    queryKey: ['user-capsules', userAddress],
+    queryFn: () => userAddress ? fetchUserCapsules(userAddress) : Promise.resolve([]),
+    enabled: !!userAddress,
+  });
+
+  if (isLoading) {
+    return (
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardContent className="p-6">
+          <div className="animate-pulse space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-24 bg-slate-700 rounded-lg"></div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const displayCapsules = capsules?.length ? capsules : defaultCapsules;
+  const totalViews = displayCapsules.reduce((sum, cap) => sum + cap.stats.views, 0);
+  const totalShares = displayCapsules.reduce((sum, cap) => sum + cap.stats.shares, 0);
+  const verifiedCount = displayCapsules.filter(cap => cap.status === 'verified').length;
+  const totalYield = displayCapsules.reduce((sum, cap) => sum + cap.truthYield, 0);
 
   return (
     <Card className="bg-slate-800/50 border-slate-700">

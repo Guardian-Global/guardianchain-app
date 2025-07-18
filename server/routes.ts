@@ -527,6 +527,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User API endpoints
+  app.get("/api/users/:address", async (req, res) => {
+    try {
+      const { getUserProfile } = await import("./api/users");
+      await getUserProfile(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to load user profile" });
+    }
+  });
+
+  app.get("/api/users/:address/achievements", async (req, res) => {
+    try {
+      const { getUserAchievements } = await import("./api/users");
+      await getUserAchievements(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to load user achievements" });
+    }
+  });
+
+  app.get("/api/users/:address/capsules", async (req, res) => {
+    try {
+      const { getUserCapsules } = await import("./api/users");
+      await getUserCapsules(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to load user capsules" });
+    }
+  });
+
+  app.get("/api/users/:address/transactions", async (req, res) => {
+    try {
+      const { getUserTransactions } = await import("./api/users");
+      await getUserTransactions(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to load user transactions" });
+    }
+  });
+
+  app.get("/api/users/:address/xp-history", async (req, res) => {
+    try {
+      const { getUserXPHistory } = await import("./api/users");
+      await getUserXPHistory(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to load user XP history" });
+    }
+  });
+
   // GUARDIANCHAIN brand enforcement endpoint
   app.get("/api/brand/info", (req, res) => {
     res.json({

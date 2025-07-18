@@ -11,6 +11,7 @@ export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
   getUserByAuth0Id(auth0Id: string): Promise<User | undefined>;
+  getUserByWallet(walletAddress: string): Promise<User | undefined>;
   getUserByWalletAddress(walletAddress: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<User>): Promise<User>;
@@ -20,6 +21,7 @@ export interface IStorage {
   // Capsule operations
   getCapsule(id: number): Promise<Capsule | undefined>;
   getCapsules(filters?: { status?: string; creatorId?: number; isPublic?: boolean; category?: string; limit?: number; offset?: number }): Promise<Capsule[]>;
+  getCapsulesByCreator(creatorId: number): Promise<Capsule[]>;
   createCapsule(capsule: InsertCapsule): Promise<Capsule>;
   updateCapsule(id: number, updates: Partial<Capsule>): Promise<Capsule>;
   getFeaturedCapsules(limit?: number): Promise<Capsule[]>;
@@ -84,10 +86,26 @@ export class MemStorage implements IStorage {
     demoUsers.forEach(userData => {
       const user = {
         ...userData,
+        bio: `${userData.username.replace(/_/g, ' ')} - GUARDIANCHAIN Truth Validator`,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.username}`,
+        reputation: 850 + (userData.id * 100),
+        xpPoints: 1500 + (userData.id * 250),
+        totalCapsules: userData.id,
+        verifiedCapsules: userData.id,
+        gttBalance: `${(userData.id * 125).toFixed(2)}`,
+        badges: ['truth-pioneer', 'verified-validator'],
+        achievements: [
+          {
+            id: 'truth-pioneer',
+            title: 'Truth Pioneer',
+            description: 'First 100 users to seal a Veritas Capsule',
+            rarity: 'legendary',
+            unlockedAt: '2024-07-15',
+            metadata: { level: 1, benefits: ['10% GTT Bonus', 'Priority Verification'] }
+          }
+        ],
+        socialLinks: { twitter: `@${userData.username}`, discord: `${userData.username}#1234` },
         griefScore: "0.2",
-        gttBalance: "0.00",
-        totalCapsules: 1,
-        verifiedCapsules: 1,
         isVerified: true,
         stripeCustomerId: null,
         stripeSubscriptionId: null,
@@ -104,8 +122,9 @@ export class MemStorage implements IStorage {
         title: "Climate Change Evidence: Arctic Ice Sheet Melting Acceleration",
         description: "Comprehensive analysis of arctic ice sheet data from 2020-2024 showing unprecedented melting rates.",
         content: "Detailed scientific analysis of satellite data, temperature readings, and ice thickness measurements from multiple Arctic research stations. The data shows a 340% acceleration in ice loss compared to the 1990-2010 baseline period.",
-        category: "science",
-        status: "sealed",
+        type: "KNOWLEDGE",
+        category: "science", 
+        status: "verified",
         creatorId: 1,
         griefScore: "0.2",
         verificationCount: 15,
@@ -134,8 +153,9 @@ export class MemStorage implements IStorage {
         title: "Supply Chain Transparency: Fast Fashion Environmental Impact",
         description: "Investigation into hidden environmental costs of major fast fashion brands' supply chains.",
         content: "Detailed investigation revealing toxic chemical usage, water pollution, and labor violations across 50+ factories in Southeast Asia. Includes photo evidence, chemical analysis reports, and worker testimonies.",
+        type: "CITIZEN_JOURNALISM",
         category: "investigation",
-        status: "verified",
+        status: "verified", 
         creatorId: 2,
         griefScore: "0.8",
         verificationCount: 23,
@@ -164,8 +184,9 @@ export class MemStorage implements IStorage {
         title: "Corporate Whistleblower: Healthcare Data Privacy Violations",
         description: "Internal documents revealing systematic patient data privacy violations at major healthcare provider.",
         content: "Leaked internal emails, database access logs, and compliance reports showing deliberate HIPAA violations affecting 2.3 million patients. Includes executive correspondence authorizing illegal data sharing practices.",
+        type: "FRAUD_PROOF",
         category: "whistleblowing",
-        status: "sealed",
+        status: "verified",
         creatorId: 3,
         griefScore: "0.1",
         verificationCount: 45,
@@ -210,6 +231,10 @@ export class MemStorage implements IStorage {
 
   async getUserByWalletAddress(walletAddress: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(user => user.walletAddress === walletAddress);
+  }
+
+  async getUserByWallet(walletAddress: string): Promise<User | undefined> {
+    return this.getUserByWalletAddress(walletAddress);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
@@ -282,6 +307,10 @@ export class MemStorage implements IStorage {
     }
 
     return capsules;
+  }
+
+  async getCapsulesByCreator(creatorId: number): Promise<Capsule[]> {
+    return this.getCapsules({ creatorId });
   }
 
   async createCapsule(insertCapsule: InsertCapsule): Promise<Capsule> {

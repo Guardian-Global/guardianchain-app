@@ -5,6 +5,8 @@ import {
   Star, Crown, Diamond, Target, Award 
 } from 'lucide-react';
 import { BRAND_COLORS } from '@/lib/constants';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserAchievements } from '@/lib/api';
 
 interface SoulboundAchievement {
   id: string;
@@ -25,7 +27,14 @@ interface SoulboundNFTDisplayProps {
   achievements?: SoulboundAchievement[];
 }
 
-const defaultAchievements: SoulboundAchievement[] = [
+export default function SoulboundNFTDisplay({ address }: SoulboundNFTDisplayProps) {
+  const { data: achievements, isLoading, error } = useQuery({
+    queryKey: ['user-achievements', address],
+    queryFn: () => address ? fetchUserAchievements(address) : Promise.resolve([]),
+    enabled: !!address,
+  });
+
+  const defaultAchievements: SoulboundAchievement[] = [
   {
     id: "truth-pioneer",
     title: "Truth Pioneer",
@@ -95,10 +104,24 @@ const getRarityIcon = (rarity: string) => {
   }
 };
 
-export default function SoulboundNFTDisplay({ address, achievements = defaultAchievements }: SoulboundNFTDisplayProps) {
-  const legendaryCount = achievements.filter(a => a.rarity === 'legendary').length;
-  const epicCount = achievements.filter(a => a.rarity === 'epic').length;
-  const totalValue = achievements.length * 100; // Example calculation
+  if (isLoading) {
+    return (
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardContent className="p-6">
+          <div className="animate-pulse grid grid-cols-2 md:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-32 bg-slate-700 rounded-xl"></div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const displayAchievements = achievements?.length ? achievements : defaultAchievements;
+  const legendaryCount = displayAchievements.filter(a => a.rarity === 'legendary').length;
+  const epicCount = displayAchievements.filter(a => a.rarity === 'epic').length;
+  const totalValue = displayAchievements.length * 100; // Example calculation
 
   return (
     <Card className="bg-slate-800/50 border-slate-700">

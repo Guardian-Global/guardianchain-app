@@ -1,0 +1,163 @@
+🔧 client/src/components/profile/XPGraph.tsx
+tsx
+Copy
+Edit
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+
+export default function XPGraph({ data }: { data: { date: string; xp: number }[] }) {
+  return (
+    <div className="xp-graph">
+      <h3 className="text-xl font-bold mb-2">XP Progression</h3>
+      <ResponsiveContainer width="100%" height={250}>
+        <AreaChart data={data}>
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Area type="monotone" dataKey="xp" stroke="#7F5AF0" fill="#D1C4F9" />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+🔧 client/src/components/profile/SoulboundNFTDisplay.tsx
+tsx
+Copy
+Edit
+import { useEffect, useState } from "react";
+import { fetchUserAchievements } from "@/lib/api";
+
+export default function SoulboundNFTDisplay({ address }: { address: string }) {
+  const [badges, setBadges] = useState([]);
+
+  useEffect(() => {
+    fetchUserAchievements(address).then(setBadges);
+  }, [address]);
+
+  return (
+    <div className="soulbound-display">
+      <h3 className="text-xl font-bold mb-4">Soulbound Achievements</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {badges.map((badge) => (
+          <div key={badge.id} className="badge-card">
+            <img src={badge.image} alt={badge.name} className="w-full rounded-xl" />
+            <p className="mt-2 text-sm text-center font-medium">{badge.name}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+🔧 client/src/components/profile/CapsuleHistory.tsx
+tsx
+Copy
+Edit
+import { useEffect, useState } from "react";
+import { fetchUserCapsules } from "@/lib/api";
+
+export default function CapsuleHistory({ address }: { address: string }) {
+  const [capsules, setCapsules] = useState([]);
+
+  useEffect(() => {
+    fetchUserCapsules(address).then(setCapsules);
+  }, [address]);
+
+  return (
+    <div>
+      <h3 className="text-xl font-bold mb-4">Capsule History</h3>
+      <div className="space-y-4">
+        {capsules.map((cap) => (
+          <div key={cap.id} className="capsule-entry border rounded-lg p-4">
+            <div className="flex justify-between">
+              <span className="font-semibold">{cap.title}</span>
+              <span className="text-sm text-gray-500">{cap.type}</span>
+            </div>
+            <div className="text-xs text-gray-600">Sealed: {new Date(cap.timestamp).toLocaleDateString()}</div>
+            <div className="text-sm mt-2">GTT Earned: {cap.gttEarnings}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+✅ Add Capsule Types Schema to Server (Drizzle / Prisma-like)
+ts
+Copy
+Edit
+export const CapsuleTypes = [
+  "STANDARD",
+  "LEGAL",
+  "KNOWLEDGE",
+  "CREATOR",
+  "CIVIC",
+  "FINANCIAL",
+  "VERITAS_CERTIFICATE",
+  "AI_GENERATED",
+  "CROSS_CHAIN_ASSET",
+  "MULTIMEDIA_STORY",
+  "CITIZEN_JOURNALISM",
+  "FRAUD_PROOF",
+  "WITNESS_TESTIMONY",
+  "SOULBOUND_MEMOIR",
+];
+✅ CapsuleTypeSelector UI Logic
+tsx
+Copy
+Edit
+const CapsuleTypeSelector = ({ onSelect }) => {
+  const [selected, setSelected] = useState("");
+
+  const handleSelect = (type) => {
+    setSelected(type);
+    onSelect(type);
+  };
+
+  return (
+    <div className="capsule-selector">
+      <h3 className="text-xl font-bold mb-3">Choose Capsule Type</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {CapsuleTypes.map((type) => (
+          <button
+            key={type}
+            onClick={() => handleSelect(type)}
+            className={`rounded-lg p-3 border ${
+              selected === type ? "border-green-400 bg-green-50" : "border-gray-200"
+            }`}
+          >
+            {type.replace(/_/g, " ")}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+✅ Navigation Update
+tsx
+Copy
+Edit
+// client/src/components/layout/navigation.tsx
+<li><a href="/capsule-forge">Capsule Forge</a></li>
+<li><a href="/insights">Insights</a></li>
+<li><a href="/profile">Profile</a></li>
+🟣 REPLIT FINAL DEPLOY COMMANDS
+bash
+Copy
+Edit
+# Enter your Replit shell
+cd /home/runner/your-project-name
+
+# Compile contracts
+npx hardhat compile
+
+# Start development server
+npm run dev
+
+# OPTIONAL: deploy to Polygon Amoy testnet
+npx hardhat run scripts/deploy.cjs --network polygonAmoy
+📌 BRAND CONSISTENCY FOR REPLIT AI
+Copy this into your Replit project README or .replit memory config:
+
+pgsql
+Copy
+Edit
+All mentions of the company should appear as GUARDIANCHAIN (ALL CAPS, NO SPACE).
+This format must be enforced across all UI, code, smart contracts, and metadata.

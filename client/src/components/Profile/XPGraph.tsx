@@ -2,6 +2,8 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp } from 'lucide-react';
 import { BRAND_COLORS } from '@/lib/constants';
+import { useQuery } from '@tanstack/react-query';
+import { fetchUserXPData } from '@/lib/api';
 
 interface XPDataPoint {
   day: string;
@@ -15,17 +17,36 @@ interface XPGraphProps {
   data?: XPDataPoint[];
 }
 
-const defaultData: XPDataPoint[] = [
-  { day: "Day 1", XP: 100, reputation: 50, capsules: 1 },
-  { day: "Day 2", XP: 250, reputation: 120, capsules: 3 },
-  { day: "Day 3", XP: 400, reputation: 200, capsules: 5 },
-  { day: "Day 4", XP: 650, reputation: 320, capsules: 8 },
-  { day: "Day 5", XP: 900, reputation: 450, capsules: 12 },
-  { day: "Day 6", XP: 1200, reputation: 600, capsules: 15 },
-  { day: "Today", XP: 1850, reputation: 925, capsules: 22 },
-];
+export default function XPGraph({ address }: XPGraphProps) {
+  const { data: xpData, isLoading, error } = useQuery({
+    queryKey: ['user-xp', address],
+    queryFn: () => address ? fetchUserXPData(address) : Promise.resolve([]),
+    enabled: !!address,
+  });
+  if (isLoading) {
+    return (
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardContent className="p-6">
+          <div className="animate-pulse">
+            <div className="h-6 bg-slate-700 rounded w-48 mb-4"></div>
+            <div className="h-32 bg-slate-700 rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
-export default function XPGraph({ address, data = defaultData }: XPGraphProps) {
+  if (error || !xpData?.length) {
+    return (
+      <Card className="bg-slate-800/50 border-slate-700">
+        <CardContent className="p-6 text-center">
+          <div className="text-slate-400">No XP data available</div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const data = xpData;
   const currentXP = data[data.length - 1]?.XP || 0;
   const currentLevel = Math.floor(currentXP / 1000) + 1;
   const nextLevelXP = currentLevel * 1000;

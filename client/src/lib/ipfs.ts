@@ -14,8 +14,8 @@ class IPFSManager {
 
   constructor() {
     // Use environment variables with fallback
-    this.projectId = import.meta.env.VITE_IPFS_PROJECT_ID || process.env.IPFS_PROJECT_ID;
-    this.projectSecret = import.meta.env.VITE_IPFS_SECRET || process.env.IPFS_SECRET;
+    this.projectId = import.meta.env.VITE_IPFS_PROJECT_ID;
+    this.projectSecret = import.meta.env.VITE_IPFS_SECRET;
     
     if (this.projectId && this.projectSecret) {
       this.authHeader = "Basic " + btoa(this.projectId + ":" + this.projectSecret);
