@@ -40,6 +40,8 @@ import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 import TestProfilePage from "./pages/test-profile";
 import AuctionHousePage from "./pages/auction-house";
+import EmbedCapsulePage from "./pages/embed-capsule";
+import YieldTrackerPage from "./pages/yield-tracker";
 
 function Router() {
   return (
@@ -77,6 +79,8 @@ function Router() {
         <Route path="/referral" component={ReferralPage} />
         <Route path="/airdrop" component={AirdropPage} />
         <Route path="/auction-house" component={AuctionHousePage} />
+        <Route path="/embed/capsule" component={EmbedCapsulePage} />
+        <Route path="/yield-tracker" component={YieldTrackerPage} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>

@@ -29,6 +29,7 @@ const navigation = [
   { name: "Referrals", href: "/referral" },
   { name: "Airdrop", href: "/airdrop" },
   { name: "Auction House", href: "/auction-house" },
+  { name: "Yield Tracker", href: "/yield-tracker" },
   { name: "Governance", href: "/governance" },
 ];
 

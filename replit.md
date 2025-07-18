@@ -110,6 +110,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### July 18, 2025 - Phase 17: Enhanced Capsule Yield Tracking & Embedding System Complete ✅
+- **CapsuleYieldTracker Component**: Comprehensive yield tracking with real-time performance analytics and emotional resonance scoring
+- **Embeddable Widgets**: Full embed system at /embed/capsule allowing external sites to display live capsule performance
+- **MintCapsuleNFTWrapper Component**: Enhanced capsule creation interface with AI-powered yield estimation and content hash generation
+- **Yield Tracker Page**: Dedicated tracking hub at /yield-tracker with sample performance demos and usage instructions
+- **Share & Embed Features**: Copy-paste embed codes, shareable URLs, and social media integration for viral growth
+- **Performance Analytics**: Real-time GTT yield tracking, emotional resonance charts, and historical performance data
+- **Mock Data System**: Realistic demonstration data for three sample capsules with varying performance levels
+- **Responsive Design**: Mobile-optimized interfaces with dark theme and GUARDIANCHAIN branding consistency
+
 ### July 18, 2025 - Phase 16: TruthAuction Engine Deployment Complete ✅
 - **TruthAuctionEngine Smart Contract**: Advanced auction system for capsule yield rights with reserve pricing and platform fees
 - **Deployed Address**: 0x5FbDB2315678afecb367f032d93F642f64180aa3 on Hardhat local network (31337)
