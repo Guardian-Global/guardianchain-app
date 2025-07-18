@@ -1211,6 +1211,42 @@
         "FeeManager",
         "IGTT"
       ]
+    },
+    "/home/runner/workspace/solidity/contracts/CapsuleFactoryV2.sol": {
+      "lastModificationDate": 1752818464163,
+      "contentHash": "290b69cf09a8c7cd33850c0a6b65de60",
+      "sourceName": "solidity/contracts/CapsuleFactoryV2.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CapsuleFactoryV2"
+      ]
     }
   }
 }

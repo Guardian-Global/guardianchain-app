@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import MintGTTButton from "@/components/web3/MintGTTButton";
+import VeritusNodePanel from "@/components/web3/VeritusNodePanel";
 
 export default function CommanderView() {
   const [mintAmount, setMintAmount] = useState("");
@@ -439,6 +440,11 @@ export default function CommanderView() {
               </p>
             </CardContent>
           </Card>
+
+          {/* CapsuleFactoryV2 Veritus Admin Panel */}
+          <div className="mt-8">
+            <VeritusNodePanel />
+          </div>
         </div>
       </section>
     </div>

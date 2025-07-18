@@ -5,6 +5,7 @@ export interface ContractAddresses {
   gtt: string;
   vault: string;
   factory: string;
+  factoryV2: string; // New CapsuleFactoryV2
   nft: string;
   dao: string;
   feeManager: string;
@@ -18,6 +19,7 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     gtt: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     vault: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 
     factory: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    factoryV2: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // CapsuleFactoryV2 deployed
     nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
     dao: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
     feeManager: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
@@ -30,6 +32,7 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     gtt: "0x...",          // Replace after deploy
     vault: "0x...",        // Replace after deploy
     factory: "0x...",      // Replace after deploy
+    factoryV2: "0x...",    // CapsuleFactoryV2 - Replace after deploy
     nft: "0x...",          // Replace after deploy
     dao: "0x...",          // Replace after deploy
     feeManager: "0x...",   // Replace after deploy
@@ -42,6 +45,7 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     gtt: "0x...",          // Will be updated after deployment
     vault: "0x...",        // Will be updated after deployment
     factory: "0x...",      // Will be updated after deployment
+    factoryV2: "0x...",    // CapsuleFactoryV2 - Will be updated after deployment
     nft: "0x...",          // Will be updated after deployment
     dao: "0x...",          // Will be updated after deployment
     feeManager: "0x...",   // Will be updated after deployment
@@ -266,3 +270,241 @@ export function getNetworkName(chainId: number): string {
   const config = NETWORK_CONFIGS[chainId as keyof typeof NETWORK_CONFIGS];
   return config?.name || `Unknown Network (${chainId})`;
 }
+
+// CapsuleFactoryV2 ABI - Enhanced capsule creation with yield and sealing
+export const CAPSULE_FACTORY_V2_ABI = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_veritusNode",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "capsuleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "storyTitle",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "yield",
+        "type": "uint256"
+      }
+    ],
+    "name": "CapsuleCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "capsuleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sealedBy",
+        "type": "address"
+      }
+    ],
+    "name": "CapsuleSealed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "capsuleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "yieldValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "YieldAssigned",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "capsuleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "finalYield",
+        "type": "uint256"
+      }
+    ],
+    "name": "assignYield",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "capsuleCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "contentHash",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "storyTitle",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "storySummary",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "yieldEstimate",
+        "type": "uint256"
+      }
+    ],
+    "name": "createCapsule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "capsuleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCapsule",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "creator",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "contentHash",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "storyTitle",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "storySummary",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createdAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "emotionalYield",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "status",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct CapsuleFactoryV2.Capsule",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "capsuleId",
+        "type": "uint256"
+      }
+    ],
+    "name": "sealCapsule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newVeritusNode",
+        "type": "address"
+      }
+    ],
+    "name": "updateVeritus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "veritusNode",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+] as const;

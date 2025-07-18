@@ -110,6 +110,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### July 18, 2025 - Phase 15: CapsuleFactoryV2 Protocol Upgrade Complete ✅
+- **CapsuleFactoryV2 Smart Contract**: Enhanced capsule creation with emotional yield tracking and Veritus verification system
+- **Deployed Address**: 0x5FbDB2315678afecb367f032d93F642f64180aa3 on Hardhat local network (31337)
+- **CapsuleCreator Component**: Complete React interface for creating capsules with title, summary, content hash, and yield estimation
+- **VeritusNodePanel Component**: Admin control panel for sealing capsules and assigning final yield values (restricted to Veritus node)
+- **Enhanced Workflow**: Users create → Veritus seals → Yield assigned → Capsules become claimable for GTT rewards
+- **Smart Contract Features**: Immutable capsule authorship, status progression (Unsealed → Sealed → Yielded), IPFS integration
+- **UI Integration**: Updated create-capsule page with CapsuleFactoryV2 system, added Veritus controls to commander dashboard
+- **Configuration**: Veritus node set to first Hardhat account (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+
 ### July 18, 2025 - Phase 14: Elite Protocol Upgrade Complete ✅
 - **Enhanced Database Schema**: Complete overhaul with capsule types, user achievements, NFT evolution tracking, and social features
 - **14 Specialized Capsule Types**: Legal, Knowledge, Creator, Civic, Financial, Veritas Certificate, AI-Generated, Cross-Chain Asset, Multimedia Story, Citizen Journalism, Fraud Proof, Witness Testimony, Soulbound Memoir

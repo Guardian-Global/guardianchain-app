@@ -52,3 +52,6 @@ export const LAUNCHPAD_CONFIG = {
   MIN_VOTES: 100,
   FEATURED_REWARD: 2000 // GTT bonus for featured creators
 };
+
+// Veritus Node Configuration - Admin wallet address for CapsuleFactoryV2
+export const VERITUS_NODE = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // First Hardhat account
