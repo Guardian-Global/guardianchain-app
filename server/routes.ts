@@ -16,12 +16,17 @@ import {
   type CapsuleData,
   type UserProfile
 } from "./lib/aiRecommendations";
+import { getCapsuleAnalytics, getAllCapsulesAnalytics } from "./routes/capsule-analytics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register GuardianChain API routes
   app.use("/api/capsules", capsulesRouter);
   app.use("/api/veritas", veritasRouter);
   app.use("/api/analytics", analyticsRouter);
+  
+  // Capsule Analytics Routes
+  app.get("/api/capsule/:capsuleId/analytics", getCapsuleAnalytics);
+  app.get("/api/capsules/analytics/summary", getAllCapsulesAnalytics);
   
   // Register Veritas Seal routes
   registerSealRoutes(app);

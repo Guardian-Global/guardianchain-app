@@ -54,7 +54,23 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
     async function fetchAnalyticsData() {
       setIsLoading(true);
       
-      // Generate realistic demo data based on capsule ID and time range
+      try {
+        // First attempt to fetch from API/Supabase
+        const response = await fetch(`/api/capsule/${capsuleId}/analytics?timeRange=${timeRange}`);
+        
+        if (response.ok) {
+          const apiData = await response.json();
+          setDataPoints(apiData.dataPoints || []);
+          setTotalYield(apiData.totalYield || 0);
+          setAvgResonance(apiData.avgResonance || 0);
+          setIsLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.log("API not available, using demo data");
+      }
+      
+      // Fallback to realistic demo data based on capsule ID and time range
       const generateMockData = (id: string, range: string): YieldDataPoint[] => {
         const days = range === "7d" ? 7 : range === "30d" ? 30 : range === "90d" ? 90 : 365;
         const data: YieldDataPoint[] = [];

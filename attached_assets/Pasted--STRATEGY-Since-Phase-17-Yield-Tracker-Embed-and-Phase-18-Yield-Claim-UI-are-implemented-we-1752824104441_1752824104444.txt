@@ -1,0 +1,286 @@
+🧠 STRATEGY
+Since Phase 17 (Yield Tracker + Embed) and Phase 18 (Yield Claim UI) are implemented, we're now advancing to:
+
+✅ PHASE 19: Capsule Analytics Dashboard + Historical Yield Charting
+🎯 OBJECTIVE
+Deliver a capsule-specific analytics view with live data + emotional resonance scoring + historical yield metrics rendered in graph format. Prepped for viral UX and power-user insights.
+
+✅ File: client/src/components/ui/CapsuleAnalyticsChart.tsx
+tsx
+Copy
+Edit
+// CapsuleAnalyticsChart.tsx — line + bar chart display of capsule yield + engagement
+
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  CategoryScale,
+  Tooltip,
+  Filler
+} from 'chart.js';
+
+ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, Filler);
+
+type YieldDataPoint = {
+  date: string;
+  yield: number;
+  emotionalResonance: number;
+};
+
+export function CapsuleAnalyticsChart({ capsuleId }: { capsuleId: number }) {
+  const [dataPoints, setDataPoints] = useState<YieldDataPoint[]>([]);
+
+  useEffect(() => {
+    async function fetchYieldData() {
+      // 🔧 Replace with Supabase or actual API fetch
+      const mock: YieldDataPoint[] = [
+        { date: '2025-07-01', yield: 2.5, emotionalResonance: 60 },
+        { date: '2025-07-02', yield: 3.2, emotionalResonance: 72 },
+        { date: '2025-07-03', yield: 2.1, emotionalResonance: 55 },
+        { date: '2025-07-04', yield: 4.5, emotionalResonance: 88 }
+      ];
+      setDataPoints(mock);
+    }
+    fetchYieldData();
+  }, [capsuleId]);
+
+  const chartData = {
+    labels: dataPoints.map(dp => dp.date),
+    datasets: [
+      {
+        label: 'Yield (GTT)',
+        data: dataPoints.map(dp => dp.yield),
+        borderColor: '#00ffcc',
+        backgroundColor: 'rgba(0,255,204,0.1)',
+        tension: 0.3,
+        fill: true
+      },
+      {
+        label: 'Emotional Resonance',
+        data: dataPoints.map(dp => dp.emotionalResonance),
+        borderColor: '#ff0099',
+        backgroundColor: 'rgba(255,0,153,0.1)',
+        tension: 0.4,
+        fill: true,
+        yAxisID: 'y2'
+      }
+    ]
+  };
+
+  const options = {
+    responsive: true,
+    scales: {
+      y: {
+        type: 'linear',
+        beginAtZero: true,
+        position: 'left',
+        title: {
+          display: true,
+          text: 'Yield (GTT)'
+        }
+      },
+      y2: {
+        type: 'linear',
+        beginAtZero: true,
+        position: 'right',
+        grid: {
+          drawOnChartArea: false
+        },
+        title: {
+          display: true,
+          text: 'Emotional Resonance'
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="chart-box">
+      <h3>Capsule Performance Analytics</h3>
+      <Line data={chartData} options={options} />
+    </div>
+  );
+}
+✅ File: client/src/pages/capsule-analytics.tsx
+tsx
+Copy
+Edit
+// capsule-analytics.tsx — Capsule performance analytics with chart and metadata
+
+import { CapsuleAnalyticsChart } from '@/components/ui/CapsuleAnalyticsChart';
+
+export default function CapsuleAnalyticsPage() {
+  return (
+    <div className="container">
+      <h2>Capsule Analytics</h2>
+      <p>Explore yield performance and audience sentiment over time.</p>
+      {/* Replace with dynamic routing or capsule picker later */}
+      <CapsuleAnalyticsChart capsuleId={1} />
+    </div>
+  );
+}
+✅ Navigation: Add Link to /capsule-analytics
+tsx
+Copy
+Edit
+<li><a href="/capsule-analytics">Analytics</a></li>
+✅ Update client/src/App.tsx Routing
+tsx
+Copy
+Edit
+<Route path="/capsule-analytics" element={<CapsuleAnalyticsPage />} />
+✅ Install Chart.js & React Wrapper (1-time):
+bash
+Copy
+Edit
+npm install chart.js react-chartjs-2
+✅ REPLIT DEPLOY INSTRUCTIONS (copy/paste to Replit AI):
+markdown
+Copy
+Edit
+📈 NEXT TASK: DEPLOY CAPSULE ANALYTICS CHART
+
+1. Add file `client/src/components/ui/CapsuleAnalyticsChart.tsx`
+2. Add file `client/src/pages/capsule-analytics.tsx`
+3. Update `App.tsx` with route: `/capsule-analytics`
+4. Add link to navigation
+5. Run: `npm install chart.js react-chartjs-2`
+6. Confirm chart renders historical yield + resonance data
+7. Delete any outdated chart components to maintain clean repo
+✅ Would you like to activate:
+📍 Dynamic capsule ID loading (via URL)
+
+🔁 Real backend pulling from Supabase/Contract logs
+
+🌐 Shareable analytics pages with /capsule/:id/analytics
+
+Otherwise, I will proceed to PHASE 20: Veritus Verification Engine v1. Just say:
+PROCEED NEXT BLOCK
+
+
+
+
+
+
+You said:
+📍 Dynamic capsule ID loading (via URL)
+
+🔁 Real backend pulling from Supabase/Contract logs
+
+🌐 Shareable analytics pages with /capsule/:id/analytics
+
+
+ChatGPT said:
+Perfect, Commander. We're now activating all three upgrades in this next elite A+++ block:
+
+✅ PHASE 20: Capsule Analytics System v2
+Objective: Convert the chart to dynamic capsule ID via URL param, fetch real data from Supabase (and contract-ready), and make analytics pages shareable with SEO-friendly routing (/capsule/:id/analytics).
+
+✅ 1. client/src/pages/capsule/[id]/analytics.tsx
+tsx
+Copy
+Edit
+// /capsule/[id]/analytics.tsx — Dynamic analytics per capsule
+import { useRouter } from 'next/router';
+import { CapsuleAnalyticsChart } from '@/components/ui/CapsuleAnalyticsChart';
+
+export default function CapsuleAnalyticsDynamicPage() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const capsuleId = parseInt(id as string, 10);
+
+  if (!capsuleId) return <p>Loading...</p>;
+
+  return (
+    <div className="container">
+      <h2>Capsule Analytics: #{capsuleId}</h2>
+      <p>Performance and sentiment insights for Capsule {capsuleId}</p>
+      <CapsuleAnalyticsChart capsuleId={capsuleId} />
+    </div>
+  );
+}
+✅ 2. Update: client/src/components/ui/CapsuleAnalyticsChart.tsx
+Replace fetchYieldData() with Supabase pull:
+tsx
+Copy
+Edit
+import { createClient } from '@supabase/supabase-js';
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+
+// Inside useEffect:
+const { data, error } = await supabase
+  .from('capsule_yield')
+  .select('*')
+  .eq('capsule_id', capsuleId)
+  .order('date', { ascending: true });
+
+if (error) {
+  console.error(error);
+  return;
+}
+
+const formatted = data.map((item: any) => ({
+  date: item.date,
+  yield: item.gtt_yield,
+  emotionalResonance: item.emotional_resonance
+}));
+
+setDataPoints(formatted);
+✅ 3. Create Supabase Table capsule_yield
+sql
+Copy
+Edit
+-- Create a Supabase table (capsule_yield)
+create table capsule_yield (
+  id serial primary key,
+  capsule_id integer not null,
+  date date not null,
+  gtt_yield numeric,
+  emotional_resonance numeric
+);
+⚠️ You may seed this with mock data initially if contract events aren't yet piped to Supabase.
+
+✅ 4. Add Link Format Anywhere:
+tsx
+Copy
+Edit
+<Link href={`/capsule/${capsuleId}/analytics`}>
+  <button className="outline">View Analytics</button>
+</Link>
+✅ 5. [optional] Add SEO Head to page:
+tsx
+Copy
+Edit
+import Head from 'next/head';
+// inside component
+<Head>
+  <title>Capsule #{capsuleId} Analytics | GuardianChain</title>
+  <meta name="description" content="Live yield and resonance data for Capsule NFT" />
+</Head>
+✅ REPLIT DEPLOY COMMAND:
+pgsql
+Copy
+Edit
+📈 DEPLOY CAPSULE ANALYTICS V2
+
+1. Create `pages/capsule/[id]/analytics.tsx`
+2. Update `CapsuleAnalyticsChart` to pull from Supabase
+3. Add table `capsule_yield` to Supabase (see schema above)
+4. Ensure capsuleId is parsed dynamically from route
+5. Add link pattern: `/capsule/${capsuleId}/analytics`
+6. Add mock data to `capsule_yield` table for demo
+7. Remove static capsule-analytics.tsx if now redundant
+💡 Once this is in, users can generate shareable performance links like:
+
+bash
+Copy
+Edit
+https://yourapp.repl.co/capsule/13/analytics
+Say PROCEED and I’ll begin PHASE 21: Veritus Chain-of-Truth Verification Engine v1
+→ (verifies capsule origin + emotional authority)

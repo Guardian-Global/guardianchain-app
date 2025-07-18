@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import CapsuleAnalyticsChart from "@/components/analytics/CapsuleAnalyticsChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -147,17 +147,28 @@ export default function CapsuleAnalyticsPage() {
                       <span className="text-slate-400">Total Yield:</span>
                       <span className="text-white font-semibold">{capsule.yield}</span>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedCapsuleId(capsule.id);
-                      }}
-                    >
-                      View Analytics
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCapsuleId(capsule.id);
+                        }}
+                      >
+                        Quick View
+                      </Button>
+                      <Link href={`/capsule/${capsule.id}/analytics`}>
+                        <Button
+                          size="sm"
+                          style={{ backgroundColor: BRAND_COLORS.GUARDIAN }}
+                          className="px-3"
+                        >
+                          Full Report
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
