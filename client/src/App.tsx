@@ -44,6 +44,9 @@ import EmbedCapsulePage from "./pages/embed-capsule";
 import YieldTrackerPage from "./pages/yield-tracker";
 import CapsuleAnalyticsPage from "./pages/capsule-analytics";
 import DynamicCapsuleAnalytics from "./pages/capsule/[id]/analytics";
+import FinancialDashboard from "./pages/financial-dashboard";
+import TiersPage from "./pages/tiers";
+import DonateAccessPage from "./pages/donate-access";
 
 function Router() {
   return (
@@ -85,6 +88,9 @@ function Router() {
         <Route path="/yield-tracker" component={YieldTrackerPage} />
         <Route path="/capsule-analytics" component={CapsuleAnalyticsPage} />
         <Route path="/capsule/:id/analytics" component={DynamicCapsuleAnalytics} />
+        <Route path="/financial-dashboard" component={FinancialDashboard} />
+        <Route path="/tiers" component={TiersPage} />
+        <Route path="/donate-access" component={DonateAccessPage} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>

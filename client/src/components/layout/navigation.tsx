@@ -30,6 +30,9 @@ const navigation = [
   { name: "Airdrop", href: "/airdrop" },
   { name: "Auction House", href: "/auction-house" },
   { name: "Yield Tracker", href: "/yield-tracker" },
+  { name: "Financial", href: "/financial-dashboard" },
+  { name: "Tiers", href: "/tiers" },
+  { name: "Donate", href: "/donate-access" },
   { name: "Governance", href: "/governance" },
 ];
 
