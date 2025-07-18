@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CapsuleTypeSelector from '@/components/CapsuleTypes/CapsuleTypeSelector';
+import CapsuleTypeSelector from '@/components/capsule/CapsuleTypeSelector';
 import { CapsuleType } from '@/types/capsule';
 import { Palette, Brain, FileText, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
