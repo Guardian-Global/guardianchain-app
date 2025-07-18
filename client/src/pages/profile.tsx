@@ -7,9 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CapsuleCard from "@/components/capsule/capsule-card";
+import XPGraph from "@/components/Profile/XPGraph";
+import SoulboundNFTDisplay from "@/components/Profile/SoulboundNFTDisplay";
+import CapsuleHistory from "@/components/Profile/CapsuleHistory";
+import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
+import { useAccount } from 'wagmi';
 
 export default function Profile() {
   const { id } = useParams();
+  const { address } = useAccount();
   const userId = id ? parseInt(id) : 1; // Default to user 1 for demo
 
   const { data: user, isLoading: userLoading } = useQuery({
@@ -128,9 +134,12 @@ export default function Profile() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="capsules" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3 bg-slate-800 border-slate-700">
+              <TabsList className="grid w-full grid-cols-4 bg-slate-800 border-slate-700">
                 <TabsTrigger value="capsules" className="data-[state=active]:bg-primary">
                   Capsules
+                </TabsTrigger>
+                <TabsTrigger value="history" className="data-[state=active]:bg-primary">
+                  History
                 </TabsTrigger>
                 <TabsTrigger value="transactions" className="data-[state=active]:bg-primary">
                   Transactions
@@ -164,6 +173,10 @@ export default function Profile() {
                     <div className="text-slate-400 text-lg">No capsules created yet.</div>
                   </div>
                 )}
+              </TabsContent>
+
+              <TabsContent value="history" className="space-y-6">
+                <CapsuleHistory userAddress={address} />
               </TabsContent>
 
               <TabsContent value="transactions" className="space-y-4">
@@ -253,45 +266,8 @@ export default function Profile() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Quick Stats */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle>Quick Stats</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Member Since</span>
-                  <span className="text-sm font-medium">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Verification Rate</span>
-                  <span className="text-sm font-medium text-emerald-400">
-                    {user.totalCapsules > 0 ? Math.round((user.verifiedCapsules / user.totalCapsules) * 100) : 0}%
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Wallet Connected</span>
-                  <Badge variant={user.walletAddress ? "default" : "secondary"}>
-                    {user.walletAddress ? "Yes" : "No"}
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="text-center py-8">
-                  <Calendar className="mx-auto h-8 w-8 text-slate-400 mb-2" />
-                  <div className="text-sm text-slate-400">No recent activity</div>
-                </div>
-              </CardContent>
-            </Card>
+            <XPGraph address={address} />
+            <SoulboundNFTDisplay address={address} />
           </div>
         </div>
       </div>
