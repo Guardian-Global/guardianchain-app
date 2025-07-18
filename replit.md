@@ -110,6 +110,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### July 18, 2025 - Phase 16: TruthAuction Engine Deployment Complete ✅
+- **TruthAuctionEngine Smart Contract**: Advanced auction system for capsule yield rights with reserve pricing and platform fees
+- **Deployed Address**: 0x5FbDB2315678afecb367f032d93F642f64180aa3 on Hardhat local network (31337)
+- **TruthAuctionPanel Component**: Complete React interface for creating auctions, placing bids, and sealing completed auctions
+- **MintCapsuleNFT Component**: Enhanced NFT minting component for creating capsule certificates with grief scoring
+- **Auction House Page**: Dedicated auction marketplace at /auction-house with full workflow management
+- **Smart Contract Features**: 7-day auction duration, reserve pricing, platform fee collection (2.5%), bidder refunds, creator payments
+- **UI Integration**: Added "Auction House" to navigation, complete auction lifecycle management, real-time auction tracking
+- **Economic Model**: Truth value discovery through community bidding, capsule monetization for creators, platform revenue generation
+
 ### July 18, 2025 - Phase 15: CapsuleFactoryV2 Protocol Upgrade Complete ✅
 - **CapsuleFactoryV2 Smart Contract**: Enhanced capsule creation with emotional yield tracking and Veritus verification system
 - **Deployed Address**: 0x5FbDB2315678afecb367f032d93F642f64180aa3 on Hardhat local network (31337)

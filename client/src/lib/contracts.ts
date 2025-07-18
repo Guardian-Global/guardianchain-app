@@ -10,6 +10,7 @@ export interface ContractAddresses {
   dao: string;
   feeManager: string;
   treasury: string;
+  auctionEngine: string;
 }
 
 export const CONTRACTS: Record<string, ContractAddresses> = {
@@ -23,7 +24,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
     dao: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
     feeManager: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    treasury: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    treasury: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    auctionEngine: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   },
   
   // Sepolia Testnet
@@ -36,7 +38,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     nft: "0x...",          // Replace after deploy
     dao: "0x...",          // Replace after deploy
     feeManager: "0x...",   // Replace after deploy
-    treasury: "0x..."      // Replace after deploy
+    treasury: "0x...",      // Replace after deploy
+    auctionEngine: "0x..." // Replace after deploy
   },
   
   // Polygon Amoy Testnet  
@@ -49,7 +52,8 @@ export const CONTRACTS: Record<string, ContractAddresses> = {
     nft: "0x...",          // Will be updated after deployment
     dao: "0x...",          // Will be updated after deployment
     feeManager: "0x...",   // Will be updated after deployment
-    treasury: "0x..."      // Will be updated after deployment
+    treasury: "0x...",      // Will be updated after deployment
+    auctionEngine: "0x..." // Will be updated after deployment
   }
 };
 
@@ -505,6 +509,72 @@ export const CAPSULE_FACTORY_V2_ABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  }
+] as const;
+
+// Truth Auction Engine ABI
+export const TRUTH_AUCTION_ABI = [
+  {
+    "inputs": [
+      { "internalType": "string", "name": "capsuleHash", "type": "string" },
+      { "internalType": "uint256", "name": "reservePrice", "type": "uint256" }
+    ],
+    "name": "createAuction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id", "type": "uint256" }],
+    "name": "placeBid",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id", "type": "uint256" }],
+    "name": "sealAuction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "id", "type": "uint256" }],
+    "name": "getAuction",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "creator", "type": "address" },
+          { "internalType": "string", "name": "capsuleHash", "type": "string" },
+          { "internalType": "uint256", "name": "reservePrice", "type": "uint256" },
+          { "internalType": "uint256", "name": "highestBid", "type": "uint256" },
+          { "internalType": "address", "name": "highestBidder", "type": "address" },
+          { "internalType": "uint256", "name": "endTime", "type": "uint256" },
+          { "internalType": "bool", "name": "sealed", "type": "bool" },
+          { "internalType": "bool", "name": "complete", "type": "bool" },
+          { "internalType": "bool", "name": "cancelled", "type": "bool" }
+        ],
+        "internalType": "struct TruthAuctionEngine.Auction",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "auctionCounter",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ] as const;

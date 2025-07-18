@@ -1247,6 +1247,45 @@
       "artifacts": [
         "CapsuleFactoryV2"
       ]
+    },
+    "/home/runner/workspace/solidity/contracts/TruthAuctionEngine.sol": {
+      "lastModificationDate": 1752819482692,
+      "contentHash": "2cdd8c54fad51af0c0074b90e5e2e79f",
+      "sourceName": "solidity/contracts/TruthAuctionEngine.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TruthAuctionEngine"
+      ]
     }
   }
 }

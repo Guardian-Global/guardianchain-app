@@ -39,6 +39,7 @@ import AirdropPage from "@/pages/airdrop";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 import TestProfilePage from "./pages/test-profile";
+import AuctionHousePage from "./pages/auction-house";
 
 function Router() {
   return (
@@ -75,6 +76,7 @@ function Router() {
         <Route path="/launchpad" component={LaunchpadPage} />
         <Route path="/referral" component={ReferralPage} />
         <Route path="/airdrop" component={AirdropPage} />
+        <Route path="/auction-house" component={AuctionHousePage} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>

@@ -28,6 +28,7 @@ const navigation = [
   { name: "Launchpad", href: "/launchpad" },
   { name: "Referrals", href: "/referral" },
   { name: "Airdrop", href: "/airdrop" },
+  { name: "Auction House", href: "/auction-house" },
   { name: "Governance", href: "/governance" },
 ];
 
