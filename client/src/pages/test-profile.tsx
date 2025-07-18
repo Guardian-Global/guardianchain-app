@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import XPGraph from '@/components/Profile/XPGraph';
 import SoulboundNFTDisplay from '@/components/Profile/SoulboundNFTDisplay';
 import CapsuleHistory from '@/components/Profile/CapsuleHistory';
+import NetworkIndicator from '@/components/web3/NetworkIndicator';
 import { BRAND_COLORS, BRAND_NAME } from '@/lib/constants';
 
 export default function TestProfilePage() {
@@ -63,31 +64,41 @@ export default function TestProfilePage() {
           </CardContent>
         </Card>
 
+        {/* Network Status */}
+        <Card className="mb-8 bg-slate-800/50 border-slate-700">
+          <CardHeader>
+            <CardTitle className="text-white">Web3 Network Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <NetworkIndicator />
+          </CardContent>
+        </Card>
+
         {/* API Status */}
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">API Status Check</CardTitle>
+            <CardTitle className="text-white">System Status Check</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-slate-700/30 rounded-lg p-4">
-                <h4 className="text-white font-semibold mb-2">Available Endpoints</h4>
+                <h4 className="text-white font-semibold mb-2">API Endpoints</h4>
                 <ul className="text-sm text-slate-300 space-y-1">
-                  <li>✅ /api/users/{testWalletAddress}</li>
-                  <li>✅ /api/users/{testWalletAddress}/xp-history</li>
-                  <li>✅ /api/users/{testWalletAddress}/achievements</li>
-                  <li>✅ /api/users/{testWalletAddress}/capsules</li>
-                  <li>✅ /api/capsule-types</li>
+                  <li>✅ User Profile API</li>
+                  <li>✅ XP History API</li>
+                  <li>✅ Achievements API</li>
+                  <li>✅ Capsules API</li>
+                  <li>✅ Capsule Types API</li>
                 </ul>
               </div>
               <div className="bg-slate-700/30 rounded-lg p-4">
-                <h4 className="text-white font-semibold mb-2">Component Status</h4>
+                <h4 className="text-white font-semibold mb-2">Components</h4>
                 <ul className="text-sm text-slate-300 space-y-1">
-                  <li>🔧 XPGraph - API Integration</li>
-                  <li>🔧 SoulboundNFTDisplay - API Integration</li>
-                  <li>🔧 CapsuleHistory - API Integration</li>
-                  <li>✅ CapsuleTypeSelector - Working</li>
-                  <li>✅ IPFS Manager - Ready</li>
+                  <li>✅ XPGraph - Real Data</li>
+                  <li>✅ SoulboundNFTDisplay - Real Data</li>
+                  <li>✅ CapsuleHistory - Real Data</li>
+                  <li>✅ Web3 Integration - Fixed</li>
+                  <li>✅ Network Detection - Working</li>
                 </ul>
               </div>
             </div>

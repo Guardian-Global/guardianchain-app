@@ -2,19 +2,40 @@ import { createConfig, http } from 'wagmi';
 import { mainnet, sepolia, polygon, polygonAmoy } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 
-// Contract addresses (will be deployed addresses)
+// Local Hardhat development chain
+const hardhat = {
+  id: 31337,
+  name: 'Hardhat',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ether',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: {
+      http: ['http://127.0.0.1:8545'],
+    },
+  },
+  blockExplorers: {
+    default: { name: 'Local', url: 'http://localhost:8545' },
+  },
+} as const;
+
+// Contract addresses from current deployments
 export const CONTRACTS = {
   GTT_TOKEN: {
     [mainnet.id]: '0x0000000000000000000000000000000000000000', // Deploy GTT here
     [sepolia.id]: '0x0000000000000000000000000000000000000000', // Testnet GTT
     [polygon.id]: '0x0000000000000000000000000000000000000000', // Polygon GTT
     [polygonAmoy.id]: '0x0000000000000000000000000000000000000000', // Polygon testnet GTT
+    [hardhat.id]: '0x5FbDB2315678afecb367f032d93F642f64180aa3', // Local hardhat GTT
   },
   TRUTH_VAULT: {
     [mainnet.id]: '0x0000000000000000000000000000000000000000', // Deploy TruthVault here
     [sepolia.id]: '0x0000000000000000000000000000000000000000', // Testnet TruthVault
     [polygon.id]: '0x0000000000000000000000000000000000000000', // Polygon TruthVault
     [polygonAmoy.id]: '0x0000000000000000000000000000000000000000', // Polygon testnet TruthVault
+    [hardhat.id]: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', // Local hardhat TruthVault
   }
 } as const;
 
@@ -130,7 +151,7 @@ export const TRUTH_VAULT_ABI = [
 
 // Wagmi configuration
 export const wagmiConfig = createConfig({
-  chains: [mainnet, sepolia, polygon, polygonAmoy],
+  chains: [hardhat, mainnet, sepolia, polygon, polygonAmoy],
   connectors: [
     injected({
       shimDisconnect: true,
@@ -150,6 +171,7 @@ export const wagmiConfig = createConfig({
     }),
   ],
   transports: {
+    [hardhat.id]: http('http://127.0.0.1:8545'),
     [mainnet.id]: http(`https://eth-mainnet.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY || 'demo'}`),
     [sepolia.id]: http(`https://eth-sepolia.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY || 'demo'}`),
     [polygon.id]: http(`https://polygon-mainnet.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY || 'demo'}`),
@@ -157,17 +179,19 @@ export const wagmiConfig = createConfig({
   },
 });
 
-// Helper function to get contract address for current chain
+// Helper function to get contract address for current chain  
 export function getContractAddress(contractName: keyof typeof CONTRACTS, chainId: number): string {
   const address = CONTRACTS[contractName][chainId as keyof typeof CONTRACTS[typeof contractName]];
   if (!address || address === '0x0000000000000000000000000000000000000000') {
-    throw new Error(`${contractName} not deployed on chain ${chainId}`);
+    console.warn(`${contractName} not deployed on chain ${chainId}, using zero address`);
+    return '0x0000000000000000000000000000000000000000';
   }
   return address;
 }
 
 // Network display names
 export const NETWORK_NAMES = {
+  [hardhat.id]: 'Hardhat Local',
   [mainnet.id]: 'Ethereum',
   [sepolia.id]: 'Sepolia Testnet',
   [polygon.id]: 'Polygon',

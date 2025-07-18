@@ -26,18 +26,29 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
+  // Get contract address with error handling
+  const getVaultAddress = () => {
+    if (!chainId) return undefined;
+    try {
+      return getContractAddress(chainId, 'vault') as `0x${string}`;
+    } catch (error) {
+      console.warn('Failed to get vault address:', error);
+      return undefined;
+    }
+  };
+
   // Read seal information
   const { 
     data: sealInfo, 
     isLoading: isLoadingSeal,
     refetch: refetchSeal 
   } = useReadContract({
-    address: chainId ? getContractAddress(chainId, 'vault') as `0x${string}` : undefined,
+    address: getVaultAddress(),
     abi: CONTRACT_ABIS.TruthVault,
     functionName: 'getSeal',
     args: capsuleId ? [BigInt(capsuleId)] : undefined,
     query: {
-      enabled: !!capsuleId && !!chainId,
+      enabled: !!capsuleId && !!chainId && !!getVaultAddress(),
     }
   }) as { 
     data: SealInfo | undefined, 
@@ -72,8 +83,20 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
 
     if (!chainId) {
       toast({
-        title: "No Network",
-        description: "Please connect to a supported network",
+        title: "No Network Connected",
+        description: "Please connect your wallet and switch to a supported network",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let vaultAddress;
+    try {
+      vaultAddress = getContractAddress(chainId, 'vault');
+    } catch (error) {
+      toast({
+        title: "Unsupported Network",
+        description: "Please switch to Hardhat Local (31337), Sepolia, Polygon, or Polygon Amoy",
         variant: "destructive",
       });
       return;

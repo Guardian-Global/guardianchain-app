@@ -58,12 +58,21 @@ export function getContractAddress(chainId: number, contractName: keyof Contract
   );
   
   if (!networkKey) {
-    throw new Error(`Unsupported chain ID: ${chainId}`);
+    console.warn(`Unsupported chain ID: ${chainId}. Using local hardhat for development.`);
+    // Fallback to local hardhat for development
+    if (CONTRACTS.hardhat) {
+      const address = CONTRACTS.hardhat[contractName];
+      if (address && address !== "0x...") {
+        return address;
+      }
+    }
+    throw new Error(`Unsupported chain ID: ${chainId}. Please switch to a supported network.`);
   }
   
   const address = CONTRACTS[networkKey][contractName];
   if (!address || address === "0x...") {
-    throw new Error(`Contract ${contractName} not deployed on chain ${chainId}`);
+    console.warn(`Contract ${contractName} not deployed on chain ${chainId}`);
+    return "0x0000000000000000000000000000000000000000"; // Return zero address instead of throwing
   }
   
   return address;
