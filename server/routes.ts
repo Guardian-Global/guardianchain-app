@@ -28,6 +28,7 @@ import { registerAdminRoutes } from "./routes/admin";
 import { setupSecurityMiddleware } from "./routes/security";
 import { registerFinancialRoutes } from "./routes/financial";
 import { registerContactRoutes } from "./routes/contact";
+import { registerNotificationRoutes } from "./routes/notifications";
 import { automationService } from "./services/automation";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -46,6 +47,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Contact and communication routes
   registerContactRoutes(app);
+  
+  // Notification and email routes
+  registerNotificationRoutes(app);
   // Register Stripe webhook handler
   registerStripeWebhook(app);
   // Register GuardianChain API routes

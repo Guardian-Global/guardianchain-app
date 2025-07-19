@@ -15,6 +15,7 @@ const navigation = [
   { name: "Profile", href: "/profile" },
   { name: "Master Admin", href: "/master-admin" },
   { name: "Contact", href: "/contact" },
+  { name: "Notifications", href: "/notifications" },
 ];
 
 export default function Navigation() {

@@ -58,6 +58,8 @@ import PremiumFeaturesPage from "./pages/premium-features";
 import ViralTools from "./pages/viral-tools";
 import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
+import Contact from "./pages/Contact";
+import Notifications from "./pages/Notifications";
 
 function Router() {
   return (
