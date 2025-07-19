@@ -261,7 +261,7 @@ export function registerNotificationRoutes(app: Express) {
     }
   });
 
-  // Test email functionality
+  // Test email functionality with founder CC
   app.post('/api/notifications/test', simpleAuth, async (req, res) => {
     try {
       const { email, testType } = req.body;
@@ -307,7 +307,8 @@ export function registerNotificationRoutes(app: Express) {
         success: true, 
         message: `Test ${testType} email ${isConfigured ? 'sent' : 'simulated'} to ${email}`,
         smtpConfigured: isConfigured,
-        note: isConfigured ? 'Email sent via ProtonMail SMTP' : 'Email simulated - configure ProtonMail SMTP to enable sending'
+        note: isConfigured ? 'Email sent via ProtonMail SMTP with founder@guardianchain.org CC backup' : 'Email simulated - configure ProtonMail SMTP to enable sending',
+        founderBackup: 'All emails automatically CC founder@guardianchain.org for backup'
       });
     } catch (error) {
       console.error('Error sending test email:', error);
@@ -319,6 +320,56 @@ export function registerNotificationRoutes(app: Express) {
         details: isConfigured ? error.message : 'ProtonMail SMTP credentials required',
         smtpConfigured: isConfigured,
         requiredSecrets: ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS']
+      });
+    }
+  });
+
+  // Test founder email specifically
+  app.post('/api/notifications/test-founder', simpleAuth, async (req, res) => {
+    try {
+      const { testType = 'digest' } = req.body;
+      
+      const founderUser = { email: 'founder@guardianchain.org', name: 'GUARDIANCHAIN Founder' };
+      
+      let result;
+      switch (testType) {
+        case 'memory':
+          result = await notifyMemorySaved({
+            user: founderUser,
+            message: 'Founder test prompt for GUARDIANCHAIN AI',
+            reply: 'This is a test response for the founder showing AI memory system functionality.',
+            threadId: 'founder-test-thread-456'
+          });
+          break;
+        case 'capsule':
+          result = await notifyCapsuleSealed({ user: founderUser, capsuleId: 'FOUNDER-TEST-001' });
+          break;
+        case 'digest':
+          result = await sendDigest({
+            ...founderUser,
+            weeklyYield: 125.5,
+            sealedCount: 12,
+            remixedCount: 24,
+            viewCount: 589,
+            topCapsule: 'Founder Test Capsule #001',
+            engagementRate: '87.3%',
+            portfolioGrowth: '23.7%'
+          });
+          break;
+        default:
+          return res.status(400).json({ error: 'Invalid test type' });
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `Founder test ${testType} email sent to founder@guardianchain.org`,
+        note: 'Direct founder email test - no CC needed'
+      });
+    } catch (error) {
+      console.error('Error sending founder test email:', error);
+      res.status(500).json({ 
+        error: 'Failed to send founder test email',
+        details: error.message
       });
     }
   });

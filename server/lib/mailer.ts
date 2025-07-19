@@ -29,6 +29,9 @@ export async function setUserEmailPreference(email: string, enabled: boolean) {
 
 import { getEmailSystemStatus, mockSendEmail } from './emailStatus';
 
+// Secondary founder email for backup and oversight
+const FOUNDER_EMAIL = "founder@guardianchain.org";
+
 export async function sendGuardianEmail({
   to,
   subject,
@@ -36,6 +39,7 @@ export async function sendGuardianEmail({
   html,
   text,
   forceSend = false,
+  ccFounder = true,
 }: {
   to: string;
   subject: string;
@@ -43,6 +47,7 @@ export async function sendGuardianEmail({
   html?: string;
   text?: string;
   forceSend?: boolean;
+  ccFounder?: boolean;
 }) {
   const emailStatus = getEmailSystemStatus();
   
@@ -75,15 +80,21 @@ export async function sendGuardianEmail({
       <img src="https://track.guardianchain.ai/pixel?email=${encodeURIComponent(to)}" width="1" height="1" style="display: none;"/>
     `;
 
+    // Prepare recipient list with founder CC for backup
+    const recipients = to;
+    const ccList = ccFounder && to !== FOUNDER_EMAIL ? [FOUNDER_EMAIL] : [];
+
     const res = await transporter.sendMail({
       from: `"GUARDIANCHAIN AI" <${process.env.SMTP_USER}>`,
-      to,
+      to: recipients,
+      cc: ccList.length > 0 ? ccList.join(', ') : undefined,
       subject,
       text: plain,
       html: brandedHtml,
     });
 
-    console.log(`✉️ Sent to ${to}: ${subject} (${res.messageId})`);
+    const ccNote = ccList.length > 0 ? ` (CC: ${ccList.join(', ')})` : '';
+    console.log(`✉️ Sent to ${to}${ccNote}: ${subject} (${res.messageId})`);
     return res;
   } catch (err) {
     console.error("❌ Email send failed:", err);

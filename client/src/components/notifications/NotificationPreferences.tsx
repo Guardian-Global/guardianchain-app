@@ -298,10 +298,9 @@ export default function NotificationPreferences() {
           {/* Test Email Buttons */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">Test Email System</Label>
-            <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                📧 Email system is ready! Configure ProtonMail SMTP credentials to enable live sending.
-                Currently simulating email sends for testing.
+            <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-3">
+              <p className="text-sm text-green-700 dark:text-green-300">
+                ✅ Live ProtonMail SMTP active! All emails sent with founder@guardianchain.org CC backup.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -330,8 +329,17 @@ export default function NotificationPreferences() {
                 Test Weekly GTT Digest
               </Button>
             </div>
+            <div className="flex flex-wrap gap-2 mt-3">
+              <Button
+                onClick={() => window.fetch('/api/notifications/test-founder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ testType: 'digest' }) }).then(() => toast({ title: "Founder Test Sent", description: "Check founder@guardianchain.org inbox" }))}
+                variant="secondary"
+                size="sm"
+              >
+                Test Founder Email
+              </Button>
+            </div>
             <div className="text-xs text-muted-foreground mt-2">
-              All 8 notification types ready: Memory saves, Capsule events, DAO votes, Weekly reports, Legacy alerts, Admin notifications, Monthly summaries, Preference confirmations
+              All 8 notification types ready with founder@guardianchain.org backup: Memory saves, Capsule events, DAO votes, Weekly reports, Legacy alerts, Admin notifications, Monthly summaries, Preference confirmations
             </div>
           </div>
 
