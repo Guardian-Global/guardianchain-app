@@ -63,6 +63,7 @@ import Notifications from "./pages/Notifications";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
+import TokenLaunch from "./pages/token-launch";
 
 function Router() {
   return (
@@ -121,6 +122,7 @@ function Router() {
         <Route path="/master-admin" component={MasterAdmin} />
         <Route path="/contact" component={() => <ContactInfo />} />
         <Route path="/notifications" component={Notifications} />
+        <Route path="/token-launch" component={TokenLaunch} />
         
         {/* Legal Pages */}
         <Route path="/legal/privacy" component={PrivacyPolicy} />

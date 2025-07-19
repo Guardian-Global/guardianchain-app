@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import WalletConnect from "@/components/web3/wallet-connect";
 import { useTheme } from "@/components/web3/theme-provider";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useTranslation } from "@/lib/i18n";
 
 // Core navigation focused on enterprise features
 const navigation = [
-  { name: "Explore", href: "/explore" },
-  { name: "Create", href: "/create" },
-  { name: "Viral Tools", href: "/viral-tools" },
-  { name: "Analytics", href: "/capsule-analytics" },
-  { name: "Profile", href: "/profile" },
-  { name: "Master Admin", href: "/master-admin" },
+  { name: "Explore", href: "/explore", translationKey: "nav.explore" },
+  { name: "Create", href: "/create", translationKey: "nav.create" },
+  { name: "Token Launch", href: "/token-launch", translationKey: "token.launch" },
+  { name: "Analytics", href: "/capsule-analytics", translationKey: "nav.analytics" },
+  { name: "Profile", href: "/profile", translationKey: "nav.profile" },
+  { name: "Master Admin", href: "/master-admin", translationKey: "nav.enterprise" },
   { name: "Contact", href: "/contact" },
   { name: "Notifications", href: "/notifications" },
 ];
@@ -22,6 +24,7 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-glass border-b border-slate-800">
@@ -48,7 +51,7 @@ export default function Navigation() {
                       location === item.href ? "text-primary" : ""
                     }`}
                   >
-                    {item.name}
+                    {item.translationKey ? t(item.translationKey as any) : item.name}
                   </Button>
                 </Link>
               ))}
@@ -70,6 +73,8 @@ export default function Navigation() {
             </div>
             
             <WalletConnect />
+            
+            <LanguageSelector />
             
             <Button
               variant="ghost"
