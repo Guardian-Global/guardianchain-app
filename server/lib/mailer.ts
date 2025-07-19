@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-import { marked } from "marked";
+import { renderMarkdown } from "./renderMarkdown";
+import { getUserPreferences, isEmailTypeEnabled } from "../utils/emailPrefs";
 
 export const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -11,26 +12,10 @@ export const transporter = nodemailer.createTransport({
   },
 });
 
-// Enhanced markdown to HTML renderer
-export function renderMarkdown(markdown: string): string {
-  return marked.parse(markdown);
-}
-
-// Advanced email preferences system
-const emailPrefsDB = new Map();
-
-export async function getUserPreferences(email: string) {
-  return emailPrefsDB.get(email.toLowerCase()) || { emailEnabled: true };
-}
-
-export async function setUserEmailPreference(email: string, enabled: boolean) {
-  emailPrefsDB.set(email.toLowerCase(), { emailEnabled: enabled });
-}
-
 import { getEmailSystemStatus, mockSendEmail } from './emailStatus';
 
-// Secondary founder email for backup and oversight
-const FOUNDER_EMAIL = "founder@guardianchain.org";
+// Primary founder email for oversight and compliance
+const FOUNDER_EMAIL = "founder+guardian-admin@guardianchain.org";
 
 export async function sendGuardianEmail({
   to,
@@ -39,7 +24,7 @@ export async function sendGuardianEmail({
   html,
   text,
   forceSend = false,
-  ccFounder = true,
+  notificationType = "general",
 }: {
   to: string;
   subject: string;
@@ -47,7 +32,7 @@ export async function sendGuardianEmail({
   html?: string;
   text?: string;
   forceSend?: boolean;
-  ccFounder?: boolean;
+  notificationType?: string;
 }) {
   const emailStatus = getEmailSystemStatus();
   
@@ -59,46 +44,45 @@ export async function sendGuardianEmail({
 
   try {
     // Check user preferences (bypass for critical alerts)
-    const prefs = await getUserPreferences(to);
-    if (!prefs?.emailEnabled && !forceSend) {
-      console.log(`📭 Email disabled for ${to}`);
-      return;
+    if (!forceSend) {
+      const prefs = await getUserPreferences(to);
+      if (!prefs?.emailEnabled) {
+        console.log(`📭 Email disabled for ${to} - skipping: ${subject}`);
+        return;
+      }
     }
 
-    // Advanced template processing
-    const finalHtml = html || (markdown ? renderMarkdown(markdown) : '');
-    const plain = text || (markdown || '').replace(/[#_*`]/g, '');
+    // Generate HTML content
+    const finalHtml = html || renderMarkdown(markdown || "");
+    const plainText = text || (markdown || "").replace(/[#_*`]/g, "");
 
-    // Add GUARDIANCHAIN branding and tracking
-    const brandedHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #7F5AF0 0%, #2CB67D 100%); color: white; padding: 20px; border-radius: 10px;">
-        ${finalHtml}
-        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); text-align: center;">
-          <p style="color: #2CB67D; font-weight: bold; margin: 0;">GUARDIANCHAIN - Digital Sovereignty Secured</p>
-        </div>
-      </div>
-      <img src="https://track.guardianchain.ai/pixel?email=${encodeURIComponent(to)}" width="1" height="1" style="display: none;"/>
-    `;
+    // Add tracking pixel
+    const htmlWithTracking = finalHtml + `<img src="https://track.guardianchain.app/pixel?email=${encodeURIComponent(to)}&type=${notificationType}" width="1" height="1" style="display:none;" />`;
 
-    // Prepare recipient list with founder CC for backup
-    const recipients = to;
-    const ccList = ccFounder && to !== FOUNDER_EMAIL ? [FOUNDER_EMAIL] : [];
+    // Always CC founder for oversight and compliance
+    const recipients = [to, FOUNDER_EMAIL];
 
     const res = await transporter.sendMail({
-      from: `"GUARDIANCHAIN AI" <${process.env.SMTP_USER}>`,
+      from: `"GUARDIANCHAIN Protocol" <${process.env.SMTP_USER}>`,
       to: recipients,
-      cc: ccList.length > 0 ? ccList.join(', ') : undefined,
-      subject,
-      text: plain,
-      html: brandedHtml,
+      subject: `[GUARDIANCHAIN] ${subject}`,
+      text: plainText,
+      html: htmlWithTracking,
     });
 
-    const ccNote = ccList.length > 0 ? ` (CC: ${ccList.join(', ')})` : '';
-    console.log(`✉️ Sent to ${to}${ccNote}: ${subject} (${res.messageId})`);
+    console.log(`✉️ GUARDIANCHAIN email sent to ${to} (CC: founder): ${subject} (type: ${notificationType})`);
     return res;
   } catch (err) {
-    console.error("❌ Email send failed:", err);
+    console.error("❌ GUARDIANCHAIN email send failed:", err);
     // Fallback to mock for development
     return mockSendEmail(to, subject);
   }
+}
+
+// Legacy function for backward compatibility
+export async function sendNotificationEmail(params: any) {
+  return sendGuardianEmail({
+    ...params,
+    markdown: params.message,
+  });
 }

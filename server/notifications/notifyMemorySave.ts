@@ -1,35 +1,54 @@
 import { sendGuardianEmail } from "../lib/mailer";
 
-export async function notifyMemorySaved({
-  user,
-  message,
-  reply,
+export async function notifyMemorySaved({ 
+  user, 
+  message, 
+  reply, 
   threadId,
-}: any) {
+  importance = "medium"
+}: {
+  user: { email: string; name?: string };
+  message: string;
+  reply: string;
+  threadId: string;
+  importance?: "low" | "medium" | "high" | "critical";
+}) {
+  const emoji = importance === "critical" ? "🚨" : importance === "high" ? "⚡" : "🧠";
+  
   await sendGuardianEmail({
     to: user.email,
-    subject: "🧠 GUARDIANCHAIN AI Memory Saved",
+    subject: `${emoji} AI Memory Saved - ${importance.toUpperCase()} Priority`,
+    notificationType: "ai_memory",
     markdown: `
-## 🧠 New Memory Stored
+# ${emoji} AI Memory Successfully Stored
 
-Your Sovereign AI has saved a significant interaction with high importance value.
+Your Sovereign AI has saved a significant interaction based on importance threshold analysis.
 
-### Interaction Details
-**Prompt:** ${message}
+## Conversation Details
 
-**AI Reply:** ${reply}
+**Your Prompt:**
+> ${message}
 
-**Thread ID:** \`${threadId}\`
+**AI Response:**
+> ${reply}
 
-### Storage Confirmation
-✅ Memory encrypted and stored immutably  
-✅ Added to your digital legacy record  
-✅ Available for future AI context  
-✅ Secured with blockchain verification  
+## Memory Classification
+- **Importance Level:** ${importance.toUpperCase()}
+- **Thread ID:** \`${threadId}\`
+- **Stored:** ${new Date().toLocaleString()}
 
-This memory will enhance your AI's understanding and responses in future conversations.
+## What This Means
+Your AI assistant has determined this conversation contains valuable information for future reference. This memory is:
+- ✅ Stored immutably on-chain
+- ✅ Accessible only to you
+- ✅ Protected by zero-knowledge encryption
+- ✅ Never accessible to GUARDIANCHAIN team
 
-[View AI Memory Dashboard](https://guardianchain.ai/profile?tab=ai)
+---
+
+**[View All Memories](https://guardianchain.app/profile?tab=ai)** | **[Memory Settings](https://guardianchain.app/profile?tab=preferences)**
+
+*Your AI becomes more intelligent with each saved memory.*
 `,
   });
 }

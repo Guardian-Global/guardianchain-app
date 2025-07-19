@@ -1,70 +1,99 @@
 import { sendGuardianEmail } from "../lib/mailer";
 
-const adminEmail = "commander.guardian@protonmail.com";
+const ADMIN_EMAIL = "founder+guardian-admin@guardianchain.org";
 
-export async function notifyAdminOnCritical(message: string) {
+export async function notifyAdminOnCritical(message: string, context?: any) {
   await sendGuardianEmail({
-    to: adminEmail,
-    subject: "⚠️ GUARDIANCHAIN System Alert",
+    to: ADMIN_EMAIL,
+    subject: "🚨 GUARDIANCHAIN System Alert",
+    notificationType: "admin_alert",
+    forceSend: true, // Critical alerts always send
     markdown: `
-## URGENT SYSTEM EVENT
+# 🚨 URGENT SYSTEM EVENT
 
+**Alert Time:** ${new Date().toLocaleString()}
+
+## Critical Alert
 ${message}
 
-**Time:** ${new Date().toISOString()}
+## System Context
+${context ? `
+\`\`\`json
+${JSON.stringify(context, null, 2)}
+\`\`\`
+` : '*No additional context provided*'}
 
-**Action Required:** Immediate attention needed
+## Immediate Actions Required
+1. Review system status dashboard
+2. Check error logs and metrics
+3. Verify all critical services
+4. Execute emergency protocols if needed
 
-[Open Admin Dashboard](https://guardianchain.ai/master-admin)
+---
+
+**[Open Admin Dashboard](https://guardianchain.app/master-admin)** | **[System Health](https://guardianchain.app/admin/health)** | **[Emergency Protocols](https://guardianchain.app/admin/emergency)**
+
+*This is an automated critical alert from GUARDIANCHAIN protocol.*
 `,
-    forceSend: true,
   });
 }
 
-export async function notifyAdminUserAction({ action, userId, details }: any) {
+export async function notifyAdminUserAction(action: string, userEmail: string, details?: any) {
   await sendGuardianEmail({
-    to: adminEmail,
-    subject: `🔔 GUARDIANCHAIN User Action: ${action}`,
+    to: ADMIN_EMAIL,
+    subject: `📊 User Action: ${action}`,
+    notificationType: "admin_tracking",
     markdown: `
-## User Activity Alert
+# 📊 User Activity Report
 
-**Action:** ${action}
-**User ID:** ${userId}
-**Details:** ${details}
-**Time:** ${new Date().toISOString()}
+## Action Details
+- **Action:** ${action}
+- **User:** ${userEmail}
+- **Timestamp:** ${new Date().toLocaleString()}
 
-[View User Dashboard](https://guardianchain.ai/master-admin)
+## Additional Details
+${details ? `
+\`\`\`json
+${JSON.stringify(details, null, 2)}
+\`\`\`
+` : '*No additional details*'}
+
+---
+
+**[User Profile](https://guardianchain.app/admin/users?email=${encodeURIComponent(userEmail)})** | **[Activity Log](https://guardianchain.app/admin/activity)**
 `,
-    forceSend: true,
   });
 }
 
 export async function notifyAdminSystemHealth(healthData: any) {
   await sendGuardianEmail({
-    to: adminEmail,
-    subject: "📊 GUARDIANCHAIN Daily System Report",
+    to: ADMIN_EMAIL,
+    subject: "💗 Daily System Health Report",
+    notificationType: "admin_health",
     markdown: `
-## Daily System Health Report
+# 💗 Daily System Health Report
 
-**Date:** ${new Date().toDateString()}
+**Report Generated:** ${new Date().toLocaleString()}
 
-### System Status
-- **Database:** ${healthData.database || 'Healthy'}
-- **Blockchain:** ${healthData.blockchain || 'Healthy'}
-- **AI Services:** ${healthData.ai || 'Healthy'}
-- **Email System:** ${healthData.email || 'Healthy'}
+## System Status
+- **Overall Health:** ${healthData.status || 'Unknown'}
+- **Uptime:** ${healthData.uptime || 'N/A'}
+- **Active Users:** ${healthData.activeUsers || '0'}
+- **GTT Transactions:** ${healthData.transactions || '0'}
 
-### Daily Metrics
-- **Active Users:** ${healthData.activeUsers || 0}
-- **New Capsules:** ${healthData.newCapsules || 0}
-- **GTT Minted:** ${healthData.gttMinted || 0}
-- **Revenue:** $${healthData.revenue || 0}
+## Service Status
+${healthData.services ? Object.entries(healthData.services).map(([service, status]) => 
+  `- **${service}:** ${status}`
+).join('\n') : '*No service data available*'}
 
-### Alerts
-${healthData.alerts?.length ? healthData.alerts.map((alert: string) => `- ${alert}`).join('\n') : '- No alerts'}
+## Performance Metrics
+- **Response Time:** ${healthData.responseTime || 'N/A'}ms
+- **Error Rate:** ${healthData.errorRate || '0'}%
+- **Database Performance:** ${healthData.dbPerformance || 'Normal'}
 
-[View Full Dashboard](https://guardianchain.ai/master-admin)
+---
+
+**[Full Health Dashboard](https://guardianchain.app/admin/health)** | **[Performance Metrics](https://guardianchain.app/admin/metrics)**
 `,
-    forceSend: true,
   });
 }

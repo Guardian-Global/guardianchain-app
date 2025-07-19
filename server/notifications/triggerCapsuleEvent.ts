@@ -1,68 +1,111 @@
 import { sendGuardianEmail } from "../lib/mailer";
 
-export async function notifyCapsuleRemix({
-  user,
-  capsuleId,
+export async function notifyCapsuleRemix({ 
+  user, 
+  capsuleId, 
   remixerName,
-}: any) {
+  remixerAddress,
+  originalCapsule
+}: {
+  user: { email: string; name?: string };
+  capsuleId: string;
+  remixerName: string;
+  remixerAddress: string;
+  originalCapsule: { title: string; yield?: number };
+}) {
   await sendGuardianEmail({
     to: user.email,
-    subject: "📦 GUARDIANCHAIN Capsule Remixed",
+    subject: "🎭 Your Capsule Has Been Remixed!",
+    notificationType: "capsule_event",
     markdown: `
-## 📦 Capsule Remixed
+# 🎭 Capsule Remix Notification
 
-Your capsule \`${capsuleId}\` was remixed by **${remixerName}**.
+Great news! Your truth capsule has been remixed by another creator.
 
-### Impact Summary
-- **Original Value:** Preserved immutably
-- **Remix Value:** Building on your foundation  
-- **GTT Rewards:** Earning from derivative content
-- **Social Proof:** Increased verification weight
+## Remix Details
+- **Original Capsule:** "${originalCapsule.title}"
+- **Capsule ID:** \`${capsuleId}\`
+- **Remixed By:** ${remixerName}
+- **Remixer Address:** \`${remixerAddress}\`
+- **Date:** ${new Date().toLocaleString()}
 
-### Next Steps
-Check your yield dashboard for updated performance metrics and potential GTT rewards.
+## What This Means
+- 🎯 Your content is gaining viral traction
+- 💰 You'll earn **25% of remix yield** automatically
+- 📈 Your reputation score increases
+- 🌟 Original capsule gets enhanced visibility
 
-[View Capsule Dashboard](https://guardianchain.ai/capsule/${capsuleId})  
-[Check Yield Tracker](https://guardianchain.ai/yield-tracker)
+## Current Earnings
+${originalCapsule.yield ? `Your capsule has generated **${originalCapsule.yield} GTT** so far.` : "Yield tracking starting now."}
+
+---
+
+**[View Remix](https://guardianchain.app/capsule/${capsuleId})** | **[Dashboard](https://guardianchain.app/dashboard)** | **[Earnings](https://guardianchain.app/earnings)**
+
+*Content that gets remixed is valuable content.*
 `,
   });
 }
 
-export async function notifyCapsuleSealed({ user, capsuleId }: any) {
-  await sendGuardianEmail({
-    to: user.email,
-    subject: "🔒 GUARDIANCHAIN Capsule Sealed",
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #7F5AF0 0%, #2CB67D 100%); color: white; padding: 20px; border-radius: 10px;">
-        <h2 style="color: #2CB67D;">🔒 Seal Confirmation</h2>
-        <p>Your capsule <strong>${capsuleId}</strong> has been sealed permanently on the blockchain.</p>
-        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
-          <p>✅ <strong>Status:</strong> Immutable & Verified</p>
-          <p>🛡️ <strong>Protection:</strong> Cryptographically secured</p>
-          <p>🌍 <strong>Access:</strong> Globally accessible</p>
-        </div>
-        <p>This capsule now forms part of your digital legacy and cannot be altered.</p>
-        <p style="color: #2CB67D; font-weight: bold;">GUARDIANCHAIN - Digital Sovereignty Secured</p>
-      </div>
-    `,
-  });
-}
+export async function notifyCapsuleSealed({ 
+  user, 
+  capsuleId,
+  capsuleTitle,
+  sealType = "standard",
+  finalYield
+}: {
+  user: { email: string; name?: string };
+  capsuleId: string;
+  capsuleTitle: string;
+  sealType?: "standard" | "premium" | "legal" | "diamond";
+  finalYield?: number;
+}) {
+  const sealEmojis = {
+    standard: "🔒",
+    premium: "💎",
+    legal: "⚖️",
+    diamond: "💠"
+  };
 
-export async function notifyCapsuleReplayed({ user, capsuleId, viewerCount }: any) {
   await sendGuardianEmail({
     to: user.email,
-    subject: "🔄 GUARDIANCHAIN Capsule Replayed",
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #7F5AF0 0%, #2CB67D 100%); color: white; padding: 20px; border-radius: 10px;">
-        <h2 style="color: #2CB67D;">🔄 Replay Activity</h2>
-        <p>Your capsule <strong>${capsuleId}</strong> has been replayed <strong>${viewerCount}</strong> times.</p>
-        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
-          <p>📈 <strong>Engagement:</strong> Growing audience</p>
-          <p>💎 <strong>Value:</strong> Increasing social proof</p>
-          <p>🎁 <strong>Rewards:</strong> GTT yield accumulating</p>
-        </div>
-        <p style="color: #2CB67D; font-weight: bold;">GUARDIANCHAIN - Digital Sovereignty Secured</p>
-      </div>
-    `,
+    subject: `${sealEmojis[sealType]} Capsule Permanently Sealed`,
+    notificationType: "capsule_event",
+    markdown: `
+# ${sealEmojis[sealType]} Capsule Sealed Successfully
+
+Your truth capsule has been permanently sealed and is now immutable.
+
+## Seal Details
+- **Capsule:** "${capsuleTitle}"
+- **Capsule ID:** \`${capsuleId}\`
+- **Seal Type:** ${sealType.toUpperCase()}
+- **Sealed:** ${new Date().toLocaleString()}
+- **Status:** Permanently Immutable ✅
+
+## What Happens Next
+${finalYield ? `
+- 💰 **Final Yield:** ${finalYield} GTT tokens
+- 🎯 Yield distribution begins immediately
+- 📈 NFT certificate available for minting
+` : `
+- ⏳ Yield calculation in progress
+- 🔄 Community verification ongoing
+- 📊 Results available within 24 hours
+`}
+
+## Immutability Guarantee
+Your capsule is now:
+- ✅ Stored permanently on blockchain
+- ✅ Tamper-proof and unchangeable
+- ✅ Timestamped for historical record
+- ✅ Protected by cryptographic hash
+
+---
+
+**[View Capsule](https://guardianchain.app/capsule/${capsuleId})** | **[Mint NFT](https://guardianchain.app/mint-nft/${capsuleId})** | **[Share](https://guardianchain.app/share/${capsuleId})**
+
+*Sealed capsules are eternal truth.*
+`,
   });
 }
