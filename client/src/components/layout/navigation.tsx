@@ -40,6 +40,7 @@ const navigation = [
   { name: "Config", href: "/config" },
   { name: "Tiers", href: "/tiers" },
   { name: "Donate", href: "/donate-access" },
+  { name: "Blockchain Demo", href: "/blockchain-demo" },
   { name: "Governance", href: "/governance" },
 ];
 
