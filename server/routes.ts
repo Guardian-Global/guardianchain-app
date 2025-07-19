@@ -599,6 +599,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register tier management routes
   registerTierRoutes(app);
 
+  // AI service endpoints
+  app.post("/api/ai/accounting-analysis", async (req, res) => {
+    try {
+      const { accountingAnalysis } = await import("./api/ai");
+      await accountingAnalysis(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "AI service error" });
+    }
+  });
+
+  app.post("/api/ai/financial-insights", async (req, res) => {
+    try {
+      const { financialInsights } = await import("./api/ai");
+      await financialInsights(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "AI service error" });
+    }
+  });
+
+  // Compliance endpoints
+  app.get("/api/compliance/status", async (req, res) => {
+    try {
+      const { getComplianceStatus } = await import("./api/compliance");
+      await getComplianceStatus(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Compliance service error" });
+    }
+  });
+
+  app.get("/api/compliance/alerts", async (req, res) => {
+    try {
+      const { getComplianceAlerts } = await import("./api/compliance");
+      await getComplianceAlerts(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Compliance service error" });
+    }
+  });
+
+  app.post("/api/compliance/regional", async (req, res) => {
+    try {
+      const { checkRegionalCompliance } = await import("./api/compliance");
+      await checkRegionalCompliance(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Compliance service error" });
+    }
+  });
+
+  // Notification endpoints
+  app.get("/api/notifications", async (req, res) => {
+    try {
+      const { getNotifications } = await import("./api/notifications");
+      await getNotifications(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Notification service error" });
+    }
+  });
+
+  app.post("/api/notifications/:id/read", async (req, res) => {
+    try {
+      const { markNotificationRead } = await import("./api/notifications");
+      await markNotificationRead(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "Notification service error" });
+    }
+  });
+
+  app.get("/api/system/alerts", async (req, res) => {
+    try {
+      const { getSystemAlerts } = await import("./api/notifications");
+      await getSystemAlerts(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "System alerts service error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -1,162 +1,51 @@
-import { askAI } from './ai';
-
-// Mock Supabase client for development
-const mockSupabaseClient = {
-  from: (table: string) => ({
-    insert: (data: any) => ({
-      then: (callback: (result: any) => void) => {
-        console.log(`Compliance log inserted:`, data);
-        callback({ data, error: null });
-      }
-    }),
-    select: (columns: string) => ({
-      order: (column: string, options: any) => ({
-        limit: (count: number) => ({
-          then: (callback: (result: any) => void) => {
-            const mockEvents = [
-              {
-                id: 1,
-                type: 'user_registration',
-                userId: 'user-123',
-                details: { region: 'US', ip: '192.168.1.1' },
-                timestamp: new Date().toISOString()
-              },
-              {
-                id: 2,
-                type: 'large_transaction',
-                userId: 'user-456',
-                details: { amount: 5000, currency: 'GTT' },
-                timestamp: new Date().toISOString()
-              },
-              {
-                id: 3,
-                type: 'capsule_mint',
-                userId: 'user-789',
-                details: { capsuleType: 'legal', grievanceScore: 85 },
-                timestamp: new Date().toISOString()
-              }
-            ];
-            callback({ data: mockEvents, error: null });
-          }
-        })
-      })
-    })
-  })
-};
-
-export interface ComplianceEvent {
-  type: string;
-  userId?: string;
-  details: any;
-  timestamp?: string;
-}
-
-export async function logComplianceEvent(event: ComplianceEvent) {
+// Real compliance checking - no mock data
+export async function runComplianceCheck() {
   try {
-    const eventWithTimestamp = {
-      ...event,
-      timestamp: event.timestamp || new Date().toISOString(),
-    };
-
-    return new Promise((resolve) => {
-      mockSupabaseClient.from('compliance_log').insert([eventWithTimestamp]).then((result) => {
-        resolve(result);
-      });
-    });
+    const response = await fetch('/api/compliance/status');
+    
+    if (!response.ok) {
+      throw new Error(`Compliance service error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.status;
   } catch (error) {
-    console.error('Compliance logging error:', error);
-    throw error;
+    throw new Error("Compliance not configured: Connect compliance provider to activate");
   }
 }
 
-export async function runComplianceAudit() {
+export async function getComplianceAlerts() {
   try {
-    const events = await new Promise((resolve) => {
-      mockSupabaseClient
-        .from('compliance_log')
-        .select('*')
-        .order('timestamp', { ascending: false })
-        .limit(100)
-        .then((result: any) => {
-          resolve(result.data || []);
-        });
-    });
-
-    const prompt = `GuardianChain Compliance Audit Report
-
-Review the following events for potential compliance issues:
-- Fraud indicators
-- Money laundering patterns
-- Suspicious regional access
-- Abnormal capsule activity
-- Risk assessment
-
-Events to analyze:
-${JSON.stringify(events, null, 2)}
-
-Provide a structured compliance assessment with:
-1. Risk Level (Low/Medium/High)
-2. Flagged Activities
-3. Recommended Actions
-4. Compliance Status`;
-
-    const aiResponse = await askAI({
-      prompt,
-      max_tokens: 400,
-    });
-
-    return aiResponse;
+    const response = await fetch('/api/compliance/alerts');
+    
+    if (!response.ok) {
+      throw new Error(`Compliance alerts error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.alerts || [];
   } catch (error) {
-    console.error('Compliance audit error:', error);
-    return `Compliance Audit Results:
-
-Risk Level: Low
-Status: All systems operating within normal parameters
-
-Recent Activity Summary:
-• User registrations: Normal patterns detected
-• Transaction volumes: Within expected ranges
-• Regional access: Standard geographic distribution
-• Capsule activity: Healthy engagement metrics
-
-Recommendations:
-• Continue automated monitoring
-• Review quarterly compliance updates
-• Maintain current security protocols
-• No immediate action required
-
-Last Updated: ${new Date().toLocaleString()}`;
+    throw new Error("Compliance alerts unavailable: Service not configured");
   }
 }
 
-export async function checkRegionCompliance(userRegion: string, userIp: string) {
-  const restrictedRegions = ['XX', 'YY']; // Mock restricted regions
-  
-  if (restrictedRegions.includes(userRegion)) {
-    await logComplianceEvent({
-      type: 'restricted_region_access',
-      details: { region: userRegion, ip: userIp }
+export async function runRegionalComplianceCheck(region: string) {
+  try {
+    const response = await fetch('/api/compliance/regional', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ region })
     });
-    return false;
+    
+    if (!response.ok) {
+      throw new Error(`Regional compliance error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.compliance;
+  } catch (error) {
+    throw new Error("Regional compliance unavailable: Service not configured");
   }
-  
-  return true;
-}
-
-export async function flagSuspiciousActivity(userId: string, activity: any) {
-  await logComplianceEvent({
-    type: 'suspicious_activity',
-    userId,
-    details: activity
-  });
-}
-
-export async function getComplianceStatus() {
-  return {
-    status: 'compliant',
-    lastAudit: new Date().toISOString(),
-    riskLevel: 'low',
-    activeAlerts: 0,
-    systemHealth: 'operational'
-  };
 }
