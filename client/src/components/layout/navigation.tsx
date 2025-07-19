@@ -13,6 +13,8 @@ const navigation = [
   { name: "Viral Tools", href: "/viral-tools" },
   { name: "Analytics", href: "/capsule-analytics" },
   { name: "Profile", href: "/profile" },
+  { name: "Master Admin", href: "/master-admin" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Navigation() {

@@ -56,6 +56,8 @@ import ProtocolStrategy from "./pages/protocol-strategy";
 import EnterpriseSuite from "./pages/enterprise-suite";
 import PremiumFeaturesPage from "./pages/premium-features";
 import ViralTools from "./pages/viral-tools";
+import MasterAdmin from "./pages/MasterAdmin";
+import ContactInfo from "./components/ContactInfo";
 
 function Router() {
   return (
@@ -111,6 +113,8 @@ function Router() {
         <Route path="/enterprise-suite" component={EnterpriseSuite} />
         <Route path="/premium-features" component={PremiumFeaturesPage} />
         <Route path="/viral-tools" component={ViralTools} />
+        <Route path="/master-admin" component={MasterAdmin} />
+        <Route path="/contact" component={() => <ContactInfo />} />
 
         <Route component={NotFound} />
       </Switch>

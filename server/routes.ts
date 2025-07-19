@@ -24,11 +24,28 @@ import { getCapsuleAnalytics, getAllCapsulesAnalytics } from "./routes/capsule-a
 import openaiRoutes from "./routes/openai";
 import enterpriseAuthRoutes from "./routes/enterprise-auth";
 import aiAssistantRoutes from "./routes/ai-assistant";
+import { registerAdminRoutes } from "./routes/admin";
+import { setupSecurityMiddleware } from "./routes/security";
+import { registerFinancialRoutes } from "./routes/financial";
+import { registerContactRoutes } from "./routes/contact";
+import { automationService } from "./services/automation";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Security middleware must be first
+  setupSecurityMiddleware(app);
+  
   // Enhanced authentication and premium routes
   app.use('/api/auth', authRoutes);
   app.use('/api/premium', premiumRoutes);
+  
+  // Master admin routes
+  registerAdminRoutes(app);
+  
+  // Financial security routes
+  registerFinancialRoutes(app);
+  
+  // Contact and communication routes
+  registerContactRoutes(app);
   // Register Stripe webhook handler
   registerStripeWebhook(app);
   // Register GuardianChain API routes
