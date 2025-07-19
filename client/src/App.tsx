@@ -60,6 +60,9 @@ import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
 import Contact from "./pages/Contact";
 import Notifications from "./pages/Notifications";
+import PrivacyPolicy from "./pages/legal/privacy";
+import TermsOfService from "./pages/legal/terms";
+import SecurityPolicy from "./pages/legal/security";
 
 function Router() {
   return (
@@ -118,6 +121,11 @@ function Router() {
         <Route path="/master-admin" component={MasterAdmin} />
         <Route path="/contact" component={() => <ContactInfo />} />
         <Route path="/notifications" component={Notifications} />
+        
+        {/* Legal Pages */}
+        <Route path="/legal/privacy" component={PrivacyPolicy} />
+        <Route path="/legal/terms" component={TermsOfService} />
+        <Route path="/legal/security" component={SecurityPolicy} />
 
         <Route component={NotFound} />
       </Switch>
