@@ -49,6 +49,10 @@ import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
 import TreasuryDashboard from "./pages/treasury";
 import AIAdvisorPanel from "./pages/ai-advisor";
+import CompliancePanel from "./pages/compliance";
+import YieldDistributionPage from "./pages/yield-distribution";
+import AdminDashboard from "./pages/admin";
+import ConfigPage from "./pages/config";
 
 function Router() {
   return (
@@ -95,6 +99,10 @@ function Router() {
         <Route path="/donate-access" component={DonateAccessPage} />
         <Route path="/treasury" component={TreasuryDashboard} />
         <Route path="/ai-advisor" component={AIAdvisorPanel} />
+        <Route path="/compliance" component={CompliancePanel} />
+        <Route path="/yield-distribution" component={YieldDistributionPage} />
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/config" component={ConfigPage} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>
