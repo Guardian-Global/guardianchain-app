@@ -53,6 +53,8 @@ import CompliancePanel from "./pages/compliance";
 import YieldDistributionPage from "./pages/yield-distribution";
 import AdminDashboard from "./pages/admin";
 import ConfigPage from "./pages/config";
+import ReportingDashboard from "./pages/reporting";
+import CommanderDashboard from "./pages/dashboard";
 
 function Router() {
   return (
@@ -103,6 +105,8 @@ function Router() {
         <Route path="/yield-distribution" component={YieldDistributionPage} />
         <Route path="/admin" component={AdminDashboard} />
         <Route path="/config" component={ConfigPage} />
+        <Route path="/reporting" component={ReportingDashboard} />
+        <Route path="/dashboard" component={CommanderDashboard} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>

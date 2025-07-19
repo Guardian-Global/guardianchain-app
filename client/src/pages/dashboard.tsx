@@ -1,299 +1,287 @@
-import { useQuery } from "@tanstack/react-query";
-import { Shield, Users, TrendingUp, Star, AlertTriangle, CheckCircle, Clock, Eye, Share2, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import CapsuleCard from "@/components/capsule/capsule-card";
-import { Link } from "wouter";
+import { Link } from 'wouter';
+import { 
+  DollarSign, 
+  TrendingUp, 
+  Shield, 
+  FileText, 
+  Brain,
+  Activity,
+  Users,
+  BarChart3,
+  Coins,
+  AlertTriangle
+} from "lucide-react";
+import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
-export default function OperatorDashboard() {
-  const { data: capsules, isLoading: capsulesLoading } = useQuery({
-    queryKey: ["/api/capsules"],
-  });
+export default function CommanderDashboard() {
+  const dashboardSections = [
+    {
+      title: "Treasury Overview",
+      description: "Real-time GTT treasury and market metrics",
+      href: "/treasury",
+      icon: DollarSign,
+      color: BRAND_COLORS.SUCCESS,
+      status: "operational",
+      metrics: {
+        value: "$2.4M",
+        label: "Treasury Value",
+        trend: "+12.5%"
+      }
+    },
+    {
+      title: "AI Financial Advisor",
+      description: "Strategic recommendations and automated insights",
+      href: "/ai-advisor",
+      icon: Brain,
+      color: BRAND_COLORS.GUARDIAN,
+      status: "active",
+      metrics: {
+        value: "94%",
+        label: "Confidence Score",
+        trend: "+2.1%"
+      }
+    },
+    {
+      title: "Yield Distribution",
+      description: "Automated GTT reward distribution system",
+      href: "/yield-distribution",
+      icon: Coins,
+      color: "#10b981",
+      status: "healthy",
+      metrics: {
+        value: "1,247 GTT",
+        label: "Daily Distribution",
+        trend: "+8.3%"
+      }
+    },
+    {
+      title: "Compliance Monitor",
+      description: "AI-powered regulatory and risk assessment",
+      href: "/compliance",
+      icon: Shield,
+      color: "#3b82f6",
+      status: "monitoring",
+      metrics: {
+        value: "99.2%",
+        label: "Compliance Score",
+        trend: "0%"
+      }
+    },
+    {
+      title: "Daily Reports",
+      description: "Automated operations reporting and analytics",
+      href: "/reporting",
+      icon: FileText,
+      color: "#8b5cf6",
+      status: "automated",
+      metrics: {
+        value: "24h",
+        label: "Report Cycle",
+        trend: "0%"
+      }
+    },
+    {
+      title: "Financial Dashboard",
+      description: "Comprehensive business intelligence platform",
+      href: "/financial-dashboard",
+      icon: BarChart3,
+      color: "#f59e0b",
+      status: "operational",
+      metrics: {
+        value: "$156K",
+        label: "Monthly Revenue",
+        trend: "+15.2%"
+      }
+    }
+  ];
 
-  const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: ["/api/stats"],
-  });
+  const systemMetrics = [
+    { label: "Active Users", value: "1,247", change: "+5.2%", positive: true },
+    { label: "Daily GTT Minted", value: "3,420", change: "+12.1%", positive: true },
+    { label: "Platform Revenue", value: "$12.4K", change: "+8.7%", positive: true },
+    { label: "System Uptime", value: "99.8%", change: "+0.1%", positive: true }
+  ];
 
-  const { data: moderationQueue } = useQuery({
-    queryKey: ["/api/moderation/queue"],
-  });
-
-  // Calculate operator metrics
-  const sealedCapsules = capsules?.filter((c: any) => c.isSealed) || [];
-  const pendingCapsules = capsules?.filter((c: any) => !c.isSealed) || [];
-  const highGriefCapsules = capsules?.filter((c: any) => c.griefScore > 80) || [];
-  const totalGriefScore = capsules?.reduce((sum: number, c: any) => sum + (c.griefScore || 0), 0) || 0;
-  const avgGriefScore = capsules?.length ? Math.round(totalGriefScore / capsules.length) : 0;
+  const recentAlerts = [
+    {
+      type: "success",
+      message: "Yield distribution completed successfully",
+      time: "2 hours ago"
+    },
+    {
+      type: "info",
+      message: "Treasury sync completed",
+      time: "4 hours ago"
+    },
+    {
+      type: "success",
+      message: "AI compliance audit passed",
+      time: "6 hours ago"
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
-      <section className="pt-20 pb-12 bg-gradient-to-br from-slate-800 to-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="bg-blue-600 p-3 rounded-lg">
-                <Shield className="h-8 w-8 text-white" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold gradient-text">
-                Operator Dashboard
-              </h1>
-            </div>
-            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Monitor capsule activity, seal status, and grief analytics in real-time
-            </p>
-          </div>
+      <section className="pt-20 pb-8 bg-gradient-to-br from-purple-900 to-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl font-bold mb-4">
+            👑 {BRAND_NAME} Sovereign Operations Dashboard
+          </h1>
+          <p className="text-xl text-slate-300 mb-6">
+            Unified command center for platform oversight and strategic management
+          </p>
+          <Badge className="bg-purple-600 text-white px-4 py-2">
+            <Activity className="w-4 h-4 mr-2" />
+            All Systems Operational
+          </Badge>
         </div>
       </section>
 
-      {/* Operator Metrics */}
-      <section className="py-12">
+      <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-400 text-sm">Total Capsules</p>
-                    <p className="text-3xl font-bold text-white">
-                      {capsulesLoading ? "..." : capsules?.length || 0}
-                    </p>
+          
+          {/* System Metrics Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {systemMetrics.map((metric, index) => (
+              <Card key={index} className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-slate-400">{metric.label}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-white mb-1">
+                    {metric.value}
+                  </p>
+                  <div className="flex items-center">
+                    <TrendingUp className={`w-4 h-4 mr-1 ${metric.positive ? 'text-green-400' : 'text-red-400'}`} />
+                    <span className={`text-sm ${metric.positive ? 'text-green-400' : 'text-red-400'}`}>
+                      {metric.change}
+                    </span>
                   </div>
-                  <div className="bg-blue-600 p-3 rounded-lg">
-                    <Shield className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-400 text-sm">Sealed Capsules</p>
-                    <p className="text-3xl font-bold text-green-400">
-                      {sealedCapsules.length}
-                    </p>
-                  </div>
-                  <div className="bg-green-600 p-3 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-                <div className="mt-2">
-                  <Progress 
-                    value={(sealedCapsules.length / (capsules?.length || 1)) * 100} 
-                    className="h-2"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-400 text-sm">Avg Grief Score</p>
-                    <p className="text-3xl font-bold text-yellow-400">
-                      {avgGriefScore}
-                    </p>
-                  </div>
-                  <div className="bg-yellow-600 p-3 rounded-lg">
-                    <TrendingUp className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-                <div className="mt-2">
-                  <Progress 
-                    value={avgGriefScore} 
-                    className="h-2"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-400 text-sm">High Priority</p>
-                    <p className="text-3xl font-bold text-red-400">
-                      {highGriefCapsules.length}
-                    </p>
-                  </div>
-                  <div className="bg-red-600 p-3 rounded-lg">
-                    <AlertTriangle className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
-          {/* Action Center */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-yellow-400" />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Link href="/commander">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    Commander Panel
-                  </Button>
-                </Link>
-                <Button variant="outline" className="w-full border-slate-600">
-                  Export Analytics
-                </Button>
-                <Button variant="outline" className="w-full border-slate-600">
-                  Sync Capsule Index
-                </Button>
-              </CardContent>
-            </Card>
+          {/* Main Dashboard Sections */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {dashboardSections.map((section, index) => (
+              <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white flex items-center">
+                      <section.icon className="w-5 h-5 mr-2" style={{ color: section.color }} />
+                      {section.title}
+                    </CardTitle>
+                    <Badge 
+                      className={`text-xs ${
+                        section.status === 'operational' || section.status === 'healthy' ? 'bg-green-600' :
+                        section.status === 'active' || section.status === 'monitoring' || section.status === 'automated' ? 'bg-blue-600' :
+                        'bg-yellow-600'
+                      }`}
+                    >
+                      {section.status}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-300 text-sm mb-4">
+                    {section.description}
+                  </p>
+                  
+                  {/* Metrics */}
+                  <div className="bg-slate-700/30 p-3 rounded-lg mb-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400 text-sm">{section.metrics.label}</span>
+                      <div className="text-right">
+                        <span className="text-white font-semibold">{section.metrics.value}</span>
+                        <div className="flex items-center mt-1">
+                          <TrendingUp className="w-3 h-3 mr-1 text-green-400" />
+                          <span className="text-xs text-green-400">{section.metrics.trend}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Link href={section.href}>
+                    <div 
+                      className="w-full py-2 px-4 rounded-lg text-white text-center font-medium cursor-pointer hover:opacity-90 transition-opacity"
+                      style={{ backgroundColor: section.color }}
+                    >
+                      Access Dashboard
+                    </div>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
+          {/* Recent Activity & Alerts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-blue-400" />
-                  Moderation Queue
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Pending Review</span>
-                    <span className="text-yellow-400">{moderationQueue?.pending || 0}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Flagged Content</span>
-                    <span className="text-red-400">{moderationQueue?.flagged || 0}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-400">Auto-Approved</span>
-                    <span className="text-green-400">{moderationQueue?.approved || 0}</span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full mt-4 border-slate-600">
-                  Review Queue
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-purple-400" />
-                  System Health
+                <CardTitle className="text-white flex items-center">
+                  <AlertTriangle className="w-5 h-5 mr-2 text-green-400" />
+                  Recent System Activity
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">API Status</span>
-                    <Badge variant="default" className="bg-green-600">Online</Badge>
+                  {recentAlerts.map((alert, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                      <div className="flex items-center">
+                        <div className={`w-2 h-2 rounded-full mr-3 ${
+                          alert.type === 'success' ? 'bg-green-400' :
+                          alert.type === 'info' ? 'bg-blue-400' :
+                          'bg-yellow-400'
+                        }`} />
+                        <span className="text-slate-300 text-sm">{alert.message}</span>
+                      </div>
+                      <span className="text-xs text-slate-500">{alert.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-purple-400" />
+                  Platform Health
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">API Services:</span>
+                    <Badge className="bg-green-600 text-white">Operational</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">Database</span>
-                    <Badge variant="default" className="bg-green-600">Healthy</Badge>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Database:</span>
+                    <Badge className="bg-green-600 text-white">Healthy</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">IPFS</span>
-                    <Badge variant="default" className="bg-green-600">Connected</Badge>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">AI Services:</span>
+                    <Badge className="bg-green-600 text-white">Active</Badge>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">DocuSign</span>
-                    <Badge variant="default" className="bg-green-600">Active</Badge>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Compliance:</span>
+                    <Badge className="bg-green-600 text-white">Compliant</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Yield Engine:</span>
+                    <Badge className="bg-green-600 text-white">Distributing</Badge>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
-
-          {/* Recent Capsules */}
-          <div className="mb-12">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Recent Capsules</h2>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="border-slate-600">
-                  All
-                </Button>
-                <Button variant="outline" size="sm" className="border-slate-600">
-                  Sealed
-                </Button>
-                <Button variant="outline" size="sm" className="border-slate-600">
-                  Pending
-                </Button>
-                <Button variant="outline" size="sm" className="border-slate-600">
-                  High Grief
-                </Button>
-              </div>
-            </div>
-
-            {capsulesLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <Card key={i} className="bg-slate-800/50 border-slate-700">
-                    <CardContent className="p-6">
-                      <div className="animate-pulse">
-                        <div className="h-48 bg-slate-700 rounded-lg mb-4"></div>
-                        <div className="h-4 bg-slate-700 rounded w-3/4 mb-2"></div>
-                        <div className="h-4 bg-slate-700 rounded w-1/2"></div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {capsules?.slice(0, 8).map((capsule: any) => (
-                  <Card key={capsule.id} className="bg-slate-800/50 border-slate-700">
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline" className="text-xs">
-                              ID: {capsule.id}
-                            </Badge>
-                            <Badge 
-                              variant={capsule.isSealed ? "default" : "outline"}
-                              className={capsule.isSealed ? "bg-green-600" : "border-yellow-500 text-yellow-400"}
-                            >
-                              {capsule.isSealed ? "Sealed" : "Unsealed"}
-                            </Badge>
-                            {capsule.griefScore > 80 && (
-                              <Badge variant="outline" className="border-red-500 text-red-400">
-                                High Priority
-                              </Badge>
-                            )}
-                          </div>
-                          <h3 className="font-semibold mb-1">{capsule.title || `Capsule #${capsule.id}`}</h3>
-                          <p className="text-slate-400 text-sm mb-2">Creator: {capsule.creator}</p>
-                          <p className="text-slate-300 text-sm line-clamp-2">
-                            {capsule.content?.substring(0, 120)}...
-                          </p>
-                        </div>
-                        <div className="text-right ml-4">
-                          <div className="text-2xl font-bold text-yellow-400 mb-1">
-                            {capsule.griefScore || 0}
-                          </div>
-                          <div className="text-xs text-slate-400">Grief Score</div>
-                          <div className="flex gap-1 mt-2">
-                            <Button size="sm" variant="outline" className="text-xs">
-                              Review
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
