@@ -1,8 +1,18 @@
 import type { Express } from "express";
 // Mock authentication for now - replace with actual auth system
 const isAuthenticated = (req: any, res: any, next: any) => {
+  // In development, always allow access
+  if (process.env.NODE_ENV === 'development') {
+    req.user = { id: 'user123', walletAddress: '0x123...' };
+    return next();
+  }
+  
   // In production, implement proper authentication
-  req.user = { id: 'user123', walletAddress: '0x123...' };
+  const isAuth = req.session?.user || req.headers.authorization || req.user;
+  if (!isAuth) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  
   next();
 };
 import { notificationService } from "../services/notifications";

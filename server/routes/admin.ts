@@ -1,9 +1,5 @@
 import type { Express } from "express";
-// Mock authentication for now - replace with actual auth system
-const isAuthenticated = (req: any, res: any, next: any) => {
-  req.user = { id: 'admin123', walletAddress: '0xYourMasterWalletAddress' };
-  next();
-};
+import { simpleAuth, adminOnly } from "../middleware/auth";
 
 // Master admin access with comprehensive security
 const MASTER_ADMIN_ADDRESSES = [
@@ -12,22 +8,11 @@ const MASTER_ADMIN_ADDRESSES = [
 ];
 
 export function registerAdminRoutes(app: Express) {
-  // Master admin authentication middleware
-  const isMasterAdmin = (req: any, res: any, next: any) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
-    
-    const userWallet = req.user?.walletAddress;
-    if (!MASTER_ADMIN_ADDRESSES.includes(userWallet)) {
-      return res.status(403).json({ error: 'Master admin access required' });
-    }
-    
-    next();
-  };
+  // Use simplified authentication middleware
+  const authMiddleware = [simpleAuth, adminOnly];
 
   // System health and oversight
-  app.get('/api/admin/system-health', isMasterAdmin, (req, res) => {
+  app.get('/api/admin/system-health', authMiddleware, (req, res) => {
     res.json({
       status: 'operational',
       timestamp: new Date().toISOString(),
@@ -49,7 +34,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Financial monitoring
-  app.get('/api/admin/financial-overview', isMasterAdmin, (req, res) => {
+  app.get('/api/admin/financial-overview', authMiddleware, (req, res) => {
     res.json({
       revenue: {
         monthly: 124750.00,
@@ -76,7 +61,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // User oversight (privacy-compliant)
-  app.get('/api/admin/user-overview', isMasterAdmin, (req, res) => {
+  app.get('/api/admin/user-overview', authMiddleware, (req, res) => {
     res.json({
       totalUsers: 1247,
       tierDistribution: {
@@ -96,7 +81,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Security monitoring
-  app.get('/api/admin/security-status', isMasterAdmin, (req, res) => {
+  app.get('/api/admin/security-status', authMiddleware, (req, res) => {
     res.json({
       threatLevel: 'low',
       activeIncidents: 0,
@@ -119,7 +104,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Legal compliance status
-  app.get('/api/admin/compliance-status', isMasterAdmin, (req, res) => {
+  app.get('/api/admin/compliance-status', authMiddleware, (req, res) => {
     res.json({
       gdpr: {
         status: 'compliant',
@@ -149,7 +134,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Emergency controls
-  app.post('/api/admin/emergency-pause', isMasterAdmin, (req, res) => {
+  app.post('/api/admin/emergency-pause', authMiddleware, (req, res) => {
     // Emergency pause functionality
     res.json({
       status: 'paused',
@@ -159,7 +144,7 @@ export function registerAdminRoutes(app: Express) {
   });
 
   // Revenue management
-  app.get('/api/admin/revenue-streams', isMasterAdmin, (req, res) => {
+  app.get('/api/admin/revenue-streams', authMiddleware, (req, res) => {
     res.json({
       subscriptions: {
         monthly: 89750.00,
