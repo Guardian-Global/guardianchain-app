@@ -23,6 +23,7 @@ import {
 import { getCapsuleAnalytics, getAllCapsulesAnalytics } from "./routes/capsule-analytics";
 import openaiRoutes from "./routes/openai";
 import enterpriseAuthRoutes from "./routes/enterprise-auth";
+import aiAssistantRoutes from "./routes/ai-assistant";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enhanced authentication and premium routes
@@ -36,6 +37,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/analytics", analyticsRouter);
   app.use("/api", openaiRoutes);
   app.use("/api/auth", enterpriseAuthRoutes);
+  app.use("/api/auth", aiAssistantRoutes);
   
   // Capsule Analytics Routes
   app.get("/api/capsule/:capsuleId/analytics", getCapsuleAnalytics);

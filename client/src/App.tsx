@@ -67,6 +67,7 @@ function Router() {
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={Profile} />
+        <Route path="/profile" component={Profile} />
         <Route path="/auth" component={AuthenticationHub} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
