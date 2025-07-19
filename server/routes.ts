@@ -21,6 +21,7 @@ import {
   type UserProfile
 } from "./lib/aiRecommendations";
 import { getCapsuleAnalytics, getAllCapsulesAnalytics } from "./routes/capsule-analytics";
+import openaiRoutes from "./routes/openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enhanced authentication and premium routes
@@ -32,6 +33,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/capsules", capsulesRouter);
   app.use("/api/veritas", veritasRouter);
   app.use("/api/analytics", analyticsRouter);
+  app.use("/api", openaiRoutes);
   
   // Capsule Analytics Routes
   app.get("/api/capsule/:capsuleId/analytics", getCapsuleAnalytics);

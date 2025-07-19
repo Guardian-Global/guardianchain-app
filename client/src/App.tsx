@@ -60,6 +60,7 @@ import AssetIntegrationPage from "./pages/asset-integration";
 import ProtocolStrategy from "./pages/protocol-strategy";
 import EnterpriseSuite from "./pages/enterprise-suite";
 import PremiumFeaturesPage from "./pages/premium-features";
+import ViralTools from "./pages/viral-tools";
 
 function Router() {
   return (
@@ -117,6 +118,7 @@ function Router() {
         <Route path="/protocol-strategy" component={ProtocolStrategy} />
         <Route path="/enterprise-suite" component={EnterpriseSuite} />
         <Route path="/premium-features" component={PremiumFeaturesPage} />
+        <Route path="/viral-tools" component={ViralTools} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>
