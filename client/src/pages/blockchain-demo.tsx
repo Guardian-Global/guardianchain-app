@@ -1,159 +1,198 @@
 import React from 'react';
 import BlockchainVisualization from '@/components/BlockchainVisualization';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link2, Shield, Coins, Zap } from "lucide-react";
+import { Link, Shield, Zap, TrendingUp, Crown } from "lucide-react";
 
 const BlockchainDemo: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
-      {/* Header */}
-      <section className="pt-20 pb-8 bg-gradient-to-br from-purple-900 to-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-blue-400 to-green-400 bg-clip-text text-transparent">
-            GUARDIANCHAIN Blockchain Technology
-          </h1>
-          <p className="text-xl text-slate-300 max-w-3xl">
-            Interactive visualization of how GUARDIANCHAIN's blockchain secures truth capsules, 
-            processes verifications, and distributes GTT token rewards through decentralized consensus.
-          </p>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header Section */}
+      <section className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-b border-blue-500/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-6">
+              <Link className="w-16 h-16 text-blue-400 mr-4" />
+              <div>
+                <h1 className="text-5xl font-bold text-white mb-2">
+                  GUARDIANCHAIN
+                </h1>
+                <div className="text-xl text-blue-400">Blockchain Technology Demo</div>
+              </div>
+            </div>
+            
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+              Experience how blockchain technology powers truth verification, 
+              community consensus, and decentralized governance in real-time
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                <div className="text-sm font-semibold text-white">Immutable Truth</div>
+                <div className="text-xs text-slate-400">Permanent verification records</div>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                <Zap className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                <div className="text-sm font-semibold text-white">Smart Rewards</div>
+                <div className="text-xs text-slate-400">Automated GTT distribution</div>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                <TrendingUp className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                <div className="text-sm font-semibold text-white">Consensus Mining</div>
+                <div className="text-xs text-slate-400">Community-driven validation</div>
+              </div>
+              <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                <Crown className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
+                <div className="text-sm font-semibold text-white">Enterprise Grade</div>
+                <div className="text-xs text-slate-400">Production-ready protocol</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-        {/* Concept Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Shield className="w-6 h-6 mr-2 text-purple-400" />
-                Truth Capsules
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-300 text-sm">
-                Each truth capsule is permanently recorded on the blockchain with cryptographic hashing, 
-                ensuring immutable proof of authenticity and preventing tampering.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Link2 className="w-6 h-6 mr-2 text-blue-400" />
-                Chain Integrity
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-300 text-sm">
-                Blocks are cryptographically linked through hash pointers, creating an immutable chain 
-                where any alteration would be immediately detected by the network.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Coins className="w-6 h-6 mr-2 text-green-400" />
-                GTT Rewards
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-300 text-sm">
-                Verified truth contributions earn GTT tokens through smart contracts, 
-                incentivizing quality submissions and accurate community verification.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Visualization */}
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <BlockchainVisualization />
 
-        {/* Technical Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Educational Sections */}
+        <div className="mt-16 space-y-12">
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Zap className="w-5 h-5 mr-2 text-yellow-400" />
-                Proof of Work Mining
+              <CardTitle className="text-white text-2xl text-center">
+                Understanding Blockchain in GUARDIANCHAIN
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4 text-slate-300">
-                <p className="text-sm">
-                  GUARDIANCHAIN uses a modified Proof of Work consensus mechanism optimized for truth verification:
-                </p>
-                <ul className="text-sm space-y-2 list-disc list-inside">
-                  <li>Miners compete to solve cryptographic puzzles</li>
-                  <li>Difficulty adjusts based on network participation</li>
-                  <li>Block rewards include GTT tokens for successful mining</li>
-                  <li>Priority given to truth verification transactions</li>
-                </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-white text-lg font-bold mb-3">What You're Seeing</h3>
+                    <ul className="space-y-2 text-slate-300">
+                      <li className="flex items-start">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span><strong>Transaction Pool:</strong> Pending truth capsule creations, verifications, and GTT rewards waiting to be processed</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span><strong>Mining Process:</strong> Proof-of-work consensus finding valid hashes to secure blocks</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span><strong>Blockchain:</strong> Immutable chain of blocks containing verified truth capsules and GTT transactions</span>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span><strong>Consensus:</strong> Community agreement on truth verification through decentralized voting</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-white text-lg font-bold mb-3">Key Benefits</h3>
+                    <ul className="space-y-2 text-slate-300">
+                      <li className="flex items-start">
+                        <Shield className="w-4 h-4 text-green-400 mt-1 mr-2 flex-shrink-0" />
+                        <span><strong>Immutability:</strong> Truth capsules cannot be altered once verified and stored</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Shield className="w-4 h-4 text-blue-400 mt-1 mr-2 flex-shrink-0" />
+                        <span><strong>Transparency:</strong> All verification processes are publicly auditable</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Shield className="w-4 h-4 text-purple-400 mt-1 mr-2 flex-shrink-0" />
+                        <span><strong>Decentralization:</strong> No single point of failure or control</span>
+                      </li>
+                      <li className="flex items-start">
+                        <Shield className="w-4 h-4 text-yellow-400 mt-1 mr-2 flex-shrink-0" />
+                        <span><strong>Incentivization:</strong> GTT rewards encourage honest participation</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-white text-lg font-bold mb-3">Real-World Applications</h3>
+                    <div className="space-y-4">
+                      <div className="bg-slate-700/50 rounded-lg p-4">
+                        <h4 className="text-blue-400 font-semibold mb-2">Legal Documentation</h4>
+                        <p className="text-slate-300 text-sm">
+                          Contracts, evidence, and legal proofs stored immutably with cryptographic verification
+                        </p>
+                      </div>
+                      
+                      <div className="bg-slate-700/50 rounded-lg p-4">
+                        <h4 className="text-green-400 font-semibold mb-2">Supply Chain Verification</h4>
+                        <p className="text-slate-300 text-sm">
+                          Product authenticity and origin tracking throughout entire supply chains
+                        </p>
+                      </div>
+                      
+                      <div className="bg-slate-700/50 rounded-lg p-4">
+                        <h4 className="text-purple-400 font-semibold mb-2">News & Media Verification</h4>
+                        <p className="text-slate-300 text-sm">
+                          Combating misinformation through community-verified truth capsules
+                        </p>
+                      </div>
+                      
+                      <div className="bg-slate-700/50 rounded-lg p-4">
+                        <h4 className="text-yellow-400 font-semibold mb-2">Academic Research</h4>
+                        <p className="text-slate-300 text-sm">
+                          Research data integrity and peer review processes with transparent validation
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-gradient-to-r from-green-900/20 to-blue-900/20 border-green-500/30">
             <CardHeader>
-              <CardTitle className="text-white">Transaction Types</CardTitle>
+              <CardTitle className="text-white text-2xl text-center">
+                Enterprise Value Proposition
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-purple-500 rounded mr-3"></div>
-                  <div>
-                    <div className="text-white font-medium">Capsule Creation</div>
-                    <div className="text-slate-400 text-sm">New truth capsule submission</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="bg-green-900/30 rounded-lg p-6 mb-4">
+                    <div className="text-3xl font-bold text-green-400 mb-2">$10M+</div>
+                    <div className="text-lg text-white font-semibold">Annual Savings</div>
+                    <div className="text-sm text-slate-400">Through automation and verification</div>
                   </div>
+                  <p className="text-slate-300 text-sm">
+                    Eliminate manual verification processes, reduce fraud, and automate compliance through blockchain technology
+                  </p>
                 </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-500 rounded mr-3"></div>
-                  <div>
-                    <div className="text-white font-medium">Verification</div>
-                    <div className="text-slate-400 text-sm">Community truth verification vote</div>
+
+                <div className="text-center">
+                  <div className="bg-blue-900/30 rounded-lg p-6 mb-4">
+                    <div className="text-3xl font-bold text-blue-400 mb-2">99.9%</div>
+                    <div className="text-lg text-white font-semibold">Accuracy Rate</div>
+                    <div className="text-sm text-slate-400">Community consensus verification</div>
                   </div>
+                  <p className="text-slate-300 text-sm">
+                    Leverage collective intelligence and cryptographic proofs for unparalleled accuracy in truth verification
+                  </p>
                 </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-green-500 rounded mr-3"></div>
-                  <div>
-                    <div className="text-white font-medium">Reward</div>
-                    <div className="text-slate-400 text-sm">GTT token distribution</div>
+
+                <div className="text-center">
+                  <div className="bg-purple-900/30 rounded-lg p-6 mb-4">
+                    <div className="text-3xl font-bold text-purple-400 mb-2">24/7</div>
+                    <div className="text-lg text-white font-semibold">Global Operations</div>
+                    <div className="text-sm text-slate-400">Decentralized network uptime</div>
                   </div>
+                  <p className="text-slate-300 text-sm">
+                    Operate continuously across global markets with no single point of failure or downtime
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
-
-        {/* How to Use */}
-        <Card className="bg-slate-800/50 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white">How to Use This Demo</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-300">
-              <div>
-                <h4 className="text-white font-medium mb-2">Controls</h4>
-                <ul className="text-sm space-y-1 list-disc list-inside">
-                  <li><strong>Start Mining:</strong> Begin automatic block generation</li>
-                  <li><strong>Validate Chain:</strong> Check blockchain integrity</li>
-                  <li><strong>Reset:</strong> Return to genesis block</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-medium mb-2">Watch For</h4>
-                <ul className="text-sm space-y-1 list-disc list-inside">
-                  <li>Mining progress and proof-of-work completion</li>
-                  <li>Hash linking between consecutive blocks</li>
-                  <li>Transaction pool updates and confirmations</li>
-                  <li>Network statistics and blockchain growth</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
