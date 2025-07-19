@@ -117,6 +117,7 @@ function Router() {
         <Route path="/viral-tools" component={ViralTools} />
         <Route path="/master-admin" component={MasterAdmin} />
         <Route path="/contact" component={() => <ContactInfo />} />
+        <Route path="/notifications" component={Notifications} />
 
         <Route component={NotFound} />
       </Switch>

@@ -8,18 +8,23 @@ export async function notifyCapsuleRemix({
   await sendGuardianEmail({
     to: user.email,
     subject: "📦 GUARDIANCHAIN Capsule Remixed",
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #7F5AF0 0%, #2CB67D 100%); color: white; padding: 20px; border-radius: 10px;">
-        <h2 style="color: #2CB67D;">📦 Remix Alert</h2>
-        <p>Your capsule <strong>${capsuleId}</strong> was remixed by <strong>${remixerName}</strong>.</p>
-        <p>Check your yield dashboard for updated stats and GTT rewards.</p>
-        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
-          <p>🎯 <strong>Action Required:</strong> Review remix performance</p>
-          <p>💰 <strong>Potential Yield:</strong> Additional GTT tokens earned</p>
-        </div>
-        <p style="color: #2CB67D; font-weight: bold;">GUARDIANCHAIN - Digital Sovereignty Secured</p>
-      </div>
-    `,
+    markdown: `
+## 📦 Capsule Remixed
+
+Your capsule \`${capsuleId}\` was remixed by **${remixerName}**.
+
+### Impact Summary
+- **Original Value:** Preserved immutably
+- **Remix Value:** Building on your foundation  
+- **GTT Rewards:** Earning from derivative content
+- **Social Proof:** Increased verification weight
+
+### Next Steps
+Check your yield dashboard for updated performance metrics and potential GTT rewards.
+
+[View Capsule Dashboard](https://guardianchain.ai/capsule/${capsuleId})  
+[Check Yield Tracker](https://guardianchain.ai/yield-tracker)
+`,
   });
 }
 

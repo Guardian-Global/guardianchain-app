@@ -11,6 +11,9 @@ import { notifyMemorySaved } from "../notifications/notifyMemorySave";
 import { notifyCapsuleRemix, notifyCapsuleSealed, notifyCapsuleReplayed } from "../notifications/triggerCapsuleEvent";
 import { notifyLegacySetup, notifyLegacyExpiration } from "../notifications/notifyLegacyTrigger";
 import { sendDAOVoteReceipt, notifyProposalUpdate } from "../notifications/notifyDAOVote";
+import { notifyAdminOnCritical, notifyAdminUserAction, notifyAdminSystemHealth } from "../notifications/notifyAdmin";
+import { notifyOptOut, notifyOptIn } from "../notifications/notifyOptOut";
+import { setUserEmailPreference } from "../lib/mailer";
 
 export function registerNotificationRoutes(app: Express) {
   // Get user notification preferences
@@ -195,6 +198,65 @@ export function registerNotificationRoutes(app: Express) {
       res.json({ success: true, message: 'Monthly report sent' });
     } catch (error) {
       console.error('Error sending monthly report:', error);
+      res.status(500).json({ error: 'Failed to send report' });
+    }
+  });
+
+  // Update email preferences (with opt-out/opt-in notifications)
+  app.post('/api/notifications/preferences/toggle', simpleAuth, async (req, res) => {
+    try {
+      const { email, enabled } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ error: 'Email address required' });
+      }
+
+      await setUserEmailPreference(email, enabled);
+      
+      const user = { email };
+      if (enabled) {
+        await notifyOptIn({ user });
+      } else {
+        await notifyOptOut({ user });
+      }
+      
+      res.json({ success: true, message: `Email notifications ${enabled ? 'enabled' : 'disabled'}` });
+    } catch (error) {
+      console.error('Error toggling preferences:', error);
+      res.status(500).json({ error: 'Failed to update preferences' });
+    }
+  });
+
+  // Admin notification endpoints
+  app.post('/api/notifications/admin/critical', simpleAuth, async (req, res) => {
+    try {
+      const { message } = req.body;
+      await notifyAdminOnCritical(message);
+      res.json({ success: true, message: 'Critical alert sent to admin' });
+    } catch (error) {
+      console.error('Error sending admin alert:', error);
+      res.status(500).json({ error: 'Failed to send admin alert' });
+    }
+  });
+
+  app.post('/api/notifications/admin/user-action', simpleAuth, async (req, res) => {
+    try {
+      const { action, userId, details } = req.body;
+      await notifyAdminUserAction({ action, userId, details });
+      res.json({ success: true, message: 'User action notification sent' });
+    } catch (error) {
+      console.error('Error sending user action notification:', error);
+      res.status(500).json({ error: 'Failed to send notification' });
+    }
+  });
+
+  app.post('/api/notifications/admin/system-health', simpleAuth, async (req, res) => {
+    try {
+      const healthData = req.body;
+      await notifyAdminSystemHealth(healthData);
+      res.json({ success: true, message: 'System health report sent' });
+    } catch (error) {
+      console.error('Error sending system health report:', error);
       res.status(500).json({ error: 'Failed to send report' });
     }
   });

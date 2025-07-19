@@ -6,43 +6,32 @@ export async function sendDigest(user: any) {
   await sendGuardianEmail({
     to: user.email,
     subject: "📈 GUARDIANCHAIN Weekly GTT Report",
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #7F5AF0 0%, #2CB67D 100%); color: white; padding: 20px; border-radius: 10px;">
-        <h2 style="color: #2CB67D;">📈 Weekly Performance Report</h2>
-        <p>Hello <strong>${user.name}</strong>,</p>
-        <p>Here's your weekly GUARDIANCHAIN performance summary:</p>
-        
-        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #FFD700; margin-top: 0;">💰 GTT Rewards</h3>
-          <p style="font-size: 24px; margin: 10px 0;"><strong>${user.weeklyYield} GTT</strong></p>
-          <p style="font-size: 16px; opacity: 0.9;">≈ $${totalValue.toFixed(2)} USD</p>
-        </div>
+    markdown: `
+## 📈 Weekly Capsule Summary
 
-        <div style="display: flex; justify-content: space-between; margin: 20px 0;">
-          <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; width: 30%;">
-            <h4 style="color: #2CB67D; margin: 0;">📦 Sealed</h4>
-            <p style="font-size: 20px; margin: 5px 0;"><strong>${user.sealedCount}</strong></p>
-          </div>
-          <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; width: 30%;">
-            <h4 style="color: #2CB67D; margin: 0;">🔄 Remixed</h4>
-            <p style="font-size: 20px; margin: 5px 0;"><strong>${user.remixedCount}</strong></p>
-          </div>
-          <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; width: 30%;">
-            <h4 style="color: #2CB67D; margin: 0;">👀 Views</h4>
-            <p style="font-size: 20px; margin: 5px 0;"><strong>${user.viewCount || 0}</strong></p>
-          </div>
-        </div>
+Hello **${user.name}**,
 
-        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
-          <p>🎯 <strong>Top Performer:</strong> ${user.topCapsule || 'N/A'}</p>
-          <p>🔥 <strong>Engagement Rate:</strong> ${user.engagementRate || '0%'}</p>
-          <p>📊 <strong>Portfolio Growth:</strong> +${user.portfolioGrowth || '0%'}</p>
-        </div>
+Your GUARDIANCHAIN performance for the week:
 
-        <p>Keep creating valuable content to increase your GTT yield and digital sovereignty.</p>
-        <p style="color: #2CB67D; font-weight: bold;">GUARDIANCHAIN - Digital Sovereignty Secured</p>
-      </div>
-    `,
+### 💰 GTT Rewards Earned
+**${user.weeklyYield} GTT** (≈ $${totalValue.toFixed(2)} USD)
+
+### 📊 Activity Breakdown
+- **Capsules sealed:** ${user.sealedCount}
+- **Capsules remixed:** ${user.remixedCount}  
+- **Total views:** ${user.viewCount || 0}
+
+### 🏆 Performance Highlights
+- **Top Performer:** ${user.topCapsule || 'N/A'}
+- **Engagement Rate:** ${user.engagementRate || '0%'}
+- **Portfolio Growth:** +${user.portfolioGrowth || '0%'}
+
+### 💡 Weekly Insights
+Your content is generating consistent value in the GUARDIANCHAIN ecosystem. Continue creating high-quality capsules to maximize your GTT yield and strengthen your digital sovereignty.
+
+[Open Portfolio Dashboard](https://guardianchain.ai/portfolio)  
+[View Detailed Analytics](https://guardianchain.ai/capsule-analytics)
+`,
   });
 }
 
