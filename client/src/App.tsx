@@ -57,6 +57,8 @@ import ReportingDashboard from "./pages/reporting";
 import CommanderDashboard from "./pages/dashboard";
 import BlockchainDemo from "./pages/blockchain-demo";
 import AssetIntegrationPage from "./pages/asset-integration";
+import ProtocolStrategy from "./pages/protocol-strategy";
+import EnterpriseSuite from "./pages/enterprise-suite";
 
 function Router() {
   return (
@@ -111,6 +113,8 @@ function Router() {
         <Route path="/dashboard" component={CommanderDashboard} />
         <Route path="/blockchain-demo" component={BlockchainDemo} />
         <Route path="/asset-integration" component={AssetIntegrationPage} />
+        <Route path="/protocol-strategy" component={ProtocolStrategy} />
+        <Route path="/enterprise-suite" component={EnterpriseSuite} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>
