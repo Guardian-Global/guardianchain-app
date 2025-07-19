@@ -60,6 +60,7 @@ import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
 import Contact from "./pages/Contact";
 import Notifications from "./pages/Notifications";
+import BillingDashboard from "./pages/BillingDashboard";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
@@ -122,6 +123,7 @@ function Router() {
         <Route path="/master-admin" component={MasterAdmin} />
         <Route path="/contact" component={() => <ContactInfo />} />
         <Route path="/notifications" component={Notifications} />
+        <Route path="/billing-dashboard" component={BillingDashboard} />
         <Route path="/token-launch" component={TokenLaunch} />
         
         {/* Legal Pages */}

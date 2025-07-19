@@ -1,0 +1,65 @@
+{
+  "timestamp": "2025-07-19T18:40:23.000Z",
+  "version": "1.0.0",
+  "protocol": "GUARDIANCHAIN",
+  "ledger_hash": "0x19823fcbdd89562ed65",
+  "weekly_yield_paid": 38400,
+  "vendor_payouts": [
+    {
+      "vendor": "ProtonMail",
+      "amount": 5400,
+      "timestamp": "2025-01-14",
+      "invoiceId": "INV-PROTONMAIL-001",
+      "category": "Infrastructure"
+    },
+    {
+      "vendor": "AWS",
+      "amount": 18750,
+      "timestamp": "2024-12-28",
+      "invoiceId": "INV-AWS-001",
+      "category": "Infrastructure"
+    },
+    {
+      "vendor": "Chainlink",
+      "amount": 9200,
+      "timestamp": "2024-12-30",
+      "invoiceId": "INV-CHAINLINK-001",
+      "category": "Infrastructure"
+    },
+    {
+      "vendor": "Legal Counsel",
+      "amount": 15600,
+      "timestamp": "2024-11-15",
+      "invoiceId": "INV-LEGAL COUNSEL-001",
+      "category": "Infrastructure"
+    }
+  ],
+  "audit_flags": [
+    "High vendor payout concentration: 19.8%",
+    "2 overdue invoices"
+  ],
+  "compliance_score": 77,
+  "treasury_summary": {
+    "balance": 150000,
+    "circulation": 1000000,
+    "weekly_volume": 25000,
+    "monthly_revenue": 85000
+  },
+  "risk_assessment": {
+    "level": "HIGH",
+    "factors": [
+      "High vendor payout concentration: 19.8%",
+      "2 overdue invoices"
+    ],
+    "recommendations": [
+      "Review and address compliance gaps to maintain regulatory standing",
+      "Monitor vendor costs relative to protocol yield generation"
+    ]
+  },
+  "regulatory_compliance": {
+    "gaap_compliant": true,
+    "xbrl_ready": true,
+    "retention_policy": "7_years_immutable_ipfs_arweave",
+    "audit_trail_complete": false
+  }
+}

@@ -15,6 +15,7 @@ const navigation = [
   { name: "Token Launch", href: "/token-launch", translationKey: "token.launch" },
   { name: "Analytics", href: "/capsule-analytics", translationKey: "nav.analytics" },
   { name: "Profile", href: "/profile", translationKey: "nav.profile" },
+  { name: "Billing", href: "/billing-dashboard", translationKey: "nav.billing" },
   { name: "Master Admin", href: "/master-admin", translationKey: "nav.enterprise" },
   { name: "Contact", href: "/contact" },
   { name: "Notifications", href: "/notifications" },

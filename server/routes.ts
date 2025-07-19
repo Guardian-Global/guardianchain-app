@@ -31,6 +31,7 @@ import { registerContactRoutes } from "./routes/contact";
 import { registerNotificationRoutes } from "./routes/notifications";
 import { registerEmailStatusRoutes } from "./routes/email-status";
 import { registerEmailPrefsRoutes } from "./routes/emailPrefs";
+import { registerBillingRoutes } from "./routes/billing";
 import { automationService } from "./services/automation";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -56,6 +57,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Email preferences routes
   registerEmailPrefsRoutes(app);
+  
+  // Billing infrastructure routes
+  registerBillingRoutes(app);
   // Register Stripe webhook handler
   registerStripeWebhook(app);
   // Register GuardianChain API routes
