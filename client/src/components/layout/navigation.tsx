@@ -6,47 +6,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import WalletConnect from "@/components/web3/wallet-connect";
 import { useTheme } from "@/components/web3/theme-provider";
 
+// Core navigation focused on enterprise features
 const navigation = [
   { name: "Explore", href: "/explore" },
   { name: "Create", href: "/create" },
-  { name: "Leaderboard", href: "/leaderboard" },
-  { name: "Profile", href: "/profile" },
-  { name: "Private", href: "/private" },
-  { name: "Commander", href: "/commander" },
-  { name: "Contracts", href: "/contract-demo" },
-  { name: "Mint NFT", href: "/mint-nft" },
-  { name: "Govern", href: "/govern" },
-  { name: "AI Recommendations", href: "/recommendations" },
-  { name: "Enhanced Profile", href: "/enhanced-profile" },
-  { name: "Explorer", href: "/explorer" },
-  { name: "Enhanced Leaderboard", href: "/enhanced-leaderboard" },
-  { name: "Certify", href: "/certify" },
-  { name: "Insights", href: "/insight" },
-  { name: "Capsule Forge", href: "/capsule-forge" },
-  { name: "Stake", href: "/stake" },
-  { name: "Launchpad", href: "/launchpad" },
-  { name: "Referrals", href: "/referral" },
-  { name: "Airdrop", href: "/airdrop" },
-  { name: "Auction House", href: "/auction-house" },
-  { name: "Yield Tracker", href: "/yield-tracker" },
-  { name: "Financial", href: "/financial-dashboard" },
-  { name: "Treasury", href: "/treasury" },
-  { name: "AI Advisor", href: "/ai-advisor" },
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Compliance", href: "/compliance" },
-  { name: "Yield Engine", href: "/yield-distribution" },
-  { name: "Reports", href: "/reporting" },
-  { name: "Admin", href: "/admin" },
-  { name: "Config", href: "/config" },
-  { name: "Tiers", href: "/tiers" },
-  { name: "Donate", href: "/donate-access" },
-  { name: "Blockchain Demo", href: "/blockchain-demo" },
-  { name: "Asset Integration", href: "/asset-integration" },
-  { name: "Protocol Strategy", href: "/protocol-strategy" },
-  { name: "Enterprise Suite", href: "/enterprise-suite" },
-  { name: "Premium Features", href: "/premium-features" },
   { name: "Viral Tools", href: "/viral-tools" },
-  { name: "Governance", href: "/governance" },
+  { name: "Analytics", href: "/capsule-analytics" },
+  { name: "Profile", href: "/profile" },
 ];
 
 export default function Navigation() {
@@ -87,6 +53,12 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
+            <Link href="/auth">
+              <Button variant="outline" size="sm" className="text-purple-400 border-purple-400 hover:bg-purple-400/10">
+                Enterprise Login
+              </Button>
+            </Link>
+            
             <div className="hidden sm:block">
               <div className="flex items-center space-x-2 bg-slate-800 rounded-lg px-3 py-2">
                 <Coins className="h-4 w-4 text-amber-400" />
@@ -129,7 +101,16 @@ export default function Navigation() {
                       </Link>
                     ))}
                     <div className="pt-4 border-t border-slate-800">
-                      <div className="flex items-center space-x-2 bg-slate-800 rounded-lg px-3 py-2 mb-4">
+                      <Link href="/auth">
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-purple-400 border-purple-400 hover:bg-purple-400/10 mb-4"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Enterprise Login
+                        </Button>
+                      </Link>
+                      <div className="flex items-center space-x-2 bg-slate-800 rounded-lg px-3 py-2">
                         <Coins className="h-4 w-4 text-amber-400" />
                         <span className="text-sm font-mono">1,247 GTT</span>
                       </div>

@@ -12,18 +12,13 @@ import CreateCapsule from "@/pages/create-capsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
 import Profile from "@/pages/profile";
-import SealDemo from "@/pages/seal-demo";
-import NFTDemo from "@/pages/nft-demo";
 import CapsuleDetail from "@/pages/capsule-detail";
-import ShareDemo from "@/pages/share-demo";
-import AnalyticsDemo from "@/pages/analytics-demo";
-import Web3Demo from "@/pages/web3-demo";
-import SmartContractDemo from "@/pages/smart-contract-demo";
 import Governance from "@/pages/governance";
 import PrivateFeed from "@/pages/private";
 import Dashboard from "@/pages/dashboard";
 import Commander from "@/pages/commander";
-import ContractDemo from "@/pages/contract-demo";
+import AuthenticationHub from "@/components/auth/AuthenticationHub";
+import OnboardingPage from "@/pages/onboarding";
 import MintNFT from "@/pages/mint-nft";
 import RecommendationsPage from "@/pages/recommendations";
 import EnhancedProfile from "@/pages/enhanced-profile";
@@ -38,7 +33,7 @@ import ReferralPage from "@/pages/referral";
 import AirdropPage from "@/pages/airdrop";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
-import TestProfilePage from "./pages/test-profile";
+
 import AuctionHousePage from "./pages/auction-house";
 import EmbedCapsulePage from "./pages/embed-capsule";
 import YieldTrackerPage from "./pages/yield-tracker";
@@ -55,7 +50,7 @@ import AdminDashboard from "./pages/admin";
 import ConfigPage from "./pages/config";
 import ReportingDashboard from "./pages/reporting";
 import CommanderDashboard from "./pages/dashboard";
-import BlockchainDemo from "./pages/blockchain-demo";
+
 import AssetIntegrationPage from "./pages/asset-integration";
 import ProtocolStrategy from "./pages/protocol-strategy";
 import EnterpriseSuite from "./pages/enterprise-suite";
@@ -72,18 +67,14 @@ function Router() {
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={Profile} />
-        <Route path="/seal-demo" component={SealDemo} />
-        <Route path="/nft-demo" component={NFTDemo} />
+        <Route path="/auth" component={AuthenticationHub} />
+        <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
-        <Route path="/share-demo" component={ShareDemo} />
-        <Route path="/analytics-demo" component={AnalyticsDemo} />
-        <Route path="/web3-demo" component={Web3Demo} />
-        <Route path="/smart-contract-demo" component={SmartContractDemo} />
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/commander" component={Commander} />
-        <Route path="/contract-demo" component={ContractDemo} />
+
         <Route path="/mint-nft" component={MintNFT} />
         <Route path="/govern" component={Govern} />
         <Route path="/recommendations" component={RecommendationsPage} />
@@ -113,13 +104,13 @@ function Router() {
         <Route path="/config" component={ConfigPage} />
         <Route path="/reporting" component={ReportingDashboard} />
         <Route path="/dashboard" component={CommanderDashboard} />
-        <Route path="/blockchain-demo" component={BlockchainDemo} />
+
         <Route path="/asset-integration" component={AssetIntegrationPage} />
         <Route path="/protocol-strategy" component={ProtocolStrategy} />
         <Route path="/enterprise-suite" component={EnterpriseSuite} />
         <Route path="/premium-features" component={PremiumFeaturesPage} />
         <Route path="/viral-tools" component={ViralTools} />
-        <Route path="/test-profile" component={TestProfilePage} />
+
         <Route component={NotFound} />
       </Switch>
       <Footer />

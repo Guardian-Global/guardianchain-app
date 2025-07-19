@@ -22,6 +22,7 @@ import {
 } from "./lib/aiRecommendations";
 import { getCapsuleAnalytics, getAllCapsulesAnalytics } from "./routes/capsule-analytics";
 import openaiRoutes from "./routes/openai";
+import enterpriseAuthRoutes from "./routes/enterprise-auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Enhanced authentication and premium routes
@@ -34,6 +35,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/veritas", veritasRouter);
   app.use("/api/analytics", analyticsRouter);
   app.use("/api", openaiRoutes);
+  app.use("/api/auth", enterpriseAuthRoutes);
   
   // Capsule Analytics Routes
   app.get("/api/capsule/:capsuleId/analytics", getCapsuleAnalytics);
