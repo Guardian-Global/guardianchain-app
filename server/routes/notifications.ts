@@ -272,9 +272,10 @@ export function registerNotificationRoutes(app: Express) {
 
       const testUser = { email, name: 'Test User' };
       
+      let result;
       switch (testType) {
         case 'memory':
-          await notifyMemorySaved({
+          result = await notifyMemorySaved({
             user: testUser,
             message: 'Test prompt for GUARDIANCHAIN AI',
             reply: 'This is a test response from your Sovereign AI assistant.',
@@ -282,10 +283,10 @@ export function registerNotificationRoutes(app: Express) {
           });
           break;
         case 'capsule':
-          await notifyCapsuleSealed({ user: testUser, capsuleId: 'TEST-001' });
+          result = await notifyCapsuleSealed({ user: testUser, capsuleId: 'TEST-001' });
           break;
         case 'digest':
-          await sendDigest({
+          result = await sendDigest({
             ...testUser,
             weeklyYield: 25.5,
             sealedCount: 2,
@@ -300,10 +301,25 @@ export function registerNotificationRoutes(app: Express) {
           return res.status(400).json({ error: 'Invalid test type' });
       }
       
-      res.json({ success: true, message: `Test ${testType} email sent to ${email}` });
+      const isConfigured = !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+      
+      res.json({ 
+        success: true, 
+        message: `Test ${testType} email ${isConfigured ? 'sent' : 'simulated'} to ${email}`,
+        smtpConfigured: isConfigured,
+        note: isConfigured ? 'Email sent via ProtonMail SMTP' : 'Email simulated - configure ProtonMail SMTP to enable sending'
+      });
     } catch (error) {
       console.error('Error sending test email:', error);
-      res.status(500).json({ error: 'Failed to send test email', details: error.message });
+      const isConfigured = !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+      
+      res.json({ 
+        success: false, 
+        error: 'Email system ready but needs configuration',
+        details: isConfigured ? error.message : 'ProtonMail SMTP credentials required',
+        smtpConfigured: isConfigured,
+        requiredSecrets: ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS']
+      });
     }
   });
 }

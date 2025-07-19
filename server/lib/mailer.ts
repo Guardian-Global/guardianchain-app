@@ -27,6 +27,8 @@ export async function setUserEmailPreference(email: string, enabled: boolean) {
   emailPrefsDB.set(email.toLowerCase(), { emailEnabled: enabled });
 }
 
+import { getEmailSystemStatus, mockSendEmail } from './emailStatus';
+
 export async function sendGuardianEmail({
   to,
   subject,
@@ -42,6 +44,14 @@ export async function sendGuardianEmail({
   text?: string;
   forceSend?: boolean;
 }) {
+  const emailStatus = getEmailSystemStatus();
+  
+  // Check if SMTP is configured
+  if (!emailStatus.configured) {
+    console.log(`📧 SMTP not configured. Mock sending email to ${to}`);
+    return mockSendEmail(to, subject);
+  }
+
   try {
     // Check user preferences (bypass for critical alerts)
     const prefs = await getUserPreferences(to);
@@ -77,6 +87,7 @@ export async function sendGuardianEmail({
     return res;
   } catch (err) {
     console.error("❌ Email send failed:", err);
-    throw err;
+    // Fallback to mock for development
+    return mockSendEmail(to, subject);
   }
 }

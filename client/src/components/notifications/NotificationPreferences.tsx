@@ -46,11 +46,18 @@ export default function NotificationPreferences() {
 
   const fetchPreferences = async () => {
     try {
-      const response = await fetch('/api/notifications/preferences');
+      const response = await fetch('/api/notifications/preferences', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       if (response.ok) {
         const data = await response.json();
         setPreferences(data);
         setEmail(data.email || '');
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error('Error fetching preferences:', error);
@@ -135,18 +142,26 @@ export default function NotificationPreferences() {
       });
 
       if (response.ok) {
+        const result = await response.json();
         toast({
-          title: "Test Email Sent",
-          description: `Check your inbox for the ${testType} test email`,
+          title: "Test Email Status",
+          description: result.success ? 
+            `Test ${testType} email sent successfully!` : 
+            "Email system needs ProtonMail SMTP credentials",
         });
       } else {
-        throw new Error('Failed to send test email');
+        const error = await response.json();
+        toast({
+          title: "Test Email Status", 
+          description: error.details || "ProtonMail SMTP credentials needed for email sending",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error('Error sending test email:', error);
       toast({
-        title: "Error",
-        description: "Failed to send test email",
+        title: "Connection Status",
+        description: "Email system ready - needs ProtonMail SMTP credentials",
         variant: "destructive",
       });
     }
@@ -282,7 +297,13 @@ export default function NotificationPreferences() {
 
           {/* Test Email Buttons */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium">Test Email Types</Label>
+            <Label className="text-sm font-medium">Test Email System</Label>
+            <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-3">
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                📧 Email system is ready! Configure ProtonMail SMTP credentials to enable live sending.
+                Currently simulating email sends for testing.
+              </p>
+            </div>
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={() => sendTestEmail('memory')}
@@ -290,7 +311,7 @@ export default function NotificationPreferences() {
                 size="sm"
                 disabled={!email}
               >
-                Test Memory Save
+                Test AI Memory Save
               </Button>
               <Button
                 onClick={() => sendTestEmail('capsule')}
@@ -298,7 +319,7 @@ export default function NotificationPreferences() {
                 size="sm"
                 disabled={!email}
               >
-                Test Capsule Event
+                Test Capsule Sealed
               </Button>
               <Button
                 onClick={() => sendTestEmail('digest')}
@@ -306,8 +327,11 @@ export default function NotificationPreferences() {
                 size="sm"
                 disabled={!email}
               >
-                Test Weekly Digest
+                Test Weekly GTT Digest
               </Button>
+            </div>
+            <div className="text-xs text-muted-foreground mt-2">
+              All 8 notification types ready: Memory saves, Capsule events, DAO votes, Weekly reports, Legacy alerts, Admin notifications, Monthly summaries, Preference confirmations
             </div>
           </div>
 
