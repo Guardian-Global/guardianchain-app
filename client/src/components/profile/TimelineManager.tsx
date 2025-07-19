@@ -1,37 +1,32 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import { 
-  Eye, 
-  EyeOff, 
-  Globe, 
-  Lock, 
-  Calendar, 
-  Activity, 
-  TrendingUp, 
-  MessageSquare,
+  Calendar,
+  Shield,
+  Coins,
+  TrendingUp,
+  Users,
   Share,
-  Heart,
-  Bookmark,
-  User,
-  Users
+  Lock,
+  Globe,
+  Filter
 } from 'lucide-react';
 
 interface TimelineEvent {
   id: string;
-  type: 'capsule' | 'verification' | 'yield' | 'social' | 'achievement';
+  type: 'capsule_created' | 'capsule_verified' | 'yield_received' | 'verification_performed' | 'achievement_unlocked';
   title: string;
   description: string;
-  timestamp: Date;
-  isPublic: boolean;
-  metadata?: {
-    value?: number;
-    participants?: string[];
-    reactions?: number;
-    shares?: number;
+  timestamp: string;
+  metadata: {
+    gttAmount?: number;
+    capsuleTitle?: string;
+    verificationCount?: number;
+    achievementName?: string;
+    privacy: 'public' | 'private';
   };
 }
 
@@ -39,389 +34,276 @@ interface TimelineManagerProps {
   isPublic: boolean;
 }
 
-export function TimelineManager({ isPublic }: TimelineManagerProps) {
-  const [timelinePrivacy, setTimelinePrivacy] = useState(isPublic);
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+export default function TimelineManager({ isPublic }: TimelineManagerProps) {
+  const [showPrivateEvents, setShowPrivateEvents] = useState(false);
+  const [filterType, setFilterType] = useState<string>('all');
 
-  // Mock timeline events
   const timelineEvents: TimelineEvent[] = [
     {
       id: '1',
-      type: 'capsule',
-      title: 'Created Climate Research Data Verification',
-      description: 'Published a comprehensive climate data verification capsule with 247 data points',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      isPublic: true,
+      type: 'yield_received',
+      title: 'Yield Payment Received',
+      description: 'Received GTT yield from Climate Research Data Verification capsule',
+      timestamp: '2024-12-19T10:30:00Z',
       metadata: {
-        value: 2847.50,
-        reactions: 23,
-        shares: 7
+        gttAmount: 127.5,
+        capsuleTitle: 'Climate Research Data Verification',
+        privacy: 'public'
       }
     },
     {
       id: '2',
-      type: 'yield',
-      title: 'Received GTT Yield Distribution',
-      description: 'Earned 127.5 GTT from Legal Document Authentication capsule performance',
-      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-      isPublic: false,
+      type: 'capsule_verified',
+      title: 'Capsule Verified by Community',
+      description: 'Legal Document Authentication capsule received 5 new verifications',
+      timestamp: '2024-12-18T15:45:00Z',
       metadata: {
-        value: 127.5
+        capsuleTitle: 'Legal Document Authentication',
+        verificationCount: 5,
+        privacy: 'public'
       }
     },
     {
       id: '3',
-      type: 'verification',
-      title: 'Verified 5 Community Capsules',
-      description: 'Contributed to community verification of AI training data integrity capsules',
-      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-      isPublic: true,
+      type: 'verification_performed',
+      title: 'Verified Community Capsules',
+      description: 'Performed verification on 3 community capsules, earned reputation points',
+      timestamp: '2024-12-17T09:20:00Z',
       metadata: {
-        participants: ['user1', 'user2', 'user3'],
-        reactions: 15
+        verificationCount: 3,
+        privacy: 'public'
       }
     },
     {
       id: '4',
-      type: 'achievement',
-      title: 'Reached Truth Guardian Status',
-      description: 'Achieved 1000+ successful verifications and unlocked Truth Guardian badge',
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-      isPublic: true,
+      type: 'capsule_created',
+      title: 'Personal Medical Records Sealed',
+      description: 'Created private capsule for personal medical documentation',
+      timestamp: '2024-12-16T14:15:00Z',
       metadata: {
-        reactions: 89,
-        shares: 12
+        capsuleTitle: 'Personal Medical Records',
+        privacy: 'private'
       }
     },
     {
       id: '5',
-      type: 'social',
-      title: 'Followed by Environmental Research Institute',
-      description: 'Gained recognition from @EnviroResearch for climate data verification work',
-      timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-      isPublic: true,
+      type: 'achievement_unlocked',
+      title: 'Achievement Unlocked: Truth Guardian',
+      description: 'Reached 150 total verifications and earned Truth Guardian badge',
+      timestamp: '2024-12-15T11:30:00Z',
       metadata: {
-        reactions: 34,
-        shares: 8
+        achievementName: 'Truth Guardian',
+        privacy: 'public'
       }
     },
     {
       id: '6',
-      type: 'capsule',
-      title: 'Updated Legal Document Authentication',
-      description: 'Enhanced legal document verification with new blockchain attestation features',
-      timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
-      isPublic: false,
+      type: 'capsule_created',
+      title: 'AI Training Data Integrity Capsule',
+      description: 'Created and sealed comprehensive AI training dataset verification',
+      timestamp: '2024-12-10T16:45:00Z',
       metadata: {
-        value: 1523.75,
-        reactions: 19,
-        shares: 4
+        capsuleTitle: 'AI Training Data Integrity',
+        privacy: 'public'
       }
     }
   ];
 
   const getEventIcon = (type: string) => {
     const icons = {
-      capsule: '📄',
-      verification: '✅',
-      yield: '💰',
-      social: '👥',
-      achievement: '🏆'
+      capsule_created: Shield,
+      capsule_verified: Users,
+      yield_received: Coins,
+      verification_performed: TrendingUp,
+      achievement_unlocked: Badge
     };
-    return icons[type as keyof typeof icons] || '📄';
+    return icons[type as keyof typeof icons] || Calendar;
   };
 
   const getEventColor = (type: string) => {
     const colors = {
-      capsule: 'border-blue-500',
-      verification: 'border-green-500',
-      yield: 'border-amber-500',
-      social: 'border-purple-500',
-      achievement: 'border-pink-500'
+      capsule_created: 'text-blue-400',
+      capsule_verified: 'text-green-400',
+      yield_received: 'text-amber-400',
+      verification_performed: 'text-purple-400',
+      achievement_unlocked: 'text-pink-400'
     };
-    return colors[type as keyof typeof colors] || 'border-gray-500';
+    return colors[type as keyof typeof colors] || 'text-gray-400';
   };
 
   const filteredEvents = timelineEvents.filter(event => {
-    if (selectedFilter === 'all') return true;
-    if (selectedFilter === 'public') return event.isPublic;
-    if (selectedFilter === 'private') return !event.isPublic;
-    return event.type === selectedFilter;
+    const matchesPrivacy = showPrivateEvents || event.metadata.privacy === 'public';
+    const matchesType = filterType === 'all' || event.type === filterType;
+    return matchesPrivacy && matchesType;
   });
 
-  const formatTimeAgo = (timestamp: Date) => {
+  const formatDate = (timestamp: string) => {
+    const date = new Date(timestamp);
     const now = new Date();
-    const diff = now.getTime() - timestamp.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (days > 0) return `${days}d ago`;
-    if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
+    if (diffDays === 1) return 'Today';
+    if (diffDays === 2) return 'Yesterday';
+    if (diffDays <= 7) return `${diffDays - 1} days ago`;
+    return date.toLocaleDateString();
   };
 
   return (
     <div className="space-y-6">
-      {/* Privacy Controls */}
-      <Card className="bg-slate-800">
+      {/* Timeline Controls */}
+      <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Calendar className="w-5 h-5 mr-2 text-blue-400" />
-              Timeline Manager
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Lock className="w-4 h-4 text-slate-400" />
-                <span className="text-sm text-slate-400">Timeline Privacy</span>
-                <Switch
-                  checked={timelinePrivacy}
-                  onCheckedChange={setTimelinePrivacy}
-                />
-                <Globe className="w-4 h-4 text-slate-400" />
-              </div>
-              <Badge variant={timelinePrivacy ? "default" : "secondary"}>
-                {timelinePrivacy ? (
-                  <>
-                    <Eye className="w-3 h-3 mr-1" />
-                    Public
-                  </>
-                ) : (
-                  <>
-                    <EyeOff className="w-3 h-3 mr-1" />
-                    Private
-                  </>
-                )}
-              </Badge>
+            <span>Activity Timeline</span>
+            <div className="flex items-center space-x-2">
+              {isPublic ? (
+                <Globe className="w-4 h-4 text-green-400" />
+              ) : (
+                <Lock className="w-4 h-4 text-red-400" />
+              )}
+              <span className="text-sm text-slate-400">
+                {isPublic ? 'Public Timeline' : 'Private Timeline'}
+              </span>
             </div>
           </CardTitle>
         </CardHeader>
+        
         <CardContent>
-          <p className="text-sm text-slate-400">
-            {timelinePrivacy 
-              ? "Your timeline is visible to all users. You can still mark individual events as private."
-              : "Your timeline is private. Only you can see your activity and events."
-            }
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Timeline Filters */}
-      <Card className="bg-slate-800">
-        <CardContent className="p-4">
-          <div className="flex flex-wrap gap-2">
-            {[
-              { key: 'all', label: 'All Events', icon: Activity },
-              { key: 'public', label: 'Public', icon: Globe },
-              { key: 'private', label: 'Private', icon: Lock },
-              { key: 'capsule', label: 'Capsules', icon: null },
-              { key: 'verification', label: 'Verifications', icon: null },
-              { key: 'yield', label: 'Yield', icon: null },
-              { key: 'social', label: 'Social', icon: Users },
-              { key: 'achievement', label: 'Achievements', icon: null }
-            ].map((filter) => (
-              <Button
-                key={filter.key}
-                variant={selectedFilter === filter.key ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedFilter(filter.key)}
-                className="flex items-center"
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={showPrivateEvents}
+                  onCheckedChange={setShowPrivateEvents}
+                  id="show-private"
+                />
+                <label htmlFor="show-private" className="text-sm text-slate-400">
+                  Show private events
+                </label>
+              </div>
+              
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm"
               >
-                {filter.icon && <filter.icon className="w-3 h-3 mr-1" />}
-                {filter.label}
-              </Button>
-            ))}
+                <option value="all">All Events</option>
+                <option value="capsule_created">Capsules Created</option>
+                <option value="capsule_verified">Verifications</option>
+                <option value="yield_received">Yield Received</option>
+                <option value="verification_performed">Verifications Performed</option>
+                <option value="achievement_unlocked">Achievements</option>
+              </select>
+            </div>
+            
+            <Button variant="outline" size="sm">
+              <Share className="w-4 h-4 mr-2" />
+              Share Timeline
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="timeline" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 bg-slate-800">
-          <TabsTrigger value="timeline">Timeline View</TabsTrigger>
-          <TabsTrigger value="analytics">Timeline Analytics</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="timeline">
-          <Card className="bg-slate-800">
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                {filteredEvents.map((event, index) => (
-                  <div key={event.id} className="relative">
-                    {/* Timeline connector */}
-                    {index < filteredEvents.length - 1 && (
-                      <div className="absolute left-6 top-12 w-0.5 h-16 bg-slate-600"></div>
-                    )}
+      {/* Timeline Events */}
+      <div className="space-y-4">
+        {filteredEvents.map((event, index) => {
+          const EventIcon = getEventIcon(event.type);
+          const eventColor = getEventColor(event.type);
+          
+          return (
+            <Card key={event.id} className="bg-slate-800 border-slate-700">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-4">
+                  {/* Timeline indicator */}
+                  <div className="relative">
+                    <div className={`w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center ${eventColor}`}>
+                      <EventIcon className="w-5 h-5" />
+                    </div>
                     
-                    <div className="flex items-start space-x-4">
-                      {/* Event icon */}
-                      <div className={`w-12 h-12 rounded-full border-2 ${getEventColor(event.type)} bg-slate-700 flex items-center justify-center text-xl`}>
-                        {getEventIcon(event.type)}
-                      </div>
-                      
-                      {/* Event content */}
-                      <div className="flex-1 bg-slate-700 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className="font-medium text-white mb-1">{event.title}</h3>
-                            <p className="text-sm text-slate-300">{event.description}</p>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2">
-                            <Badge variant={event.isPublic ? "default" : "secondary"} className="text-xs">
-                              {event.isPublic ? (
-                                <>
-                                  <Globe className="w-2 h-2 mr-1" />
-                                  Public
-                                </>
-                              ) : (
-                                <>
-                                  <Lock className="w-2 h-2 mr-1" />
-                                  Private
-                                </>
-                              )}
-                            </Badge>
-                            <span className="text-xs text-slate-400">
-                              {formatTimeAgo(event.timestamp)}
-                            </span>
-                          </div>
-                        </div>
+                    {index !== filteredEvents.length - 1 && (
+                      <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-slate-600"></div>
+                    )}
+                  </div>
+                  
+                  {/* Event content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-medium text-white mb-1">{event.title}</h3>
+                        <p className="text-slate-400 text-sm mb-2">{event.description}</p>
                         
                         {/* Event metadata */}
-                        {event.metadata && (
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4 text-sm">
-                              {event.metadata.value && (
-                                <span className="text-amber-400">
-                                  {event.metadata.value.toLocaleString()} GTT
-                                </span>
-                              )}
-                              {event.metadata.participants && (
-                                <span className="text-blue-400">
-                                  {event.metadata.participants.length} participants
-                                </span>
-                              )}
-                            </div>
-                            
-                            <div className="flex items-center space-x-3 text-slate-400">
-                              {event.metadata.reactions && (
-                                <div className="flex items-center">
-                                  <Heart className="w-3 h-3 mr-1" />
-                                  {event.metadata.reactions}
-                                </div>
-                              )}
-                              {event.metadata.shares && (
-                                <div className="flex items-center">
-                                  <Share className="w-3 h-3 mr-1" />
-                                  {event.metadata.shares}
-                                </div>
-                              )}
-                              <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                                <MessageSquare className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        )}
+                        <div className="flex items-center space-x-4 text-xs text-slate-500">
+                          <span>{formatDate(event.timestamp)}</span>
+                          
+                          {event.metadata.gttAmount && (
+                            <>
+                              <span>•</span>
+                              <span className="text-amber-400">+{event.metadata.gttAmount} GTT</span>
+                            </>
+                          )}
+                          
+                          {event.metadata.verificationCount && (
+                            <>
+                              <span>•</span>
+                              <span className="text-blue-400">{event.metadata.verificationCount} verifications</span>
+                            </>
+                          )}
+                          
+                          {event.metadata.achievementName && (
+                            <>
+                              <span>•</span>
+                              <span className="text-pink-400">{event.metadata.achievementName}</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 ml-4">
+                        <Badge
+                          variant="outline"
+                          className={`${
+                            event.metadata.privacy === 'private'
+                              ? 'border-red-400 text-red-400'
+                              : 'border-green-400 text-green-400'
+                          }`}
+                        >
+                          {event.metadata.privacy === 'private' ? (
+                            <Lock className="w-3 h-3 mr-1" />
+                          ) : (
+                            <Globe className="w-3 h-3 mr-1" />
+                          )}
+                          {event.metadata.privacy}
+                        </Badge>
                       </div>
                     </div>
                   </div>
-                ))}
-                
-                {filteredEvents.length === 0 && (
-                  <div className="text-center py-12">
-                    <Activity className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-slate-300 mb-2">No events found</h3>
-                    <p className="text-slate-400">Try adjusting your filter selection</p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analytics">
-          <div className="grid lg:grid-cols-2 gap-6">
-            <Card className="bg-slate-800">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-green-400" />
-                  Activity Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Total Events</span>
-                    <span className="font-bold">{timelineEvents.length}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Public Events</span>
-                    <span className="font-bold text-green-400">
-                      {timelineEvents.filter(e => e.isPublic).length}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Private Events</span>
-                    <span className="font-bold text-amber-400">
-                      {timelineEvents.filter(e => !e.isPublic).length}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Total Reactions</span>
-                    <span className="font-bold text-pink-400">
-                      {timelineEvents.reduce((sum, e) => sum + (e.metadata?.reactions || 0), 0)}
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Total Shares</span>
-                    <span className="font-bold text-blue-400">
-                      {timelineEvents.reduce((sum, e) => sum + (e.metadata?.shares || 0), 0)}
-                    </span>
-                  </div>
                 </div>
               </CardContent>
             </Card>
+          );
+        })}
+      </div>
 
-            <Card className="bg-slate-800">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Activity className="w-5 h-5 mr-2 text-purple-400" />
-                  Event Types
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {['capsule', 'verification', 'yield', 'social', 'achievement'].map((type) => {
-                    const count = timelineEvents.filter(e => e.type === type).length;
-                    const percentage = (count / timelineEvents.length) * 100;
-                    
-                    return (
-                      <div key={type}>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="capitalize flex items-center">
-                            <span className="mr-2">{getEventIcon(type)}</span>
-                            {type}
-                          </span>
-                          <span>{count} ({percentage.toFixed(0)}%)</span>
-                        </div>
-                        <div className="w-full bg-slate-600 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full ${getEventColor(type).replace('border', 'bg')}`}
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+      {filteredEvents.length === 0 && (
+        <Card className="bg-slate-800 border-slate-700">
+          <CardContent className="p-12 text-center">
+            <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">No timeline events</h3>
+            <p className="text-slate-400 mb-4">
+              {filterType !== 'all' || !showPrivateEvents
+                ? 'Try adjusting your filter settings to see more events.'
+                : 'Your activity timeline will appear here as you use GUARDIANCHAIN.'
+              }
+            </p>
+            <Button className="bg-purple-600 hover:bg-purple-700">
+              <Shield className="w-4 h-4 mr-2" />
+              Create First Capsule
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

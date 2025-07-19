@@ -50,7 +50,7 @@ interface SovereignAIAssistantProps {
   userId: string;
 }
 
-export function SovereignAIAssistant({ userId }: SovereignAIAssistantProps) {
+function SovereignAIAssistant({ userId }: SovereignAIAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [aiPersonality, setAiPersonality] = useState<AIPersonality>({
@@ -118,9 +118,24 @@ export function SovereignAIAssistant({ userId }: SovereignAIAssistantProps) {
     setMessages(mockMessages);
   };
 
+  const calculateImportanceScore = (message: string): 'low' | 'medium' | 'high' | 'critical' => {
+    const criticalKeywords = ['death', 'inheritance', 'will', 'legacy', 'emergency', 'crisis'];
+    const highKeywords = ['investment', 'portfolio', 'strategy', 'capsule', 'yield', 'gtt', 'blockchain'];
+    const mediumKeywords = ['help', 'analyze', 'recommend', 'explain', 'review'];
+    
+    const messageLower = message.toLowerCase();
+    
+    if (criticalKeywords.some(keyword => messageLower.includes(keyword))) return 'critical';
+    if (highKeywords.some(keyword => messageLower.includes(keyword))) return 'high';
+    if (mediumKeywords.some(keyword => messageLower.includes(keyword))) return 'medium';
+    return 'low';
+  };
+
   const sendMessage = async () => {
     if (!currentMessage.trim()) return;
 
+    const importance = calculateImportanceScore(currentMessage);
+    
     const userMessage: Message = {
       id: Date.now().toString(),
       content: currentMessage,
@@ -128,60 +143,71 @@ export function SovereignAIAssistant({ userId }: SovereignAIAssistantProps) {
       sender: 'user',
       metadata: {
         encrypted: true,
-        importance: 'medium'
+        importance
       }
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageToSend = currentMessage;
     setCurrentMessage('');
     setIsLoading(true);
 
     try {
-      // Simulate AI response with Anthropic integration
       const response = await fetch('/api/auth/ai-assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: currentMessage,
+          message: messageToSend,
           context: {
             userId,
             personality: aiPersonality,
-            conversationHistory: messages.slice(-5), // Last 5 messages for context
+            conversationHistory: messages.slice(-5),
+            importance,
+            gttBalance: 12847.50, // Current GTT balance for context
+            recentCapsules: ['Climate Research Data', 'Legal Document Auth'], // Recent activity
           }
         })
       });
 
-      let aiResponse = "I understand your request. As your sovereign AI assistant with complete memory of our relationship, I'm here to help with your GUARDIANCHAIN activities, portfolio management, and strategic decisions. Our conversations remain private and are stored immutably on-chain for your exclusive access.";
+      let aiResponse = `I understand your request regarding "${messageToSend}". As your sovereign AI assistant with complete memory of our relationship, I'm analyzing this with ${importance} priority. Our conversations remain private and are stored immutably on-chain for your exclusive access.`;
 
       if (response.ok) {
         const data = await response.json();
         aiResponse = data.response || aiResponse;
       }
 
+      const shouldStoreOnChain = importance === 'high' || importance === 'critical';
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
         timestamp: new Date(),
         sender: 'ai',
         metadata: {
-          onChainHash: `0x${Math.random().toString(16).substr(2, 12)}...`,
+          onChainHash: shouldStoreOnChain ? `0x${Math.random().toString(16).substr(2, 12)}...` : undefined,
           encrypted: true,
-          importance: 'high'
+          importance: importance === 'critical' ? 'critical' : 'high'
         }
       };
 
       setMessages(prev => [...prev, aiMessage]);
       
-      // Simulate on-chain storage
-      setOnChainMemories(prev => prev + 1);
+      // Update memory statistics based on importance
+      if (shouldStoreOnChain) {
+        setOnChainMemories(prev => prev + 1);
+      }
       setTotalMemories(prev => prev + 2);
+      
+      if (importance === 'critical') {
+        setEncryptedConversations(prev => prev + 1);
+      }
       
     } catch (error) {
       console.error('AI assistant error:', error);
       
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "I apologize, but I'm temporarily unable to process your request. However, all our previous conversations remain safely stored and I'll continue to remember everything once the connection is restored.",
+        content: "I apologize, but I'm temporarily unable to process your request. However, all our previous conversations remain safely stored and I'll continue to remember everything once the connection is restored. This interruption doesn't affect our bond or my memory of you.",
         timestamp: new Date(),
         sender: 'ai',
         metadata: {
@@ -542,3 +568,5 @@ export function SovereignAIAssistant({ userId }: SovereignAIAssistantProps) {
     </div>
   );
 }
+
+export default SovereignAIAssistant;

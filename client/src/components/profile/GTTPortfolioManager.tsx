@@ -1,273 +1,330 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { 
-  Coins, 
   TrendingUp, 
   TrendingDown, 
-  Send, 
-  Download, 
-  Shuffle, 
-  BarChart3,
+  DollarSign, 
+  ArrowUpRight, 
+  ArrowDownLeft,
   PieChart,
+  BarChart3,
   Clock,
   Target,
-  Zap
+  Coins,
+  Gift,
+  ShoppingCart,
+  RefreshCw
 } from 'lucide-react';
 
-interface CapsuleInvestment {
+interface Investment {
   id: string;
-  title: string;
-  originalInvestment: number;
-  purchaseDate: string;
+  capsuleTitle: string;
+  investmentDate: string;
+  gttInvested: number;
   currentValue: number;
+  yieldGenerated: number;
   projectedYield: number;
-  lifetimeValue: number;
-  status: 'active' | 'matured' | 'pending';
+  roi: number;
 }
 
-interface GTTPortfolioManagerProps {
-  balance: number;
-  yield: number;
-  investments: CapsuleInvestment[];
+interface TradeHistory {
+  id: string;
+  type: 'buy' | 'sell' | 'airdrop' | 'yield';
+  amount: number;
+  price: number;
+  date: string;
+  status: 'completed' | 'pending';
 }
 
-export function GTTPortfolioManager({ balance, yield: totalYield, investments }: GTTPortfolioManagerProps) {
-  const [activeAction, setActiveAction] = useState<'buy' | 'sell' | 'airdrop' | 'trade' | null>(null);
-  const [amount, setAmount] = useState('');
-  const [recipient, setRecipient] = useState('');
+export default function GTTPortfolioManager() {
+  const [activeTab, setActiveTab] = useState('overview');
 
-  const totalInvested = investments.reduce((sum, inv) => sum + inv.originalInvestment, 0);
-  const totalCurrent = investments.reduce((sum, inv) => sum + inv.currentValue, 0);
-  const totalProjected = investments.reduce((sum, inv) => sum + inv.projectedYield, 0);
-  const portfolioGain = totalCurrent - totalInvested;
-  const portfolioGainPercent = totalInvested > 0 ? (portfolioGain / totalInvested) * 100 : 0;
-
-  const recentTransactions = [
-    { type: 'buy', amount: 500, capsule: 'Climate Data Verification', time: '2 hours ago' },
-    { type: 'yield', amount: 127.5, capsule: 'Legal Documents', time: '1 day ago' },
-    { type: 'airdrop', amount: 250, recipient: 'environmental_org', time: '3 days ago' },
-    { type: 'trade', amount: 1000, pair: 'GTT/ETH', time: '1 week ago' }
+  // Mock investment data
+  const investments: Investment[] = [
+    {
+      id: '1',
+      capsuleTitle: 'Climate Research Data Verification',
+      investmentDate: '2024-11-15',
+      gttInvested: 500,
+      currentValue: 823.75,
+      yieldGenerated: 147.50,
+      projectedYield: 275.25,
+      roi: 64.7
+    },
+    {
+      id: '2',
+      capsuleTitle: 'Legal Document Authentication',
+      investmentDate: '2024-10-22',
+      gttInvested: 750,
+      currentValue: 1156.80,
+      yieldGenerated: 289.33,
+      projectedYield: 445.50,
+      roi: 54.2
+    },
+    {
+      id: '3',
+      capsuleTitle: 'AI Training Data Integrity',
+      investmentDate: '2024-09-08',
+      gttInvested: 1000,
+      currentValue: 2267.45,
+      yieldGenerated: 567.45,
+      projectedYield: 1200.00,
+      roi: 126.7
+    }
   ];
 
-  const handleAction = (action: 'buy' | 'sell' | 'airdrop' | 'trade') => {
-    setActiveAction(action);
-    setAmount('');
-    setRecipient('');
+  const tradeHistory: TradeHistory[] = [
+    {
+      id: '1',
+      type: 'yield',
+      amount: 127.5,
+      price: 2.0,
+      date: '2024-12-19',
+      status: 'completed'
+    },
+    {
+      id: '2',
+      type: 'buy',
+      amount: 500,
+      price: 1.95,
+      date: '2024-12-18',
+      status: 'completed'
+    },
+    {
+      id: '3',
+      type: 'airdrop',
+      amount: 250,
+      price: 0,
+      date: '2024-12-15',
+      status: 'completed'
+    },
+    {
+      id: '4',
+      type: 'sell',
+      amount: 100,
+      price: 2.1,
+      date: '2024-12-10',
+      status: 'completed'
+    }
+  ];
+
+  const totalInvested = investments.reduce((sum, inv) => sum + inv.gttInvested, 0);
+  const totalCurrentValue = investments.reduce((sum, inv) => sum + inv.currentValue, 0);
+  const totalYieldGenerated = investments.reduce((sum, inv) => sum + inv.yieldGenerated, 0);
+  const totalProjectedYield = investments.reduce((sum, inv) => sum + inv.projectedYield, 0);
+  const avgROI = totalCurrentValue > 0 ? ((totalCurrentValue - totalInvested) / totalInvested) * 100 : 0;
+
+  const getTradeIcon = (type: string) => {
+    const icons = {
+      buy: ShoppingCart,
+      sell: DollarSign,
+      airdrop: Gift,
+      yield: Coins
+    };
+    return icons[type as keyof typeof icons] || DollarSign;
   };
 
-  const executeAction = () => {
-    console.log(`Executing ${activeAction} with amount: ${amount}, recipient: ${recipient}`);
-    // Here you would implement the actual transaction logic
-    setActiveAction(null);
-    setAmount('');
-    setRecipient('');
+  const getTradeColor = (type: string) => {
+    const colors = {
+      buy: 'text-blue-400',
+      sell: 'text-red-400',
+      airdrop: 'text-purple-400',
+      yield: 'text-green-400'
+    };
+    return colors[type as keyof typeof colors] || 'text-gray-400';
   };
 
   return (
     <div className="space-y-6">
       {/* Portfolio Overview */}
-      <Card className="bg-slate-800">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Coins className="w-5 h-5 mr-2 text-amber-400" />
-            GTT Portfolio Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-amber-400">{balance.toLocaleString()}</div>
-              <div className="text-sm text-slate-400">Available GTT</div>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-400">{totalYield.toLocaleString()}</div>
-              <div className="text-sm text-slate-400">Total Yield</div>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">{totalCurrent.toLocaleString()}</div>
-              <div className="text-sm text-slate-400">Current Value</div>
-            </div>
-            
-            <div className="text-center">
-              <div className={`text-2xl font-bold ${portfolioGain >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {portfolioGain >= 0 ? '+' : ''}{portfolioGain.toLocaleString()}
-              </div>
-              <div className="text-sm text-slate-400">
-                {portfolioGainPercent >= 0 ? '+' : ''}{portfolioGainPercent.toFixed(1)}%
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card className="bg-slate-800">
+          <CardContent className="p-4 text-center">
+            <DollarSign className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+            <div className="text-xl font-bold">{totalInvested.toLocaleString()} GTT</div>
+            <div className="text-xs text-slate-400">Total Invested</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-slate-800">
+          <CardContent className="p-4 text-center">
+            <TrendingUp className="w-6 h-6 text-green-400 mx-auto mb-2" />
+            <div className="text-xl font-bold">{totalCurrentValue.toLocaleString()} GTT</div>
+            <div className="text-xs text-slate-400">Current Value</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-slate-800">
+          <CardContent className="p-4 text-center">
+            <Coins className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+            <div className="text-xl font-bold">{totalYieldGenerated.toLocaleString()} GTT</div>
+            <div className="text-xs text-slate-400">Yield Generated</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-slate-800">
+          <CardContent className="p-4 text-center">
+            <Target className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+            <div className="text-xl font-bold">+{avgROI.toFixed(1)}%</div>
+            <div className="text-xs text-slate-400">Average ROI</div>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Quick Actions */}
-      <Card className="bg-slate-800">
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <Button 
-              onClick={() => handleAction('buy')}
-              className="bg-green-600 hover:bg-green-700 flex flex-col items-center py-4"
-            >
-              <Download className="w-5 h-5 mb-1" />
-              Buy GTT
-            </Button>
-            
-            <Button 
-              onClick={() => handleAction('sell')}
-              className="bg-red-600 hover:bg-red-700 flex flex-col items-center py-4"
-            >
-              <Send className="w-5 h-5 mb-1" />
-              Sell GTT
-            </Button>
-            
-            <Button 
-              onClick={() => handleAction('airdrop')}
-              className="bg-blue-600 hover:bg-blue-700 flex flex-col items-center py-4"
-            >
-              <Zap className="w-5 h-5 mb-1" />
-              Airdrop
-            </Button>
-            
-            <Button 
-              onClick={() => handleAction('trade')}
-              className="bg-purple-600 hover:bg-purple-700 flex flex-col items-center py-4"
-            >
-              <Shuffle className="w-5 h-5 mb-1" />
-              Trade
-            </Button>
-          </div>
-
-          {/* Action Form */}
-          {activeAction && (
-            <div className="bg-slate-700 p-4 rounded-lg">
-              <h4 className="font-medium mb-4 capitalize">{activeAction} GTT</h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm text-slate-400 mb-2">Amount (GTT)</label>
-                  <Input
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="0.00"
-                    className="bg-slate-600 border-slate-500"
-                  />
-                </div>
-                
-                {(activeAction === 'airdrop' || activeAction === 'trade') && (
-                  <div>
-                    <label className="block text-sm text-slate-400 mb-2">
-                      {activeAction === 'airdrop' ? 'Recipient Address' : 'Trading Pair'}
-                    </label>
-                    <Input
-                      value={recipient}
-                      onChange={(e) => setRecipient(e.target.value)}
-                      placeholder={activeAction === 'airdrop' ? '0x...' : 'GTT/ETH'}
-                      className="bg-slate-600 border-slate-500"
-                    />
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={() => setActiveAction(null)}>
-                  Cancel
-                </Button>
-                <Button onClick={executeAction} disabled={!amount}>
-                  Execute {activeAction.charAt(0).toUpperCase() + activeAction.slice(1)}
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <Tabs defaultValue="investments" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 bg-slate-800">
-          <TabsTrigger value="investments">Investments</TabsTrigger>
-          <TabsTrigger value="transactions">Transactions</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 bg-slate-800">
+          <TabsTrigger value="overview" className="flex items-center">
+            <PieChart className="w-4 h-4 mr-2" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger value="investments" className="flex items-center">
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Investments
+          </TabsTrigger>
+          <TabsTrigger value="trading" className="flex items-center">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Trading
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center">
+            <Clock className="w-4 h-4 mr-2" />
+            History
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="overview">
+          <div className="grid lg:grid-cols-2 gap-6">
+            <Card className="bg-slate-800">
+              <CardHeader>
+                <CardTitle>Portfolio Performance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>7-Day Performance</span>
+                      <span className="text-green-400">+8.7%</span>
+                    </div>
+                    <Progress value={87} className="h-2" />
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>30-Day Performance</span>
+                      <span className="text-green-400">+23.4%</span>
+                    </div>
+                    <Progress value={78} className="h-2" />
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>90-Day Performance</span>
+                      <span className="text-green-400">+67.2%</span>
+                    </div>
+                    <Progress value={95} className="h-2" />
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>All-Time Performance</span>
+                      <span className="text-green-400">+{avgROI.toFixed(1)}%</span>
+                    </div>
+                    <Progress value={Math.min(avgROI, 100)} className="h-2" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800">
+              <CardHeader>
+                <CardTitle>Yield Projections</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400 mb-1">
+                      {totalProjectedYield.toLocaleString()} GTT
+                    </div>
+                    <div className="text-sm text-slate-400">Projected Annual Yield</div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm">Monthly Estimate</span>
+                      <span className="text-green-400">{(totalProjectedYield / 12).toFixed(0)} GTT</span>
+                    </div>
+                    
+                    <div className="flex justify-between">
+                      <span className="text-sm">Weekly Estimate</span>
+                      <span className="text-green-400">{(totalProjectedYield / 52).toFixed(0)} GTT</span>
+                    </div>
+                    
+                    <div className="flex justify-between">
+                      <span className="text-sm">Daily Estimate</span>
+                      <span className="text-green-400">{(totalProjectedYield / 365).toFixed(1)} GTT</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
 
         <TabsContent value="investments">
           <Card className="bg-slate-800">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Target className="w-5 h-5 mr-2 text-green-400" />
-                Capsule Investments
-              </CardTitle>
+              <CardTitle>Investment Portfolio</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {investments.map((investment) => (
                   <div key={investment.id} className="bg-slate-700 p-4 rounded-lg">
-                    <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h4 className="font-medium">{investment.title}</h4>
+                        <h3 className="font-medium text-white mb-1">{investment.capsuleTitle}</h3>
                         <p className="text-sm text-slate-400">
-                          Purchased {new Date(investment.purchaseDate).toLocaleDateString()}
+                          Invested: {new Date(investment.investmentDate).toLocaleDateString()}
                         </p>
                       </div>
-                      <Badge variant={investment.status === 'active' ? 'default' : 'secondary'}>
-                        {investment.status}
+                      <Badge className={`${investment.roi > 0 ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+                        {investment.roi > 0 ? '+' : ''}{investment.roi.toFixed(1)}% ROI
                       </Badge>
                     </div>
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <div className="text-slate-400">Original Investment</div>
-                        <div className="font-medium">{investment.originalInvestment} GTT</div>
+                        <span className="text-slate-400">Invested: </span>
+                        <span className="text-white">{investment.gttInvested} GTT</span>
                       </div>
                       
                       <div>
-                        <div className="text-slate-400">Current Value</div>
-                        <div className="font-medium text-green-400">{investment.currentValue} GTT</div>
+                        <span className="text-slate-400">Current: </span>
+                        <span className="text-amber-400">{investment.currentValue.toLocaleString()} GTT</span>
                       </div>
                       
                       <div>
-                        <div className="text-slate-400">Projected Yield</div>
-                        <div className="font-medium text-blue-400">{investment.projectedYield} GTT</div>
+                        <span className="text-slate-400">Yield: </span>
+                        <span className="text-green-400">{investment.yieldGenerated.toLocaleString()} GTT</span>
                       </div>
                       
                       <div>
-                        <div className="text-slate-400">Lifetime Value</div>
-                        <div className="font-medium text-purple-400">{investment.lifetimeValue} GTT</div>
+                        <span className="text-slate-400">Projected: </span>
+                        <span className="text-blue-400">{investment.projectedYield.toLocaleString()} GTT</span>
                       </div>
                     </div>
                     
-                    <div className="mt-4">
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                    <div className="mt-3">
+                      <div className="flex justify-between text-xs mb-1">
                         <span>Progress to Projected Yield</span>
-                        <span>{Math.round((investment.currentValue / investment.projectedYield) * 100)}%</span>
+                        <span>{((investment.yieldGenerated / investment.projectedYield) * 100).toFixed(0)}%</span>
                       </div>
-                      <div className="w-full bg-slate-600 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full"
-                          style={{ width: `${Math.min((investment.currentValue / investment.projectedYield) * 100, 100)}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex space-x-2 mt-4">
-                      <Button size="sm" variant="outline">
-                        View Details
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        Increase Investment
-                      </Button>
-                      {investment.status === 'matured' && (
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                          Claim Yield
-                        </Button>
-                      )}
+                      <Progress 
+                        value={(investment.yieldGenerated / investment.projectedYield) * 100} 
+                        className="h-2" 
+                      />
                     </div>
                   </div>
                 ))}
@@ -276,121 +333,128 @@ export function GTTPortfolioManager({ balance, yield: totalYield, investments }:
           </Card>
         </TabsContent>
 
-        <TabsContent value="transactions">
-          <Card className="bg-slate-800">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Clock className="w-5 h-5 mr-2 text-blue-400" />
-                Recent Transactions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {recentTransactions.map((tx, index) => (
-                  <div key={index} className="flex items-center justify-between py-3 border-b border-slate-700">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        tx.type === 'buy' ? 'bg-green-600' :
-                        tx.type === 'yield' ? 'bg-blue-600' :
-                        tx.type === 'airdrop' ? 'bg-purple-600' : 'bg-amber-600'
-                      }`}>
-                        {tx.type === 'buy' && <Download className="w-4 h-4" />}
-                        {tx.type === 'yield' && <TrendingUp className="w-4 h-4" />}
-                        {tx.type === 'airdrop' && <Zap className="w-4 h-4" />}
-                        {tx.type === 'trade' && <Shuffle className="w-4 h-4" />}
-                      </div>
-                      
-                      <div>
-                        <div className="font-medium capitalize">{tx.type}</div>
-                        <div className="text-sm text-slate-400">
-                          {tx.type === 'trade' ? tx.pair : tx.capsule || tx.recipient}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="text-right">
-                      <div className={`font-medium ${
-                        tx.type === 'buy' ? 'text-red-400' : 'text-green-400'
-                      }`}>
-                        {tx.type === 'buy' ? '-' : '+'}{tx.amount} GTT
-                      </div>
-                      <div className="text-sm text-slate-400">{tx.time}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analytics">
+        <TabsContent value="trading">
           <div className="grid lg:grid-cols-2 gap-6">
             <Card className="bg-slate-800">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <BarChart3 className="w-5 h-5 mr-2 text-purple-400" />
-                  Portfolio Performance
-                </CardTitle>
+                <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Total ROI</span>
-                    <span className={`font-bold ${portfolioGain >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      {portfolioGainPercent >= 0 ? '+' : ''}{portfolioGainPercent.toFixed(2)}%
-                    </span>
-                  </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button className="bg-green-600 hover:bg-green-700 flex flex-col items-center py-8">
+                    <ArrowUpRight className="w-6 h-6 mb-2" />
+                    <span>Buy GTT</span>
+                    <span className="text-xs text-green-200">Current: $2.04</span>
+                  </Button>
                   
-                  <div className="flex justify-between items-center">
-                    <span>Best Performing</span>
-                    <span className="text-green-400">Climate Data (+64.7%)</span>
-                  </div>
+                  <Button className="bg-red-600 hover:bg-red-700 flex flex-col items-center py-8">
+                    <ArrowDownLeft className="w-6 h-6 mb-2" />
+                    <span>Sell GTT</span>
+                    <span className="text-xs text-red-200">Best bid: $2.02</span>
+                  </Button>
                   
-                  <div className="flex justify-between items-center">
-                    <span>Average Yield Rate</span>
-                    <span className="text-blue-400">8.3% APY</span>
-                  </div>
+                  <Button className="bg-purple-600 hover:bg-purple-700 flex flex-col items-center py-8">
+                    <Gift className="w-6 h-6 mb-2" />
+                    <span>Airdrop</span>
+                    <span className="text-xs text-purple-200">Send to friends</span>
+                  </Button>
                   
-                  <div className="flex justify-between items-center">
-                    <span>Risk Score</span>
-                    <Badge variant="outline" className="text-green-400">Low</Badge>
-                  </div>
+                  <Button className="bg-blue-600 hover:bg-blue-700 flex flex-col items-center py-8">
+                    <RefreshCw className="w-6 h-6 mb-2" />
+                    <span>Trade</span>
+                    <span className="text-xs text-blue-200">Exchange tokens</span>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
 
             <Card className="bg-slate-800">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <PieChart className="w-5 h-5 mr-2 text-amber-400" />
-                  Asset Allocation
-                </CardTitle>
+                <CardTitle>Market Information</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span>Liquid GTT</span>
-                    <span className="font-medium">{((balance / (balance + totalCurrent)) * 100).toFixed(1)}%</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Active Investments</span>
-                    <span className="font-medium">{((totalCurrent / (balance + totalCurrent)) * 100).toFixed(1)}%</span>
-                  </div>
-                  
-                  <div className="pt-2 border-t border-slate-700">
-                    <div className="text-sm text-slate-400 mb-2">Investment Breakdown:</div>
-                    {investments.map((inv, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span>{inv.title.slice(0, 20)}...</span>
-                        <span>{((inv.currentValue / totalCurrent) * 100).toFixed(1)}%</span>
+                    <span>GTT Price</span>
+                    <div className="text-right">
+                      <div className="text-lg font-bold">$2.04</div>
+                      <div className="text-green-400 text-sm flex items-center">
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        +5.2% (24h)
                       </div>
-                    ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span>Market Cap</span>
+                    <span className="font-mono">$247.8M</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span>24h Volume</span>
+                    <span className="font-mono">$12.4M</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span>Circulating Supply</span>
+                    <span className="font-mono">121.4M GTT</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span>Your Holdings</span>
+                    <span className="font-mono text-amber-400">12,847 GTT</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="history">
+          <Card className="bg-slate-800">
+            <CardHeader>
+              <CardTitle>Transaction History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {tradeHistory.map((trade) => {
+                  const TradeIcon = getTradeIcon(trade.type);
+                  
+                  return (
+                    <div key={trade.id} className="flex items-center justify-between bg-slate-700 p-4 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-full bg-slate-600 ${getTradeColor(trade.type)}`}>
+                          <TradeIcon className="w-4 h-4" />
+                        </div>
+                        
+                        <div>
+                          <div className="font-medium capitalize">{trade.type}</div>
+                          <div className="text-sm text-slate-400">
+                            {new Date(trade.date).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <div className="font-medium">
+                          {trade.type === 'sell' ? '-' : '+'}{trade.amount.toLocaleString()} GTT
+                        </div>
+                        <div className="text-sm text-slate-400">
+                          {trade.price > 0 ? `$${trade.price.toFixed(2)}` : 'Free'}
+                        </div>
+                      </div>
+                      
+                      <Badge 
+                        className={`${trade.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'} text-white`}
+                      >
+                        {trade.status}
+                      </Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
