@@ -1,5 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import authRoutes from "./routes/auth";
+import premiumRoutes from "./routes/premium";
 import { registerTierRoutes } from "./routes/tiers";
 import { registerStripeWebhook } from "./routes/stripe-webhook";
 import { uploadToIPFS, uploadJSONToIPFS } from "./api/ipfs-upload";
@@ -21,6 +23,9 @@ import {
 import { getCapsuleAnalytics, getAllCapsulesAnalytics } from "./routes/capsule-analytics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Enhanced authentication and premium routes
+  app.use('/api/auth', authRoutes);
+  app.use('/api/premium', premiumRoutes);
   // Register Stripe webhook handler
   registerStripeWebhook(app);
   // Register GuardianChain API routes

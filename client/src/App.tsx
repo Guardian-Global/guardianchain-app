@@ -59,6 +59,7 @@ import BlockchainDemo from "./pages/blockchain-demo";
 import AssetIntegrationPage from "./pages/asset-integration";
 import ProtocolStrategy from "./pages/protocol-strategy";
 import EnterpriseSuite from "./pages/enterprise-suite";
+import PremiumFeaturesPage from "./pages/premium-features";
 
 function Router() {
   return (
@@ -115,6 +116,7 @@ function Router() {
         <Route path="/asset-integration" component={AssetIntegrationPage} />
         <Route path="/protocol-strategy" component={ProtocolStrategy} />
         <Route path="/enterprise-suite" component={EnterpriseSuite} />
+        <Route path="/premium-features" component={PremiumFeaturesPage} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>

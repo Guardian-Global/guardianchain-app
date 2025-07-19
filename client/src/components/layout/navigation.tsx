@@ -44,6 +44,7 @@ const navigation = [
   { name: "Asset Integration", href: "/asset-integration" },
   { name: "Protocol Strategy", href: "/protocol-strategy" },
   { name: "Enterprise Suite", href: "/enterprise-suite" },
+  { name: "Premium Features", href: "/premium-features" },
   { name: "Governance", href: "/governance" },
 ];
 
