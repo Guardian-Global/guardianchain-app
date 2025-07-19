@@ -3,6 +3,7 @@ import PremiumFeatures from '@/components/PremiumFeatures';
 import EnhancedAuth from '@/components/EnhancedAuth';
 import AdvancedAI from '@/components/AdvancedAI';
 import CrossChainHub from '@/components/CrossChainHub';
+import MetaMaskTest from '@/components/MetaMaskTest';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Crown, Shield, Zap, TrendingUp } from "lucide-react";
@@ -65,6 +66,11 @@ const PremiumFeaturesPage: React.FC = () => {
             <CrossChainHub />
           </TabsContent>
         </Tabs>
+
+        {/* MetaMask Connection Test */}
+        <div className="mt-8">
+          <MetaMaskTest />
+        </div>
 
         {/* Value Proposition Summary */}
         <div className="mt-16">

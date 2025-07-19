@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import WalletConnector from './WalletConnector';
 import { 
   Shield, 
   Key, 
@@ -128,20 +129,26 @@ const EnhancedAuth: React.FC = () => {
           break;
 
         case 'web3_wallet':
-          // Connect to Web3 wallet
-          if (typeof window.ethereum !== 'undefined') {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            toast({
-              title: "Wallet Connected",
-              description: "Successfully connected to Web3 wallet"
+          // Connect to Web3 wallet using improved wallet manager
+          const { walletManager } = await import('@/lib/wallet');
+          const walletInfo = await walletManager.connectMetaMask();
+          
+          if (walletInfo) {
+            // Send wallet info to backend for authentication
+            const authResponse = await fetch('/api/auth/web3-wallet', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                address: walletInfo.address,
+                chainId: walletInfo.chainId,
+                signature: await walletManager.signMessage('GUARDIANCHAIN Login'),
+                message: 'GUARDIANCHAIN Login'
+              })
             });
-            setAuthStatus('authenticated');
-          } else {
-            toast({
-              title: "Wallet Required",
-              description: "Please install MetaMask or another Web3 wallet",
-              variant: "destructive"
-            });
+            
+            if (authResponse.ok) {
+              setAuthStatus('authenticated');
+            }
           }
           break;
 
@@ -327,6 +334,9 @@ const EnhancedAuth: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Web3 Wallet Connector */}
+      <WalletConnector />
 
       {/* Authentication Status & Actions */}
       {authStatus === 'authenticated' && (
