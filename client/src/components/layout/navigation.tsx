@@ -12,7 +12,6 @@ const navigation = [
   { name: "Leaderboard", href: "/leaderboard" },
   { name: "Profile", href: "/profile" },
   { name: "Private", href: "/private" },
-  { name: "Dashboard", href: "/dashboard" },
   { name: "Commander", href: "/commander" },
   { name: "Contracts", href: "/contract-demo" },
   { name: "Mint NFT", href: "/mint-nft" },

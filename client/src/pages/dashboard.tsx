@@ -1,4 +1,7 @@
 import React from 'react';
+import TreasuryDashboard from "@/components/TreasuryDashboard";
+import AIAccountingPanel from "@/components/AIAccountingPanel";
+import ClaimAllYieldPanel from "@/components/web3/ClaimAllYieldPanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from 'wouter';
@@ -17,156 +20,118 @@ import {
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
 export default function CommanderDashboard() {
-  const dashboardSections = [
-    {
-      title: "Treasury Overview",
-      description: "Real-time GTT treasury and market metrics",
-      href: "/treasury",
-      icon: DollarSign,
-      color: BRAND_COLORS.SUCCESS,
-      status: "operational",
-      metrics: {
-        value: "$2.4M",
-        label: "Treasury Value",
-        trend: "+12.5%"
-      }
-    },
-    {
-      title: "AI Financial Advisor",
-      description: "Strategic recommendations and automated insights",
-      href: "/ai-advisor",
-      icon: Brain,
-      color: BRAND_COLORS.GUARDIAN,
-      status: "active",
-      metrics: {
-        value: "94%",
-        label: "Confidence Score",
-        trend: "+2.1%"
-      }
-    },
-    {
-      title: "Yield Distribution",
-      description: "Automated GTT reward distribution system",
-      href: "/yield-distribution",
-      icon: Coins,
-      color: "#10b981",
-      status: "healthy",
-      metrics: {
-        value: "1,247 GTT",
-        label: "Daily Distribution",
-        trend: "+8.3%"
-      }
-    },
-    {
-      title: "Compliance Monitor",
-      description: "AI-powered regulatory and risk assessment",
-      href: "/compliance",
-      icon: Shield,
-      color: "#3b82f6",
-      status: "monitoring",
-      metrics: {
-        value: "99.2%",
-        label: "Compliance Score",
-        trend: "0%"
-      }
-    },
-    {
-      title: "Daily Reports",
-      description: "Automated operations reporting and analytics",
-      href: "/reporting",
-      icon: FileText,
-      color: "#8b5cf6",
-      status: "automated",
-      metrics: {
-        value: "24h",
-        label: "Report Cycle",
-        trend: "0%"
-      }
-    },
-    {
-      title: "Financial Dashboard",
-      description: "Comprehensive business intelligence platform",
-      href: "/financial-dashboard",
-      icon: BarChart3,
-      color: "#f59e0b",
-      status: "operational",
-      metrics: {
-        value: "$156K",
-        label: "Monthly Revenue",
-        trend: "+15.2%"
-      }
-    }
-  ];
-
-  const systemMetrics = [
-    { label: "Active Users", value: "1,247", change: "+5.2%", positive: true },
-    { label: "Daily GTT Minted", value: "3,420", change: "+12.1%", positive: true },
-    { label: "Platform Revenue", value: "$12.4K", change: "+8.7%", positive: true },
-    { label: "System Uptime", value: "99.8%", change: "+0.1%", positive: true }
-  ];
-
-  const recentAlerts = [
-    {
-      type: "success",
-      message: "Yield distribution completed successfully",
-      time: "2 hours ago"
-    },
-    {
-      type: "info",
-      message: "Treasury sync completed",
-      time: "4 hours ago"
-    },
-    {
-      type: "success",
-      message: "AI compliance audit passed",
-      time: "6 hours ago"
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Header */}
       <section className="pt-20 pb-8 bg-gradient-to-br from-purple-900 to-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">
-            👑 {BRAND_NAME} Sovereign Operations Dashboard
+            {BRAND_NAME} Commander Dashboard
           </h1>
-          <p className="text-xl text-slate-300 mb-6">
-            Unified command center for platform oversight and strategic management
+          <p className="text-xl text-slate-300">
+            Advanced treasury management, AI insights, and yield claiming hub
           </p>
-          <Badge className="bg-purple-600 text-white px-4 py-2">
-            <Activity className="w-4 h-4 mr-2" />
-            All Systems Operational
-          </Badge>
         </div>
       </section>
 
       <div className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
-          {/* System Metrics Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {systemMetrics.map((metric, index) => (
-              <Card key={index} className="bg-slate-800/50 border-slate-700">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm text-slate-400">{metric.label}</CardTitle>
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link href="/treasury">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-700/50 transition-colors cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <DollarSign className="w-5 h-5 mr-2 text-green-400" />
+                    Treasury
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold text-white mb-1">
-                    {metric.value}
+                  <p className="text-slate-300 text-sm">
+                    Real-time GTT treasury and market metrics
                   </p>
-                  <div className="flex items-center">
-                    <TrendingUp className={`w-4 h-4 mr-1 ${metric.positive ? 'text-green-400' : 'text-red-400'}`} />
-                    <span className={`text-sm ${metric.positive ? 'text-green-400' : 'text-red-400'}`}>
-                      {metric.change}
-                    </span>
-                  </div>
                 </CardContent>
               </Card>
-            ))}
+            </Link>
+
+            <Link href="/ai-advisor">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-700/50 transition-colors cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Brain className="w-5 h-5 mr-2 text-purple-400" />
+                    AI Advisor
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-300 text-sm">
+                    Strategic recommendations and automated insights
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/reporting">
+              <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-700/50 transition-colors cursor-pointer">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <FileText className="w-5 h-5 mr-2 text-blue-400" />
+                    Reports
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-slate-300 text-sm">
+                    Automated daily operations reports
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
 
-          {/* Main Dashboard Sections */}
+          {/* Treasury Dashboard Component */}
+          <TreasuryDashboard />
+          
+          {/* AI Accounting Panel */}
+          <AIAccountingPanel />
+
+          {/* GTT Yield Claiming Panel */}
+          <ClaimAllYieldPanel />
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Previous section data that was partially displayed
+const dashboardSections = [
+  {
+    title: "Treasury Overview",
+    description: "Real-time GTT treasury and market metrics",
+    href: "/treasury",
+    icon: DollarSign,
+    color: BRAND_COLORS.SUCCESS,
+    status: "operational",
+    metrics: {
+      value: "$2.4M",
+      label: "Treasury Value",
+      trend: "+12.5%"
+    }
+  },
+  {
+    title: "AI Financial Advisor", 
+    description: "Strategic recommendations and automated insights",
+    href: "/ai-advisor",
+    icon: Brain,
+    color: BRAND_COLORS.GUARDIAN,
+    status: "active",
+    metrics: {
+      value: "94%",
+      label: "Confidence Score",
+      trend: "+2.1%"
+    }
+  }
+];}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {dashboardSections.map((section, index) => (
               <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors">

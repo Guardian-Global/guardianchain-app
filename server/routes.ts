@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { registerTierRoutes } from "./routes/tiers";
 import { registerStripeWebhook } from "./routes/stripe-webhook";
 import { uploadToIPFS, uploadJSONToIPFS } from "./api/ipfs-upload";
 import { claimYield } from "./api/claim-yield";
@@ -594,6 +595,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       protocol_version: "1.0.0"
     });
   });
+
+  // Register tier management routes
+  registerTierRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;

@@ -1,31 +1,19 @@
 // Tier Pricing Page
 
 import React from "react";
-import { TIERS } from '@/lib/tiers';
+import TiersPricing from "@/components/TiersPricing";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Crown, Zap } from "lucide-react";
+import { Check, Star, Crown, Zap, Users, TrendingUp } from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
-
-const tierIcons = {
-  Explorer: <Zap className="w-6 h-6" />,
-  Seeker: <Star className="w-6 h-6" />,
-  Creator: <Crown className="w-6 h-6" />,
-  Sovereign: <Crown className="w-6 h-6" />
-};
-
-const tierColors = {
-  Explorer: "bg-slate-600",
-  Seeker: "bg-blue-600",
-  Creator: "bg-purple-600",
-  Sovereign: "bg-yellow-600"
-};
+import { useTier } from "@/hooks/useTier";
 
 export default function TiersPage() {
-  const handleUpgrade = (tierName: string) => {
-    // Will integrate with Stripe checkout
-    console.log(`Upgrading to ${tierName}`);
+  const { userProfile } = useTier();
+
+  const handleUpgrade = (tierId: string) => {
+    console.log(`Upgrading to tier: ${tierId}`);
+    // Stripe integration will be handled by TiersPricing component
   };
 
   return (
@@ -34,151 +22,138 @@ export default function TiersPage() {
       <section className="pt-20 pb-8 bg-gradient-to-br from-purple-900 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-bold mb-4">
-            Choose Your {BRAND_NAME} Tier
+            Choose Your {BRAND_NAME} Access Tier
           </h1>
           <p className="text-xl text-slate-300 mb-6">
-            Unlock more capsule mints, higher yield bonuses, and exclusive features
+            Unlock more capsule mints, higher yield bonuses, and exclusive features with GTT token economics
           </p>
           <Badge className="bg-purple-600 text-white px-4 py-2">
+            <Check className="w-4 h-4 mr-2" />
             Unused mints roll over • Donations available • Cancel anytime
           </Badge>
         </div>
       </section>
 
-      {/* Pricing Cards */}
+      {/* Current User Status */}
+      {userProfile && (
+        <section className="py-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-slate-800/30 rounded-lg p-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <Users className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                  <div className="text-2xl font-bold text-white">
+                    {userProfile.mintsThisPeriod}
+                  </div>
+                  <div className="text-sm text-slate-400">Mints Used This Month</div>
+                </div>
+                <div className="text-center">
+                  <TrendingUp className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                  <div className="text-2xl font-bold text-white">
+                    {userProfile.gttBalance?.toFixed(2) || '0.00'} GTT
+                  </div>
+                  <div className="text-sm text-slate-400">Current Balance</div>
+                </div>
+                <div className="text-center">
+                  <Star className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+                  <div className="text-2xl font-bold text-white">
+                    {userProfile.totalYieldEarned?.toFixed(2) || '0.00'} GTT
+                  </div>
+                  <div className="text-sm text-slate-400">Total Yield Earned</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Tier Pricing Component */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TIERS.map((tier, index) => (
-              <Card 
-                key={tier.name} 
-                className={`bg-slate-800/50 border-slate-700 relative ${
-                  tier.name === 'Creator' ? 'border-purple-500 ring-2 ring-purple-500/20' : ''
-                }`}
-              >
-                {tier.name === 'Creator' && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-purple-600 text-white px-3 py-1">
-                      Most Popular
-                    </Badge>
-                  </div>
-                )}
-                
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-12 h-12 mx-auto mb-4 rounded-full ${tierColors[tier.name]} flex items-center justify-center text-white`}>
-                    {tierIcons[tier.name]}
-                  </div>
-                  <CardTitle className="text-2xl font-bold text-white">
-                    {tier.name}
-                  </CardTitle>
-                  <div className="mt-2">
-                    <span className="text-3xl font-bold text-white">
-                      ${tier.priceUsd}
-                    </span>
-                    {tier.priceUsd > 0 && (
-                      <span className="text-slate-400">/month</span>
-                    )}
-                  </div>
-                </CardHeader>
+          <TiersPricing 
+            userId={userProfile?.id}
+            currentTierId={userProfile?.tierId || 'explorer'}
+            onUpgrade={handleUpgrade}
+          />
+        </div>
+      </section>
 
-                <CardContent className="space-y-4">
-                  <p className="text-slate-300 text-sm text-center mb-6">
-                    {tier.description}
-                  </p>
+      {/* Features Comparison */}
+      <section className="py-12 bg-slate-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center text-white mb-8">
+            Why Upgrade Your {BRAND_NAME} Tier?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Zap className="w-5 h-5 mr-2 text-yellow-400" />
+                  Higher Yield Multipliers
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-slate-300">
+                  Earn up to 25% bonus yield on all your capsule verifications and community contributions.
+                </p>
+              </CardContent>
+            </Card>
 
-                  <div className="space-y-3">
-                    <div className="flex items-center">
-                      <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                      <span className="text-slate-300">
-                        <strong>{tier.capsuleMints}</strong> capsule mints/month
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                      <span className="text-slate-300">
-                        <strong>{tier.yieldBonus * 100}%</strong> yield bonus
-                      </span>
-                    </div>
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Crown className="w-5 h-5 mr-2 text-purple-400" />
+                  Exclusive Features
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-slate-300">
+                  Access advanced analytics, API endpoints, custom branding, and priority support.
+                </p>
+              </CardContent>
+            </Card>
 
-                    {tier.name !== 'Explorer' && (
-                      <>
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">Priority support</span>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">Analytics dashboard</span>
-                        </div>
-                      </>
-                    )}
-
-                    {tier.name === 'Creator' && (
-                      <>
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">Creator badge</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">Featured placements</span>
-                        </div>
-                      </>
-                    )}
-
-                    {tier.name === 'Sovereign' && (
-                      <>
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">Early access features</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">Governance voting</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Check className="w-4 h-4 mr-3 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">White-label options</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  <div className="pt-6">
-                    <Button 
-                      className="w-full"
-                      style={{ 
-                        backgroundColor: tier.name === 'Explorer' ? '#64748b' : BRAND_COLORS.GUARDIAN 
-                      }}
-                      onClick={() => handleUpgrade(tier.name)}
-                      disabled={tier.name === 'Explorer'}
-                    >
-                      {tier.name === 'Explorer' ? 'Current Plan' : `Upgrade to ${tier.name}`}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-green-400" />
+                  Community Impact
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-slate-300">
+                  Donate unused mints to support trauma survivors, nonprofits, and public truth initiatives.
+                </p>
+              </CardContent>
+            </Card>
           </div>
+        </div>
+      </section>
 
-          {/* Additional Info */}
-          <div className="mt-12 text-center">
-            <div className="bg-slate-800/30 rounded-lg p-6 max-w-4xl mx-auto">
-              <h3 className="text-xl font-bold text-white mb-4">
-                Flexible Capsule Credits
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
-                <div>
-                  <strong className="text-white">Rollover Credits:</strong> Unused mints carry forward to next month, up to 2x your tier limit
-                </div>
-                <div>
-                  <strong className="text-white">Donation System:</strong> Donate unused credits to trauma survivors and nonprofit organizations
-                </div>
-                <div>
-                  <strong className="text-white">Fair Billing:</strong> Pro-rated upgrades, cancel anytime, transparent pricing with no hidden fees
-                </div>
+      {/* GTT Token Integration */}
+      <section className="py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Powered by GTT Token Economics
+          </h2>
+          <p className="text-xl text-slate-300 mb-8">
+            All tier benefits integrate with our Guardian Truth Token (GTT) for seamless yield distribution and governance participation.
+          </p>
+          
+          <div className="bg-gradient-to-r from-purple-900/50 to-green-900/50 rounded-lg p-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-xl font-semibold text-white mb-4">Automatic Yield Distribution</h3>
+                <p className="text-slate-300">
+                  Higher tiers receive boosted GTT yields automatically distributed from our smart contract treasury system.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-white mb-4">Governance Participation</h3>
+                <p className="text-slate-300">
+                  Use earned GTT tokens to participate in {BRAND_NAME} DAO governance and shape platform development.
+                </p>
               </div>
             </div>
           </div>
