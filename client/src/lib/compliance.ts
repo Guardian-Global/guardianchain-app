@@ -49,3 +49,45 @@ export async function runRegionalComplianceCheck(region: string) {
     throw new Error("Regional compliance unavailable: Service not configured");
   }
 }
+
+// Legacy exports for compatibility
+export const getComplianceStatus = runComplianceCheck;
+
+export async function runComplianceAudit() {
+  try {
+    const response = await fetch('/api/compliance/audit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Compliance audit error: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    throw new Error("Compliance audit unavailable: Service not configured");
+  }
+}
+
+export async function logComplianceEvent(event: any) {
+  try {
+    const response = await fetch('/api/compliance/log', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ event })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Compliance logging error: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    throw new Error("Compliance logging unavailable: Service not configured");
+  }
+}

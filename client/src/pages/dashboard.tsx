@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchTreasurySnapshot, fetchGTTMarket, fetchStripeSubscriptions } from "@/lib/treasury";
+import { AIAdvisorPanel } from "@/components/AIAdvisorPanel";
 import TreasuryDashboard from "@/components/TreasuryDashboard";
 import AIAccountingPanel from "@/components/AIAccountingPanel";
 import ClaimAllYieldPanel from "@/components/web3/ClaimAllYieldPanel";
@@ -134,17 +136,161 @@ const dashboardSections = [
 ];
 
 function Dashboard() {
+  const [treasury, setTreasury] = useState<any>(null);
+  const [market, setMarket] = useState<any>(null);
+  const [subscriptions, setSubscriptions] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    setLoading(true);
+    setErrors([]);
+    const newErrors: string[] = [];
+
+    try {
+      const treasuryData = await fetchTreasurySnapshot();
+      setTreasury(treasuryData);
+    } catch (e) {
+      newErrors.push((e as Error).message);
+    }
+
+    try {
+      const marketData = await fetchGTTMarket();
+      setMarket(marketData);
+    } catch (e) {
+      newErrors.push((e as Error).message);
+    }
+
+    try {
+      const subscriptionData = await fetchStripeSubscriptions();
+      setSubscriptions(subscriptionData);
+    } catch (e) {
+      newErrors.push((e as Error).message);
+    }
+
+    setErrors(newErrors);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-white text-xl">Loading GuardianChain Financial Dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-900">{/* Dashboard wrapper */}
+    <div className="min-h-screen bg-slate-900">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 via-green-400 to-blue-400 bg-clip-text text-transparent">
-            {BRAND_NAME} Command Center
+            GUARDIANCHAIN Financial Dashboard
           </h1>
           <p className="text-xl text-slate-300">
-            Production-Ready Sovereign Financial Engine
+            Live market, treasury, and yield analytics
           </p>
+        </div>
+
+        {/* Error Alerts */}
+        {errors.length > 0 && (
+          <Card className="bg-red-900/20 border-red-700">
+            <CardHeader>
+              <CardTitle className="text-red-300 flex items-center">
+                <AlertTriangle className="w-5 h-5 mr-2" />
+                Data Source Configuration Required
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {errors.map((error, index) => (
+                  <li key={index} className="text-red-200 text-sm">• {error}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Live Financial Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white">GTT Market</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {market ? (
+                <div className="space-y-2">
+                  <div className="text-2xl font-bold text-green-400">
+                    ${market.price}
+                  </div>
+                  <div className={`flex items-center ${market.change24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    <TrendingUp className="w-4 h-4 mr-1" />
+                    {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(2)}% (24h)
+                  </div>
+                  <div className="text-xs text-slate-500">Source: {market.source}</div>
+                </div>
+              ) : (
+                <div className="text-slate-400">Market data unavailable</div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white">Treasury</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {treasury ? (
+                <div className="space-y-2">
+                  <div className="text-2xl font-bold text-purple-400">
+                    {treasury.balance.toLocaleString()} GTT
+                  </div>
+                  <div className="text-sm text-slate-300">
+                    Yield Distributed: {treasury.yieldPaid.toLocaleString()} GTT
+                  </div>
+                  <div className="text-sm text-slate-300">
+                    Active Capsules: {treasury.activeCapsules.toLocaleString()}
+                  </div>
+                  <Badge className={treasury.complianceOk ? 'bg-green-600' : 'bg-red-600'}>
+                    {treasury.complianceOk ? 'Compliant' : 'Alert'}
+                  </Badge>
+                </div>
+              ) : (
+                <div className="text-slate-400">Treasury data unavailable</div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardHeader>
+              <CardTitle className="text-white">Revenue (Stripe)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {subscriptions ? (
+                <div className="space-y-2">
+                  <div className="text-2xl font-bold text-blue-400">
+                    ${subscriptions.monthlyRevenue.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-slate-300">
+                    Active Users: {subscriptions.activeUsers.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-slate-300">
+                    Total Subscriptions: {subscriptions.totalSubscriptions.toLocaleString()}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-slate-400">Subscription data unavailable</div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         {/* System Status Cards */}
@@ -193,11 +339,14 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* AI Accounting Panel */}
-        <AIAccountingPanel />
+        {/* AI Advisor Panel */}
+        <AIAdvisorPanel treasury={treasury} market={market} />
 
         {/* Treasury Dashboard */}
         <TreasuryDashboard />
+
+        {/* AI Accounting Panel */}
+        <AIAccountingPanel />
 
         {/* System Status */}
         <Card className="bg-slate-800/50 border-slate-700">
@@ -236,3 +385,5 @@ function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;

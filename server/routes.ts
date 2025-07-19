@@ -674,6 +674,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Advisor endpoint
+  app.post("/api/ai/advisor", async (req, res) => {
+    try {
+      const { financialAdvisor } = await import("./api/ai");
+      await financialAdvisor(req, res);
+    } catch (error) {
+      res.status(500).json({ error: "AI advisor service error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

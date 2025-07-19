@@ -70,3 +70,42 @@ export async function financialInsights(req: Request, res: Response) {
     });
   }
 }
+
+export async function financialAdvisor(req: Request, res: Response) {
+  if (!openai) {
+    return res.status(503).json({ 
+      error: "AI advisor not configured: OpenAI API key required" 
+    });
+  }
+
+  const { prompt } = req.body;
+  
+  if (!prompt) {
+    return res.status(400).json({ error: "Prompt required" });
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert financial advisor for GuardianChain, a Web3 truth verification platform. Provide concise, actionable financial analysis and strategic recommendations based on the provided data. Focus on treasury optimization, risk management, and growth opportunities."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      max_tokens: 500
+    });
+
+    const advice = completion.choices[0].message.content;
+    res.json({ advice });
+  } catch (error) {
+    console.error('AI advisor error:', error);
+    res.status(500).json({ 
+      error: "AI advisor analysis failed: " + (error as Error).message 
+    });
+  }
+}
