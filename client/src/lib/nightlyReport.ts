@@ -1,4 +1,5 @@
 import { getTreasurySummary } from './veritus.engine';
+import { getLatestTreasurySnapshot } from './treasury';
 import OpenAI from 'openai';
 
 // Mock Supabase client for development
@@ -35,7 +36,10 @@ const openai = typeof window === 'undefined' ? new OpenAI({
 // Generate the nightly capsule yield & financial report (AI summary + stats)
 export async function generateNightlyReport() {
   try {
-    const treasury = await getTreasurySummary();
+    const [treasury, treasurySnapshot] = await Promise.all([
+      getTreasurySummary(),
+      getLatestTreasurySnapshot()
+    ]);
     
     const donations = await new Promise((resolve) => {
       mockSupabaseClient
@@ -52,7 +56,8 @@ export async function generateNightlyReport() {
     if (typeof window === 'undefined' && process.env.OPENAI_API_KEY && openai) {
       const prompt = `
         Here is the latest GuardianChain financial data:
-        Treasury: ${JSON.stringify(treasury)}
+        Treasury Summary: ${JSON.stringify(treasury)}
+        Treasury Snapshot: ${JSON.stringify(treasurySnapshot)}
         Capsule Donations: ${JSON.stringify(donations)}
         Please summarize today's key insights, risk, user yield, and recommendations for the founder. Keep it clear and professional.
       `;

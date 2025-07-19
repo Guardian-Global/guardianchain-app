@@ -47,6 +47,8 @@ import DynamicCapsuleAnalytics from "./pages/capsule/[id]/analytics";
 import FinancialDashboard from "./pages/financial-dashboard";
 import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
+import TreasuryDashboard from "./pages/treasury";
+import AIAdvisorPanel from "./pages/ai-advisor";
 
 function Router() {
   return (
@@ -91,6 +93,8 @@ function Router() {
         <Route path="/financial-dashboard" component={FinancialDashboard} />
         <Route path="/tiers" component={TiersPage} />
         <Route path="/donate-access" component={DonateAccessPage} />
+        <Route path="/treasury" component={TreasuryDashboard} />
+        <Route path="/ai-advisor" component={AIAdvisorPanel} />
         <Route path="/test-profile" component={TestProfilePage} />
         <Route component={NotFound} />
       </Switch>

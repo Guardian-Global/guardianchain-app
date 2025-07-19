@@ -31,6 +31,8 @@ const navigation = [
   { name: "Auction House", href: "/auction-house" },
   { name: "Yield Tracker", href: "/yield-tracker" },
   { name: "Financial", href: "/financial-dashboard" },
+  { name: "Treasury", href: "/treasury" },
+  { name: "AI Advisor", href: "/ai-advisor" },
   { name: "Tiers", href: "/tiers" },
   { name: "Donate", href: "/donate-access" },
   { name: "Governance", href: "/governance" },

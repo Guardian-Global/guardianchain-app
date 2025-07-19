@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getTreasurySummary, aiBusinessIntelligence, complianceCheck } from "@/lib/veritus.engine";
+import { fetchGTTPrice, fetchGTTPriceChange, fetchGTTMarketData } from "@/lib/gttPrice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,9 @@ export default function FinancialDashboard() {
   const [treasury, setTreasury] = useState<any>(null);
   const [suggestions, setSuggestions] = useState<string>("");
   const [compliance, setCompliance] = useState<any>(null);
+  const [gttPrice, setGttPrice] = useState<number>(0);
+  const [priceChange, setPriceChange] = useState<any>(null);
+  const [marketData, setMarketData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,13 +23,19 @@ export default function FinancialDashboard() {
       try {
         setLoading(true);
         
-        const [treasuryData, complianceData] = await Promise.all([
+        const [treasuryData, complianceData, priceData, changeData, marketInfo] = await Promise.all([
           getTreasurySummary(),
-          complianceCheck()
+          complianceCheck(),
+          fetchGTTPrice(),
+          fetchGTTPriceChange(),
+          fetchGTTMarketData()
         ]);
         
         setTreasury(treasuryData);
         setCompliance(complianceData);
+        setGttPrice(priceData);
+        setPriceChange(changeData);
+        setMarketData(marketInfo);
         
         if (treasuryData) {
           const bizSuggestions = await aiBusinessIntelligence(treasuryData);
@@ -78,7 +88,7 @@ export default function FinancialDashboard() {
           </h2>
           
           {treasury ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm text-slate-400">Total GTT Balance</CardTitle>
@@ -124,6 +134,22 @@ export default function FinancialDashboard() {
                     {treasury.expenses?.toLocaleString() || '0'}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">Operational Costs</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm text-slate-400">GTT Price</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-white">
+                    ${gttPrice.toFixed(4)}
+                  </p>
+                  {priceChange && (
+                    <p className={`text-xs mt-1 ${priceChange.isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                      {priceChange.isPositive ? '+' : ''}{priceChange.change.toFixed(2)}% 24h
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
