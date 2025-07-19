@@ -599,6 +599,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register tier management routes
   registerTierRoutes(app);
 
+  // Asset Integration Routes
+  app.post("/api/assets/process", async (req, res) => {
+    try {
+      const { userId, selectedAssetIds } = req.body;
+      
+      if (!userId || !selectedAssetIds || !Array.isArray(selectedAssetIds)) {
+        return res.status(400).json({ 
+          message: "Missing required parameters: userId and selectedAssetIds array" 
+        });
+      }
+
+      const { processAssetsForUser } = await import("./lib/supabase-server");
+      const result = await processAssetsForUser(userId, selectedAssetIds);
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ 
+        message: "Error processing assets: " + error.message,
+        error: error.toString()
+      });
+    }
+  });
+
+  app.get("/api/assets/status", async (req, res) => {
+    try {
+      const hasSupabaseUrl = !!(process.env.NEXT_PUBLIC_SUPABASE_URL);
+      const hasServiceKey = !!(process.env.SUPABASE_SERVICE_ROLE_KEY);
+      
+      res.json({
+        configured: hasSupabaseUrl && hasServiceKey,
+        supabase_url: hasSupabaseUrl,
+        service_key: hasServiceKey,
+        message: (hasSupabaseUrl && hasServiceKey) 
+          ? "Supabase fully configured" 
+          : "Supabase configuration incomplete"
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: "Error checking status: " + error.message });
+    }
+  });
+
   // AI service endpoints
   app.post("/api/ai/accounting-analysis", async (req, res) => {
     try {

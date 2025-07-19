@@ -41,6 +41,7 @@ const navigation = [
   { name: "Tiers", href: "/tiers" },
   { name: "Donate", href: "/donate-access" },
   { name: "Blockchain Demo", href: "/blockchain-demo" },
+  { name: "Asset Integration", href: "/asset-integration" },
   { name: "Governance", href: "/governance" },
 ];
 
