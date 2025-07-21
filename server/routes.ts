@@ -33,8 +33,12 @@ import { registerEmailStatusRoutes } from "./routes/email-status";
 import { registerEmailPrefsRoutes } from "./routes/emailPrefs";
 import { registerBillingRoutes } from "./routes/billing";
 import { automationService } from "./services/automation";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup Replit Auth middleware
+  await setupAuth(app);
+  
   // Temporarily disable security middleware to fix authentication errors
   // setupSecurityMiddleware(app);
   
@@ -60,6 +64,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Billing infrastructure routes
   registerBillingRoutes(app);
+  
+  // Replit Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
   // Register Stripe webhook handler
   registerStripeWebhook(app);
   // Register GuardianChain API routes

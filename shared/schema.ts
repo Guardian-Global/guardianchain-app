@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, boolean, timestamp, jsonb, decimal } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean, timestamp, jsonb, decimal, varchar, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -22,11 +22,27 @@ export const CapsuleType = z.enum([
 
 export type CapsuleTypeEnum = z.infer<typeof CapsuleType>;
 
-// Enhanced Users table
+// Session storage table for Replit Auth
+// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// Enhanced Users table with Replit Auth integration
+// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").unique().notNull(),
-  email: text("email").unique(),
+  id: varchar("id").primaryKey().notNull(),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  username: text("username").unique(),
   walletAddress: text("wallet_address").unique(),
   bio: text("bio"),
   avatar: text("avatar"),
@@ -43,12 +59,15 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
+
 // Enhanced Capsules table
 export const capsules = pgTable("capsules", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   content: text("content").notNull(),
-  creatorId: integer("creator_id").references(() => users.id),
+  creatorId: varchar("creator_id").references(() => users.id),
   type: text("type").$type<CapsuleTypeEnum>().default("STANDARD"),
   category: text("category"),
   tags: jsonb("tags").$type<string[]>().default([]),
@@ -77,7 +96,7 @@ export const capsules = pgTable("capsules", {
 export const capsuleInteractions = pgTable("capsule_interactions", {
   id: serial("id").primaryKey(),
   capsuleId: integer("capsule_id").references(() => capsules.id),
-  userId: integer("user_id").references(() => users.id),
+  userId: varchar("user_id").references(() => users.id),
   type: text("type").notNull(), // view, share, vote, fork, collaborate
   metadata: jsonb("metadata").$type<object>().default({}),
   createdAt: timestamp("created_at").defaultNow(),
@@ -86,7 +105,7 @@ export const capsuleInteractions = pgTable("capsule_interactions", {
 // User Achievements table
 export const userAchievements = pgTable("user_achievements", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id),
+  userId: varchar("user_id").references(() => users.id),
   achievementType: text("achievement_type").notNull(),
   title: text("title").notNull(),
   description: text("description"),

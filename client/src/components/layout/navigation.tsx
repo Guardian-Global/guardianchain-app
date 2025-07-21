@@ -60,9 +60,9 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link href="/auth">
+            <Link href="/api/login">
               <Button variant="outline" size="sm" className="text-purple-400 border-purple-400 hover:bg-purple-400/10">
-                Enterprise Login
+                Sign In with Replit
               </Button>
             </Link>
             

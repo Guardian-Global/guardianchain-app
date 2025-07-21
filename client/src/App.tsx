@@ -61,17 +61,26 @@ import ContactInfo from "./components/ContactInfo";
 import Contact from "./pages/Contact";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./pages/BillingDashboard";
+import Landing from "./pages/Landing";
+import AuthHome from "./pages/Home";
+import { useAuth } from "./hooks/useAuth";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
 import TokenLaunch from "./pages/token-launch";
 
 function Router() {
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <Navigation />
       <Switch>
-        <Route path="/" component={Home} />
+        {isLoading || !isAuthenticated ? (
+          <Route path="/" component={Landing} />
+        ) : (
+          <Route path="/" component={AuthHome} />
+        )}
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
