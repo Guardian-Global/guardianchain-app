@@ -85,7 +85,22 @@ contract GuardianPass is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
         require(recipients.length <= 50, "Batch size too large");
         
         for (uint256 i = 0; i < recipients.length; i++) {
-            mintPass(recipients[i], rarities[i]);
+            require(recipients[i] != address(0), "Invalid recipient address");
+            require(_nextTokenId <= MAX_SUPPLY, "Max supply reached");
+            require(rarityMinted[rarities[i]] < rarityLimits[rarities[i]], "Rarity tier supply exhausted");
+            
+            uint256 tokenId = _nextTokenId++;
+            
+            // Set pass metadata based on rarity
+            PassMetadata memory metadata = _generateMetadata(rarities[i]);
+            passMetadata[tokenId] = metadata;
+            
+            // Update rarity counts
+            rarityMinted[rarities[i]]++;
+            
+            _safeMint(recipients[i], tokenId);
+            
+            emit PassMinted(recipients[i], tokenId, rarities[i]);
         }
     }
     
@@ -104,7 +119,22 @@ contract GuardianPass is ERC721, ERC721Enumerable, Ownable, ReentrancyGuard {
             rarity = RarityTier.Uncommon;
         }
         
-        mintPass(to, rarity);
+        require(to != address(0), "Invalid recipient address");
+        require(_nextTokenId <= MAX_SUPPLY, "Max supply reached");
+        require(rarityMinted[rarity] < rarityLimits[rarity], "Rarity tier supply exhausted");
+        
+        uint256 tokenId = _nextTokenId++;
+        
+        // Set pass metadata based on rarity
+        PassMetadata memory metadata = _generateMetadata(rarity);
+        passMetadata[tokenId] = metadata;
+        
+        // Update rarity counts
+        rarityMinted[rarity]++;
+        
+        _safeMint(to, tokenId);
+        
+        emit PassMinted(to, tokenId, rarity);
     }
     
     /**
