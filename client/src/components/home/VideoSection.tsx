@@ -18,14 +18,21 @@ export default function VideoSection({
   const [isMuted, setIsMuted] = useState(true);
   const [videoRef, setVideoRef] = useState<HTMLVideoElement | null>(null);
 
-  const handlePlayPause = () => {
+  const handlePlayPause = async () => {
     if (videoRef) {
-      if (isPlaying) {
-        videoRef.pause();
-      } else {
-        videoRef.play();
+      try {
+        if (isPlaying) {
+          videoRef.pause();
+          setIsPlaying(false);
+        } else {
+          await videoRef.play();
+          setIsPlaying(true);
+        }
+      } catch (error) {
+        console.log('Video play interrupted:', error);
+        // Gracefully handle play interruption
+        setIsPlaying(false);
       }
-      setIsPlaying(!isPlaying);
     }
   };
 

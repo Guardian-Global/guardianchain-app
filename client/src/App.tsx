@@ -59,11 +59,9 @@ import PremiumFeaturesPage from "./pages/premium-features";
 import ViralTools from "./pages/viral-tools";
 import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
-import Contact from "./pages/Contact";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./pages/BillingDashboard";
 import Landing from "./pages/Landing";
-import AuthHome from "./pages/Home";
 import { useAuth } from "./hooks/useAuth";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
@@ -71,6 +69,7 @@ import SecurityPolicy from "./pages/legal/security";
 import TokenLaunch from "./pages/token-launch";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboardPage from "./pages/AdminDashboard";
+import BlockchainDemo from "./pages/blockchain-demo";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -82,14 +81,14 @@ function Router() {
         {isLoading || !isAuthenticated ? (
           <Route path="/" component={Landing} />
         ) : (
-          <Route path="/" component={AuthHome} />
+          <Route path="/" component={Home} />
         )}
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={Profile} />
         <Route path="/profile" component={Profile} />
-        <Route path="/auth" component={AuthenticationHub} />
+        <Route path="/auth-hub" component={AuthenticationHub} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/governance" component={Governance} />
@@ -116,6 +115,7 @@ function Router() {
         <Route path="/capsule-analytics" component={CapsuleAnalyticsPage} />
         <Route path="/capsule/:id/analytics" component={DynamicCapsuleAnalytics} />
         <Route path="/financial-dashboard" component={FinancialDashboard} />
+        <Route path="/blockchain-demo" component={BlockchainDemo} />
         <Route path="/tiers" component={TiersPage} />
         <Route path="/donate-access" component={DonateAccessPage} />
         <Route path="/treasury" component={TreasuryDashboard} />
@@ -147,7 +147,6 @@ function Router() {
 
         <Route component={NotFound} />
       </Switch>
-      <Footer />
     </div>
   );
 }

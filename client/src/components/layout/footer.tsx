@@ -8,7 +8,7 @@ const footerSections = [
   {
     title: "Platform",
     links: [
-      { name: "Create Capsule", href: "/create" },
+      { name: "Create Capsule", href: "/create-capsule" },
       { name: "Explore", href: "/explore" },
       { name: "Analytics", href: "/capsule-analytics" },
       { name: "Viral Tools", href: "/viral-tools" },
@@ -20,10 +20,10 @@ const footerSections = [
     title: "Enterprise",
     links: [
       { name: "Master Admin", href: "/master-admin" },
-      { name: "Enterprise Auth", href: "/auth" },
+      { name: "Enterprise Auth", href: "/auth-hub" },
       { name: "Notifications", href: "/notifications" },
       { name: "Treasury", href: "/treasury" },
-      { name: "Financial", href: "/financial" },
+      { name: "Financial", href: "/financial-dashboard" },
       { name: "Contact", href: "/contact" },
     ],
   },
@@ -32,10 +32,10 @@ const footerSections = [
     links: [
       { name: "Protocol Strategy", href: "/protocol-strategy" },
       { name: "Blockchain Demo", href: "/blockchain-demo" },
-      { name: "AI Recommendations", href: "/ai-recommendations" },
+      { name: "AI Recommendations", href: "/recommendations" },
       { name: "Compliance", href: "/compliance" },
-      { name: "Yield Engine", href: "/yield-engine" },
-      { name: "Documentation", href: "https://docs.guardianchain.app" },
+      { name: "Yield Distribution", href: "/yield-distribution" },
+      { name: "Documentation", href: "/protocol-strategy" },
     ],
   },
 ];
