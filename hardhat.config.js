@@ -42,10 +42,12 @@ module.exports = {
     },
     // Polygon networks
     polygon: {
-      url: process.env.POLYGON_RPC_URL || "https://polygon-rpc.com",
-      accounts: process.env.PRIVATE_KEY_DEPLOYER ? [process.env.PRIVATE_KEY_DEPLOYER] : [],
+      url: "https://polygon-rpc.com",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 137,
-      gasPrice: 30000000000 // 30 gwei
+      gasPrice: 25000000000, // 25 gwei
+      timeout: 120000,
+      confirmations: 1
     },
     mumbai: {
       url: "https://polygon-mumbai.g.alchemy.com/v2/demo",
