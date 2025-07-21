@@ -163,9 +163,9 @@ export const wagmiConfig = createConfig({
     walletConnect({
       projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'demo-project-id',
       metadata: {
-        name: 'GuardianChain',
+        name: 'GUARDIANCHAIN',
         description: 'Decentralized Truth Verification Platform',
-        url: 'https://guardianchain.app',
+        url: import.meta.env.VITE_REPLIT_DEPLOY_URL || 'https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev',
         icons: ['https://guardianchain.app/logo.png'],
       },
     }),

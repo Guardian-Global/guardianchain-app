@@ -1,0 +1,10 @@
+{
+  "project": {
+    "name": "guardianchain",
+    "deploy": {
+      "production": {
+        "branch": "main"
+      }
+    }
+  }
+}
