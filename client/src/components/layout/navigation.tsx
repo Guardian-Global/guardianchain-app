@@ -21,6 +21,7 @@ const navigation = [
   { name: "Profile", href: "/profile", translationKey: "nav.profile" },
   { name: "Category Discovery", href: "/category-discovery", translationKey: "nav.categories" },
   { name: "Asset Gallery", href: "/asset-showcase", translationKey: "nav.assets" },
+  { name: "Master Access", href: "/master-access", translationKey: "nav.master" },
 ];
 
 export default function Navigation() {

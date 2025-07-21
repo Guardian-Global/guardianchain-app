@@ -44,13 +44,23 @@ export async function getAllAssets() {
                 .from(bucket.name)
                 .getPublicUrl(file.name);
               
+              // Fix double extension issues and create clean URLs
+              let cleanFileName = file.name;
+              if (file.name.includes('.png.png')) {
+                cleanFileName = file.name.replace('.png.png', '.png');
+              }
+              if (file.name.includes('.jpg.jpg')) {
+                cleanFileName = file.name.replace('.jpg.jpg', '.jpg');
+              }
+              
               allAssets.push({
-                id: `${bucket.name}/${file.name}`,
-                name: file.name,
+                id: `${bucket.name}/${cleanFileName}`,
+                name: cleanFileName,
+                originalName: file.name,
                 bucket: bucket.name,
                 size: file.metadata?.size || 0,
-                type: getFileType(file.name),
-                url: urlData.publicUrl,
+                type: getFileType(cleanFileName),
+                url: urlData.publicUrl.replace(encodeURIComponent(file.name), encodeURIComponent(cleanFileName)),
                 lastModified: file.updated_at || file.created_at,
                 metadata: file.metadata
               });

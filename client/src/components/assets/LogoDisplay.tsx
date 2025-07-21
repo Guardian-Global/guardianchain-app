@@ -39,37 +39,42 @@ export const LogoDisplay: React.FC<LogoDisplayProps> = ({
     );
   }
 
-  // Try to find the best logo for the variant
+  // Find the best logo for the variant - prioritize GUARDIANCHAIN and GTT
   let selectedLogo = logos[0]; // Default to first logo
 
-  // Look for specific logo variants
+  // Look for specific logo variants with GUARDIANCHAIN priority
+  const guardianLogos = logos.filter(logo => 
+    logo.name.toLowerCase().includes('guardianchain') || 
+    logo.name.toLowerCase().includes('guardian')
+  );
+  
+  const gttLogos = logos.filter(logo => 
+    logo.name.toLowerCase().includes('gtt')
+  );
+
   switch (variant) {
     case 'main':
-      selectedLogo = logos.find(logo => 
+    case 'full':
+      selectedLogo = guardianLogos.find(logo => 
         logo.name.toLowerCase().includes('main') || 
         logo.name.toLowerCase().includes('primary') ||
-        logo.name.toLowerCase().includes('guardianchain')
-      ) || logos[0];
+        logo.name.toLowerCase().includes('full')
+      ) || guardianLogos[0] || logos[0];
       break;
     case 'icon':
-      selectedLogo = logos.find(logo => 
+      selectedLogo = guardianLogos.find(logo => 
         logo.name.toLowerCase().includes('icon') || 
-        logo.name.toLowerCase().includes('favicon') ||
         logo.name.toLowerCase().includes('symbol')
-      ) || logos[0];
+      ) || guardianLogos[0] || logos[0];
       break;
     case 'text':
-      selectedLogo = logos.find(logo => 
+      selectedLogo = guardianLogos.find(logo => 
         logo.name.toLowerCase().includes('text') || 
         logo.name.toLowerCase().includes('wordmark')
-      ) || logos[0];
+      ) || guardianLogos[0] || logos[0];
       break;
-    case 'full':
-      selectedLogo = logos.find(logo => 
-        logo.name.toLowerCase().includes('full') || 
-        logo.name.toLowerCase().includes('complete') ||
-        logo.name.toLowerCase().includes('horizontal')
-      ) || logos[0];
+    case 'gtt':
+      selectedLogo = gttLogos[0] || logos[0];
       break;
   }
 

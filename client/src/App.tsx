@@ -58,6 +58,8 @@ import CommanderDashboard from "./pages/dashboard";
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
 import QuickAssetTest from "./pages/quick-asset-test";
+import MasterAccess from "./pages/master-access";
+import ProfileCustomization from "./pages/profile-customization";
 import ProtocolStrategy from "./pages/protocol-strategy";
 import EnterpriseSuite from "./pages/enterprise-suite";
 import PremiumFeaturesPage from "./pages/premium-features";
@@ -156,6 +158,8 @@ function Router() {
         <Route path="/whitepapers" component={Whitepapers} />
         <Route path="/asset-showcase" component={AssetShowcase} />
         <Route path="/asset-test" component={QuickAssetTest} />
+        <Route path="/master-access" component={MasterAccess} />
+        <Route path="/profile-customization" component={ProfileCustomization} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         
