@@ -73,19 +73,32 @@ export const LogoDisplay: React.FC<LogoDisplayProps> = ({
       break;
   }
 
+  console.log('🎨 LogoDisplay rendering:', { variant, selectedLogo: selectedLogo?.name, url: selectedLogo?.url });
+
   return (
-    <img
-      src={selectedLogo.url}
-      alt="GUARDIANCHAIN Logo"
-      className={`${sizeClasses[size]} object-contain ${className}`}
-      onError={(e) => {
-        // Fallback to text logo if image fails
-        const target = e.target as HTMLImageElement;
-        target.style.display = 'none';
-        if (target.parentElement && fallback) {
-          target.parentElement.innerHTML = fallback.toString();
-        }
-      }}
-    />
+    <div className={className}>
+      <img
+        src={selectedLogo.url}
+        alt={`GUARDIANCHAIN ${variant} logo`}
+        className={`${sizeClasses[size]} object-contain`}
+        onError={(e) => {
+          console.error('❌ Failed to load logo:', selectedLogo.url);
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+          if (fallback && target.parentElement) {
+            const fallbackContainer = document.createElement('div');
+            target.parentElement.appendChild(fallbackContainer);
+            // Use React to render fallback
+            if (typeof fallback === 'string') {
+              fallbackContainer.innerHTML = fallback;
+            }
+          }
+        }}
+        onLoad={() => {
+          console.log('✅ Successfully loaded logo:', selectedLogo.name, selectedLogo.url);
+        }}
+        style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+      />
+    </div>
   );
 };

@@ -46,17 +46,10 @@ export default function Navigation() {
                     </div>
                   }
                 />
-                <LogoDisplay 
-                  size="md" 
-                  variant="text"
-                  className="h-6"
-                  fallback={
-                    <span className="text-xl font-bold">
-                      <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>
-                      <span style={{ color: "#2CB67D" }}>CHAIN</span>
-                    </span>
-                  }
-                />
+                <span className="text-xl font-bold">
+                  <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>
+                  <span style={{ color: "#2CB67D" }}>CHAIN</span>
+                </span>
               </div>
             </Link>
             <div className="hidden md:flex space-x-6">
