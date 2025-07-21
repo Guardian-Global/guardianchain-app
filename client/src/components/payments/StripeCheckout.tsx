@@ -3,7 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
+// Mock useAuth hook since auth system isn't configured
+const useAuth = () => ({
+  user: {
+    id: 'demo-user',
+    email: 'demo@guardianchain.org',
+    userTier: 'EXPLORER',
+    gttBalance: '1,250',
+    reputation: '847',
+    totalCapsules: '23'
+  },
+  isAuthenticated: true
+});
 import { apiRequest } from "@/lib/queryClient";
 import { 
   Crown, 

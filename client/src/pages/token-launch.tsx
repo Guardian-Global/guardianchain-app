@@ -285,7 +285,8 @@ export default function TokenLaunchPage() {
     });
   };
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number | undefined) => {
+    if (!num || typeof num !== 'number') return '0';
     if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
     if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
     if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
@@ -312,7 +313,7 @@ export default function TokenLaunchPage() {
   const isLoading = metricsLoading || launchLoading;
   const hasError = metricsError || launchError;
 
-  if (isLoading && !tokenMetrics && !launchStatus) {
+  if (isLoading || !tokenMetrics || !launchStatus) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 text-white">
         <div className="container mx-auto p-6">
@@ -329,7 +330,7 @@ export default function TokenLaunchPage() {
     );
   }
 
-  if (hasError && !tokenMetrics && !launchStatus) {
+  if (hasError || (!tokenMetrics && !launchStatus && !isLoading)) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 text-white">
         <div className="container mx-auto p-6">
@@ -596,17 +597,17 @@ export default function TokenLaunchPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2">
-                      {tokenMetrics.analytics.socialMetrics.trending ? (
+                      {tokenMetrics?.analytics?.socialTrending?.twitterMentions24h > 1000 ? (
                         <CheckCircle className="w-6 h-6 text-green-500" />
                       ) : (
                         <AlertTriangle className="w-6 h-6 text-yellow-500" />
                       )}
                       <span className="text-lg font-bold">
-                        {tokenMetrics.analytics.socialMetrics.trending ? 'Trending' : 'Growing'}
+                        {tokenMetrics?.analytics?.socialTrending?.twitterMentions24h > 1000 ? 'Trending' : 'Growing'}
                       </span>
                     </div>
                     <div className="mt-2 text-sm text-slate-400">
-                      {tokenMetrics.analytics.socialMetrics.mentions24h} mentions today
+                      {tokenMetrics?.analytics?.socialTrending?.twitterMentions24h || 0} mentions today
                     </div>
                   </CardContent>
                 </Card>

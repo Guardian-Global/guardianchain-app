@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import { lazy } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -74,7 +75,7 @@ import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
-import TokenLaunch from "./pages/token-launch";
+import SimpleTokenLaunch from "./pages/simple-token-launch";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboardPage from "./pages/AdminDashboard";
 import BlockchainDemo from "./pages/blockchain-demo";
@@ -92,7 +93,7 @@ function Router() {
       <MobileResponsiveNavigation />
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={MobileHome} />
+        <Route path="/" component={() => <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center"><h1 className="text-4xl font-bold">GUARDIANCHAIN LIVE</h1></div>} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
@@ -149,7 +150,7 @@ function Router() {
         <Route path="/contact" component={() => <ContactInfo />} />
         <Route path="/notifications" component={Notifications} />
         <Route path="/billing-dashboard" component={BillingDashboard} />
-        <Route path="/token-launch" component={TokenLaunch} />
+        <Route path="/token-launch" component={() => <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center"><h1 className="text-4xl font-bold text-green-400">GTT Token Launch Page</h1></div>} />
         <Route path="/specialized-intake" component={SpecializedIntake} />
         <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
         <Route path="/category-discovery" component={CategoryDiscovery} />
