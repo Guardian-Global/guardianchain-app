@@ -1,0 +1,88 @@
+{
+  "explorer": {
+    "name": "Explorer",
+    "price": 0,
+    "priceAnnual": 0,
+    "gttRequired": 0,
+    "features": [
+      "Basic truth verification access",
+      "10 GTT welcome bonus",
+      "Community forum access",
+      "1 capsule per month",
+      "Standard support"
+    ],
+    "limits": {
+      "capsulesPerMonth": 1,
+      "storageGB": 1,
+      "apiCallsPerDay": 100
+    },
+    "apy": 0.05,
+    "color": "blue"
+  },
+  "seeker": {
+    "name": "Seeker", 
+    "price": 29,
+    "priceAnnual": 290,
+    "gttRequired": 100,
+    "features": [
+      "Advanced verification tools",
+      "100 GTT monthly bonus",
+      "Priority community support",
+      "5 capsules per month",
+      "Analytics dashboard",
+      "Email support"
+    ],
+    "limits": {
+      "capsulesPerMonth": 5,
+      "storageGB": 10,
+      "apiCallsPerDay": 1000
+    },
+    "apy": 0.08,
+    "color": "green"
+  },
+  "creator": {
+    "name": "Creator",
+    "price": 99,
+    "priceAnnual": 990,
+    "gttRequired": 1000,
+    "features": [
+      "Content monetization tools",
+      "500 GTT monthly bonus", 
+      "Custom branding options",
+      "20 capsules per month",
+      "Advanced analytics",
+      "Live chat support",
+      "Revenue sharing program"
+    ],
+    "limits": {
+      "capsulesPerMonth": 20,
+      "storageGB": 100,
+      "apiCallsPerDay": 10000
+    },
+    "apy": 0.12,
+    "color": "purple"
+  },
+  "sovereign": {
+    "name": "Sovereign",
+    "price": 299,
+    "priceAnnual": 2990,
+    "gttRequired": 10000,
+    "features": [
+      "Full platform access",
+      "2000 GTT monthly bonus",
+      "White-label solutions",
+      "Unlimited capsules",
+      "Enterprise analytics",
+      "Dedicated account manager",
+      "Custom integrations",
+      "Priority protocol governance"
+    ],
+    "limits": {
+      "capsulesPerMonth": -1,
+      "storageGB": 1000,
+      "apiCallsPerDay": 100000
+    },
+    "apy": 0.25,
+    "color": "gold"
+  }
+}

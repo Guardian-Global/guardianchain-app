@@ -1,0 +1,66 @@
+You are my full‑stack engineer. I need you to:
+
+1. ✅ **Set Up Web3 + Token Data Fetching (GTT token)**  
+   • I will provide: the correct GTT contract address and verified ABI.  
+   • Connect to it using a reliable RPC (e.g. QuickNode / Infura).  
+   • Write reusable JS/TS functions that fetch:  
+     - totalSupply()  
+     - balanceOf()  
+     - decimals(), symbol()  
+     - transfer events or historic holders count  
+     - Any other on‑chain metrics we care about (capsules, yields)  
+   • Validate the data and fall back to API backup only when strictly needed.  
+   • Provide unit tests (e.g. with Mocha + Chai or Jest) that assert functions return correct values and throw clear errors on failure.
+
+2. ✅ **Fix Promises & Async Logic Across Pages**  
+   • Audit all front‑end pages that fetch or display token data, user balances, yields, rewards, capsule prices etc.  
+   • Refactor to use `async/await`, proper error handling, and loading‑state UI components.  
+   • Ensure every component shows accurate metrics or fails loudly if the underlying promise rejects.
+
+3. ✅ **Implement Yield & Reward Calculations**  
+   • Write a separate module that computes yield logic (capsules, tiers, APY, lockups) as outlined in our whitepaper.  
+   • Unit‑test all these functions with sample scenarios.  
+   • Integrate them with front‑end: users see exactly what they earn or lock, in real time.
+
+4. ✅ **Set Up Tiered Auth & Tiered Services**  
+   • Implement a secure user signup / login flow (email + password, hashed, JWT or session).  
+   • Users can select tiers (e.g. Basic, Pro, Enterprise), each with well‑defined pricing and available services.  
+   • Integrate Stripe (or similar) to collect payment and gate access rights.  
+   • Ensure front‑end and back‑end enforce service availability based on user’s tier.
+
+5. ✅ **Ensure Pricing Accuracy & Legal Export Compliance**  
+   • Your app must reflect exactly what is promised in whitepapers / financial materials.  
+   • Write a pricing/feature matrix in code, and assert via tests that front‑end and back‑end pricing are identical.  
+   • Implement a visible “Terms of Service” pop‑up at signup, outlining availability of services.
+
+6. ✅ **Security, Logging & Error Tracking**  
+   • Add centralized logging for any token‑data fetch failures, pricing inconsistencies, auth errors.  
+   • Add alerts (console/Slack/etc.) on serious failures (e.g. token-price mismatch vs market).
+
+7. ✅ **Deploy & Validation**  
+   • Deploy backend + frontend to Replit or Vercel.  
+   • Provide a smoke‑test script or process that logs into a test user, runs through yield logic, payment, token fetch, and asserts everything works.  
+   • Provide instructions or a CI/CD script (e.g. GitHub Actions) to run tests on every push.
+
+8. ✅ **Code Organization**  
+   • Write modular, well‑commented code.  
+   • Use a clean folder structure (`/contracts`, `/lib/web3`, `/modules/yield`, `/pages`, `/auth`).  
+   • Provide a README.md explaining setup and how to run tests.
+
+---
+
+**Please generate all required files in a Replit project structure** (package.json, src/, tests/, etc.), include TODO comments for items that need environment variables (e.g. RPC key, ABI, Stripe key), and show me sample test cases.
+
+I want everything—data‑fetching, yield logic, auth, pricing, deployment, and tests—designed in one cohesive workflow. Let’s build this tech stack properly so we can win user trust and not get sued.```
+
+---
+
+**Why this works**   
+- It tells Replit AI exactly what to build, step by step.  
+- Incorporates everything you're worried about: on-chain accuracy, yield logic, async stability, auth, pricing, legal defensibility.  
+- Demands structure, tests, and deployment readiness.  
+- If gaps arise, run the assistant again with specific errors or missing files—it’ll refine the build.
+
+---
+
+Let me know how far Replit AI gets. If you get errors or missing modules, send me the logs or code and I’ll help you refine it further. This prompt should give you a fully‑scaffolded, enterprise‑grade foundation.
