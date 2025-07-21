@@ -15,6 +15,7 @@ const navigation = [
   { name: "Specialized Intake", href: "/specialized-intake", translationKey: "nav.specialized" },
   { name: "Whistleblower", href: "/whistleblower-sanctuary", translationKey: "nav.whistleblower" },
   { name: "Token Launch", href: "/token-launch", translationKey: "token.launch" },
+  { name: "Blockchain Playground", href: "/blockchain-playground", translationKey: "nav.playground" },
   { name: "Analytics", href: "/capsule-analytics", translationKey: "nav.analytics" },
   { name: "Profile", href: "/profile", translationKey: "nav.profile" },
   { name: "Category Discovery", href: "/category-discovery", translationKey: "nav.categories" },

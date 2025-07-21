@@ -72,6 +72,7 @@ import TokenLaunch from "./pages/token-launch";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboardPage from "./pages/AdminDashboard";
 import BlockchainDemo from "./pages/blockchain-demo";
+import BlockchainPlayground from "./pages/blockchain-playground";
 import SpecializedIntake from "./pages/specialized-intake";
 import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
 import CategoryDiscovery from "./pages/category-discovery";
@@ -124,6 +125,7 @@ function Router() {
         <Route path="/capsule/:id/analytics" component={DynamicCapsuleAnalytics} />
         <Route path="/financial-dashboard" component={FinancialDashboard} />
         <Route path="/blockchain-demo" component={BlockchainDemo} />
+        <Route path="/blockchain-playground" component={BlockchainPlayground} />
         <Route path="/tiers" component={TiersPage} />
         <Route path="/donate-access" component={DonateAccessPage} />
         <Route path="/treasury" component={TreasuryDashboard} />
