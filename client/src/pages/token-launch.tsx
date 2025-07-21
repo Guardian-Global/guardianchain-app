@@ -8,6 +8,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import BlockchainInteractionVisualizer from '@/components/launch/BlockchainInteractionVisualizer';
+import IntuitiveTokenPerformanceHeatmap from '@/components/launch/IntuitiveTokenPerformanceHeatmap';
+import OneClickSocialMediaShare from '@/components/launch/OneClickSocialMediaShare';
+import PersonalizedBlockchainLearningCompanion from '@/components/launch/PersonalizedBlockchainLearningCompanion';
+import GamifiedBlockchainRewardsSystem from '@/components/launch/GamifiedBlockchainRewardsSystem';
 
 interface LaunchStatus {
   phase: string;
@@ -247,6 +252,15 @@ export default function TokenLaunchPage() {
           )}
         </div>
       </Card>
+
+      {/* Enhanced Adder Components */}
+      <div className="grid gap-6">
+        <BlockchainInteractionVisualizer />
+        <IntuitiveTokenPerformanceHeatmap />
+        <OneClickSocialMediaShare />
+        <PersonalizedBlockchainLearningCompanion />
+        <GamifiedBlockchainRewardsSystem />
+      </div>
 
       {/* Main Dashboard Tabs */}
       <Tabs defaultValue="networks" className="space-y-6">
