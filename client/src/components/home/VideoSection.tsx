@@ -67,9 +67,8 @@ export default function VideoSection({
   const handleVideoLoad = (video: HTMLVideoElement | null) => {
     if (video) {
       setVideoRef(video);
-      video.muted = isMuted;
-      // Preload video for better user experience
-      video.load();
+      video.muted = true; // Always start muted
+      console.log('Video setup complete:', videoUrl);
     }
   };
 
@@ -87,38 +86,20 @@ export default function VideoSection({
 
         <Card className="overflow-hidden shadow-2xl">
           <CardContent className="p-0">
-            <div className="relative group">
-              {/* Video Element */}
+            <div className="relative">
+              {/* Direct video with native controls */}
               <video
                 ref={(video) => handleVideoLoad(video)}
                 className="w-full h-auto aspect-video object-cover"
                 poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2NzUiIHZpZXdCb3g9IjAgMCAxMjAwIDY3NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNjc1IiBmaWxsPSIjMUUyOTMzIi8+CjxjaXJjbGUgY3g9IjYwMCIgY3k9IjMzNy41IiByPSI1MCIgZmlsbD0iI0Y1OUUwQiIvPgo8cGF0aCBkPSJNNTg1IDMxNS41TDYyNSAzMzcuNUw1ODUgMzU5LjVWMzE1LjVaIiBmaWxsPSIjMUUyOTMzIi8+Cjx0ZXh0IHg9IjYwMCIgeT0iNDIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjRjU5RTBCIiBmb250LWZhbWlseT0ic2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIj5HVUFSREFOQ0hBSU48L3RleHQ+Cjx0ZXh0IHg9IjYwMCIgeT0iNDUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTRBM0I4IiBmb250LWZhbWlseT0ic2VyaWYiIGZvbnQtc2l6ZT0iMTYiPkltbXV0YWJsZSBUcnV0aCBpbiBNb3Rpb248L3RleHQ+Cjwvc3ZnPgo="
-                preload="metadata"
+                controls
                 muted
-                controls={false}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onLoadedData={(e) => {
-                  const target = e.target as HTMLVideoElement;
-                  if (target) {
-                    handleVideoLoad(target);
-                  }
-                }}
-                onError={(e) => {
-                  console.log('Video failed to load:', e);
-                  // Handle video load errors gracefully
-                }}
+                preload="metadata"
+                playsInline
+                src={videoUrl}
               >
                 <source src={videoUrl} type="video/mp4" />
-                <p className="text-center p-8">
-                  Your browser does not support the video tag. 
-                  <Button 
-                    onClick={() => window.open(videoUrl, '_blank')}
-                    className="text-purple-600 hover:underline ml-1"
-                  >
-                    View video in new tab
-                  </Button>
-                </p>
+                Your browser does not support the video tag.
               </video>
 
               {/* Video Overlay Controls */}
