@@ -1,10 +1,15 @@
 {
-  "project": {
-    "name": "guardianchain",
-    "deploy": {
-      "production": {
-        "branch": "main"
-      }
-    }
-  }
+  "projectId": "guardianchain-protocol",
+  "metadata": {
+    "name": "GUARDIANCHAIN",
+    "description": "Immutable Truth Verification Protocol",
+    "url": "https://guardianchain.replit.app",
+    "icons": [
+      "https://guardianchain.replit.app/favicon.ico"
+    ]
+  },
+  "chains": [1, 137, 80002, 31337],
+  "enableWalletConnect": true,
+  "enableInjected": true,
+  "enableCoinbase": true
 }

@@ -161,13 +161,19 @@ export const wagmiConfig = createConfig({
       appLogoUrl: 'https://guardianchain.app/logo.png',
     }),
     walletConnect({
-      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'demo-project-id',
+      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'guardianchain-protocol',
       metadata: {
         name: 'GUARDIANCHAIN',
-        description: 'Decentralized Truth Verification Platform',
-        url: import.meta.env.VITE_REPLIT_DEPLOY_URL || 'https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev',
-        icons: ['https://guardianchain.app/logo.png'],
+        description: 'Immutable Truth Verification Protocol',
+        url: typeof window !== 'undefined' ? window.location.origin : 'https://guardianchain.replit.app',
+        icons: [`${typeof window !== 'undefined' ? window.location.origin : 'https://guardianchain.replit.app'}/favicon.ico`],
       },
+      qrModalOptions: {
+        themeMode: 'dark',
+        themeVariables: {
+          '--wcm-z-index': '1000'
+        }
+      }
     }),
   ],
   transports: {

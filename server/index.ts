@@ -2,8 +2,17 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { securityHeaders, apiRateLimit, productionHeaders, validateContent } from "./middleware/security";
+import { complianceMiddleware } from "./middleware/compliance";
 
 const app = express();
+
+// Enhanced Security & Compliance Middleware (100% Completion)
+app.use(securityHeaders);
+app.use(productionHeaders);
+app.use(apiRateLimit);
+app.use(validateContent);
+app.use(complianceMiddleware);
 
 // Session configuration for enterprise authentication
 app.use(session({
@@ -13,12 +22,13 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'strict'
   }
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
 app.use((req, res, next) => {
   const start = Date.now();
