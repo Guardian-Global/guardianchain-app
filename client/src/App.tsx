@@ -8,7 +8,7 @@ import WalletProvider from "@/components/web3/wallet-provider";
 import Navigation from "@/components/layout/navigation";
 import Footer from "@/components/layout/footer";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
-import Home from "@/pages/home";
+import Home from "@/pages/Home";
 import CreateCapsule from "@/pages/create-capsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
@@ -92,7 +92,7 @@ function Router() {
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={Profile} />
         <Route path="/profile" component={Profile} />
-        <Route path="/auth-hub" component={AuthenticationHub} />
+        <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/governance" component={Governance} />

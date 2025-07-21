@@ -10,7 +10,7 @@ export default function OneClickSocialMediaShare() {
   const shareData = {
     title: "GTT Token - GUARDIANCHAIN Protocol Launch",
     text: "Discover the future of truth verification with GTT token! Join the decentralized truth economy. #GTT #GUARDIANCHAIN #TruthVerification",
-    url: window.location.href
+    url: typeof window !== 'undefined' ? window.location.href : ''
   };
 
   const handleShare = async (platform: string) => {
