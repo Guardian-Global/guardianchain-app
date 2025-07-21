@@ -1,292 +1,129 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { TrendingUp, TrendingDown, Activity, BarChart3, RefreshCw } from 'lucide-react';
-
-interface NetworkPerformance {
-  network: string;
-  price: number;
-  change24h: number;
-  volume: number;
-  liquidity: number;
-  transactions: number;
-  marketCap: number;
-  intensity: number; // 0-100 for heatmap intensity
-  status: 'excellent' | 'good' | 'moderate' | 'poor';
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function IntuitiveTokenPerformanceHeatmap() {
-  const [networks, setNetworks] = useState<NetworkPerformance[]>([]);
-  const [selectedMetric, setSelectedMetric] = useState<'volume' | 'liquidity' | 'transactions' | 'change24h'>('volume');
-  const [isLive, setIsLive] = useState(true);
+  const performanceData = [
+    { period: "1H", change: 2.4, volume: 45600 },
+    { period: "6H", change: -1.2, volume: 234500 },
+    { period: "12H", change: 5.8, volume: 456700 },
+    { period: "1D", change: 12.3, volume: 987600 },
+    { period: "3D", change: -3.1, volume: 2345600 },
+    { period: "1W", change: 18.7, volume: 4567800 },
+    { period: "1M", change: 45.2, volume: 12456700 },
+    { period: "3M", change: 120.5, volume: 23457800 }
+  ];
 
-  const generateMockData = (): NetworkPerformance[] => {
-    const networkList = [
-      'Ethereum', 'Polygon', 'BSC', 'Arbitrum', 'Optimism', 'Avalanche',
-      'Fantom', 'Solana', 'Cosmos', 'Near', 'Harmony', 'Moonriver'
-    ];
-
-    return networkList.map(network => {
-      const basePrice = 1.25 + Math.random() * 0.5; // $1.25-$1.75
-      const change24h = (Math.random() - 0.5) * 20; // -10% to +10%
-      const volume = Math.random() * 10000000; // Up to $10M
-      const liquidity = Math.random() * 50000000; // Up to $50M
-      const transactions = Math.floor(Math.random() * 100000); // Up to 100k
-      const marketCap = basePrice * 1000000000; // Based on 1B supply
-
-      // Calculate intensity based on selected metric
-      let intensity = 0;
-      switch (selectedMetric) {
-        case 'volume':
-          intensity = Math.min(100, (volume / 10000000) * 100);
-          break;
-        case 'liquidity':
-          intensity = Math.min(100, (liquidity / 50000000) * 100);
-          break;
-        case 'transactions':
-          intensity = Math.min(100, (transactions / 100000) * 100);
-          break;
-        case 'change24h':
-          intensity = Math.min(100, Math.max(0, (change24h + 10) * 5));
-          break;
-      }
-
-      let status: NetworkPerformance['status'] = 'moderate';
-      if (intensity >= 80) status = 'excellent';
-      else if (intensity >= 60) status = 'good';
-      else if (intensity >= 40) status = 'moderate';
-      else status = 'poor';
-
-      return {
-        network,
-        price: basePrice,
-        change24h,
-        volume,
-        liquidity,
-        transactions,
-        marketCap,
-        intensity,
-        status
-      };
-    });
+  const getPerformanceColor = (change: number) => {
+    if (change > 10) return 'bg-green-500';
+    if (change > 0) return 'bg-green-400';
+    if (change > -5) return 'bg-yellow-400';
+    return 'bg-red-400';
   };
 
-  useEffect(() => {
-    setNetworks(generateMockData());
-    
-    if (isLive) {
-      const interval = setInterval(() => {
-        setNetworks(generateMockData());
-      }, 3000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [selectedMetric, isLive]);
-
-  const getHeatmapColor = (intensity: number, status: NetworkPerformance['status']) => {
-    const alpha = intensity / 100;
-    
-    switch (status) {
-      case 'excellent':
-        return `rgba(34, 197, 94, ${alpha})`; // Green
-      case 'good':
-        return `rgba(59, 130, 246, ${alpha})`; // Blue
-      case 'moderate':
-        return `rgba(251, 191, 36, ${alpha})`; // Yellow
-      case 'poor':
-        return `rgba(239, 68, 68, ${alpha})`; // Red
-      default:
-        return `rgba(156, 163, 175, ${alpha})`; // Gray
-    }
+  const getPerformanceIntensity = (change: number) => {
+    const absChange = Math.abs(change);
+    if (absChange > 50) return 'opacity-100';
+    if (absChange > 20) return 'opacity-80';
+    if (absChange > 10) return 'opacity-60';
+    if (absChange > 5) return 'opacity-40';
+    return 'opacity-30';
   };
 
-  const formatValue = (value: number, type: string) => {
-    switch (type) {
-      case 'price':
-        return `$${value.toFixed(3)}`;
-      case 'change24h':
-        return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
-      case 'volume':
-        return `$${(value / 1000000).toFixed(1)}M`;
-      case 'liquidity':
-        return `$${(value / 1000000).toFixed(1)}M`;
-      case 'transactions':
-        return `${(value / 1000).toFixed(0)}k`;
-      case 'marketCap':
-        return `$${(value / 1000000000).toFixed(2)}B`;
-      default:
-        return value.toString();
-    }
-  };
-
-  const getTrendIcon = (change: number) => {
-    if (change > 0) return <TrendingUp className="w-3 h-3 text-green-500" />;
-    if (change < 0) return <TrendingDown className="w-3 h-3 text-red-500" />;
-    return <Activity className="w-3 h-3 text-gray-500" />;
-  };
-
-  const getStatusBadge = (status: NetworkPerformance['status']) => {
-    const variants = {
-      excellent: 'default',
-      good: 'secondary',
-      moderate: 'outline',
-      poor: 'destructive'
-    } as const;
-
-    return (
-      <Badge variant={variants[status]} className="text-xs">
-        {status}
-      </Badge>
-    );
+  const getIcon = (change: number) => {
+    if (change > 1) return <TrendingUp className="w-4 h-4" />;
+    if (change < -1) return <TrendingDown className="w-4 h-4" />;
+    return <Minus className="w-4 h-4" />;
   };
 
   return (
-    <Card className="w-full">
+    <Card className="bg-slate-800/50 border-slate-700">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5" />
-          Intuitive Token Performance Heatmap
+          <TrendingUp className="w-6 h-6 text-green-500" />
+          Token Performance Heatmap
         </CardTitle>
-        <CardDescription>
-          Real-time performance visualization across all networks with dynamic heatmap intensity
-        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Controls */}
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Metric:</span>
-            <div className="flex gap-1">
-              {(['volume', 'liquidity', 'transactions', 'change24h'] as const).map(metric => (
-                <Button
-                  key={metric}
-                  variant={selectedMetric === metric ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedMetric(metric)}
-                >
-                  {metric.charAt(0).toUpperCase() + metric.slice(1)}
-                </Button>
-              ))}
+      <CardContent>
+        <div className="space-y-6">
+          {/* Heatmap Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {performanceData.map((item, index) => (
+              <motion.div
+                key={item.period}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className={`
+                  p-4 rounded-lg relative overflow-hidden
+                  ${getPerformanceColor(item.change)}
+                  ${getPerformanceIntensity(item.change)}
+                `}
+              >
+                <div className="relative z-10 text-white">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold">{item.period}</span>
+                    {getIcon(item.change)}
+                  </div>
+                  <div className="text-lg font-bold">
+                    {item.change > 0 ? '+' : ''}{item.change.toFixed(1)}%
+                  </div>
+                  <div className="text-xs opacity-80">
+                    Vol: ${(item.volume / 1000).toFixed(0)}K
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20"></div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Performance Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center space-y-2">
+              <div className="text-2xl font-bold text-green-400">6/8</div>
+              <div className="text-sm text-slate-400">Positive Periods</div>
+              <Badge className="bg-green-500/20 text-green-400">Strong Performance</Badge>
+            </div>
+            
+            <div className="text-center space-y-2">
+              <div className="text-2xl font-bold text-blue-400">45.2%</div>
+              <div className="text-sm text-slate-400">Best Month</div>
+              <Badge className="bg-blue-500/20 text-blue-400">1M Period</Badge>
+            </div>
+            
+            <div className="text-center space-y-2">
+              <div className="text-2xl font-bold text-purple-400">$23.4M</div>
+              <div className="text-sm text-slate-400">Peak Volume</div>
+              <Badge className="bg-purple-500/20 text-purple-400">3M Period</Badge>
             </div>
           </div>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsLive(!isLive)}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLive ? 'animate-spin' : ''}`} />
-            {isLive ? 'Live' : 'Paused'}
-          </Button>
-        </div>
 
-        {/* Heatmap Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {networks.map((network) => (
-            <div
-              key={network.network}
-              className="relative p-4 rounded-lg border transition-all duration-300 hover:scale-105"
-              style={{
-                backgroundColor: getHeatmapColor(network.intensity, network.status),
-                backdropFilter: 'blur(8px)'
-              }}
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-sm">{network.network}</span>
-                  {getStatusBadge(network.status)}
+          {/* Trend Analysis */}
+          <div className="space-y-3">
+            <h4 className="font-semibold text-slate-300">Trend Analysis</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-3 bg-slate-700/50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="w-4 h-4 text-green-500" />
+                  <span className="text-sm font-semibold text-green-400">Bullish Momentum</span>
                 </div>
-                
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span>Price:</span>
-                    <span className="font-medium">{formatValue(network.price, 'price')}</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-xs">
-                    <span>24h:</span>
-                    <div className="flex items-center gap-1">
-                      {getTrendIcon(network.change24h)}
-                      <span className={network.change24h >= 0 ? 'text-green-600' : 'text-red-600'}>
-                        {formatValue(network.change24h, 'change24h')}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between text-xs">
-                    <span>{selectedMetric}:</span>
-                    <span className="font-medium">
-                      {formatValue(network[selectedMetric], selectedMetric)}
-                    </span>
-                  </div>
+                <p className="text-xs text-slate-400">
+                  Strong upward trend across longer timeframes with increasing volume
+                </p>
+              </div>
+              
+              <div className="p-3 bg-slate-700/50 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm font-semibold text-blue-400">Volume Growth</span>
                 </div>
-                
-                {/* Intensity indicator */}
-                <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
-                  <div
-                    className="bg-white rounded-full h-1.5 transition-all duration-300"
-                    style={{ width: `${network.intensity}%` }}
-                  />
-                </div>
+                <p className="text-xs text-slate-400">
+                  Trading volume consistently increasing over extended periods
+                </p>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Legend */}
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="flex items-center gap-4 text-xs">
-            <span className="font-medium">Performance:</span>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-green-500/80" />
-              <span>Excellent</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-blue-500/80" />
-              <span>Good</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-yellow-500/80" />
-              <span>Moderate</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-red-500/80" />
-              <span>Poor</span>
-            </div>
-          </div>
-          
-          <div className="text-xs text-muted-foreground">
-            Intensity based on {selectedMetric} • Updates every 3s
-          </div>
-        </div>
-
-        {/* Summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
-          <div className="text-center">
-            <div className="text-lg font-bold text-green-500">
-              {networks.filter(n => n.status === 'excellent').length}
-            </div>
-            <div className="text-xs text-muted-foreground">Excellent Networks</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold">
-              ${(networks.reduce((sum, n) => sum + n.volume, 0) / 1000000).toFixed(1)}M
-            </div>
-            <div className="text-xs text-muted-foreground">Total Volume</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold">
-              ${(networks.reduce((sum, n) => sum + n.liquidity, 0) / 1000000).toFixed(1)}M
-            </div>
-            <div className="text-xs text-muted-foreground">Total Liquidity</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold">
-              {(networks.reduce((sum, n) => sum + n.transactions, 0) / 1000).toFixed(0)}k
-            </div>
-            <div className="text-xs text-muted-foreground">Total TXs</div>
           </div>
         </div>
       </CardContent>
