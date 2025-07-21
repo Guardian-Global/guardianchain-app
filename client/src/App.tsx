@@ -88,6 +88,7 @@ import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
 import CategoryDiscovery from "./pages/category-discovery";
 import Whitepapers from "./pages/whitepapers";
 import MyListings from "./pages/my-listings";
+import TokenListings from "./pages/token-listings";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -101,9 +102,10 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
-        <Route path="/profile/:id?" component={() => <WorkingProfileDashboard user={null} />} />
-        <Route path="/profile" component={() => <WorkingProfileDashboard user={null} />} />
+        <Route path="/profile/:id?" component={() => <WorkingProfileDashboard user={undefined} />} />
+        <Route path="/profile" component={() => <WorkingProfileDashboard user={undefined} />} />
         <Route path="/my-listings" component={MyListings} />
+        <Route path="/token-listings" component={TokenListings} />
         <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
