@@ -58,7 +58,7 @@ import CommanderDashboard from "./pages/dashboard";
 
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
-import QuickAssetTest from "./pages/quick-asset-test";
+
 import MasterAccess from "./pages/master-access";
 import ProfileCustomization from "./pages/profile-customization";
 import ProtocolStrategy from "./pages/protocol-strategy";
@@ -81,7 +81,7 @@ import WorkingProfileDashboard from "@/components/profile/WorkingProfileDashboar
 import StripeCheckout from "@/components/payments/StripeCheckout";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboardPage from "./pages/AdminDashboard";
-import BlockchainDemo from "./pages/blockchain-demo";
+
 import BlockchainPlayground from "./pages/blockchain-playground";
 import SpecializedIntake from "./pages/specialized-intake";
 import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
@@ -100,8 +100,8 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
-        <Route path="/profile/:id?" component={WorkingProfileDashboard} />
-        <Route path="/profile" component={WorkingProfileDashboard} />
+        <Route path="/profile/:id?" component={() => <WorkingProfileDashboard user={null} />} />
+        <Route path="/profile" component={() => <WorkingProfileDashboard user={null} />} />
         <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
@@ -131,7 +131,7 @@ function Router() {
         <Route path="/capsule-analytics" component={CapsuleAnalyticsPage} />
         <Route path="/capsule/:id/analytics" component={DynamicCapsuleAnalytics} />
         <Route path="/financial-dashboard" component={FinancialDashboard} />
-        <Route path="/blockchain-demo" component={BlockchainDemo} />
+
         <Route path="/blockchain-playground" component={BlockchainPlayground} />
         <Route path="/tiers" component={TiersPage} />
         <Route path="/donate-access" component={DonateAccessPage} />
@@ -159,7 +159,7 @@ function Router() {
         <Route path="/category-discovery" component={CategoryDiscovery} />
         <Route path="/whitepapers" component={Whitepapers} />
         <Route path="/asset-showcase" component={AssetShowcase} />
-        <Route path="/asset-test" component={QuickAssetTest} />
+
         <Route path="/master-access" component={MasterAccess} />
         <Route path="/profile-customization" component={ProfileCustomization} />
         <Route path="/upgrade" component={StripeCheckout} />
