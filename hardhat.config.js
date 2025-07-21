@@ -22,11 +22,11 @@ module.exports = {
     },
     // Ethereum networks
     mainnet: {
-      url: "https://eth-mainnet.g.alchemy.com/v2/demo",
-      accounts: ["0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde"],
-      chainId: 1,
-      gasPrice: 15000000000, // 15 gwei (lower for better success)
-      timeout: 60000
+      url: "https://matic-mainnet.chainstacklabs.com",
+      accounts: process.env.PRIVATE_KEY_USER ? [process.env.PRIVATE_KEY_USER] : [],
+      chainId: 137,
+      gasPrice: 30000000000, // 30 gwei
+      timeout: 120000
     },
     sepolia: {
       url: process.env.ETHEREUM_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_ID",
@@ -49,9 +49,9 @@ module.exports = {
     },
     mumbai: {
       url: "https://polygon-mumbai.g.alchemy.com/v2/demo",
-      accounts: ["0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde"],
+      accounts: process.env.PRIVATE_KEY_USER ? [process.env.PRIVATE_KEY_USER] : [],
       chainId: 80001,
-      gasPrice: 35000000000 // 35 gwei
+      gasPrice: 20000000000 // 20 gwei (reduced for lower cost)
     },
     // BSC networks
     bsc: {

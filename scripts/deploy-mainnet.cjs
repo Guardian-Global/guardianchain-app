@@ -2,8 +2,8 @@ const { ethers } = require("hardhat");
 const fs = require('fs');
 
 async function main() {
-  console.log("🚀 GUARDIANCHAIN GTT TOKEN MAINNET DEPLOYMENT");
-  console.log("==============================================");
+  console.log("🚀 GUARDIANCHAIN GTT TOKEN POLYGON MAINNET DEPLOYMENT");
+  console.log("====================================================");
   
   // Get the deployer account
   const [deployer] = await ethers.getSigners();
@@ -11,10 +11,10 @@ async function main() {
   
   // Check deployer balance
   const balance = await deployer.provider.getBalance(deployer.address);
-  console.log("Account balance:", ethers.formatEther(balance), "ETH");
+  console.log("Account balance:", ethers.formatEther(balance), "MATIC");
   
-  if (balance < ethers.parseEther("0.001")) {
-    throw new Error("Insufficient ETH balance for deployment. Need at least 0.001 ETH");
+  if (balance < ethers.parseEther("0.005")) {
+    throw new Error("Insufficient MATIC balance for deployment. Need at least 0.005 MATIC");
   }
   
   console.log("\n📋 DEPLOYMENT SEQUENCE STARTING...");
@@ -48,8 +48,8 @@ async function main() {
   
   // Save deployment info
   const deploymentData = {
-    network: "mainnet",
-    chainId: 1,
+    network: "polygon-mainnet",
+    chainId: 137,
     deployedAt: new Date().toISOString(),
     deployer: deployer.address,
     contracts: {
