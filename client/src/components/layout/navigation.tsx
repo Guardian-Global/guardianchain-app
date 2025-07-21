@@ -20,6 +20,7 @@ const navigation = [
   { name: "Analytics", href: "/capsule-analytics", translationKey: "nav.analytics" },
   { name: "Profile", href: "/profile", translationKey: "nav.profile" },
   { name: "Category Discovery", href: "/category-discovery", translationKey: "nav.categories" },
+  { name: "Asset Gallery", href: "/asset-showcase", translationKey: "nav.assets" },
 ];
 
 export default function Navigation() {

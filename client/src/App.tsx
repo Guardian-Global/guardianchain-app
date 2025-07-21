@@ -56,6 +56,8 @@ import ReportingDashboard from "./pages/reporting";
 import CommanderDashboard from "./pages/dashboard";
 
 import AssetIntegrationPage from "./pages/asset-integration";
+import AssetShowcase from "./pages/asset-showcase";
+import QuickAssetTest from "./pages/quick-asset-test";
 import ProtocolStrategy from "./pages/protocol-strategy";
 import EnterpriseSuite from "./pages/enterprise-suite";
 import PremiumFeaturesPage from "./pages/premium-features";
@@ -152,7 +154,8 @@ function Router() {
         <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
         <Route path="/category-discovery" component={CategoryDiscovery} />
         <Route path="/whitepapers" component={Whitepapers} />
-        <Route path="/asset-showcase" component={() => import('./pages/asset-showcase').then(m => m.default())} />
+        <Route path="/asset-showcase" component={AssetShowcase} />
+        <Route path="/asset-test" component={QuickAssetTest} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         
