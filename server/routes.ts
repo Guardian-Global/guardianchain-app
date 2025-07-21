@@ -5,15 +5,19 @@ import profileRouter from "./routes/profile";
 import airdropRouter from "./routes/airdrop";
 import guardianPassRouter from "./routes/guardian-pass";
 import vaultRouter from "./routes/vault";
+import publicAuthRouter from "./routes/public-auth";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
+  // Public authentication routes (for direct user registration/login)
+  app.use('/api/auth', publicAuthRouter);
+
+  // Auth middleware for Replit Auth
   await setupAuth(app);
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Replit Auth routes
+  app.get('/api/replit/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);

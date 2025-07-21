@@ -6,10 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
-import Navigation from "@/components/layout/navigation";
+import MobileResponsiveNavigation from "@/components/layout/MobileResponsiveNavigation";
 import Footer from "@/components/layout/footer";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
-import Home from "@/pages/Home";
+import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/create-capsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
@@ -70,6 +70,7 @@ import Notifications from "./pages/Notifications";
 import BillingDashboard from "./pages/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
+import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
@@ -88,13 +89,10 @@ function Router() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
-      <Navigation />
+      <MobileResponsiveNavigation />
       <Switch>
-        {isLoading || !isAuthenticated ? (
-          <Route path="/" component={Landing} />
-        ) : (
-          <Route path="/" component={Home} />
-        )}
+        <Route path="/login" component={Login} />
+        <Route path="/" component={MobileHome} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
@@ -170,6 +168,7 @@ function Router() {
 
         <Route component={NotFound} />
       </Switch>
+      <Footer />
     </div>
   );
 }
@@ -181,18 +180,11 @@ function App() {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <AssetProvider>
             <TooltipProvider>
-            <div className="min-h-screen bg-background">
-              <MobileHeader />
-              <div className="hidden lg:block">
-                <Navigation />
-              </div>
               <main className="flex-1">
                 <Router />
               </main>
-              <Footer />
-            </div>
-            <Toaster />
-          </TooltipProvider>
+              <Toaster />
+            </TooltipProvider>
           </AssetProvider>
         </ThemeProvider>
       </WalletProvider>

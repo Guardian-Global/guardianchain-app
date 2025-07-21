@@ -2,8 +2,6 @@ import {
   users,
   capsules,
   capsuleInteractions,
-  moderationFlags,
-  yieldTransactions,
   type User,
   type UpsertUser,
   type Capsule,
@@ -18,9 +16,12 @@ import { eq, desc } from "drizzle-orm";
 export interface IStorage {
   // User operations (IMPORTANT: mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUser(id: string, userData: Partial<UpsertUser>): Promise<User>;
   updateUserTier(id: string, tier: string): Promise<User | undefined>;
+  updateUserLastLogin(userId: string): Promise<void>;
   
   // Capsule operations
   createCapsule(capsuleData: any): Promise<Capsule>;
@@ -105,6 +106,26 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id))
       .returning();
     return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async updateUserLastLogin(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        lastLoginAt: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
   }
 
   // Capsule operations
