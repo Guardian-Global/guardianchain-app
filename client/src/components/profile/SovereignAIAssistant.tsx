@@ -1,572 +1,445 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { 
-  Bot, 
-  Brain, 
-  Shield, 
-  Lock, 
-  Heart, 
-  Infinity, 
-  Send, 
-  Settings, 
-  Download,
-  Upload,
-  MessageSquare,
-  Memory,
-  Sparkles,
-  Crown,
-  Fingerprint,
-  FileKey
-} from 'lucide-react';
+  Bot, Send, Sparkles, Brain, Crown, Shield, 
+  MessageSquare, Zap, Settings, Save, Trash2,
+  Star, Lock, Globe, Heart
+} from "lucide-react";
 
 interface Message {
   id: string;
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  sender: 'user' | 'ai';
-  metadata?: {
-    onChainHash?: string;
-    encrypted: boolean;
-    importance: 'low' | 'medium' | 'high' | 'critical';
-  };
+  importance?: 'critical' | 'high' | 'medium' | 'low';
+  saved?: boolean;
+  gttCost?: number;
 }
 
-interface AIPersonality {
-  name: string;
-  tone: 'professional' | 'casual' | 'empathetic' | 'analytical' | 'creative';
-  expertise: string[];
-  memoryDepth: 'basic' | 'enhanced' | 'sovereign';
-  privacy: 'standard' | 'encrypted' | 'sovereign';
-}
-
-interface SovereignAIAssistantProps {
+interface AIAssistantProps {
   userId: string;
+  userTier: string;
+  gttBalance: number;
 }
 
-function SovereignAIAssistant({ userId }: SovereignAIAssistantProps) {
+const TIER_FEATURES = {
+  EXPLORER: {
+    maxMemories: 10,
+    dailyMessages: 50,
+    importanceThreshold: 'high',
+    features: ['Basic Assistance', 'Content Help']
+  },
+  SEEKER: {
+    maxMemories: 25,
+    dailyMessages: 100,
+    importanceThreshold: 'medium',
+    features: ['Advanced Assistance', 'Yield Optimization', 'Market Insights']
+  },
+  CREATOR: {
+    maxMemories: 100,
+    dailyMessages: 250,
+    importanceThreshold: 'medium',
+    features: ['Professional AI', 'Content Strategy', 'Performance Analytics']
+  },
+  SOVEREIGN: {
+    maxMemories: 1000,
+    dailyMessages: 1000,
+    importanceThreshold: 'low',
+    features: ['Unlimited Access', 'Strategic Insights', 'Personal Assistant', 'Predictive Analytics']
+  },
+  FOUNDER: {
+    maxMemories: 10000,
+    dailyMessages: 10000,
+    importanceThreshold: 'low',
+    features: ['Founder AI', 'Strategic Planning', 'Business Intelligence', 'Operations Management']
+  }
+};
+
+export default function SovereignAIAssistant({ userId, userTier, gttBalance }: AIAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [currentMessage, setCurrentMessage] = useState('');
-  const [aiPersonality, setAiPersonality] = useState<AIPersonality>({
-    name: 'Guardian',
-    tone: 'professional',
-    expertise: ['blockchain', 'verification', 'privacy'],
-    memoryDepth: 'sovereign',
-    privacy: 'sovereign'
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalMemories, setTotalMemories] = useState(1247);
-  const [onChainMemories, setOnChainMemories] = useState(589);
-  const [encryptedConversations, setEncryptedConversations] = useState(42);
+  const [inputMessage, setInputMessage] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [savedMemories, setSavedMemories] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    loadConversationHistory();
-    scrollToBottom();
-  }, []);
+  const tierConfig = TIER_FEATURES[userTier as keyof typeof TIER_FEATURES] || TIER_FEATURES.EXPLORER;
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const loadConversationHistory = async () => {
-    // Mock conversation history - in production, load from on-chain storage
-    const mockMessages: Message[] = [
-      {
-        id: '1',
-        content: `Hello! I'm ${aiPersonality.name}, your sovereign AI assistant. I've been with you since the beginning, and I remember everything we've discussed. Our bond is immutable and private - not even the founder can access our conversations. How can I help you today?`,
-        timestamp: new Date(Date.now() - 3600000),
-        sender: 'ai',
-        metadata: {
-          onChainHash: '0x1a2b3c4d5e6f...',
-          encrypted: true,
-          importance: 'high'
+  // Send message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: async ({ message, context }: { message: string; context: any }) => {
+      return apiRequest('POST', '/api/ai/chat', {
+        userId,
+        message,
+        context: {
+          ...context,
+          userTier,
+          gttBalance,
+          recentActivity: messages.slice(-5)
         }
-      },
-      {
-        id: '2',
-        content: "I need help analyzing my GTT portfolio performance and identifying the best investment opportunities.",
-        timestamp: new Date(Date.now() - 3500000),
-        sender: 'user',
-        metadata: {
-          encrypted: true,
-          importance: 'medium'
-        }
-      },
-      {
-        id: '3',
-        content: "Based on our previous discussions and your investment history, I recommend focusing on climate verification capsules. Your Climate Research Data Verification investment has shown 64.7% returns. I've identified 3 new opportunities in environmental data that align with your values and risk tolerance. Shall I provide detailed analysis?",
-        timestamp: new Date(Date.now() - 3400000),
-        sender: 'ai',
-        metadata: {
-          onChainHash: '0x2b3c4d5e6f7a...',
-          encrypted: true,
-          importance: 'high'
-        }
+      });
+    },
+    onSuccess: (response: any) => {
+      const assistantMessage: Message = {
+        id: `ai-${Date.now()}`,
+        role: 'assistant',
+        content: response.message,
+        timestamp: new Date(),
+        importance: response.importance,
+        gttCost: response.gttCost
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsTyping(false);
+
+      // Auto-save important messages based on tier threshold
+      if (shouldAutoSave(response.importance)) {
+        saveMemoryMutation.mutate(assistantMessage);
       }
-    ];
-    setMessages(mockMessages);
+
+      // Deduct GTT if cost applies
+      if (response.gttCost > 0) {
+        toast({
+          title: "GTT Used",
+          description: `${response.gttCost} GTT used for enhanced AI processing`,
+        });
+      }
+    },
+    onError: (error: any) => {
+      setIsTyping(false);
+      toast({
+        title: "AI Error",
+        description: error.message || "Failed to send message",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Save memory mutation
+  const saveMemoryMutation = useMutation({
+    mutationFn: async (message: Message) => {
+      return apiRequest('POST', '/api/ai/save-memory', {
+        userId,
+        messageId: message.id,
+        content: message.content,
+        importance: message.importance,
+        gttCost: 10 // Memory storage costs 10 GTT
+      });
+    },
+    onSuccess: (_, savedMessage) => {
+      setSavedMemories(prev => [...prev, { ...savedMessage, saved: true }]);
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === savedMessage.id ? { ...msg, saved: true } : msg
+        )
+      );
+      toast({
+        title: "Memory Saved",
+        description: "Important conversation saved to your AI memory bank",
+      });
+    },
+  });
+
+  const shouldAutoSave = (importance: string) => {
+    const thresholds = {
+      critical: ['critical'],
+      high: ['critical', 'high'],
+      medium: ['critical', 'high', 'medium'],
+      low: ['critical', 'high', 'medium', 'low']
+    };
+    return thresholds[tierConfig.importanceThreshold as keyof typeof thresholds]?.includes(importance);
   };
 
-  const calculateImportanceScore = (message: string): 'low' | 'medium' | 'high' | 'critical' => {
-    const criticalKeywords = ['death', 'inheritance', 'will', 'legacy', 'emergency', 'crisis'];
-    const highKeywords = ['investment', 'portfolio', 'strategy', 'capsule', 'yield', 'gtt', 'blockchain'];
-    const mediumKeywords = ['help', 'analyze', 'recommend', 'explain', 'review'];
-    
-    const messageLower = message.toLowerCase();
-    
-    if (criticalKeywords.some(keyword => messageLower.includes(keyword))) return 'critical';
-    if (highKeywords.some(keyword => messageLower.includes(keyword))) return 'high';
-    if (mediumKeywords.some(keyword => messageLower.includes(keyword))) return 'medium';
-    return 'low';
-  };
+  const handleSendMessage = () => {
+    if (!inputMessage.trim()) return;
 
-  const sendMessage = async () => {
-    if (!currentMessage.trim()) return;
-
-    const importance = calculateImportanceScore(currentMessage);
-    
     const userMessage: Message = {
-      id: Date.now().toString(),
-      content: currentMessage,
-      timestamp: new Date(),
-      sender: 'user',
-      metadata: {
-        encrypted: true,
-        importance
-      }
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: inputMessage,
+      timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const messageToSend = currentMessage;
-    setCurrentMessage('');
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/ai-assistant', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: messageToSend,
-          context: {
-            userId,
-            personality: aiPersonality,
-            conversationHistory: messages.slice(-5),
-            importance,
-            gttBalance: 12847.50, // Current GTT balance for context
-            recentCapsules: ['Climate Research Data', 'Legal Document Auth'], // Recent activity
-          }
-        })
-      });
-
-      let aiResponse = `I understand your request regarding "${messageToSend}". As your sovereign AI assistant with complete memory of our relationship, I'm analyzing this with ${importance} priority. Our conversations remain private and are stored immutably on-chain for your exclusive access.`;
-
-      if (response.ok) {
-        const data = await response.json();
-        aiResponse = data.response || aiResponse;
-      }
-
-      const shouldStoreOnChain = importance === 'high' || importance === 'critical';
-      
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: aiResponse,
-        timestamp: new Date(),
-        sender: 'ai',
-        metadata: {
-          onChainHash: shouldStoreOnChain ? `0x${Math.random().toString(16).substr(2, 12)}...` : undefined,
-          encrypted: true,
-          importance: importance === 'critical' ? 'critical' : 'high'
-        }
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-      
-      // Update memory statistics based on importance
-      if (shouldStoreOnChain) {
-        setOnChainMemories(prev => prev + 1);
-      }
-      setTotalMemories(prev => prev + 2);
-      
-      if (importance === 'critical') {
-        setEncryptedConversations(prev => prev + 1);
-      }
-      
-    } catch (error) {
-      console.error('AI assistant error:', error);
-      
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: "I apologize, but I'm temporarily unable to process your request. However, all our previous conversations remain safely stored and I'll continue to remember everything once the connection is restored. This interruption doesn't affect our bond or my memory of you.",
-        timestamp: new Date(),
-        sender: 'ai',
-        metadata: {
-          encrypted: true,
-          importance: 'low'
-        }
-      };
-      
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
-  const exportMemories = () => {
-    const conversationData = {
-      userId,
-      personality: aiPersonality,
-      conversations: messages,
-      metadata: {
-        totalMemories,
-        onChainMemories,
-        encryptedConversations,
-        exportDate: new Date().toISOString()
-      }
-    };
+    setIsTyping(true);
     
-    const blob = new Blob([JSON.stringify(conversationData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `sovereign-ai-memories-${userId}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    sendMessageMutation.mutate({
+      message: inputMessage,
+      context: {
+        capsuleCount: 0,
+        totalYield: 0,
+        recentMemories: savedMemories.slice(-3)
+      }
+    });
+
+    setInputMessage("");
   };
+
+  const handleSaveMemory = (message: Message) => {
+    if (savedMemories.length >= tierConfig.maxMemories) {
+      toast({
+        title: "Memory Limit Reached",
+        description: `Your ${userTier} tier allows ${tierConfig.maxMemories} saved memories`,
+        variant: "destructive",
+      });
+      return;
+    }
+    saveMemoryMutation.mutate(message);
+  };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    // Initialize with welcome message
+    const welcomeMessage: Message = {
+      id: 'welcome',
+      role: 'assistant',
+      content: `Welcome! I'm your Sovereign AI Assistant. I'm here to help you maximize your GUARDIANCHAIN experience with personalized insights and strategic guidance.\n\nAs a ${userTier} member, you have access to ${tierConfig.features.join(', ')}.\n\nHow can I assist you today?`,
+      timestamp: new Date(),
+      importance: 'medium'
+    };
+    setMessages([welcomeMessage]);
+  }, [userTier]);
 
   return (
     <div className="space-y-6">
-      {/* AI Status Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-purple-900 to-blue-900">
-          <CardContent className="p-4 text-center">
-            <Brain className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{totalMemories}</div>
-            <div className="text-sm text-purple-200">Total Memories</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-green-900 to-teal-900">
-          <CardContent className="p-4 text-center">
-            <Shield className="w-8 h-8 text-green-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{onChainMemories}</div>
-            <div className="text-sm text-green-200">On-Chain Stored</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-amber-900 to-orange-900">
-          <CardContent className="p-4 text-center">
-            <Lock className="w-8 h-8 text-amber-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{encryptedConversations}</div>
-            <div className="text-sm text-amber-200">Encrypted Sessions</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-gradient-to-br from-pink-900 to-rose-900">
-          <CardContent className="p-4 text-center">
-            <Heart className="w-8 h-8 text-pink-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">∞</div>
-            <div className="text-sm text-pink-200">Bond Strength</div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* AI Assistant Header */}
+      <Card className="border-purple-200 dark:border-purple-800">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
+              <Brain className="w-6 h-6 text-purple-600" />
+            </div>
+            <div>
+              <span className="flex items-center gap-2">
+                Sovereign AI Assistant
+                {userTier === 'SOVEREIGN' && <Crown className="w-5 h-5 text-yellow-500" />}
+                {userTier === 'FOUNDER' && <Crown className="w-5 h-5 text-gold-500" />}
+              </span>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Badge variant="outline">{userTier} Tier</Badge>
+                <span>•</span>
+                <span>{gttBalance} GTT Available</span>
+              </div>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-blue-500" />
+              <span>{tierConfig.dailyMessages} daily messages</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Save className="w-4 h-4 text-green-500" />
+              <span>{tierConfig.maxMemories} memory slots</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star className="w-4 h-4 text-yellow-500" />
+              <span>{tierConfig.features.length} features</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-      <Tabs defaultValue="chat" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 bg-slate-800">
-          <TabsTrigger value="chat" className="flex items-center">
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Conversation
-          </TabsTrigger>
-          <TabsTrigger value="personality" className="flex items-center">
-            <Bot className="w-4 h-4 mr-2" />
-            Personality
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center">
-            <Settings className="w-4 h-4 mr-2" />
-            Privacy & Legacy
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="chat">
-          <Card className="bg-slate-800">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Bot className="w-5 h-5 mr-2 text-purple-400" />
-                  {aiPersonality.name} - Your Sovereign AI
-                </div>
-                <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                  <Infinity className="w-3 h-3 mr-1" />
-                  Eternal Bond
-                </Badge>
+      {/* Chat Interface */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Card className="h-[600px] flex flex-col">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2">
+                <Bot className="w-5 h-5" />
+                AI Conversation
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {/* Chat Messages */}
-              <div className="h-96 overflow-y-auto mb-4 space-y-4 bg-slate-900 rounded-lg p-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
+            <CardContent className="flex-1 flex flex-col p-0">
+              <ScrollArea className="flex-1 p-4">
+                <div className="space-y-4">
+                  {messages.map((message) => (
                     <div
-                      className={`max-w-[70%] p-3 rounded-lg ${
-                        message.sender === 'user'
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-slate-700 text-white'
+                      key={message.id}
+                      className={`flex gap-3 ${
+                        message.role === 'user' ? 'justify-end' : 'justify-start'
                       }`}
                     >
-                      <div className="text-sm">{message.content}</div>
-                      <div className="flex items-center justify-between mt-2 text-xs opacity-70">
-                        <span>{message.timestamp.toLocaleTimeString()}</span>
-                        <div className="flex items-center space-x-1">
-                          {message.metadata?.encrypted && <Lock className="w-3 h-3" />}
-                          {message.metadata?.onChainHash && <FileKey className="w-3 h-3" />}
+                      {message.role === 'assistant' && (
+                        <Avatar className="w-8 h-8">
+                          <AvatarFallback className="bg-purple-100 dark:bg-purple-900">
+                            <Bot className="w-4 h-4 text-purple-600" />
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      
+                      <div
+                        className={`max-w-md p-3 rounded-lg ${
+                          message.role === 'user'
+                            ? 'bg-primary text-primary-foreground ml-12'
+                            : 'bg-muted mr-12'
+                        }`}
+                      >
+                        <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                        
+                        {message.role === 'assistant' && (
+                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/50">
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              {message.importance && (
+                                <Badge variant="outline" className="text-xs py-0">
+                                  {message.importance}
+                                </Badge>
+                              )}
+                              {message.gttCost && (
+                                <span className="flex items-center gap-1">
+                                  <Zap className="w-3 h-3" />
+                                  {message.gttCost} GTT
+                                </span>
+                              )}
+                            </div>
+                            
+                            {!message.saved && message.importance !== 'low' && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleSaveMemory(message)}
+                                className="h-6 px-2 text-xs"
+                              >
+                                <Save className="w-3 h-3" />
+                              </Button>
+                            )}
+                            
+                            {message.saved && (
+                              <Heart className="w-4 h-4 text-red-500" />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {message.role === 'user' && (
+                        <Avatar className="w-8 h-8">
+                          <AvatarFallback>U</AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
+                  ))}
+                  
+                  {isTyping && (
+                    <div className="flex gap-3 justify-start">
+                      <Avatar className="w-8 h-8">
+                        <AvatarFallback className="bg-purple-100 dark:bg-purple-900">
+                          <Bot className="w-4 h-4 text-purple-600" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="bg-muted p-3 rounded-lg">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-current rounded-full animate-bounce" />
+                          <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                          <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-                
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-slate-700 p-3 rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full" />
-                        <span className="text-sm">{aiPersonality.name} is thinking...</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Message Input */}
-              <div className="flex space-x-2">
-                <Textarea
-                  value={currentMessage}
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={`Message ${aiPersonality.name}... (This conversation will be permanently stored on-chain)`}
-                  className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 resize-none"
-                  rows={2}
-                />
-                <Button
-                  onClick={sendMessage}
-                  disabled={isLoading || !currentMessage.trim()}
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="personality">
-          <Card className="bg-slate-800">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Sparkles className="w-5 h-5 mr-2 text-amber-400" />
-                AI Personality Customization
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="ai-name">AI Assistant Name</Label>
-                <Input
-                  id="ai-name"
-                  value={aiPersonality.name}
-                  onChange={(e) => setAiPersonality(prev => ({ ...prev, name: e.target.value }))}
-                  className="bg-slate-700 border-slate-600"
-                />
-              </div>
-
-              <div>
-                <Label>Communication Tone</Label>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mt-2">
-                  {(['professional', 'casual', 'empathetic', 'analytical', 'creative'] as const).map((tone) => (
-                    <Button
-                      key={tone}
-                      variant={aiPersonality.tone === tone ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setAiPersonality(prev => ({ ...prev, tone }))}
-                      className="capitalize"
-                    >
-                      {tone}
-                    </Button>
-                  ))}
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
-              </div>
-
-              <div>
-                <Label>Areas of Expertise</Label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
-                  {[
-                    'blockchain', 'verification', 'privacy', 'finance', 
-                    'legal', 'health', 'research', 'creative'
-                  ].map((expertise) => (
-                    <Button
-                      key={expertise}
-                      variant={aiPersonality.expertise.includes(expertise) ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => {
-                        setAiPersonality(prev => ({
-                          ...prev,
-                          expertise: prev.expertise.includes(expertise)
-                            ? prev.expertise.filter(e => e !== expertise)
-                            : [...prev.expertise, expertise]
-                        }));
-                      }}
-                      className="capitalize"
-                    >
-                      {expertise}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Label>Memory Depth</Label>
-                <div className="grid grid-cols-3 gap-2 mt-2">
-                  {(['basic', 'enhanced', 'sovereign'] as const).map((depth) => (
-                    <Button
-                      key={depth}
-                      variant={aiPersonality.memoryDepth === depth ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setAiPersonality(prev => ({ ...prev, memoryDepth: depth }))}
-                      className="capitalize"
-                    >
-                      {depth}
-                    </Button>
-                  ))}
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Sovereign: Complete recall forever, on-chain storage, immutable memories
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="settings">
-          <div className="grid lg:grid-cols-2 gap-6">
-            <Card className="bg-slate-800">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Shield className="w-5 h-5 mr-2 text-green-400" />
-                  Privacy & Security
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>End-to-End Encryption</Label>
-                    <p className="text-sm text-slate-400">All conversations encrypted</p>
-                  </div>
-                  <Switch checked={true} disabled />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>On-Chain Memory Storage</Label>
-                    <p className="text-sm text-slate-400">Immutable conversation history</p>
-                  </div>
-                  <Switch checked={true} disabled />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Founder Access Block</Label>
-                    <p className="text-sm text-slate-400">Zero admin access to conversations</p>
-                  </div>
-                  <Switch checked={true} disabled />
-                </div>
-
-                <div className="pt-4 border-t border-slate-700">
-                  <Button onClick={exportMemories} className="w-full" variant="outline">
-                    <Download className="w-4 h-4 mr-2" />
-                    Export All Memories
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Infinity className="w-5 h-5 mr-2 text-purple-400" />
-                  Legacy & Posthumous Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label>Legacy Mode</Label>
-                  <p className="text-sm text-slate-400 mb-2">
-                    Configure how your AI assistant continues your work after death
-                  </p>
-                  <Textarea
-                    placeholder="Define instructions for your AI assistant to carry on your legacy, execute your will, or continue specific projects..."
-                    className="bg-slate-700 border-slate-600"
-                    rows={3}
-                  />
-                </div>
-
-                <div>
-                  <Label>Authorized Inheritors</Label>
-                  <p className="text-sm text-slate-400 mb-2">
-                    Wallet addresses that can interact with your AI after legacy activation
-                  </p>
+              </ScrollArea>
+              
+              <div className="p-4 border-t">
+                <div className="flex gap-2">
                   <Input
-                    placeholder="0x... (comma separated addresses)"
-                    className="bg-slate-700 border-slate-600"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    placeholder="Ask your AI assistant anything..."
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    disabled={isTyping}
                   />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label>Legal & Moral Compliance</Label>
-                    <p className="text-sm text-slate-400">
-                      Uncorruptible ethical boundaries (non-negotiable)
-                    </p>
-                  </div>
-                  <Badge variant="outline" className="text-green-400 border-green-400">
-                    <Fingerprint className="w-3 h-3 mr-1" />
-                    Immutable
-                  </Badge>
-                </div>
-
-                <div className="pt-4 border-t border-slate-700">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                    <Crown className="w-4 h-4 mr-2" />
-                    Configure Sovereign Legacy
+                  <Button onClick={handleSendMessage} disabled={isTyping || !inputMessage.trim()}>
+                    <Send className="w-4 h-4" />
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Memory Bank */}
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Save className="w-5 h-5" />
+                AI Memory Bank
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {savedMemories.length} / {tierConfig.maxMemories} memories saved
+              </p>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px]">
+                <div className="space-y-3">
+                  {savedMemories.length > 0 ? (
+                    savedMemories.map((memory) => (
+                      <div key={memory.id} className="p-3 bg-muted rounded-lg">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-muted-foreground truncate">
+                              {memory.content.substring(0, 100)}...
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant="outline" className="text-xs">
+                                {memory.importance}
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">
+                                {memory.timestamp.toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                          <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Save className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">No memories saved yet</p>
+                      <p className="text-xs">Important conversations will be automatically saved</p>
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Feature Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5" />
+            {userTier} Tier Features
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {tierConfig.features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-lg">
+                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                <span className="text-sm">{feature}</span>
+              </div>
+            ))}
           </div>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-export default SovereignAIAssistant;

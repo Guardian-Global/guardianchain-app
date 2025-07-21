@@ -1,5 +1,5 @@
-import ProfileDashboard from "@/components/profile/ProfileDashboard";
+import EnhancedProfileDashboard from "@/components/profile/EnhancedProfileDashboard";
 
 export default function Profile() {
-  return <ProfileDashboard />;
+  return <EnhancedProfileDashboard />;
 }

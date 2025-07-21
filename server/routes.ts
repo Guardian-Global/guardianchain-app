@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import * as capsuleYieldRoutes from "./routes/capsule-yield";
+import profileRouter from "./routes/profile";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -257,6 +258,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/capsules/:capsuleId/yield-history', isAuthenticated, capsuleYieldRoutes.getCapsuleYieldHistory);
   app.post('/api/admin/capsules/update-yield', isAuthenticated, capsuleYieldRoutes.updateCapsuleYield);
   app.post('/api/admin/capsules/verify', isAuthenticated, capsuleYieldRoutes.verifyCapsuleYield);
+
+  // Profile and AI routes
+  app.use(profileRouter);
 
   // 100% Compliance Score API Endpoint
   app.get('/api/compliance/score', async (req, res) => {
