@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
@@ -233,10 +233,10 @@ contract StakingPool is ReentrancyGuard, Pausable, Ownable {
     function exit() external {
         UserInfo memory user = users[msg.sender];
         if (user.stakedAmount > 0) {
-            withdraw(user.stakedAmount);
+            _withdraw(user.stakedAmount);
         }
         if (user.rewards > 0) {
-            claimRewards();
+            _claimRewards();
         }
     }
     

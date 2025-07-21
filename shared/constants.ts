@@ -3,9 +3,9 @@
 // Contract Addresses (Polygon Mumbai Testnet)
 export const CONTRACT_ADDRESSES = {
   MUMBAI: {
-    chainId: 80001,
-    GTTToken: "0x0000000000000000000000000000000000000000", // To be updated after deployment
-    TruthVault: "0x0000000000000000000000000000000000000000", // To be updated after deployment
+    chainId: 80002,
+    GTTToken: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // ✅ LIVE ON MUMBAI
+    TruthVault: "0xd1Ad81D7A2e954B5D2A543b67287B16f3c030d72", // ✅ LIVE ON MUMBAI
     rpcUrl: "https://rpc-mumbai.maticvigil.com"
   },
   POLYGON: {

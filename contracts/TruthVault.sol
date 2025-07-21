@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "./SimpleGTTToken.sol";
 
 /**
@@ -36,7 +36,7 @@ contract TruthVault is Ownable, ReentrancyGuard, Pausable {
     event YieldClaimed(address indexed user, bytes32 indexed capsuleId, uint256 amount);
     event YieldConfigUpdated(uint256 baseAmount, uint256 verificationBonus, uint256 shareBonus);
     
-    constructor(address _gttToken) {
+    constructor(address _gttToken) Ownable(msg.sender) {
         require(_gttToken != address(0), "Invalid GTT token address");
         gttToken = SimpleGTTToken(_gttToken);
     }

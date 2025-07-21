@@ -23,7 +23,7 @@ const config = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 80002,
       gas: 2100000,
-      gasPrice: 8000000000,
+      gasPrice: 30000000000,
     },
     sepolia: {
       url: process.env.POLYGON_RPC_URL || `https://eth-sepolia.g.alchemy.com/v2/${process.env.VITE_ALCHEMY_API_KEY}`,
@@ -35,10 +35,10 @@ const config = {
     },
   },
   paths: {
-    sources: "./solidity/contracts",
-    tests: "./solidity/test",
-    cache: "./solidity/cache",
-    artifacts: "./solidity/artifacts",
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts",
   },
 };
 
