@@ -283,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enhanced live token metrics API with comprehensive data
-  app.get('/api/live-data/token-metrics', async (req, res) => {
+  const tokenMetricsHandler = async (req, res) => {
     try {
       // Generate dynamic, realistic token data with variance
       const basePrice = 0.0247;
@@ -406,7 +406,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Token metrics error:', error);
       res.status(500).json({ error: 'Failed to fetch token metrics' });
     }
-  });
+  };
+
+  // Add both endpoints for compatibility
+  app.get('/api/live-data/token-metrics', tokenMetricsHandler);
+  app.get('/api/token/metrics', tokenMetricsHandler);
 
   // Live trading data API
   app.get('/api/live-data/trading/:pair', async (req, res) => {

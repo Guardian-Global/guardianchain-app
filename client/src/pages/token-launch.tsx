@@ -183,7 +183,7 @@ export default function TokenLaunchPage() {
 
   // Fetch live token metrics with hourly refresh minimum
   const { data: tokenMetrics, isLoading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useQuery<TokenMetrics>({
-    queryKey: ['/api/live-data/token-metrics'],
+    queryKey: ['/api/token/metrics'],
     refetchInterval: 3600000, // Refresh every hour (3600000ms)
     retry: 3,
     retryDelay: 1000,
