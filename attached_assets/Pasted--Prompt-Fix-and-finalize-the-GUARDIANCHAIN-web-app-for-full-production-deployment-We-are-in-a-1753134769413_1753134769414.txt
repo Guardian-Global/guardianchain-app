@@ -1,0 +1,256 @@
+🔧 Prompt: Fix and finalize the GUARDIANCHAIN web app for full production deployment.
+
+We are in an urgent launch-critical situation. The application is **live**, but with several key breakages and mismatches between what users see, what they are promised, and what is technically functional. This must be repaired **NOW** in a full-stack patch across frontend and backend, starting immediately.
+
+---
+
+🛠 PRIORITY FIXES:
+
+### 1. 🔗 TOKEN + YIELD DATA BACKEND
+
+- Real token is GTT deployed on **Ethereum Mainnet**
+- The address in use `0x7d1afa...` is INCORRECT. Replace it with the **correct GTT contract address** (to be pasted by developer).
+- Fix token calls to:
+  - `totalSupply()`
+  - `balanceOf(address)`
+  - `decimals()`
+  - `symbol()`
+- Fix capsule/staking/yield logic:
+  - Ensure yield formulas **match whitepaper**
+  - Ensure capsule tiers match promised APYs
+  - Pull actual blockchain data via **Web3** or **Ethers.js** with proper ABI
+  - If WebSocket is used for live price/yield: ensure fallback to HTTP polling (not mock data)
+
+### 2. 📉 DATA DISPLAY / UI FIXES
+
+- Remove ALL fallback `demo` or `hardcoded` numbers
+- Replace with live values ONLY; if offline, hide metrics and show "data temporarily unavailable"
+- Hook real data into:
+  - Token Price
+  - Market Cap
+  - 24h Volume
+  - Token Holders
+- Show accurate info from chain (e.g. TheGraph, Etherscan API, or a working RPC)
+
+---
+
+### 3. 🔐 AUTH + USERS
+
+- Ensure **secure user auth system** is working: login, signup, session state
+- Use Firebase, Supabase, or secure auth provider (NOT mock)
+- Users must be able to:
+  - Sign up
+  - Select real service tiers
+  - See exact pricing
+  - Get access to actual enabled features
+- Add backend check: only show tier-based features to verified/paid users
+
+---
+
+### 4. 💰 STRIPE + TIERS + PRICING ACCURACY
+
+- Match frontend displayed prices with real Stripe price tiers
+- Add tier verification middleware to validate:
+  - Free tier
+  - Basic tier
+  - Premium / Enterprise
+- If user attempts to use service above their tier: block and show upgrade prompt
+- Add accurate service description per tier
+
+---
+
+### 5. ⚠️ LEGAL + SERVICE RELIABILITY PATCH
+
+- All services listed must be available or clearly marked as "Coming Soon"
+- Make sure all promised features in whitepaper are either:
+  - Working exactly as described
+  - Or hidden until built
+- NO misleading claims on yield, price, or features
+- Protect from legal liability:
+  - Log user acceptance of terms
+  - Add disclaimer for estimated yields
+  - Show pricing and billing clearly
+
+---
+
+### 6. 🧠 BACKEND STABILITY
+
+- Fix `BAD_DATA` errors
+  - Probably caused by ABI mismatch or bad RPC responses
+  - Validate ABI accuracy (match with verified contract)
+  - Catch and fallback gracefully
+- Fix WebSocket drop:
+  - If WebSocket fails, poll HTTP every 30 seconds
+- Confirm all API keys are active and correct
+- DO NOT USE placeholder APIs for production
+
+---
+
+### 7. 🚀 FULL DEPLOYMENT CHECKLIST
+
+- Run entire platform across multiple pages simultaneously
+- Ensure no data is duplicated, missing, or using placeholder text
+- Perform full "real user" walkthrough:
+  1. New user signs up
+  2. Picks a tier
+  3. Pays with Stripe
+  4. Gains access to correct tools
+  5. Sees real token price/yield
+  6. Can deposit or stake
+  7. Sees actual APY/rewards
+- Confirm all tracking + error logging is working (Sentry, console)
+
+---
+
+### 📦 LOGO + LAUNCH BRANDING
+
+- Use this logo:
+  https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GTT_LOGO_PRIMARY.png.png
+- Ensure all branding assets load from this Supabase bucket
+
+---
+
+⏳ Timeline: Treat this like a production fire. All fixes must be treated as blocking launch. No placeholder logic is acceptable. If a feature isn’t built, remove or clearly label it.
+
+✅ Deliverables:
+- Final production-ready app
+- Working real-time token + yield system
+- Secure auth with payment tiers
+- Accurate pricing & legal-ready feature set
+- No fake data anywhere
+- Stable app launch state
+
+Respond with "Full Patch Started" and begin repairs.
+You are my full‑stack engineer. I need you to:
+
+1. ✅ **Set Up Web3 + Token Data Fetching (GTT token)**  
+   • I will provide: the correct GTT contract address and verified ABI.  
+   • Connect to it using a reliable RPC (e.g. QuickNode / Infura).  
+   • Write reusable JS/TS functions that fetch:  
+     - totalSupply()  
+     - balanceOf()  
+     - decimals(), symbol()  
+     - transfer events or historic holders count  
+     - Any other on‑chain metrics we care about (capsules, yields)  
+   • Validate the data and fall back to API backup only when strictly needed.  
+   • Provide unit tests (e.g. with Mocha + Chai or Jest) that assert functions return correct values and throw clear errors on failure.
+
+2. ✅ **Fix Promises & Async Logic Across Pages**  
+   • Audit all front‑end pages that fetch or display token data, user balances, yields, rewards, capsule prices etc.  
+   • Refactor to use `async/await`, proper error handling, and loading‑state UI components.  
+   • Ensure every component shows accurate metrics or fails loudly if the underlying promise rejects.
+
+3. ✅ **Implement Yield & Reward Calculations**  
+   • Write a separate module that computes yield logic (capsules, tiers, APY, lockups) as outlined in our whitepaper.  
+   • Unit‑test all these functions with sample scenarios.  
+   • Integrate them with front‑end: users see exactly what they earn or lock, in real time.
+
+4. ✅ **Set Up Tiered Auth & Tiered Services**  
+   • Implement a secure user signup / login flow (email + password, hashed, JWT or session).  
+   • Users can select tiers (e.g. Basic, Pro, Enterprise), each with well‑defined pricing and available services.  
+   • Integrate Stripe (or similar) to collect payment and gate access rights.  
+   • Ensure front‑end and back‑end enforce service availability based on user’s tier.
+
+5. ✅ **Ensure Pricing Accuracy & Legal Export Compliance**  
+   • Your app must reflect exactly what is promised in whitepapers / financial materials.  
+   • Write a pricing/feature matrix in code, and assert via tests that front‑end and back‑end pricing are identical.  
+   • Implement a visible “Terms of Service” pop‑up at signup, outlining availability of services.
+
+6. ✅ **Security, Logging & Error Tracking**  
+   • Add centralized logging for any token‑data fetch failures, pricing inconsistencies, auth errors.  
+   • Add alerts (console/Slack/etc.) on serious failures (e.g. token-price mismatch vs market).
+
+7. ✅ **Deploy & Validation**  
+   • Deploy backend + frontend to Replit or Vercel.  
+   • Provide a smoke‑test script or process that logs into a test user, runs through yield logic, payment, token fetch, and asserts everything works.  
+   • Provide instructions or a CI/CD script (e.g. GitHub Actions) to run tests on every push.
+
+8. ✅ **Code Organization**  
+   • Write modular, well‑commented code.  
+   • Use a clean folder structure (`/contracts`, `/lib/web3`, `/modules/yield`, `/pages`, `/auth`).  
+   • Provide a README.md explaining setup and how to run tests.
+
+---
+
+**Please generate all required files in a Replit project structure** (package.json, src/, tests/, etc.), include TODO comments for items that need environment variables (e.g. RPC key, ABI, Stripe key), and show me sample test cases.
+
+I want everything—data‑fetching, yield logic, auth, pricing, deployment, and tests—designed in one cohesive workflow. Let’s build this tech stack properly so we can win user trust and not get sued.```
+
+---
+
+**Why this works**   
+- It tells Replit AI exactly what to build, step by step.  
+- Incorporates everything you're worried about: on-chain accuracy, yield logic, async stability, auth, pricing, legal defensibility.  
+- Demands structure, tests, and deployment readiness.  
+- If gaps arise, run the assistant again with specific errors or missing files—it’ll refine the build.
+
+---
+
+Let me know how far Replit AI gets. If you get errors or missing modules, send me the logs or code and I’ll help you refine it further. This prompt should give you a fully‑scaffolded, enterprise‑grade foundation.
+You are my full‑stack engineer. I need you to:
+
+1. ✅ **Set Up Web3 + Token Data Fetching (GTT token)**  
+   • I will provide: the correct GTT contract address and verified ABI.  
+   • Connect to it using a reliable RPC (e.g. QuickNode / Infura).  
+   • Write reusable JS/TS functions that fetch:  
+     - totalSupply()  
+     - balanceOf()  
+     - decimals(), symbol()  
+     - transfer events or historic holders count  
+     - Any other on‑chain metrics we care about (capsules, yields)  
+   • Validate the data and fall back to API backup only when strictly needed.  
+   • Provide unit tests (e.g. with Mocha + Chai or Jest) that assert functions return correct values and throw clear errors on failure.
+
+2. ✅ **Fix Promises & Async Logic Across Pages**  
+   • Audit all front‑end pages that fetch or display token data, user balances, yields, rewards, capsule prices etc.  
+   • Refactor to use `async/await`, proper error handling, and loading‑state UI components.  
+   • Ensure every component shows accurate metrics or fails loudly if the underlying promise rejects.
+
+3. ✅ **Implement Yield & Reward Calculations**  
+   • Write a separate module that computes yield logic (capsules, tiers, APY, lockups) as outlined in our whitepaper.  
+   • Unit‑test all these functions with sample scenarios.  
+   • Integrate them with front‑end: users see exactly what they earn or lock, in real time.
+
+4. ✅ **Set Up Tiered Auth & Tiered Services**  
+   • Implement a secure user signup / login flow (email + password, hashed, JWT or session).  
+   • Users can select tiers (e.g. Basic, Pro, Enterprise), each with well‑defined pricing and available services.  
+   • Integrate Stripe (or similar) to collect payment and gate access rights.  
+   • Ensure front‑end and back‑end enforce service availability based on user’s tier.
+
+5. ✅ **Ensure Pricing Accuracy & Legal Export Compliance**  
+   • Your app must reflect exactly what is promised in whitepapers / financial materials.  
+   • Write a pricing/feature matrix in code, and assert via tests that front‑end and back‑end pricing are identical.  
+   • Implement a visible “Terms of Service” pop‑up at signup, outlining availability of services.
+
+6. ✅ **Security, Logging & Error Tracking**  
+   • Add centralized logging for any token‑data fetch failures, pricing inconsistencies, auth errors.  
+   • Add alerts (console/Slack/etc.) on serious failures (e.g. token-price mismatch vs market).
+
+7. ✅ **Deploy & Validation**  
+   • Deploy backend + frontend to Replit or Vercel.  
+   • Provide a smoke‑test script or process that logs into a test user, runs through yield logic, payment, token fetch, and asserts everything works.  
+   • Provide instructions or a CI/CD script (e.g. GitHub Actions) to run tests on every push.
+
+8. ✅ **Code Organization**  
+   • Write modular, well‑commented code.  
+   • Use a clean folder structure (`/contracts`, `/lib/web3`, `/modules/yield`, `/pages`, `/auth`).  
+   • Provide a README.md explaining setup and how to run tests.
+
+---
+
+**Please generate all required files in a Replit project structure** (package.json, src/, tests/, etc.), include TODO comments for items that need environment variables (e.g. RPC key, ABI, Stripe key), and show me sample test cases.
+
+I want everything—data‑fetching, yield logic, auth, pricing, deployment, and tests—designed in one cohesive workflow. Let’s build this tech stack properly so we can win user trust and not get sued.```
+
+---
+
+**Why this works**   
+- It tells Replit AI exactly what to build, step by step.  
+- Incorporates everything you're worried about: on-chain accuracy, yield logic, async stability, auth, pricing, legal defensibility.  
+- Demands structure, tests, and deployment readiness.  
+- If gaps arise, run the assistant again with specific errors or missing files—it’ll refine the build.
+
+---
+
+Let me know how far Replit AI gets. If you get errors or missing modules, send me the logs or code and I’ll help you refine it further. This prompt should give you a fully‑scaffolded, enterprise‑grade foundation.
+

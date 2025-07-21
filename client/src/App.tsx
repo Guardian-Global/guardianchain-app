@@ -73,6 +73,7 @@ import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
 import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/legal/privacy";
+import { AuthProvider } from "@/hooks/useAuth";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
 import SimpleTokenLaunch from "@/pages/simple-token-launch";
@@ -185,18 +186,20 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <AssetProvider>
-            <TooltipProvider>
-              <main className="flex-1">
-                <Router />
-              </main>
-              <Toaster />
-            </TooltipProvider>
-          </AssetProvider>
-        </ThemeProvider>
-      </WalletProvider>
+      <AuthProvider>
+        <WalletProvider>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <AssetProvider>
+              <TooltipProvider>
+                <main className="flex-1">
+                  <Router />
+                </main>
+                <Toaster />
+              </TooltipProvider>
+            </AssetProvider>
+          </ThemeProvider>
+        </WalletProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

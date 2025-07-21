@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/components/web3/theme-provider";
+import { AuthButton } from "@/components/auth/AuthButton";
 import { useAuth } from "@/hooks/useAuth";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
 import { Badge } from "@/components/ui/badge";
@@ -344,9 +345,19 @@ export default function EnhancedMegaNavigation() {
                       );
                     })}
                   </div>
+
+                  {/* Auth Controls in Mobile */}
+                  <div className="mt-6 pt-6 border-t border-slate-800">
+                    <AuthButton />
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
+
+            {/* Desktop Auth Button */}
+            <div className="hidden lg:flex">
+              <AuthButton />
+            </div>
           </div>
         </div>
       </div>

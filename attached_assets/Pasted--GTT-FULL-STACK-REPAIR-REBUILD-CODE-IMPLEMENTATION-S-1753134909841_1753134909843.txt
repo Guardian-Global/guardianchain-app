@@ -1,0 +1,190 @@
+// ✅ GTT FULL-STACK REPAIR & REBUILD CODE IMPLEMENTATION
+
+// -------------------------------
+// SECTION 1: CORRECT CONTRACT INTEGRATION
+// -------------------------------
+// File: lib/web3/token.js
+
+import { ethers } from 'ethers';
+
+const GTT_ABI = [
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function decimals() view returns (uint8)",
+  "function totalSupply() view returns (uint256)",
+  "function balanceOf(address) view returns (uint256)",
+  "event Transfer(address indexed from, address indexed to, uint256 value)"
+];
+
+const GTT_ADDRESS = process.env.GTT_CONTRACT_ADDRESS;
+const RPC_URL = process.env.RPC_URL;
+
+const provider = new ethers.JsonRpcProvider(RPC_URL);
+const gttContract = new ethers.Contract(GTT_ADDRESS, GTT_ABI, provider);
+
+export async function fetchTokenData() {
+  try {
+    const [name, symbol, decimals, totalSupply] = await Promise.all([
+      gttContract.name(),
+      gttContract.symbol(),
+      gttContract.decimals(),
+      gttContract.totalSupply()
+    ]);
+
+    return { name, symbol, decimals, totalSupply: totalSupply.toString() };
+  } catch (err) {
+    console.error('Token data fetch failed:', err);
+    throw new Error('TokenFetchError');
+  }
+}
+
+// -------------------------------
+// SECTION 2: YIELD + CAPSULE ENGINE
+// -------------------------------
+// File: lib/finance/engine.js
+
+export function calculateYield({ tier, amount, duration }) {
+  const apyRates = {
+    basic: 0.05,
+    pro: 0.12,
+    enterprise: 0.25
+  };
+  const rate = apyRates[tier.toLowerCase()] || 0;
+  const yieldEarned = amount * rate * (duration / 12);
+  return { yieldEarned, rate };
+}
+
+export function capsuleRewards(amountStaked) {
+  if (amountStaked >= 10000) return 'Platinum Capsule';
+  if (amountStaked >= 1000) return 'Gold Capsule';
+  return 'Silver Capsule';
+}
+
+// -------------------------------
+// SECTION 3: PRICING + TIER SYSTEM
+// -------------------------------
+// File: data/pricing.json
+
+{
+  "free": {
+    "price": 0,
+    "features": ["Read-only access", "1 capsule"]
+  },
+  "basic": {
+    "price": 9,
+    "features": ["Token dashboard", "3 capsules"]
+  },
+  "pro": {
+    "price": 29,
+    "features": ["Advanced analytics", "10 capsules"]
+  },
+  "enterprise": {
+    "price": 99,
+    "features": ["Unlimited access", "Dedicated support"]
+  }
+}
+
+// File: modules/tiers.js
+
+import pricing from '../data/pricing.json';
+
+export function getTierDetails(tier) {
+  return pricing[tier] || pricing.free;
+}
+
+// -------------------------------
+// SECTION 4: AUTH + ACCOUNTS
+// -------------------------------
+// File: middleware/auth.js
+
+export function requireAuth(req, res, next) {
+  if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
+  next();
+}
+
+export function requireTier(tier) {
+  return (req, res, next) => {
+    if (!req.user || req.user.tier !== tier) {
+      return res.status(403).json({ message: 'Insufficient tier' });
+    }
+    next();
+  };
+}
+
+// -------------------------------
+// SECTION 5: TESTING + BACKUPS
+// -------------------------------
+// File: tests/token.test.js
+
+import { fetchTokenData } from '../lib/web3/token';
+
+test('fetchTokenData should return name and totalSupply', async () => {
+  const result = await fetchTokenData();
+  expect(result.name).toBeTruthy();
+  expect(Number(result.totalSupply)).toBeGreaterThan(0);
+});
+
+// -------------------------------
+// SECTION 6: LEGAL COMPLIANCE & FAILOVER
+// -------------------------------
+// File: docs/compliance.json
+
+{
+  "serviceScope": "Access to token data, analytics, and capsule logic per tier",
+  "uptime": "99.5%",
+  "yieldDisclaimer": "Yields are estimated and subject to market volatility. Not financial advice."
+}
+
+// -------------------------------
+// SECTION 7: DEPLOYMENT + CI/CD
+// -------------------------------
+// File: .github/workflows/deploy.yml
+
+name: Deploy & Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install deps
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Deploy (Replit/Vercel)
+        run: echo "Trigger your deployment command here"
+
+// File: README.md (outline)
+
+# GTT Platform
+
+## Setup
+1. Create `.env` file using `.env.template`
+2. Run `npm install`
+3. Start app with `npm run dev`
+
+## Test
+Run `npm test`
+
+## Deploy
+Push to `main` triggers CI/CD deployment.
+
+---
+
+**Initial Test Users:**
+- Basic: user1@test.com / password123
+- Pro: user2@test.com / password123
+- Enterprise: user3@test.com / password123
+
+Simulate yield by calling `calculateYield()` with test amounts and tiers.
+
+// ✅ END OF IMPLEMENTATION

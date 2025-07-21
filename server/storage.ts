@@ -22,6 +22,19 @@ export interface IStorage {
   updateUser(id: string, userData: Partial<UpsertUser>): Promise<User>;
   updateUserTier(id: string, tier: string): Promise<User | undefined>;
   updateUserLastLogin(userId: string): Promise<void>;
+  updateUserStake(userId: string, stakeAmount: number): Promise<void>;
+  createUser(userData: {
+    email: string;
+    passwordHash: string;
+    firstName?: string;
+    lastName?: string;
+    tier: string;
+    gttStakeAmount: number;
+    emailVerified: boolean;
+    isActive: boolean;
+    agreedToTermsAt: Date;
+  }): Promise<User>;
+  getUserById(userId: string): Promise<User | undefined>;
   
   // Capsule operations
   createCapsule(capsuleData: any): Promise<Capsule>;
@@ -126,6 +139,52 @@ export class DatabaseStorage implements IStorage {
         updatedAt: new Date()
       })
       .where(eq(users.id, userId));
+  }
+
+  async updateUserStake(userId: string, stakeAmount: number): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        gttBalance: stakeAmount.toString(),
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async createUser(userData: {
+    email: string;
+    passwordHash: string;
+    firstName?: string;
+    lastName?: string;
+    tier: string;
+    gttStakeAmount: number;
+    emailVerified: boolean;
+    isActive: boolean;
+    agreedToTermsAt: Date;
+  }): Promise<User> {
+    const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const [user] = await db
+      .insert(users)
+      .values({
+        id: userId,
+        email: userData.email,
+        passwordHash: userData.passwordHash,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        userTier: userData.tier,
+        gttBalance: userData.gttStakeAmount.toString(),
+        isActive: userData.isActive,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+      .returning();
+    
+    return user;
+  }
+
+  async getUserById(userId: string): Promise<User | undefined> {
+    return this.getUser(userId);
   }
 
   // Capsule operations

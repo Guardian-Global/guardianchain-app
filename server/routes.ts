@@ -15,8 +15,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Public authentication routes (for direct user registration/login)
   app.use('/api/auth', publicAuthRouter);
   
+  // Pricing routes
+  app.use('/api/pricing', async (req, res, next) => {
+    // Import pricing routes dynamically
+    const pricingRouter = (await import('./routes/pricing')).default;
+    pricingRouter(req, res, next);
+  });
+  
   // Token data routes (public access for token launch page)
   app.use('/api/token', tokenDataRouter);
+  
+  // Real blockchain data routes
+  app.use('/api/blockchain', async (req, res, next) => {
+    const realDataRouter = (await import('./routes/token-real-data')).default;
+    realDataRouter(req, res, next);
+  });
   
   // GTT Live Data endpoint (legacy support)
   app.get('/api/gtt/live-data', (req, res) => {
