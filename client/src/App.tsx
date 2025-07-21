@@ -158,6 +158,7 @@ function Router() {
         <Route path="/asset-test" component={QuickAssetTest} />
         <Route path="/master-access" component={MasterAccess} />
         <Route path="/profile-customization" component={ProfileCustomization} />
+        <Route path="/upgrade" component={() => <div>Upgrade page coming soon</div>} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         

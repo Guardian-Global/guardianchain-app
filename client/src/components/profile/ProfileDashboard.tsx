@@ -1,280 +1,317 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { 
   User, 
   Shield, 
-  Settings, 
+  Trophy, 
+  Coins, 
   TrendingUp, 
-  Bot, 
-  Calendar,
-  Wallet,
+  Star, 
+  Award,
+  Settings,
   Crown,
-  Star,
-  Trophy,
-  Coins
-} from 'lucide-react';
+  Zap
+} from "lucide-react";
 
-import GTTPortfolioManager from './GTTPortfolioManager';
-import SovereignAIAssistant from './SovereignAIAssistant';
-import CapsuleOrganizer from './CapsuleOrganizer';
-import TimelineManager from './TimelineManager';
-import WalletPortfolio from './WalletPortfolio';
-
-interface ProfileData {
-  id: string;
-  username: string;
-  displayName: string;
-  bio: string;
-  tier: 'Explorer' | 'Seeker' | 'Creator' | 'Sovereign';
-  gttBalance: number;
-  totalYield: number;
-  capsulesCreated: number;
-  verificationsPerformed: number;
-  reputationScore: number;
-  joinDate: string;
-  profileImage?: string;
+interface UserTierInfo {
+  current: string;
+  nextTier: string;
+  progress: number;
+  benefits: string[];
+  requirements: string;
 }
 
+const TIER_INFO: Record<string, UserTierInfo> = {
+  EXPLORER: {
+    current: "Explorer",
+    nextTier: "Seeker", 
+    progress: 25,
+    benefits: ["5 capsules/month", "Basic verification", "Community access"],
+    requirements: "10 verified capsules to advance"
+  },
+  SEEKER: {
+    current: "Seeker",
+    nextTier: "Creator",
+    progress: 45,
+    benefits: ["25 capsules/month", "Priority verification", "Advanced analytics"],
+    requirements: "50 verified capsules to advance"
+  },
+  CREATOR: {
+    current: "Creator", 
+    nextTier: "Sovereign",
+    progress: 70,
+    benefits: ["100 capsules/month", "Premium features", "Revenue sharing"],
+    requirements: "250 verified capsules to advance"
+  },
+  SOVEREIGN: {
+    current: "Sovereign",
+    nextTier: "Maximum Tier",
+    progress: 100,
+    benefits: ["Unlimited capsules", "Full platform access", "Governance voting"],
+    requirements: "Maximum tier achieved"
+  }
+};
+
 export default function ProfileDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [isTimelinePublic, setIsTimelinePublic] = useState(true);
+  const { user, isAuthenticated } = useAuth();
+  const [activeTab, setActiveTab] = useState("overview");
 
-  // Mock profile data - in production, fetch from API
-  const profileData: ProfileData = {
-    id: 'user_001',
-    username: 'TruthGuardian2024',
-    displayName: 'Alex Chen',
-    bio: 'Climate researcher and blockchain truth advocate. Building immutable verification systems for scientific data integrity.',
-    tier: 'Creator',
-    gttBalance: 12847.50,
-    totalYield: 3247.89,
-    capsulesCreated: 23,
-    verificationsPerformed: 156,
-    reputationScore: 9.2,
-    joinDate: '2024-03-15',
-    profileImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face'
-  };
+  const { data: userStats } = useQuery({
+    queryKey: ['/api/user/stats'],
+    enabled: isAuthenticated && !!user,
+    queryFn: () => apiRequest('GET', '/api/user/stats')
+  });
 
-  const getTierColor = (tier: string) => {
-    const colors = {
-      Explorer: 'bg-blue-500',
-      Seeker: 'bg-green-500', 
-      Creator: 'bg-purple-500',
-      Sovereign: 'bg-amber-500'
-    };
-    return colors[tier as keyof typeof colors] || 'bg-gray-500';
-  };
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen bg-slate-900 pt-16 flex items-center justify-center">
+        <Card className="w-full max-w-md bg-slate-800/50 border-slate-700">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl text-white">Authentication Required</CardTitle>
+            <CardDescription>Please log in to view your profile</CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Button asChild>
+              <a href="/login">Login to Continue</a>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-  const getTierIcon = (tier: string) => {
-    const icons = {
-      Explorer: Star,
-      Seeker: Shield,
-      Creator: Trophy,
-      Sovereign: Crown
-    };
-    return icons[tier as keyof typeof icons] || User;
-  };
-
-  const TierIcon = getTierIcon(profileData.tier);
+  const tierInfo = TIER_INFO[user.userTier as keyof typeof TIER_INFO] || TIER_INFO.EXPLORER;
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white pt-20 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-900 pt-16">
+      <div className="container mx-auto px-4 py-8">
         {/* Profile Header */}
-        <Card className="bg-slate-800 border-slate-700 mb-8">
-          <CardContent className="p-8">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+        <div className="mb-8">
+          <Card className="bg-gradient-to-r from-purple-900/50 to-green-900/50 border-slate-700">
+            <CardContent className="p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                <Avatar className="w-24 h-24 border-4 border-purple-500">
-                  <AvatarImage src={profileData.profileImage} alt={profileData.displayName} />
-                  <AvatarFallback className="bg-purple-600 text-white text-2xl">
-                    {profileData.displayName.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-green-600 rounded-full flex items-center justify-center">
+                  <User className="h-10 w-10 text-white" />
+                </div>
                 
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-3xl font-bold">{profileData.displayName}</h1>
-                    <Badge className={`${getTierColor(profileData.tier)} text-white flex items-center`}>
-                      <TierIcon className="w-3 h-3 mr-1" />
-                      {profileData.tier}
+                <div className="flex-1">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                    {user.firstName} {user.lastName}
+                  </h1>
+                  <p className="text-slate-300 mb-4">@{user.username}</p>
+                  
+                  <div className="flex flex-wrap gap-4">
+                    <Badge className="bg-purple-600/20 text-purple-300 border-purple-500/50">
+                      <Crown className="h-3 w-3 mr-1" />
+                      {tierInfo.current} Tier
+                    </Badge>
+                    <Badge className="bg-green-600/20 text-green-300 border-green-500/50">
+                      <Coins className="h-3 w-3 mr-1" />
+                      {user.gttBalance} GTT
+                    </Badge>
+                    <Badge className="bg-blue-600/20 text-blue-300 border-blue-500/50">
+                      <Shield className="h-3 w-3 mr-1" />
+                      Rep: {user.reputation}
                     </Badge>
                   </div>
-                  <p className="text-lg text-purple-400 mb-2">@{profileData.username}</p>
-                  <p className="text-slate-300 max-w-2xl">{profileData.bio}</p>
                 </div>
-              </div>
-              
-              <div className="ml-auto">
-                <Button className="bg-purple-600 hover:bg-purple-700">
-                  <Settings className="w-4 h-4 mr-2" />
+
+                <Button variant="outline" className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10">
+                  <Settings className="h-4 w-4 mr-2" />
                   Edit Profile
                 </Button>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          <Card className="bg-slate-800 border-slate-700">
-            <CardContent className="p-4 text-center">
-              <Coins className="w-6 h-6 text-amber-400 mx-auto mb-2" />
-              <div className="text-xl font-bold">{profileData.gttBalance.toLocaleString()}</div>
-              <div className="text-xs text-slate-400">GTT Balance</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-800 border-slate-700">
-            <CardContent className="p-4 text-center">
-              <TrendingUp className="w-6 h-6 text-green-400 mx-auto mb-2" />
-              <div className="text-xl font-bold">{profileData.totalYield.toLocaleString()}</div>
-              <div className="text-xs text-slate-400">Total Yield</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-800 border-slate-700">
-            <CardContent className="p-4 text-center">
-              <Shield className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-xl font-bold">{profileData.capsulesCreated}</div>
-              <div className="text-xs text-slate-400">Capsules</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-800 border-slate-700">
-            <CardContent className="p-4 text-center">
-              <User className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-xl font-bold">{profileData.verificationsPerformed}</div>
-              <div className="text-xs text-slate-400">Verifications</div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-slate-800 border-slate-700">
-            <CardContent className="p-4 text-center">
-              <Star className="w-6 h-6 text-pink-400 mx-auto mb-2" />
-              <div className="text-xl font-bold">{profileData.reputationScore}/10</div>
-              <div className="text-xs text-slate-400">Reputation</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Dashboard Tabs */}
+        {/* Dashboard Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 bg-slate-800 p-1">
-            <TabsTrigger value="overview" className="flex items-center">
-              <User className="w-4 h-4 mr-2" />
+          <TabsList className="grid w-full grid-cols-4 bg-slate-800">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-purple-600">
               Overview
             </TabsTrigger>
-            <TabsTrigger value="portfolio" className="flex items-center">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Portfolio
+            <TabsTrigger value="tier" className="data-[state=active]:bg-purple-600">
+              Tier Progress
             </TabsTrigger>
-            <TabsTrigger value="capsules" className="flex items-center">
-              <Shield className="w-4 h-4 mr-2" />
-              Capsules
+            <TabsTrigger value="activity" className="data-[state=active]:bg-purple-600">
+              Activity
             </TabsTrigger>
-            <TabsTrigger value="timeline" className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
-              Timeline
-            </TabsTrigger>
-            <TabsTrigger value="ai" className="flex items-center">
-              <Bot className="w-4 h-4 mr-2" />
-              AI Assistant
-            </TabsTrigger>
-            <TabsTrigger value="wallet" className="flex items-center">
-              <Wallet className="w-4 h-4 mr-2" />
-              Wallet
+            <TabsTrigger value="achievements" className="data-[state=active]:bg-purple-600">
+              Achievements
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview">
-            <div className="grid lg:grid-cols-2 gap-6">
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-slate-300">Total Capsules</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span className="text-sm">Created "Climate Research Data Verification" capsule</span>
-                      <span className="text-xs text-slate-400 ml-auto">2h ago</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                      <span className="text-sm">Received 127.5 GTT yield from Legal Document Auth</span>
-                      <span className="text-xs text-slate-400 ml-auto">6h ago</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                      <span className="text-sm">Verified 5 community capsules</span>
-                      <span className="text-xs text-slate-400 ml-auto">1d ago</span>
-                    </div>
-                  </div>
+                  <div className="text-2xl font-bold text-white">{user.totalCapsules}</div>
+                  <p className="text-xs text-slate-400">Created by you</p>
                 </CardContent>
               </Card>
 
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle>Achievement Progress</CardTitle>
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-slate-300">Verified</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Truth Guardian</span>
-                        <span>89%</span>
-                      </div>
-                      <div className="w-full bg-slate-600 rounded-full h-2">
-                        <div className="bg-green-400 h-2 rounded-full" style={{width: '89%'}}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Capsule Master</span>
-                        <span>46%</span>
-                      </div>
-                      <div className="w-full bg-slate-600 rounded-full h-2">
-                        <div className="bg-blue-400 h-2 rounded-full" style={{width: '46%'}}></div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Yield Hunter</span>
-                        <span>72%</span>
-                      </div>
-                      <div className="w-full bg-slate-600 rounded-full h-2">
-                        <div className="bg-purple-400 h-2 rounded-full" style={{width: '72%'}}></div>
-                      </div>
-                    </div>
-                  </div>
+                  <div className="text-2xl font-bold text-green-400">{user.verifiedCapsules}</div>
+                  <p className="text-xs text-slate-400">Community verified</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-slate-300">GTT Balance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-amber-400">{user.gttBalance}</div>
+                  <p className="text-xs text-slate-400">Available tokens</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-slate-300">XP Points</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-purple-400">{user.xpPoints}</div>
+                  <p className="text-xs text-slate-400">Experience gained</p>
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="portfolio">
-            <GTTPortfolioManager />
+          {/* Tier Progress Tab */}
+          <TabsContent value="tier" className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Tier Progression</CardTitle>
+                <CardDescription>
+                  Advance your tier to unlock more features and benefits
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">{tierInfo.current}</h3>
+                    <p className="text-sm text-slate-400">Current Tier</p>
+                  </div>
+                  <div className="text-right">
+                    <h3 className="text-lg font-semibold text-purple-400">{tierInfo.nextTier}</h3>
+                    <p className="text-sm text-slate-400">Next Tier</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Progress</span>
+                    <span className="text-white">{tierInfo.progress}%</span>
+                  </div>
+                  <Progress value={tierInfo.progress} className="w-full" />
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium text-white mb-2">Current Benefits</h4>
+                    <ul className="space-y-1">
+                      {tierInfo.benefits.map((benefit, index) => (
+                        <li key={index} className="text-sm text-slate-300 flex items-center">
+                          <Star className="h-3 w-3 mr-2 text-green-400" />
+                          {benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-white mb-2">Requirements</h4>
+                    <p className="text-sm text-slate-300">{tierInfo.requirements}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="capsules">
-            <CapsuleOrganizer />
+          {/* Activity Tab */}
+          <TabsContent value="activity" className="space-y-6">
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardHeader>
+                <CardTitle className="text-white">Recent Activity</CardTitle>
+                <CardDescription>Your latest actions on GUARDIANCHAIN</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg">
+                    <Shield className="h-5 w-5 text-green-400" />
+                    <div>
+                      <p className="text-sm text-white">Created truth capsule</p>
+                      <p className="text-xs text-slate-400">2 hours ago</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg">
+                    <Trophy className="h-5 w-5 text-purple-400" />
+                    <div>
+                      <p className="text-sm text-white">Earned verification badge</p>
+                      <p className="text-xs text-slate-400">1 day ago</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-lg">
+                    <Coins className="h-5 w-5 text-amber-400" />
+                    <div>
+                      <p className="text-sm text-white">Received 50 GTT reward</p>
+                      <p className="text-xs text-slate-400">3 days ago</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="timeline">
-            <TimelineManager isPublic={isTimelinePublic} />
-          </TabsContent>
+          {/* Achievements Tab */}
+          <TabsContent value="achievements" className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-6 text-center">
+                  <Award className="h-12 w-12 text-purple-400 mx-auto mb-3" />
+                  <h3 className="font-semibold text-white mb-2">Truth Pioneer</h3>
+                  <p className="text-sm text-slate-400">Created your first capsule</p>
+                  <Badge className="mt-2 bg-purple-600/20 text-purple-300">Earned</Badge>
+                </CardContent>
+              </Card>
 
-          <TabsContent value="ai">
-            <SovereignAIAssistant userId={profileData.id} />
-          </TabsContent>
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-6 text-center">
+                  <Zap className="h-12 w-12 text-green-400 mx-auto mb-3" />
+                  <h3 className="font-semibold text-white mb-2">Verifier</h3>
+                  <p className="text-sm text-slate-400">Verified 10 capsules</p>
+                  <Badge className="mt-2 bg-green-600/20 text-green-300">Earned</Badge>
+                </CardContent>
+              </Card>
 
-          <TabsContent value="wallet">
-            <WalletPortfolio />
+              <Card className="bg-slate-800/50 border-slate-700 opacity-50">
+                <CardContent className="p-6 text-center">
+                  <Crown className="h-12 w-12 text-slate-400 mx-auto mb-3" />
+                  <h3 className="font-semibold text-slate-400 mb-2">Guardian Elite</h3>
+                  <p className="text-sm text-slate-500">Reach Sovereign tier</p>
+                  <Badge className="mt-2 bg-slate-600/20 text-slate-400">Locked</Badge>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
