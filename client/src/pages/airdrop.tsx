@@ -1,289 +1,454 @@
-import { useState } from 'react';
-import { Gift, Check, Clock, Users, Star, Zap, Shield, Coins } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Copy, Gift, Users, Zap, Check, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { BRAND_NAME, BRAND_COLORS, EARLY_ADOPTER_REWARDS } from '@/lib/constants';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { apiRequest, queryClient } from '@/lib/queryClient';
+
+interface AirdropStatus {
+  claimed: boolean;
+  amount: string;
+  claimDate?: string;
+  eligible: boolean;
+  eligibilityReason: string;
+}
+
+interface ReferralData {
+  code: string;
+  totalReferrals: number;
+  totalRewards: string;
+  pendingRewards: string;
+  referralLink: string;
+  recentReferrals: Array<{
+    address: string;
+    joinDate: string;
+    rewardEarned: string;
+    status: 'pending' | 'completed';
+  }>;
+}
 
 export default function AirdropPage() {
-  const [userStatus, setUserStatus] = useState({
-    isEligible: true,
-    walletVerified: false,
-    claimed: false,
-    amount: EARLY_ADOPTER_REWARDS.FIRST_500_USERS,
-    position: 247
-  });
   const { toast } = useToast();
+  const [referralCode, setReferralCode] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
 
-  const handleVerifyWallet = () => {
-    setUserStatus(prev => ({ ...prev, walletVerified: true }));
-    toast({
-      title: "Wallet Verified",
-      description: "Your wallet has been successfully verified for the airdrop",
-    });
-  };
+  // Fetch airdrop status
+  const { data: airdropStatus, isLoading: airdropLoading } = useQuery<AirdropStatus>({
+    queryKey: ['/api/airdrop/status'],
+    queryFn: async () => {
+      // Mock data for demo - replace with actual API call
+      return {
+        claimed: false,
+        amount: '100',
+        eligible: true,
+        eligibilityReason: 'Early platform user'
+      };
+    }
+  });
+
+  // Fetch referral data
+  const { data: referralData, isLoading: referralLoading } = useQuery<ReferralData>({
+    queryKey: ['/api/referral/data'],
+    queryFn: async () => {
+      // Mock data for demo - replace with actual API call
+      return {
+        code: 'GUARD1234',
+        totalReferrals: 8,
+        totalRewards: '400',
+        pendingRewards: '150',
+        referralLink: 'https://guardianchain.app/signup?ref=GUARD1234',
+        recentReferrals: [
+          {
+            address: '0x1234...5678',
+            joinDate: '2025-01-15',
+            rewardEarned: '50',
+            status: 'completed'
+          },
+          {
+            address: '0x9876...4321',
+            joinDate: '2025-01-20',
+            rewardEarned: '50',
+            status: 'pending'
+          }
+        ]
+      };
+    }
+  });
+
+  // Claim airdrop mutation
+  const claimAirdropMutation = useMutation({
+    mutationFn: async (address: string) => {
+      return apiRequest('POST', '/api/airdrop/claim', { address });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Airdrop Claimed!",
+        description: "Successfully claimed 100 GTT tokens",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/airdrop/status'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Claim Failed",
+        description: error.message || "Failed to claim airdrop",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Generate referral code mutation
+  const generateReferralMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest('POST', '/api/referral/generate', {});
+    },
+    onSuccess: () => {
+      toast({
+        title: "Referral Code Generated",
+        description: "Your unique referral code has been created",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/referral/data'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Generation Failed",
+        description: error.message || "Failed to generate referral code",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleClaimAirdrop = () => {
-    setUserStatus(prev => ({ ...prev, claimed: true }));
-    toast({
-      title: "Airdrop Claimed!",
-      description: `${userStatus.amount} GTT tokens have been transferred to your wallet`,
-    });
-  };
-
-  const eligibilityRequirements = [
-    { label: 'Wallet Connection', completed: true, icon: Shield },
-    { label: 'Discord Verification', completed: true, icon: Users },
-    { label: 'Twitter Follow', completed: false, icon: Star },
-    { label: 'Profile Completion', completed: true, icon: Check }
-  ];
-
-  const airdropTiers = [
-    {
-      tier: 'Early Pioneer',
-      positions: '1-100',
-      amount: 1000,
-      color: 'from-yellow-600 to-orange-600',
-      requirements: 'First 100 verified users'
-    },
-    {
-      tier: 'Truth Seeker',
-      positions: '101-500',
-      amount: 500,
-      color: 'from-purple-600 to-blue-600',
-      requirements: 'First 500 verified users'
-    },
-    {
-      tier: 'Community Builder',
-      positions: '501-1000',
-      amount: 250,
-      color: 'from-green-600 to-blue-600',
-      requirements: 'Active community members'
+    if (!walletAddress) {
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet or enter your address",
+        variant: "destructive",
+      });
+      return;
     }
-  ];
-
-  const getUserTier = () => {
-    if (userStatus.position <= 100) return airdropTiers[0];
-    if (userStatus.position <= 500) return airdropTiers[1];
-    return airdropTiers[2];
+    claimAirdropMutation.mutate(walletAddress);
   };
 
-  const currentTier = getUserTier();
+  const copyReferralLink = () => {
+    if (referralData?.referralLink) {
+      navigator.clipboard.writeText(referralData.referralLink);
+      toast({
+        title: "Copied!",
+        description: "Referral link copied to clipboard",
+      });
+    }
+  };
+
+  const shareOnTwitter = () => {
+    if (referralData?.referralLink) {
+      const tweetText = `Join me on GUARDIANCHAIN and earn GTT tokens! 🚀\n\nSign up with my referral link and we both get 50 GTT tokens when you start staking.\n\n${referralData.referralLink}\n\n#GUARDIANCHAIN #GTT #DeFi`;
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+      window.open(tweetUrl, '_blank');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <Card className="mb-8 bg-gradient-to-r from-purple-900/50 to-green-900/50 border-purple-500/30">
+    <div className="max-w-6xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-green-600 bg-clip-text text-transparent">
+          GTT Airdrop & Referrals
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Claim your free GTT tokens and earn rewards by inviting friends to join GUARDIANCHAIN
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Airdrop Section */}
+        <Card className="border-purple-200 dark:border-purple-800">
           <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <div className="p-2 bg-purple-500/20 rounded-lg">
-                <Gift className="h-6 w-6 text-purple-400" />
-              </div>
-              <div>
-                <span className="text-white text-xl font-bold">
-                  <span style={{ color: BRAND_COLORS.GUARDIAN }}>GUARDIAN</span>
-                  <span style={{ color: BRAND_COLORS.CHAIN }}>CHAIN</span>
-                  {' '}Airdrop
-                </span>
-                <p className="text-slate-400 text-sm font-normal">
-                  Claim your free GTT tokens for early participation
-                </p>
-              </div>
+            <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+              <Gift className="h-6 w-6" />
+              GTT Token Airdrop
             </CardTitle>
+            <CardDescription>
+              Claim your free GTT tokens for being an early GUARDIANCHAIN supporter
+            </CardDescription>
           </CardHeader>
+          <CardContent className="space-y-6">
+            {airdropLoading ? (
+              <div className="space-y-4">
+                <div className="h-20 bg-muted animate-pulse rounded-lg" />
+                <div className="h-10 bg-muted animate-pulse rounded" />
+              </div>
+            ) : airdropStatus ? (
+              <>
+                <div className="text-center space-y-2">
+                  <div className="text-6xl font-bold text-purple-600">
+                    {airdropStatus.amount}
+                  </div>
+                  <div className="text-2xl font-semibold text-muted-foreground">
+                    GTT Tokens
+                  </div>
+                  <Badge 
+                    variant={airdropStatus.eligible ? "default" : "secondary"}
+                    className="mt-2"
+                  >
+                    {airdropStatus.eligible ? "Eligible" : "Not Eligible"}
+                  </Badge>
+                </div>
+
+                {airdropStatus.eligible && !airdropStatus.claimed && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="wallet-address">Wallet Address</Label>
+                      <Input
+                        id="wallet-address"
+                        placeholder="0x... or connect wallet"
+                        value={walletAddress}
+                        onChange={(e) => setWalletAddress(e.target.value)}
+                      />
+                    </div>
+                    
+                    <Button 
+                      onClick={handleClaimAirdrop}
+                      disabled={claimAirdropMutation.isPending}
+                      className="w-full bg-purple-600 hover:bg-purple-700"
+                      size="lg"
+                    >
+                      {claimAirdropMutation.isPending ? (
+                        "Claiming..."
+                      ) : (
+                        <>
+                          <Gift className="h-5 w-5 mr-2" />
+                          Claim Airdrop
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {airdropStatus.claimed && (
+                  <div className="text-center space-y-2">
+                    <div className="flex items-center justify-center text-green-600">
+                      <Check className="h-8 w-8" />
+                    </div>
+                    <p className="text-lg font-semibold text-green-600">
+                      Airdrop Claimed!
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Claimed on {airdropStatus.claimDate}
+                    </p>
+                  </div>
+                )}
+
+                {!airdropStatus.eligible && (
+                  <div className="text-center space-y-2">
+                    <p className="text-lg font-semibold text-muted-foreground">
+                      Not Eligible
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {airdropStatus.eligibilityReason}
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : null}
+          </CardContent>
         </Card>
 
-        {/* Main Content */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Claim Interface */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-yellow-400" />
-                  <span className="text-white">Claim Your Airdrop</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* User Status */}
-                <div className={`p-4 rounded-lg bg-gradient-to-r ${currentTier.color}`}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-white font-bold text-lg">{currentTier.tier}</h3>
-                      <p className="text-white/80 text-sm">Position #{userStatus.position}</p>
+        {/* Referral Section */}
+        <Card className="border-green-200 dark:border-green-800">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-300">
+              <Users className="h-6 w-6" />
+              Referral Program
+            </CardTitle>
+            <CardDescription>
+              Earn 50 GTT for each friend you refer, and they get 50 GTT too!
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {referralLoading ? (
+              <div className="space-y-4">
+                <div className="h-20 bg-muted animate-pulse rounded-lg" />
+                <div className="h-10 bg-muted animate-pulse rounded" />
+              </div>
+            ) : referralData ? (
+              <>
+                {/* Referral Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600">
+                      {referralData.totalReferrals}
                     </div>
-                    <div className="text-right">
-                      <div className="text-white font-bold text-2xl">{currentTier.amount} GTT</div>
-                      <div className="text-white/80 text-sm">Eligible Amount</div>
+                    <div className="text-sm text-muted-foreground">
+                      Total Referrals
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600">
+                      {referralData.totalRewards}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      GTT Earned
                     </div>
                   </div>
                 </div>
 
-                {/* Eligibility Check */}
-                <div className="space-y-4">
-                  <h4 className="text-white font-semibold">Eligibility Requirements</h4>
-                  <div className="space-y-2">
-                    {eligibilityRequirements.map((req, index) => {
-                      const IconComponent = req.icon;
-                      return (
-                        <div key={index} className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            <IconComponent className="w-5 h-5 text-blue-400" />
-                            <span className="text-white">{req.label}</span>
-                          </div>
-                          {req.completed ? (
-                            <Check className="w-5 h-5 text-green-400" />
-                          ) : (
-                            <Clock className="w-5 h-5 text-yellow-400" />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Claim Actions */}
-                <div className="space-y-4">
-                  {!userStatus.walletVerified ? (
-                    <Button
-                      onClick={handleVerifyWallet}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      <Shield className="w-4 h-4 mr-2" />
-                      Verify Wallet
-                    </Button>
-                  ) : !userStatus.claimed ? (
-                    <Button
-                      onClick={handleClaimAirdrop}
-                      className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white font-semibold"
-                    >
-                      <Gift className="w-4 h-4 mr-2" />
-                      Claim {currentTier.amount} GTT
-                    </Button>
-                  ) : (
-                    <div className="w-full bg-green-600 text-white p-3 rounded-lg text-center">
-                      <Check className="w-5 h-5 mx-auto mb-2" />
-                      <span className="font-semibold">Airdrop Claimed Successfully!</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Important Notes */}
-                <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-4">
-                  <h4 className="text-yellow-400 font-semibold mb-2">Important Notes</h4>
-                  <ul className="text-sm text-slate-300 space-y-1">
-                    <li>• Airdrop tokens are available for the first 1,000 verified users</li>
-                    <li>• You must complete all eligibility requirements before claiming</li>
-                    <li>• Tokens will be distributed immediately after claiming</li>
-                    <li>• Each wallet can only claim once</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Airdrop Tiers & Stats */}
-          <div className="space-y-6">
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-purple-400" />
-                  <span className="text-white">Airdrop Tiers</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {airdropTiers.map((tier, index) => (
-                  <div
-                    key={index}
-                    className={`p-4 rounded-lg border ${
-                      tier === currentTier
-                        ? 'border-purple-500/50 bg-purple-900/20'
-                        : 'border-slate-600 bg-slate-700/30'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-white font-semibold">{tier.tier}</h4>
-                      <span className="text-yellow-400 font-bold">{tier.amount} GTT</span>
-                    </div>
-                    <p className="text-slate-400 text-sm mb-2">{tier.requirements}</p>
-                    <Badge variant="outline" className="border-slate-600 text-slate-300">
-                      Positions {tier.positions}
-                    </Badge>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-green-400" />
-                  <span className="text-white">Airdrop Statistics</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-400">Total Allocated</span>
-                  <span className="text-white font-semibold">500K GTT</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-400">Claimed</span>
-                  <span className="text-white font-semibold">127K GTT</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-400">Eligible Users</span>
-                  <span className="text-white font-semibold">1,000</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-400">Claims Made</span>
-                  <span className="text-green-400 font-semibold">423</span>
-                </div>
-                
-                <div className="w-full bg-slate-600 rounded-full h-2 mt-4">
-                  <div
-                    className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full"
-                    style={{ width: '42.3%' }}
-                  />
-                </div>
-                <div className="text-xs text-slate-400 text-center">
-                  42.3% of airdrop claimed
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Coins className="h-5 w-5 text-yellow-400" />
-                  <span className="text-white">Next Steps</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+                {/* Referral Code */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full" />
-                    <span className="text-slate-300 text-sm">Stake your GTT for rewards</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full" />
-                    <span className="text-slate-300 text-sm">Participate in governance</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                    <span className="text-slate-300 text-sm">Create truth capsules</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-                    <span className="text-slate-300 text-sm">Refer friends for bonuses</span>
+                  <Label>Your Referral Code</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={referralData.code}
+                      readOnly
+                      className="font-mono"
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        navigator.clipboard.writeText(referralData.code);
+                        toast({ title: "Copied!", description: "Referral code copied" });
+                      }}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+
+                {/* Referral Link */}
+                <div className="space-y-2">
+                  <Label>Your Referral Link</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={referralData.referralLink}
+                      readOnly
+                      className="text-xs"
+                    />
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={copyReferralLink}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Share Buttons */}
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    onClick={shareOnTwitter}
+                    className="bg-blue-500 hover:bg-blue-600"
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Share on Twitter
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={copyReferralLink}
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Link
+                  </Button>
+                </div>
+
+                {/* Pending Rewards */}
+                {referralData.pendingRewards !== '0' && (
+                  <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-yellow-600" />
+                      <span className="font-semibold">Pending Rewards</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {referralData.pendingRewards} GTT will be distributed when your referrals complete their first stake
+                    </p>
+                  </div>
+                )}
+
+                {/* Recent Referrals */}
+                {referralData.recentReferrals.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Recent Referrals</Label>
+                    <div className="space-y-2">
+                      {referralData.recentReferrals.map((referral, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div>
+                            <p className="font-mono text-sm">{referral.address}</p>
+                            <p className="text-xs text-muted-foreground">{referral.joinDate}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-semibold">{referral.rewardEarned} GTT</p>
+                            <Badge 
+                              variant={referral.status === 'completed' ? 'default' : 'secondary'}
+                              className="text-xs"
+                            >
+                              {referral.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center space-y-4">
+                <p className="text-muted-foreground">No referral code generated yet</p>
+                <Button 
+                  onClick={() => generateReferralMutation.mutate()}
+                  disabled={generateReferralMutation.isPending}
+                >
+                  Generate Referral Code
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
+
+      {/* How it Works */}
+      <Card>
+        <CardHeader>
+          <CardTitle>How the Referral Program Works</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-xl font-bold text-purple-600">1</span>
+              </div>
+              <h3 className="font-semibold">Share Your Link</h3>
+              <p className="text-sm text-muted-foreground">
+                Share your unique referral link with friends and on social media
+              </p>
+            </div>
+            
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-xl font-bold text-purple-600">2</span>
+              </div>
+              <h3 className="font-semibold">Friends Join & Stake</h3>
+              <p className="text-sm text-muted-foreground">
+                When they sign up and make their first stake, you both get rewarded
+              </p>
+            </div>
+            
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-xl font-bold text-green-600">3</span>
+              </div>
+              <h3 className="font-semibold">Earn GTT Tokens</h3>
+              <p className="text-sm text-muted-foreground">
+                Receive 50 GTT tokens for each successful referral automatically
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

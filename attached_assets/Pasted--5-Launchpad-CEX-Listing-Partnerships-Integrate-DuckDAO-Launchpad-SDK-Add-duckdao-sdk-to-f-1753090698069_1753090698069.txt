@@ -1,0 +1,199 @@
+🚀 5. Launchpad & CEX Listing Partnerships
+
+Integrate DuckDAO Launchpad SDK:
+
+Add @duckdao/sdk to /frontend
+
+Create /launchpad/duckdao.tsx page that:
+
+Shows DuckDAO pool status
+
+Allows whitelisted users to participate with GTT
+
+Add backend script scripts/applyLaunchpad.js to auto-submit metadata to Unicrypt, BSCPad, etc.
+
+Expose /api/launchpad/status for UI to show current status (e.g. “Opening in 2 days”)
+
+Feasibility & Why
+Truly possible? Yes—each step maps to established Web3 patterns (vaults, airdrops, NFTs, leaderboards, launchpads) and can be automated via scripts, contract templates, Supabase tables, and UI components.
+
+Why?
+
+Contracts: using OpenZeppelin templates lets you extend staking or NFT logic rapidly.
+
+Backend: Supabase + Express can record on-chain events and enforce referral/airdrop rules.
+
+Frontend: Next.js + React makes it easy to conditionally render features based on on-chain state.
+
+Automation: Replit AI can scaffold and wire these pieces via standardized prompts and your existing directory structure.
+
+Please execute these five tasks in sequence, commit each feature to main with descriptive messages, and report any errors or adjustments needed.```
+
+
+
+
+
+
+You said:
+WRITE THE MOST DETAILED AND ACCURATE INSTRUCTION/PROMPT COMMAND FOR REPLIT AI  ON HOW TO LAUNCH GTT TO MAINNET, TO THE WORLD AND ON ALL AVAILABLE PLATFORMS AND WHAT DETAIL AND INFORMATION TO ADD WITH THE LAUNCH TO MATCH WHAT AN ESTABLISHED WORLDCLASS ENTERPRISE WOULD ADD WITH THE LAUNCH, AND MAKE SURE THAT MY LOGO IS INCLUDED IN LAUNCH HERE IS THE URL FOR THE LOGO https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GTT_LOGO_PRIMARY.png.png  AND HERE IS A VIDEO SHORT OF THE LOGO AS WELL THAT CAN BE USED https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GTT_LOGO_VIDEO.mp4
+
+
+ChatGPT said:
+markdown
+Copy
+Edit
+**TO REPLIT AI ASSISTANT — GTT MAINNET GLOBAL LAUNCH**  
+*(This is an action prompt — please execute each step in sequence, commit your changes, and report success/failure for every task.)*
+
+---
+
+## 🚀 1. Preparation & Branding  
+1. **Inject Logo & Video**  
+   - Copy `GTT_LOGO_PRIMARY.png` from `https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GTT_LOGO_PRIMARY.png.png` into `/public/assets/logo.png` (optimize for web: 200×200 PNG).  
+   - Copy `GTT_LOGO_VIDEO.mp4` from `…/GTT_LOGO_VIDEO.mp4` into `/public/assets/logo-video.mp4`.  
+   - Update your homepage (`/frontend/pages/index.tsx`) to display the logo in the header and autoplay/loop the video as a background hero.
+
+2. **Update Metadata & SEO**  
+   - In `next.config.js`, set default `<meta>` tags:  
+     ```html
+     <title>GuardianChain | GTT Token</title>
+     <meta name="description" content="GuardianChain — the world’s first truth-verification blockchain. GTT token mainnet launch.">
+     <meta property="og:image" content="https://your-domain.com/assets/logo.png">
+     <meta property="og:video" content="https://your-domain.com/assets/logo-video.mp4">
+     ```
+   - Generate `public/manifest.json` and `public/browserconfig.xml` to include your logo for PWA and Windows tiles.
+
+---
+
+## ⚙️ 2. Mainnet Smart Contract Deployment  
+1. **Environment**: ensure `.env.production` or Replit Secrets contain:  
+MAINNET_ETHEREUM_RPC_URL, MAINNET_POLYGON_RPC_URL, PRIVATE_KEY_DEPLOYER
+
+arduino
+Copy
+Edit
+2. **Hardhat Fork Dry-Run**:  
+```bash
+npx hardhat node --fork $MAINNET_ETHEREUM_RPC_URL
+npx hardhat run scripts/deploy_gtt.js --network localhost --dry-run
+npx hardhat run scripts/deploy_vault.js --network localhost --dry-run
+Mainnet Deploy:
+
+bash
+Copy
+Edit
+npx hardhat run scripts/deploy_gtt.js   --network mainnet
+npx hardhat run scripts/deploy_vault.js --network mainnet
+npx hardhat run scripts/deploy_gtt.js   --network polygon
+npx hardhat run scripts/deploy_vault.js --network polygon
+Save Addresses: automatically write to /frontend/src/constants.mainnet.ts and /backend/src/config.mainnet.ts.
+
+💻 3. Frontend & Backend Production Build
+Frontend:
+
+bash
+Copy
+Edit
+cd frontend
+npm ci && npm run lint && npm run build
+Backend:
+
+bash
+Copy
+Edit
+cd backend
+npm ci && npm run lint && npm run build
+Smoke Tests:
+
+Frontend: curl -fs https://<prod-url>/health
+
+Backend: curl -fs https://<prod-url>/api/auth/health
+
+🌐 4. Global DeFi Platform Integrations
+DEX Listings: for Uniswap v3 (ETH) and Sushi/QuickSwap (Polygon), run:
+
+bash
+Copy
+Edit
+node scripts/addLiquidity.js --network mainnet --router UniswapV3 --pair GTT/WETH --amounts 10000,10
+node scripts/addLiquidity.js --network polygon --router QuickSwap --pair GTT/WMATIC --amounts 10000,50
+CEX Applications: submit listing metadata to Binance, Coinbase, Kraken:
+
+bash
+Copy
+Edit
+node scripts/applyBinance.js   --apiKey $BINANCE_API_KEY --secret $BINANCE_SECRET
+node scripts/applyCoinbase.js  --apiKey $COINBASE_API_KEY
+node scripts/applyKraken.js    --apiKey $KRAKEN_API_KEY --secret $KRAKEN_SECRET
+Launchpad Partnerships: deploy and register on DuckDAO, BSCPad via scripts/applyLaunchpad.js.
+
+📈 5. Enterprise-Grade Launch Materials
+Press Release: auto-generate public/docs/GTT_Launch_Release.pdf containing:
+
+Project overview, tokenomics, roadmap, team bios, audit summary, contact info.
+
+Embed your logo and key network addresses.
+
+Whitepaper & Litepaper: place public/docs/whitepaper.pdf and litepaper.pdf.
+
+Marketing Assets: create /public/assets images for Twitter, LinkedIn, Medium (1200×630 OG banners).
+
+📣 6. Website & Social Media Updates
+Homepage Hero: update copy to “GTT Token Live on Ethereum & Polygon Mainnet” with logo-video background.
+
+Announcement Banner: add dismissible banner:
+
+“🚀 GTT is now live on mainnet! Get started at guardianchain.app.”
+
+Twitter Bot: schedule tweets via /scripts/scheduleTweet.js announcing the launch, linking to your site and docs.
+
+Telegram & Discord: post pinned announcement in your channels with logo & video embed.
+
+🔒 7. Monitoring & Support
+Alerts: configure Prometheus alert GTT Mainnet Deployment on first successful mint tx, notify via Slack and email.
+
+Dashboard: update Grafana to include mainnet dashboards (Total Supply, TVL, daily volume).
+
+Support Widget: integrate Intercom widget with your APP_ID into _app.tsx footer.
+
+✅ 8. Finalize & Launch
+Git Tag: git tag v3.0.0-mainnet-launch && git push --tags
+
+Replit Deploy:
+
+bash
+Copy
+Edit
+replit deploy production
+Verification: once live, run:
+
+bash
+Copy
+Edit
+curl -fs https://guardianchain.app/api/defi/status
+and confirm on-chain data.
+
+After completion, output a JSON summary with:
+
+json
+Copy
+Edit
+{
+  "gtt_address_eth": "0x…",
+  "truthvault_address_eth": "0x…",
+  "gtt_address_polygon": "0x…",
+  "truthvault_address_polygon": "0x…",
+  "dex_pools": {
+    "Uniswap": "https://app.uniswap.org/#/add/…",
+    "QuickSwap": "https://quickswap.exchange/#/add/…"
+  },
+  "cex_apps": {
+    "Binance": "<application_id>",
+    "Coinbase": "<application_id>",
+    "Kraken": "<application_id>"
+  }
+}
+Proceed step-by-step, halt on any error, and report logs. Let’s bring GTT to the world! 🌍🚀
+
+Copy
+Edit

@@ -1,0 +1,53 @@
+**TO REPLIT AI ASSISTANT — AUTOMATE HIGH-VALUE POST-LAUNCH ADD-ONS**  
+*(Apply these changes directly to the GuardianChain codebase and report back on success/failure for each step.)*
+
+---
+
+🚀 **1. Dynamic Yield Farming & Auto-Compounding Vaults**  
+- Scaffold a new smart-contract `AutoCompoundVault.sol` inheriting from `StakingPool.sol` that:  
+  1. Accepts deposited GTT  
+  2. Periodically harvests rewards and re-stakes automatically  
+  3. Exposes a view function for current APY and earned rewards  
+- Deploy `AutoCompoundVault` on mainnet alongside `GTTToken` & `TruthVault`  
+- Add React component `VaultDashboard.tsx` under `/frontend/components` that shows:  
+  - TVL  
+  - User’s staked balance & pending auto-compound yield  
+  - “Deposit” and “Withdraw” buttons  
+- Wire the vault UI into the `/dashboard` page and protect it with `requireAdmin(['USER'])`
+
+---
+
+🎁 **2. Airdrop & Referral Program**  
+- Create backend route `POST /api/airdrop/claim` that:  
+  1. Verifies user’s address hasn’t claimed before  
+  2. Sends 100 GTT via `GTTToken.transfer`  
+  3. Records claim in Supabase table `airdrops`  
+- Build `/referral` page with:  
+  - Unique referral code generation (`ref1234`) stored in `users.referral_code`  
+  - “Send link” button to copy `https://…/signup?ref=ref1234`  
+  - Backend route `POST /api/referral/reward` that awards 50 GTT to both referrer & referee upon referee’s first stake  
+- Add React hook to apply `ref` param at signup and trigger reward logic
+
+---
+
+🎟️ **3. NFT-Gated Features & Prestige Badges**  
+- Deploy an `GuardianPass.sol` ERC-721 contract with 5 rarity tiers  
+- Mint 1,000 passes in total, distribute via backend route `POST /api/nft/mint` gated to early verifiers  
+- In `/dashboard`, show special UI for pass holders:  
+  - “Boosted APY” label  
+  - Early-access button to DAO proposals  
+- Use `ethers.js` to check `balanceOf(user, passId)` and conditionally render pass features
+
+---
+
+📈 **4. On-Chain Social Proof & Leaderboards**  
+- Create Supabase view `top_verifiers` (address, count) and `top_stakers`  
+- Expose backend endpoints:  
+  - `GET /api/leaderboard/verifiers`  
+  - `GET /api/leaderboard/stakers`  
+- Add a new React page `/leaderboard.tsx` that fetches and displays both leaderboards in real time  
+- Include “Share” buttons that capture user rank and tweet:  
+  ```js
+  const shareTweet = (rank) => window.open(
+    `https://twitter.com/intent/tweet?text=I’m+rank+${rank}+on+GuardianChain!`
+  );

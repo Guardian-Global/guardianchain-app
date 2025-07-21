@@ -31,6 +31,34 @@ export interface IStorage {
   // Interaction operations
   recordInteraction(interaction: InsertCapsuleInteraction): Promise<CapsuleInteraction>;
   getCapsuleInteractions(capsuleId: number): Promise<CapsuleInteraction[]>;
+  
+  // Airdrop operations
+  getAirdropClaim(address: string): Promise<any | undefined>;
+  createAirdropClaim(claim: any): Promise<any>;
+  
+  // Referral operations
+  createReferralCode(referral: any): Promise<any>;
+  getReferralData(userId: string): Promise<any | undefined>;
+  getReferralByCode(code: string): Promise<any | undefined>;
+  getReferralReward(address: string): Promise<any | undefined>;
+  createReferralReward(reward: any): Promise<any>;
+  
+  // Guardian Pass operations
+  getGuardianPassCollection(address: string): Promise<any | undefined>;
+  getGuardianPassMarketplaceData(): Promise<any>;
+  checkGuardianPassEligibility(address: string): Promise<boolean>;
+  createGuardianPass(passData: any): Promise<any>;
+  getGuardianPassBenefits(address: string): Promise<any>;
+  hasGuardianPass(address: string): Promise<boolean>;
+  getHighestRarityPass(address: string): Promise<string | undefined>;
+  getGuardianPassAPYBonus(address: string): Promise<number>;
+  
+  // Vault operations
+  getVaultStats(): Promise<any>;
+  getUserVaultPosition(address: string): Promise<any>;
+  recordVaultDeposit(deposit: any): Promise<any>;
+  recordVaultWithdrawal(withdrawal: any): Promise<any>;
+  recordVaultCompound(compound: any): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -146,6 +174,235 @@ export class DatabaseStorage implements IStorage {
       .from(capsuleInteractions)
       .where(eq(capsuleInteractions.capsuleId, capsuleId))
       .orderBy(desc(capsuleInteractions.createdAt));
+  }
+
+  // Mock implementations for mainnet launch features
+  // In production, these would use proper database tables
+  
+  // Airdrop operations
+  async getAirdropClaim(address: string): Promise<any | undefined> {
+    // Mock implementation - in production would query airdrop_claims table
+    return null; // No claims found
+  }
+
+  async createAirdropClaim(claim: any): Promise<any> {
+    // Mock implementation - in production would insert into airdrop_claims table
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...claim,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  // Referral operations
+  async createReferralCode(referral: any): Promise<any> {
+    // Mock implementation - in production would insert into referral_codes table
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...referral,
+      referralLink: `https://guardianchain.app/signup?ref=${referral.code}`
+    };
+  }
+
+  async getReferralData(userId: string): Promise<any | undefined> {
+    // Mock implementation - return sample referral data
+    return {
+      code: 'GUARD1234',
+      totalReferrals: 8,
+      totalRewards: '400',
+      pendingRewards: '150',
+      referralLink: 'https://guardianchain.app/signup?ref=GUARD1234',
+      recentReferrals: [
+        {
+          address: '0x1234...5678',
+          joinDate: '2025-01-15',
+          rewardEarned: '50',
+          status: 'completed'
+        },
+        {
+          address: '0x9876...4321',
+          joinDate: '2025-01-20',
+          rewardEarned: '50',
+          status: 'pending'
+        }
+      ]
+    };
+  }
+
+  async getReferralByCode(code: string): Promise<any | undefined> {
+    // Mock implementation
+    return {
+      userId: 'demo-user',
+      code,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  async getReferralReward(address: string): Promise<any | undefined> {
+    // Mock implementation - check if user already used referral
+    return null; // No existing reward found
+  }
+
+  async createReferralReward(reward: any): Promise<any> {
+    // Mock implementation
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...reward,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  // Guardian Pass operations
+  async getGuardianPassCollection(address: string): Promise<any | undefined> {
+    // Mock implementation - return sample Guardian Pass collection
+    return {
+      ownedPasses: [
+        {
+          tokenId: 42,
+          rarity: 'Rare',
+          tierName: 'Rare Guardian',
+          boostedAPY: 500,
+          stakingMultiplier: 12000,
+          earlyDAOAccess: true,
+          mintTime: '2025-01-15T10:30:00Z'
+        },
+        {
+          tokenId: 157,
+          rarity: 'Uncommon',
+          tierName: 'Uncommon Guardian',
+          boostedAPY: 250,
+          stakingMultiplier: 11000,
+          earlyDAOAccess: false,
+          mintTime: '2025-01-20T14:45:00Z'
+        }
+      ],
+      totalValue: '2,847.50',
+      highestRarity: 'Rare',
+      benefits: {
+        totalAPYBoost: 750,
+        stakingMultiplier: 1.2,
+        daoVotingPower: 150,
+        exclusiveFeatures: [
+          'Early DAO proposal access',
+          'Premium vault strategies',
+          'Priority customer support',
+          'Exclusive community channels'
+        ]
+      }
+    };
+  }
+
+  async getGuardianPassMarketplaceData(): Promise<any> {
+    // Mock marketplace data
+    return {
+      totalSupply: 847,
+      floorPrice: '0.25',
+      volume24h: '12.5',
+      rarityDistribution: {
+        Common: { minted: 423, available: 77 },
+        Uncommon: { minted: 267, available: 33 },
+        Rare: { minted: 128, available: 22 },
+        Epic: { minted: 24, available: 16 },
+        Legendary: { minted: 5, available: 5 }
+      }
+    };
+  }
+
+  async checkGuardianPassEligibility(address: string): Promise<boolean> {
+    // Mock implementation - in production would check eligibility criteria
+    return true; // All addresses eligible for demo
+  }
+
+  async createGuardianPass(passData: any): Promise<any> {
+    // Mock implementation
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...passData,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  async getGuardianPassBenefits(address: string): Promise<any> {
+    // Mock implementation
+    return {
+      totalAPYBoost: 750,
+      stakingMultiplier: 1.2,
+      daoVotingPower: 150,
+      exclusiveFeatures: [
+        'Early DAO proposal access',
+        'Premium vault strategies'
+      ]
+    };
+  }
+
+  async hasGuardianPass(address: string): Promise<boolean> {
+    // Mock implementation
+    return Math.random() > 0.3; // 70% chance of having a pass
+  }
+
+  async getHighestRarityPass(address: string): Promise<string | undefined> {
+    // Mock implementation
+    const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
+    return rarities[Math.floor(Math.random() * rarities.length)];
+  }
+
+  async getGuardianPassAPYBonus(address: string): Promise<number> {
+    // Mock implementation - return APY bonus in basis points
+    const hasPass = await this.hasGuardianPass(address);
+    return hasPass ? 500 : 0; // 5% bonus if has pass
+  }
+
+  // Vault operations
+  async getVaultStats(): Promise<any> {
+    // Mock vault statistics
+    return {
+      tvl: '2,547,832',
+      apy: '25.7',
+      userStaked: '15,000',
+      pendingRewards: '1,247.50',
+      sharePrice: '1.0847',
+      nextCompoundTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
+      totalUsers: 1247,
+      performanceFee: '2%'
+    };
+  }
+
+  async getUserVaultPosition(address: string): Promise<any> {
+    // Mock user vault position
+    return {
+      stakedAmount: '15,000',
+      shares: '13,833.24',
+      totalRewardsEarned: '3,247.89',
+      autoCompoundedAmount: '1,847.32',
+      lastDepositTime: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
+    };
+  }
+
+  async recordVaultDeposit(deposit: any): Promise<any> {
+    // Mock implementation
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...deposit,
+      status: 'completed'
+    };
+  }
+
+  async recordVaultWithdrawal(withdrawal: any): Promise<any> {
+    // Mock implementation
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...withdrawal,
+      status: 'completed'
+    };
+  }
+
+  async recordVaultCompound(compound: any): Promise<any> {
+    // Mock implementation
+    return {
+      id: Math.floor(Math.random() * 10000),
+      ...compound,
+      status: 'completed'
+    };
   }
 }
 

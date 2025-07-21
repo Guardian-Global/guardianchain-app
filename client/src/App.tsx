@@ -32,6 +32,8 @@ import StakePage from "@/pages/stake";
 import LaunchpadPage from "@/pages/launchpad";
 import ReferralPage from "@/pages/referral";
 import AirdropPage from "@/pages/airdrop";
+import GuardianPassPage from "@/pages/guardian-pass";
+import VaultDashboard from "@/components/VaultDashboard";
 import Govern from "@/pages/govern";
 import NotFound from "@/pages/not-found";
 
@@ -113,6 +115,8 @@ function Router() {
         <Route path="/launchpad" component={LaunchpadPage} />
         <Route path="/referral" component={ReferralPage} />
         <Route path="/airdrop" component={AirdropPage} />
+        <Route path="/guardian-pass" component={GuardianPassPage} />
+        <Route path="/vault" component={() => <VaultDashboard />} />
         <Route path="/auction-house" component={AuctionHousePage} />
         <Route path="/embed/capsule" component={EmbedCapsulePage} />
         <Route path="/yield-tracker" component={YieldTrackerPage} />

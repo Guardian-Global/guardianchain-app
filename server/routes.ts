@@ -2,6 +2,9 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import * as capsuleYieldRoutes from "./routes/capsule-yield";
 import profileRouter from "./routes/profile";
+import airdropRouter from "./routes/airdrop";
+import guardianPassRouter from "./routes/guardian-pass";
+import vaultRouter from "./routes/vault";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -448,6 +451,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: 'Failed to fetch trading data' });
     }
   });
+
+  // Additional route registrations for mainnet launch features
+  app.use(airdropRouter);
+  app.use(guardianPassRouter);
+  app.use(vaultRouter);
 
   const httpServer = createServer(app);
   return httpServer;
