@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
-import MobileResponsiveNavigation from "@/components/layout/MobileResponsiveNavigation";
+import EnhancedMegaNavigation from "@/components/layout/EnhancedMegaNavigation";
 import Footer from "@/components/layout/footer";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import MobileHome from "@/pages/MobileHome";
@@ -87,13 +87,14 @@ import SpecializedIntake from "./pages/specialized-intake";
 import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
 import CategoryDiscovery from "./pages/category-discovery";
 import Whitepapers from "./pages/whitepapers";
+import MyListings from "./pages/my-listings";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
-      <MobileResponsiveNavigation />
+      <EnhancedMegaNavigation />
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/" component={SimpleHome} />
@@ -102,6 +103,7 @@ function Router() {
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile/:id?" component={() => <WorkingProfileDashboard user={null} />} />
         <Route path="/profile" component={() => <WorkingProfileDashboard user={null} />} />
+        <Route path="/my-listings" component={MyListings} />
         <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />

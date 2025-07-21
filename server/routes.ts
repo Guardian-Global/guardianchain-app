@@ -18,6 +18,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Token data routes (public access for token launch page)
   app.use('/api/token', tokenDataRouter);
   
+  // GTT Live Data endpoint (legacy support)
+  app.get('/api/gtt/live-data', (req, res) => {
+    // Redirect to new token data endpoint
+    res.redirect('/api/token/gtt-data');
+  });
+  
   // Stripe payment routes
   app.use('/api/stripe', stripePaymentsRouter);
 
