@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -95,7 +95,7 @@ export default function TokenLaunchPage() {
   });
 
   // Fetch live token metrics
-  const { data: tokenMetrics, isLoading: metricsLoading } = useQuery<TokenMetrics>({
+  const { data: tokenMetrics, isLoading: metricsLoading, error: metricsError } = useQuery<TokenMetrics>({
     queryKey: ['/api/live-data/token-metrics'],
     refetchInterval: 5000, // Refresh every 5 seconds for real-time data
     retry: 2,
@@ -216,7 +216,7 @@ export default function TokenLaunchPage() {
     return status.replace(/_/g, ' ').toUpperCase();
   };
 
-  if (isLoading) {
+  if (isLoading || metricsLoading) {
     return (
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center h-64">
@@ -226,9 +226,9 @@ export default function TokenLaunchPage() {
     );
   }
 
-  if (error) {
+  if (error && !launchStatus) {
     console.error('Token launch page error:', error);
-    // Show page with default data instead of blocking
+    // Continue rendering with minimal data instead of blocking
   }
 
   return (

@@ -73,6 +73,7 @@ import BlockchainDemo from "./pages/blockchain-demo";
 import SpecializedIntake from "./pages/specialized-intake";
 import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
 import CategoryDiscovery from "./pages/category-discovery";
+import Whitepapers from "./pages/whitepapers";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -143,6 +144,7 @@ function Router() {
         <Route path="/specialized-intake" component={SpecializedIntake} />
         <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
         <Route path="/category-discovery" component={CategoryDiscovery} />
+        <Route path="/whitepapers" component={Whitepapers} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         

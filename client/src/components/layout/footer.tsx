@@ -30,11 +30,11 @@ const footerSections = [
   {
     title: "Resources",
     links: [
+      { name: "Whitepapers", href: "/whitepapers" },
       { name: "Protocol Strategy", href: "/protocol-strategy" },
       { name: "Blockchain Demo", href: "/blockchain-demo" },
       { name: "AI Recommendations", href: "/recommendations" },
       { name: "Compliance", href: "/compliance" },
-      { name: "Yield Distribution", href: "/yield-distribution" },
       { name: "Documentation", href: "/protocol-strategy" },
     ],
   },
