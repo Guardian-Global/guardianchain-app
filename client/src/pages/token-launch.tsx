@@ -213,16 +213,17 @@ export default function TokenLaunchPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-green-600 bg-clip-text text-transparent">
-          GTT Token Global Launch Dashboard
-        </h1>
-        <p className="text-xl text-muted-foreground">
-          Monitor and control the comprehensive DeFi deployment across all major networks
-        </p>
-      </div>
+    <div className="min-h-screen bg-slate-900 text-white">
+      <div className="container mx-auto p-6 space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
+            GUARDIANCHAIN Token Global Launch Dashboard
+          </h1>
+          <p className="text-xl text-slate-300">
+            Monitor and control the comprehensive DeFi deployment across all major networks
+          </p>
+        </div>
 
       {/* Overall Progress */}
       <Card className="p-6">
@@ -555,6 +556,7 @@ export default function TokenLaunchPage() {
           <CommandDashboard />
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

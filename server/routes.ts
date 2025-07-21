@@ -20,8 +20,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin launch status endpoint
-  app.get('/api/admin/launch-status', isAuthenticated, async (req: any, res) => {
+  // Public launch status endpoint (removed authentication requirement for token launch page)
+  app.get('/api/admin/launch-status', async (req: any, res) => {
     try {
       // Production deployment status
       const launchStatus = {
