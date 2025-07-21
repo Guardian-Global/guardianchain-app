@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
+import { AssetProvider } from "@/components/assets/AssetProvider";
 import Navigation from "@/components/layout/navigation";
 import Footer from "@/components/layout/footer";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
@@ -151,6 +152,7 @@ function Router() {
         <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
         <Route path="/category-discovery" component={CategoryDiscovery} />
         <Route path="/whitepapers" component={Whitepapers} />
+        <Route path="/asset-showcase" component={() => import('./pages/asset-showcase').then(m => m.default())} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         
@@ -170,7 +172,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <WalletProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <TooltipProvider>
+          <AssetProvider>
+            <TooltipProvider>
             <div className="min-h-screen bg-background">
               <MobileHeader />
               <div className="hidden lg:block">
@@ -183,6 +186,7 @@ function App() {
             </div>
             <Toaster />
           </TooltipProvider>
+          </AssetProvider>
         </ThemeProvider>
       </WalletProvider>
     </QueryClientProvider>

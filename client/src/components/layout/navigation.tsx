@@ -7,6 +7,7 @@ import WalletConnect from "@/components/web3/wallet-connect";
 import { useTheme } from "@/components/web3/theme-provider";
 import LanguageSelector from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/i18n";
+import { LogoDisplay } from "@/components/assets/LogoDisplay";
 
 // Core navigation focused on enterprise features
 const navigation = [
@@ -34,13 +35,27 @@ export default function Navigation() {
           <div className="flex items-center space-x-8">
             <Link href="/">
               <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                  <Shield className="text-white h-5 w-5" />
-                </div>
-                <span className="text-xl font-bold">
-                  <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>
-                  <span style={{ color: "#2CB67D" }}>CHAIN</span>
-                </span>
+                <LogoDisplay 
+                  size="lg" 
+                  variant="icon"
+                  className="w-8 h-8"
+                  fallback={
+                    <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
+                      <Shield className="text-white h-5 w-5" />
+                    </div>
+                  }
+                />
+                <LogoDisplay 
+                  size="md" 
+                  variant="text"
+                  className="h-6"
+                  fallback={
+                    <span className="text-xl font-bold">
+                      <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>
+                      <span style={{ color: "#2CB67D" }}>CHAIN</span>
+                    </span>
+                  }
+                />
               </div>
             </Link>
             <div className="hidden md:flex space-x-6">

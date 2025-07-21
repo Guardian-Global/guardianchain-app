@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { Shield, Coins, TrendingUp, Users } from "lucide-react";
+import { VideoDisplay } from "@/components/assets/VideoDisplay";
+import { NFTIconDisplay } from "@/components/assets/NFTIconDisplay";
+import { CapsuleArtDisplay } from "@/components/assets/CapsuleArtDisplay";
 
 export default function Home() {
   const { user } = useAuth();
@@ -33,13 +36,35 @@ export default function Home() {
             Your GUARDIANCHAIN command center is ready. Secure truth, earn rewards, and build the future.
           </p>
 
-          <Button asChild className="mr-4">
-            <a href="/create">Create Capsule</a>
-          </Button>
-          
-          <Button variant="outline" asChild>
-            <a href="/api/logout">Sign Out</a>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+            <Button asChild className="mr-4">
+              <a href="/create">Create Capsule</a>
+            </Button>
+            
+            <Button variant="outline" asChild>
+              <a href="/api/logout">Sign Out</a>
+            </Button>
+          </div>
+
+          {/* Featured Video Section */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">GUARDIANCHAIN Protocol Overview</h2>
+            <VideoDisplay 
+              variant="explainer"
+              autoplay={false}
+              controls={true}
+              className="w-full aspect-video rounded-lg"
+              fallback={
+                <div className="w-full aspect-video bg-gradient-to-br from-purple-900 to-slate-900 rounded-lg flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <Shield className="w-16 h-16 mx-auto mb-4 text-purple-400" />
+                    <h3 className="text-xl font-bold">GUARDIANCHAIN Explainer</h3>
+                    <p className="text-slate-300">Coming Soon</p>
+                  </div>
+                </div>
+              }
+            />
+          </div>
         </div>
 
         {/* Dashboard Cards */}
