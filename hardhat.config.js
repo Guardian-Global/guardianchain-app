@@ -21,6 +21,13 @@ module.exports = {
       chainId: 31337
     },
     // Ethereum networks
+    ethereum: {
+      url: "https://eth.llamarpc.com",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 1,
+      gasPrice: 15000000000, // 15 gwei
+      timeout: 120000
+    },
     mainnet: {
       url: "https://matic-mainnet.chainstacklabs.com",
       accounts: process.env.PRIVATE_KEY_USER ? [process.env.PRIVATE_KEY_USER] : [],
