@@ -22,10 +22,11 @@ module.exports = {
     },
     // Ethereum networks
     mainnet: {
-      url: process.env.ETHEREUM_RPC_URL || "https://boldest-long-flower.quiknode.pro/f95e9c78a34f9c076e8ff012c98e17332758f862/",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      url: "https://eth-mainnet.g.alchemy.com/v2/demo",
+      accounts: ["0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde"],
       chainId: 1,
-      gasPrice: 20000000000 // 20 gwei
+      gasPrice: 15000000000, // 15 gwei (lower for better success)
+      timeout: 60000
     },
     sepolia: {
       url: process.env.ETHEREUM_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_ID",
@@ -47,8 +48,8 @@ module.exports = {
       gasPrice: 30000000000 // 30 gwei
     },
     mumbai: {
-      url: process.env.POLYGON_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY],
+      url: "https://polygon-mumbai.g.alchemy.com/v2/demo",
+      accounts: ["0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde"],
       chainId: 80001,
       gasPrice: 35000000000 // 35 gwei
     },
