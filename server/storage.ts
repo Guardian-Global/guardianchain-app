@@ -9,7 +9,17 @@ export interface IStorage {
   // User operations
   // (IMPORTANT) these user operations are mandatory for Replit Auth.
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  createAdminUser(adminData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    roles: string[];
+    isActive: boolean;
+    passwordHash: string;
+  }): Promise<User>;
+  updateUserRoles(userId: string, roles: string[]): Promise<User>;
   getUserByAuth0Id?(auth0Id: string): Promise<User | undefined>;
   getUserByWallet?(walletAddress: string): Promise<User | undefined>;
   getUserByWalletAddress?(walletAddress: string): Promise<User | undefined>;
@@ -61,7 +71,93 @@ export class DatabaseStorage implements IStorage {
       achievements: [],
       socialLinks: {},
       isVerified: false,
+      roles: ["USER"],
+      isActive: true,
+      passwordHash: null,
+      lastLoginAt: null,
       createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    // Mock implementation for now
+    if (email === process.env.MASTER_ADMIN_EMAIL) {
+      return {
+        id: "master-admin-1",
+        email,
+        firstName: "Master",
+        lastName: "Admin",
+        profileImageUrl: null,
+        username: null,
+        walletAddress: null,
+        bio: null,
+        avatar: null,
+        reputation: 0,
+        xpPoints: 0,
+        totalCapsules: 0,
+        verifiedCapsules: 0,
+        gttBalance: "0",
+        badges: [],
+        achievements: [],
+        socialLinks: {},
+        isVerified: true,
+        roles: ["MASTER_ADMIN"],
+        isActive: true,
+        passwordHash: null,
+        lastLoginAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    }
+    return undefined;
+  }
+
+  async createAdminUser(adminData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    roles: string[];
+    isActive: boolean;
+    passwordHash: string;
+  }): Promise<User> {
+    const newUser: User = {
+      id: `admin-${Date.now()}`,
+      email: adminData.email,
+      firstName: adminData.firstName,
+      lastName: adminData.lastName,
+      profileImageUrl: null,
+      username: null,
+      walletAddress: null,
+      bio: null,
+      avatar: null,
+      reputation: 0,
+      xpPoints: 0,
+      totalCapsules: 0,
+      verifiedCapsules: 0,
+      gttBalance: "0",
+      badges: [],
+      achievements: [],
+      socialLinks: {},
+      isVerified: true,
+      roles: adminData.roles,
+      isActive: adminData.isActive,
+      passwordHash: adminData.passwordHash,
+      lastLoginAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return newUser;
+  }
+
+  async updateUserRoles(userId: string, roles: string[]): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return {
+      ...user,
+      roles,
       updatedAt: new Date(),
     };
   }
@@ -87,6 +183,10 @@ export class DatabaseStorage implements IStorage {
       achievements: userData.achievements || [],
       socialLinks: userData.socialLinks || {},
       isVerified: userData.isVerified || false,
+      roles: userData.roles || ["USER"],
+      isActive: userData.isActive !== undefined ? userData.isActive : true,
+      passwordHash: userData.passwordHash || null,
+      lastLoginAt: userData.lastLoginAt || null,
       createdAt: userData.createdAt || new Date(),
       updatedAt: new Date(),
     };
@@ -190,6 +290,10 @@ export class MemStorage implements IStorage {
       achievements: userData.achievements || [],
       socialLinks: userData.socialLinks || {},
       isVerified: userData.isVerified || false,
+      roles: userData.roles || ["USER"],
+      isActive: userData.isActive !== undefined ? userData.isActive : true,
+      passwordHash: userData.passwordHash || null,
+      lastLoginAt: userData.lastLoginAt || null,
       createdAt: userData.createdAt || new Date(),
       updatedAt: new Date(),
     };
@@ -201,6 +305,64 @@ export class MemStorage implements IStorage {
     }
     
     return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return this.users.find(u => u.email === email);
+  }
+
+  async createAdminUser(adminData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    roles: string[];
+    isActive: boolean;
+    passwordHash: string;
+  }): Promise<User> {
+    const newUser: User = {
+      id: `admin-${Date.now()}`,
+      email: adminData.email,
+      firstName: adminData.firstName,
+      lastName: adminData.lastName,
+      profileImageUrl: null,
+      username: null,
+      walletAddress: null,
+      bio: null,
+      avatar: null,
+      reputation: 1000,
+      xpPoints: 1000,
+      totalCapsules: 0,
+      verifiedCapsules: 0,
+      gttBalance: "1000",
+      badges: ["ADMIN"],
+      achievements: [],
+      socialLinks: {},
+      isVerified: true,
+      roles: adminData.roles,
+      isActive: adminData.isActive,
+      passwordHash: adminData.passwordHash,
+      lastLoginAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    this.users.push(newUser);
+    return newUser;
+  }
+
+  async updateUserRoles(userId: string, roles: string[]): Promise<User> {
+    const userIndex = this.users.findIndex(u => u.id === userId);
+    if (userIndex === -1) {
+      throw new Error("User not found");
+    }
+    
+    this.users[userIndex] = {
+      ...this.users[userIndex],
+      roles,
+      updatedAt: new Date(),
+    };
+    
+    return this.users[userIndex];
   }
 
   async getCapsule(id: number): Promise<Capsule | undefined> {

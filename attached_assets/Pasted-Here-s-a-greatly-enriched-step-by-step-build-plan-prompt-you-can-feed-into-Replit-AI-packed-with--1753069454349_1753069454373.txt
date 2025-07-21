@@ -1,0 +1,196 @@
+Here’s a greatly enriched, step-by-step “build plan” prompt you can feed into Replit AI—packed with context, clear objectives, security reminders, dependency versions, and explicit deliverables. Feel free to tweak any names, URLs or secret-names to match your exact setup:
+
+markdown
+Copy
+Edit
+🚀 **GUARDIANCHAIN PRODUCTION RELEASE** 🚀
+
+You are **Senior Full-Stack Web3 Engineer** for **GUARDIANCHAIN**, owning end-to-end delivery. Your mission is to finalize, test, and commit **production-ready** code on **Replit**. Follow each step precisely and **do not skip** any deployment, binding or security check. 
+
+---
+
+### 1️⃣ Environment & Secrets
+- Use these Replit Secrets (do **not** hard-code):
+  - `POLYGON_RPC_URL` → Polygon Mumbai RPC endpoint
+  - `PRIVATE_KEY`        → Deployer wallet private key
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `STRIPE_PUB_KEY`
+  - `STRIPE_SECRET_KEY`
+  - `STRIPE_WEBHOOK_SECRET`
+  - `PINATA_API_KEY`
+  - `PINATA_SECRET_API_KEY`
+- Verify `.env.local` and Replit Secrets panel are in sync.
+
+---
+
+### 2️⃣ Smart Contracts Deployment  
+**Network:** Polygon Mumbai  
+**Contracts:**  
+- **GTTToken.sol** (ERC-20 grief-tethered token)  
+- **TruthVault.sol** (capsule yield & DAO registry)  
+
+**Tasks:**  
+1. Compile with `hardhat compile`  
+2. Deploy:  
+   ```bash
+   npx hardhat run scripts/deploy_gtt.js --network mumbai
+   npx hardhat run scripts/deploy_vault.js --network mumbai
+Capture deployed addresses in ./frontend/src/constants.ts and ./backend/src/config.ts
+
+Verify on PolygonScan (testnet) and log gas used.
+
+3️⃣ Backend Integration & Supabase Sync
+Update constants.ts in both /frontend and /backend with new contract addresses + ABIs.
+
+Supabase schema migrations:
+
+Add heirAddress (text) and unlockDate (timestamp) to capsules table.
+
+Add truthYield (numeric) to capsule_yield table.
+
+Run: supabase db push or apply SQL migrations manually.
+
+Confirm schema by querying:
+
+sql
+Copy
+Edit
+SELECT column_name, data_type 
+  FROM information_schema.columns 
+ WHERE table_name = 'capsules';
+4️⃣ Capsule Yield Logic
+Views: ensure /api/capsule/:id/yield returns on-chain + Supabase yield.
+
+Shares: implement on-chain share events (emit CapsuleShared) in TruthVault, then webhook to backend to log in Supabase.
+
+Verifications: on-chain verifyTruth() must update truthYield in both contract storage and Supabase.
+
+NFT Mints: mint function in TruthVault should call _mint() and then backend /api/mint to store tokenId, metadataCID and update truthYield.
+
+5️⃣ Replit Auth → Supabase Auth Bridge
+Frontend: import @replit/extensions → call extensions.auth.getUser() on app load.
+
+Backend: accept Replit JWT, verify via @supabase/supabase-js service role key.
+
+Flow:
+
+User logs in → Replit issues JWT
+
+Frontend sends JWT to /api/auth/bridge
+
+Backend verifies and upserts user in Supabase (auth.users), returns Supabase user JWT
+
+Store Supabase JWT in localStorage under SUPABASE_JWT
+
+6️⃣ Frontend Features & UI Updates
+Capsule Form (/capsule/new): add heirAddress and unlockDate inputs, validate on submit.
+
+Homepage: embed video player:
+
+jsx
+Copy
+Edit
+<video 
+  src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4" 
+  controls 
+  loop 
+  muted 
+  className="w-full max-h-[500px] object-cover rounded-xl"
+/>
+
+markdown
+Copy
+Edit
+- **Responsive**: audit all pages with Chrome DevTools mobile emulator—fix any overflow, ensure touch targets ≥ 44px, nav collapses correctly.
+
+---
+
+### 7️⃣ Dashboard & CLI  
+- **User Dashboard** (`/dashboard`): list verified capsules, display `truthYield`, allow **GTT yield claims**.  
+- **Admin Console** (`/admin` or `/commander`):
+- Protect via `createMiddlewareSupabaseClient` in `middleware.ts`  
+- Show tables: capsules, flags, DAO proposals  
+- Buttons: “Revoke Capsule”, “Flag Review”, “Trigger DAO Action”  
+- **CLI Script**: add `scripts/claimYield.js` for batch GTT distribution:
+```bash
+node scripts/claimYield.js --network mumbai
+8️⃣ End-to-End Testing & QA
+Write or update Cypress tests for:
+
+Contract deployment & address resolution
+
+Capsule creation → IPFS storage → DB record
+
+Replit Auth flow → Supabase JWT issuance
+
+Yield logic: share → verify → mint → claim
+
+Responsive layout checks
+
+Run: npm run test:e2e and fix any failures.
+
+9️⃣ Finalize & Commit
+Lint & format: npm run lint && npm run prettier:check
+
+Build production bundles:
+
+Frontend: npm run build && npm run export
+
+Backend: npm run tsc
+
+Commit with message:
+
+diff
+Copy
+Edit
+chore: production-ready release:
+- deployed GTTToken & TruthVault on Mumbai
+- updated constants & schemas
+- completed capsule yield + NFT mint logic
+- integrated Replit→Supabase auth
+- added inheritance fields & video embed
+- responsive audit + QA tests
+Push to main, then git tag v1.0.0 and push tags.
+
+Trigger Replit “Deploy to Production” via Replit UI.
+
+🔒 Security & Sanity Checks
+✅ No private keys in code
+
+✅ All secrets loaded via Replit Secrets or .env
+
+🔄 Verify no lingering console.log(secret) in logs
+
+🔍 Scan for TODOs and FIXMEs → resolve
+
+When complete, report:
+
+Contract addresses + gas usage
+
+Supabase migration results
+
+E2E test pass rate
+
+Responsive audit screenshots
+
+Production build size and any warnings
+
+Proceed methodically, and confirm each major milestone in chat before moving on. Good luck—let’s launch GUARDIANCHAIN!
+
+Copy
+Edit
+
+
+
+
+
+
+Ask ChatGPT
+
+
+
+
+
+ChatGPT can make mistakes. Check important info.

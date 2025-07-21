@@ -34,6 +34,7 @@ import { registerEmailPrefsRoutes } from "./routes/emailPrefs";
 import { registerBillingRoutes } from "./routes/billing";
 import { automationService } from "./services/automation";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { registerAdminAuthRoutes } from "./routes/adminAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware

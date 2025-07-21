@@ -68,6 +68,8 @@ import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
 import TokenLaunch from "./pages/token-launch";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboardPage from "./pages/AdminDashboard";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -134,6 +136,8 @@ function Router() {
         <Route path="/notifications" component={Notifications} />
         <Route path="/billing-dashboard" component={BillingDashboard} />
         <Route path="/token-launch" component={TokenLaunch} />
+        <Route path="/admin/login" component={AdminLogin} />
+        <Route path="/admin/dashboard" component={AdminDashboardPage} />
         
         {/* Legal Pages */}
         <Route path="/legal/privacy" component={PrivacyPolicy} />

@@ -55,6 +55,10 @@ export const users = pgTable("users", {
   achievements: jsonb("achievements").$type<object[]>().default([]),
   socialLinks: jsonb("social_links").$type<Record<string, string>>().default({}),
   isVerified: boolean("is_verified").default(false),
+  roles: jsonb("roles").$type<string[]>().default(["USER"]),
+  isActive: boolean("is_active").default(true),
+  passwordHash: varchar("password_hash"),
+  lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
