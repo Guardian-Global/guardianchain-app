@@ -184,6 +184,22 @@ export default function TokenLaunchPage() {
   // Fetch live token metrics with hourly refresh minimum
   const { data: tokenMetrics, isLoading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useQuery<TokenMetrics>({
     queryKey: ['/api/token/metrics'],
+    queryFn: async () => {
+      const response = await fetch('/api/token/metrics', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data;
+    },
     refetchInterval: 3600000, // Refresh every hour (3600000ms)
     retry: 3,
     retryDelay: 1000,
@@ -194,6 +210,22 @@ export default function TokenLaunchPage() {
   // Fetch launch status with live updates
   const { data: launchStatus, isLoading: launchLoading, error: launchError, refetch: refetchLaunch } = useQuery<LaunchStatus>({
     queryKey: ['/api/admin/launch-status'],
+    queryFn: async () => {
+      const response = await fetch('/api/admin/launch-status', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data;
+    },
     refetchInterval: 300000, // Refresh every 5 minutes
     retry: 3,
     retryDelay: 1000,

@@ -283,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enhanced live token metrics API with comprehensive data
-  const tokenMetricsHandler = async (req, res) => {
+  const tokenMetricsHandler = async (req: any, res: any) => {
     try {
       // Generate dynamic, realistic token data with variance
       const basePrice = 0.0247;
