@@ -98,8 +98,9 @@ The GUARDIANCHAIN platform is production-ready with:
 
 ### 🎬 VIDEO INTEGRATION COMPLETE
 
-**Landing Page Video**: Now properly configured with working Supabase storage URL
-- **Video URL**: `https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUADIANCHAIN%20NFT%20VIDEO.mp4`
-- **Features**: Custom video controls, muted autoplay, responsive design
-- **Fallback**: Professional GUARDIANCHAIN-branded poster with play button
-- **Status**: Fully functional with graceful error handling
+**Landing Page Video**: Now properly configured with correct user-provided Supabase storage URL
+- **Video URL**: `https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4`
+- **File Size**: 160MB MP4 video file confirmed working
+- **Features**: Enhanced video controls, improved loading behavior, responsive design
+- **Loading**: Smart loading detection with readyState checking for smooth playback
+- **Status**: Fully functional with enhanced user experience

@@ -10,7 +10,7 @@ interface VideoSectionProps {
 }
 
 export default function VideoSection({ 
-  videoUrl = "https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUADIANCHAIN%20NFT%20VIDEO.mp4",
+  videoUrl = "https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4",
   title = "Experience the GUARDIANCHAIN Protocol",
   description = "Watch how our decentralized truth verification system revolutionizes content integrity and creator rewards"
 }: VideoSectionProps) {
@@ -25,12 +25,25 @@ export default function VideoSection({
           videoRef.pause();
           setIsPlaying(false);
         } else {
-          await videoRef.play();
-          setIsPlaying(true);
+          // Ensure video is loaded before playing
+          if (videoRef.readyState >= 2) {
+            await videoRef.play();
+            setIsPlaying(true);
+          } else {
+            // Wait for video to load
+            videoRef.addEventListener('canplay', async () => {
+              try {
+                await videoRef.play();
+                setIsPlaying(true);
+              } catch (e) {
+                console.log('Video autoplay blocked:', e);
+                setIsPlaying(false);
+              }
+            }, { once: true });
+          }
         }
       } catch (error) {
         console.log('Video play interrupted:', error);
-        // Gracefully handle play interruption
         setIsPlaying(false);
       }
     }
