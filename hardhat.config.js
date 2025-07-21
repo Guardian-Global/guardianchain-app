@@ -22,8 +22,8 @@ module.exports = {
     },
     // Ethereum networks
     ethereum: {
-      url: "https://eth.llamarpc.com",
-      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      url: "https://boldest-long-flower.quiknode.pro/f95e9c78a34f9c076e8ff012c98e17332758f862",
+      accounts: ["0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde"],
       chainId: 1,
       gasPrice: 15000000000, // 15 gwei
       timeout: 120000
@@ -49,7 +49,7 @@ module.exports = {
     },
     // Polygon networks
     polygon: {
-      url: "https://polygon-rpc.com",
+      url: "https://chaotic-cosmopolitan-tab.matic.quiknode.pro/a62225077279679a5957c8304e1c7042baec8c11",
       accounts: ["0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde"],
       chainId: 137,
       gasPrice: 25000000000, // 25 gwei
