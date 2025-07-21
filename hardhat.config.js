@@ -22,8 +22,8 @@ module.exports = {
     },
     // Ethereum networks
     mainnet: {
-      url: process.env.ETHEREUM_RPC_URL || "https://mainnet.infura.io/v3/YOUR_INFURA_ID",
-      accounts: process.env.PRIVATE_KEY_DEPLOYER ? [process.env.PRIVATE_KEY_DEPLOYER] : [],
+      url: process.env.ETHEREUM_RPC_URL || "https://boldest-long-flower.quiknode.pro/f95e9c78a34f9c076e8ff012c98e17332758f862/",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 1,
       gasPrice: 20000000000 // 20 gwei
     },
