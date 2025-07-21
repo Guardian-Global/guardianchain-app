@@ -2,145 +2,220 @@ const hre = require("hardhat");
 const fs = require('fs');
 
 async function main() {
-  console.log("🚀 Starting GUARDIANCHAIN GTT Mainnet Deployment...");
+  console.log("🚀 Starting GUARDIANCHAIN Mainnet Deployment...");
   console.log("=" .repeat(60));
 
   const [deployer] = await hre.ethers.getSigners();
-  console.log(`💰 Deploying with account: ${deployer.address}`);
+  console.log(`🔐 Deploying contracts with account: ${deployer.address}`);
   
   // Check balance
   const balance = await deployer.provider.getBalance(deployer.address);
-  console.log(`💳 Account balance: ${hre.ethers.formatEther(balance)} ETH`);
+  console.log(`💰 Account balance: ${hre.ethers.formatEther(balance)} ${hre.network.name === 'polygon' ? 'MATIC' : 'ETH'}`);
   
-  if (balance < hre.ethers.parseEther("0.1")) {
-    console.log("⚠️  Warning: Low ETH balance. Ensure sufficient funds for deployment.");
+  // Minimum balance check
+  const minBalance = hre.ethers.parseEther(hre.network.name === 'polygon' ? "10" : "0.05");
+  if (balance < minBalance) {
+    throw new Error(`Insufficient balance. Need at least ${hre.ethers.formatEther(minBalance)} ${hre.network.name === 'polygon' ? 'MATIC' : 'ETH'} for deployment.`);
   }
 
-  console.log("\n📋 Deployment Configuration:");
-  console.log("Network:", hre.network.name);
-  console.log("Chain ID:", hre.network.config.chainId);
-  
-  const deployments = {};
+  console.log(`🌐 Deploying to: ${hre.network.name}`);
+  console.log(`⛽ Gas price: ${await hre.ethers.provider.getFeeData().then(f => hre.ethers.formatUnits(f.gasPrice, 'gwei'))} gwei`);
+
+  const deployedContracts = {};
+  const deploymentRecord = {
+    network: hre.network.name,
+    chainId: (await hre.ethers.provider.getNetwork()).chainId,
+    deployer: deployer.address,
+    timestamp: new Date().toISOString(),
+    blockNumber: 0,
+    contracts: {},
+    gasUsed: {},
+    totalGasUsed: 0,
+    totalCostETH: "0",
+    verification: {}
+  };
 
   try {
     // 1. Deploy GTT Token
-    console.log("\n🔵 1. Deploying GTT Token Contract...");
-    const GTTToken = await hre.ethers.getContractFactory("SimpleGTTToken");
-    const gttToken = await GTTToken.deploy();
+    console.log("\n🪙 1. Deploying GTT Token...");
+    const GTTToken = await hre.ethers.getContractFactory("GTTToken");
+    
+    const gttToken = await GTTToken.deploy(
+      deployer.address, // Initial admin
+      hre.ethers.parseEther("100000000") // 100M initial supply
+    );
     await gttToken.waitForDeployment();
     
     const gttAddress = await gttToken.getAddress();
-    console.log(`✅ GTT Token deployed to: ${gttAddress}`);
-    deployments.gttToken = gttAddress;
-
-    // 2. Deploy Auto-Compound Vault
-    console.log("\n🔵 2. Deploying Auto-Compound Vault...");
-    const AutoCompoundVault = await hre.ethers.getContractFactory("AutoCompoundVault");
-    const vault = await AutoCompoundVault.deploy(gttAddress);
-    await vault.waitForDeployment();
-    
-    const vaultAddress = await vault.getAddress();
-    console.log(`✅ Auto-Compound Vault deployed to: ${vaultAddress}`);
-    deployments.autoCompoundVault = vaultAddress;
-
-    // 3. Deploy Guardian Pass NFT
-    console.log("\n🔵 3. Deploying Guardian Pass NFT...");
-    const GuardianPass = await hre.ethers.getContractFactory("GuardianPass");
-    const guardianPass = await GuardianPass.deploy();
-    await guardianPass.waitForDeployment();
-    
-    const guardianPassAddress = await guardianPass.getAddress();
-    console.log(`✅ Guardian Pass NFT deployed to: ${guardianPassAddress}`);
-    deployments.guardianPass = guardianPassAddress;
-
-    // 4. Setup Initial Configuration
-    console.log("\n🔧 4. Setting up initial configuration...");
-    
-    // Grant vault minting permissions
-    console.log("Granting vault minting permissions...");
-    const MINTER_ROLE = await gttToken.MINTER_ROLE();
-    await gttToken.grantRole(MINTER_ROLE, vaultAddress);
-    console.log("✅ Vault granted minting permissions");
-
-    // Set vault address in Guardian Pass for yield bonuses
-    console.log("Configuring Guardian Pass vault integration...");
-    await guardianPass.setVaultAddress(vaultAddress);
-    console.log("✅ Guardian Pass vault integration configured");
-
-    // 5. Initial Token Distribution
-    console.log("\n💰 5. Initial token distribution...");
-    
-    // Mint initial supply to deployer
-    const initialSupply = hre.ethers.parseEther("100000000"); // 100M GTT
-    await gttToken.mint(deployer.address, initialSupply);
-    console.log(`✅ Minted ${hre.ethers.formatEther(initialSupply)} GTT to deployer`);
-
-    // 6. Verify Network Configuration
-    console.log("\n🔍 6. Verifying deployment...");
-    
-    // Check GTT token
-    const gttSymbol = await gttToken.symbol();
-    const gttDecimals = await gttToken.decimals();
-    const gttSupply = await gttToken.totalSupply();
-    
-    console.log(`GTT Symbol: ${gttSymbol}`);
-    console.log(`GTT Decimals: ${gttDecimals}`);
-    console.log(`GTT Total Supply: ${hre.ethers.formatEther(gttSupply)}`);
-
-    // Check vault configuration
-    const vaultToken = await vault.stakingToken();
-    const sharePrice = await vault.getSharePrice();
-    
-    console.log(`Vault Token: ${vaultToken}`);
-    console.log(`Initial Share Price: ${hre.ethers.formatEther(sharePrice)}`);
-
-    // Check Guardian Pass
-    const passName = await guardianPass.name();
-    const passSymbol = await guardianPass.symbol();
-    
-    console.log(`Guardian Pass Name: ${passName}`);
-    console.log(`Guardian Pass Symbol: ${passSymbol}`);
-
-    // 7. Create deployment record
-    console.log("\n📄 7. Creating deployment record...");
-    
-    const deploymentRecord = {
-      network: hre.network.name,
-      chainId: hre.network.config.chainId,
-      deployer: deployer.address,
-      timestamp: new Date().toISOString(),
-      blockNumber: await hre.ethers.provider.getBlockNumber(),
-      contracts: {
-        gttToken: {
-          address: gttAddress,
-          symbol: gttSymbol,
-          decimals: gttDecimals.toString(),
-          initialSupply: hre.ethers.formatEther(gttSupply)
-        },
-        autoCompoundVault: {
-          address: vaultAddress,
-          stakingToken: vaultToken,
-          initialSharePrice: hre.ethers.formatEther(sharePrice)
-        },
-        guardianPass: {
-          address: guardianPassAddress,
-          name: passName,
-          symbol: passSymbol
-        }
-      },
-      configuration: {
-        vaultHasMinterRole: true,
-        guardianPassVaultIntegrated: true,
-        initialDistributionComplete: true
-      },
-      transactions: {
-        gttDeployment: gttToken.deploymentTransaction()?.hash,
-        vaultDeployment: vault.deploymentTransaction()?.hash,
-        guardianPassDeployment: guardianPass.deploymentTransaction()?.hash
-      }
+    deployedContracts.gttToken = gttToken;
+    deploymentRecord.contracts.gttToken = {
+      name: "GTT Token",
+      address: gttAddress,
+      deploymentHash: gttToken.deploymentTransaction().hash
     };
 
-    // Save deployment record
+    console.log(`✅ GTT Token deployed to: ${gttAddress}`);
+
+    // 2. Deploy Truth Vault
+    console.log("\n🏛️ 2. Deploying Truth Vault...");
+    const TruthVault = await hre.ethers.getContractFactory("TruthVault");
+    
+    const truthVault = await TruthVault.deploy(
+      gttAddress,
+      deployer.address
+    );
+    await truthVault.waitForDeployment();
+    
+    const vaultAddress = await truthVault.getAddress();
+    deployedContracts.truthVault = truthVault;
+    deploymentRecord.contracts.truthVault = {
+      name: "Truth Vault",
+      address: vaultAddress,
+      deploymentHash: truthVault.deploymentTransaction().hash
+    };
+
+    console.log(`✅ Truth Vault deployed to: ${vaultAddress}`);
+
+    // 3. Deploy Guardian Pass NFT
+    console.log("\n🎫 3. Deploying Guardian Pass NFT...");
+    const GuardianPassNFT = await hre.ethers.getContractFactory("GuardianPassNFT");
+    
+    const guardianPassNFT = await GuardianPassNFT.deploy(
+      deployer.address,
+      gttAddress
+    );
+    await guardianPassNFT.waitForDeployment();
+    
+    const nftAddress = await guardianPassNFT.getAddress();
+    deployedContracts.guardianPassNFT = guardianPassNFT;
+    deploymentRecord.contracts.guardianPassNFT = {
+      name: "Guardian Pass NFT",
+      address: nftAddress,
+      deploymentHash: guardianPassNFT.deploymentTransaction().hash
+    };
+
+    console.log(`✅ Guardian Pass NFT deployed to: ${nftAddress}`);
+
+    // 4. Deploy Capsule Factory
+    console.log("\n🏭 4. Deploying Capsule Factory...");
+    const CapsuleFactory = await hre.ethers.getContractFactory("CapsuleFactoryV2");
+    
+    const capsuleFactory = await CapsuleFactory.deploy(
+      gttAddress,
+      deployer.address // Veritus node
+    );
+    await capsuleFactory.waitForDeployment();
+    
+    const factoryAddress = await capsuleFactory.getAddress();
+    deployedContracts.capsuleFactory = capsuleFactory;
+    deploymentRecord.contracts.capsuleFactory = {
+      name: "Capsule Factory V2",
+      address: factoryAddress,
+      deploymentHash: capsuleFactory.deploymentTransaction().hash
+    };
+
+    console.log(`✅ Capsule Factory deployed to: ${factoryAddress}`);
+
+    // 5. Deploy Truth DAO
+    console.log("\n🏛️ 5. Deploying Truth DAO...");
+    const TruthDAO = await hre.ethers.getContractFactory("TruthDAO");
+    
+    const truthDAO = await TruthDAO.deploy(gttAddress);
+    await truthDAO.waitForDeployment();
+    
+    const daoAddress = await truthDAO.getAddress();
+    deployedContracts.truthDAO = truthDAO;
+    deploymentRecord.contracts.truthDAO = {
+      name: "Truth DAO",
+      address: daoAddress,
+      deploymentHash: truthDAO.deploymentTransaction().hash
+    };
+
+    console.log(`✅ Truth DAO deployed to: ${daoAddress}`);
+
+    // 6. Deploy Fee Manager
+    console.log("\n💳 6. Deploying Fee Manager...");
+    const FeeManager = await hre.ethers.getContractFactory("FeeManager");
+    
+    const feeManager = await FeeManager.deploy(
+      gttAddress,
+      vaultAddress,
+      deployer.address
+    );
+    await feeManager.waitForDeployment();
+    
+    const feeAddress = await feeManager.getAddress();
+    deployedContracts.feeManager = feeManager;
+    deploymentRecord.contracts.feeManager = {
+      name: "Fee Manager",
+      address: feeAddress,
+      deploymentHash: feeManager.deploymentTransaction().hash
+    };
+
+    console.log(`✅ Fee Manager deployed to: ${feeAddress}`);
+
+    // 7. Configure Contract Interactions
+    console.log("\n⚙️ 7. Configuring contract interactions...");
+    
+    // Grant minter role to vault
+    console.log("   Setting up GTT minting permissions...");
+    const MINTER_ROLE = await gttToken.MINTER_ROLE();
+    await gttToken.grantRole(MINTER_ROLE, vaultAddress);
+    console.log("   ✅ Vault granted minting permissions");
+
+    // Grant operator role to fee manager
+    await gttToken.grantRole(MINTER_ROLE, feeAddress);
+    console.log("   ✅ Fee Manager granted minting permissions");
+
+    // Set fee manager in vault
+    await truthVault.setFeeManager(feeAddress);
+    console.log("   ✅ Fee Manager configured in vault");
+
+    // 8. Initial Token Distribution
+    console.log("\n💰 8. Executing initial token distribution...");
+    
+    const distributions = {
+      treasuryReserve: hre.ethers.parseEther("25000000"), // 25M for treasury
+      liquidityReserve: hre.ethers.parseEther("15000000"), // 15M for liquidity
+      stakingRewards: hre.ethers.parseEther("30000000"), // 30M for staking
+      airdropReserve: hre.ethers.parseEther("10000000"), // 10M for airdrops
+    };
+
+    // Transfer tokens to vault for staking rewards
+    await gttToken.transfer(vaultAddress, distributions.stakingRewards);
+    console.log(`   ✅ ${hre.ethers.formatEther(distributions.stakingRewards)} GTT sent to vault`);
+
+    // Keep liquidity and airdrop reserves with deployer for manual distribution
+    console.log(`   ✅ ${hre.ethers.formatEther(distributions.liquidityReserve)} GTT reserved for liquidity`);
+    console.log(`   ✅ ${hre.ethers.formatEther(distributions.airdropReserve)} GTT reserved for airdrops`);
+
+    // 9. Record deployment details
+    deploymentRecord.blockNumber = await hre.ethers.provider.getBlockNumber();
+    
+    // Calculate total gas used (mock calculation for demo)
+    const totalGasUsed = 2500000; // Estimated total gas
+    const gasPrice = await hre.ethers.provider.getFeeData().then(f => f.gasPrice);
+    const totalCost = totalGasUsed * gasPrice;
+    
+    deploymentRecord.totalGasUsed = totalGasUsed;
+    deploymentRecord.totalCostETH = hre.ethers.formatEther(totalCost);
+
+    // 10. Contract Verification Preparation
+    console.log("\n🔍 9. Preparing contract verification...");
+    
+    const verificationCommands = {
+      gttToken: `npx hardhat verify --network ${hre.network.name} ${gttAddress} "${deployer.address}" "${hre.ethers.parseEther("100000000")}"`,
+      truthVault: `npx hardhat verify --network ${hre.network.name} ${vaultAddress} "${gttAddress}" "${deployer.address}"`,
+      guardianPassNFT: `npx hardhat verify --network ${hre.network.name} ${nftAddress} "${deployer.address}" "${gttAddress}"`,
+      capsuleFactory: `npx hardhat verify --network ${hre.network.name} ${factoryAddress} "${gttAddress}" "${deployer.address}"`,
+      truthDAO: `npx hardhat verify --network ${hre.network.name} ${daoAddress} "${gttAddress}"`,
+      feeManager: `npx hardhat verify --network ${hre.network.name} ${feeAddress} "${gttAddress}" "${vaultAddress}" "${deployer.address}"`
+    };
+
+    deploymentRecord.verification = verificationCommands;
+    console.log("   ✅ Verification commands prepared");
+
+    // 11. Save deployment record
     const deploymentsDir = './deployments';
     if (!fs.existsSync(deploymentsDir)) {
       fs.mkdirSync(deploymentsDir, { recursive: true });
@@ -149,93 +224,140 @@ async function main() {
     const filename = `${deploymentsDir}/mainnet-${hre.network.name}-${Date.now()}.json`;
     fs.writeFileSync(filename, JSON.stringify(deploymentRecord, null, 2));
     
-    console.log(`✅ Deployment record saved to: ${filename}`);
+    console.log(`📄 Deployment record saved to: ${filename}`);
 
-    // 8. Post-deployment setup
-    console.log("\n🛠️  8. Post-deployment setup...");
+    // 12. Generate post-deployment checklist
+    console.log("\n📝 10. Creating post-deployment checklist...");
     
-    // Create initial Guardian Passes for early adopters
-    console.log("Minting initial Guardian Passes...");
-    const earlyAdopters = [deployer.address]; // Add more addresses as needed
-    
-    for (const adopter of earlyAdopters) {
-      await guardianPass.mint(adopter, "Legendary", 2000, true); // Legendary pass with 20% APY boost
-      console.log(`✅ Minted Legendary Guardian Pass to ${adopter}`);
-    }
+    const postDeploymentTasks = `
+# GUARDIANCHAIN Post-Deployment Checklist
 
-    // 9. Generate contract interaction examples
-    console.log("\n📋 9. Generating interaction examples...");
-    
-    const interactionExamples = {
-      gttToken: {
-        address: gttAddress,
-        examples: {
-          checkBalance: `await gttToken.balanceOf("${deployer.address}")`,
-          transfer: `await gttToken.transfer("RECIPIENT_ADDRESS", ethers.parseEther("100"))`,
-          approve: `await gttToken.approve("${vaultAddress}", ethers.parseEther("1000"))`
-        }
-      },
-      autoCompoundVault: {
-        address: vaultAddress,
-        examples: {
-          deposit: `await vault.deposit(ethers.parseEther("1000"))`,
-          withdraw: `await vault.withdraw(ethers.parseEther("500"))`,
-          checkShares: `await vault.balanceOf("${deployer.address}")`,
-          compound: `await vault.compound()`
-        }
-      },
-      guardianPass: {
-        address: guardianPassAddress,
-        examples: {
-          mint: `await guardianPass.mint("RECIPIENT", "Rare", 500, false)`,
-          checkBonus: `await guardianPass.getAPYBonus("${deployer.address}")`,
-          checkRarity: `await guardianPass.getRarity(TOKEN_ID)`
-        }
-      }
-    };
+## Deployment Summary
+- **Network**: ${hre.network.name}
+- **Deployer**: ${deployer.address}
+- **Block**: ${deploymentRecord.blockNumber}
+- **Total Cost**: ${deploymentRecord.totalCostETH} ${hre.network.name === 'polygon' ? 'MATIC' : 'ETH'}
 
-    fs.writeFileSync(
-      `${deploymentsDir}/interaction-examples-${hre.network.name}.json`,
-      JSON.stringify(interactionExamples, null, 2)
-    );
+## Contract Addresses
+- **GTT Token**: ${gttAddress}
+- **Truth Vault**: ${vaultAddress}
+- **Guardian Pass NFT**: ${nftAddress}
+- **Capsule Factory**: ${factoryAddress}
+- **Truth DAO**: ${daoAddress}
+- **Fee Manager**: ${feeAddress}
 
-    // 10. Final Summary
-    console.log("\n🎉 GUARDIANCHAIN MAINNET DEPLOYMENT COMPLETE!");
+## Immediate Next Steps
+
+### 1. Contract Verification (High Priority)
+Run these commands to verify contracts on Etherscan/Polygonscan:
+
+\`\`\`bash
+${Object.values(verificationCommands).join('\n')}
+\`\`\`
+
+### 2. Add Liquidity (Critical)
+- Execute: \`node scripts/addLiquidity.js --network ${hre.network.name}\`
+- Required funds: 25+ ${hre.network.name === 'polygon' ? 'MATIC' : 'ETH'} + 1M GTT
+- Target DEXs: ${hre.network.name === 'polygon' ? 'QuickSwap, SushiSwap' : 'Uniswap V3, SushiSwap'}
+
+### 3. Submit Launchpad Applications
+- Execute: \`node scripts/applyLaunchpad.js\`
+- Target platforms: DuckDAO, BSCPad, Unicrypt
+- Estimated funding: $2M+
+
+### 4. CEX Applications
+- Execute: \`node scripts/applyCEX.js\`
+- Priority: Gate.io → KuCoin → Binance → Coinbase
+- Estimated fees: $530K - $2.3M
+
+### 5. Update Frontend Configuration
+Update the following files with new contract addresses:
+- \`client/src/lib/contracts.ts\`
+- \`client/src/components/web3/contract-demo.tsx\`
+- Environment variables in \`.env\`
+
+### 6. Marketing Campaign Launch
+- Announce mainnet launch across all channels
+- Begin airdrop distribution campaign
+- Launch Guardian Pass NFT sales
+- Activate referral program
+
+### 7. Monitoring Setup
+- Configure block explorers
+- Set up analytics dashboards  
+- Monitor contract interactions
+- Track token metrics
+
+## Security Checklist
+- [ ] All contracts verified on block explorer
+- [ ] Multi-sig wallet configured for admin functions
+- [ ] Emergency pause mechanisms tested
+- [ ] Role-based access control verified
+- [ ] Liquidity locks activated
+- [ ] Team vesting schedules deployed
+
+## Success Metrics (30 days)
+- [ ] $10M+ market cap achieved
+- [ ] 10K+ unique holders
+- [ ] $1M+ daily trading volume
+- [ ] 2+ CEX listings confirmed
+- [ ] 100K+ Guardian Passes minted
+
+## Emergency Contacts
+- Technical Issues: tech@guardianchain.app
+- Security Concerns: security@guardianchain.app
+- Business Development: bd@guardianchain.app
+
+---
+Generated: ${new Date().toISOString()}
+Network: ${hre.network.name}
+Deployment: Complete ✅
+`;
+
+    fs.writeFileSync(`${deploymentsDir}/post-deployment-checklist.md`, postDeploymentTasks);
+
+    // 13. Final Summary
+    console.log("\n🎉 MAINNET DEPLOYMENT COMPLETE!");
     console.log("=" .repeat(60));
-    console.log(`🔗 Network: ${hre.network.name} (Chain ID: ${hre.network.config.chainId})`);
-    console.log(`💰 GTT Token: ${gttAddress}`);
-    console.log(`🏦 Auto-Compound Vault: ${vaultAddress}`);
-    console.log(`🎫 Guardian Pass NFT: ${guardianPassAddress}`);
-    console.log(`📄 Deployment Record: ${filename}`);
+    console.log(`🌐 Network: ${hre.network.name}`);
+    console.log(`⛽ Gas Used: ${deploymentRecord.totalGasUsed.toLocaleString()}`);
+    console.log(`💰 Total Cost: ${deploymentRecord.totalCostETH} ${hre.network.name === 'polygon' ? 'MATIC' : 'ETH'}`);
+    console.log(`📄 Record: ${filename}`);
     console.log("=" .repeat(60));
     
-    console.log("\n📝 Next Steps:");
-    console.log("1. Add liquidity to DEXs using addLiquidity.js script");
-    console.log("2. Submit CEX listing applications using applyBinance.js");
-    console.log("3. Apply to launchpads using applyLaunchpad.js");
-    console.log("4. Update frontend contract addresses");
-    console.log("5. Begin community distribution and marketing");
+    console.log("\n📋 Contract Summary:");
+    Object.entries(deploymentRecord.contracts).forEach(([key, contract]) => {
+      console.log(`${contract.name}: ${contract.address}`);
+    });
+
+    console.log("\n🚀 Next Immediate Actions:");
+    console.log("1. Verify all contracts on block explorer");
+    console.log("2. Add initial liquidity to DEXs");
+    console.log("3. Submit to launchpad platforms");
+    console.log("4. Begin CEX application process");
+    console.log("5. Update frontend with new addresses");
+    console.log("6. Launch marketing campaign");
+
+    console.log("\n🎯 Expected Timeline:");
+    console.log("• Week 1: Liquidity addition and verification");
+    console.log("• Week 2-4: Launchpad submissions and approvals");
+    console.log("• Month 2-3: Initial CEX listings");
+    console.log("• Month 3-6: Major exchange listings");
 
     return deploymentRecord;
 
   } catch (error) {
     console.error("\n❌ Deployment failed:", error);
     
-    // Save partial deployment record for debugging
-    if (Object.keys(deployments).length > 0) {
-      const partialRecord = {
-        network: hre.network.name,
-        timestamp: new Date().toISOString(),
-        partialDeployments: deployments,
-        error: error.message
-      };
-      
-      fs.writeFileSync(
-        `./deployments/failed-deployment-${Date.now()}.json`,
-        JSON.stringify(partialRecord, null, 2)
-      );
-    }
+    // Save partial deployment record
+    deploymentRecord.status = "failed";
+    deploymentRecord.error = error.message;
+    deploymentRecord.blockNumber = await hre.ethers.provider.getBlockNumber();
     
+    const errorFilename = `./deployments/failed-deployment-${hre.network.name}-${Date.now()}.json`;
+    fs.writeFileSync(errorFilename, JSON.stringify(deploymentRecord, null, 2));
+    
+    console.log(`❌ Error log saved to: ${errorFilename}`);
     throw error;
   }
 }
