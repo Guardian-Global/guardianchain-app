@@ -247,11 +247,11 @@ export default function SimpleTokenLaunchPage() {
               Start earning GTT tokens by creating verified content and contributing to the world's most trusted information platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90">
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90" onClick={() => window.location.href = '/profile'}>
                 Get Started Now
               </Button>
-              <Button variant="outline" size="lg" className="border-purple-500 text-purple-400 hover:bg-purple-500/10">
-                View Documentation
+              <Button variant="outline" size="lg" className="border-purple-500 text-purple-400 hover:bg-purple-500/10" onClick={() => window.location.href = '/upgrade'}>
+                Upgrade Account
               </Button>
             </div>
           </div>

@@ -75,7 +75,10 @@ import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
-import SimpleTokenLaunch from "./pages/simple-token-launch";
+import SimpleTokenLaunch from "@/pages/simple-token-launch";
+import SimpleHome from "@/pages/simple-home";
+import WorkingProfileDashboard from "@/components/profile/WorkingProfileDashboard";
+import StripeCheckout from "@/components/payments/StripeCheckout";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboardPage from "./pages/AdminDashboard";
 import BlockchainDemo from "./pages/blockchain-demo";
@@ -93,12 +96,12 @@ function Router() {
       <MobileResponsiveNavigation />
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={() => <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center"><h1 className="text-4xl font-bold">GUARDIANCHAIN LIVE</h1></div>} />
+        <Route path="/" component={SimpleHome} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
-        <Route path="/profile/:id?" component={Profile} />
-        <Route path="/profile" component={Profile} />
+        <Route path="/profile/:id?" component={WorkingProfileDashboard} />
+        <Route path="/profile" component={WorkingProfileDashboard} />
         <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
@@ -150,7 +153,7 @@ function Router() {
         <Route path="/contact" component={() => <ContactInfo />} />
         <Route path="/notifications" component={Notifications} />
         <Route path="/billing-dashboard" component={BillingDashboard} />
-        <Route path="/token-launch" component={() => <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center"><h1 className="text-4xl font-bold text-green-400">GTT Token Launch Page</h1></div>} />
+        <Route path="/token-launch" component={SimpleTokenLaunch} />
         <Route path="/specialized-intake" component={SpecializedIntake} />
         <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
         <Route path="/category-discovery" component={CategoryDiscovery} />
@@ -159,7 +162,7 @@ function Router() {
         <Route path="/asset-test" component={QuickAssetTest} />
         <Route path="/master-access" component={MasterAccess} />
         <Route path="/profile-customization" component={ProfileCustomization} />
-        <Route path="/upgrade" component={() => <div>Upgrade page coming soon</div>} />
+        <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         

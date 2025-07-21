@@ -25,11 +25,11 @@ export default function SimpleHome() {
             Secure your content, verify information, and earn GTT tokens.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90">
+            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90" onClick={() => window.location.href = '/profile'}>
               <Rocket className="h-5 w-5 mr-2" />
               Get Started
             </Button>
-            <Button variant="outline" size="lg" className="border-purple-500 text-purple-400 hover:bg-purple-500/10">
+            <Button variant="outline" size="lg" className="border-purple-500 text-purple-400 hover:bg-purple-500/10" onClick={() => window.location.href = '/token-launch'}>
               View Token Launch
             </Button>
           </div>
