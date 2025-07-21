@@ -35,6 +35,7 @@ import { registerBillingRoutes } from "./routes/billing";
 import { automationService } from "./services/automation";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { registerAdminAuthRoutes } from "./routes/adminAuth";
+import launchControlRoutes from "./routes/launchControl";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
@@ -65,6 +66,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Billing infrastructure routes
   registerBillingRoutes(app);
+  
+  // Launch control routes for GTT token deployment
+  app.use('/api/admin', launchControlRoutes);
   
   // Replit Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {

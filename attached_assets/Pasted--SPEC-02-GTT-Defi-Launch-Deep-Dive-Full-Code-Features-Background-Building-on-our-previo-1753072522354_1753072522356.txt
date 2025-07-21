@@ -1,0 +1,161 @@
+# SPEC-02-GTT-Defi-Launch Deep Dive: Full Code & Features
+
+## Background
+
+Building on our previous global DeFi launch plan for the GTT token, this document dives deeper by providing full code skeletons, directory structure, additional features, monitoring, security controls, and Master Admin–driven operations. The goal is a turnkey Replit AI–driven build, deploy, secure, and monitor pipeline, all controlled via your Master Admin login.
+
+## 1. Project Structure & Supporting Files
+
+```
+/ ── .env.local           # local secrets (gitignored)
+    ├─ package.json
+    ├─ hardhat.config.js
+    ├─ tsconfig.json
+    ├─ /scripts           # deployment & utility scripts
+    │   ├─ deploy_gtt.js
+    │   ├─ deploy_staking.js
+    │   ├─ addLiquidity.js
+    │   ├─ bridgeSetup.js
+    │   ├─ applyBinance.js
+    │   ├─ bootstrap_master_admin.js
+    │   └─ claimYield.js
+    ├─ /contracts         # solidity contracts
+    │   ├─ GTTToken.sol
+    │   ├─ StakingPool.sol
+    │   └─ Farm.sol
+    ├─ /frontend          # Next.js React app
+    │   ├─ pages
+    │   │   ├─ index.tsx
+    │   │   ├─ /admin
+    │   │   │   ├─ login.tsx
+    │   │   │   ├─ index.tsx
+    │   │   │   └─ invite.tsx
+    │   │   └─ /analytics.tsx
+    │   └─ /components
+    │       ├─ AdminLayout.tsx
+    │       ├─ RoleManager.tsx
+    │       ├─ MonitorPanel.tsx
+    │       └─ TokenLaunchCard.tsx
+    ├─ /backend           # Node.js + Express API
+    │   ├─ src
+    │   │   ├─ index.ts
+    │   │   ├─ middleware/auth.ts
+    │   │   ├─ routes
+    │   │   │   ├─ admin.ts
+    │   │   │   ├─ defi.ts
+    │   │   │   └─ auth.ts
+    │   │   └─ lib
+    │   │       ├─ supabase.ts
+    │   │       └─ web3.ts
+    │   └─ tsconfig.json
+    └─ /monitoring        # Grafana + Prometheus configs
+        ├─ prometheus.yml
+        └─ dashboards.json
+```
+
+## 2. Secrets & Environment Setup
+
+1. In `.env.local` and Replit Secrets:
+
+   ```env
+   MASTER_ADMIN_EMAIL=alice@mycompany.com
+   MASTER_ADMIN_INIT_PASSWORD=<generated>
+   JWT_SECRET=<hex32>
+   OAUTH_COOKIE_SECRET=<hex32>
+   PASSWORD_PEPPER=<hex32>
+   POLYGON_RPC_URL=<...>
+   ETHEREUM_RPC_URL=<...>
+   BSC_RPC_URL=<...>
+   PRIVATE_KEY_DEPLOYER=<...>
+   BINANCE_API_KEY=<...>
+   BINANCE_SECRET=<...>
+   COINBASE_API_KEY=<...>
+   INFURA_ID=<...>
+   BRIDGE_CBRIDGE_KEY=<...>
+   SUPABASE_SERVICE_ROLE_KEY=<...>
+   ```
+2. Confirm in Replit: **Lock** icon → add each key/value.
+
+## 3. Deployment Scripts
+
+* `scripts/deploy_gtt.js`: compiles & deploys GTTToken.sol across configured networks, writes addresses to `/constants` files.
+* `scripts/deploy_staking.js` & `deploy_farm.js`: deploy staking and farming contracts.
+* `scripts/addLiquidity.js`: adds initial liquidity on Uniswap/Sushi/Pancake.
+* `scripts/bridgeSetup.js`: tests cross-chain bridges.
+* **Usage Example**:
+
+  ```bash
+  npx hardhat run scripts/deploy_gtt.js --network mumbai
+  node scripts/addLiquidity.js --network mumbai --router Sushi --pair GTT/WMATIC --amounts 10000,50
+  ```
+
+## 4. Feature Modules
+
+### 4.1 Admin Role Manager
+
+* **File**: `frontend/components/RoleManager.tsx`
+* UI to list all admins, assign/revoke roles.
+* Calls backend `/api/admin/roles` endpoints secured with `requireAdmin(['MASTER'])`.
+
+### 4.2 DeFi Control Panel
+
+* **File**: `frontend/components/MonitorPanel.tsx`
+* Displays real-time: TVL on pools, application statuses, listing responses.
+* Fetches from backend `/api/admin/defi/status`.
+
+### 4.3 Invite & Auth Flow
+
+* **File**: `frontend/pages/admin/invite.tsx`
+* JWT invite token creation, 24h expiration; sets roles on signup.
+
+## 5. Backend API Endpoints
+
+### 5.1 Auth
+
+* `POST /api/auth/login`: verifies Supabase JWT, sets secure cookie.
+* `POST /api/auth/invite`: redeems invite token.
+
+### 5.2 Admin
+
+* `GET /api/admin/users`: list users + admin metadata.
+* `POST /api/admin/roles`: MASTER only → update roles.
+* `POST /api/admin/audit`: logs all changes to `admin_audit_logs`.
+
+### 5.3 DeFi
+
+* `GET /api/admin/defi/status`: fetches on-chain metrics + CEX application statuses.
+* `POST /api/admin/defi/exec`: MASTER can trigger scripts (e.g. re-add liquidity, run bridge).
+
+## 6. Monitoring & Alerts
+
+* **Prometheus** (`monitoring/prometheus.yml`): scrape Node.js metrics on `/metrics` port 9100.
+* **Grafana Dashboard** (`monitoring/dashboards.json`): CPU, Memory, request latencies, on-chain txn rates, TVL charts.
+* **Alert Rules**:
+
+  * High error rate on `/api/admin/*` → Slack webhook.
+  * Bridge tx failures → SMS via Twilio.
+
+## 7. Master Admin Control
+
+1. **Bootstrap**: `node scripts/bootstrap_master_admin.js` → creates Supabase user + `admins` row.
+2. **Login**: go to `https://<app>/admin/login` → use `MASTER_ADMIN_EMAIL` + password.
+3. **Rotate**: invite new MASTER via UI, demote old MASTER.
+4. **Access**: all `/admin/*` panels for user/role management, DeFi controls, monitoring insights.
+
+## 8. Security Best Practices
+
+* **Secrets** only via Replit Secrets or `.env.local`; never commit.
+* **HTTPS**: enforce TLS on all endpoints.
+* **Rate limiting**: limit login & invite endpoints.
+* **Audit logs**: every admin action → `admin_audit_logs` table.
+* **CORS & Cookie**: `SameSite=Strict`, `HttpOnly`, `Secure`.
+
+## 9. Final Deployment & CI/CD
+
+1. **CI**: run `npm run lint && npm run test:unit && npm run test:e2e` on push.
+2. **CD**: Replit AI “Deploy to Production” button triggers build & script runs.
+3. **Post-Deploy**: confirm all metrics in Grafana, verify TVL on DEX, check CEX portal statuses.
+
+---
+
+Proceed block-by-block and confirm readiness before moving forward. Once all are green, your GTT token will be live, monitored, and fully controlled by your Master Admin account.

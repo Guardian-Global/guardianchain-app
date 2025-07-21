@@ -1,0 +1,397 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+/**
+ * @title StakingPool - GTT Token Staking Contract
+ * @dev Advanced staking pool with flexible reward distribution and tiered benefits
+ */
+contract StakingPool is ReentrancyGuard, Pausable, Ownable {
+    using SafeERC20 for IERC20;
+    
+    // Tokens
+    IERC20 public immutable stakingToken;
+    IERC20 public immutable rewardsToken;
+    
+    // Staking parameters
+    uint256 public rewardRate; // Rewards per second
+    uint256 public lastUpdateTime;
+    uint256 public rewardPerTokenStored;
+    uint256 public minimumStakingPeriod = 7 days;
+    uint256 public totalStaked;
+    
+    // Staking tiers with multipliers
+    struct StakingTier {
+        uint256 minAmount;
+        uint256 multiplier; // In basis points (10000 = 1x)
+        string name;
+    }
+    
+    StakingTier[] public stakingTiers;
+    
+    // User staking info
+    struct UserInfo {
+        uint256 stakedAmount;
+        uint256 rewardPerTokenPaid;
+        uint256 rewards;
+        uint256 stakingTimestamp;
+        uint256 tierIndex;
+    }
+    
+    mapping(address => UserInfo) public users;
+    
+    // Events
+    event Staked(address indexed user, uint256 amount, uint256 tierIndex);
+    event Withdrawn(address indexed user, uint256 amount);
+    event RewardPaid(address indexed user, uint256 reward);
+    event RewardRateUpdated(uint256 oldRate, uint256 newRate);
+    event TierAdded(uint256 minAmount, uint256 multiplier, string name);
+    event TierUpdated(uint256 index, uint256 minAmount, uint256 multiplier);
+    
+    constructor(
+        address _stakingToken,
+        address _rewardsToken,
+        uint256 _rewardRate
+    ) {
+        require(_stakingToken != address(0), "Invalid staking token");
+        require(_rewardsToken != address(0), "Invalid rewards token");
+        require(_rewardRate > 0, "Reward rate must be positive");
+        
+        stakingToken = IERC20(_stakingToken);
+        rewardsToken = IERC20(_rewardsToken);
+        rewardRate = _rewardRate;
+        lastUpdateTime = block.timestamp;
+        
+        // Initialize default staking tiers
+        _initializeDefaultTiers();
+    }
+    
+    /**
+     * @dev Initialize default staking tiers
+     */
+    function _initializeDefaultTiers() private {
+        // Bronze: 1,000 GTT minimum, 1x multiplier
+        stakingTiers.push(StakingTier({
+            minAmount: 1000 * 10**18,
+            multiplier: 10000,
+            name: "Bronze"
+        }));
+        
+        // Silver: 10,000 GTT minimum, 1.25x multiplier
+        stakingTiers.push(StakingTier({
+            minAmount: 10000 * 10**18,
+            multiplier: 12500,
+            name: "Silver"
+        }));
+        
+        // Gold: 50,000 GTT minimum, 1.5x multiplier
+        stakingTiers.push(StakingTier({
+            minAmount: 50000 * 10**18,
+            multiplier: 15000,
+            name: "Gold"
+        }));
+        
+        // Platinum: 250,000 GTT minimum, 2x multiplier
+        stakingTiers.push(StakingTier({
+            minAmount: 250000 * 10**18,
+            multiplier: 20000,
+            name: "Platinum"
+        }));
+        
+        // Diamond: 1,000,000 GTT minimum, 3x multiplier
+        stakingTiers.push(StakingTier({
+            minAmount: 1000000 * 10**18,
+            multiplier: 30000,
+            name: "Diamond"
+        }));
+    }
+    
+    /**
+     * @dev Update reward variables
+     */
+    modifier updateReward(address account) {
+        rewardPerTokenStored = rewardPerToken();
+        lastUpdateTime = block.timestamp;
+        
+        if (account != address(0)) {
+            UserInfo storage user = users[account];
+            user.rewards = earned(account);
+            user.rewardPerTokenPaid = rewardPerTokenStored;
+        }
+        _;
+    }
+    
+    /**
+     * @dev Get current reward per token
+     */
+    function rewardPerToken() public view returns (uint256) {
+        if (totalStaked == 0) {
+            return rewardPerTokenStored;
+        }
+        return
+            rewardPerTokenStored +
+            (((block.timestamp - lastUpdateTime) * rewardRate * 1e18) / totalStaked);
+    }
+    
+    /**
+     * @dev Calculate earned rewards for an account
+     */
+    function earned(address account) public view returns (uint256) {
+        UserInfo memory user = users[account];
+        uint256 baseReward = (user.stakedAmount * 
+            (rewardPerToken() - user.rewardPerTokenPaid)) / 1e18;
+        
+        // Apply tier multiplier
+        if (user.tierIndex < stakingTiers.length) {
+            baseReward = (baseReward * stakingTiers[user.tierIndex].multiplier) / 10000;
+        }
+        
+        return baseReward + user.rewards;
+    }
+    
+    /**
+     * @dev Get appropriate tier for staking amount
+     */
+    function getTierForAmount(uint256 amount) public view returns (uint256) {
+        for (uint256 i = stakingTiers.length; i > 0; i--) {
+            if (amount >= stakingTiers[i - 1].minAmount) {
+                return i - 1;
+            }
+        }
+        return 0; // Default to first tier
+    }
+    
+    /**
+     * @dev Stake tokens
+     */
+    function stake(uint256 amount) external nonReentrant whenNotPaused updateReward(msg.sender) {
+        require(amount > 0, "Cannot stake 0 tokens");
+        
+        UserInfo storage user = users[msg.sender];
+        
+        // Transfer tokens from user
+        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+        
+        // Update user staking info
+        user.stakedAmount += amount;
+        user.stakingTimestamp = block.timestamp;
+        user.tierIndex = getTierForAmount(user.stakedAmount);
+        
+        // Update total staked
+        totalStaked += amount;
+        
+        emit Staked(msg.sender, amount, user.tierIndex);
+    }
+    
+    /**
+     * @dev Withdraw staked tokens
+     */
+    function withdraw(uint256 amount) external nonReentrant updateReward(msg.sender) {
+        require(amount > 0, "Cannot withdraw 0 tokens");
+        
+        UserInfo storage user = users[msg.sender];
+        require(user.stakedAmount >= amount, "Insufficient staked amount");
+        require(
+            block.timestamp >= user.stakingTimestamp + minimumStakingPeriod,
+            "Minimum staking period not met"
+        );
+        
+        // Update user staking info
+        user.stakedAmount -= amount;
+        user.tierIndex = getTierForAmount(user.stakedAmount);
+        
+        // Update total staked
+        totalStaked -= amount;
+        
+        // Transfer tokens to user
+        stakingToken.safeTransfer(msg.sender, amount);
+        
+        emit Withdrawn(msg.sender, amount);
+    }
+    
+    /**
+     * @dev Claim rewards
+     */
+    function claimRewards() external nonReentrant updateReward(msg.sender) {
+        uint256 reward = users[msg.sender].rewards;
+        require(reward > 0, "No rewards to claim");
+        
+        users[msg.sender].rewards = 0;
+        rewardsToken.safeTransfer(msg.sender, reward);
+        
+        emit RewardPaid(msg.sender, reward);
+    }
+    
+    /**
+     * @dev Exit staking (withdraw all and claim rewards)
+     */
+    function exit() external {
+        UserInfo memory user = users[msg.sender];
+        if (user.stakedAmount > 0) {
+            withdraw(user.stakedAmount);
+        }
+        if (user.rewards > 0) {
+            claimRewards();
+        }
+    }
+    
+    /**
+     * @dev Emergency withdraw without rewards
+     */
+    function emergencyWithdraw() external nonReentrant {
+        UserInfo storage user = users[msg.sender];
+        uint256 amount = user.stakedAmount;
+        require(amount > 0, "No tokens staked");
+        
+        // Reset user data
+        user.stakedAmount = 0;
+        user.rewards = 0;
+        user.rewardPerTokenPaid = 0;
+        user.stakingTimestamp = 0;
+        user.tierIndex = 0;
+        
+        // Update total staked
+        totalStaked -= amount;
+        
+        // Transfer tokens to user
+        stakingToken.safeTransfer(msg.sender, amount);
+        
+        emit Withdrawn(msg.sender, amount);
+    }
+    
+    /**
+     * @dev Update reward rate (owner only)
+     */
+    function updateRewardRate(uint256 newRewardRate) external onlyOwner updateReward(address(0)) {
+        uint256 oldRate = rewardRate;
+        rewardRate = newRewardRate;
+        emit RewardRateUpdated(oldRate, newRewardRate);
+    }
+    
+    /**
+     * @dev Add new staking tier (owner only)
+     */
+    function addStakingTier(
+        uint256 minAmount,
+        uint256 multiplier,
+        string memory name
+    ) external onlyOwner {
+        require(multiplier >= 10000, "Multiplier must be at least 1x");
+        
+        stakingTiers.push(StakingTier({
+            minAmount: minAmount,
+            multiplier: multiplier,
+            name: name
+        }));
+        
+        emit TierAdded(minAmount, multiplier, name);
+    }
+    
+    /**
+     * @dev Update existing staking tier (owner only)
+     */
+    function updateStakingTier(
+        uint256 index,
+        uint256 minAmount,
+        uint256 multiplier
+    ) external onlyOwner {
+        require(index < stakingTiers.length, "Invalid tier index");
+        require(multiplier >= 10000, "Multiplier must be at least 1x");
+        
+        stakingTiers[index].minAmount = minAmount;
+        stakingTiers[index].multiplier = multiplier;
+        
+        emit TierUpdated(index, minAmount, multiplier);
+    }
+    
+    /**
+     * @dev Update minimum staking period (owner only)
+     */
+    function updateMinimumStakingPeriod(uint256 newPeriod) external onlyOwner {
+        minimumStakingPeriod = newPeriod;
+    }
+    
+    /**
+     * @dev Pause staking (owner only)
+     */
+    function pause() external onlyOwner {
+        _pause();
+    }
+    
+    /**
+     * @dev Unpause staking (owner only)
+     */
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+    
+    /**
+     * @dev Emergency token recovery (owner only)
+     */
+    function emergencyTokenRecovery(
+        address tokenAddress,
+        uint256 amount
+    ) external onlyOwner nonReentrant {
+        require(
+            tokenAddress != address(stakingToken) && 
+            tokenAddress != address(rewardsToken),
+            "Cannot recover staking or rewards tokens"
+        );
+        IERC20(tokenAddress).safeTransfer(owner(), amount);
+    }
+    
+    /**
+     * @dev Get user staking info
+     */
+    function getUserInfo(address account) external view returns (
+        uint256 stakedAmount,
+        uint256 pendingRewards,
+        uint256 tierIndex,
+        string memory tierName,
+        uint256 stakingTimestamp,
+        bool canWithdraw
+    ) {
+        UserInfo memory user = users[account];
+        bool _canWithdraw = block.timestamp >= user.stakingTimestamp + minimumStakingPeriod;
+        string memory _tierName = user.tierIndex < stakingTiers.length ? 
+            stakingTiers[user.tierIndex].name : "None";
+        
+        return (
+            user.stakedAmount,
+            earned(account),
+            user.tierIndex,
+            _tierName,
+            user.stakingTimestamp,
+            _canWithdraw
+        );
+    }
+    
+    /**
+     * @dev Get staking tiers count
+     */
+    function getStakingTiersCount() external view returns (uint256) {
+        return stakingTiers.length;
+    }
+    
+    /**
+     * @dev Get pool info
+     */
+    function getPoolInfo() external view returns (
+        uint256 _totalStaked,
+        uint256 _rewardRate,
+        uint256 _rewardPerToken,
+        uint256 _minimumStakingPeriod
+    ) {
+        return (
+            totalStaked,
+            rewardRate,
+            rewardPerToken(),
+            minimumStakingPeriod
+        );
+    }
+}
