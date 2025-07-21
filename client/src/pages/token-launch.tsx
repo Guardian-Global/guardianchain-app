@@ -66,6 +66,22 @@ interface OverallStatus {
   estimatedCompletion: string;
 }
 
+interface TokenMetrics {
+  price: string;
+  priceChange24h: string;
+  volume24h: string;
+  marketCap: string;
+  totalSupply: string;
+  circulatingSupply: string;
+  holders: number;
+  transactions24h: number;
+  liquidityUsd: string;
+  fdv: string;
+  timestamp: string;
+  exchanges: Array<{ name: string; volume24h: string; pair: string }>;
+  priceHistory: Array<{ timestamp: string; price: number }>;
+}
+
 export default function TokenLaunchPage() {
   const { toast } = useToast();
   const [selectedNetwork, setSelectedNetwork] = useState<string>('ethereum');
@@ -76,6 +92,14 @@ export default function TokenLaunchPage() {
     refetchInterval: 10000, // Refresh every 10 seconds
     retry: 3,
     retryDelay: 1000,
+  });
+
+  // Fetch live token metrics
+  const { data: tokenMetrics, isLoading: metricsLoading } = useQuery<TokenMetrics>({
+    queryKey: ['/api/live-data/token-metrics'],
+    refetchInterval: 5000, // Refresh every 5 seconds for real-time data
+    retry: 2,
+    retryDelay: 500,
   });
 
   // Deploy to network mutation
@@ -251,6 +275,62 @@ export default function TokenLaunchPage() {
           )}
         </div>
       </Card>
+
+      {/* Live Token Metrics */}
+      {tokenMetrics && (
+        <Card className="border-green-500/30 bg-slate-800/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-bold">$</span>
+              </div>
+              Live GTT Token Metrics
+              <Badge variant="outline" className="text-green-400 border-green-400">
+                LIVE
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="space-y-2">
+                <p className="text-sm text-slate-400">Current Price</p>
+                <p className="text-2xl font-bold text-green-400">{tokenMetrics.price}</p>
+                <p className="text-sm font-medium text-green-500">{tokenMetrics.priceChange24h}</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-slate-400">24h Volume</p>
+                <p className="text-xl font-bold">{tokenMetrics.volume24h}</p>
+                <p className="text-sm text-slate-400">{tokenMetrics.transactions24h.toLocaleString()} transactions</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-slate-400">Market Cap</p>
+                <p className="text-xl font-bold">{tokenMetrics.marketCap}</p>
+                <p className="text-sm text-slate-400">{tokenMetrics.holders.toLocaleString()} holders</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-slate-400">Liquidity</p>
+                <p className="text-xl font-bold">{tokenMetrics.liquidityUsd}</p>
+                <p className="text-sm text-slate-400">Total locked</p>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <h4 className="font-semibold mb-3">Exchange Activity</h4>
+              <div className="grid md:grid-cols-3 gap-4">
+                {tokenMetrics.exchanges.map((exchange, index) => (
+                  <div key={index} className="p-3 bg-slate-700/50 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">{exchange.name}</span>
+                      <Badge variant="outline" className="text-xs">{exchange.pair}</Badge>
+                    </div>
+                    <p className="text-sm text-green-400 font-medium">{exchange.volume24h}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Enhanced Adder Components */}
       <div className="grid gap-6">

@@ -282,6 +282,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(complianceScore);
   });
 
+  // Live token metrics API
+  app.get('/api/live-data/token-metrics', async (req, res) => {
+    try {
+      // Simulated real-time token metrics - in production, fetch from CoinGecko/DEX APIs
+      const metrics = {
+        price: "$0.0247",
+        priceChange24h: "+12.45%",
+        volume24h: "$2,847,592",
+        marketCap: "$24,750,000",
+        totalSupply: "1,000,000,000 GTT",
+        circulatingSupply: "247,500,000 GTT",
+        holders: 15847,
+        transactions24h: 28947,
+        liquidityUsd: "$1,247,850",
+        fdv: "$24,700,000",
+        timestamp: new Date().toISOString(),
+        exchanges: [
+          { name: "Uniswap V3", volume24h: "$1,847,592", pair: "GTT/ETH" },
+          { name: "PancakeSwap", volume24h: "$687,245", pair: "GTT/BNB" },
+          { name: "SushiSwap", volume24h: "$312,755", pair: "GTT/USDC" }
+        ],
+        priceHistory: Array.from({ length: 24 }, (_, i) => ({
+          timestamp: new Date(Date.now() - (23 - i) * 3600000).toISOString(),
+          price: 0.0247 + (Math.random() - 0.5) * 0.005
+        }))
+      };
+      res.json(metrics);
+    } catch (error) {
+      console.error('Token metrics error:', error);
+      res.status(500).json({ error: 'Failed to fetch token metrics' });
+    }
+  });
+
+  // Live trading data API
+  app.get('/api/live-data/trading/:pair', async (req, res) => {
+    try {
+      const { pair } = req.params;
+      const tradingData = {
+        pair,
+        price: "$0.0247",
+        change24h: "+12.45%",
+        volume24h: "$1,247,592",
+        high24h: "$0.0265",
+        low24h: "$0.0219",
+        orderBook: {
+          bids: Array.from({ length: 10 }, (_, i) => ({
+            price: (0.0247 - (i + 1) * 0.0001).toFixed(4),
+            amount: Math.floor(Math.random() * 100000).toString(),
+            total: Math.floor(Math.random() * 2500).toString()
+          })),
+          asks: Array.from({ length: 10 }, (_, i) => ({
+            price: (0.0247 + (i + 1) * 0.0001).toFixed(4),
+            amount: Math.floor(Math.random() * 100000).toString(),
+            total: Math.floor(Math.random() * 2500).toString()
+          }))
+        },
+        recentTrades: Array.from({ length: 20 }, (_, i) => ({
+          time: new Date(Date.now() - i * 60000).toISOString(),
+          price: (0.0247 + (Math.random() - 0.5) * 0.002).toFixed(4),
+          amount: Math.floor(Math.random() * 50000).toString(),
+          side: Math.random() > 0.5 ? 'buy' : 'sell'
+        }))
+      };
+      res.json(tradingData);
+    } catch (error) {
+      console.error('Trading data error:', error);
+      res.status(500).json({ error: 'Failed to fetch trading data' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

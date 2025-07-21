@@ -30,8 +30,9 @@ export function VideoExplainer({ className }: VideoExplainerProps) {
   const [duration, setDuration] = useState(180); // 3 minutes
   const [currentTime, setCurrentTime] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   
-  const videoRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const progressInterval = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
@@ -67,17 +68,31 @@ export function VideoExplainer({ className }: VideoExplainerProps) {
   };
 
   const togglePlay = () => {
-    setIsPlaying(!isPlaying);
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
   };
 
   const restart = () => {
-    setCurrentTime(0);
-    setProgress(0);
-    setIsPlaying(true);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+      setCurrentTime(0);
+      setProgress(0);
+      setIsPlaying(true);
+    }
   };
 
   const toggleFullscreen = () => {
@@ -145,10 +160,39 @@ export function VideoExplainer({ className }: VideoExplainerProps) {
       >
         <Card className="overflow-hidden">
           <div className="relative aspect-video bg-gradient-to-br from-purple-900 via-purple-800 to-green-800">
-            {/* Video Placeholder */}
-            <div 
+            {/* Actual Video Element */}
+            <video
               ref={videoRef}
+              className="w-full h-full object-cover"
+              preload="metadata"
+              playsInline
+              onError={() => setVideoError(true)}
+              onLoadedMetadata={() => {
+                if (videoRef.current) {
+                  setDuration(videoRef.current.duration);
+                  console.log('Video setup complete:', videoRef.current.src);
+                }
+              }}
+              onTimeUpdate={() => {
+                if (videoRef.current) {
+                  const currentTime = videoRef.current.currentTime;
+                  const duration = videoRef.current.duration;
+                  setCurrentTime(currentTime);
+                  setProgress((currentTime / duration) * 100);
+                }
+              }}
+            >
+              <source 
+                src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4" 
+                type="video/mp4" 
+              />
+              Your browser does not support the video tag.
+            </video>
+            
+            {/* Video Overlay and Controls */}
+            <div 
               className="absolute inset-0 flex items-center justify-center bg-black/20"
+              style={{ display: isPlaying ? 'none' : 'flex' }}
             >
               <motion.div
                 initial={{ scale: 0 }}
