@@ -70,6 +70,9 @@ import TokenLaunch from "./pages/token-launch";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboardPage from "./pages/AdminDashboard";
 import BlockchainDemo from "./pages/blockchain-demo";
+import SpecializedIntake from "./pages/specialized-intake";
+import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
+import CategoryDiscovery from "./pages/category-discovery";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -137,6 +140,9 @@ function Router() {
         <Route path="/notifications" component={Notifications} />
         <Route path="/billing-dashboard" component={BillingDashboard} />
         <Route path="/token-launch" component={TokenLaunch} />
+        <Route path="/specialized-intake" component={SpecializedIntake} />
+        <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
+        <Route path="/category-discovery" component={CategoryDiscovery} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         

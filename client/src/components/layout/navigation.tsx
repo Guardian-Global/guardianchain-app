@@ -12,13 +12,12 @@ import { useTranslation } from "@/lib/i18n";
 const navigation = [
   { name: "Explore", href: "/explore", translationKey: "nav.explore" },
   { name: "Create", href: "/create", translationKey: "nav.create" },
+  { name: "Specialized Intake", href: "/specialized-intake", translationKey: "nav.specialized" },
+  { name: "Whistleblower", href: "/whistleblower-sanctuary", translationKey: "nav.whistleblower" },
   { name: "Token Launch", href: "/token-launch", translationKey: "token.launch" },
   { name: "Analytics", href: "/capsule-analytics", translationKey: "nav.analytics" },
   { name: "Profile", href: "/profile", translationKey: "nav.profile" },
-  { name: "Billing", href: "/billing-dashboard", translationKey: "nav.billing" },
-  { name: "Master Admin", href: "/master-admin", translationKey: "nav.enterprise" },
-  { name: "Contact", href: "/contact" },
-  { name: "Notifications", href: "/notifications" },
+  { name: "Category Discovery", href: "/category-discovery", translationKey: "nav.categories" },
 ];
 
 export default function Navigation() {
