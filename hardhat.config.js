@@ -47,10 +47,10 @@ module.exports = {
       gasPrice: 30000000000 // 30 gwei
     },
     mumbai: {
-      url: process.env.POLYGON_RPC_URL || "https://rpc-mumbai.maticvigil.com",
-      accounts: process.env.PRIVATE_KEY_DEPLOYER ? [process.env.PRIVATE_KEY_DEPLOYER] : [],
+      url: process.env.POLYGON_RPC_URL,
+      accounts: [process.env.PRIVATE_KEY],
       chainId: 80001,
-      gasPrice: 20000000000
+      gasPrice: 35000000000 // 35 gwei
     },
     // BSC networks
     bsc: {

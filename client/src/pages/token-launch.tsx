@@ -13,6 +13,9 @@ import IntuitiveTokenPerformanceHeatmap from '@/components/launch/IntuitiveToken
 import OneClickSocialMediaShare from '@/components/launch/OneClickSocialMediaShare';
 import PersonalizedBlockchainLearningCompanion from '@/components/launch/PersonalizedBlockchainLearningCompanion';
 import GamifiedBlockchainRewardsSystem from '@/components/launch/GamifiedBlockchainRewardsSystem';
+import MobileOptimizations from '@/components/launch/mobile-optimizations';
+import VideoExplainer from '@/components/launch/video-explainer';
+import CommandDashboard from '@/components/admin/command-dashboard';
 
 interface LaunchStatus {
   phase: string;
@@ -264,11 +267,14 @@ export default function TokenLaunchPage() {
 
       {/* Main Dashboard Tabs */}
       <Tabs defaultValue="networks" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="networks">Network Deployment</TabsTrigger>
-          <TabsTrigger value="exchanges">Exchange Listings</TabsTrigger>
-          <TabsTrigger value="bridges">Cross-Chain Bridges</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="networks">Networks</TabsTrigger>
+          <TabsTrigger value="exchanges">Exchanges</TabsTrigger>
+          <TabsTrigger value="bridges">Bridges</TabsTrigger>
           <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+          <TabsTrigger value="mobile">Mobile</TabsTrigger>
+          <TabsTrigger value="video">Video</TabsTrigger>
+          <TabsTrigger value="admin">Admin</TabsTrigger>
         </TabsList>
 
         {/* Network Deployment Tab */}
@@ -532,6 +538,21 @@ export default function TokenLaunchPage() {
               </div>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Mobile Optimizations Tab */}
+        <TabsContent value="mobile" className="space-y-6">
+          <MobileOptimizations />
+        </TabsContent>
+
+        {/* Video Explainer Tab */}
+        <TabsContent value="video" className="space-y-6">
+          <VideoExplainer />
+        </TabsContent>
+
+        {/* Command Dashboard Tab */}
+        <TabsContent value="admin" className="space-y-6">
+          <CommandDashboard />
         </TabsContent>
       </Tabs>
     </div>

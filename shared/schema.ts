@@ -59,6 +59,10 @@ export const users = pgTable("users", {
   isActive: boolean("is_active").default(true),
   passwordHash: varchar("password_hash"),
   lastLoginAt: timestamp("last_login_at"),
+  userTier: text("user_tier").default("EXPLORER"),
+  totalYieldClaimed: decimal("total_yield_claimed", { precision: 18, scale: 8 }).default("0"),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -92,6 +96,8 @@ export const capsules = pgTable("capsules", {
   version: integer("version").default(1),
   evolutionLevel: integer("evolution_level").default(1),
   collaborators: jsonb("collaborators").$type<string[]>().default([]),
+  heirAddress: text("heir_address"), // Inheritance field
+  unlockDate: timestamp("unlock_date"), // Inheritance field
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

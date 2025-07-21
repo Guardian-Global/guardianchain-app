@@ -231,7 +231,10 @@ contract BillingOracle {
     
     /**
      * @dev Get contract financial summary
-     * @return Treasury summary for audit purposes
+     * @return contractBalance Current contract ETH balance
+     * @return totalCredits Total credits issued to users
+     * @return totalPayouts Total payouts made to vendors
+     * @return transactionCount Total number of transactions
      */
     function getFinancialSummary() external view returns (
         uint256 contractBalance,
