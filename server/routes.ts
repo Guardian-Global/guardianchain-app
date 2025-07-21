@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import * as capsuleYieldRoutes from "./routes/capsule-yield";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -249,6 +250,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Command execution failed" });
     }
   });
+
+  // Capsule yield management routes
+  app.post('/api/capsules/claim-yield', isAuthenticated, capsuleYieldRoutes.claimYield);
+  app.get('/api/users/:userAddress/claimable', isAuthenticated, capsuleYieldRoutes.getClaimableCapsules);
+  app.get('/api/capsules/:capsuleId/yield-history', isAuthenticated, capsuleYieldRoutes.getCapsuleYieldHistory);
+  app.post('/api/admin/capsules/update-yield', isAuthenticated, capsuleYieldRoutes.updateCapsuleYield);
+  app.post('/api/admin/capsules/verify', isAuthenticated, capsuleYieldRoutes.verifyCapsuleYield);
 
   const httpServer = createServer(app);
   return httpServer;

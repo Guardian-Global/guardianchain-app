@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Users, Zap, Globe } from "lucide-react";
+import VideoSection from "@/components/home/VideoSection";
 
 export default function Landing() {
   return (
@@ -31,7 +32,10 @@ export default function Landing() {
               </a>
             </Button>
             
-            <Button variant="outline" size="lg" className="border-green-500 text-green-400 hover:bg-green-500/10 px-8 py-6 text-lg">
+            <Button variant="outline" size="lg" className="border-green-500 text-green-400 hover:bg-green-500/10 px-8 py-6 text-lg" onClick={() => {
+              const videoSection = document.getElementById('video-section');
+              videoSection?.scrollIntoView({ behavior: 'smooth' });
+            }}>
               Watch Demo
             </Button>
           </div>
@@ -123,6 +127,14 @@ export default function Landing() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Video Demo Section */}
+      <div id="video-section">
+        <VideoSection 
+          title="See GUARDIANCHAIN in Action"
+          description="Discover how our platform protects your intellectual property and enables truth verification on the blockchain"
+        />
       </div>
     </div>
   );

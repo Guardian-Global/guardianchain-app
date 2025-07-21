@@ -2,6 +2,14 @@
 
 // Contract Addresses (Polygon Mumbai Testnet)
 export const CONTRACT_ADDRESSES = {
+  // Live Mumbai Testnet Contracts
+  80002: {
+    chainId: 80002,
+    name: "Mumbai Testnet",
+    GTTToken: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // ✅ LIVE ON MUMBAI
+    TruthVault: "0xd1Ad81D7A2e954B5D2A543b67287B16f3c030d72", // ✅ LIVE ON MUMBAI
+    rpcUrl: "https://rpc-mumbai.maticvigil.com"
+  },
   MUMBAI: {
     chainId: 80002,
     GTTToken: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // ✅ LIVE ON MUMBAI
@@ -146,15 +154,15 @@ export const API_ENDPOINTS = {
   ANALYTICS_USER: "/api/analytics/user"
 };
 
-// Environment Configuration
+// Environment Configuration (Browser Compatible)
 export const ENV_CONFIG = {
-  isDevelopment: process.env.NODE_ENV === "development",
-  isProduction: process.env.NODE_ENV === "production",
-  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  jwtSecret: process.env.JWT_SECRET,
-  polygonRpcUrl: process.env.POLYGON_RPC_URL,
-  privateKey: process.env.PRIVATE_KEY
+  isDevelopment: typeof process !== 'undefined' ? process.env.NODE_ENV === "development" : import.meta.env.DEV,
+  isProduction: typeof process !== 'undefined' ? process.env.NODE_ENV === "production" : import.meta.env.PROD,
+  supabaseUrl: typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_SUPABASE_URL : import.meta.env.VITE_SUPABASE_URL,
+  supabaseKey: typeof process !== 'undefined' ? process.env.SUPABASE_SERVICE_ROLE_KEY : import.meta.env.VITE_SUPABASE_KEY,
+  jwtSecret: typeof process !== 'undefined' ? process.env.JWT_SECRET : import.meta.env.VITE_JWT_SECRET,
+  polygonRpcUrl: typeof process !== 'undefined' ? process.env.POLYGON_RPC_URL : import.meta.env.VITE_POLYGON_RPC_URL,
+  privateKey: typeof process !== 'undefined' ? process.env.PRIVATE_KEY : import.meta.env.VITE_PRIVATE_KEY
 };
 
 // Social Media Configuration

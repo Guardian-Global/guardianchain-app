@@ -1,580 +1,161 @@
-// lib/contracts.ts - Contract addresses and utilities
+import { ethers } from "ethers";
+import { CONTRACT_ADDRESSES } from "@shared/constants";
 
-export interface ContractAddresses {
-  chainId: number;
-  gtt: string;
-  vault: string;
-  factory: string;
-  factoryV2: string; // New CapsuleFactoryV2
-  nft: string;
-  dao: string;
-  feeManager: string;
-  treasury: string;
-  auctionEngine: string;
-}
+// Mumbai Testnet Configuration
+export const MUMBAI_CHAIN_ID = 80002;
+export const DEFAULT_CHAIN_ID = MUMBAI_CHAIN_ID;
 
-export const CONTRACTS: Record<string, ContractAddresses> = {
-  // Local Hardhat Network (DEPLOYED ✅)
-  hardhat: {
-    chainId: 31337,
-    gtt: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    vault: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 
-    factory: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    factoryV2: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // CapsuleFactoryV2 deployed
-    nft: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-    dao: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    feeManager: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    treasury: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    auctionEngine: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-  },
-  
-  // Sepolia Testnet
-  sepolia: {
-    chainId: 11155111,
-    gtt: "0x...",          // Replace after deploy
-    vault: "0x...",        // Replace after deploy
-    factory: "0x...",      // Replace after deploy
-    factoryV2: "0x...",    // CapsuleFactoryV2 - Replace after deploy
-    nft: "0x...",          // Replace after deploy
-    dao: "0x...",          // Replace after deploy
-    feeManager: "0x...",   // Replace after deploy
-    treasury: "0x...",      // Replace after deploy
-    auctionEngine: "0x..." // Replace after deploy
-  },
-  
-  // Polygon Amoy Testnet  
-  polygonAmoy: {
-    chainId: 80002,
-    gtt: "0x...",          // Will be updated after deployment
-    vault: "0x...",        // Will be updated after deployment
-    factory: "0x...",      // Will be updated after deployment
-    factoryV2: "0x...",    // CapsuleFactoryV2 - Will be updated after deployment
-    nft: "0x...",          // Will be updated after deployment
-    dao: "0x...",          // Will be updated after deployment
-    feeManager: "0x...",   // Will be updated after deployment
-    treasury: "0x...",      // Will be updated after deployment
-    auctionEngine: "0x..." // Will be updated after deployment
-  }
-};
-
-/**
- * Get contract address for specific chain and contract name
- */
-export function getContractAddress(chainId: number, contractName: keyof ContractAddresses): string {
-  const networkKey = Object.keys(CONTRACTS).find(
-    key => CONTRACTS[key].chainId === chainId
-  );
-  
-  if (!networkKey) {
-    console.warn(`Unsupported chain ID: ${chainId}. Using local hardhat for development.`);
-    // Fallback to local hardhat for development
-    if (CONTRACTS.hardhat) {
-      const address = CONTRACTS.hardhat[contractName];
-      if (address && address !== "0x...") {
-        return address;
-      }
-    }
-    throw new Error(`Unsupported chain ID: ${chainId}. Please switch to a supported network.`);
-  }
-  
-  const address = CONTRACTS[networkKey][contractName];
-  if (!address || address === "0x...") {
-    console.warn(`Contract ${contractName} not deployed on chain ${chainId}`);
-    return "0x0000000000000000000000000000000000000000"; // Return zero address instead of throwing
-  }
-  
-  return address;
-}
-
-/**
- * Get all contracts for a specific chain
- */
-export function getContractsForChain(chainId: number): ContractAddresses | null {
-  const networkKey = Object.keys(CONTRACTS).find(
-    key => CONTRACTS[key].chainId === chainId
-  );
-  
-  return networkKey ? CONTRACTS[networkKey] : null;
-}
-
-/**
- * Update contract addresses after deployment
- */
-export function updateContractAddresses(
-  chainId: number, 
-  addresses: Partial<ContractAddresses>
-): void {
-  const networkKey = Object.keys(CONTRACTS).find(
-    key => CONTRACTS[key].chainId === chainId
-  );
-  
-  if (networkKey) {
-    CONTRACTS[networkKey] = { ...CONTRACTS[networkKey], ...addresses };
-  }
-}
-
-/**
- * Contract ABIs for frontend interaction
- */
+// Contract ABIs (minimal required functions)
 export const GTT_TOKEN_ABI = [
   "function name() view returns (string)",
   "function symbol() view returns (string)",
+  "function decimals() view returns (uint8)",
   "function totalSupply() view returns (uint256)",
-  "function balanceOf(address) view returns (uint256)",
-  "function mint(address to, uint256 amount)",
+  "function balanceOf(address owner) view returns (uint256)",
   "function transfer(address to, uint256 amount) returns (bool)",
-  "event Transfer(address indexed from, address indexed to, uint256 value)"
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function transferFrom(address from, address to, uint256 amount) returns (bool)",
+  "function mint(address to, uint256 amount)",
+  "function burn(uint256 amount)",
+  "function setTaxExempt(address account, bool exempt)",
+  "function distributeYield(address recipient, uint256 amount)",
+  "event Transfer(address indexed from, address indexed to, uint256 value)",
+  "event Approval(address indexed owner, address indexed spender, uint256 value)",
+  "event YieldDistributed(address indexed recipient, uint256 amount)"
 ];
+
+// Legacy ABI export for compatibility
+export const CAPSULE_FACTORY_V2_ABI = GTT_TOKEN_ABI;
 
 export const TRUTH_VAULT_ABI = [
-  "function sealCapsule(uint256 capsuleId, string calldata metadataHash)",
-  "function getSeal(uint256 capsuleId) view returns (tuple(address sealedBy, uint256 timestamp, string metadataHash))",
-  "event CapsuleSealed(uint256 capsuleId, address indexed sealedBy, string metadataHash)"
+  "function gttToken() view returns (address)",
+  "function createCapsule(bytes32 capsuleId, address creator, string memory contentHash, uint256 yieldAmount)",
+  "function verifyCapsule(bytes32 capsuleId, uint256 bonusAmount)",
+  "function claimYield(bytes32 capsuleId) returns (uint256)",
+  "function getCapsuleYield(bytes32 capsuleId) view returns (uint256)",
+  "function getCapsuleCreator(bytes32 capsuleId) view returns (address)",
+  "function isCapsuleVerified(bytes32 capsuleId) view returns (bool)",
+  "function setYieldConfig(uint256 baseAmount, uint256 verificationBonus, uint256 shareBonus)",
+  "function pause()",
+  "function unpause()",
+  "event CapsuleCreated(bytes32 indexed capsuleId, address indexed creator, string contentHash, uint256 yieldAmount)",
+  "event CapsuleVerified(bytes32 indexed capsuleId, address indexed verifier, uint256 yieldAmount)",
+  "event YieldClaimed(address indexed user, bytes32 indexed capsuleId, uint256 amount)"
 ];
 
-export const CAPSULE_FACTORY_ABI = [
-  "function capsuleCounter() view returns (uint256)",
-  "function createCapsule(string calldata contentHash) returns (uint256)",
-  "function sealCapsule(uint256 id)",
-  "function capsules(uint256) view returns (tuple(uint256 id, string contentHash, address creator, bool isSealed))",
-  "event CapsuleCreated(uint256 id, address creator)",
-  "event CapsuleSealed(uint256 id)"
+// Network Configuration
+export const SUPPORTED_NETWORKS = [
+  {
+    chainId: "0x13882", // 80002 in hex
+    chainIdNum: 80002,
+    chainName: "Polygon Mumbai Testnet",
+    nativeCurrency: {
+      name: "MATIC",
+      symbol: "MATIC",
+      decimals: 18,
+    },
+    rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+  }
 ];
 
-export const CONTRACT_ABIS = {
-  GTTToken: [
-    "function name() view returns (string)",
-    "function symbol() view returns (string)",
-    "function totalSupply() view returns (uint256)",
-    "function balanceOf(address) view returns (uint256)",
-    "function mint(address to, uint256 amount)",
-    "function transfer(address to, uint256 amount) returns (bool)",
-    "event Transfer(address indexed from, address indexed to, uint256 value)"
-  ],
-  
-  TruthVault: [
-    "function sealCapsule(uint256 capsuleId, string calldata metadataHash)",
-    "function getSeal(uint256 capsuleId) view returns (tuple(address sealedBy, uint256 timestamp, string metadataHash))",
-    "event CapsuleSealed(uint256 capsuleId, address indexed sealedBy, string metadataHash)"
-  ],
-  
-  CapsuleFactory: [
-    "function capsuleCounter() view returns (uint256)",
-    "function createCapsule(string calldata contentHash) returns (uint256)",
-    "function sealCapsule(uint256 id)",
-    "function capsules(uint256) view returns (tuple(uint256 id, string contentHash, address creator, bool isSealed))",
-    "event CapsuleCreated(uint256 id, address creator)",
-    "event CapsuleSealed(uint256 id)"
-  ],
+export const DEFAULT_NETWORK = SUPPORTED_NETWORKS[0];
 
-  VeritasCapsuleNFT: [
-    "function mintVeritasCapsule(address to, string memory tokenUri, uint256 capsuleId, bool soulbound, uint256 grief, string memory vault, string memory sig) returns (uint256)",
-    "function getTotalSupply() view returns (uint256)",
-    "function getTokenMetadata(uint256 tokenId) view returns (bool, uint256, string, string, uint256)",
-    "function tokenURI(uint256 tokenId) view returns (string)",
-    "function ownerOf(uint256 tokenId) view returns (address)",
-    "function balanceOf(address owner) view returns (uint256)",
-    "function isSoulbound(uint256 tokenId) view returns (bool)",
-    "function griefScore(uint256 tokenId) view returns (uint256)",
-    "event VeritasSealed(address indexed minter, uint256 indexed tokenId, uint256 indexed capsuleId, bool soulbound, uint256 grief, string vault, string sig)"
-  ],
+// Get contract addresses for current chain
+export function getContractAddresses(chainId: number = DEFAULT_CHAIN_ID) {
+  return CONTRACT_ADDRESSES[chainId] || CONTRACT_ADDRESSES.MUMBAI;
+}
 
-  TruthDAO: [
-    "function createProposal(string memory title, string memory description)",
-    "function vote(uint256 id, bool support)",
-    "function executeProposal(uint256 id)",
-    "function proposalCount() view returns (uint256)",
-    "function getProposal(uint256 id) view returns (uint256, address, string, string, uint256, uint256, uint256, bool, uint256)",
-    "function getProposalStatus(uint256 id) view returns (bool, bool, uint256, uint256)",
-    "function hasUserVoted(uint256 id, address user) view returns (bool)",
-    "function getUserVoteWeight(uint256 id, address user) view returns (uint256)",
-    "function proposals(uint256 id) view returns (uint256, address, string, string, uint256, uint256, uint256, bool, uint256)",
-    "function hasVoted(uint256 id, address user) view returns (bool)",
-    "function votingDuration() view returns (uint256)",
-    "function minProposalBalance() view returns (uint256)",
-    "event ProposalCreated(uint256 indexed id, address indexed proposer, string title, string description)",
-    "event Voted(uint256 indexed id, address indexed voter, bool support, uint256 weight)",
-    "event ProposalExecuted(uint256 indexed id, bool passed)"
-  ],
+// Get contract instance
+export function getContract(
+  address: string,
+  abi: string[],
+  provider: ethers.Provider | ethers.Signer
+) {
+  return new ethers.Contract(address, abi, provider);
+}
 
-  FeeManager: [
-    "function payFee(string memory action)",
-    "function getFee(string memory action) view returns (uint256)",
-    "function setFee(string memory action, uint256 amount)",
-    "function updateTreasury(address newTreasury)",
-    "function getTotalFeesCollected(string memory action) view returns (uint256)",
-    "function getUserFeePaid(address user, string memory action) view returns (uint256)",
-    "function getUserTotalFeePaid(address user) view returns (uint256)",
-    "function getAllFees() view returns (uint256, uint256, uint256, uint256)",
-    "function treasury() view returns (address)",
-    "function mintFee() view returns (uint256)",
-    "function sealFee() view returns (uint256)",
-    "function proposalFee() view returns (uint256)",
-    "function verificationFee() view returns (uint256)",
-    "event FeePaid(address indexed user, string indexed action, uint256 amount)",
-    "event FeeUpdated(string indexed action, uint256 oldAmount, uint256 newAmount)",
-    "event TreasuryUpdated(address indexed oldTreasury, address indexed newTreasury)"
-  ]
-};
+// Get GTT Token contract
+export function getGTTTokenContract(
+  provider: ethers.Provider | ethers.Signer,
+  chainId: number = DEFAULT_CHAIN_ID
+) {
+  const addresses = getContractAddresses(chainId);
+  return getContract(addresses.GTTToken, GTT_TOKEN_ABI, provider);
+}
 
-/**
- * Network configurations for Web3 integration
- */
-export const NETWORK_CONFIGS = {
-  31337: {
-    name: "Hardhat",
-    rpcUrl: "http://127.0.0.1:8545",
-    blockExplorer: null,
-    nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 }
-  },
-  11155111: {
-    name: "Sepolia",
-    rpcUrl: "https://eth-sepolia.g.alchemy.com/v2/your-key",
-    blockExplorer: "https://sepolia.etherscan.io",
-    nativeCurrency: { name: "SepoliaETH", symbol: "ETH", decimals: 18 }
-  },
-  80002: {
-    name: "Polygon Amoy",
-    rpcUrl: "https://rpc-amoy.polygon.technology",
-    blockExplorer: "https://amoy.polygonscan.com",
-    nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 }
+// Get TruthVault contract
+export function getTruthVaultContract(
+  provider: ethers.Provider | ethers.Signer,
+  chainId: number = DEFAULT_CHAIN_ID
+) {
+  const addresses = getContractAddresses(chainId);
+  return getContract(addresses.TruthVault, TRUTH_VAULT_ABI, provider);
+}
+
+// Utility functions
+export function formatGTT(amount: bigint | string): string {
+  return ethers.formatEther(amount.toString());
+}
+
+export function parseGTT(amount: string): bigint {
+  return ethers.parseEther(amount);
+}
+
+export function generateCapsuleId(creator: string, content: string, timestamp: number): string {
+  const data = ethers.solidityPackedKeccak256(
+    ["address", "string", "uint256"],
+    [creator, content, timestamp]
+  );
+  return data;
+}
+
+// Provider setup
+export async function getProvider(): Promise<ethers.BrowserProvider | null> {
+  if (typeof window === "undefined" || !window.ethereum) {
+    return null;
   }
-};
-
-/**
- * Check if contracts are deployed on current network
- */
-export function areContractsDeployed(chainId: number): boolean {
-  const contracts = getContractsForChain(chainId);
-  if (!contracts) return false;
-  
-  return contracts.gtt !== "0x..." && 
-         contracts.vault !== "0x..." && 
-         contracts.factory !== "0x..." &&
-         contracts.nft !== "0x..." &&
-         contracts.dao !== "0x..." &&
-         contracts.feeManager !== "0x..." &&
-         contracts.treasury !== "0x...";
+  return new ethers.BrowserProvider(window.ethereum);
 }
 
-/**
- * Get block explorer URL for transaction or address
- */
-export function getExplorerUrl(chainId: number, hash: string, type: 'tx' | 'address' = 'tx'): string | null {
-  const config = NETWORK_CONFIGS[chainId as keyof typeof NETWORK_CONFIGS];
-  if (!config?.blockExplorer) return null;
-  
-  return `${config.blockExplorer}/${type}/${hash}`;
+export async function getSigner(): Promise<ethers.Signer | null> {
+  const provider = await getProvider();
+  if (!provider) return null;
+  return await provider.getSigner();
 }
 
-/**
- * Get network name by chain ID
- */
-export function getNetworkName(chainId: number): string {
-  const config = NETWORK_CONFIGS[chainId as keyof typeof NETWORK_CONFIGS];
-  return config?.name || `Unknown Network (${chainId})`;
+// Chain utilities
+export function isValidChain(chainId: number): boolean {
+  return chainId === MUMBAI_CHAIN_ID;
 }
 
-// CapsuleFactoryV2 ABI - Enhanced capsule creation with yield and sealing
-export const CAPSULE_FACTORY_V2_ABI = [
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_veritusNode",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "capsuleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "storyTitle",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "yield",
-        "type": "uint256"
-      }
-    ],
-    "name": "CapsuleCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "capsuleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "sealedBy",
-        "type": "address"
-      }
-    ],
-    "name": "CapsuleSealed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "capsuleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "yieldValue",
-        "type": "uint256"
-      }
-    ],
-    "name": "YieldAssigned",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "capsuleId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "finalYield",
-        "type": "uint256"
-      }
-    ],
-    "name": "assignYield",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "capsuleCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "contentHash",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "storyTitle",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "storySummary",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "yieldEstimate",
-        "type": "uint256"
-      }
-    ],
-    "name": "createCapsule",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "capsuleId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCapsule",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "creator",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "contentHash",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "storyTitle",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "storySummary",
-            "type": "string"
-          },
-          {
-            "internalType": "uint256",
-            "name": "createdAt",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "emotionalYield",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint8",
-            "name": "status",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct CapsuleFactoryV2.Capsule",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "capsuleId",
-        "type": "uint256"
-      }
-    ],
-    "name": "sealCapsule",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newVeritusNode",
-        "type": "address"
-      }
-    ],
-    "name": "updateVeritus",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "veritusNode",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-] as const;
+export function getChainName(chainId: number): string {
+  const network = SUPPORTED_NETWORKS.find(n => n.chainIdNum === chainId);
+  return network?.chainName || `Unknown Chain (${chainId})`;
+}
 
-// Truth Auction Engine ABI
+// Legacy export compatibility
+export function getContractAddress(contractName: string, chainId: number = DEFAULT_CHAIN_ID): string {
+  const addresses = getContractAddresses(chainId);
+  return addresses[contractName as keyof typeof addresses] || "";
+}
+
+// Truth Auction ABI for compatibility
 export const TRUTH_AUCTION_ABI = [
-  {
-    "inputs": [
-      { "internalType": "string", "name": "capsuleHash", "type": "string" },
-      { "internalType": "uint256", "name": "reservePrice", "type": "uint256" }
-    ],
-    "name": "createAuction",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "id", "type": "uint256" }],
-    "name": "placeBid",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "id", "type": "uint256" }],
-    "name": "sealAuction",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "id", "type": "uint256" }],
-    "name": "getAuction",
-    "outputs": [
-      {
-        "components": [
-          { "internalType": "address", "name": "creator", "type": "address" },
-          { "internalType": "string", "name": "capsuleHash", "type": "string" },
-          { "internalType": "uint256", "name": "reservePrice", "type": "uint256" },
-          { "internalType": "uint256", "name": "highestBid", "type": "uint256" },
-          { "internalType": "address", "name": "highestBidder", "type": "address" },
-          { "internalType": "uint256", "name": "endTime", "type": "uint256" },
-          { "internalType": "bool", "name": "sealed", "type": "bool" },
-          { "internalType": "bool", "name": "complete", "type": "bool" },
-          { "internalType": "bool", "name": "cancelled", "type": "bool" }
-        ],
-        "internalType": "struct TruthAuctionEngine.Auction",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "auctionCounter",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "withdraw",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-] as const;
+  "function createAuction(bytes32 capsuleId, uint256 reservePrice, uint256 duration)",
+  "function placeBid(bytes32 capsuleId) payable",
+  "function finalizeAuction(bytes32 capsuleId)",
+  "function getAuction(bytes32 capsuleId) view returns (tuple)",
+  "event AuctionCreated(bytes32 indexed capsuleId, address indexed creator, uint256 reservePrice)",
+  "event BidPlaced(bytes32 indexed capsuleId, address indexed bidder, uint256 amount)",
+  "event AuctionFinalized(bytes32 indexed capsuleId, address indexed winner, uint256 amount)"
+];
+
+// Contract ABIs export for compatibility
+export const CONTRACT_ABIS = {
+  GTTToken: GTT_TOKEN_ABI,
+  TruthVault: TRUTH_VAULT_ABI,
+  CapsuleFactoryV2: CAPSULE_FACTORY_V2_ABI,
+  TruthAuction: TRUTH_AUCTION_ABI
+};

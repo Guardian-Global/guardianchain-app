@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import Navigation from "@/components/layout/navigation";
 import Footer from "@/components/layout/footer";
+import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import Home from "@/pages/home";
 import CreateCapsule from "@/pages/create-capsule";
 import Explore from "@/pages/explore";
@@ -157,7 +158,16 @@ function App() {
       <WalletProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <TooltipProvider>
-            <Router />
+            <div className="min-h-screen bg-background">
+              <MobileHeader />
+              <div className="hidden lg:block">
+                <Navigation />
+              </div>
+              <main className="flex-1">
+                <Router />
+              </main>
+              <Footer />
+            </div>
             <Toaster />
           </TooltipProvider>
         </ThemeProvider>
