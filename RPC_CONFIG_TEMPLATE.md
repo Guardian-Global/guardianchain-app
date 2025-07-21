@@ -1,28 +1,32 @@
-# 🚀 PASTE YOUR QUICKNODE VALUES HERE
+# 🚀 GUARDIANCHAIN MAINNET DEPLOYMENT - OPTIMAL SOLUTION
 
-Copy this template and fill in your actual values:
+## KEEP YOUR $30 ETH - FREE SOLUTION AVAILABLE!
 
-```bash
-# Add these to your .env.local file:
+### ⚡ Recommended Approach:
 
-# QuickNode Ethereum Mainnet RPC URL (from your dashboard)
-ETHEREUM_RPC_URL=https://your-quicknode-url-here.quiknode.pro/xxxxx/
+#### Option 1: Free Alchemy RPC (5 minutes setup)
+1. **Sign up:** https://dashboard.alchemy.com/signup
+2. **Create App:** Select "Polygon" network
+3. **Copy API URL:** Will look like `https://polygon-mainnet.g.alchemy.com/v2/YOUR-API-KEY`
+4. **Deploy immediately** with your existing MATIC
 
-# Your deployer wallet private key (starts with 0x)
-PRIVATE_KEY=0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+**Benefits:**
+- Keep your $30 ETH untouched
+- Reliable mainnet deployment 
+- 25M free requests per month
+- Professional grade infrastructure
 
-# Optional: Your QuickNode API key (if provided)
-QUICKNODE_API_KEY=your-api-key-here
-```
+#### Option 2: Testnet First (2 minutes)
+Get 0.1 MATIC from faucet for your wallet: `0x959C1E8Baa6EB72A0A9F2547B59176a96dD239db`
 
-**PASTE YOUR COMPLETED VALUES ABOVE AND I'LL DEPLOY IMMEDIATELY!**
+**Faucets:**
+- **Primary:** https://faucet.polygon.technology/
+- **Backup:** https://mumbaifaucet.com/
+- **Alternative:** https://faucet.quicknode.com/polygon/mumbai
 
----
+### 🎯 RECOMMENDATION:
+**Option 1** - Get free Alchemy RPC, deploy to mainnet directly with your existing funds.
 
-### Where to find these values:
+This preserves your $30 ETH for DEX liquidity while completing the mainnet deployment professionally.
 
-1. **ETHEREUM_RPC_URL**: From your QuickNode dashboard after creating the endpoint
-2. **PRIVATE_KEY**: From your deployer wallet (0x8c7C0...F0a73) - export private key from MetaMask
-3. **QUICKNODE_API_KEY**: Optional, from your QuickNode account settings
-
-**Once you paste the filled template, deployment takes 5-10 minutes!**
+**Which option would you prefer?**
