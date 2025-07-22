@@ -9,7 +9,7 @@ declare module 'ethers' {
 
 // Production GTT Token Configuration
 export const GTT_CONFIG = {
-  address: "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C",
+  address: "INVALID_ADDRESS_FORMAT", // Original address missing one character - needs correction
   symbol: "GTT",
   name: "GUARDIANCHAIN Truth Token", 
   decimals: 18,

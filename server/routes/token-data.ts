@@ -33,9 +33,9 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
     } catch (error) {
       // If Web3 fails, return contract info without pricing
       tokenData = {
-        contractAddress: "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C",
+        contractAddress: "INVALID_ADDRESS_FORMAT",
         symbol: "GTT",
-        name: "Guardian Truth Token",
+        name: "Guardian Truth Token", 
         price: null,
         priceUSD: null,
         change24h: null,
@@ -44,8 +44,8 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
         circulatingSupply: null,
         totalSupply: null,
         verified: false,
-        source: 'configuration',
-        error: 'Unable to fetch live token data - contract may not be publicly deployed or traded'
+        source: 'error',
+        error: 'CRITICAL: Invalid contract address format - address is only 41 characters instead of required 42. Please provide the complete and correct GTT contract address.'
       };
     }
     
@@ -64,7 +64,7 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
         activeCapsules: 0, // Requires database query
         verifiedCapsules: 0,
         pendingCapsules: 0,
-        listings: [] // Real listings require database connection
+        listings: [], // Real listings require database connection
         lastUpdated: new Date().toISOString()
       }
     };
