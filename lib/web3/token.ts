@@ -164,25 +164,76 @@ export async function fetchRecentTransfers(limit: number = 10) {
   }
 }
 
-// Get live GTT price data (fallback to API)
+// Get live GTT price data from authentic sources
 export async function fetchGTTPrice() {
   try {
-    // For now, return the authentic price data we have
+    // Try multiple authentic data sources for GTT token
+    const sources = [
+      `https://api.dexscreener.com/latest/dex/tokens/${GTT_CONFIG.address}`,
+      `https://api.coingecko.com/api/v3/onchain/networks/polygon-pos/tokens/${GTT_CONFIG.address}`,
+      `https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail?address=${GTT_CONFIG.address}&platform=polygon`
+    ];
+
+    for (const url of sources) {
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Parse DexScreener format
+          if (data.pairs && data.pairs.length > 0) {
+            const pair = data.pairs[0];
+            return {
+              price: parseFloat(pair.priceUsd) || 0,
+              marketCap: parseFloat(pair.marketCap) || 0,
+              change24h: parseFloat(pair.priceChange?.h24) || 0,
+              volume24h: parseFloat(pair.volume?.h24) || 0,
+              source: 'DexScreener',
+              timestamp: new Date().toISOString()
+            };
+          }
+          
+          // Parse CoinGecko format  
+          if (data.data && data.data.attributes) {
+            const attrs = data.data.attributes;
+            return {
+              price: parseFloat(attrs.price_usd) || 0,
+              marketCap: parseFloat(attrs.market_cap_usd) || 0,
+              change24h: parseFloat(attrs.percent_change_24h) || 0,
+              volume24h: parseFloat(attrs.volume_24h_usd) || 0,
+              source: 'CoinGecko',
+              timestamp: new Date().toISOString()
+            };
+          }
+        }
+      } catch (sourceError) {
+        console.warn(`❌ Failed to fetch from ${url}:`, sourceError);
+        continue;
+      }
+    }
+
+    // If no authentic price data available, return empty data with clear indication
+    console.warn("⚠️ No authentic GTT price data available from any source");
     return {
-      price: 0.0075,
-      marketCap: 18750000,
-      change24h: 19.05,
-      volume24h: 2400000,
-      timestamp: new Date().toISOString()
+      price: null,
+      marketCap: null,
+      change24h: null,
+      volume24h: null,
+      source: 'No data available',
+      timestamp: new Date().toISOString(),
+      error: 'GTT token not found on major price feeds - may not be publicly traded'
     };
+
   } catch (error) {
     console.error("❌ Failed to fetch GTT price:", error);
     return {
-      price: 0.0075,
-      marketCap: 18750000, 
-      change24h: 0,
-      volume24h: 0,
-      timestamp: new Date().toISOString()
+      price: null,
+      marketCap: null,
+      change24h: null,
+      volume24h: null,
+      source: 'Error',
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }

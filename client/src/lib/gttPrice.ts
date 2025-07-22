@@ -1,36 +1,40 @@
-// Fetches GTT price from on-chain oracle or CoinGecko
+// Fetches GTT price from backend API (NO MOCK DATA)
 export async function fetchGTTPrice() {
   try {
-    // For development, return a realistic mock price with slight variations
-    // In production, replace with your contract/oracle endpoint
-    const basePrice = 0.15;
-    const variation = (Math.random() - 0.5) * 0.02; // ±1% variation
-    const mockPrice = basePrice + variation;
+    const response = await fetch('/api/token/gtt-data');
+    const data = await response.json();
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    return Number(mockPrice.toFixed(4));
+    if (data.success && data.data.price !== null) {
+      return Number(data.data.price);
+    } else {
+      console.warn('GTT price not available - token may not be publicly traded');
+      return null; // Return null instead of fake price
+    }
   } catch (error) {
     console.error('Error fetching GTT price:', error);
-    return 0.15; // Fallback price
+    return null; // Return null instead of fake price
   }
 }
 
-// Get price change percentage over 24h
+// Get price change percentage over 24h (NO MOCK DATA)
 export async function fetchGTTPriceChange() {
   try {
-    // Mock 24h price change data
-    const changes = [-2.5, 1.8, 0.3, -0.7, 3.2, -1.1, 2.9];
-    const randomChange = changes[Math.floor(Math.random() * changes.length)];
+    const response = await fetch('/api/token/gtt-data');
+    const data = await response.json();
     
-    return {
-      change: randomChange,
-      isPositive: randomChange >= 0
-    };
+    if (data.success && data.data.change24h !== null) {
+      const change = Number(data.data.change24h);
+      return {
+        change: change,
+        isPositive: change >= 0
+      };
+    } else {
+      console.warn('GTT price change not available - token may not be publicly traded');
+      return null; // Return null instead of fake data
+    }
   } catch (error) {
     console.error('Error fetching GTT price change:', error);
-    return { change: 0, isPositive: true };
+    return null; // Return null instead of fake data
   }
 }
 

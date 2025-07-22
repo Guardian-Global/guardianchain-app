@@ -253,28 +253,43 @@ export async function setTaxRate(
 }
 
 /**
- * Get current GTT price (mock implementation)
+ * Get current GTT price from authentic sources only
  */
-export async function getGTTPrice(): Promise<number> {
-  // TODO: Replace with actual price feed integration
-  // This could connect to CoinGecko, CoinMarketCap, or your own price oracle
+export async function getGTTPrice(): Promise<number | null> {
   try {
-    // Mock price with some volatility
-    const basePrice = 0.50;
-    const volatility = (Math.random() - 0.5) * 0.1; // ±5% volatility
-    return basePrice + volatility;
+    const response = await fetch('/api/token/gtt-data');
+    const data = await response.json();
+    
+    if (data.success && data.data.price !== null) {
+      return Number(data.data.price);
+    } else {
+      console.warn('GTT price not available from authentic sources');
+      return null; // Return null instead of fake price
+    }
   } catch (error) {
     console.error('Error fetching GTT price:', error);
-    return 0.50; // Fallback price
+    return null; // Return null instead of fake price
   }
 }
 
 /**
- * Get 24h price change (mock implementation)
+ * Get 24h price change from authentic sources only
  */
-export async function getGTTPriceChange24h(): Promise<number> {
-  // TODO: Replace with actual price change data
-  return (Math.random() - 0.5) * 20; // Random ±10% change
+export async function getGTTPriceChange24h(): Promise<number | null> {
+  try {
+    const response = await fetch('/api/token/gtt-data');
+    const data = await response.json();
+    
+    if (data.success && data.data.change24h !== null) {
+      return Number(data.data.change24h);
+    } else {
+      console.warn('GTT price change not available from authentic sources');
+      return null; // Return null instead of fake data
+    }
+  } catch (error) {
+    console.error('Error fetching GTT price change:', error);
+    return null; // Return null instead of fake data
+  }
 }
 
 /**

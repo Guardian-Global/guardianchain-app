@@ -6,34 +6,54 @@ const router = Router();
 // Real GTT Token Data API Endpoint - NO MOCK DATA
 router.get("/gtt-data", async (req: Request, res: Response) => {
   try {
-    // AUTHENTIC GTT TOKEN DATA ONLY - Contract: 0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C
-    const realPrice = 0.0075; // Current real GTT price
-    const real24hChange = 19.05; // Current real 24h change
-    const realMarketCap = 18750000; // Current real market cap $18.75M
+    // ATTEMPT TO FETCH REAL GTT TOKEN DATA FROM BLOCKCHAIN/PRICE FEEDS
+    let tokenData;
     
-    const timestamp = Date.now();
-    
-    // Calculate circulating supply from real market cap and price
-    const circulatingSupply = Math.floor(realMarketCap / realPrice);
-    
-    // Real volume data would come from DEX APIs - using conservative estimate
-    const volume24h = 2450000; // Conservative 24h volume estimate
-    
-    const tokenData = {
-      success: true,
-      data: {
+    try {
+      // Try to fetch from actual Web3 source
+      const { fetchTokenData, fetchGTTPrice } = await import('../../lib/web3/token');
+      const contractData = await fetchTokenData();
+      const priceData = await fetchGTTPrice();
+      
+      tokenData = {
+        contractAddress: contractData.contractAddress,
+        symbol: contractData.symbol,
+        name: contractData.name,
+        price: priceData.price || null,
+        priceUSD: priceData.price || null,
+        change24h: priceData.change24h || null,
+        marketCap: priceData.marketCap || null,
+        volume24h: priceData.volume24h || null,
+        circulatingSupply: contractData.totalSupply || null,
+        totalSupply: contractData.totalSupply || null,
+        verified: contractData.verified || false,
+        source: priceData.source || 'blockchain',
+        error: priceData.error || null
+      };
+    } catch (error) {
+      // If Web3 fails, return contract info without pricing
+      tokenData = {
         contractAddress: "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C",
         symbol: "GTT",
         name: "Guardian Truth Token",
-        price: realPrice,
-        priceUSD: realPrice,
-        change24h: real24hChange,
-        marketCap: realMarketCap,
-        volume24h: volume24h,
-        circulatingSupply: circulatingSupply,
-        totalSupply: 1000000000,
-        holders: 5247, // Real holder count - would query from blockchain
-        transactions24h: 1856, // Real transaction count
+        price: null,
+        priceUSD: null,
+        change24h: null,
+        marketCap: null,
+        volume24h: null,
+        circulatingSupply: null,
+        totalSupply: null,
+        verified: false,
+        source: 'configuration',
+        error: 'Unable to fetch live token data - contract may not be publicly deployed or traded'
+      };
+    }
+    
+    const finalResponse = {
+      success: true,
+      data: {
+        ...tokenData,
+        timestamp: Date.now(),
         // User-specific data (requires wallet connection for real data)
         userBalance: 0, // Requires Web3 wallet connection
         userBalanceUSD: 0,
@@ -44,43 +64,12 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
         activeCapsules: 0, // Requires database query
         verifiedCapsules: 0,
         pendingCapsules: 0,
-        listings: [], // Real listings require database connection
-        priceHistory24h: [], // Real price history requires DEX API integration
-        marketMetrics: {
-          volatility: 0.347, // Real volatility from market data
-          liquidityScore: 72.5, // Actual liquidity assessment
-          sentiment: "bullish", // Based on +19.05% gain
-          supportLevel: 0.0071, // Technical analysis support
-          resistanceLevel: 0.0079, // Technical resistance
-          rsi: 68.2, // Real RSI indicator
-          macd: 0.0008 // Real MACD value
-        },
-        exchanges: [
-          {
-            name: "Uniswap V3",
-            price: 0.0075,
-            volume24h: 980000,
-            liquidity: 2812500
-          },
-          {
-            name: "PancakeSwap", 
-            price: 0.0075,
-            volume24h: 857500,
-            liquidity: 2250000
-          },
-          {
-            name: "SushiSwap",
-            price: 0.0075,
-            volume24h: 612500,
-            liquidity: 1500000
-          }
-        ],
-        lastUpdated: new Date().toISOString(),
-        timestamp: timestamp
+        listings: [] // Real listings require database connection
+        lastUpdated: new Date().toISOString()
       }
     };
 
-    res.json(tokenData);
+    res.json(finalResponse);
   } catch (error) {
     console.error("Error fetching GTT token data:", error);
     res.status(500).json({
