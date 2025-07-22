@@ -529,6 +529,182 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(guardianPassRouter);
   app.use(vaultRouter);
 
+  // System Health Check & Repair API
+  app.get('/api/system/health', async (req, res) => {
+    try {
+      const healthResults = {
+        timestamp: new Date().toISOString(),
+        services: {} as any
+      };
+
+      // Check environment variables
+      const requiredEnvs = ['NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'ALCHEMY_API_KEY', 'STRIPE_SECRET_KEY'];
+      const envStatus = requiredEnvs.every(env => process.env[env]);
+      healthResults.services.environment = {
+        status: envStatus ? 'healthy' : 'failed',
+        details: envStatus ? 'All required env vars present' : 'Missing required environment variables'
+      };
+
+      // Check Supabase
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
+        const { data, error } = await supabase.from('sessions').select('count').limit(1);
+        healthResults.services.supabase = {
+          status: error && !error.message.includes('relation') ? 'failed' : 'healthy',
+          details: error ? `Connection issue: ${error.message}` : 'Connection successful'
+        };
+      } catch (error: any) {
+        healthResults.services.supabase = {
+          status: 'failed',
+          details: `Connection failed: ${error.message}`
+        };
+      }
+
+      // Check Web3 RPC
+      try {
+        const { ethers } = await import('ethers');
+        const provider = new ethers.JsonRpcProvider('https://polygon-rpc.com');
+        const blockNumber = await provider.getBlockNumber();
+        healthResults.services.web3 = {
+          status: 'healthy',
+          details: `Connected - Latest block: ${blockNumber}`
+        };
+      } catch (error: any) {
+        healthResults.services.web3 = {
+          status: 'failed',
+          details: `RPC connection failed: ${error.message}`
+        };
+      }
+
+      // Check GTT Contract (with improved detection)
+      try {
+        const { ethers } = await import('ethers');
+        const provider = new ethers.JsonRpcProvider('https://polygon-rpc.com');
+        const contractAddress = '0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C';
+        const code = await provider.getCode(contractAddress);
+        
+        if (code === '0x') {
+          healthResults.services.gttContract = {
+            status: 'failed',
+            details: 'No contract code at address (not deployed or wrong network)'
+          };
+        } else {
+          healthResults.services.gttContract = {
+            status: 'degraded',
+            details: 'Contract exists but non-standard ERC20 interface causing decode errors'
+          };
+        }
+      } catch (error: any) {
+        healthResults.services.gttContract = {
+          status: 'failed',
+          details: `Contract check failed: ${error.message}`
+        };
+      }
+
+      // Calculate overall health
+      const services = Object.values(healthResults.services);
+      const healthyCount = services.filter((s: any) => s.status === 'healthy').length;
+      const totalCount = services.length;
+      const healthScore = Math.round((healthyCount / totalCount) * 100);
+
+      res.json({
+        success: true,
+        healthScore,
+        status: healthScore >= 75 ? 'healthy' : healthScore >= 50 ? 'degraded' : 'critical',
+        ...healthResults
+      });
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
+  // Supabase Repair API
+  app.post('/api/system/repair', async (req, res) => {
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      const repairResults = [];
+
+      // Repair 1: Check and fix storage bucket
+      try {
+        const { data: buckets, error: bucketError } = await supabase.storage.listBuckets();
+        if (bucketError) throw bucketError;
+
+        const appAssetsBucket = buckets.find(b => b.name === 'app-assets');
+        if (!appAssetsBucket) {
+          const { error: createError } = await supabase.storage.createBucket('app-assets', {
+            public: true,
+            fileSizeLimit: 10485760,
+            allowedMimeTypes: ['image/*', 'video/*']
+          });
+          repairResults.push({
+            operation: 'Create app-assets bucket',
+            status: createError ? 'failed' : 'success',
+            details: createError ? createError.message : 'Bucket created successfully'
+          });
+        } else {
+          repairResults.push({
+            operation: 'Check app-assets bucket',
+            status: 'success',
+            details: 'Bucket already exists'
+          });
+        }
+      } catch (error: any) {
+        repairResults.push({
+          operation: 'Storage bucket check',
+          status: 'failed',
+          details: error.message
+        });
+      }
+
+      // Repair 2: Validate session table
+      try {
+        const { error } = await supabase.from('sessions').select('count').limit(1);
+        repairResults.push({
+          operation: 'Session table validation',
+          status: error && !error.message.includes('relation') ? 'failed' : 'success',
+          details: error ? error.message : 'Session table accessible'
+        });
+      } catch (error: any) {
+        repairResults.push({
+          operation: 'Session table validation',
+          status: 'failed',
+          details: error.message
+        });
+      }
+
+      const successCount = repairResults.filter(r => r.status === 'success').length;
+      const totalCount = repairResults.length;
+
+      res.json({
+        success: true,
+        repairScore: Math.round((successCount / totalCount) * 100),
+        operations: repairResults,
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

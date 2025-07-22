@@ -1,0 +1,44 @@
+🚨 URGENT: FULL-STACK SYNC, SUPABASE REPAIR & VENDOR AUDIT — EXECUTE IMMEDIATELY
+
+You are our lead full-stack AI engineer. Over the next 1 hour, perform the following:
+
+1. 🔐 **Import All Environment Variables**  
+   - SESSION_SECRET, SUPABASE service keys, ALCHEMY, INFURA, STRIPE, POSTHOG, PINATA, ANTHROPIC, REPLICATE, TOGETHER_AI, RESEND, DUNE, PLAUSIBLE, DOCUSIGN, META, THIRDWEB, HELIO, OPENAI, CLOUDINARY, CLOUDFLARE, WEB3AUTH, ETHERSCAN, AUTH0, POLYGON_RPC_URL, PRIVATE_KEY, SMTP, DATABASE, JWT, MASTER_ADMIN, OAUTH, PASSWORD_PEPPER, PRIVATE_KEY_USER, VITE_OPENAI_API_KEY  
+   - Validate presence and accessibility in project.
+
+2. ✅ **Supabase Audit & Healing**
+   - Connect using `NEXT_PUBLIC_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`.
+   - Validate `auth.users` for tier metadata, email confirmation, password reset.
+   - Clean or repair tables: `capsules`, `capsule_rewards`, `user_profiles`, `transaction_history`, GTT-specific yield/staking tables.
+   - Fix orphaned rows, enforce FK constraints, purge malformed dummy data.
+   - Verify real-time subscriptions and RLS policies — fix broken event listeners or blocked writes.
+
+3. ⚙️ **Vendor Integration Audit**
+   - **Web3 RPC**: Confirm `ALCHEMY_RPC_URL`, `INFURA_PROJECT_ID`, and `POLYGON_RPC_URL` are valid and responding.
+   - **Stripe**: Validate `STRIPE_SECRET_KEY`, `PUBLISHABLE_KEY`, chargeability, tier payment flows.
+   - **PostHog Analytics**: Validate `POSTHOG_API_KEY`, `HOST`, `STRIPE_ACCOUNT_ID`, working event tracking.
+   - **Pinata**: Validate pinning and gateway access for storage assets.
+   - **Anthropic/Replicate/OpenAI**: Validate AI endpoints working with their keys.
+   - **Cloudinary & Cloudflare**: Validate media upload and asset delivery.
+
+4. ✅ **Frontend-Backend Sync**
+   - Visit `https://guardianchain.app` and validate user flows end-to-end: signup, login, tier purchase, capsule view, yield calculation.
+   - Ensure real-time UI matches Supabase state and on-chain data.
+
+5. ⚡️ **Clinical Repairs & Fixes**
+   - Generate SQL migration scripts or Supabase API patch calls to fix inconsistencies.
+   - Patch any broken RLS or API policies.
+   - Provide console logs and health check outputs for each vendor endpoint.
+
+6. 🧪 **Verify & Report**
+   - Run a live health-check script (works with Supabase and Web3) and output to console.
+   - Summarize: what was repaired, what remains broken, and what's still failing.
+   - If any vendor is misconfigured or inaccessible, flag it clearly.
+
+⏱ **Execute now** and provide real-time updates:  
+- SQL fixes  
+- Patch code  
+- Health-check console logs  
+- Final summary report: ✅ All good, or 🔴 Needs attention.
+
+Begin immediately — our system is counting on this. 🚀
