@@ -8,6 +8,7 @@ import vaultRouter from "./routes/vault";
 import publicAuthRouter from "./routes/public-auth";
 import tokenDataRouter from "./routes/token-data";
 import stripePaymentsRouter from "./routes/stripe-payments";
+import supabaseHealthRouter from "./routes/supabase-health";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -39,6 +40,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Stripe payment routes
   app.use('/api/stripe', stripePaymentsRouter);
+  
+  // Supabase health and management routes
+  app.use(supabaseHealthRouter);
 
   // Auth middleware for Replit Auth
   await setupAuth(app);
@@ -547,20 +551,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check Supabase
       try {
-        const { createClient } = await import('@supabase/supabase-js');
-        const supabase = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.SUPABASE_SERVICE_ROLE_KEY!
-        );
-        const { data, error } = await supabase.from('sessions').select('count').limit(1);
+        const { getSupabaseClient, checkSupabaseHealth } = await import('../../lib/supabase/client');
+        const healthCheck = await checkSupabaseHealth();
+        
         healthResults.services.supabase = {
-          status: error && !error.message.includes('relation') ? 'failed' : 'healthy',
-          details: error ? `Connection issue: ${error.message}` : 'Connection successful'
+          status: healthCheck.connected ? 'healthy' : 'failed',
+          details: healthCheck.connected ? 'Connection successful' : (healthCheck.error || 'Configuration missing')
         };
       } catch (error: any) {
         healthResults.services.supabase = {
           status: 'failed',
-          details: `Connection failed: ${error.message}`
+          details: `Health check failed: ${error.message}`
         };
       }
 

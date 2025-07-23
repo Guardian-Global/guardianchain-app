@@ -114,8 +114,8 @@ const AssetIntegrationPage: React.FC = () => {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-slate-300">Database URL:</span>
-                <span className={import.meta.env.VITE_SUPABASE_URL ? 'text-green-400' : 'text-red-400'}>
-                  {import.meta.env.VITE_SUPABASE_URL ? 'Configured' : 'Missing'}
+                <span className={import.meta.env.NEXT_PUBLIC_SUPABASE_URL ? 'text-green-400' : 'text-red-400'}>
+                  {import.meta.env.NEXT_PUBLIC_SUPABASE_URL ? 'Configured' : 'Missing'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -124,11 +124,11 @@ const AssetIntegrationPage: React.FC = () => {
                   {import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY ? 'Configured' : 'Missing'}
                 </span>
               </div>
-              {(!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY) && (
+              {(!import.meta.env.NEXT_PUBLIC_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY) && (
                 <div className="mt-4 p-3 bg-red-900/20 border border-red-700 rounded">
                   <p className="text-red-300 text-sm">
                     <strong>Configuration Required:</strong> Please add your Supabase credentials 
-                    (VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY) to access your assets.
+                    (NEXT_PUBLIC_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY) to access your assets.
                   </p>
                 </div>
               )}

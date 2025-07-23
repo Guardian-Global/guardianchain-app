@@ -1,20 +1,24 @@
 // Real Supabase client configuration
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl) {
-  console.warn('Supabase URL not configured. Add VITE_SUPABASE_URL to environment variables.');
-}
+// Silent configuration check - no console warnings
+const isConfigured = supabaseUrl && supabaseServiceKey;
 
-if (!supabaseServiceKey) {
-  console.warn('Supabase service key not configured. Add VITE_SUPABASE_SERVICE_ROLE_KEY to environment variables.');
-}
-
-// Create Supabase client if credentials are available
-export const supabase = supabaseUrl && supabaseServiceKey 
-  ? createClient(supabaseUrl, supabaseServiceKey)
+// Create Supabase client with enhanced configuration
+export const supabase = isConfigured 
+  ? createClient(supabaseUrl!, supabaseServiceKey!, {
+      auth: {
+        persistSession: false
+      },
+      global: {
+        headers: {
+          'x-client': 'guardianchain-frontend'
+        }
+      }
+    })
   : null;
 
 // Asset management functions

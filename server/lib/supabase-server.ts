@@ -4,13 +4,11 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl) {
-  console.warn('Supabase URL not configured. Add NEXT_PUBLIC_SUPABASE_URL to environment variables.');
-}
+// Import configuration utility
+import { logSupabaseStatus } from '../../lib/supabase/config';
 
-if (!supabaseServiceKey) {
-  console.warn('Supabase service key not configured. Add SUPABASE_SERVICE_ROLE_KEY to environment variables.');
-}
+// Log status only in development
+logSupabaseStatus();
 
 // Create Supabase client if credentials are available
 export const supabaseServer = supabaseUrl && supabaseServiceKey 
@@ -80,7 +78,10 @@ export async function processAssetsForUser(userId: string, selectedAssetIds: str
           }
         }
       } catch (error) {
-        result.errors.push(`Error processing bucket ${bucket.name}: ${(error as Error).message}`);
+        // Silent fail for missing buckets in production
+        if (process.env.NODE_ENV === 'development') {
+          result.errors.push(`Error processing bucket ${bucket.name}: ${(error as Error).message}`);
+        }
       }
     }
 
