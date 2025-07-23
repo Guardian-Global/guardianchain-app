@@ -7,14 +7,14 @@ declare module 'ethers' {
   }
 }
 
-// GTT Token Configuration - Mumbai Testnet
+// GTT Token Configuration - Polygon Mainnet Launch
 export const GTT_CONFIG = {
-  address: "0x948051E40bc1A9b4e2861D8B7fC56404852da83", // Mumbai testnet deployment
+  address: "0x948051E40bc1A9b4e2861D8B7fC56404852da83", // Will be updated with mainnet deployment
   symbol: "GTT",
   name: "GUARDIANCHAIN Truth Token", 
   decimals: 18,
-  network: "Mumbai",
-  chainId: 80001
+  network: "Polygon",
+  chainId: 137
 };
 
 // Standard ERC20 ABI for reliable token data fetching
@@ -27,12 +27,12 @@ const GTT_ABI = [
   "event Transfer(address indexed from, address indexed to, uint256 value)"
 ];
 
-// Mumbai Testnet RPC endpoints
+// Polygon Mainnet RPC endpoints
 const RPC_ENDPOINTS = [
-  "https://rpc-mumbai.maticvigil.com",
-  "https://matic-mumbai.chainstacklabs.com",
-  "https://polygon-mumbai.blockpi.network/v1/rpc/public",
-  "https://rpc.ankr.com/polygon_mumbai"
+  "https://polygon-rpc.com",
+  "https://rpc-mainnet.matic.network",
+  "https://polygon-mainnet.public.blastapi.io",
+  "https://polygon.llamarpc.com"
 ];
 
 let provider: ethers.JsonRpcProvider | null = null;

@@ -1,0 +1,21 @@
+{
+  "name": "GUARDIANCHAIN - GTT Token",
+  "short_name": "GTT Token",
+  "description": "GUARDIANCHAIN Truth Token - Enterprise-grade blockchain verification platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#8b5cf6",
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "200x200",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["blockchain", "cryptocurrency", "verification", "security"],
+  "lang": "en",
+  "dir": "ltr",
+  "orientation": "portrait-primary"
+}

@@ -90,6 +90,7 @@ import CategoryDiscovery from "./pages/category-discovery";
 import Whitepapers from "./pages/whitepapers";
 import MyListings from "./pages/my-listings";
 import TokenListings from "./pages/token-listings";
+import GTTLaunch from "./pages/gtt-launch";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -99,7 +100,8 @@ function Router() {
       <EnhancedMegaNavigation />
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={SimpleHome} />
+        <Route path="/" component={GTTLaunch} />
+        <Route path="/home" component={SimpleHome} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
@@ -107,6 +109,7 @@ function Router() {
         <Route path="/profile" component={() => <WorkingProfileDashboard user={undefined} />} />
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
+        <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
