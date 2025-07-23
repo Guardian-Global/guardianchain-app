@@ -9,6 +9,7 @@ import publicAuthRouter from "./routes/public-auth";
 import tokenDataRouter from "./routes/token-data";
 import stripePaymentsRouter from "./routes/stripe-payments";
 import supabaseHealthRouter from "./routes/supabase-health";
+import supabaseSecurityRouter from "./routes/supabase-security";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -43,6 +44,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Supabase health and management routes
   app.use(supabaseHealthRouter);
+  
+  // Supabase security hardening routes
+  app.use(supabaseSecurityRouter);
 
   // Auth middleware for Replit Auth
   await setupAuth(app);

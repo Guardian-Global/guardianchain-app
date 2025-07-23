@@ -91,6 +91,7 @@ import Whitepapers from "./pages/whitepapers";
 import MyListings from "./pages/my-listings";
 import TokenListings from "./pages/token-listings";
 import GTTLaunch from "./pages/gtt-launch";
+import SupabaseSecurity from "./pages/supabase-security";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -170,6 +171,7 @@ function Router() {
 
         <Route path="/master-access" component={MasterAccess} />
         <Route path="/profile-customization" component={ProfileCustomization} />
+        <Route path="/supabase-security" component={SupabaseSecurity} />
         <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />

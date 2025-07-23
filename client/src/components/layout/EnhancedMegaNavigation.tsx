@@ -113,6 +113,7 @@ const pageCategories = {
       { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
       { name: "Config", href: "/config", icon: Settings },
       { name: "Compliance", href: "/compliance", icon: Lock },
+      { name: "Security Center", href: "/supabase-security", icon: Shield },
     ]
   }
 };
