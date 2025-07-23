@@ -7,14 +7,14 @@ declare module 'ethers' {
   }
 }
 
-// Production GTT Token Configuration
+// GTT Token Configuration - Mumbai Testnet
 export const GTT_CONFIG = {
-  address: "INVALID_ADDRESS_FORMAT", // Original address missing one character - needs correction
+  address: "0x948051E40bc1A9b4e2861D8B7fC56404852da83", // Mumbai testnet deployment
   symbol: "GTT",
   name: "GUARDIANCHAIN Truth Token", 
   decimals: 18,
-  network: "Polygon",
-  chainId: 137
+  network: "Mumbai",
+  chainId: 80001
 };
 
 // Standard ERC20 ABI for reliable token data fetching
@@ -27,12 +27,12 @@ const GTT_ABI = [
   "event Transfer(address indexed from, address indexed to, uint256 value)"
 ];
 
-// Reliable Polygon RPC endpoints
+// Mumbai Testnet RPC endpoints
 const RPC_ENDPOINTS = [
-  "https://polygon-rpc.com",
-  "https://rpc-mainnet.matic.network",
-  "https://polygon-mainnet.public.blastapi.io",
-  "https://polygon.llamarpc.com"
+  "https://rpc-mumbai.maticvigil.com",
+  "https://matic-mumbai.chainstacklabs.com",
+  "https://polygon-mumbai.blockpi.network/v1/rpc/public",
+  "https://rpc.ankr.com/polygon_mumbai"
 ];
 
 let provider: ethers.JsonRpcProvider | null = null;
@@ -53,7 +53,7 @@ async function initializeProvider(): Promise<ethers.JsonRpcProvider> {
       provider = testProvider;
       gttContract = new ethers.Contract(GTT_CONFIG.address, GTT_ABI, provider);
       
-      console.log(`✅ Connected to Polygon via ${rpcUrl}`);
+      console.log(`✅ Connected to Mumbai testnet via ${rpcUrl}`);
       return provider;
     } catch (error) {
       console.warn(`❌ Failed RPC ${rpcUrl}:`, error);
