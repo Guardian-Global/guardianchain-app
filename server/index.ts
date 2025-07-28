@@ -2,7 +2,12 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { securityHeaders, apiRateLimit, productionHeaders, validateContent } from "./middleware/security";
+import {
+  securityHeaders,
+  apiRateLimit,
+  productionHeaders,
+  validateContent,
+} from "./middleware/security";
 import { complianceMiddleware } from "./middleware/compliance";
 
 const app = express();
@@ -15,24 +20,26 @@ app.use(validateContent);
 app.use(complianceMiddleware);
 
 // Session configuration for enterprise authentication
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'guardianchain-dev-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'strict'
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "guardianchain-dev-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: "strict",
+    },
+  })
+);
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
 // Import and use authentication routes
-import authRoutes from './auth';
-app.use('/api/auth', authRoutes);
+import authRoutes from "./auth";
+app.use("/api/auth", authRoutes);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -88,12 +95,15 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '3000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
+  const port = parseInt(process.env.PORT || "3000", 10);
+  server.listen(
+    {
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    },
+    () => {
+      log(`serving on port ${port}`);
+    }
+  );
 })();

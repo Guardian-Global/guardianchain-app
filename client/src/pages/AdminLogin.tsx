@@ -6,8 +6,21 @@ import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Shield, Lock, User } from "lucide-react";
@@ -40,7 +53,7 @@ export default function AdminLogin() {
       if (data.success) {
         // Store JWT token
         localStorage.setItem("admin_token", data.token);
-        
+
         toast({
           title: "Login Successful",
           description: `Welcome back, ${data.user.firstName}!`,
@@ -95,13 +108,18 @@ export default function AdminLogin() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-200">Admin Email</FormLabel>
+                      <FormLabel className="text-slate-200">
+                        Admin Email
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
@@ -143,7 +161,9 @@ export default function AdminLogin() {
                   className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white font-semibold py-3"
                   disabled={loginMutation.isPending}
                 >
-                  {loginMutation.isPending ? "Authenticating..." : "Access Admin Portal"}
+                  {loginMutation.isPending
+                    ? "Authenticating..."
+                    : "Access Admin Portal"}
                 </Button>
               </form>
             </Form>
@@ -153,9 +173,12 @@ export default function AdminLogin() {
               <div className="flex items-start space-x-3">
                 <Shield className="h-5 w-5 text-yellow-400 mt-0.5" />
                 <div>
-                  <h4 className="text-sm font-medium text-yellow-400">Security Notice</h4>
+                  <h4 className="text-sm font-medium text-yellow-400">
+                    Security Notice
+                  </h4>
                   <p className="text-xs text-slate-400 mt-1">
-                    This portal is protected by enterprise-grade security. All access attempts are logged and monitored.
+                    This portal is protected by enterprise-grade security. All
+                    access attempts are logged and monitored.
                   </p>
                 </div>
               </div>

@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { FileText, Image, Video, Link, Shield, Upload } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useState } from "react";
+import { FileText, Image, Video, Link, Shield, Upload } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface Block {
   id: number;
@@ -22,39 +22,53 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
     // Simulate file upload
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     onUpdate(`Uploaded: ${file.name}`);
     setIsUploading(false);
   };
 
   const getBlockIcon = (type: string) => {
     switch (type) {
-      case 'text': return <FileText className="w-4 h-4 text-blue-400" />;
-      case 'image': return <Image className="w-4 h-4 text-green-400" />;
-      case 'video': return <Video className="w-4 h-4 text-red-400" />;
-      case 'link': return <Link className="w-4 h-4 text-purple-400" />;
-      case 'seal': return <Shield className="w-4 h-4 text-yellow-400" />;
-      default: return <FileText className="w-4 h-4 text-slate-400" />;
+      case "text":
+        return <FileText className="w-4 h-4 text-blue-400" />;
+      case "image":
+        return <Image className="w-4 h-4 text-green-400" />;
+      case "video":
+        return <Video className="w-4 h-4 text-red-400" />;
+      case "link":
+        return <Link className="w-4 h-4 text-purple-400" />;
+      case "seal":
+        return <Shield className="w-4 h-4 text-yellow-400" />;
+      default:
+        return <FileText className="w-4 h-4 text-slate-400" />;
     }
   };
 
   const getBlockLabel = (type: string) => {
     switch (type) {
-      case 'text': return 'Text Content';
-      case 'image': return 'Image Upload';
-      case 'video': return 'Video Embed';
-      case 'link': return 'External Link';
-      case 'seal': return 'Veritas Seal';
-      default: return 'Content Block';
+      case "text":
+        return "Text Content";
+      case "image":
+        return "Image Upload";
+      case "video":
+        return "Video Embed";
+      case "link":
+        return "External Link";
+      case "seal":
+        return "Veritas Seal";
+      default:
+        return "Content Block";
     }
   };
 
-  if (block.type === 'text') {
+  if (block.type === "text") {
     return (
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           {getBlockIcon(block.type)}
-          <span className="text-sm font-medium text-slate-300">{getBlockLabel(block.type)}</span>
+          <span className="text-sm font-medium text-slate-300">
+            {getBlockLabel(block.type)}
+          </span>
         </div>
         <Textarea
           placeholder="Enter your truth content here. Be detailed and factual..."
@@ -70,14 +84,16 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
     );
   }
 
-  if (block.type === 'image') {
+  if (block.type === "image") {
     return (
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           {getBlockIcon(block.type)}
-          <span className="text-sm font-medium text-slate-300">{getBlockLabel(block.type)}</span>
+          <span className="text-sm font-medium text-slate-300">
+            {getBlockLabel(block.type)}
+          </span>
         </div>
-        
+
         {block.content ? (
           <div className="bg-slate-600 rounded-lg p-4">
             <div className="flex items-center justify-between">
@@ -85,7 +101,7 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onUpdate('')}
+                onClick={() => onUpdate("")}
                 className="text-slate-400 hover:text-white"
               >
                 Change
@@ -114,9 +130,11 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
                 <Upload className="w-6 h-6 text-slate-400" />
               )}
               <span className="text-sm text-slate-400">
-                {isUploading ? 'Uploading...' : 'Click to upload image'}
+                {isUploading ? "Uploading..." : "Click to upload image"}
               </span>
-              <span className="text-xs text-slate-500">PNG, JPG, WEBP up to 10MB</span>
+              <span className="text-xs text-slate-500">
+                PNG, JPG, WEBP up to 10MB
+              </span>
             </label>
           </div>
         )}
@@ -124,12 +142,14 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
     );
   }
 
-  if (block.type === 'video') {
+  if (block.type === "video") {
     return (
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           {getBlockIcon(block.type)}
-          <span className="text-sm font-medium text-slate-300">{getBlockLabel(block.type)}</span>
+          <span className="text-sm font-medium text-slate-300">
+            {getBlockLabel(block.type)}
+          </span>
         </div>
         <Input
           type="url"
@@ -147,20 +167,22 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
     );
   }
 
-  if (block.type === 'link') {
+  if (block.type === "link") {
     return (
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           {getBlockIcon(block.type)}
-          <span className="text-sm font-medium text-slate-300">{getBlockLabel(block.type)}</span>
+          <span className="text-sm font-medium text-slate-300">
+            {getBlockLabel(block.type)}
+          </span>
         </div>
         <div className="grid grid-cols-2 gap-2">
           <Input
             type="text"
             placeholder="Link title"
-            value={block.content.split('|')[0] || ''}
+            value={block.content.split("|")[0] || ""}
             onChange={(e) => {
-              const url = block.content.split('|')[1] || '';
+              const url = block.content.split("|")[1] || "";
               onUpdate(`${e.target.value}|${url}`);
             }}
             className="bg-slate-600 border-slate-500 text-white placeholder-slate-400"
@@ -168,9 +190,9 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
           <Input
             type="url"
             placeholder="URL"
-            value={block.content.split('|')[1] || ''}
+            value={block.content.split("|")[1] || ""}
             onChange={(e) => {
-              const title = block.content.split('|')[0] || '';
+              const title = block.content.split("|")[0] || "";
               onUpdate(`${title}|${e.target.value}`);
             }}
             className="bg-slate-600 border-slate-500 text-white placeholder-slate-400"
@@ -180,12 +202,14 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
     );
   }
 
-  if (block.type === 'seal') {
+  if (block.type === "seal") {
     return (
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           {getBlockIcon(block.type)}
-          <span className="text-sm font-medium text-slate-300">{getBlockLabel(block.type)}</span>
+          <span className="text-sm font-medium text-slate-300">
+            {getBlockLabel(block.type)}
+          </span>
           <Badge className="bg-yellow-600 text-white text-xs">Premium</Badge>
         </div>
         <div className="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 border border-yellow-600/30 rounded-lg p-4">
@@ -220,7 +244,9 @@ export default function CapsuleBlock({ block, onUpdate }: CapsuleBlockProps) {
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         {getBlockIcon(block.type)}
-        <span className="text-sm font-medium text-slate-300">{getBlockLabel(block.type)}</span>
+        <span className="text-sm font-medium text-slate-300">
+          {getBlockLabel(block.type)}
+        </span>
       </div>
       <div className="bg-slate-600 rounded p-4 text-center text-slate-400">
         <span className="text-sm">Block type: {block.type}</span>

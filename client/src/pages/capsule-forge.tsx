@@ -1,33 +1,46 @@
-import { useState } from 'react';
-import CapsuleTypeSelector from '@/components/capsule/CapsuleTypeSelector';
-import { CapsuleType } from '@/types/capsule';
-import { Palette, Brain, FileText, Zap } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import ForgeEditor from '@/components/CapsuleForge/ForgeEditor';
-import MetadataPreview from '@/components/CapsuleForge/MetadataPreview';
-import ForgeControls from '@/components/CapsuleForge/ForgeControls';
-import AIAssistant from '@/components/CapsuleForge/AIAssistant';
+import { useState } from "react";
+import CapsuleTypeSelector from "@/components/capsule/CapsuleTypeSelector";
+import { CapsuleType } from "@/types/capsule";
+import { Palette, Brain, FileText, Zap } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ForgeEditor from "@/components/CapsuleForge/ForgeEditor";
+import MetadataPreview from "@/components/CapsuleForge/MetadataPreview";
+import ForgeControls from "@/components/CapsuleForge/ForgeControls";
+import AIAssistant from "@/components/CapsuleForge/AIAssistant";
 
 export default function CapsuleForgePage() {
   const [capsuleData, setCapsuleData] = useState({
-    title: '',
-    type: 'STANDARD' as CapsuleType,
-    blocks: [
-      { id: Date.now(), type: 'text', content: '' }
-    ],
+    title: "",
+    type: "STANDARD" as CapsuleType,
+    blocks: [{ id: Date.now(), type: "text", content: "" }],
     metadata: {
-      category: 'general',
+      category: "general",
       tags: [],
       griefScore: 0,
-      credibilityScore: 0
-    }
+      credibilityScore: 0,
+    },
   });
 
   const stats = [
-    { label: 'Draft Capsules', value: '12', icon: FileText, color: 'text-blue-400' },
-    { label: 'AI Suggestions', value: '47', icon: Brain, color: 'text-purple-400' },
-    { label: 'Sealed Today', value: '3', icon: Zap, color: 'text-green-400' },
-    { label: 'GTT Available', value: '850', icon: Palette, color: 'text-yellow-400' }
+    {
+      label: "Draft Capsules",
+      value: "12",
+      icon: FileText,
+      color: "text-blue-400",
+    },
+    {
+      label: "AI Suggestions",
+      value: "47",
+      icon: Brain,
+      color: "text-purple-400",
+    },
+    { label: "Sealed Today", value: "3", icon: Zap, color: "text-green-400" },
+    {
+      label: "GTT Available",
+      value: "850",
+      icon: Palette,
+      color: "text-yellow-400",
+    },
   ];
 
   return (
@@ -62,7 +75,9 @@ export default function CapsuleForgePage() {
                     <stat.icon className={`h-5 w-5 ${stat.color}`} />
                   </div>
                   <div>
-                    <div className={`text-lg font-bold ${stat.color}`}>{stat.value}</div>
+                    <div className={`text-lg font-bold ${stat.color}`}>
+                      {stat.value}
+                    </div>
                     <div className="text-xs text-slate-400">{stat.label}</div>
                   </div>
                 </div>
@@ -75,7 +90,9 @@ export default function CapsuleForgePage() {
         <div className="mb-8">
           <CapsuleTypeSelector
             selectedType={capsuleData.type}
-            onTypeSelect={(type) => setCapsuleData(prev => ({ ...prev, type }))}
+            onTypeSelect={(type) =>
+              setCapsuleData((prev) => ({ ...prev, type }))
+            }
           />
         </div>
 
@@ -83,7 +100,7 @@ export default function CapsuleForgePage() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Editor Section */}
           <div className="lg:col-span-2 space-y-6">
-            <ForgeEditor 
+            <ForgeEditor
               capsuleData={capsuleData}
               setCapsuleData={setCapsuleData}
             />
@@ -93,7 +110,7 @@ export default function CapsuleForgePage() {
           {/* Sidebar */}
           <div className="space-y-6">
             <MetadataPreview capsuleData={capsuleData} />
-            <AIAssistant 
+            <AIAssistant
               capsuleData={capsuleData}
               setCapsuleData={setCapsuleData}
             />

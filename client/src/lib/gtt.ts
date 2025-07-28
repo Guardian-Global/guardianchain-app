@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 // GTT Token Contract ABI (essential functions)
 export const GTT_TOKEN_ABI = [
@@ -21,7 +21,7 @@ export const GTT_TOKEN_ABI = [
   "event TaxRateChanged(uint256 newRate)",
   "event TreasuryChanged(address indexed oldTreasury, address indexed newTreasury)",
   "event YieldPoolChanged(address indexed oldYieldPool, address indexed newYieldPool)",
-  "event TradingTaxCollected(address indexed from, address indexed to, uint256 taxAmount)"
+  "event TradingTaxCollected(address indexed from, address indexed to, uint256 taxAmount)",
 ];
 
 export interface GTTContractInfo {
@@ -52,14 +52,14 @@ export async function getGTTBalance(
     const contract = new ethers.Contract(tokenAddress, GTT_TOKEN_ABI, provider);
     const balance = await contract.balanceOf(userAddress);
     const formattedBalance = ethers.formatEther(balance);
-    
+
     return {
       balance: balance.toString(),
       formattedBalance,
-      usdValue: parseFloat(formattedBalance) * 0.50 // Mock price - replace with real price feed
+      usdValue: parseFloat(formattedBalance) * 0.5, // Mock price - replace with real price feed
     };
   } catch (error) {
-    console.error('Error getting GTT balance:', error);
+    console.error("Error getting GTT balance:", error);
     throw error;
   }
 }
@@ -80,9 +80,9 @@ export async function getGTTContractInfo(
       treasury,
       yieldPool,
       treasuryBalance,
-      yieldPoolBalance
+      yieldPoolBalance,
     ] = await contract.getContractInfo();
-    
+
     return {
       totalSupply: ethers.formatEther(totalSupply),
       maxSupply: ethers.formatEther(maxSupply),
@@ -90,10 +90,10 @@ export async function getGTTContractInfo(
       treasury,
       yieldPool,
       treasuryBalance: ethers.formatEther(treasuryBalance),
-      yieldPoolBalance: ethers.formatEther(yieldPoolBalance)
+      yieldPoolBalance: ethers.formatEther(yieldPoolBalance),
     };
   } catch (error) {
-    console.error('Error getting GTT contract info:', error);
+    console.error("Error getting GTT contract info:", error);
     throw error;
   }
 }
@@ -113,7 +113,7 @@ export async function transferGTT(
     const tx = await contract.transfer(to, amountWei);
     return tx;
   } catch (error) {
-    console.error('Error transferring GTT:', error);
+    console.error("Error transferring GTT:", error);
     throw error;
   }
 }
@@ -133,7 +133,7 @@ export async function approveGTT(
     const tx = await contract.approve(spender, amountWei);
     return tx;
   } catch (error) {
-    console.error('Error approving GTT:', error);
+    console.error("Error approving GTT:", error);
     throw error;
   }
 }
@@ -152,7 +152,7 @@ export async function getGTTAllowance(
     const allowance = await contract.allowance(owner, spender);
     return ethers.formatEther(allowance);
   } catch (error) {
-    console.error('Error getting GTT allowance:', error);
+    console.error("Error getting GTT allowance:", error);
     throw error;
   }
 }
@@ -173,7 +173,7 @@ export async function calculateTradingTax(
     const tax = await contract.calculateTax(from, to, amountWei);
     return ethers.formatEther(tax);
   } catch (error) {
-    console.error('Error calculating trading tax:', error);
+    console.error("Error calculating trading tax:", error);
     throw error;
   }
 }
@@ -190,7 +190,7 @@ export async function isAddressTaxExempt(
     const contract = new ethers.Contract(tokenAddress, GTT_TOKEN_ABI, provider);
     return await contract.isExemptFromTax(address);
   } catch (error) {
-    console.error('Error checking tax exemption:', error);
+    console.error("Error checking tax exemption:", error);
     throw error;
   }
 }
@@ -210,7 +210,7 @@ export async function mintGTT(
     const tx = await contract.mint(to, amountWei);
     return tx;
   } catch (error) {
-    console.error('Error minting GTT:', error);
+    console.error("Error minting GTT:", error);
     throw error;
   }
 }
@@ -229,7 +229,7 @@ export async function burnGTT(
     const tx = await contract.burn(amountWei);
     return tx;
   } catch (error) {
-    console.error('Error burning GTT:', error);
+    console.error("Error burning GTT:", error);
     throw error;
   }
 }
@@ -247,7 +247,7 @@ export async function setTaxRate(
     const tx = await contract.setTaxRate(basisPoints);
     return tx;
   } catch (error) {
-    console.error('Error setting tax rate:', error);
+    console.error("Error setting tax rate:", error);
     throw error;
   }
 }
@@ -257,17 +257,17 @@ export async function setTaxRate(
  */
 export async function getGTTPrice(): Promise<number | null> {
   try {
-    const response = await fetch('/api/token/gtt-data');
+    const response = await fetch("/api/token/gtt-data");
     const data = await response.json();
-    
+
     if (data.success && data.data.price !== null) {
       return Number(data.data.price);
     } else {
-      console.warn('GTT price not available from authentic sources');
+      console.warn("GTT price not available from authentic sources");
       return null; // Return null instead of fake price
     }
   } catch (error) {
-    console.error('Error fetching GTT price:', error);
+    console.error("Error fetching GTT price:", error);
     return null; // Return null instead of fake price
   }
 }
@@ -277,17 +277,17 @@ export async function getGTTPrice(): Promise<number | null> {
  */
 export async function getGTTPriceChange24h(): Promise<number | null> {
   try {
-    const response = await fetch('/api/token/gtt-data');
+    const response = await fetch("/api/token/gtt-data");
     const data = await response.json();
-    
+
     if (data.success && data.data.change24h !== null) {
       return Number(data.data.change24h);
     } else {
-      console.warn('GTT price change not available from authentic sources');
+      console.warn("GTT price change not available from authentic sources");
       return null; // Return null instead of fake data
     }
   } catch (error) {
-    console.error('Error fetching GTT price change:', error);
+    console.error("Error fetching GTT price change:", error);
     return null; // Return null instead of fake data
   }
 }
@@ -295,10 +295,13 @@ export async function getGTTPriceChange24h(): Promise<number | null> {
 /**
  * Format GTT amount for display
  */
-export function formatGTTAmount(amount: string | number, decimals: number = 4): string {
-  const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-  if (num === 0) return '0';
-  if (num < 0.0001) return '< 0.0001';
+export function formatGTTAmount(
+  amount: string | number,
+  decimals: number = 4
+): string {
+  const num = typeof amount === "string" ? parseFloat(amount) : amount;
+  if (num === 0) return "0";
+  if (num < 0.0001) return "< 0.0001";
   return num.toFixed(decimals);
 }
 
@@ -307,39 +310,43 @@ export function formatGTTAmount(amount: string | number, decimals: number = 4): 
  */
 export function parseGTTAmount(input: string): string {
   try {
-    const cleaned = input.replace(/[^\d.]/g, '');
+    const cleaned = input.replace(/[^\d.]/g, "");
     const parsed = parseFloat(cleaned);
     if (isNaN(parsed) || parsed < 0) {
-      throw new Error('Invalid amount');
+      throw new Error("Invalid amount");
     }
     return parsed.toString();
   } catch (error) {
-    throw new Error('Invalid GTT amount format');
+    throw new Error("Invalid GTT amount format");
   }
 }
 
 /**
  * Validate GTT transfer parameters
  */
-export function validateGTTTransfer(to: string, amount: string, balance: string): { valid: boolean; error?: string } {
+export function validateGTTTransfer(
+  to: string,
+  amount: string,
+  balance: string
+): { valid: boolean; error?: string } {
   if (!ethers.isAddress(to)) {
-    return { valid: false, error: 'Invalid recipient address' };
+    return { valid: false, error: "Invalid recipient address" };
   }
-  
+
   try {
     const parsedAmount = parseGTTAmount(amount);
     const parsedBalance = parseFloat(balance);
-    
+
     if (parseFloat(parsedAmount) <= 0) {
-      return { valid: false, error: 'Amount must be greater than 0' };
+      return { valid: false, error: "Amount must be greater than 0" };
     }
-    
+
     if (parseFloat(parsedAmount) > parsedBalance) {
-      return { valid: false, error: 'Insufficient balance' };
+      return { valid: false, error: "Insufficient balance" };
     }
-    
+
     return { valid: true };
   } catch (error) {
-    return { valid: false, error: 'Invalid amount format' };
+    return { valid: false, error: "Invalid amount format" };
   }
 }

@@ -10,10 +10,12 @@ GUARDIANCHAIN is a decentralized truth verification protocol that enables users 
 ## Brand Guidelines
 
 **CRITICAL: The brand name must ALWAYS be written as "GUARDIANCHAIN"**
+
 - ✅ Correct: GUARDIANCHAIN
 - ❌ Incorrect: GuardianChain, Guardian Chain, guardianchain
 
 ### Brand Colors
+
 - GUARDIAN: #7F5AF0 (Purple)
 - CHAIN: #2CB67D (Green)
 
@@ -45,6 +47,7 @@ npm run dev
 ## Brand Enforcement
 
 This protocol enforces the GUARDIANCHAIN brand format at all levels:
+
 - Smart contract metadata
 - UI components and documentation
 - API responses and error messages
@@ -53,6 +56,7 @@ This protocol enforces the GUARDIANCHAIN brand format at all levels:
 ## Development
 
 The project follows modern Web3 development practices with emphasis on:
+
 - Type safety throughout the stack
 - Responsive design with consistent branding
 - Real-time blockchain integration

@@ -1,4 +1,4 @@
-import pricingData from '../data/pricing.json';
+import pricingData from "../data/pricing.json";
 
 export interface TierDetails {
   name: string;
@@ -15,7 +15,7 @@ export interface TierDetails {
   color: string;
 }
 
-export type TierName = 'explorer' | 'seeker' | 'creator' | 'sovereign';
+export type TierName = "explorer" | "seeker" | "creator" | "sovereign";
 
 /**
  * Get tier details by tier name
@@ -37,7 +37,9 @@ export function getAllTiers(): Record<TierName, TierDetails> {
  */
 export function hasFeatureAccess(userTier: string, feature: string): boolean {
   const tier = getTierDetails(userTier);
-  return tier.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
+  return tier.features.some((f) =>
+    f.toLowerCase().includes(feature.toLowerCase())
+  );
 }
 
 /**
@@ -62,37 +64,49 @@ export function checkUsageLimits(
   // Check capsule limit
   if (usage.capsulesThisMonth && tier.limits.capsulesPerMonth > 0) {
     if (usage.capsulesThisMonth >= tier.limits.capsulesPerMonth) {
-      exceeded.push('Monthly capsule limit reached');
+      exceeded.push("Monthly capsule limit reached");
     } else if (usage.capsulesThisMonth >= tier.limits.capsulesPerMonth * 0.8) {
-      warnings.push('Approaching monthly capsule limit');
+      warnings.push("Approaching monthly capsule limit");
     }
   }
 
   // Check storage limit
   if (usage.storageUsedGB && usage.storageUsedGB >= tier.limits.storageGB) {
-    exceeded.push('Storage limit reached');
-  } else if (usage.storageUsedGB && usage.storageUsedGB >= tier.limits.storageGB * 0.8) {
-    warnings.push('Approaching storage limit');
+    exceeded.push("Storage limit reached");
+  } else if (
+    usage.storageUsedGB &&
+    usage.storageUsedGB >= tier.limits.storageGB * 0.8
+  ) {
+    warnings.push("Approaching storage limit");
   }
 
   // Check API limit
-  if (usage.apiCallsToday && usage.apiCallsToday >= tier.limits.apiCallsPerDay) {
-    exceeded.push('Daily API limit reached');
-  } else if (usage.apiCallsToday && usage.apiCallsToday >= tier.limits.apiCallsPerDay * 0.8) {
-    warnings.push('Approaching daily API limit');
+  if (
+    usage.apiCallsToday &&
+    usage.apiCallsToday >= tier.limits.apiCallsPerDay
+  ) {
+    exceeded.push("Daily API limit reached");
+  } else if (
+    usage.apiCallsToday &&
+    usage.apiCallsToday >= tier.limits.apiCallsPerDay * 0.8
+  ) {
+    warnings.push("Approaching daily API limit");
   }
 
   return {
     isWithinLimits: exceeded.length === 0,
     exceeded,
-    warnings
+    warnings,
   };
 }
 
 /**
  * Calculate upgrade benefits
  */
-export function getUpgradeBenefits(currentTier: string, targetTier: string): {
+export function getUpgradeBenefits(
+  currentTier: string,
+  targetTier: string
+): {
   additionalFeatures: string[];
   increasedLimits: Record<string, string>;
   priceDifference: number;
@@ -103,14 +117,14 @@ export function getUpgradeBenefits(currentTier: string, targetTier: string): {
 
   // Find additional features
   const additionalFeatures = target.features.filter(
-    feature => !current.features.includes(feature)
+    (feature) => !current.features.includes(feature)
   );
 
   // Calculate limit increases
   const increasedLimits: Record<string, string> = {};
-  
+
   if (target.limits.capsulesPerMonth === -1) {
-    increasedLimits.capsules = 'Unlimited';
+    increasedLimits.capsules = "Unlimited";
   } else if (target.limits.capsulesPerMonth > current.limits.capsulesPerMonth) {
     increasedLimits.capsules = `${current.limits.capsulesPerMonth} → ${target.limits.capsulesPerMonth}`;
   }
@@ -127,7 +141,7 @@ export function getUpgradeBenefits(currentTier: string, targetTier: string): {
     additionalFeatures,
     increasedLimits,
     priceDifference: target.price - current.price,
-    gttRequirement: target.gttRequired
+    gttRequirement: target.gttRequired,
   };
 }
 
@@ -143,18 +157,26 @@ export function getRecommendedTier(usage: {
   isEnterprise?: boolean;
 }): TierName {
   if (usage.isEnterprise || usage.capsulesPerMonth > 20) {
-    return 'sovereign';
+    return "sovereign";
   }
 
-  if (usage.needsMonetization || usage.needsCustomBranding || usage.capsulesPerMonth > 5) {
-    return 'creator';
+  if (
+    usage.needsMonetization ||
+    usage.needsCustomBranding ||
+    usage.capsulesPerMonth > 5
+  ) {
+    return "creator";
   }
 
-  if (usage.capsulesPerMonth > 1 || usage.storageGB > 1 || usage.apiCallsPerDay > 100) {
-    return 'seeker';
+  if (
+    usage.capsulesPerMonth > 1 ||
+    usage.storageGB > 1 ||
+    usage.apiCallsPerDay > 100
+  ) {
+    return "seeker";
   }
 
-  return 'explorer';
+  return "explorer";
 }
 
 /**
@@ -175,7 +197,9 @@ export function validateTierUpgrade(
 
   // Check GTT requirement
   if (userGTTBalance < target.gttRequired) {
-    errors.push(`Insufficient GTT balance. Required: ${target.gttRequired}, Current: ${userGTTBalance}`);
+    errors.push(
+      `Insufficient GTT balance. Required: ${target.gttRequired}, Current: ${userGTTBalance}`
+    );
   }
 
   // Add requirement info
@@ -190,6 +214,6 @@ export function validateTierUpgrade(
   return {
     isValid: errors.length === 0,
     errors,
-    requirements
+    requirements,
   };
 }

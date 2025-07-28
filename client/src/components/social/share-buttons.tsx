@@ -13,12 +13,12 @@ interface ShareButtonsProps {
   compact?: boolean;
 }
 
-export default function ShareButtons({ 
-  title, 
-  url, 
-  image, 
+export default function ShareButtons({
+  title,
+  url,
+  image,
   description,
-  compact = false 
+  compact = false,
 }: ShareButtonsProps) {
   const { toast } = useToast();
   const [isSharing, setIsSharing] = useState(false);
@@ -26,7 +26,7 @@ export default function ShareButtons({
   const shareData = {
     title,
     text: description || title,
-    url
+    url,
   };
 
   const encodedTitle = encodeURIComponent(title);
@@ -38,18 +38,18 @@ export default function ShareButtons({
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}`,
     whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-    email: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`
+    email: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`,
   };
 
   const handleNativeShare = async () => {
     if (!navigator.share) return;
-    
+
     setIsSharing(true);
     try {
       await navigator.share(shareData);
       toast({
         title: "Shared successfully!",
-        description: "Truth capsule shared via native sharing."
+        description: "Truth capsule shared via native sharing.",
       });
     } catch (error) {
       // User cancelled sharing or sharing failed
@@ -64,31 +64,35 @@ export default function ShareButtons({
       await navigator.clipboard.writeText(url);
       toast({
         title: "Link copied!",
-        description: "Capsule link copied to clipboard."
+        description: "Capsule link copied to clipboard.",
       });
     } catch (error) {
       toast({
         title: "Copy failed",
         description: "Please copy the link manually.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   const handleSocialShare = async (platform: string, link: string) => {
     // Track share analytics if capsuleId is available
-    if (url.includes('/capsule/')) {
+    if (url.includes("/capsule/")) {
       try {
-        const capsuleId = url.split('/capsule/')[1];
+        const capsuleId = url.split("/capsule/")[1];
         await apiRequest("POST", `/api/analytics/${capsuleId}/share`, {
-          platform
+          platform,
         });
       } catch (error) {
         console.log("Share tracking failed:", error);
       }
     }
-    
-    window.open(link, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+
+    window.open(
+      link,
+      "_blank",
+      "width=600,height=400,scrollbars=yes,resizable=yes"
+    );
   };
 
   if (compact) {
@@ -116,7 +120,7 @@ export default function ShareButtons({
         <Button
           size="sm"
           variant="outline"
-          onClick={() => handleSocialShare('twitter', shareLinks.twitter)}
+          onClick={() => handleSocialShare("twitter", shareLinks.twitter)}
           className="border-slate-600 hover:border-blue-500 hover:text-blue-400"
         >
           <FaTwitter className="h-3 w-3" />
@@ -127,8 +131,10 @@ export default function ShareButtons({
 
   return (
     <div className="space-y-3">
-      <div className="text-sm font-medium text-slate-300 mb-2">Share this truth capsule</div>
-      
+      <div className="text-sm font-medium text-slate-300 mb-2">
+        Share this truth capsule
+      </div>
+
       {/* Native Share (Mobile) */}
       {navigator.share && (
         <Button
@@ -146,37 +152,37 @@ export default function ShareButtons({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handleSocialShare('twitter', shareLinks.twitter)}
+          onClick={() => handleSocialShare("twitter", shareLinks.twitter)}
           className="border-slate-600 hover:border-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
         >
           <FaTwitter className="h-4 w-4 mr-2" />
           Twitter
         </Button>
-        
+
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handleSocialShare('facebook', shareLinks.facebook)}
+          onClick={() => handleSocialShare("facebook", shareLinks.facebook)}
           className="border-slate-600 hover:border-blue-600 hover:text-blue-400 hover:bg-blue-600/10"
         >
           <FaFacebook className="h-4 w-4 mr-2" />
           Facebook
         </Button>
-        
+
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handleSocialShare('linkedin', shareLinks.linkedin)}
+          onClick={() => handleSocialShare("linkedin", shareLinks.linkedin)}
           className="border-slate-600 hover:border-blue-700 hover:text-blue-400 hover:bg-blue-700/10"
         >
           <FaLinkedin className="h-4 w-4 mr-2" />
           LinkedIn
         </Button>
-        
+
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handleSocialShare('whatsapp', shareLinks.whatsapp)}
+          onClick={() => handleSocialShare("whatsapp", shareLinks.whatsapp)}
           className="border-slate-600 hover:border-green-500 hover:text-green-400 hover:bg-green-500/10"
         >
           <FaWhatsapp className="h-4 w-4 mr-2" />
@@ -189,13 +195,13 @@ export default function ShareButtons({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => handleSocialShare('email', shareLinks.email)}
+          onClick={() => handleSocialShare("email", shareLinks.email)}
           className="border-slate-600 hover:border-slate-400 hover:text-slate-300"
         >
           <Mail className="h-4 w-4 mr-2" />
           Email
         </Button>
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -206,7 +212,7 @@ export default function ShareButtons({
           Copy Link
         </Button>
       </div>
-      
+
       <div className="text-xs text-slate-500 text-center">
         Share immutable truth • Powered by GuardianChain
       </div>

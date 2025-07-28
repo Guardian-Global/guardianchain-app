@@ -1,13 +1,22 @@
-import { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { Shield, Clock, Check, ExternalLink, AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { getContractAddress, CONTRACT_ABIS, NETWORK_CONFIGS } from '@/lib/contracts';
+import { useState, useEffect } from "react";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { Shield, Clock, Check, ExternalLink, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import {
+  getContractAddress,
+  CONTRACT_ABIS,
+  NETWORK_CONFIGS,
+} from "@/lib/contracts";
 
 interface SealInfo {
   sealedBy: string;
@@ -20,9 +29,12 @@ interface SealTrackerUIProps {
   onSealSuccess?: (txHash: string, capsuleId: string) => void;
 }
 
-export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSuccess }: SealTrackerUIProps) {
-  const [capsuleId, setCapsuleId] = useState(initialCapsuleId || '');
-  const [metadataHash, setMetadataHash] = useState('');
+export default function SealTrackerUI({
+  capsuleId: initialCapsuleId,
+  onSealSuccess,
+}: SealTrackerUIProps) {
+  const [capsuleId, setCapsuleId] = useState(initialCapsuleId || "");
+  const [metadataHash, setMetadataHash] = useState("");
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
@@ -30,46 +42,39 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
   const getVaultAddress = () => {
     if (!chainId) return undefined;
     try {
-      return getContractAddress(chainId, 'vault') as `0x${string}`;
+      return getContractAddress(chainId, "vault") as `0x${string}`;
     } catch (error) {
-      console.warn('Failed to get vault address:', error);
+      console.warn("Failed to get vault address:", error);
       return undefined;
     }
   };
 
   // Read seal information
-  const { 
-    data: sealInfo, 
+  const {
+    data: sealInfo,
     isLoading: isLoadingSeal,
-    refetch: refetchSeal 
+    refetch: refetchSeal,
   } = useReadContract({
     address: getVaultAddress(),
     abi: CONTRACT_ABIS.TruthVault,
-    functionName: 'getSeal',
+    functionName: "getSeal",
     args: capsuleId ? [BigInt(capsuleId)] : undefined,
     query: {
       enabled: !!capsuleId && !!chainId && !!getVaultAddress(),
-    }
-  }) as { 
-    data: SealInfo | undefined, 
-    isLoading: boolean,
-    refetch: () => void 
+    },
+  }) as {
+    data: SealInfo | undefined;
+    isLoading: boolean;
+    refetch: () => void;
   };
 
   // Write contract for sealing
-  const { 
-    writeContract, 
-    data: hash, 
-    isPending, 
-    error 
-  } = useWriteContract();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-  const { 
-    isLoading: isConfirming, 
-    isSuccess: isConfirmed 
-  } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const handleSealCapsule = async () => {
     if (!capsuleId || !metadataHash) {
@@ -84,7 +89,8 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
     if (!chainId) {
       toast({
         title: "No Network Connected",
-        description: "Please connect your wallet and switch to a supported network",
+        description:
+          "Please connect your wallet and switch to a supported network",
         variant: "destructive",
       });
       return;
@@ -92,26 +98,26 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
 
     let vaultAddress;
     try {
-      vaultAddress = getContractAddress(chainId, 'vault');
+      vaultAddress = getContractAddress(chainId, "vault");
     } catch (error) {
       toast({
         title: "Unsupported Network",
-        description: "Please switch to Hardhat Local (31337), Sepolia, Polygon, or Polygon Amoy",
+        description:
+          "Please switch to Hardhat Local (31337), Sepolia, Polygon, or Polygon Amoy",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      const vaultAddress = getContractAddress(chainId, 'vault');
-      
+      const vaultAddress = getContractAddress(chainId, "vault");
+
       writeContract({
         address: vaultAddress as `0x${string}`,
         abi: CONTRACT_ABIS.TruthVault,
-        functionName: 'sealCapsule',
+        functionName: "sealCapsule",
         args: [BigInt(capsuleId), metadataHash],
       });
-
     } catch (error: any) {
       toast({
         title: "Seal Failed",
@@ -128,7 +134,7 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
       if (onSealSuccess) {
         onSealSuccess(hash, capsuleId);
       }
-      
+
       toast({
         title: "Capsule Sealed!",
         description: `Capsule ${capsuleId} has been permanently sealed on-chain`,
@@ -136,8 +142,12 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
     }
   }, [isConfirmed, hash, capsuleId, onSealSuccess, refetchSeal, toast]);
 
-  const isSealed = sealInfo && sealInfo.sealedBy !== '0x0000000000000000000000000000000000000000';
-  const blockExplorer = chainId ? NETWORK_CONFIGS[chainId as keyof typeof NETWORK_CONFIGS]?.blockExplorer : null;
+  const isSealed =
+    sealInfo &&
+    sealInfo.sealedBy !== "0x0000000000000000000000000000000000000000";
+  const blockExplorer = chainId
+    ? NETWORK_CONFIGS[chainId as keyof typeof NETWORK_CONFIGS]?.blockExplorer
+    : null;
 
   return (
     <div className="space-y-6">
@@ -182,7 +192,7 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
                       Capsule is permanently sealed
                     </span>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-slate-400">Sealed By:</span>
@@ -193,7 +203,9 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
                     <div>
                       <span className="text-slate-400">Sealed At:</span>
                       <p className="text-white">
-                        {new Date(Number(sealInfo.timestamp) * 1000).toLocaleString()}
+                        {new Date(
+                          Number(sealInfo.timestamp) * 1000
+                        ).toLocaleString()}
                       </p>
                     </div>
                     <div className="md:col-span-2">
@@ -218,7 +230,10 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="border-yellow-500 text-yellow-400">
+                  <Badge
+                    variant="outline"
+                    className="border-yellow-500 text-yellow-400"
+                  >
                     <AlertCircle className="h-3 w-3 mr-1" />
                     Unsealed
                   </Badge>
@@ -263,7 +278,7 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
               {isPending || isConfirming ? (
                 <>
                   <Clock className="mr-2 h-4 w-4 animate-spin" />
-                  {isPending ? 'Confirming...' : 'Sealing...'}
+                  {isPending ? "Confirming..." : "Sealing..."}
                 </>
               ) : (
                 <>
@@ -274,14 +289,15 @@ export default function SealTrackerUI({ capsuleId: initialCapsuleId, onSealSucce
             </Button>
 
             {error && (
-              <div className="text-red-400 text-sm">
-                Error: {error.message}
-              </div>
+              <div className="text-red-400 text-sm">Error: {error.message}</div>
             )}
 
             <div className="text-xs text-slate-400">
               <p>⚠️ Sealing is permanent and cannot be undone.</p>
-              <p>The metadata hash will be stored on-chain as proof of authenticity.</p>
+              <p>
+                The metadata hash will be stored on-chain as proof of
+                authenticity.
+              </p>
             </div>
           </CardContent>
         </Card>

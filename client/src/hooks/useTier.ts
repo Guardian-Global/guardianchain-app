@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
-import { getTierById, type Tier } from '@/lib/roles';
-import { type UserProfile } from '@/lib/access';
+import { useState, useEffect } from "react";
+import { getTierById, type Tier } from "@/lib/roles";
+import { type UserProfile } from "@/lib/access";
 
 /**
  * Mock user data for development - replace with actual user context
  */
 const mockUserProfile: UserProfile = {
-  id: 'user-123',
-  tierId: 'explorer',
+  id: "user-123",
+  tierId: "explorer",
   mintsThisPeriod: 1,
   periodStartDate: new Date().toISOString(),
   gttBalance: 150.75,
   totalYieldEarned: 45.25,
-  subscriptionStatus: 'active',
-  subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+  subscriptionStatus: "active",
+  subscriptionEndDate: new Date(
+    Date.now() + 30 * 24 * 60 * 60 * 1000
+  ).toISOString(),
 };
 
 /**
@@ -28,18 +30,17 @@ export function useTier(userId?: string) {
     async function fetchUserProfile() {
       try {
         setLoading(true);
-        
+
         // TODO: Replace with actual API call to fetch user profile
         // const response = await fetch(`/api/users/${userId}/profile`);
         // const profile = await response.json();
-        
+
         // For now, use mock data
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate API delay
         setUserProfile(mockUserProfile);
-        
       } catch (err) {
-        setError('Failed to fetch user profile');
-        console.error('Error fetching user profile:', err);
+        setError("Failed to fetch user profile");
+        console.error("Error fetching user profile:", err);
       } finally {
         setLoading(false);
       }
@@ -69,10 +70,10 @@ export function useTier(userId?: string) {
       //   body: JSON.stringify({ tierId: newTierId })
       // });
 
-      setUserProfile(prev => prev ? { ...prev, tierId: newTierId } : null);
+      setUserProfile((prev) => (prev ? { ...prev, tierId: newTierId } : null));
     } catch (err) {
-      setError('Failed to update tier');
-      console.error('Error updating tier:', err);
+      setError("Failed to update tier");
+      console.error("Error updating tier:", err);
     }
   };
 
@@ -88,12 +89,12 @@ export function useTier(userId?: string) {
       //   method: 'POST'
       // });
 
-      setUserProfile(prev => 
+      setUserProfile((prev) =>
         prev ? { ...prev, mintsThisPeriod: prev.mintsThisPeriod + 1 } : null
       );
     } catch (err) {
-      setError('Failed to update mint count');
-      console.error('Error updating mint count:', err);
+      setError("Failed to update mint count");
+      console.error("Error updating mint count:", err);
     }
   };
 
@@ -103,7 +104,7 @@ export function useTier(userId?: string) {
   const updateGTTBalance = async (newBalance: number) => {
     if (!userProfile) return;
 
-    setUserProfile(prev => 
+    setUserProfile((prev) =>
       prev ? { ...prev, gttBalance: newBalance } : null
     );
   };
@@ -117,9 +118,9 @@ export function useTier(userId?: string) {
     try {
       setLoading(true);
       // TODO: Implement actual refresh logic
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (err) {
-      setError('Failed to refresh profile');
+      setError("Failed to refresh profile");
     } finally {
       setLoading(false);
     }
@@ -134,10 +135,12 @@ export function useTier(userId?: string) {
     incrementMintCount,
     updateGTTBalance,
     refreshProfile,
-    
+
     // Computed values for convenience
-    isSubscribed: userProfile?.subscriptionStatus === 'active' || userProfile?.subscriptionStatus === 'trialing',
+    isSubscribed:
+      userProfile?.subscriptionStatus === "active" ||
+      userProfile?.subscriptionStatus === "trialing",
     isPaidTier: tier ? tier.priceUSD > 0 : false,
-    hasGTT: (userProfile?.gttBalance || 0) > 0
+    hasGTT: (userProfile?.gttBalance || 0) > 0,
   };
 }

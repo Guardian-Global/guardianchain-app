@@ -8,8 +8,9 @@ export async function claimYield(req: Request, res: Response) {
     const { capsuleId, userAddress, amount, txHash } = req.body;
 
     if (!capsuleId || !userAddress || !amount || !txHash) {
-      return res.status(400).json({ 
-        message: "Missing required fields: capsuleId, userAddress, amount, txHash" 
+      return res.status(400).json({
+        message:
+          "Missing required fields: capsuleId, userAddress, amount, txHash",
       });
     }
 
@@ -20,11 +21,15 @@ export async function claimYield(req: Request, res: Response) {
     }
 
     if (capsule.creator !== userAddress) {
-      return res.status(403).json({ message: "Unauthorized: Not capsule creator" });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized: Not capsule creator" });
     }
 
     if (!capsule.verified) {
-      return res.status(400).json({ message: "Capsule not verified for yield" });
+      return res
+        .status(400)
+        .json({ message: "Capsule not verified for yield" });
     }
 
     if (capsule.yieldClaimed) {
@@ -36,7 +41,7 @@ export async function claimYield(req: Request, res: Response) {
       yieldClaimed: true,
       yieldClaimedAt: new Date(),
       yieldTxHash: txHash,
-      yieldAmount: amount
+      yieldAmount: amount,
     });
 
     // Log yield claim event to Supabase
@@ -46,21 +51,20 @@ export async function claimYield(req: Request, res: Response) {
       amount: parseFloat(amount),
       txHash,
       eventType: "yield_claimed",
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     res.json({
       success: true,
       message: "Yield claimed successfully",
       amount,
-      txHash
+      txHash,
     });
-
   } catch (error: any) {
     console.error("Error claiming yield:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to claim yield",
-      error: error.message 
+      error: error.message,
     });
   }
 }
@@ -77,25 +81,25 @@ export async function getClaimableCapsules(req: Request, res: Response) {
     // Get user's verified capsules that haven't been claimed
     const capsules = await storage.getUserCapsules(userAddress, {
       verified: true,
-      yieldClaimed: false
+      yieldClaimed: false,
     });
 
     // Calculate total claimable yield
-    const totalClaimable = capsules.reduce((sum, capsule) => 
-      sum + (capsule.yieldAmount || 0), 0
+    const totalClaimable = capsules.reduce(
+      (sum, capsule) => sum + (capsule.yieldAmount || 0),
+      0
     );
 
     res.json({
       capsules,
       totalClaimable,
-      count: capsules.length
+      count: capsules.length,
     });
-
   } catch (error: any) {
     console.error("Error fetching claimable capsules:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to fetch claimable capsules",
-      error: error.message 
+      error: error.message,
     });
   }
 }
@@ -113,14 +117,13 @@ export async function getCapsuleYieldHistory(req: Request, res: Response) {
 
     res.json({
       capsuleId,
-      yieldHistory
+      yieldHistory,
     });
-
   } catch (error: any) {
     console.error("Error fetching yield history:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to fetch yield history",
-      error: error.message 
+      error: error.message,
     });
   }
 }
@@ -131,8 +134,8 @@ export async function updateCapsuleYield(req: Request, res: Response) {
     const { capsuleId, yieldAmount, bonusAmount, reason } = req.body;
 
     if (!capsuleId || !yieldAmount) {
-      return res.status(400).json({ 
-        message: "Missing required fields: capsuleId, yieldAmount" 
+      return res.status(400).json({
+        message: "Missing required fields: capsuleId, yieldAmount",
       });
     }
 
@@ -141,7 +144,7 @@ export async function updateCapsuleYield(req: Request, res: Response) {
       yieldAmount: parseFloat(yieldAmount),
       bonusYield: bonusAmount ? parseFloat(bonusAmount) : 0,
       yieldUpdatedAt: new Date(),
-      yieldUpdateReason: reason || "Admin adjustment"
+      yieldUpdateReason: reason || "Admin adjustment",
     });
 
     // Log yield update event
@@ -151,27 +154,30 @@ export async function updateCapsuleYield(req: Request, res: Response) {
       amount: parseFloat(yieldAmount),
       eventType: "yield_updated",
       reason,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     res.json({
       success: true,
       message: "Capsule yield updated successfully",
       capsuleId,
-      yieldAmount: parseFloat(yieldAmount)
+      yieldAmount: parseFloat(yieldAmount),
     });
-
   } catch (error: any) {
     console.error("Error updating capsule yield:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to update capsule yield",
-      error: error.message 
+      error: error.message,
     });
   }
 }
 
 // Calculate yield based on engagement metrics
-export function calculateCapsuleYield(views: number, shares: number, verifications: number): number {
+export function calculateCapsuleYield(
+  views: number,
+  shares: number,
+  verifications: number
+): number {
   const BASE_YIELD = 100; // Base GTT yield
   const VIEW_MULTIPLIER = 0.1; // 0.1 GTT per view
   const SHARE_MULTIPLIER = 5; // 5 GTT per share
@@ -190,8 +196,8 @@ export async function verifyCapsuleYield(req: Request, res: Response) {
     const { capsuleId, verifierAddress } = req.body;
 
     if (!capsuleId || !verifierAddress) {
-      return res.status(400).json({ 
-        message: "Missing required fields: capsuleId, verifierAddress" 
+      return res.status(400).json({
+        message: "Missing required fields: capsuleId, verifierAddress",
       });
     }
 
@@ -217,7 +223,7 @@ export async function verifyCapsuleYield(req: Request, res: Response) {
       verifiedAt: new Date(),
       verifiedBy: verifierAddress,
       yieldAmount,
-      verifications: (capsule.verifications || 0) + 1
+      verifications: (capsule.verifications || 0) + 1,
     });
 
     // Log verification event
@@ -226,7 +232,7 @@ export async function verifyCapsuleYield(req: Request, res: Response) {
       userAddress: verifierAddress,
       amount: yieldAmount,
       eventType: "capsule_verified",
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     res.json({
@@ -234,14 +240,13 @@ export async function verifyCapsuleYield(req: Request, res: Response) {
       message: "Capsule verified successfully",
       capsuleId,
       yieldAmount,
-      verifierAddress
+      verifierAddress,
     });
-
   } catch (error: any) {
     console.error("Error verifying capsule:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: "Failed to verify capsule",
-      error: error.message 
+      error: error.message,
     });
   }
 }

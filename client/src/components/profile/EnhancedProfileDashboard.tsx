@@ -7,7 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
@@ -15,10 +21,26 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import { 
-  User, Settings, Crown, Zap, Brain, Shield, Heart, 
-  Star, Trophy, Camera, Edit3, Save, X, Plus,
-  MessageSquare, Bot, Sparkles, Lock, Globe
+import {
+  User,
+  Settings,
+  Crown,
+  Zap,
+  Brain,
+  Shield,
+  Heart,
+  Star,
+  Trophy,
+  Camera,
+  Edit3,
+  Save,
+  X,
+  Plus,
+  MessageSquare,
+  Bot,
+  Sparkles,
+  Lock,
+  Globe,
 } from "lucide-react";
 import SovereignAIAssistant from "./SovereignAIAssistant";
 
@@ -54,7 +76,7 @@ interface Achievement {
   title: string;
   description: string;
   icon: string;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  rarity: "common" | "rare" | "epic" | "legendary";
   unlockedAt: string;
 }
 
@@ -68,7 +90,7 @@ interface ProfileStats {
 }
 
 interface UserPreferences {
-  theme: 'light' | 'dark' | 'system';
+  theme: "light" | "dark" | "system";
   emailNotifications: boolean;
   pushNotifications: boolean;
   aiAssistantEnabled: boolean;
@@ -79,29 +101,29 @@ interface UserPreferences {
 
 const FOUNDER_PROFILES = [
   {
-    id: 'founder-main',
-    displayName: 'GUARDIANCHAIN Founder',
-    role: 'Creator & Visionary',
+    id: "founder-main",
+    displayName: "GUARDIANCHAIN Founder",
+    role: "Creator & Visionary",
     isFounder: true,
-    tier: 'SOVEREIGN',
-    bio: 'Architect of truth verification and digital sovereignty.',
+    tier: "SOVEREIGN",
+    bio: "Architect of truth verification and digital sovereignty.",
   },
   {
-    id: 'founder-wife',
-    displayName: 'Co-Founder & Strategic Partner',
-    role: 'Operations & Strategy',
+    id: "founder-wife",
+    displayName: "Co-Founder & Strategic Partner",
+    role: "Operations & Strategy",
     isFounder: true,
-    tier: 'SOVEREIGN',
-    bio: 'Leading operational excellence and strategic partnerships.',
+    tier: "SOVEREIGN",
+    bio: "Leading operational excellence and strategic partnerships.",
   },
   {
-    id: 'founder-son',
-    displayName: 'Next Generation Guardian',
-    role: 'Innovation & Future',
+    id: "founder-son",
+    displayName: "Next Generation Guardian",
+    role: "Innovation & Future",
     isFounder: true,
-    tier: 'SOVEREIGN',
-    bio: 'Representing the future of truth verification technology.',
-  }
+    tier: "SOVEREIGN",
+    bio: "Representing the future of truth verification technology.",
+  },
 ];
 
 export default function EnhancedProfileDashboard() {
@@ -113,16 +135,16 @@ export default function EnhancedProfileDashboard() {
 
   // Fetch user profile
   const { data: profile, isLoading } = useQuery({
-    queryKey: ['/api/profile', user?.id],
+    queryKey: ["/api/profile", user?.id],
     enabled: !!user?.id,
-    retry: false
+    retry: false,
   });
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (updatedProfile: Partial<UserProfile>) => {
-      if (!user?.id) throw new Error('User ID not found');
-      return apiRequest('PUT', `/api/profile/${user.id}`, updatedProfile);
+      if (!user?.id) throw new Error("User ID not found");
+      return apiRequest("PUT", `/api/profile/${user.id}`, updatedProfile);
     },
     onSuccess: () => {
       toast({
@@ -130,7 +152,7 @@ export default function EnhancedProfileDashboard() {
         description: "Your profile has been successfully updated.",
       });
       setIsEditing(false);
-      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/profile"] });
     },
     onError: (error: any) => {
       toast({
@@ -147,31 +169,33 @@ export default function EnhancedProfileDashboard() {
     } else if (user) {
       // Initialize with basic user data
       setProfileData({
-        id: (user as any).id || 'unknown',
+        id: (user as any).id || "unknown",
         email: (user as any).email,
         firstName: (user as any).firstName,
         lastName: (user as any).lastName,
-        displayName: (user as any).displayName || `${(user as any).firstName} ${(user as any).lastName}`,
+        displayName:
+          (user as any).displayName ||
+          `${(user as any).firstName} ${(user as any).lastName}`,
         profileImageUrl: (user as any).profileImageUrl,
-        tier: 'EXPLORER',
-        roles: ['USER'],
+        tier: "EXPLORER",
+        roles: ["USER"],
         stats: {
           capsulesCreated: 0,
           totalYieldEarned: 0,
           verificationScore: 100,
           followerCount: 0,
           followingCount: 0,
-          gttBalance: 0
+          gttBalance: 0,
         },
         preferences: {
-          theme: 'dark',
+          theme: "dark",
           emailNotifications: true,
           pushNotifications: false,
           aiAssistantEnabled: true,
           publicProfile: true,
           showStats: true,
-          allowMessages: true
-        }
+          allowMessages: true,
+        },
       });
     }
   }, [profile, user]);
@@ -192,7 +216,7 @@ export default function EnhancedProfileDashboard() {
     if (profileData?.preferences) {
       setProfileData({
         ...profileData,
-        preferences: { ...profileData.preferences, [field]: value }
+        preferences: { ...profileData.preferences, [field]: value },
       });
     }
   };
@@ -202,8 +226,10 @@ export default function EnhancedProfileDashboard() {
       <div className="container mx-auto p-6">
         <Card className="p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">Profile Access Required</h2>
-          <p className="text-muted-foreground mb-6">Please log in to view and customize your profile.</p>
-          <Button onClick={() => window.location.href = '/api/login'}>
+          <p className="text-muted-foreground mb-6">
+            Please log in to view and customize your profile.
+          </p>
+          <Button onClick={() => (window.location.href = "/api/login")}>
             Log In to Continue
           </Button>
         </Card>
@@ -232,32 +258,44 @@ export default function EnhancedProfileDashboard() {
               <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
                 <AvatarImage src={profileData.profileImageUrl} />
                 <AvatarFallback className="text-2xl">
-                  {profileData.displayName?.[0] || 'U'}
+                  {profileData.displayName?.[0] || "U"}
                 </AvatarFallback>
               </Avatar>
               {isEditing && (
-                <Button size="sm" className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                <Button
+                  size="sm"
+                  className="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
+                >
                   <Camera className="w-4 h-4" />
                 </Button>
               )}
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold truncate">
-                  {profileData.displayName || 'Anonymous User'}
+                  {profileData.displayName || "Anonymous User"}
                 </h1>
-                {profileData.isFounder && <Crown className="w-6 h-6 text-yellow-500" />}
-                {profileData.isVerified && <Shield className="w-6 h-6 text-blue-500" />}
-                <Badge variant={profileData.tier === 'SOVEREIGN' ? 'default' : 'secondary'}>
+                {profileData.isFounder && (
+                  <Crown className="w-6 h-6 text-yellow-500" />
+                )}
+                {profileData.isVerified && (
+                  <Shield className="w-6 h-6 text-blue-500" />
+                )}
+                <Badge
+                  variant={
+                    profileData.tier === "SOVEREIGN" ? "default" : "secondary"
+                  }
+                >
                   {profileData.tier}
                 </Badge>
               </div>
-              
+
               <p className="text-muted-foreground mb-4 max-w-2xl">
-                {profileData.bio || 'No bio provided yet. Add one to tell others about yourself!'}
+                {profileData.bio ||
+                  "No bio provided yet. Add one to tell others about yourself!"}
               </p>
-              
+
               <div className="flex flex-wrap gap-4 text-sm">
                 <div className="flex items-center gap-1">
                   <Zap className="w-4 h-4 text-yellow-500" />
@@ -265,7 +303,9 @@ export default function EnhancedProfileDashboard() {
                 </div>
                 <div className="flex items-center gap-1">
                   <Trophy className="w-4 h-4 text-purple-500" />
-                  <span>{profileData.stats?.capsulesCreated || 0} Capsules</span>
+                  <span>
+                    {profileData.stats?.capsulesCreated || 0} Capsules
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-blue-500" />
@@ -273,11 +313,14 @@ export default function EnhancedProfileDashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex gap-2">
               {isEditing ? (
                 <>
-                  <Button onClick={handleSaveProfile} disabled={updateProfileMutation.isPending}>
+                  <Button
+                    onClick={handleSaveProfile}
+                    disabled={updateProfileMutation.isPending}
+                  >
                     <Save className="w-4 h-4 mr-2" />
                     Save
                   </Button>
@@ -320,20 +363,32 @@ export default function EnhancedProfileDashboard() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-sm text-muted-foreground">Full Name</Label>
-                  <p className="font-medium">{profileData.firstName} {profileData.lastName}</p>
+                  <Label className="text-sm text-muted-foreground">
+                    Full Name
+                  </Label>
+                  <p className="font-medium">
+                    {profileData.firstName} {profileData.lastName}
+                  </p>
                 </div>
                 <div>
                   <Label className="text-sm text-muted-foreground">Email</Label>
                   <p className="font-medium">{profileData.email}</p>
                 </div>
                 <div>
-                  <Label className="text-sm text-muted-foreground">Location</Label>
-                  <p className="font-medium">{profileData.location || 'Not specified'}</p>
+                  <Label className="text-sm text-muted-foreground">
+                    Location
+                  </Label>
+                  <p className="font-medium">
+                    {profileData.location || "Not specified"}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-sm text-muted-foreground">Occupation</Label>
-                  <p className="font-medium">{profileData.occupation || 'Not specified'}</p>
+                  <Label className="text-sm text-muted-foreground">
+                    Occupation
+                  </Label>
+                  <p className="font-medium">
+                    {profileData.occupation || "Not specified"}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -351,25 +406,33 @@ export default function EnhancedProfileDashboard() {
                     <div className="text-2xl font-bold text-purple-600">
                       {profileData.stats?.capsulesCreated || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Capsules</div>
+                    <div className="text-sm text-muted-foreground">
+                      Capsules
+                    </div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold text-green-600">
                       {profileData.stats?.totalYieldEarned || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">GTT Earned</div>
+                    <div className="text-sm text-muted-foreground">
+                      GTT Earned
+                    </div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold text-blue-600">
                       {profileData.stats?.verificationScore || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Truth Score</div>
+                    <div className="text-sm text-muted-foreground">
+                      Truth Score
+                    </div>
                   </div>
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <div className="text-2xl font-bold text-yellow-600">
                       {profileData.stats?.followerCount || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Followers</div>
+                    <div className="text-sm text-muted-foreground">
+                      Followers
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -388,47 +451,55 @@ export default function EnhancedProfileDashboard() {
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
                     id="firstName"
-                    value={profileData.firstName || ''}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    value={profileData.firstName || ""}
+                    onChange={(e) =>
+                      handleInputChange("firstName", e.target.value)
+                    }
                   />
                 </div>
                 <div>
                   <Label htmlFor="lastName">Last Name</Label>
                   <Input
                     id="lastName"
-                    value={profileData.lastName || ''}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
+                    value={profileData.lastName || ""}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
                   />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="displayName">Display Name</Label>
                 <Input
                   id="displayName"
-                  value={profileData.displayName || ''}
-                  onChange={(e) => handleInputChange('displayName', e.target.value)}
+                  value={profileData.displayName || ""}
+                  onChange={(e) =>
+                    handleInputChange("displayName", e.target.value)
+                  }
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="bio">Bio</Label>
                 <Textarea
                   id="bio"
-                  value={profileData.bio || ''}
-                  onChange={(e) => handleInputChange('bio', e.target.value)}
+                  value={profileData.bio || ""}
+                  onChange={(e) => handleInputChange("bio", e.target.value)}
                   placeholder="Tell others about yourself..."
                   rows={3}
                 />
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="location">Location</Label>
                   <Input
                     id="location"
-                    value={profileData.location || ''}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    value={profileData.location || ""}
+                    onChange={(e) =>
+                      handleInputChange("location", e.target.value)
+                    }
                     placeholder="City, Country"
                   />
                 </div>
@@ -436,19 +507,23 @@ export default function EnhancedProfileDashboard() {
                   <Label htmlFor="occupation">Occupation</Label>
                   <Input
                     id="occupation"
-                    value={profileData.occupation || ''}
-                    onChange={(e) => handleInputChange('occupation', e.target.value)}
+                    value={profileData.occupation || ""}
+                    onChange={(e) =>
+                      handleInputChange("occupation", e.target.value)
+                    }
                   />
                 </div>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="website">Website</Label>
                   <Input
                     id="website"
-                    value={profileData.website || ''}
-                    onChange={(e) => handleInputChange('website', e.target.value)}
+                    value={profileData.website || ""}
+                    onChange={(e) =>
+                      handleInputChange("website", e.target.value)
+                    }
                     placeholder="https://..."
                   />
                 </div>
@@ -456,8 +531,10 @@ export default function EnhancedProfileDashboard() {
                   <Label htmlFor="twitter">Twitter</Label>
                   <Input
                     id="twitter"
-                    value={profileData.twitter || ''}
-                    onChange={(e) => handleInputChange('twitter', e.target.value)}
+                    value={profileData.twitter || ""}
+                    onChange={(e) =>
+                      handleInputChange("twitter", e.target.value)
+                    }
                     placeholder="@username"
                   />
                 </div>
@@ -465,8 +542,10 @@ export default function EnhancedProfileDashboard() {
                   <Label htmlFor="linkedin">LinkedIn</Label>
                   <Input
                     id="linkedin"
-                    value={profileData.linkedin || ''}
-                    onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                    value={profileData.linkedin || ""}
+                    onChange={(e) =>
+                      handleInputChange("linkedin", e.target.value)
+                    }
                     placeholder="linkedin.com/in/..."
                   />
                 </div>
@@ -476,9 +555,9 @@ export default function EnhancedProfileDashboard() {
         </TabsContent>
 
         <TabsContent value="ai-assistant" className="space-y-6">
-          <SovereignAIAssistant 
-            userId={profileData.id} 
-            userTier={profileData.tier || 'EXPLORER'}
+          <SovereignAIAssistant
+            userId={profileData.id}
+            userTier={profileData.tier || "EXPLORER"}
             gttBalance={profileData.stats?.gttBalance || 0}
           />
         </TabsContent>
@@ -500,17 +579,26 @@ export default function EnhancedProfileDashboard() {
                         <div className="text-2xl">{achievement.icon}</div>
                         <div>
                           <h3 className="font-semibold">{achievement.title}</h3>
-                          <Badge variant={achievement.rarity === 'legendary' ? 'default' : 'secondary'}>
+                          <Badge
+                            variant={
+                              achievement.rarity === "legendary"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
                             {achievement.rarity}
                           </Badge>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {achievement.description}
+                      </p>
                     </div>
                   ))
                 ) : (
                   <div className="col-span-full text-center py-8 text-muted-foreground">
-                    No achievements yet. Start creating capsules to earn your first badges!
+                    No achievements yet. Start creating capsules to earn your
+                    first badges!
                   </div>
                 )}
               </div>
@@ -530,50 +618,66 @@ export default function EnhancedProfileDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive updates about your capsules and activity</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive updates about your capsules and activity
+                  </p>
                 </div>
                 <Switch
                   checked={profileData.preferences?.emailNotifications || false}
-                  onCheckedChange={(checked) => handlePreferenceChange('emailNotifications', checked)}
+                  onCheckedChange={(checked) =>
+                    handlePreferenceChange("emailNotifications", checked)
+                  }
                 />
               </div>
-              
+
               <Separator />
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Label>AI Assistant</Label>
-                  <p className="text-sm text-muted-foreground">Enable your personal sovereign AI assistant</p>
+                  <p className="text-sm text-muted-foreground">
+                    Enable your personal sovereign AI assistant
+                  </p>
                 </div>
                 <Switch
                   checked={profileData.preferences?.aiAssistantEnabled || false}
-                  onCheckedChange={(checked) => handlePreferenceChange('aiAssistantEnabled', checked)}
+                  onCheckedChange={(checked) =>
+                    handlePreferenceChange("aiAssistantEnabled", checked)
+                  }
                 />
               </div>
-              
+
               <Separator />
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Public Profile</Label>
-                  <p className="text-sm text-muted-foreground">Make your profile visible to other users</p>
+                  <p className="text-sm text-muted-foreground">
+                    Make your profile visible to other users
+                  </p>
                 </div>
                 <Switch
                   checked={profileData.preferences?.publicProfile || false}
-                  onCheckedChange={(checked) => handlePreferenceChange('publicProfile', checked)}
+                  onCheckedChange={(checked) =>
+                    handlePreferenceChange("publicProfile", checked)
+                  }
                 />
               </div>
-              
+
               <Separator />
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Show Statistics</Label>
-                  <p className="text-sm text-muted-foreground">Display your stats on your public profile</p>
+                  <p className="text-sm text-muted-foreground">
+                    Display your stats on your public profile
+                  </p>
                 </div>
                 <Switch
                   checked={profileData.preferences?.showStats || false}
-                  onCheckedChange={(checked) => handlePreferenceChange('showStats', checked)}
+                  onCheckedChange={(checked) =>
+                    handlePreferenceChange("showStats", checked)
+                  }
                 />
               </div>
             </CardContent>
@@ -598,7 +702,7 @@ export default function EnhancedProfileDashboard() {
                   Your account is secured with enterprise-grade authentication.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-4">
                 <Button variant="outline" className="justify-start">
                   <Shield className="w-4 h-4 mr-2" />
@@ -624,15 +728,21 @@ export default function EnhancedProfileDashboard() {
             <CardContent className="space-y-6">
               <div className="text-center p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 rounded-lg">
                 <Crown className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">GUARDIANCHAIN Founder Access</h3>
+                <h3 className="text-xl font-bold mb-2">
+                  GUARDIANCHAIN Founder Access
+                </h3>
                 <p className="text-muted-foreground">
-                  Set up founder profiles for you, your wife, and your son with special privileges and recognition.
+                  Set up founder profiles for you, your wife, and your son with
+                  special privileges and recognition.
                 </p>
               </div>
-              
+
               <div className="grid gap-4">
                 {FOUNDER_PROFILES.map((founder) => (
-                  <Card key={founder.id} className="border-yellow-200 dark:border-yellow-800">
+                  <Card
+                    key={founder.id}
+                    className="border-yellow-200 dark:border-yellow-800"
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -640,7 +750,9 @@ export default function EnhancedProfileDashboard() {
                             <Crown className="w-4 h-4 text-yellow-500" />
                             {founder.displayName}
                           </h4>
-                          <p className="text-sm text-muted-foreground">{founder.role}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {founder.role}
+                          </p>
                           <p className="text-xs mt-1">{founder.bio}</p>
                         </div>
                         <div className="text-right">

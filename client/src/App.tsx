@@ -106,12 +106,21 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
-        <Route path="/profile/:id?" component={() => <WorkingProfileDashboard user={undefined} />} />
-        <Route path="/profile" component={() => <WorkingProfileDashboard user={undefined} />} />
+        <Route
+          path="/profile/:id?"
+          component={() => <WorkingProfileDashboard user={undefined} />}
+        />
+        <Route
+          path="/profile"
+          component={() => <WorkingProfileDashboard user={undefined} />}
+        />
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
         <Route path="/gtt-launch" component={GTTLaunch} />
-        <Route path="/auth-hub" component={() => <AuthenticationHub onAuthenticated={() => {}} />} />
+        <Route
+          path="/auth-hub"
+          component={() => <AuthenticationHub onAuthenticated={() => {}} />}
+        />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/governance" component={Governance} />
@@ -138,7 +147,10 @@ function Router() {
         <Route path="/embed/capsule" component={EmbedCapsulePage} />
         <Route path="/yield-tracker" component={YieldTrackerPage} />
         <Route path="/capsule-analytics" component={CapsuleAnalyticsPage} />
-        <Route path="/capsule/:id/analytics" component={DynamicCapsuleAnalytics} />
+        <Route
+          path="/capsule/:id/analytics"
+          component={DynamicCapsuleAnalytics}
+        />
         <Route path="/financial-dashboard" component={FinancialDashboard} />
 
         <Route path="/blockchain-playground" component={BlockchainPlayground} />
@@ -164,7 +176,10 @@ function Router() {
         <Route path="/billing-dashboard" component={BillingDashboard} />
         <Route path="/token-launch" component={SimpleTokenLaunch} />
         <Route path="/specialized-intake" component={SpecializedIntake} />
-        <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
+        <Route
+          path="/whistleblower-sanctuary"
+          component={WhistleblowerSanctuary}
+        />
         <Route path="/category-discovery" component={CategoryDiscovery} />
         <Route path="/whitepapers" component={Whitepapers} />
         <Route path="/asset-showcase" component={AssetShowcase} />
@@ -175,7 +190,7 @@ function Router() {
         <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
-        
+
         {/* Legal Pages */}
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />

@@ -7,7 +7,7 @@ import {
   type Capsule,
   type InsertCapsule,
   type CapsuleInteraction,
-  type InsertCapsuleInteraction
+  type InsertCapsuleInteraction,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -35,28 +35,33 @@ export interface IStorage {
     agreedToTermsAt: Date;
   }): Promise<User>;
   getUserById(userId: string): Promise<User | undefined>;
-  
+
   // Capsule operations
   createCapsule(capsuleData: any): Promise<Capsule>;
   getUserCapsules(userId: string): Promise<Capsule[]>;
   getCapsule(id: number): Promise<Capsule | undefined>;
-  updateCapsule(id: number, updates: Partial<Capsule>): Promise<Capsule | undefined>;
-  
+  updateCapsule(
+    id: number,
+    updates: Partial<Capsule>
+  ): Promise<Capsule | undefined>;
+
   // Interaction operations
-  recordInteraction(interaction: InsertCapsuleInteraction): Promise<CapsuleInteraction>;
+  recordInteraction(
+    interaction: InsertCapsuleInteraction
+  ): Promise<CapsuleInteraction>;
   getCapsuleInteractions(capsuleId: number): Promise<CapsuleInteraction[]>;
-  
+
   // Airdrop operations
   getAirdropClaim(address: string): Promise<any | undefined>;
   createAirdropClaim(claim: any): Promise<any>;
-  
+
   // Referral operations
   createReferralCode(referral: any): Promise<any>;
   getReferralData(userId: string): Promise<any | undefined>;
   getReferralByCode(code: string): Promise<any | undefined>;
   getReferralReward(address: string): Promise<any | undefined>;
   createReferralReward(reward: any): Promise<any>;
-  
+
   // Guardian Pass operations
   getGuardianPassCollection(address: string): Promise<any | undefined>;
   getGuardianPassMarketplaceData(): Promise<any>;
@@ -66,7 +71,7 @@ export interface IStorage {
   hasGuardianPass(address: string): Promise<boolean>;
   getHighestRarityPass(address: string): Promise<string | undefined>;
   getGuardianPassAPYBonus(address: string): Promise<number>;
-  
+
   // Vault operations
   getVaultStats(): Promise<any>;
   getUserVaultPosition(address: string): Promise<any>;
@@ -112,9 +117,9 @@ export class DatabaseStorage implements IStorage {
   async updateUserTier(id: string, tier: string): Promise<User | undefined> {
     const [user] = await db
       .update(users)
-      .set({ 
+      .set({
         userTier: tier,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(users.id, id))
       .returning();
@@ -127,16 +132,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
     return user;
   }
 
   async updateUserLastLogin(userId: string): Promise<void> {
     await db
       .update(users)
-      .set({ 
+      .set({
         lastLoginAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(users.id, userId));
   }
@@ -144,9 +152,9 @@ export class DatabaseStorage implements IStorage {
   async updateUserStake(userId: string, stakeAmount: number): Promise<void> {
     await db
       .update(users)
-      .set({ 
+      .set({
         gttBalance: stakeAmount.toString(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(users.id, userId));
   }
@@ -162,8 +170,10 @@ export class DatabaseStorage implements IStorage {
     isActive: boolean;
     agreedToTermsAt: Date;
   }): Promise<User> {
-    const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+    const userId = `user_${Date.now()}_${Math.random()
+      .toString(36)
+      .substr(2, 9)}`;
+
     const [user] = await db
       .insert(users)
       .values({
@@ -176,10 +186,10 @@ export class DatabaseStorage implements IStorage {
         gttBalance: userData.gttStakeAmount.toString(),
         isActive: userData.isActive,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .returning();
-    
+
     return user;
   }
 
@@ -205,7 +215,7 @@ export class DatabaseStorage implements IStorage {
         truthYield: "0",
         metadata: capsuleData.metadata || {},
         heirAddress: capsuleData.heirAddress,
-        unlockDate: capsuleData.unlockDate
+        unlockDate: capsuleData.unlockDate,
       })
       .returning();
     return capsule;
@@ -227,12 +237,15 @@ export class DatabaseStorage implements IStorage {
     return capsule;
   }
 
-  async updateCapsule(id: number, updates: Partial<Capsule>): Promise<Capsule | undefined> {
+  async updateCapsule(
+    id: number,
+    updates: Partial<Capsule>
+  ): Promise<Capsule | undefined> {
     const [capsule] = await db
       .update(capsules)
       .set({
         ...updates,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(capsules.id, id))
       .returning();
@@ -240,7 +253,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Interaction operations
-  async recordInteraction(interaction: InsertCapsuleInteraction): Promise<CapsuleInteraction> {
+  async recordInteraction(
+    interaction: InsertCapsuleInteraction
+  ): Promise<CapsuleInteraction> {
     const [result] = await db
       .insert(capsuleInteractions)
       .values(interaction)
@@ -248,7 +263,9 @@ export class DatabaseStorage implements IStorage {
     return result;
   }
 
-  async getCapsuleInteractions(capsuleId: number): Promise<CapsuleInteraction[]> {
+  async getCapsuleInteractions(
+    capsuleId: number
+  ): Promise<CapsuleInteraction[]> {
     return await db
       .select()
       .from(capsuleInteractions)
@@ -258,7 +275,7 @@ export class DatabaseStorage implements IStorage {
 
   // Mock implementations for mainnet launch features
   // In production, these would use proper database tables
-  
+
   // Airdrop operations
   async getAirdropClaim(address: string): Promise<any | undefined> {
     // Mock implementation - in production would query airdrop_claims table
@@ -270,7 +287,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...claim,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
   }
 
@@ -280,41 +297,41 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...referral,
-      referralLink: `https://guardianchain.app/signup?ref=${referral.code}`
+      referralLink: `https://guardianchain.app/signup?ref=${referral.code}`,
     };
   }
 
   async getReferralData(userId: string): Promise<any | undefined> {
     // Mock implementation - return sample referral data
     return {
-      code: 'GUARD1234',
+      code: "GUARD1234",
       totalReferrals: 8,
-      totalRewards: '400',
-      pendingRewards: '150',
-      referralLink: 'https://guardianchain.app/signup?ref=GUARD1234',
+      totalRewards: "400",
+      pendingRewards: "150",
+      referralLink: "https://guardianchain.app/signup?ref=GUARD1234",
       recentReferrals: [
         {
-          address: '0x1234...5678',
-          joinDate: '2025-01-15',
-          rewardEarned: '50',
-          status: 'completed'
+          address: "0x1234...5678",
+          joinDate: "2025-01-15",
+          rewardEarned: "50",
+          status: "completed",
         },
         {
-          address: '0x9876...4321',
-          joinDate: '2025-01-20',
-          rewardEarned: '50',
-          status: 'pending'
-        }
-      ]
+          address: "0x9876...4321",
+          joinDate: "2025-01-20",
+          rewardEarned: "50",
+          status: "pending",
+        },
+      ],
     };
   }
 
   async getReferralByCode(code: string): Promise<any | undefined> {
     // Mock implementation
     return {
-      userId: 'demo-user',
+      userId: "demo-user",
       code,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
   }
 
@@ -328,7 +345,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...reward,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
   }
 
@@ -339,36 +356,36 @@ export class DatabaseStorage implements IStorage {
       ownedPasses: [
         {
           tokenId: 42,
-          rarity: 'Rare',
-          tierName: 'Rare Guardian',
+          rarity: "Rare",
+          tierName: "Rare Guardian",
           boostedAPY: 500,
           stakingMultiplier: 12000,
           earlyDAOAccess: true,
-          mintTime: '2025-01-15T10:30:00Z'
+          mintTime: "2025-01-15T10:30:00Z",
         },
         {
           tokenId: 157,
-          rarity: 'Uncommon',
-          tierName: 'Uncommon Guardian',
+          rarity: "Uncommon",
+          tierName: "Uncommon Guardian",
           boostedAPY: 250,
           stakingMultiplier: 11000,
           earlyDAOAccess: false,
-          mintTime: '2025-01-20T14:45:00Z'
-        }
+          mintTime: "2025-01-20T14:45:00Z",
+        },
       ],
-      totalValue: '2,847.50',
-      highestRarity: 'Rare',
+      totalValue: "2,847.50",
+      highestRarity: "Rare",
       benefits: {
         totalAPYBoost: 750,
         stakingMultiplier: 1.2,
         daoVotingPower: 150,
         exclusiveFeatures: [
-          'Early DAO proposal access',
-          'Premium vault strategies',
-          'Priority customer support',
-          'Exclusive community channels'
-        ]
-      }
+          "Early DAO proposal access",
+          "Premium vault strategies",
+          "Priority customer support",
+          "Exclusive community channels",
+        ],
+      },
     };
   }
 
@@ -376,15 +393,15 @@ export class DatabaseStorage implements IStorage {
     // Mock marketplace data
     return {
       totalSupply: 847,
-      floorPrice: '0.25',
-      volume24h: '12.5',
+      floorPrice: "0.25",
+      volume24h: "12.5",
       rarityDistribution: {
         Common: { minted: 423, available: 77 },
         Uncommon: { minted: 267, available: 33 },
         Rare: { minted: 128, available: 22 },
         Epic: { minted: 24, available: 16 },
-        Legendary: { minted: 5, available: 5 }
-      }
+        Legendary: { minted: 5, available: 5 },
+      },
     };
   }
 
@@ -398,7 +415,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...passData,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
   }
 
@@ -409,9 +426,9 @@ export class DatabaseStorage implements IStorage {
       stakingMultiplier: 1.2,
       daoVotingPower: 150,
       exclusiveFeatures: [
-        'Early DAO proposal access',
-        'Premium vault strategies'
-      ]
+        "Early DAO proposal access",
+        "Premium vault strategies",
+      ],
     };
   }
 
@@ -422,7 +439,7 @@ export class DatabaseStorage implements IStorage {
 
   async getHighestRarityPass(address: string): Promise<string | undefined> {
     // Mock implementation
-    const rarities = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
+    const rarities = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
     return rarities[Math.floor(Math.random() * rarities.length)];
   }
 
@@ -436,25 +453,27 @@ export class DatabaseStorage implements IStorage {
   async getVaultStats(): Promise<any> {
     // Mock vault statistics
     return {
-      tvl: '2,547,832',
-      apy: '25.7',
-      userStaked: '15,000',
-      pendingRewards: '1,247.50',
-      sharePrice: '1.0847',
+      tvl: "2,547,832",
+      apy: "25.7",
+      userStaked: "15,000",
+      pendingRewards: "1,247.50",
+      sharePrice: "1.0847",
       nextCompoundTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
       totalUsers: 1247,
-      performanceFee: '2%'
+      performanceFee: "2%",
     };
   }
 
   async getUserVaultPosition(address: string): Promise<any> {
     // Mock user vault position
     return {
-      stakedAmount: '15,000',
-      shares: '13,833.24',
-      totalRewardsEarned: '3,247.89',
-      autoCompoundedAmount: '1,847.32',
-      lastDepositTime: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString()
+      stakedAmount: "15,000",
+      shares: "13,833.24",
+      totalRewardsEarned: "3,247.89",
+      autoCompoundedAmount: "1,847.32",
+      lastDepositTime: new Date(
+        Date.now() - 15 * 24 * 60 * 60 * 1000
+      ).toISOString(),
     };
   }
 
@@ -463,7 +482,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...deposit,
-      status: 'completed'
+      status: "completed",
     };
   }
 
@@ -472,7 +491,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...withdrawal,
-      status: 'completed'
+      status: "completed",
     };
   }
 
@@ -481,7 +500,7 @@ export class DatabaseStorage implements IStorage {
     return {
       id: Math.floor(Math.random() * 10000),
       ...compound,
-      status: 'completed'
+      status: "completed",
     };
   }
 }

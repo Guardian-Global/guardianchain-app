@@ -2,7 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Brain, Trophy, Target, CheckCircle, Star } from "lucide-react";
+import {
+  BookOpen,
+  Brain,
+  Trophy,
+  Target,
+  CheckCircle,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
 
 export default function PersonalizedBlockchainLearningCompanion() {
@@ -15,23 +22,23 @@ export default function PersonalizedBlockchainLearningCompanion() {
       level: "Beginner",
       duration: "15 min",
       description: "Understanding blocks, chains, and decentralization",
-      completed: true
+      completed: true,
     },
     {
       title: "GTT Token Economics",
       progress: 75,
-      level: "Intermediate", 
+      level: "Intermediate",
       duration: "20 min",
       description: "How GTT powers the GUARDIANCHAIN ecosystem",
-      completed: false
+      completed: false,
     },
     {
       title: "Truth Verification",
       progress: 45,
       level: "Intermediate",
-      duration: "25 min", 
+      duration: "25 min",
       description: "Decentralized consensus and verification mechanisms",
-      completed: false
+      completed: false,
     },
     {
       title: "DeFi Integration",
@@ -39,23 +46,27 @@ export default function PersonalizedBlockchainLearningCompanion() {
       level: "Advanced",
       duration: "30 min",
       description: "Yield farming, staking, and liquidity provision",
-      completed: false
-    }
+      completed: false,
+    },
   ];
 
   const achievements = [
     { name: "First Steps", icon: "🚀", earned: true },
     { name: "Token Expert", icon: "💎", earned: true },
     { name: "Truth Seeker", icon: "🔍", earned: false },
-    { name: "DeFi Master", icon: "🏆", earned: false }
+    { name: "DeFi Master", icon: "🏆", earned: false },
   ];
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case "Beginner": return "text-green-400 bg-green-500/20";
-      case "Intermediate": return "text-blue-400 bg-blue-500/20";
-      case "Advanced": return "text-purple-400 bg-purple-500/20";
-      default: return "text-slate-400 bg-slate-500/20";
+      case "Beginner":
+        return "text-green-400 bg-green-500/20";
+      case "Intermediate":
+        return "text-blue-400 bg-blue-500/20";
+      case "Advanced":
+        return "text-purple-400 bg-purple-500/20";
+      default:
+        return "text-slate-400 bg-slate-500/20";
     }
   };
 
@@ -76,19 +87,19 @@ export default function PersonalizedBlockchainLearningCompanion() {
               <div className="text-2xl font-bold text-blue-400">2/4</div>
               <div className="text-sm text-slate-400">Modules Complete</div>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Target className="w-8 h-8 text-green-400 mx-auto" />
               <div className="text-2xl font-bold text-green-400">55%</div>
               <div className="text-sm text-slate-400">Overall Progress</div>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Trophy className="w-8 h-8 text-yellow-400 mx-auto" />
               <div className="text-2xl font-bold text-yellow-400">2/4</div>
               <div className="text-sm text-slate-400">Achievements</div>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Star className="w-8 h-8 text-purple-400 mx-auto" />
               <div className="text-2xl font-bold text-purple-400">150</div>
@@ -104,9 +115,9 @@ export default function PersonalizedBlockchainLearningCompanion() {
                 <div
                   key={index}
                   className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                    selectedModule === index 
-                      ? 'border-purple-500 bg-purple-500/10' 
-                      : 'border-slate-600 bg-slate-700/50 hover:border-slate-500'
+                    selectedModule === index
+                      ? "border-purple-500 bg-purple-500/10"
+                      : "border-slate-600 bg-slate-700/50 hover:border-slate-500"
                   }`}
                   onClick={() => setSelectedModule(index)}
                 >
@@ -123,16 +134,22 @@ export default function PersonalizedBlockchainLearningCompanion() {
                       <Badge className={getLevelColor(module.level)}>
                         {module.level}
                       </Badge>
-                      <span className="text-sm text-slate-400">{module.duration}</span>
+                      <span className="text-sm text-slate-400">
+                        {module.duration}
+                      </span>
                     </div>
                   </div>
-                  
-                  <p className="text-sm text-slate-400 mb-3">{module.description}</p>
-                  
+
+                  <p className="text-sm text-slate-400 mb-3">
+                    {module.description}
+                  </p>
+
                   <div className="space-y-2">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-slate-400">Progress</span>
-                      <span className="text-purple-400">{module.progress}%</span>
+                      <span className="text-purple-400">
+                        {module.progress}%
+                      </span>
                     </div>
                     <Progress value={module.progress} className="h-2" />
                   </div>
@@ -149,15 +166,17 @@ export default function PersonalizedBlockchainLearningCompanion() {
                 <div
                   key={index}
                   className={`p-3 rounded-lg text-center ${
-                    achievement.earned 
-                      ? 'bg-yellow-500/20 border border-yellow-500/30' 
-                      : 'bg-slate-700/50 border border-slate-600'
+                    achievement.earned
+                      ? "bg-yellow-500/20 border border-yellow-500/30"
+                      : "bg-slate-700/50 border border-slate-600"
                   }`}
                 >
                   <div className="text-2xl mb-2">{achievement.icon}</div>
-                  <div className={`text-sm font-semibold ${
-                    achievement.earned ? 'text-yellow-400' : 'text-slate-400'
-                  }`}>
+                  <div
+                    className={`text-sm font-semibold ${
+                      achievement.earned ? "text-yellow-400" : "text-slate-400"
+                    }`}
+                  >
                     {achievement.name}
                   </div>
                 </div>

@@ -1,13 +1,17 @@
 interface ComplianceCheck {
   userId: string;
-  type: 'kyc' | 'aml' | 'gdpr' | 'ccpa' | 'fatca';
-  status: 'pending' | 'approved' | 'rejected' | 'requires_review';
+  type: "kyc" | "aml" | "gdpr" | "ccpa" | "fatca";
+  status: "pending" | "approved" | "rejected" | "requires_review";
   data: any;
   timestamp: Date;
 }
 
 interface LegalDocument {
-  type: 'terms_of_service' | 'privacy_policy' | 'aml_policy' | 'risk_disclosure';
+  type:
+    | "terms_of_service"
+    | "privacy_policy"
+    | "aml_policy"
+    | "risk_disclosure";
   version: string;
   effectiveDate: Date;
   content: string;
@@ -15,72 +19,81 @@ interface LegalDocument {
 
 export class ComplianceService {
   // KYC/AML compliance
-  async performKYCCheck(userId: string, userData: any): Promise<ComplianceCheck> {
+  async performKYCCheck(
+    userId: string,
+    userData: any
+  ): Promise<ComplianceCheck> {
     const kycResult = {
       userId,
-      type: 'kyc' as const,
-      status: 'approved' as const,
+      type: "kyc" as const,
+      status: "approved" as const,
       data: {
         identityVerified: true,
         addressVerified: true,
-        sanctionsCheck: 'clear',
-        pepCheck: 'clear',
-        riskScore: 'low'
+        sanctionsCheck: "clear",
+        pepCheck: "clear",
+        riskScore: "low",
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Log compliance action
-    await this.logComplianceAction(userId, 'kyc_check', kycResult);
-    
+    await this.logComplianceAction(userId, "kyc_check", kycResult);
+
     return kycResult;
   }
 
-  async performAMLCheck(userId: string, transactionData: any): Promise<ComplianceCheck> {
+  async performAMLCheck(
+    userId: string,
+    transactionData: any
+  ): Promise<ComplianceCheck> {
     const amlResult = {
       userId,
-      type: 'aml' as const,
-      status: 'approved' as const,
+      type: "aml" as const,
+      status: "approved" as const,
       data: {
-        sanctionsList: 'clear',
-        pepList: 'clear',
-        watchList: 'clear',
+        sanctionsList: "clear",
+        pepList: "clear",
+        watchList: "clear",
         riskScore: this.calculateAMLRisk(transactionData),
-        transactionPattern: 'normal'
+        transactionPattern: "normal",
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     // Log compliance action
-    await this.logComplianceAction(userId, 'aml_check', amlResult);
+    await this.logComplianceAction(userId, "aml_check", amlResult);
 
     return amlResult;
   }
 
   // GDPR/CCPA compliance
-  async handleDataRequest(userId: string, requestType: 'access' | 'deletion' | 'portability') {
+  async handleDataRequest(
+    userId: string,
+    requestType: "access" | "deletion" | "portability"
+  ) {
     const request = {
       userId,
       type: requestType,
-      status: 'processing',
+      status: "processing",
       requestDate: new Date(),
       completionDate: null,
-      data: null
+      data: null,
     };
 
     switch (requestType) {
-      case 'access':
+      case "access":
         request.data = await this.exportUserData(userId);
         break;
-      case 'deletion':
+      case "deletion":
         await this.deleteUserData(userId);
         break;
-      case 'portability':
+      case "portability":
         request.data = await this.exportPortableData(userId);
         break;
     }
 
-    request.status = 'completed';
+    request.status = "completed";
     request.completionDate = new Date();
 
     await this.logComplianceAction(userId, `gdpr_${requestType}`, request);
@@ -95,18 +108,18 @@ export class ComplianceService {
         aml: await this.performAMLCheck(transaction.userId, transaction),
         sanctions: await this.checkSanctions(transaction),
         limits: await this.checkTransactionLimits(transaction),
-        tax: await this.calculateTaxObligations(transaction)
+        tax: await this.calculateTaxObligations(transaction),
       },
-      recommendations: [] as string[]
+      recommendations: [] as string[],
     };
 
     if (transaction.amount > 10000) {
-      validation.recommendations.push('Report to FinCEN (CTR required)');
+      validation.recommendations.push("Report to FinCEN (CTR required)");
     }
 
-    if (validation.compliance.sanctions.status === 'flagged') {
+    if (validation.compliance.sanctions.status === "flagged") {
       validation.isValid = false;
-      validation.recommendations.push('Block transaction - sanctions match');
+      validation.recommendations.push("Block transaction - sanctions match");
     }
 
     return validation;
@@ -116,29 +129,29 @@ export class ComplianceService {
   async getLegalDocuments(): Promise<LegalDocument[]> {
     return [
       {
-        type: 'terms_of_service',
-        version: '2.1',
-        effectiveDate: new Date('2024-01-01'),
-        content: this.getTermsOfService()
+        type: "terms_of_service",
+        version: "2.1",
+        effectiveDate: new Date("2024-01-01"),
+        content: this.getTermsOfService(),
       },
       {
-        type: 'privacy_policy',
-        version: '1.8',
-        effectiveDate: new Date('2024-01-01'),
-        content: this.getPrivacyPolicy()
+        type: "privacy_policy",
+        version: "1.8",
+        effectiveDate: new Date("2024-01-01"),
+        content: this.getPrivacyPolicy(),
       },
       {
-        type: 'aml_policy',
-        version: '1.3',
-        effectiveDate: new Date('2024-01-01'),
-        content: this.getAMLPolicy()
+        type: "aml_policy",
+        version: "1.3",
+        effectiveDate: new Date("2024-01-01"),
+        content: this.getAMLPolicy(),
       },
       {
-        type: 'risk_disclosure',
-        version: '1.1',
-        effectiveDate: new Date('2024-01-01'),
-        content: this.getRiskDisclosure()
-      }
+        type: "risk_disclosure",
+        version: "1.1",
+        effectiveDate: new Date("2024-01-01"),
+        content: this.getRiskDisclosure(),
+      },
     ];
   }
 
@@ -149,32 +162,32 @@ export class ComplianceService {
       action,
       data,
       timestamp: new Date(),
-      ipAddress: 'redacted_for_privacy',
-      userAgent: 'redacted_for_privacy'
+      ipAddress: "redacted_for_privacy",
+      userAgent: "redacted_for_privacy",
     };
 
     // In production, store in secure audit database
-    console.log('Compliance log:', logEntry);
+    console.log("Compliance log:", logEntry);
   }
 
-  private calculateAMLRisk(transactionData: any): 'low' | 'medium' | 'high' {
+  private calculateAMLRisk(transactionData: any): "low" | "medium" | "high" {
     let score = 0;
-    
+
     if (transactionData.amount > 10000) score += 2;
     if (transactionData.frequency > 10) score += 1;
     if (transactionData.cross_border) score += 1;
-    
-    if (score >= 3) return 'high';
-    if (score >= 2) return 'medium';
-    return 'low';
+
+    if (score >= 3) return "high";
+    if (score >= 2) return "medium";
+    return "low";
   }
 
   private async checkSanctions(transaction: any) {
     // Check against OFAC sanctions list
     return {
-      status: 'clear',
-      lists_checked: ['OFAC', 'UN', 'EU'],
-      last_updated: new Date()
+      status: "clear",
+      lists_checked: ["OFAC", "UN", "EU"],
+      last_updated: new Date(),
     };
   }
 
@@ -182,7 +195,7 @@ export class ComplianceService {
     const limits = {
       daily: 50000,
       monthly: 500000,
-      annual: 2000000
+      annual: 2000000,
     };
 
     return {
@@ -191,17 +204,17 @@ export class ComplianceService {
       current_usage: {
         daily: 12500,
         monthly: 89000,
-        annual: 450000
-      }
+        annual: 450000,
+      },
     };
   }
 
   private async calculateTaxObligations(transaction: any) {
     return {
-      jurisdiction: 'US',
+      jurisdiction: "US",
       tax_rate: 0.21,
       estimated_tax: transaction.amount * 0.21,
-      reporting_required: transaction.amount > 600
+      reporting_required: transaction.amount > 600,
     };
   }
 
@@ -212,7 +225,7 @@ export class ComplianceService {
       transactions: [],
       capsules: [],
       preferences: {},
-      audit_log: []
+      audit_log: [],
     };
   }
 
@@ -224,8 +237,8 @@ export class ComplianceService {
   private async exportPortableData(userId: string) {
     // Export data in portable format
     return {
-      format: 'JSON',
-      data: await this.exportUserData(userId)
+      format: "JSON",
+      data: await this.exportUserData(userId),
     };
   }
 

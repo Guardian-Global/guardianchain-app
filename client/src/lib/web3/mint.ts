@@ -7,16 +7,16 @@ const VERITAS_NFT_ADDRESS = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"; // Loc
 
 const VERITAS_NFT_ABI = [
   {
-    "inputs": [
-      {"internalType": "address", "name": "to", "type": "address"},
-      {"internalType": "string", "name": "uri", "type": "string"},
-      {"internalType": "uint256", "name": "griefScore", "type": "uint256"}
+    inputs: [
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "string", name: "uri", type: "string" },
+      { internalType: "uint256", name: "griefScore", type: "uint256" },
     ],
-    "name": "mint",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    name: "mint",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 interface CapsuleMetadata {
@@ -57,21 +57,28 @@ export async function mintCapsuleNFT(
       attributes: [
         { trait_type: "Category", value: capsuleData.metadata.category },
         { trait_type: "Grief Score", value: capsuleData.metadata.griefScore },
-        { trait_type: "Credibility Score", value: capsuleData.metadata.credibilityScore },
+        {
+          trait_type: "Credibility Score",
+          value: capsuleData.metadata.credibilityScore,
+        },
         { trait_type: "Block Count", value: capsuleData.blocks.length },
         { trait_type: "Creator Type", value: "Truth Seeker" },
-        { trait_type: "Verification Status", value: "Sealed" }
+        { trait_type: "Verification Status", value: "Sealed" },
       ],
       grief_score: capsuleData.metadata.griefScore,
       creator: userAddress,
       timestamp: Date.now(),
-      content_blocks: capsuleData.blocks
+      content_blocks: capsuleData.blocks,
     };
 
     // Add tags as attributes
     capsuleData.metadata.tags.forEach((tag, index) => {
-      if (index < 3) { // Limit to 3 tag attributes
-        metadata.attributes.push({ trait_type: `Tag ${index + 1}`, value: tag });
+      if (index < 3) {
+        // Limit to 3 tag attributes
+        metadata.attributes.push({
+          trait_type: `Tag ${index + 1}`,
+          value: tag,
+        });
       }
     });
 
@@ -101,11 +108,17 @@ export async function mintCapsuleNFT(
     return { hash, tokenId };
   } catch (error) {
     console.error("NFT minting failed:", error);
-    throw new Error(`Failed to mint NFT: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to mint NFT: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 }
 
-export async function getTokenMetadata(tokenId: number): Promise<CapsuleMetadata | null> {
+export async function getTokenMetadata(
+  tokenId: number
+): Promise<CapsuleMetadata | null> {
   try {
     // This would typically call the contract's tokenURI function
     // For now, return mock data
@@ -116,7 +129,7 @@ export async function getTokenMetadata(tokenId: number): Promise<CapsuleMetadata
       grief_score: 85,
       creator: "0x...",
       timestamp: Date.now(),
-      content_blocks: []
+      content_blocks: [],
     };
   } catch (error) {
     console.error("Failed to fetch token metadata:", error);

@@ -12,19 +12,21 @@ interface EmailPreferences {
 
 // Mock database for development - replace with real Supabase integration
 const emailPrefsDB: Record<string, EmailPreferences> = {
-  "founder+guardian-admin@guardianchain.org": { 
+  "founder+guardian-admin@guardianchain.org": {
     emailEnabled: true,
     capsuleEvents: true,
     aiMemorySaves: true,
     daoVotes: true,
     weeklyDigest: true,
-    adminAlerts: true
+    adminAlerts: true,
   },
   "user@example.com": { emailEnabled: true },
   "test@guardianchain.app": { emailEnabled: true },
 };
 
-export async function getUserPreferences(email: string): Promise<EmailPreferences> {
+export async function getUserPreferences(
+  email: string
+): Promise<EmailPreferences> {
   // Fallback to enabled for all users (production ready)
   const defaultPrefs: EmailPreferences = {
     emailEnabled: true,
@@ -32,7 +34,7 @@ export async function getUserPreferences(email: string): Promise<EmailPreference
     aiMemorySaves: true,
     daoVotes: true,
     weeklyDigest: true,
-    adminAlerts: false // Only for admins
+    adminAlerts: false, // Only for admins
   };
 
   // Check mock database first
@@ -75,12 +77,15 @@ export async function getUserPreferences(email: string): Promise<EmailPreference
   return defaultPrefs;
 }
 
-export async function setUserPreferences(email: string, preferences: Partial<EmailPreferences>): Promise<boolean> {
+export async function setUserPreferences(
+  email: string,
+  preferences: Partial<EmailPreferences>
+): Promise<boolean> {
   try {
     // Update mock database
     emailPrefsDB[email.toLowerCase()] = {
       ...emailPrefsDB[email.toLowerCase()],
-      ...preferences
+      ...preferences,
     };
 
     // TODO: Replace with real Supabase update
@@ -117,13 +122,19 @@ export async function setUserPreferences(email: string, preferences: Partial<Ema
   }
 }
 
-export async function isEmailTypeEnabled(email: string, type: keyof EmailPreferences): Promise<boolean> {
+export async function isEmailTypeEnabled(
+  email: string,
+  type: keyof EmailPreferences
+): Promise<boolean> {
   const prefs = await getUserPreferences(email);
-  
+
   // Always allow admin alerts for founder
-  if (type === 'adminAlerts' && email === 'founder+guardian-admin@guardianchain.org') {
+  if (
+    type === "adminAlerts" &&
+    email === "founder+guardian-admin@guardianchain.org"
+  ) {
     return true;
   }
-  
+
   return prefs[type] ?? false;
 }

@@ -1,13 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TrendingUp, DollarSign, Clock, Users, Zap, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  TrendingUp,
+  DollarSign,
+  Clock,
+  Users,
+  Zap,
+  ArrowUpRight,
+  ArrowDownLeft,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface VaultStats {
   tvl: string;
@@ -31,26 +45,26 @@ interface UserPosition {
 export default function VaultDashboard() {
   const { toast } = useToast();
   const [vaultStats, setVaultStats] = useState<VaultStats>({
-    tvl: '0',
-    apy: '0',
-    userStaked: '0',
-    pendingRewards: '0',
-    sharePrice: '1.00',
-    nextCompoundTime: '',
+    tvl: "0",
+    apy: "0",
+    userStaked: "0",
+    pendingRewards: "0",
+    sharePrice: "1.00",
+    nextCompoundTime: "",
     totalUsers: 0,
-    performanceFee: '2%'
+    performanceFee: "2%",
   });
-  
+
   const [userPosition, setUserPosition] = useState<UserPosition>({
-    stakedAmount: '0',
-    shares: '0',
-    totalRewardsEarned: '0',
-    autoCompoundedAmount: '0',
-    lastDepositTime: ''
+    stakedAmount: "0",
+    shares: "0",
+    totalRewardsEarned: "0",
+    autoCompoundedAmount: "0",
+    lastDepositTime: "",
   });
-  
-  const [depositAmount, setDepositAmount] = useState('');
-  const [withdrawShares, setWithdrawShares] = useState('');
+
+  const [depositAmount, setDepositAmount] = useState("");
+  const [withdrawShares, setWithdrawShares] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch vault data
@@ -64,30 +78,34 @@ export default function VaultDashboard() {
     try {
       // In production, this would call actual smart contract methods
       // For demo, we'll use realistic mock data
-      
+
       const mockStats: VaultStats = {
-        tvl: '2,547,832',
-        apy: '25.7',
-        userStaked: '15,000',
-        pendingRewards: '1,247.50',
-        sharePrice: '1.0847',
-        nextCompoundTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(), // 6 hours from now
+        tvl: "2,547,832",
+        apy: "25.7",
+        userStaked: "15,000",
+        pendingRewards: "1,247.50",
+        sharePrice: "1.0847",
+        nextCompoundTime: new Date(
+          Date.now() + 6 * 60 * 60 * 1000
+        ).toISOString(), // 6 hours from now
         totalUsers: 1247,
-        performanceFee: '2%'
+        performanceFee: "2%",
       };
-      
+
       const mockPosition: UserPosition = {
-        stakedAmount: '15,000',
-        shares: '13,833.24',
-        totalRewardsEarned: '3,247.89',
-        autoCompoundedAmount: '1,847.32',
-        lastDepositTime: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString() // 15 days ago
+        stakedAmount: "15,000",
+        shares: "13,833.24",
+        totalRewardsEarned: "3,247.89",
+        autoCompoundedAmount: "1,847.32",
+        lastDepositTime: new Date(
+          Date.now() - 15 * 24 * 60 * 60 * 1000
+        ).toISOString(), // 15 days ago
       };
-      
+
       setVaultStats(mockStats);
       setUserPosition(mockPosition);
     } catch (error) {
-      console.error('Error fetching vault data:', error);
+      console.error("Error fetching vault data:", error);
     }
   };
 
@@ -96,30 +114,30 @@ export default function VaultDashboard() {
       toast({
         title: "Invalid Amount",
         description: "Please enter a valid deposit amount",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       // In production, this would interact with the AutoCompoundVault contract
       // Mock the deposit process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       toast({
         title: "Deposit Successful",
         description: `Successfully deposited ${depositAmount} GTT to the vault`,
       });
-      
-      setDepositAmount('');
+
+      setDepositAmount("");
       fetchVaultData();
     } catch (error) {
       toast({
         title: "Deposit Failed",
         description: "Failed to deposit tokens to vault",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -131,29 +149,29 @@ export default function VaultDashboard() {
       toast({
         title: "Invalid Amount",
         description: "Please enter a valid number of shares to withdraw",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       // In production, this would interact with the AutoCompoundVault contract
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       toast({
         title: "Withdrawal Successful",
         description: `Successfully withdrew ${withdrawShares} shares from the vault`,
       });
-      
-      setWithdrawShares('');
+
+      setWithdrawShares("");
       fetchVaultData();
     } catch (error) {
       toast({
         title: "Withdrawal Failed",
         description: "Failed to withdraw from vault",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -162,22 +180,22 @@ export default function VaultDashboard() {
 
   const handleCompound = async () => {
     setIsLoading(true);
-    
+
     try {
       // In production, this would call the compound() function on the smart contract
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       toast({
         title: "Compound Triggered",
         description: "Successfully triggered auto-compound for all users",
       });
-      
+
       fetchVaultData();
     } catch (error) {
       toast({
         title: "Compound Failed",
         description: "Failed to trigger compound",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -185,17 +203,17 @@ export default function VaultDashboard() {
   };
 
   const timeUntilCompound = () => {
-    if (!vaultStats.nextCompoundTime) return '';
-    
+    if (!vaultStats.nextCompoundTime) return "";
+
     const now = new Date();
     const compoundTime = new Date(vaultStats.nextCompoundTime);
     const diff = compoundTime.getTime() - now.getTime();
-    
-    if (diff <= 0) return 'Ready to compound';
-    
+
+    if (diff <= 0) return "Ready to compound";
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     return `${hours}h ${minutes}m`;
   };
 
@@ -217,7 +235,9 @@ export default function VaultDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Value Locked</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Total Value Locked
+                </p>
                 <p className="text-2xl font-bold">{vaultStats.tvl} GTT</p>
               </div>
               <DollarSign className="h-8 w-8 text-green-600" />
@@ -229,8 +249,12 @@ export default function VaultDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Current APY</p>
-                <p className="text-2xl font-bold text-green-600">{vaultStats.apy}%</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Current APY
+                </p>
+                <p className="text-2xl font-bold text-green-600">
+                  {vaultStats.apy}%
+                </p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-600" />
             </div>
@@ -241,8 +265,12 @@ export default function VaultDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Active Users</p>
-                <p className="text-2xl font-bold">{vaultStats.totalUsers.toLocaleString()}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Active Users
+                </p>
+                <p className="text-2xl font-bold">
+                  {vaultStats.totalUsers.toLocaleString()}
+                </p>
               </div>
               <Users className="h-8 w-8 text-blue-600" />
             </div>
@@ -253,7 +281,9 @@ export default function VaultDashboard() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Next Compound</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Next Compound
+                </p>
                 <p className="text-lg font-bold">{timeUntilCompound()}</p>
               </div>
               <Clock className="h-8 w-8 text-purple-600" />
@@ -286,30 +316,48 @@ export default function VaultDashboard() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Staked Amount</p>
-                    <p className="text-xl font-bold">{userPosition.stakedAmount} GTT</p>
+                    <p className="text-sm text-muted-foreground">
+                      Staked Amount
+                    </p>
+                    <p className="text-xl font-bold">
+                      {userPosition.stakedAmount} GTT
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Your Shares</p>
                     <p className="text-xl font-bold">{userPosition.shares}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Pending Rewards</p>
-                    <p className="text-xl font-bold text-green-600">{vaultStats.pendingRewards} GTT</p>
+                    <p className="text-sm text-muted-foreground">
+                      Pending Rewards
+                    </p>
+                    <p className="text-xl font-bold text-green-600">
+                      {vaultStats.pendingRewards} GTT
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Earned</p>
-                    <p className="text-xl font-bold text-green-600">{userPosition.totalRewardsEarned} GTT</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total Earned
+                    </p>
+                    <p className="text-xl font-bold text-green-600">
+                      {userPosition.totalRewardsEarned} GTT
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="pt-4 border-t">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-muted-foreground">Auto-Compounded</span>
-                    <Badge variant="secondary">{userPosition.autoCompoundedAmount} GTT</Badge>
+                    <span className="text-sm text-muted-foreground">
+                      Auto-Compounded
+                    </span>
+                    <Badge variant="secondary">
+                      {userPosition.autoCompoundedAmount} GTT
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">Share Price</span>
+                    <span className="text-sm text-muted-foreground">
+                      Share Price
+                    </span>
                     <Badge variant="outline">${vaultStats.sharePrice}</Badge>
                   </div>
                 </div>
@@ -327,27 +375,34 @@ export default function VaultDashboard() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Performance Fee</p>
-                    <p className="text-lg font-semibold">{vaultStats.performanceFee}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Performance Fee
+                    </p>
+                    <p className="text-lg font-semibold">
+                      {vaultStats.performanceFee}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Compound Frequency</p>
+                    <p className="text-sm text-muted-foreground">
+                      Compound Frequency
+                    </p>
                     <p className="text-lg font-semibold">24 hours</p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Auto-Compound Progress</span>
-                    <span className="text-sm text-muted-foreground">{timeUntilCompound()}</span>
+                    <span className="text-sm text-muted-foreground">
+                      Auto-Compound Progress
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {timeUntilCompound()}
+                    </span>
                   </div>
-                  <Progress 
-                    value={75} 
-                    className="h-2"
-                  />
+                  <Progress value={75} className="h-2" />
                 </div>
-                
-                <Button 
+
+                <Button
                   onClick={handleCompound}
                   disabled={isLoading}
                   className="w-full"
@@ -385,26 +440,35 @@ export default function VaultDashboard() {
                   You will receive shares proportional to your deposit
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
                 <div>
-                  <p className="text-sm text-muted-foreground">Current Share Price</p>
+                  <p className="text-sm text-muted-foreground">
+                    Current Share Price
+                  </p>
                   <p className="font-semibold">${vaultStats.sharePrice}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Estimated Shares</p>
+                  <p className="text-sm text-muted-foreground">
+                    Estimated Shares
+                  </p>
                   <p className="font-semibold">
-                    {depositAmount ? (parseFloat(depositAmount) / parseFloat(vaultStats.sharePrice)).toFixed(2) : '0'}
+                    {depositAmount
+                      ? (
+                          parseFloat(depositAmount) /
+                          parseFloat(vaultStats.sharePrice)
+                        ).toFixed(2)
+                      : "0"}
                   </p>
                 </div>
               </div>
-              
-              <Button 
+
+              <Button
                 onClick={handleDeposit}
                 disabled={isLoading || !depositAmount}
                 className="w-full"
               >
-                {isLoading ? 'Processing...' : 'Deposit to Vault'}
+                {isLoading ? "Processing..." : "Deposit to Vault"}
               </Button>
             </CardContent>
           </Card>
@@ -436,27 +500,34 @@ export default function VaultDashboard() {
                   Available shares: {userPosition.shares}
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
                 <div>
-                  <p className="text-sm text-muted-foreground">Current Share Price</p>
+                  <p className="text-sm text-muted-foreground">
+                    Current Share Price
+                  </p>
                   <p className="font-semibold">${vaultStats.sharePrice}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">GTT Amount</p>
                   <p className="font-semibold">
-                    {withdrawShares ? (parseFloat(withdrawShares) * parseFloat(vaultStats.sharePrice)).toFixed(2) : '0'}
+                    {withdrawShares
+                      ? (
+                          parseFloat(withdrawShares) *
+                          parseFloat(vaultStats.sharePrice)
+                        ).toFixed(2)
+                      : "0"}
                   </p>
                 </div>
               </div>
-              
-              <Button 
+
+              <Button
                 onClick={handleWithdraw}
                 disabled={isLoading || !withdrawShares}
                 className="w-full"
                 variant="outline"
               >
-                {isLoading ? 'Processing...' : 'Withdraw from Vault'}
+                {isLoading ? "Processing..." : "Withdraw from Vault"}
               </Button>
             </CardContent>
           </Card>

@@ -1,7 +1,7 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 if (!process.env.OPENAI_API_KEY) {
-  throw new Error('Missing required OpenAI API key: OPENAI_API_KEY');
+  throw new Error("Missing required OpenAI API key: OPENAI_API_KEY");
 }
 
 const openai = new OpenAI({
@@ -50,7 +50,7 @@ export async function generateCapsuleRecommendations(
     let candidateCapsules = availableCapsules;
     if (excludeViewed && userProfile.viewHistory) {
       candidateCapsules = availableCapsules.filter(
-        capsule => !userProfile.viewHistory!.includes(capsule.id)
+        (capsule) => !userProfile.viewHistory!.includes(capsule.id)
       );
     }
 
@@ -67,21 +67,31 @@ export async function generateCapsuleRecommendations(
     Analyze the user profile and recommend the most relevant capsules (truth submissions).
 
     User Profile:
-    - Interests: ${userProfile.interests?.join(', ') || 'Not specified'}
-    - Preferred Categories: ${userProfile.preferredCategories?.join(', ') || 'Not specified'}
+    - Interests: ${userProfile.interests?.join(", ") || "Not specified"}
+    - Preferred Categories: ${
+      userProfile.preferredCategories?.join(", ") || "Not specified"
+    }
     - View History: ${userProfile.viewHistory?.length || 0} capsules viewed
-    - Verification History: ${userProfile.verificationHistory?.length || 0} verifications made
+    - Verification History: ${
+      userProfile.verificationHistory?.length || 0
+    } verifications made
 
     Available Capsules:
-    ${topCandidates.map(capsule => `
+    ${topCandidates
+      .map(
+        (capsule) => `
     ID: ${capsule.id}
     Title: ${capsule.title}
     Content: ${capsule.content.slice(0, 200)}...
-    Category: ${capsule.category || 'Uncategorized'}
-    Tags: ${capsule.tags?.join(', ') || 'None'}
+    Category: ${capsule.category || "Uncategorized"}
+    Tags: ${capsule.tags?.join(", ") || "None"}
     Verification Score: ${capsule.verificationScore || 0}
-    Engagement: ${capsule.engagement?.views || 0} views, ${capsule.engagement?.shares || 0} shares
-    `).join('\n---\n')}
+    Engagement: ${capsule.engagement?.views || 0} views, ${
+          capsule.engagement?.shares || 0
+        } shares
+    `
+      )
+      .join("\n---\n")}
 
     Provide recommendations in JSON format with the following structure:
     {
@@ -111,23 +121,25 @@ export async function generateCapsuleRecommendations(
       messages: [
         {
           role: "system",
-          content: "You are an expert recommendation engine that provides personalized content recommendations based on user preferences and content quality metrics."
+          content:
+            "You are an expert recommendation engine that provides personalized content recommendations based on user preferences and content quality metrics.",
         },
         {
           role: "user",
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       response_format: { type: "json_object" },
       temperature: 0.7,
-      max_tokens: 2000
+      max_tokens: 2000,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || '{"recommendations": []}');
+    const result = JSON.parse(
+      response.choices[0].message.content || '{"recommendations": []}'
+    );
     return result.recommendations || [];
-
   } catch (error: any) {
-    console.error('Error generating recommendations:', error);
+    console.error("Error generating recommendations:", error);
     throw new Error(`Failed to generate recommendations: ${error.message}`);
   }
 }
@@ -163,29 +175,29 @@ export async function analyzeCapsuleContent(capsule: CapsuleData): Promise<{
       messages: [
         {
           role: "system",
-          content: "You are an expert content analyzer specializing in truth verification and content categorization."
+          content:
+            "You are an expert content analyzer specializing in truth verification and content categorization.",
         },
         {
           role: "user",
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       response_format: { type: "json_object" },
       temperature: 0.3,
-      max_tokens: 1000
+      max_tokens: 1000,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const result = JSON.parse(response.choices[0].message.content || "{}");
     return {
       categories: result.categories || [],
       tags: result.tags || [],
-      sentiment: result.sentiment || 'neutral',
+      sentiment: result.sentiment || "neutral",
       credibilityIndicators: result.credibilityIndicators || [],
-      topicSummary: result.topicSummary || ''
+      topicSummary: result.topicSummary || "",
     };
-
   } catch (error: any) {
-    console.error('Error analyzing capsule content:', error);
+    console.error("Error analyzing capsule content:", error);
     throw new Error(`Failed to analyze content: ${error.message}`);
   }
 }
@@ -203,10 +215,14 @@ export async function generateUserInterestProfile(
     const prompt = `Analyze user behavior to generate an interest profile:
 
     Viewed Capsules:
-    ${viewHistory.map(capsule => `- ${capsule.title} (${capsule.category})`).join('\n')}
+    ${viewHistory
+      .map((capsule) => `- ${capsule.title} (${capsule.category})`)
+      .join("\n")}
 
     Verified Capsules:
-    ${verificationHistory.map(capsule => `- ${capsule.title} (${capsule.category})`).join('\n')}
+    ${verificationHistory
+      .map((capsule) => `- ${capsule.title} (${capsule.category})`)
+      .join("\n")}
 
     Generate a user interest profile in JSON format:
     {
@@ -224,28 +240,28 @@ export async function generateUserInterestProfile(
       messages: [
         {
           role: "system",
-          content: "You are an expert user behavior analyst specializing in content consumption patterns."
+          content:
+            "You are an expert user behavior analyst specializing in content consumption patterns.",
         },
         {
           role: "user",
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       response_format: { type: "json_object" },
       temperature: 0.5,
-      max_tokens: 1000
+      max_tokens: 1000,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
+    const result = JSON.parse(response.choices[0].message.content || "{}");
     return {
       interests: result.interests || [],
       preferredCategories: result.preferredCategories || [],
-      behaviorPattern: result.behaviorPattern || '',
-      recommendations: result.recommendations || []
+      behaviorPattern: result.behaviorPattern || "",
+      recommendations: result.recommendations || [],
     };
-
   } catch (error: any) {
-    console.error('Error generating user profile:', error);
+    console.error("Error generating user profile:", error);
     throw new Error(`Failed to generate user profile: ${error.message}`);
   }
 }

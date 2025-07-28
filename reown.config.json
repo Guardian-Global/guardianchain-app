@@ -4,9 +4,7 @@
     "name": "GUARDIANCHAIN",
     "description": "Immutable Truth Verification Protocol",
     "url": "https://guardianchain.replit.app",
-    "icons": [
-      "https://guardianchain.replit.app/favicon.ico"
-    ]
+    "icons": ["https://guardianchain.replit.app/favicon.ico"]
   },
   "chains": [1, 137, 80002, 31337],
   "enableWalletConnect": true,

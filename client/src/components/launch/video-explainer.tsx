@@ -39,13 +39,11 @@ export default function VideoExplainer() {
                 Your browser does not support the video tag.
               </video>
             )}
-            
+
             <div className="absolute top-4 left-4">
-              <Badge className="bg-purple-600 text-white">
-                HD Quality
-              </Badge>
+              <Badge className="bg-purple-600 text-white">HD Quality</Badge>
             </div>
-            
+
             <div className="absolute top-4 right-4">
               <Badge className="bg-green-600 text-white">
                 <Eye className="w-3 h-3 mr-1" />
@@ -62,7 +60,7 @@ export default function VideoExplainer() {
                 3-minute comprehensive explanation of GTT token economics
               </p>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Download className="w-8 h-8 text-green-400 mx-auto" />
               <h4 className="font-semibold">Download</h4>
@@ -70,7 +68,7 @@ export default function VideoExplainer() {
                 Available in 4K, 1080p, and mobile formats
               </p>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Share className="w-8 h-8 text-purple-400 mx-auto" />
               <h4 className="font-semibold">Share</h4>

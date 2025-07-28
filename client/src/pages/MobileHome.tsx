@@ -1,6 +1,12 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Shield, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 
@@ -17,17 +23,26 @@ export default function MobileHome() {
               GUARDIANCHAIN
             </h1>
             <p className="text-lg sm:text-xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              The world's first decentralized truth verification platform. Protect your digital sovereignty and earn rewards for verifying truth.
+              The world's first decentralized truth verification platform.
+              Protect your digital sovereignty and earn rewards for verifying
+              truth.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/login">
-                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 w-full sm:w-auto"
+                >
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/explore">
-                <Button variant="outline" size="lg" className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10 w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10 w-full sm:w-auto"
+                >
                   Explore Platform
                 </Button>
               </Link>
@@ -43,7 +58,8 @@ export default function MobileHome() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Immutable truth capsules with community verification and blockchain proof
+                  Immutable truth capsules with community verification and
+                  blockchain proof
                 </CardDescription>
               </CardContent>
             </Card>
@@ -55,7 +71,8 @@ export default function MobileHome() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Earn GTT tokens for creating verified content and participating in governance
+                  Earn GTT tokens for creating verified content and
+                  participating in governance
                 </CardDescription>
               </CardContent>
             </Card>
@@ -67,7 +84,8 @@ export default function MobileHome() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Join thousands of truth guardians protecting digital integrity worldwide
+                  Join thousands of truth guardians protecting digital integrity
+                  worldwide
                 </CardDescription>
               </CardContent>
             </Card>
@@ -79,7 +97,8 @@ export default function MobileHome() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Professional tools for organizations requiring verified information workflows
+                  Professional tools for organizations requiring verified
+                  information workflows
                 </CardDescription>
               </CardContent>
             </Card>
@@ -87,22 +106,32 @@ export default function MobileHome() {
 
           {/* Stats Section */}
           <div className="bg-slate-800/30 rounded-xl p-6 sm:p-8 mb-12">
-            <h2 className="text-2xl font-bold text-center mb-8 text-white">Platform Statistics</h2>
+            <h2 className="text-2xl font-bold text-center mb-8 text-white">
+              Platform Statistics
+            </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-purple-400">50K+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-purple-400">
+                  50K+
+                </div>
                 <div className="text-sm text-slate-400">Truth Capsules</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-green-400">25K+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-400">
+                  25K+
+                </div>
                 <div className="text-sm text-slate-400">Verified Users</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-blue-400">1M+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-blue-400">
+                  1M+
+                </div>
                 <div className="text-sm text-slate-400">GTT Distributed</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-400">99.9%</div>
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-400">
+                  99.9%
+                </div>
                 <div className="text-sm text-slate-400">Accuracy Rate</div>
               </div>
             </div>
@@ -110,12 +139,18 @@ export default function MobileHome() {
 
           {/* CTA Section */}
           <div className="text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-white">Ready to Start Verifying Truth?</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-white">
+              Ready to Start Verifying Truth?
+            </h2>
             <p className="text-slate-300 mb-6 max-w-xl mx-auto">
-              Join the revolution in digital truth verification. Create your account and start earning GTT tokens today.
+              Join the revolution in digital truth verification. Create your
+              account and start earning GTT tokens today.
             </p>
             <Link href="/login">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
+              >
                 Create Free Account
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -134,9 +169,7 @@ export default function MobileHome() {
           <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
             Welcome back, {user?.firstName}!
           </h1>
-          <p className="text-slate-400">
-            Your GUARDIANCHAIN dashboard
-          </p>
+          <p className="text-slate-400">Your GUARDIANCHAIN dashboard</p>
         </div>
 
         {/* Quick Actions */}
@@ -192,19 +225,27 @@ export default function MobileHome() {
           <CardContent>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-xl font-bold text-purple-400">{user?.gttBalance || "0"}</div>
+                <div className="text-xl font-bold text-purple-400">
+                  {user?.gttBalance || "0"}
+                </div>
                 <div className="text-sm text-slate-400">GTT Balance</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-green-400">{user?.totalCapsules || 0}</div>
+                <div className="text-xl font-bold text-green-400">
+                  {user?.totalCapsules || 0}
+                </div>
                 <div className="text-sm text-slate-400">Capsules Created</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-blue-400">{user?.reputation || 0}</div>
+                <div className="text-xl font-bold text-blue-400">
+                  {user?.reputation || 0}
+                </div>
                 <div className="text-sm text-slate-400">Reputation</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-yellow-400">{user?.userTier || "Explorer"}</div>
+                <div className="text-xl font-bold text-yellow-400">
+                  {user?.userTier || "Explorer"}
+                </div>
                 <div className="text-sm text-slate-400">Current Tier</div>
               </div>
             </div>

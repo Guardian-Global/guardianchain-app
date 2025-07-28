@@ -22,28 +22,29 @@ export default function MintCapsuleNFTWrapper() {
   const factoryAddress = getContractAddress(chainId || 31337, "factory");
 
   // Create capsule transaction
-  const { writeContract: createCapsule, isPending: isCreatePending } = useContractWrite({
-    mutation: {
-      onSuccess: (hash) => {
-        toast({
-          title: "Capsule Created Successfully!",
-          description: `Transaction: ${hash}`,
-        });
-        // Clear form
-        setTitle("");
-        setContent("");
-        setContentHash("");
-        setEstimatedYield("");
+  const { writeContract: createCapsule, isPending: isCreatePending } =
+    useContractWrite({
+      mutation: {
+        onSuccess: (hash) => {
+          toast({
+            title: "Capsule Created Successfully!",
+            description: `Transaction: ${hash}`,
+          });
+          // Clear form
+          setTitle("");
+          setContent("");
+          setContentHash("");
+          setEstimatedYield("");
+        },
+        onError: (error) => {
+          toast({
+            title: "Creation Failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
       },
-      onError: (error) => {
-        toast({
-          title: "Creation Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      },
-    }
-  });
+    });
 
   const handleCreateCapsule = () => {
     if (!title || !content || !contentHash) {
@@ -70,10 +71,11 @@ export default function MintCapsuleNFTWrapper() {
 
   const generateContentHash = () => {
     // Simple hash generation for demo - in production use proper IPFS hash
-    const hash = "0x" + Array.from(
-      { length: 64 }, 
-      () => Math.floor(Math.random() * 16).toString(16)
-    ).join("");
+    const hash =
+      "0x" +
+      Array.from({ length: 64 }, () =>
+        Math.floor(Math.random() * 16).toString(16)
+      ).join("");
     setContentHash(hash);
     toast({
       title: "Content Hash Generated",
@@ -93,11 +95,15 @@ export default function MintCapsuleNFTWrapper() {
     <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-purple-500/30 max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Factory className="w-6 h-6" style={{ color: BRAND_COLORS.GUARDIAN }} />
+          <Factory
+            className="w-6 h-6"
+            style={{ color: BRAND_COLORS.GUARDIAN }}
+          />
           Mint Truth Capsule NFT
         </CardTitle>
         <p className="text-slate-400">
-          Create an immutable truth capsule with yield tracking and NFT certificate
+          Create an immutable truth capsule with yield tracking and NFT
+          certificate
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -190,7 +196,8 @@ export default function MintCapsuleNFTWrapper() {
               </Button>
             </div>
             <div className="text-xs text-slate-400 mt-1">
-              AI-powered yield estimation based on content quality and impact potential
+              AI-powered yield estimation based on content quality and impact
+              potential
             </div>
           </div>
         </div>
@@ -207,13 +214,19 @@ export default function MintCapsuleNFTWrapper() {
             <div>
               <span className="text-slate-400">Content Quality:</span>
               <span className="text-white ml-2">
-                {content.length > 500 ? "High" : content.length > 200 ? "Medium" : "Basic"}
+                {content.length > 500
+                  ? "High"
+                  : content.length > 200
+                  ? "Medium"
+                  : "Basic"}
               </span>
             </div>
             <div>
               <span className="text-slate-400">Potential Yield:</span>
               <span className="text-white ml-2">
-                {estimatedYield ? `${estimatedYield} GTT` : "Calculate estimate"}
+                {estimatedYield
+                  ? `${estimatedYield} GTT`
+                  : "Calculate estimate"}
               </span>
             </div>
             <div>

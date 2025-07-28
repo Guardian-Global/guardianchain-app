@@ -1,6 +1,6 @@
-import React from 'react';
-import EnterpriseSDK from '@/components/EnterpriseSDK';
-import TokenomicsEngine from '@/components/TokenomicsEngine';
+import React from "react";
+import EnterpriseSDK from "@/components/EnterpriseSDK";
+import TokenomicsEngine from "@/components/TokenomicsEngine";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Building, TrendingUp, Shield, Globe } from "lucide-react";
@@ -15,8 +15,9 @@ const EnterpriseSuite: React.FC = () => {
             GUARDIANCHAIN Enterprise Suite
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl">
-            Complete enterprise infrastructure for building the world's most valuable truth verification protocol. 
-            Production-ready SDK, sustainable tokenomics, and billion-dollar scaling potential.
+            Complete enterprise infrastructure for building the world's most
+            valuable truth verification protocol. Production-ready SDK,
+            sustainable tokenomics, and billion-dollar scaling potential.
           </p>
         </div>
       </section>
@@ -45,7 +46,9 @@ const EnterpriseSuite: React.FC = () => {
 
         {/* Strategic Initiatives */}
         <div className="mt-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Strategic Value Creation Initiatives</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            Strategic Value Creation Initiatives
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>

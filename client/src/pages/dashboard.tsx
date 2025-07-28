@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { fetchTreasurySnapshot, fetchGTTMarket, fetchStripeSubscriptions } from "@/lib/treasury";
+import React, { useEffect, useState } from "react";
+import {
+  fetchTreasurySnapshot,
+  fetchGTTMarket,
+  fetchStripeSubscriptions,
+} from "@/lib/treasury";
 import { AIAdvisorPanel } from "@/components/AIAdvisorPanel";
 import TreasuryDashboard from "@/components/TreasuryDashboard";
 import AIAccountingPanel from "@/components/AIAccountingPanel";
 import ClaimAllYieldPanel from "@/components/web3/ClaimAllYieldPanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link } from 'wouter';
-import { 
-  DollarSign, 
-  TrendingUp, 
-  Shield, 
-  FileText, 
+import { Link } from "wouter";
+import {
+  DollarSign,
+  TrendingUp,
+  Shield,
+  FileText,
   Brain,
   Activity,
   Users,
   BarChart3,
   Coins,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
@@ -38,7 +42,6 @@ function CommanderDashboard() {
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link href="/treasury">
@@ -92,13 +95,12 @@ function CommanderDashboard() {
 
           {/* Treasury Dashboard Component */}
           <TreasuryDashboard />
-          
+
           {/* AI Accounting Panel */}
           <AIAccountingPanel />
 
           {/* GTT Yield Claiming Panel */}
           <ClaimAllYieldPanel />
-
         </div>
       </div>
     </div>
@@ -117,11 +119,11 @@ const dashboardSections = [
     metrics: {
       value: "$2.4M",
       label: "Treasury Value",
-      trend: "+12.5%"
-    }
+      trend: "+12.5%",
+    },
   },
   {
-    title: "AI Financial Advisor", 
+    title: "AI Financial Advisor",
     description: "Strategic recommendations and automated insights",
     href: "/ai-advisor",
     icon: Brain,
@@ -130,9 +132,9 @@ const dashboardSections = [
     metrics: {
       value: "94%",
       label: "Confidence Score",
-      trend: "+2.1%"
-    }
-  }
+      trend: "+2.1%",
+    },
+  },
 ];
 
 function Dashboard() {
@@ -181,7 +183,9 @@ function Dashboard() {
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-white text-xl">Loading GuardianChain Financial Dashboard...</p>
+          <p className="text-white text-xl">
+            Loading GuardianChain Financial Dashboard...
+          </p>
         </div>
       </div>
     );
@@ -212,7 +216,9 @@ function Dashboard() {
             <CardContent>
               <ul className="space-y-2">
                 {errors.map((error, index) => (
-                  <li key={index} className="text-red-200 text-sm">• {error}</li>
+                  <li key={index} className="text-red-200 text-sm">
+                    • {error}
+                  </li>
                 ))}
               </ul>
             </CardContent>
@@ -231,11 +237,18 @@ function Dashboard() {
                   <div className="text-2xl font-bold text-green-400">
                     ${market.price}
                   </div>
-                  <div className={`flex items-center ${market.change24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  <div
+                    className={`flex items-center ${
+                      market.change24h >= 0 ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
                     <TrendingUp className="w-4 h-4 mr-1" />
-                    {market.change24h >= 0 ? '+' : ''}{market.change24h.toFixed(2)}% (24h)
+                    {market.change24h >= 0 ? "+" : ""}
+                    {market.change24h.toFixed(2)}% (24h)
                   </div>
-                  <div className="text-xs text-slate-500">Source: {market.source}</div>
+                  <div className="text-xs text-slate-500">
+                    Source: {market.source}
+                  </div>
                 </div>
               ) : (
                 <div className="text-slate-400">Market data unavailable</div>
@@ -259,8 +272,12 @@ function Dashboard() {
                   <div className="text-sm text-slate-300">
                     Active Capsules: {treasury.activeCapsules.toLocaleString()}
                   </div>
-                  <Badge className={treasury.complianceOk ? 'bg-green-600' : 'bg-red-600'}>
-                    {treasury.complianceOk ? 'Compliant' : 'Alert'}
+                  <Badge
+                    className={
+                      treasury.complianceOk ? "bg-green-600" : "bg-red-600"
+                    }
+                  >
+                    {treasury.complianceOk ? "Compliant" : "Alert"}
                   </Badge>
                 </div>
               ) : (
@@ -283,11 +300,14 @@ function Dashboard() {
                     Active Users: {subscriptions.activeUsers.toLocaleString()}
                   </div>
                   <div className="text-sm text-slate-300">
-                    Total Subscriptions: {subscriptions.totalSubscriptions.toLocaleString()}
+                    Total Subscriptions:{" "}
+                    {subscriptions.totalSubscriptions.toLocaleString()}
                   </div>
                 </div>
               ) : (
-                <div className="text-slate-400">Subscription data unavailable</div>
+                <div className="text-slate-400">
+                  Subscription data unavailable
+                </div>
               )}
             </CardContent>
           </Card>
@@ -296,11 +316,17 @@ function Dashboard() {
         {/* System Status Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {dashboardSections.map((section, index) => (
-            <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors">
+            <Card
+              key={index}
+              className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors"
+            >
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-white flex items-center">
-                    <section.icon className="w-5 h-5 mr-2" style={{ color: section.color }} />
+                    <section.icon
+                      className="w-5 h-5 mr-2"
+                      style={{ color: section.color }}
+                    />
                     {section.title}
                   </CardTitle>
                   <Badge className="bg-green-600 text-xs">
@@ -312,22 +338,28 @@ function Dashboard() {
                 <p className="text-slate-300 text-sm mb-4">
                   {section.description}
                 </p>
-                
+
                 <div className="bg-slate-700/30 p-3 rounded-lg mb-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-sm">{section.metrics.label}</span>
+                    <span className="text-slate-400 text-sm">
+                      {section.metrics.label}
+                    </span>
                     <div className="text-right">
-                      <span className="text-white font-semibold">{section.metrics.value}</span>
+                      <span className="text-white font-semibold">
+                        {section.metrics.value}
+                      </span>
                       <div className="flex items-center mt-1">
                         <TrendingUp className="w-3 h-3 mr-1 text-green-400" />
-                        <span className="text-xs text-green-400">{section.metrics.trend}</span>
+                        <span className="text-xs text-green-400">
+                          {section.metrics.trend}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
-                
+
                 <Link href={section.href}>
-                  <div 
+                  <div
                     className="w-full py-2 px-4 rounded-lg text-white text-center font-medium cursor-pointer hover:opacity-90 transition-opacity"
                     style={{ backgroundColor: section.color }}
                   >

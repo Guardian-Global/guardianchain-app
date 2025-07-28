@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,8 +10,8 @@ interface EmailTemplate {
 }
 
 export class NotificationService {
-  private readonly FROM_EMAIL = 'capsule@guardianchain.app';
-  private readonly ADMIN_EMAIL = 'commander.guardian@protonmail.com';
+  private readonly FROM_EMAIL = "capsule@guardianchain.app";
+  private readonly ADMIN_EMAIL = "commander.guardian@protonmail.com";
 
   // Security alert notifications
   async sendSecurityAlert(type: string, details: any) {
@@ -34,7 +34,7 @@ ${JSON.stringify(details, null, 2)}
           </p>
         </div>
       `,
-      from: this.FROM_EMAIL
+      from: this.FROM_EMAIL,
     };
 
     return this.sendEmail(template);
@@ -50,14 +50,16 @@ ${JSON.stringify(details, null, 2)}
           <h2 style="margin: 0 0 20px 0;">💰 Financial Transaction Alert</h2>
           <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
             <p><strong>Type:</strong> ${transaction.type}</p>
-            <p><strong>Amount:</strong> ${transaction.amount} ${transaction.currency}</p>
+            <p><strong>Amount:</strong> ${transaction.amount} ${
+        transaction.currency
+      }</p>
             <p><strong>User:</strong> ${transaction.userId}</p>
             <p><strong>Status:</strong> ${transaction.status}</p>
             <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
           </div>
         </div>
       `,
-      from: this.FROM_EMAIL
+      from: this.FROM_EMAIL,
     };
 
     return this.sendEmail(template);
@@ -80,7 +82,7 @@ ${JSON.stringify(details, null, 2)}
           </div>
         </div>
       `,
-      from: this.FROM_EMAIL
+      from: this.FROM_EMAIL,
     };
 
     return this.sendEmail(template);
@@ -90,12 +92,12 @@ ${JSON.stringify(details, null, 2)}
   async sendUserNotification(userId: string, type: string, data: any) {
     // Get user email from database
     const userEmail = await this.getUserEmail(userId);
-    
+
     const template: EmailTemplate = {
       to: userEmail,
       subject: this.getSubjectByType(type),
       html: this.getTemplateByType(type, data),
-      from: this.FROM_EMAIL
+      from: this.FROM_EMAIL,
     };
 
     return this.sendEmail(template);
@@ -104,7 +106,7 @@ ${JSON.stringify(details, null, 2)}
   // Daily reports
   async sendDailyReport() {
     const report = await this.generateDailyReport();
-    
+
     const template: EmailTemplate = {
       to: this.ADMIN_EMAIL,
       subject: `📊 GUARDIANCHAIN Daily Report - ${new Date().toLocaleDateString()}`,
@@ -138,7 +140,7 @@ ${JSON.stringify(details, null, 2)}
           </div>
         </div>
       `,
-      from: this.FROM_EMAIL
+      from: this.FROM_EMAIL,
     };
 
     return this.sendEmail(template);
@@ -150,30 +152,32 @@ ${JSON.stringify(details, null, 2)}
         from: template.from || this.FROM_EMAIL,
         to: template.to,
         subject: template.subject,
-        html: template.html
+        html: template.html,
       });
-      
-      console.log('Email sent successfully:', response);
+
+      console.log("Email sent successfully:", response);
       return response;
     } catch (error) {
-      console.error('Email send failed:', error);
+      console.error("Email send failed:", error);
       throw error;
     }
   }
 
   private async getUserEmail(userId: string): Promise<string> {
     // In production, fetch from database
-    return 'user@example.com';
+    return "user@example.com";
   }
 
   private getSubjectByType(type: string): string {
     const subjects = {
-      'capsule_verified': '✅ Your Truth Capsule Has Been Verified',
-      'gtt_reward': '🎉 GTT Tokens Earned!',
-      'tier_upgrade': '⬆️ Account Tier Upgraded',
-      'security_alert': '🔒 Security Alert for Your Account'
+      capsule_verified: "✅ Your Truth Capsule Has Been Verified",
+      gtt_reward: "🎉 GTT Tokens Earned!",
+      tier_upgrade: "⬆️ Account Tier Upgraded",
+      security_alert: "🔒 Security Alert for Your Account",
     };
-    return subjects[type as keyof typeof subjects] || 'GUARDIANCHAIN Notification';
+    return (
+      subjects[type as keyof typeof subjects] || "GUARDIANCHAIN Notification"
+    );
   }
 
   private getTemplateByType(type: string, data: any): string {
@@ -193,11 +197,11 @@ ${JSON.stringify(details, null, 2)}
     // Generate comprehensive daily metrics
     return {
       newUsers: 23,
-      revenue: 4750.00,
+      revenue: 4750.0,
       newCapsules: 89,
       gttMinted: 12500,
       securityIncidents: 0,
-      complianceIssues: 0
+      complianceIssues: 0,
     };
   }
 }

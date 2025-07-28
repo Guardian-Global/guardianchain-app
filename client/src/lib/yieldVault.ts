@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 export const YIELD_VAULT_ABI = [
   "function depositYield(address capsuleOwner, uint256 amount) external",
@@ -10,7 +10,7 @@ export const YIELD_VAULT_ABI = [
   "function emergencyWithdraw(uint256 amount) external",
   "event YieldDeposited(address indexed capsuleOwner, uint256 amount, uint256 timestamp)",
   "event YieldClaimed(address indexed user, uint256 amount, uint256 timestamp)",
-  "event BulkDistribution(uint256 totalAmount, uint256 recipientCount, uint256 timestamp)"
+  "event BulkDistribution(uint256 totalAmount, uint256 recipientCount, uint256 timestamp)",
 ];
 
 export function getYieldVaultContract(providerOrSigner: any, address: string) {
@@ -33,49 +33,58 @@ export interface VaultStats {
 }
 
 export async function getUserYieldInfo(
-  contract: ethers.Contract, 
+  contract: ethers.Contract,
   userAddress: string
 ): Promise<YieldInfo> {
   try {
-    const [totalEarned, totalWithdrawn, claimable, lastDistributionTime] = 
+    const [totalEarned, totalWithdrawn, claimable, lastDistributionTime] =
       await contract.getUserYieldInfo(userAddress);
-    
+
     return {
       totalEarned: ethers.formatEther(totalEarned),
       totalWithdrawn: ethers.formatEther(totalWithdrawn),
       claimable: ethers.formatEther(claimable),
-      lastDistributionTime: lastDistributionTime.toString()
+      lastDistributionTime: lastDistributionTime.toString(),
     };
   } catch (error) {
-    console.error('Error getting user yield info:', error);
+    console.error("Error getting user yield info:", error);
     throw error;
   }
 }
 
-export async function getVaultStats(contract: ethers.Contract): Promise<VaultStats> {
+export async function getVaultStats(
+  contract: ethers.Contract
+): Promise<VaultStats> {
   try {
-    const [totalEarned, totalDistributed, pendingClaims, vaultBalance, distributionCount] = 
-      await contract.getVaultStats();
-    
+    const [
+      totalEarned,
+      totalDistributed,
+      pendingClaims,
+      vaultBalance,
+      distributionCount,
+    ] = await contract.getVaultStats();
+
     return {
       totalEarned: ethers.formatEther(totalEarned),
       totalDistributed: ethers.formatEther(totalDistributed),
       pendingClaims: ethers.formatEther(pendingClaims),
       vaultBalance: ethers.formatEther(vaultBalance),
-      distributionCount: distributionCount.toString()
+      distributionCount: distributionCount.toString(),
     };
   } catch (error) {
-    console.error('Error getting vault stats:', error);
+    console.error("Error getting vault stats:", error);
     throw error;
   }
 }
 
-export async function claimYield(contract: ethers.Contract): Promise<ethers.TransactionResponse> {
+export async function claimYield(
+  contract: ethers.Contract
+): Promise<ethers.TransactionResponse> {
   try {
     const tx = await contract.claimYield();
     return tx;
   } catch (error) {
-    console.error('Error claiming yield:', error);
+    console.error("Error claiming yield:", error);
     throw error;
   }
 }
@@ -90,7 +99,7 @@ export async function depositYield(
     const tx = await contract.depositYield(capsuleOwner, amountWei);
     return tx;
   } catch (error) {
-    console.error('Error depositing yield:', error);
+    console.error("Error depositing yield:", error);
     throw error;
   }
 }
@@ -101,11 +110,11 @@ export async function bulkDepositYield(
   amounts: string[]
 ): Promise<ethers.TransactionResponse> {
   try {
-    const amountsWei = amounts.map(amount => ethers.parseEther(amount));
+    const amountsWei = amounts.map((amount) => ethers.parseEther(amount));
     const tx = await contract.bulkDepositYield(capsuleOwners, amountsWei);
     return tx;
   } catch (error) {
-    console.error('Error bulk depositing yield:', error);
+    console.error("Error bulk depositing yield:", error);
     throw error;
   }
 }

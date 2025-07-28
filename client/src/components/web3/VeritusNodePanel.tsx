@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,28 +12,43 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { CAPSULE_FACTORY_V2_ABI, getContractAddress } from "@/lib/contracts";
 import { VERITUS_NODE, BRAND_COLORS } from "@/lib/constants";
-import { Shield, CheckCircle, TrendingUp, Loader2, AlertTriangle } from "lucide-react";
+import {
+  Shield,
+  CheckCircle,
+  TrendingUp,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
 
 export default function VeritusNodePanel() {
   const { address, chainId } = useAccount();
   const { toast } = useToast();
-  
+
   const [capsuleId, setCapsuleId] = useState<number>(0);
   const [yieldValue, setYieldValue] = useState<number>(0);
 
-  const { writeContract: writeSeal, data: sealHash, isPending: isSealPending } = useWriteContract();
-  const { writeContract: writeYield, data: yieldHash, isPending: isYieldPending } = useWriteContract();
-  
+  const {
+    writeContract: writeSeal,
+    data: sealHash,
+    isPending: isSealPending,
+  } = useWriteContract();
+  const {
+    writeContract: writeYield,
+    data: yieldHash,
+    isPending: isYieldPending,
+  } = useWriteContract();
+
   const { isLoading: isSealConfirming } = useWaitForTransactionReceipt({
     hash: sealHash,
   });
-  
+
   const { isLoading: isYieldConfirming } = useWaitForTransactionReceipt({
     hash: yieldHash,
   });
 
   const isVeritus = address?.toLowerCase() === VERITUS_NODE.toLowerCase();
-  const isLoading = isSealPending || isYieldPending || isSealConfirming || isYieldConfirming;
+  const isLoading =
+    isSealPending || isYieldPending || isSealConfirming || isYieldConfirming;
 
   const handleSealCapsule = () => {
     if (!address || !chainId || capsuleId <= 0) {
@@ -42,12 +61,15 @@ export default function VeritusNodePanel() {
     }
 
     try {
-      const factoryAddress = getContractAddress(chainId, 'factoryV2') as `0x${string}`;
-      
+      const factoryAddress = getContractAddress(
+        chainId,
+        "factoryV2"
+      ) as `0x${string}`;
+
       writeSeal({
         address: factoryAddress,
         abi: CAPSULE_FACTORY_V2_ABI,
-        functionName: 'sealCapsule',
+        functionName: "sealCapsule",
         args: [BigInt(capsuleId)],
       });
 
@@ -56,7 +78,7 @@ export default function VeritusNodePanel() {
         description: `Processing seal for Capsule #${capsuleId}...`,
       });
     } catch (error) {
-      console.error('Error sealing capsule:', error);
+      console.error("Error sealing capsule:", error);
       toast({
         title: "Sealing Failed",
         description: "Failed to seal capsule. Please try again.",
@@ -76,12 +98,15 @@ export default function VeritusNodePanel() {
     }
 
     try {
-      const factoryAddress = getContractAddress(chainId, 'factoryV2') as `0x${string}`;
-      
+      const factoryAddress = getContractAddress(
+        chainId,
+        "factoryV2"
+      ) as `0x${string}`;
+
       writeYield({
         address: factoryAddress,
         abi: CAPSULE_FACTORY_V2_ABI,
-        functionName: 'assignYield',
+        functionName: "assignYield",
         args: [BigInt(capsuleId), BigInt(yieldValue)],
       });
 
@@ -90,7 +115,7 @@ export default function VeritusNodePanel() {
         description: `Processing yield assignment for Capsule #${capsuleId}...`,
       });
     } catch (error) {
-      console.error('Error assigning yield:', error);
+      console.error("Error assigning yield:", error);
       toast({
         title: "Yield Assignment Failed",
         description: "Failed to assign yield. Please try again.",
@@ -115,7 +140,14 @@ export default function VeritusNodePanel() {
         description: `Emotional yield of ${yieldValue} assigned to Capsule #${capsuleId}.`,
       });
     }
-  }, [yieldHash, isYieldConfirming, isYieldPending, capsuleId, yieldValue, toast]);
+  }, [
+    yieldHash,
+    isYieldConfirming,
+    isYieldPending,
+    capsuleId,
+    yieldValue,
+    toast,
+  ]);
 
   if (!isVeritus) {
     return (
@@ -142,12 +174,15 @@ export default function VeritusNodePanel() {
     <Card className="bg-slate-800/50 border-slate-700">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Shield className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+          <Shield
+            className="w-5 h-5"
+            style={{ color: BRAND_COLORS.GUARDIAN }}
+          />
           Veritus Admin Panel
         </CardTitle>
         <div className="flex items-center gap-2">
-          <Badge 
-            variant="outline" 
+          <Badge
+            variant="outline"
             className="border-green-500/30 text-green-400 bg-green-500/10"
           >
             Authenticated
@@ -160,11 +195,13 @@ export default function VeritusNodePanel() {
       <CardContent className="space-y-6">
         {/* Capsule ID Input */}
         <div className="space-y-2">
-          <Label htmlFor="capsuleId" className="text-white">Capsule ID</Label>
+          <Label htmlFor="capsuleId" className="text-white">
+            Capsule ID
+          </Label>
           <Input
             id="capsuleId"
             type="number"
-            value={capsuleId || ''}
+            value={capsuleId || ""}
             onChange={(e) => setCapsuleId(parseInt(e.target.value) || 0)}
             placeholder="Enter capsule ID..."
             className="bg-slate-700/50 border-slate-600 text-white"
@@ -179,21 +216,22 @@ export default function VeritusNodePanel() {
             Seal Verification
           </h3>
           <p className="text-sm text-slate-400 mb-4">
-            Verify and seal a capsule after content review. This marks the capsule as authentic.
+            Verify and seal a capsule after content review. This marks the
+            capsule as authentic.
           </p>
           <Button
             onClick={handleSealCapsule}
             disabled={isLoading || capsuleId <= 0}
             className="w-full"
-            style={{ 
+            style={{
               backgroundColor: BRAND_COLORS.CHAIN,
-              color: 'white'
+              color: "white",
             }}
           >
             {isSealPending || isSealConfirming ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {isSealPending ? 'Sealing...' : 'Confirming...'}
+                {isSealPending ? "Sealing..." : "Confirming..."}
               </>
             ) : (
               <>
@@ -211,16 +249,19 @@ export default function VeritusNodePanel() {
             Yield Assignment
           </h3>
           <p className="text-sm text-slate-400 mb-4">
-            Assign final emotional yield value after capsule review and analysis.
+            Assign final emotional yield value after capsule review and
+            analysis.
           </p>
-          
+
           <div className="space-y-3">
             <div className="space-y-2">
-              <Label htmlFor="yieldValue" className="text-white">Yield Value</Label>
+              <Label htmlFor="yieldValue" className="text-white">
+                Yield Value
+              </Label>
               <Input
                 id="yieldValue"
                 type="number"
-                value={yieldValue || ''}
+                value={yieldValue || ""}
                 onChange={(e) => setYieldValue(parseInt(e.target.value) || 0)}
                 placeholder="Enter yield value..."
                 className="bg-slate-700/50 border-slate-600 text-white"
@@ -228,23 +269,24 @@ export default function VeritusNodePanel() {
                 max="10000"
               />
               <p className="text-xs text-slate-500">
-                Recommended range: 50-500 for most capsules, 500+ for exceptional content
+                Recommended range: 50-500 for most capsules, 500+ for
+                exceptional content
               </p>
             </div>
-            
+
             <Button
               onClick={handleAssignYield}
               disabled={isLoading || capsuleId <= 0 || yieldValue <= 0}
               className="w-full"
-              style={{ 
+              style={{
                 backgroundColor: BRAND_COLORS.GUARDIAN,
-                color: 'white'
+                color: "white",
               }}
             >
               {isYieldPending || isYieldConfirming ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {isYieldPending ? 'Assigning...' : 'Confirming...'}
+                  {isYieldPending ? "Assigning..." : "Confirming..."}
                 </>
               ) : (
                 <>

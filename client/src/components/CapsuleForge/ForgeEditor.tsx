@@ -1,10 +1,19 @@
-import { useState } from 'react';
-import { Plus, GripVertical, Trash2, FileText, Image, Shield, Video, Link } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import CapsuleBlock from './CapsuleBlock';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import {
+  Plus,
+  GripVertical,
+  Trash2,
+  FileText,
+  Image,
+  Shield,
+  Video,
+  Link,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import CapsuleBlock from "./CapsuleBlock";
+import { useToast } from "@/hooks/use-toast";
 
 interface Block {
   id: number;
@@ -28,28 +37,41 @@ interface ForgeEditorProps {
   setCapsuleData: (data: CapsuleData) => void;
 }
 
-export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditorProps) {
+export default function ForgeEditor({
+  capsuleData,
+  setCapsuleData,
+}: ForgeEditorProps) {
   const [draggedItem, setDraggedItem] = useState<number | null>(null);
   const { toast } = useToast();
 
   const blockTypes = [
-    { type: 'text', label: 'Text Block', icon: FileText, color: 'text-blue-400' },
-    { type: 'image', label: 'Image', icon: Image, color: 'text-green-400' },
-    { type: 'video', label: 'Video', icon: Video, color: 'text-red-400' },
-    { type: 'link', label: 'Link', icon: Link, color: 'text-purple-400' },
-    { type: 'seal', label: 'Veritas Seal', icon: Shield, color: 'text-yellow-400' }
+    {
+      type: "text",
+      label: "Text Block",
+      icon: FileText,
+      color: "text-blue-400",
+    },
+    { type: "image", label: "Image", icon: Image, color: "text-green-400" },
+    { type: "video", label: "Video", icon: Video, color: "text-red-400" },
+    { type: "link", label: "Link", icon: Link, color: "text-purple-400" },
+    {
+      type: "seal",
+      label: "Veritas Seal",
+      icon: Shield,
+      color: "text-yellow-400",
+    },
   ];
 
   const addBlock = (type: string) => {
     const newBlock = {
       id: Date.now(),
       type,
-      content: ''
+      content: "",
     };
-    
+
     setCapsuleData({
       ...capsuleData,
-      blocks: [...capsuleData.blocks, newBlock]
+      blocks: [...capsuleData.blocks, newBlock],
     });
 
     toast({
@@ -63,7 +85,7 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
     updatedBlocks[index].content = content;
     setCapsuleData({
       ...capsuleData,
-      blocks: updatedBlocks
+      blocks: updatedBlocks,
     });
   };
 
@@ -71,7 +93,7 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
     const updatedBlocks = capsuleData.blocks.filter((_, i) => i !== index);
     setCapsuleData({
       ...capsuleData,
-      blocks: updatedBlocks
+      blocks: updatedBlocks,
     });
 
     toast({
@@ -86,7 +108,7 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
     updatedBlocks.splice(toIndex, 0, movedBlock);
     setCapsuleData({
       ...capsuleData,
-      blocks: updatedBlocks
+      blocks: updatedBlocks,
     });
   };
 
@@ -126,10 +148,12 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
             type="text"
             placeholder="Enter your truth capsule title..."
             value={capsuleData.title}
-            onChange={(e) => setCapsuleData({
-              ...capsuleData,
-              title: e.target.value
-            })}
+            onChange={(e) =>
+              setCapsuleData({
+                ...capsuleData,
+                title: e.target.value,
+              })
+            }
             className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 text-lg font-semibold"
           />
         </div>
@@ -138,7 +162,9 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-white font-semibold">Content Blocks</h3>
-            <span className="text-sm text-slate-400">{capsuleData.blocks.length} blocks</span>
+            <span className="text-sm text-slate-400">
+              {capsuleData.blocks.length} blocks
+            </span>
           </div>
 
           {capsuleData.blocks.map((block, index) => (
@@ -180,7 +206,9 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
 
         {/* Add Block Controls */}
         <div className="border-t border-slate-600 pt-4">
-          <h4 className="text-sm font-medium text-slate-400 mb-3">Add Content Block</h4>
+          <h4 className="text-sm font-medium text-slate-400 mb-3">
+            Add Content Block
+          </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {blockTypes.map((blockType) => {
               const IconComponent = blockType.icon;
@@ -204,13 +232,23 @@ export default function ForgeEditor({ capsuleData, setCapsuleData }: ForgeEditor
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-white font-semibold">Auto-save</h4>
-              <p className="text-xs text-slate-400">Changes saved automatically</p>
+              <p className="text-xs text-slate-400">
+                Changes saved automatically
+              </p>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="border-slate-600 text-slate-300">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-slate-600 text-slate-300"
+              >
                 Save Draft
               </Button>
-              <Button variant="outline" size="sm" className="border-slate-600 text-slate-300">
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-slate-600 text-slate-300"
+              >
                 Preview
               </Button>
             </div>

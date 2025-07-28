@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { 
-  User, 
-  TrendingUp, 
-  Shield, 
+import {
+  User,
+  TrendingUp,
+  Shield,
   Wallet,
   Trophy,
   Target,
   Activity,
   Clock,
   Star,
-  Crown
+  Crown,
 } from "lucide-react";
 
 interface UserData {
@@ -32,27 +32,34 @@ interface WorkingProfileDashboardProps {
   user?: UserData;
 }
 
-export default function WorkingProfileDashboard({ user }: WorkingProfileDashboardProps) {
+export default function WorkingProfileDashboard({
+  user,
+}: WorkingProfileDashboardProps) {
   // Default user data if not provided
   const userData = user || {
-    id: 'demo-user-001',
-    email: 'guardian@example.com',
-    tier: 'CREATOR',
-    gttBalance: '2,847',
-    reputation: '892',
-    totalCapsules: '47',
+    id: "demo-user-001",
+    email: "guardian@example.com",
+    tier: "CREATOR",
+    gttBalance: "2,847",
+    reputation: "892",
+    totalCapsules: "47",
     verificationRate: 87,
-    joinDate: 'January 2025',
-    achievements: ['Early Adopter', 'Truth Seeker', 'Community Builder']
+    joinDate: "January 2025",
+    achievements: ["Early Adopter", "Truth Seeker", "Community Builder"],
   };
 
   const getTierColor = (tier: string) => {
     switch (tier.toLowerCase()) {
-      case 'explorer': return 'text-blue-400 border-blue-400';
-      case 'seeker': return 'text-purple-400 border-purple-400';
-      case 'creator': return 'text-green-400 border-green-400';
-      case 'sovereign': return 'text-yellow-400 border-yellow-400';
-      default: return 'text-gray-400 border-gray-400';
+      case "explorer":
+        return "text-blue-400 border-blue-400";
+      case "seeker":
+        return "text-purple-400 border-purple-400";
+      case "creator":
+        return "text-green-400 border-green-400";
+      case "sovereign":
+        return "text-yellow-400 border-yellow-400";
+      default:
+        return "text-gray-400 border-gray-400";
     }
   };
 
@@ -62,7 +69,9 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Profile Dashboard</h1>
-          <p className="text-slate-400">Manage your GUARDIANCHAIN profile and track your progress</p>
+          <p className="text-slate-400">
+            Manage your GUARDIANCHAIN profile and track your progress
+          </p>
         </div>
 
         {/* Overview Cards */}
@@ -102,7 +111,9 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{userData.totalCapsules}</div>
-              <div className="text-sm text-purple-400">{userData.verificationRate}% verified</div>
+              <div className="text-sm text-purple-400">
+                {userData.verificationRate}% verified
+              </div>
             </CardContent>
           </Card>
 
@@ -114,10 +125,16 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Badge className={`${getTierColor(userData.tier)} bg-transparent text-lg`}>
+              <Badge
+                className={`${getTierColor(
+                  userData.tier
+                )} bg-transparent text-lg`}
+              >
                 {userData.tier}
               </Badge>
-              <div className="text-sm text-orange-400 mt-1">Since {userData.joinDate}</div>
+              <div className="text-sm text-orange-400 mt-1">
+                Since {userData.joinDate}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -145,21 +162,29 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                       <div className="flex-1">
-                        <div className="text-sm font-medium">Created truth capsule #47</div>
-                        <div className="text-xs text-slate-400">2 hours ago</div>
+                        <div className="text-sm font-medium">
+                          Created truth capsule #47
+                        </div>
+                        <div className="text-xs text-slate-400">
+                          2 hours ago
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                       <div className="flex-1">
-                        <div className="text-sm font-medium">Verified 3 capsules</div>
+                        <div className="text-sm font-medium">
+                          Verified 3 capsules
+                        </div>
                         <div className="text-xs text-slate-400">1 day ago</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                       <div className="flex-1">
-                        <div className="text-sm font-medium">Earned 150 GTT rewards</div>
+                        <div className="text-sm font-medium">
+                          Earned 150 GTT rewards
+                        </div>
                         <div className="text-xs text-slate-400">2 days ago</div>
                       </div>
                     </div>
@@ -178,21 +203,32 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium">Verification Accuracy</span>
-                        <span className="text-sm font-bold">{userData.verificationRate}%</span>
+                        <span className="text-sm font-medium">
+                          Verification Accuracy
+                        </span>
+                        <span className="text-sm font-bold">
+                          {userData.verificationRate}%
+                        </span>
                       </div>
-                      <Progress value={userData.verificationRate} className="h-2" />
+                      <Progress
+                        value={userData.verificationRate}
+                        className="h-2"
+                      />
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium">Community Trust</span>
+                        <span className="text-sm font-medium">
+                          Community Trust
+                        </span>
                         <span className="text-sm font-bold">94%</span>
                       </div>
                       <Progress value={94} className="h-2" />
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium">Monthly Growth</span>
+                        <span className="text-sm font-medium">
+                          Monthly Growth
+                        </span>
                         <span className="text-sm font-bold">78%</span>
                       </div>
                       <Progress value={78} className="h-2" />
@@ -211,10 +247,18 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
               <CardContent>
                 <div className="space-y-4">
                   {[1, 2, 3].map((item) => (
-                    <div key={item} className="border border-slate-700 rounded-lg p-4">
+                    <div
+                      key={item}
+                      className="border border-slate-700 rounded-lg p-4"
+                    >
                       <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-semibold">Truth Capsule #{47 - item + 1}</h4>
-                        <Badge variant="outline" className="border-green-500 text-green-400">
+                        <h4 className="font-semibold">
+                          Truth Capsule #{47 - item + 1}
+                        </h4>
+                        <Badge
+                          variant="outline"
+                          className="border-green-500 text-green-400"
+                        >
                           Verified
                         </Badge>
                       </div>
@@ -244,7 +288,10 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {userData.achievements.map((achievement, index) => (
-                    <div key={index} className="border border-slate-700 rounded-lg p-4 text-center">
+                    <div
+                      key={index}
+                      className="border border-slate-700 rounded-lg p-4 text-center"
+                    >
                       <Star className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
                       <h4 className="font-semibold mb-1">{achievement}</h4>
                       <p className="text-xs text-slate-400">
@@ -281,9 +328,15 @@ export default function WorkingProfileDashboard({ user }: WorkingProfileDashboar
                   <div>
                     <h4 className="font-medium mb-4">Preferences</h4>
                     <div className="space-y-2">
-                      <Button variant="outline" size="sm">Notification Settings</Button>
-                      <Button variant="outline" size="sm">Privacy Settings</Button>
-                      <Button variant="outline" size="sm">Export Data</Button>
+                      <Button variant="outline" size="sm">
+                        Notification Settings
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        Privacy Settings
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        Export Data
+                      </Button>
                     </div>
                   </div>
                 </div>

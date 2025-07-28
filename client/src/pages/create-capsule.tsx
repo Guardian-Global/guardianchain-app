@@ -20,8 +20,9 @@ export default function CreateCapsule() {
             {BRAND_NAME} Capsule Studio V2
           </h1>
           <p className="text-slate-400 text-lg max-w-3xl">
-            Create immutable truth capsules with enhanced yield tracking and Veritus verification.
-            Powered by CapsuleFactoryV2 smart contract for secure, permanent storage.
+            Create immutable truth capsules with enhanced yield tracking and
+            Veritus verification. Powered by CapsuleFactoryV2 smart contract for
+            secure, permanent storage.
           </p>
         </div>
 
@@ -37,13 +38,18 @@ export default function CreateCapsule() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Zap className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Zap
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   CapsuleFactoryV2 Features
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="p-4 bg-slate-700/30 rounded-lg">
-                  <h3 className="font-semibold text-white mb-2">Enhanced Features:</h3>
+                  <h3 className="font-semibold text-white mb-2">
+                    Enhanced Features:
+                  </h3>
                   <ul className="text-sm text-slate-300 space-y-1">
                     <li>• Emotional yield calculation and tracking</li>
                     <li>• Veritus node verification system</li>
@@ -55,7 +61,9 @@ export default function CreateCapsule() {
                 </div>
 
                 <div className="p-4 bg-slate-700/30 rounded-lg">
-                  <h3 className="font-semibold text-white mb-2">Creation Workflow:</h3>
+                  <h3 className="font-semibold text-white mb-2">
+                    Creation Workflow:
+                  </h3>
                   <ol className="text-sm text-slate-300 space-y-1 list-decimal ml-4">
                     <li>Upload content to IPFS</li>
                     <li>Create capsule with content hash</li>
@@ -67,8 +75,9 @@ export default function CreateCapsule() {
 
                 <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
                   <p className="text-sm text-purple-200">
-                    <strong>Smart Contract:</strong> All capsules are stored on-chain with 
-                    immutable metadata and yield tracking for transparent reward distribution.
+                    <strong>Smart Contract:</strong> All capsules are stored
+                    on-chain with immutable metadata and yield tracking for
+                    transparent reward distribution.
                   </p>
                 </div>
               </CardContent>
@@ -77,7 +86,9 @@ export default function CreateCapsule() {
             {/* Legacy Type Selector for Reference */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Legacy Capsule Types</CardTitle>
+                <CardTitle className="text-white">
+                  Legacy Capsule Types
+                </CardTitle>
                 <p className="text-sm text-slate-400">
                   Reference guide for specialized capsule categories
                 </p>

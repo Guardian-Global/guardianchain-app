@@ -1,11 +1,11 @@
-import { ethers } from 'ethers';
-import { 
-  GTT_CONTRACT_ADDRESS, 
-  GTT_TOKEN_ABI, 
+import { ethers } from "ethers";
+import {
+  GTT_CONTRACT_ADDRESS,
+  GTT_TOKEN_ABI,
   PRIMARY_NETWORK,
   validateContractAddress,
-  getConfigurationStatus 
-} from './contractConfig';
+  getConfigurationStatus,
+} from "./contractConfig";
 
 /**
  * Production-ready Web3 service for GTT token data fetching
@@ -63,43 +63,44 @@ class Web3TokenService {
    */
   private async initializeProvider(): Promise<void> {
     const rpcUrls = PRIMARY_NETWORK.rpcUrls;
-    
+
     for (const rpcUrl of rpcUrls) {
       try {
         // Skip placeholder URLs
-        if (rpcUrl.includes('YOUR_')) {
+        if (rpcUrl.includes("YOUR_")) {
           console.warn(`⚠️ Skipping placeholder RPC URL: ${rpcUrl}`);
           continue;
         }
 
         console.log(`🔗 Attempting connection to: ${rpcUrl}`);
         this.provider = new ethers.JsonRpcProvider(rpcUrl);
-        
+
         // Test connection
         const blockNumber = await this.provider.getBlockNumber();
-        console.log(`✅ Connected to ${PRIMARY_NETWORK.name} via ${rpcUrl}, block: ${blockNumber}`);
-        
+        console.log(
+          `✅ Connected to ${PRIMARY_NETWORK.name} via ${rpcUrl}, block: ${blockNumber}`
+        );
+
         // Initialize contract
         this.contract = new ethers.Contract(
           GTT_CONTRACT_ADDRESS,
           GTT_TOKEN_ABI,
           this.provider
         );
-        
+
         // Test contract call
         await this.contract.symbol();
         console.log(`✅ GTT contract verified at ${GTT_CONTRACT_ADDRESS}`);
-        
+
         this.isInitialized = true;
         this.lastError = null;
         return;
-        
       } catch (error) {
         console.warn(`⚠️ RPC ${rpcUrl} failed:`, error);
         continue;
       }
     }
-    
+
     this.lastError = `Failed to connect to any RPC endpoint for ${PRIMARY_NETWORK.name}`;
     throw new Error(this.lastError);
   }
@@ -109,18 +110,18 @@ class Web3TokenService {
    */
   async getTokenData(): Promise<TokenData | null> {
     if (!this.isInitialized || !this.contract) {
-      console.error('❌ Web3 service not initialized');
+      console.error("❌ Web3 service not initialized");
       return null;
     }
 
     try {
-      console.log('🔍 Fetching token data from blockchain...');
-      
+      console.log("🔍 Fetching token data from blockchain...");
+
       const [name, symbol, decimals, totalSupply] = await Promise.all([
         this.contract.name(),
         this.contract.symbol(),
         this.contract.decimals(),
-        this.contract.totalSupply()
+        this.contract.totalSupply(),
       ]);
 
       // Try to get circulating supply (may not be available on all contracts)
@@ -140,15 +141,15 @@ class Web3TokenService {
         circulatingSupply: ethers.formatUnits(circulatingSupply, decimals),
         contractAddress: GTT_CONTRACT_ADDRESS,
         network: PRIMARY_NETWORK.name,
-        verified: true
+        verified: true,
       };
 
-      console.log('✅ Token data retrieved successfully:', tokenData);
+      console.log("✅ Token data retrieved successfully:", tokenData);
       return tokenData;
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('❌ Failed to fetch token data:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.error("❌ Failed to fetch token data:", error);
       this.lastError = `Token data fetch failed: ${errorMessage}`;
       return null;
     }
@@ -159,29 +160,29 @@ class Web3TokenService {
    */
   async getTokenBalance(walletAddress: string): Promise<TokenBalance | null> {
     if (!this.isInitialized || !this.contract) {
-      console.error('❌ Web3 service not initialized');
+      console.error("❌ Web3 service not initialized");
       return null;
     }
 
     if (!validateContractAddress(walletAddress)) {
-      console.error('❌ Invalid wallet address:', walletAddress);
+      console.error("❌ Invalid wallet address:", walletAddress);
       return null;
     }
 
     try {
       const balance = await this.contract.balanceOf(walletAddress);
       const decimals = await this.contract.decimals();
-      
+
       return {
         address: walletAddress,
         balance: balance.toString(),
         balanceFormatted: ethers.formatUnits(balance, decimals),
-        decimals: Number(decimals)
+        decimals: Number(decimals),
       };
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('❌ Failed to fetch token balance:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.error("❌ Failed to fetch token balance:", error);
       this.lastError = `Balance fetch failed: ${errorMessage}`;
       return null;
     }
@@ -192,7 +193,7 @@ class Web3TokenService {
    */
   async getRecentTransfers(limit: number = 100): Promise<TokenTransfer[]> {
     if (!this.isInitialized || !this.contract) {
-      console.error('❌ Web3 service not initialized');
+      console.error("❌ Web3 service not initialized");
       return [];
     }
 
@@ -201,25 +202,29 @@ class Web3TokenService {
       const fromBlock = Math.max(0, currentBlock - 10000); // Last ~10k blocks
 
       const transferFilter = this.contract.filters.Transfer();
-      const events = await this.contract.queryFilter(transferFilter, fromBlock, currentBlock);
-      
+      const events = await this.contract.queryFilter(
+        transferFilter,
+        fromBlock,
+        currentBlock
+      );
+
       const decimals = await this.contract.decimals();
-      
+
       const transfers = events.slice(-limit).map((event: any) => ({
-        from: event.args?.from || '',
-        to: event.args?.to || '',
-        value: event.args?.value?.toString() || '0',
+        from: event.args?.from || "",
+        to: event.args?.to || "",
+        value: event.args?.value?.toString() || "0",
         valueFormatted: ethers.formatUnits(event.args?.value || 0, decimals),
         blockNumber: event.blockNumber || 0,
-        transactionHash: event.transactionHash || ''
+        transactionHash: event.transactionHash || "",
       }));
 
       console.log(`✅ Retrieved ${transfers.length} recent transfers`);
       return transfers;
-
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('❌ Failed to fetch transfers:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.error("❌ Failed to fetch transfers:", error);
       this.lastError = `Transfer fetch failed: ${errorMessage}`;
       return [];
     }
@@ -238,7 +243,7 @@ class Web3TokenService {
       return Number(holderCount);
     } catch (error) {
       // Many contracts don't implement this function
-      console.warn('⚠️ Holder count not available from contract');
+      console.warn("⚠️ Holder count not available from contract");
       return null;
     }
   }
@@ -248,7 +253,7 @@ class Web3TokenService {
    */
   async validateService(): Promise<{ isValid: boolean; errors: string[] }> {
     const errors: string[] = [];
-    
+
     // Check configuration
     const configStatus = getConfigurationStatus();
     if (!configStatus.isValid) {
@@ -257,7 +262,7 @@ class Web3TokenService {
 
     // Check initialization
     if (!this.isInitialized) {
-      errors.push('Web3 service not initialized');
+      errors.push("Web3 service not initialized");
     }
 
     // Test contract connection
@@ -265,7 +270,8 @@ class Web3TokenService {
       try {
         await this.contract.symbol();
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
         errors.push(`Contract connection failed: ${errorMessage}`);
       }
     }
@@ -277,7 +283,7 @@ class Web3TokenService {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -292,7 +298,7 @@ class Web3TokenService {
       lastError: this.lastError,
       contractAddress: GTT_CONTRACT_ADDRESS,
       network: PRIMARY_NETWORK.name,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 
@@ -304,7 +310,7 @@ class Web3TokenService {
     this.provider = null;
     this.contract = null;
     this.lastError = null;
-    
+
     await this.initializeProvider();
   }
 }

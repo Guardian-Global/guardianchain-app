@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { 
-  Shield, 
-  DollarSign, 
-  Users, 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Settings, 
-  FileText, 
+import {
+  Shield,
+  DollarSign,
+  Users,
+  Activity,
+  AlertTriangle,
+  CheckCircle,
+  Settings,
+  FileText,
   Lock,
   Eye,
   TrendingUp,
@@ -22,8 +22,8 @@ import {
   Gavel,
   CreditCard,
   Globe,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 interface SystemHealth {
   status: string;
@@ -69,7 +69,9 @@ interface FinancialData {
 
 export default function MasterAdmin() {
   const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
-  const [financialData, setFinancialData] = useState<FinancialData | null>(null);
+  const [financialData, setFinancialData] = useState<FinancialData | null>(
+    null
+  );
   const [securityStatus, setSecurityStatus] = useState<any>(null);
   const [complianceStatus, setComplianceStatus] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -81,10 +83,18 @@ export default function MasterAdmin() {
   const loadAdminData = async () => {
     try {
       const [health, financial, security, compliance] = await Promise.all([
-        fetch('/api/admin/system-health').then(r => r.ok ? r.json() : Promise.reject('Health API failed')),
-        fetch('/api/admin/financial-overview').then(r => r.ok ? r.json() : Promise.reject('Financial API failed')),
-        fetch('/api/admin/security-status').then(r => r.ok ? r.json() : Promise.reject('Security API failed')),
-        fetch('/api/admin/compliance-status').then(r => r.ok ? r.json() : Promise.reject('Compliance API failed'))
+        fetch("/api/admin/system-health").then((r) =>
+          r.ok ? r.json() : Promise.reject("Health API failed")
+        ),
+        fetch("/api/admin/financial-overview").then((r) =>
+          r.ok ? r.json() : Promise.reject("Financial API failed")
+        ),
+        fetch("/api/admin/security-status").then((r) =>
+          r.ok ? r.json() : Promise.reject("Security API failed")
+        ),
+        fetch("/api/admin/compliance-status").then((r) =>
+          r.ok ? r.json() : Promise.reject("Compliance API failed")
+        ),
       ]);
 
       setSystemHealth(health);
@@ -92,41 +102,54 @@ export default function MasterAdmin() {
       setSecurityStatus(security);
       setComplianceStatus(compliance);
     } catch (error) {
-      console.error('Failed to load admin data:', error);
+      console.error("Failed to load admin data:", error);
       // Set fallback data for development
       setSystemHealth({
-        status: 'operational',
+        status: "operational",
         timestamp: new Date().toISOString(),
         services: {
-          database: 'healthy',
-          blockchain: 'healthy',
-          storage: 'healthy',
-          ai: 'healthy',
-          email: 'healthy'
+          database: "healthy",
+          blockchain: "healthy",
+          storage: "healthy",
+          ai: "healthy",
+          email: "healthy",
         },
         metrics: {
           totalUsers: 1247,
           activeUsers: 892,
           totalCapsules: 5674,
           gttSupply: 10000000,
-          treasuryBalance: 2847593.45
-        }
+          treasuryBalance: 2847593.45,
+        },
       });
       setFinancialData({
-        revenue: { monthly: 124750.00, yearly: 1497000.00, growth: 23.5 },
-        expenses: { infrastructure: 8450.00, compliance: 12000.00, security: 15000.00 },
-        treasury: { gttHoldings: 2500000, usdcReserves: 847593.45, stakingRewards: 125000.00 },
-        compliance: { kycRate: 98.7, amlChecks: 'passing', taxReporting: 'current', licenses: 'valid' }
+        revenue: { monthly: 124750.0, yearly: 1497000.0, growth: 23.5 },
+        expenses: {
+          infrastructure: 8450.0,
+          compliance: 12000.0,
+          security: 15000.0,
+        },
+        treasury: {
+          gttHoldings: 2500000,
+          usdcReserves: 847593.45,
+          stakingRewards: 125000.0,
+        },
+        compliance: {
+          kycRate: 98.7,
+          amlChecks: "passing",
+          taxReporting: "current",
+          licenses: "valid",
+        },
       });
       setSecurityStatus({
-        threatLevel: 'low',
+        threatLevel: "low",
         activeIncidents: 0,
-        securityScans: { vulnerabilities: 0, status: 'secure' },
-        accessLogs: { adminLogins: 5, failedAttempts: 0 }
+        securityScans: { vulnerabilities: 0, status: "secure" },
+        accessLogs: { adminLogins: 5, failedAttempts: 0 },
       });
       setComplianceStatus({
-        gdpr: { status: 'compliant' },
-        ccpa: { status: 'compliant' }
+        gdpr: { status: "compliant" },
+        ccpa: { status: "compliant" },
       });
     } finally {
       setLoading(false);
@@ -134,21 +157,25 @@ export default function MasterAdmin() {
   };
 
   const emergencyPause = async () => {
-    const confirmed = window.confirm('Are you sure you want to emergency pause the platform?');
+    const confirmed = window.confirm(
+      "Are you sure you want to emergency pause the platform?"
+    );
     if (confirmed) {
       try {
-        const response = await fetch('/api/admin/emergency-pause', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reason: 'Manual emergency pause by master admin' })
+        const response = await fetch("/api/admin/emergency-pause", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reason: "Manual emergency pause by master admin",
+          }),
         });
         if (response.ok) {
-          alert('Platform emergency paused');
+          alert("Platform emergency paused");
         } else {
-          alert('Emergency pause initiated (simulated for development)');
+          alert("Emergency pause initiated (simulated for development)");
         }
       } catch (error) {
-        alert('Emergency pause initiated (simulated for development)');
+        alert("Emergency pause initiated (simulated for development)");
       }
     }
   };
@@ -173,22 +200,21 @@ export default function MasterAdmin() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               🛡️ GUARDIANCHAIN Master Admin
             </h1>
-            <p className="text-slate-400 mt-2">Complete platform oversight and control</p>
+            <p className="text-slate-400 mt-2">
+              Complete platform oversight and control
+            </p>
           </div>
-          
+
           <div className="flex space-x-4">
-            <Button 
+            <Button
               onClick={emergencyPause}
               className="bg-red-600 hover:bg-red-700"
             >
               <AlertTriangle className="w-4 h-4 mr-2" />
               Emergency Pause
             </Button>
-            
-            <Button 
-              onClick={loadAdminData}
-              variant="outline"
-            >
+
+            <Button onClick={loadAdminData} variant="outline">
               <Activity className="w-4 h-4 mr-2" />
               Refresh Data
             </Button>
@@ -202,47 +228,49 @@ export default function MasterAdmin() {
           <CardContent className="p-4 text-center">
             <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">
-              {systemHealth?.status === 'operational' ? 'SECURE' : 'ALERT'}
+              {systemHealth?.status === "operational" ? "SECURE" : "ALERT"}
             </div>
             <div className="text-sm text-green-200">System Status</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-blue-900 to-cyan-900">
           <CardContent className="p-4 text-center">
             <DollarSign className="w-8 h-8 text-blue-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">
-              ${financialData?.revenue.monthly.toLocaleString() || '0'}
+              ${financialData?.revenue.monthly.toLocaleString() || "0"}
             </div>
             <div className="text-sm text-blue-200">Monthly Revenue</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-purple-900 to-violet-900">
           <CardContent className="p-4 text-center">
             <Users className="w-8 h-8 text-purple-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">
-              {systemHealth?.metrics.totalUsers.toLocaleString() || '0'}
+              {systemHealth?.metrics.totalUsers.toLocaleString() || "0"}
             </div>
             <div className="text-sm text-purple-200">Total Users</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-amber-900 to-orange-900">
           <CardContent className="p-4 text-center">
             <Shield className="w-8 h-8 text-amber-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">
-              {securityStatus?.threatLevel || 'LOW'}
+              {securityStatus?.threatLevel || "LOW"}
             </div>
             <div className="text-sm text-amber-200">Threat Level</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-gradient-to-br from-pink-900 to-rose-900">
           <CardContent className="p-4 text-center">
             <Gavel className="w-8 h-8 text-pink-400 mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">
-              {complianceStatus?.gdpr.status === 'compliant' ? '100%' : 'REVIEW'}
+              {complianceStatus?.gdpr.status === "compliant"
+                ? "100%"
+                : "REVIEW"}
             </div>
             <div className="text-sm text-pink-200">Compliance</div>
           </CardContent>
@@ -288,14 +316,26 @@ export default function MasterAdmin() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {systemHealth && Object.entries(systemHealth.services).map(([service, status]) => (
-                    <div key={service} className="flex items-center justify-between">
-                      <span className="capitalize">{service}</span>
-                      <Badge className={status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}>
-                        {status}
-                      </Badge>
-                    </div>
-                  ))}
+                  {systemHealth &&
+                    Object.entries(systemHealth.services).map(
+                      ([service, status]) => (
+                        <div
+                          key={service}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="capitalize">{service}</span>
+                          <Badge
+                            className={
+                              status === "healthy"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                            }
+                          >
+                            {status}
+                          </Badge>
+                        </div>
+                      )
+                    )}
                 </div>
               </CardContent>
             </Card>
@@ -311,19 +351,27 @@ export default function MasterAdmin() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span>Active Users</span>
-                    <span className="font-bold">{systemHealth?.metrics.activeUsers.toLocaleString()}</span>
+                    <span className="font-bold">
+                      {systemHealth?.metrics.activeUsers.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Total Capsules</span>
-                    <span className="font-bold">{systemHealth?.metrics.totalCapsules.toLocaleString()}</span>
+                    <span className="font-bold">
+                      {systemHealth?.metrics.totalCapsules.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>GTT Supply</span>
-                    <span className="font-bold">{systemHealth?.metrics.gttSupply.toLocaleString()}</span>
+                    <span className="font-bold">
+                      {systemHealth?.metrics.gttSupply.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Treasury Balance</span>
-                    <span className="font-bold">${systemHealth?.metrics.treasuryBalance.toLocaleString()}</span>
+                    <span className="font-bold">
+                      ${systemHealth?.metrics.treasuryBalance.toLocaleString()}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -334,7 +382,8 @@ export default function MasterAdmin() {
             <CheckCircle className="h-4 w-4" />
             <AlertTitle>All Systems Operational</AlertTitle>
             <AlertDescription>
-              GUARDIANCHAIN is operating at full capacity with all security, compliance, and financial systems functioning properly.
+              GUARDIANCHAIN is operating at full capacity with all security,
+              compliance, and financial systems functioning properly.
             </AlertDescription>
           </Alert>
         </TabsContent>
@@ -439,7 +488,9 @@ export default function MasterAdmin() {
             <DollarSign className="h-4 w-4" />
             <AlertTitle>Financial Security Status</AlertTitle>
             <AlertDescription>
-              All revenue streams are secure and properly routed. Tax compliance is current and automated. Treasury is fully protected with multi-signature controls.
+              All revenue streams are secure and properly routed. Tax compliance
+              is current and automated. Treasury is fully protected with
+              multi-signature controls.
             </AlertDescription>
           </Alert>
         </TabsContent>
@@ -458,7 +509,7 @@ export default function MasterAdmin() {
                   <div className="flex justify-between">
                     <span>Threat Level</span>
                     <Badge className="bg-green-500">
-                      {securityStatus?.threatLevel || 'LOW'}
+                      {securityStatus?.threatLevel || "LOW"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
@@ -530,13 +581,13 @@ export default function MasterAdmin() {
                   <div className="flex justify-between">
                     <span>GDPR Compliance</span>
                     <Badge className="bg-green-500">
-                      {complianceStatus?.gdpr?.status || 'Compliant'}
+                      {complianceStatus?.gdpr?.status || "Compliant"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>CCPA Compliance</span>
                     <Badge className="bg-green-500">
-                      {complianceStatus?.ccpa?.status || 'Compliant'}
+                      {complianceStatus?.ccpa?.status || "Compliant"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
@@ -696,7 +747,7 @@ export default function MasterAdmin() {
                   <Globe className="w-4 h-4 mr-2" />
                   Update Smart Contracts
                 </Button>
-                <Button 
+                <Button
                   className="w-full bg-red-600 hover:bg-red-700"
                   onClick={emergencyPause}
                 >

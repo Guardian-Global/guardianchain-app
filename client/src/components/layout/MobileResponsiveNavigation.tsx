@@ -42,8 +42,8 @@ export default function MobileResponsiveNavigation() {
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <LogoDisplay 
-                size="lg" 
+              <LogoDisplay
+                size="lg"
                 variant="icon"
                 className="w-6 h-6 sm:w-8 sm:h-8"
                 fallback={
@@ -80,9 +80,7 @@ export default function MobileResponsiveNavigation() {
           <div className="hidden md:flex items-center space-x-3">
             {isAuthenticated && user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-xs text-slate-300">
-                  {user.firstName}
-                </span>
+                <span className="text-xs text-slate-300">{user.firstName}</span>
                 <Button
                   variant="outline"
                   size="sm"
@@ -94,8 +92,8 @@ export default function MobileResponsiveNavigation() {
               </div>
             ) : (
               <Link href="/login">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
                 >
@@ -103,14 +101,18 @@ export default function MobileResponsiveNavigation() {
                 </Button>
               </Link>
             )}
-            
+
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="text-slate-300 hover:text-white"
             >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </Button>
           </div>
 
@@ -122,18 +124,26 @@ export default function MobileResponsiveNavigation() {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="text-slate-300 hover:text-white p-2"
             >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </Button>
-            
+
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white p-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-300 hover:text-white p-2"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              
-              <SheetContent 
-                side="right" 
+
+              <SheetContent
+                side="right"
                 className="w-80 bg-slate-900/98 border-slate-800 overflow-y-auto"
               >
                 <div className="flex flex-col space-y-6 mt-8">
@@ -145,8 +155,12 @@ export default function MobileResponsiveNavigation() {
                           <User className="h-5 w-5 text-white" />
                         </div>
                         <div>
-                          <p className="text-white font-medium">{user.firstName} {user.lastName}</p>
-                          <p className="text-xs text-slate-400">@{user.username}</p>
+                          <p className="text-white font-medium">
+                            {user.firstName} {user.lastName}
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            @{user.username}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -171,8 +185,8 @@ export default function MobileResponsiveNavigation() {
                         <Button
                           variant="ghost"
                           className={`w-full justify-start text-left py-3 px-4 ${
-                            location === item.href 
-                              ? "text-purple-400 bg-purple-400/10" 
+                            location === item.href
+                              ? "text-purple-400 bg-purple-400/10"
                               : "text-slate-300 hover:text-white hover:bg-slate-800/50"
                           }`}
                           onClick={() => setIsOpen(false)}

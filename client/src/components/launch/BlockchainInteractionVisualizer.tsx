@@ -19,9 +19,24 @@ export default function BlockchainInteractionVisualizer() {
   }, [isAnimating]);
 
   const blocks = [
-    { id: 1, type: "Truth Capsule", color: "bg-green-500", data: "Content Hash: 0x1a2b..." },
-    { id: 2, type: "Verification", color: "bg-blue-500", data: "Validator: 0x3c4d..." },
-    { id: 3, type: "GTT Reward", color: "bg-purple-500", data: "Amount: 50 GTT" }
+    {
+      id: 1,
+      type: "Truth Capsule",
+      color: "bg-green-500",
+      data: "Content Hash: 0x1a2b...",
+    },
+    {
+      id: 2,
+      type: "Verification",
+      color: "bg-blue-500",
+      data: "Validator: 0x3c4d...",
+    },
+    {
+      id: 3,
+      type: "GTT Reward",
+      color: "bg-purple-500",
+      data: "Amount: 50 GTT",
+    },
   ];
 
   return (
@@ -37,7 +52,7 @@ export default function BlockchainInteractionVisualizer() {
             variant="outline"
             onClick={() => setIsAnimating(!isAnimating)}
           >
-            {isAnimating ? 'Pause' : 'Resume'}
+            {isAnimating ? "Pause" : "Resume"}
           </Button>
         </CardTitle>
       </CardHeader>
@@ -50,7 +65,7 @@ export default function BlockchainInteractionVisualizer() {
                 <motion.div
                   animate={{
                     scale: activeBlock === index ? 1.1 : 1,
-                    opacity: activeBlock === index ? 1 : 0.6
+                    opacity: activeBlock === index ? 1 : 0.6,
                   }}
                   className={`w-24 h-24 ${block.color} rounded-lg flex flex-col items-center justify-center text-white text-xs font-bold relative`}
                 >
@@ -58,7 +73,7 @@ export default function BlockchainInteractionVisualizer() {
                     <div className="text-lg">#{block.id}</div>
                     <div className="mt-1">{block.type}</div>
                   </div>
-                  
+
                   {activeBlock === index && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
@@ -69,12 +84,12 @@ export default function BlockchainInteractionVisualizer() {
                     </motion.div>
                   )}
                 </motion.div>
-                
+
                 {index < blocks.length - 1 && (
                   <motion.div
                     animate={{
                       opacity: activeBlock >= index ? 1 : 0.3,
-                      x: activeBlock > index ? 5 : 0
+                      x: activeBlock > index ? 5 : 0,
                     }}
                     className="mx-4 flex items-center"
                   >
@@ -96,19 +111,19 @@ export default function BlockchainInteractionVisualizer() {
               <div className="text-2xl font-bold text-green-400">1,247</div>
               <div className="text-sm text-slate-400">Daily Transactions</div>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Zap className="w-8 h-8 text-yellow-400 mx-auto" />
               <div className="text-2xl font-bold text-yellow-400">2.3s</div>
               <div className="text-sm text-slate-400">Avg Block Time</div>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Shield className="w-8 h-8 text-blue-400 mx-auto" />
               <div className="text-2xl font-bold text-blue-400">99.9%</div>
               <div className="text-sm text-slate-400">Validation Rate</div>
             </div>
-            
+
             <div className="text-center space-y-2">
               <Network className="w-8 h-8 text-purple-400 mx-auto" />
               <div className="text-2xl font-bold text-purple-400">5</div>
@@ -125,9 +140,11 @@ export default function BlockchainInteractionVisualizer() {
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   <span className="text-sm">Truth capsule verified</span>
                 </div>
-                <Badge className="bg-green-500/20 text-green-400">+25 GTT</Badge>
+                <Badge className="bg-green-500/20 text-green-400">
+                  +25 GTT
+                </Badge>
               </div>
-              
+
               <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -135,13 +152,15 @@ export default function BlockchainInteractionVisualizer() {
                 </div>
                 <Badge className="bg-blue-500/20 text-blue-400">Network</Badge>
               </div>
-              
+
               <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                   <span className="text-sm">GTT rewards distributed</span>
                 </div>
-                <Badge className="bg-purple-500/20 text-purple-400">Rewards</Badge>
+                <Badge className="bg-purple-500/20 text-purple-400">
+                  Rewards
+                </Badge>
               </div>
             </div>
           </div>

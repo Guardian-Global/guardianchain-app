@@ -9,7 +9,11 @@ export default function SecurityPolicy() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-4 mb-8">
           <Link href="/">
-            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-slate-400 hover:text-white"
+            >
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -21,9 +25,7 @@ export default function SecurityPolicy() {
             <Shield className="mr-3 h-8 w-8 text-green-400" />
             Security Policy
           </h1>
-          <p className="text-slate-300 mb-6">
-            Last Updated: January 19, 2025
-          </p>
+          <p className="text-slate-300 mb-6">Last Updated: January 19, 2025</p>
 
           <div className="space-y-8 text-slate-300">
             <section>
@@ -32,7 +34,8 @@ export default function SecurityPolicy() {
                 1. Enterprise-Grade Security
               </h2>
               <p className="mb-4">
-                GUARDIANCHAIN implements institutional-level security measures to protect your digital sovereignty:
+                GUARDIANCHAIN implements institutional-level security measures
+                to protect your digital sovereignty:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>End-to-end encryption for all data transmission</li>
@@ -50,7 +53,8 @@ export default function SecurityPolicy() {
               </h2>
               <div className="bg-amber-900/20 border border-amber-600 rounded-lg p-4 mb-4">
                 <p className="text-amber-200 font-semibold">
-                  ⚠️ Important: You are responsible for securing your private keys
+                  ⚠️ Important: You are responsible for securing your private
+                  keys
                 </p>
               </div>
               <ul className="list-disc list-inside space-y-2 ml-4">
@@ -68,7 +72,8 @@ export default function SecurityPolicy() {
                 3. Infrastructure Security
               </h2>
               <p className="mb-4">
-                Our platform infrastructure is designed for maximum security and uptime:
+                Our platform infrastructure is designed for maximum security and
+                uptime:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Distributed architecture across multiple regions</li>
@@ -80,7 +85,9 @@ export default function SecurityPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-green-400">4. Smart Contract Security</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                4. Smart Contract Security
+              </h2>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Multiple independent security audits</li>
                 <li>Open-source code for community verification</li>
@@ -91,7 +98,9 @@ export default function SecurityPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-green-400">5. Data Protection</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                5. Data Protection
+              </h2>
               <p className="mb-4">
                 Your truth capsules and personal data are protected by:
               </p>
@@ -105,10 +114,10 @@ export default function SecurityPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-green-400">6. Incident Response</h2>
-              <p className="mb-4">
-                In case of security incidents:
-              </p>
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                6. Incident Response
+              </h2>
+              <p className="mb-4">In case of security incidents:</p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>24/7 monitoring for security threats</li>
                 <li>Immediate notification via encrypted channels</li>
@@ -119,7 +128,9 @@ export default function SecurityPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-green-400">7. Reporting Security Issues</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                7. Reporting Security Issues
+              </h2>
               <p className="mb-4">
                 Help us maintain platform security by reporting issues:
               </p>
@@ -132,7 +143,9 @@ export default function SecurityPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-green-400">8. Best Practices for Users</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                8. Best Practices for Users
+              </h2>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Use strong, unique passwords for all accounts</li>
                 <li>Enable email notifications for all transactions</li>
@@ -147,7 +160,8 @@ export default function SecurityPolicy() {
           <div className="mt-8 pt-6 border-t border-slate-700">
             <div className="bg-green-900/20 border border-green-600 rounded-lg p-4">
               <p className="text-green-200 font-semibold">
-                🛡️ Digital Sovereignty Secured: Your truth, your control, your protection.
+                🛡️ Digital Sovereignty Secured: Your truth, your control, your
+                protection.
               </p>
             </div>
           </div>

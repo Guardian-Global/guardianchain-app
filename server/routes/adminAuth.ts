@@ -1,12 +1,12 @@
 import type { Express } from "express";
 import { storage } from "../storage";
-import { 
-  hashPassword, 
-  verifyPassword, 
-  generateToken, 
-  requireAuth, 
+import {
+  hashPassword,
+  verifyPassword,
+  generateToken,
+  requireAuth,
   requireRole,
-  initializeMasterAdmin
+  initializeMasterAdmin,
 } from "../auth/adminAuth";
 
 export function registerAdminAuthRoutes(app: Express) {
@@ -58,8 +58,8 @@ export function registerAdminAuthRoutes(app: Express) {
           firstName: user.firstName,
           lastName: user.lastName,
           roles: user.roles,
-          isActive: user.isActive
-        }
+          isActive: user.isActive,
+        },
       });
     } catch (error) {
       console.error("Admin login error:", error);
@@ -82,7 +82,7 @@ export function registerAdminAuthRoutes(app: Express) {
         lastName: user.lastName,
         roles: user.roles,
         isActive: user.isActive,
-        lastLoginAt: user.lastLoginAt
+        lastLoginAt: user.lastLoginAt,
       });
     } catch (error) {
       console.error("Get admin user error:", error);
@@ -91,96 +91,111 @@ export function registerAdminAuthRoutes(app: Express) {
   });
 
   // Create new admin user (Master Admin only)
-  app.post("/api/admin/users", requireAuth, requireRole("MASTER_ADMIN"), async (req: any, res) => {
-    try {
-      const { email, firstName, lastName, roles, password } = req.body;
+  app.post(
+    "/api/admin/users",
+    requireAuth,
+    requireRole("MASTER_ADMIN"),
+    async (req: any, res) => {
+      try {
+        const { email, firstName, lastName, roles, password } = req.body;
 
-      if (!email || !firstName || !lastName || !roles || !password) {
-        return res.status(400).json({ error: "All fields are required" });
-      }
-
-      // Check if user already exists
-      const existingUser = await storage.getUserByEmail(email);
-      if (existingUser) {
-        return res.status(400).json({ error: "User already exists" });
-      }
-
-      // Hash password
-      const passwordHash = await hashPassword(password);
-
-      // Create admin user
-      const newUser = await storage.createAdminUser({
-        email,
-        firstName,
-        lastName,
-        roles,
-        isActive: true,
-        passwordHash
-      });
-
-      res.json({
-        success: true,
-        user: {
-          id: newUser.id,
-          email: newUser.email,
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-          roles: newUser.roles,
-          isActive: newUser.isActive
+        if (!email || !firstName || !lastName || !roles || !password) {
+          return res.status(400).json({ error: "All fields are required" });
         }
-      });
-    } catch (error) {
-      console.error("Create admin user error:", error);
-      res.status(500).json({ error: "Internal server error" });
+
+        // Check if user already exists
+        const existingUser = await storage.getUserByEmail(email);
+        if (existingUser) {
+          return res.status(400).json({ error: "User already exists" });
+        }
+
+        // Hash password
+        const passwordHash = await hashPassword(password);
+
+        // Create admin user
+        const newUser = await storage.createAdminUser({
+          email,
+          firstName,
+          lastName,
+          roles,
+          isActive: true,
+          passwordHash,
+        });
+
+        res.json({
+          success: true,
+          user: {
+            id: newUser.id,
+            email: newUser.email,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName,
+            roles: newUser.roles,
+            isActive: newUser.isActive,
+          },
+        });
+      } catch (error) {
+        console.error("Create admin user error:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
     }
-  });
+  );
 
   // Update user roles (Admin+ only)
-  app.patch("/api/admin/users/:userId/roles", requireAuth, requireRole("ADMIN"), async (req: any, res) => {
-    try {
-      const { userId } = req.params;
-      const { roles } = req.body;
+  app.patch(
+    "/api/admin/users/:userId/roles",
+    requireAuth,
+    requireRole("ADMIN"),
+    async (req: any, res) => {
+      try {
+        const { userId } = req.params;
+        const { roles } = req.body;
 
-      if (!roles || !Array.isArray(roles)) {
-        return res.status(400).json({ error: "Valid roles array required" });
-      }
-
-      const updatedUser = await storage.updateUserRoles(userId, roles);
-
-      res.json({
-        success: true,
-        user: {
-          id: updatedUser.id,
-          email: updatedUser.email,
-          firstName: updatedUser.firstName,
-          lastName: updatedUser.lastName,
-          roles: updatedUser.roles,
-          isActive: updatedUser.isActive
+        if (!roles || !Array.isArray(roles)) {
+          return res.status(400).json({ error: "Valid roles array required" });
         }
-      });
-    } catch (error) {
-      console.error("Update user roles error:", error);
-      res.status(500).json({ error: "Internal server error" });
+
+        const updatedUser = await storage.updateUserRoles(userId, roles);
+
+        res.json({
+          success: true,
+          user: {
+            id: updatedUser.id,
+            email: updatedUser.email,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+            roles: updatedUser.roles,
+            isActive: updatedUser.isActive,
+          },
+        });
+      } catch (error) {
+        console.error("Update user roles error:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
     }
-  });
+  );
 
   // Admin dashboard stats (Moderator+ only)
-  app.get("/api/admin/stats", requireAuth, requireRole("MODERATOR"), async (req: any, res) => {
-    try {
-      const stats = await storage.getStats();
+  app.get(
+    "/api/admin/stats",
+    requireAuth,
+    requireRole("MODERATOR"),
+    async (req: any, res) => {
+      try {
+        const stats = await storage.getStats();
 
-      res.json({
-        success: true,
-        stats: {
-          ...stats,
-          adminUsers: 1, // Mock count for now
-          activeAdmins: 1,
-          lastActivity: new Date().toISOString()
-        }
-      });
-    } catch (error) {
-      console.error("Get admin stats error:", error);
-      res.status(500).json({ error: "Internal server error" });
+        res.json({
+          success: true,
+          stats: {
+            ...stats,
+            adminUsers: 1, // Mock count for now
+            activeAdmins: 1,
+            lastActivity: new Date().toISOString(),
+          },
+        });
+      } catch (error) {
+        console.error("Get admin stats error:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
     }
-  });
+  );
 }

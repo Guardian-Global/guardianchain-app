@@ -1,27 +1,33 @@
-import { useState } from 'react';
-import { useWriteContract, useAccount } from 'wagmi';
-import { Settings, UserX, RefreshCw, Shield } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useToast } from '@/hooks/use-toast';
-import { getContractAddress, CONTRACT_ABIS } from '@/lib/contracts';
-import { useChainId } from 'wagmi';
+import { useState } from "react";
+import { useWriteContract, useAccount } from "wagmi";
+import { Settings, UserX, RefreshCw, Shield } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { getContractAddress, CONTRACT_ABIS } from "@/lib/contracts";
+import { useChainId } from "wagmi";
 
 export default function AdminFeePanel() {
-  const [userAddress, setUserAddress] = useState('');
-  const [selectedAction, setSelectedAction] = useState('');
-  const [newFeeAmount, setNewFeeAmount] = useState('');
+  const [userAddress, setUserAddress] = useState("");
+  const [selectedAction, setSelectedAction] = useState("");
+  const [newFeeAmount, setNewFeeAmount] = useState("");
   const [isSettingFee, setIsSettingFee] = useState(false);
-  
+
   const chainId = useChainId();
   const { address } = useAccount();
   const { toast } = useToast();
-  
-  const feeManagerAddress = getContractAddress(chainId, 'feeManager');
+
+  const feeManagerAddress = getContractAddress(chainId, "feeManager");
 
   const { writeContract, isPending } = useWriteContract();
 
@@ -30,7 +36,7 @@ export default function AdminFeePanel() {
       toast({
         title: "Missing Information",
         description: "Please enter user address and select an action",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -39,19 +45,22 @@ export default function AdminFeePanel() {
       writeContract({
         address: feeManagerAddress as `0x${string}`,
         abi: CONTRACT_ABIS.FeeManager,
-        functionName: 'resetFee',
+        functionName: "resetFee",
         args: [userAddress, selectedAction],
       });
 
       toast({
         title: "Fee Reset Initiated",
-        description: `Resetting ${selectedAction} fee for ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`,
+        description: `Resetting ${selectedAction} fee for ${userAddress.slice(
+          0,
+          6
+        )}...${userAddress.slice(-4)}`,
       });
     } catch (error: any) {
       toast({
         title: "Reset Failed",
         description: error.message || "Failed to reset user fee",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -59,20 +68,20 @@ export default function AdminFeePanel() {
   const updateFee = async () => {
     if (!selectedAction || !newFeeAmount) {
       toast({
-        title: "Missing Information", 
+        title: "Missing Information",
         description: "Please select action and enter new fee amount",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     try {
       const feeInWei = BigInt(parseFloat(newFeeAmount) * 1e18);
-      
+
       writeContract({
         address: feeManagerAddress as `0x${string}`,
         abi: CONTRACT_ABIS.FeeManager,
-        functionName: 'setFee',
+        functionName: "setFee",
         args: [selectedAction, feeInWei],
       });
 
@@ -84,7 +93,7 @@ export default function AdminFeePanel() {
       toast({
         title: "Update Failed",
         description: error.message || "Failed to update fee",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -94,7 +103,9 @@ export default function AdminFeePanel() {
       <Card className="bg-slate-800/50 border-slate-700">
         <CardContent className="p-6 text-center">
           <Shield className="h-12 w-12 text-slate-500 mx-auto mb-4" />
-          <p className="text-slate-400">Connect your wallet to access admin controls</p>
+          <p className="text-slate-400">
+            Connect your wallet to access admin controls
+          </p>
         </CardContent>
       </Card>
     );
@@ -112,7 +123,8 @@ export default function AdminFeePanel() {
         <Alert className="border-red-700 bg-red-900/20">
           <Shield className="h-4 w-4" />
           <AlertDescription className="text-red-300">
-            ⚠️ Admin functions require treasury privileges. Only authorized addresses can execute these operations.
+            ⚠️ Admin functions require treasury privileges. Only authorized
+            addresses can execute these operations.
           </AlertDescription>
         </Alert>
 
@@ -122,7 +134,7 @@ export default function AdminFeePanel() {
             <UserX className="h-4 w-4" />
             Reset User Fee
           </h4>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label className="text-slate-300">User Address</Label>
@@ -133,7 +145,7 @@ export default function AdminFeePanel() {
                 className="bg-slate-700 border-slate-600 text-white"
               />
             </div>
-            
+
             <div>
               <Label className="text-slate-300">Action Type</Label>
               <Select value={selectedAction} onValueChange={setSelectedAction}>
@@ -144,7 +156,9 @@ export default function AdminFeePanel() {
                   <SelectItem value="mint">NFT Minting</SelectItem>
                   <SelectItem value="seal">Capsule Sealing</SelectItem>
                   <SelectItem value="proposal">DAO Proposal</SelectItem>
-                  <SelectItem value="verification">Content Verification</SelectItem>
+                  <SelectItem value="verification">
+                    Content Verification
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -175,7 +189,7 @@ export default function AdminFeePanel() {
             <Settings className="h-4 w-4" />
             Update Fee Structure
           </h4>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label className="text-slate-300">Action Type</Label>
@@ -187,11 +201,13 @@ export default function AdminFeePanel() {
                   <SelectItem value="mint">NFT Minting</SelectItem>
                   <SelectItem value="seal">Capsule Sealing</SelectItem>
                   <SelectItem value="proposal">DAO Proposal</SelectItem>
-                  <SelectItem value="verification">Content Verification</SelectItem>
+                  <SelectItem value="verification">
+                    Content Verification
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label className="text-slate-300">New Fee (GTT)</Label>
               <Input
@@ -225,7 +241,12 @@ export default function AdminFeePanel() {
 
         {/* Current Status */}
         <div className="text-xs text-slate-500 text-center">
-          Contract: {feeManagerAddress ? `${feeManagerAddress.slice(0, 6)}...${feeManagerAddress.slice(-4)}` : 'Not deployed'}
+          Contract:{" "}
+          {feeManagerAddress
+            ? `${feeManagerAddress.slice(0, 6)}...${feeManagerAddress.slice(
+                -4
+              )}`
+            : "Not deployed"}
         </div>
       </CardContent>
     </Card>

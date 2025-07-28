@@ -18,8 +18,9 @@ export default function AuctionHousePage() {
             {BRAND_NAME} Auction House
           </h1>
           <p className="text-slate-400 text-lg max-w-3xl">
-            Participate in truth value discovery through decentralized auctions. 
-            Bid on capsule yield rights and help establish fair market pricing for verified content.
+            Participate in truth value discovery through decentralized auctions.
+            Bid on capsule yield rights and help establish fair market pricing
+            for verified content.
           </p>
         </div>
 

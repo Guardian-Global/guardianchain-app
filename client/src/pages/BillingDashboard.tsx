@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { BrandedText } from "@/components/BrandEnforcement";
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  FileText, 
-  Users, 
-  Shield, 
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  FileText,
+  Users,
+  Shield,
   AlertTriangle,
   CheckCircle,
   Clock,
@@ -20,7 +26,7 @@ import {
   Database,
   BarChart3,
   RefreshCw,
-  Download
+  Download,
 } from "lucide-react";
 
 interface TreasuryData {
@@ -41,7 +47,7 @@ interface Invoice {
   id: string;
   vendor: string;
   amount: number;
-  status: 'pending' | 'paid' | 'disputed';
+  status: "pending" | "paid" | "disputed";
   dueDate: string;
   category: string;
   description: string;
@@ -74,27 +80,27 @@ export default function BillingDashboard() {
     setLoading(true);
     try {
       // Load treasury data
-      const treasuryResponse = await fetch('/api/billing/treasury');
+      const treasuryResponse = await fetch("/api/billing/treasury");
       const treasuryResult = await treasuryResponse.json();
       if (treasuryResult.success) {
         setTreasury(treasuryResult.data);
       }
 
       // Load invoices
-      const invoicesResponse = await fetch('/api/billing/invoices');
+      const invoicesResponse = await fetch("/api/billing/invoices");
       const invoicesResult = await invoicesResponse.json();
       if (invoicesResult.success) {
         setInvoices(invoicesResult.data.invoices);
       }
 
       // Load vendors
-      const vendorsResponse = await fetch('/api/billing/vendors');
+      const vendorsResponse = await fetch("/api/billing/vendors");
       const vendorsResult = await vendorsResponse.json();
       if (vendorsResult.success) {
         setVendors(vendorsResult.data.vendors);
       }
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
+      console.error("Failed to load dashboard data:", error);
       toast({
         title: "Load Error",
         description: "Failed to load billing dashboard data",
@@ -108,9 +114,9 @@ export default function BillingDashboard() {
   const runAudit = async () => {
     setAuditing(true);
     try {
-      const response = await fetch('/api/billing/audit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/billing/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
 
       const result = await response.json();
@@ -119,12 +125,12 @@ export default function BillingDashboard() {
           title: "Audit Complete",
           description: `Financial audit completed. Compliance score: ${result.data.auditReport.complianceScore}/100`,
         });
-        
+
         // Reload dashboard data to reflect any changes
         await loadDashboardData();
       }
     } catch (error) {
-      console.error('Failed to run audit:', error);
+      console.error("Failed to run audit:", error);
       toast({
         title: "Audit Failed",
         description: "Failed to complete financial audit",
@@ -137,19 +143,27 @@ export default function BillingDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'paid': return 'bg-green-500';
-      case 'pending': return 'bg-yellow-500';
-      case 'disputed': return 'bg-red-500';
-      default: return 'bg-gray-500';
+      case "paid":
+        return "bg-green-500";
+      case "pending":
+        return "bg-yellow-500";
+      case "disputed":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel) {
-      case 'LOW': return 'text-green-400';
-      case 'MEDIUM': return 'text-yellow-400';
-      case 'HIGH': return 'text-red-400';
-      default: return 'text-gray-400';
+      case "LOW":
+        return "text-green-400";
+      case "MEDIUM":
+        return "text-yellow-400";
+      case "HIGH":
+        return "text-red-400";
+      default:
+        return "text-gray-400";
     }
   };
 
@@ -175,7 +189,8 @@ export default function BillingDashboard() {
               <span className="text-white"> Financial Intelligence</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Enterprise-grade billing infrastructure with AI-powered auditing and institutional compliance
+              Enterprise-grade billing infrastructure with AI-powered auditing
+              and institutional compliance
             </p>
           </div>
 
@@ -224,7 +239,9 @@ export default function BillingDashboard() {
                   </div>
                   <div className="flex items-center text-sm">
                     <TrendingUp className="w-4 h-4 mr-1 text-green-400" />
-                    <span className="text-green-400">{treasury.trends.balanceChange}</span>
+                    <span className="text-green-400">
+                      {treasury.trends.balanceChange}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -242,7 +259,9 @@ export default function BillingDashboard() {
                   </div>
                   <div className="flex items-center text-sm">
                     <TrendingUp className="w-4 h-4 mr-1 text-green-400" />
-                    <span className="text-green-400">{treasury.trends.volumeChange}</span>
+                    <span className="text-green-400">
+                      {treasury.trends.volumeChange}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -260,7 +279,9 @@ export default function BillingDashboard() {
                   </div>
                   <div className="flex items-center text-sm">
                     <TrendingUp className="w-4 h-4 mr-1 text-green-400" />
-                    <span className="text-green-400">{treasury.trends.revenueChange}</span>
+                    <span className="text-green-400">
+                      {treasury.trends.revenueChange}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -277,7 +298,11 @@ export default function BillingDashboard() {
                     {treasury.healthScore}/100
                   </div>
                   <Progress value={treasury.healthScore} className="mb-2" />
-                  <div className={`text-sm font-medium ${getRiskColor(treasury.riskLevel)}`}>
+                  <div
+                    className={`text-sm font-medium ${getRiskColor(
+                      treasury.riskLevel
+                    )}`}
+                  >
                     {treasury.riskLevel} RISK
                   </div>
                 </CardContent>
@@ -288,19 +313,31 @@ export default function BillingDashboard() {
           {/* Detailed Tabs */}
           <Tabs defaultValue="invoices" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="invoices" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="invoices"
+                className="flex items-center space-x-2"
+              >
                 <FileText className="w-4 h-4" />
                 <span>Invoices</span>
               </TabsTrigger>
-              <TabsTrigger value="vendors" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="vendors"
+                className="flex items-center space-x-2"
+              >
                 <Users className="w-4 h-4" />
                 <span>Vendors</span>
               </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="analytics"
+                className="flex items-center space-x-2"
+              >
                 <BarChart3 className="w-4 h-4" />
                 <span>Analytics</span>
               </TabsTrigger>
-              <TabsTrigger value="compliance" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="compliance"
+                className="flex items-center space-x-2"
+              >
                 <Shield className="w-4 h-4" />
                 <span>Compliance</span>
               </TabsTrigger>
@@ -318,19 +355,41 @@ export default function BillingDashboard() {
                 <CardContent>
                   <div className="space-y-4">
                     {invoices.map((invoice) => (
-                      <div key={invoice.id} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-600">
+                      <div
+                        key={invoice.id}
+                        className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-600"
+                      >
                         <div className="flex items-center space-x-4">
-                          <div className={`w-3 h-3 rounded-full ${getStatusColor(invoice.status)}`}></div>
+                          <div
+                            className={`w-3 h-3 rounded-full ${getStatusColor(
+                              invoice.status
+                            )}`}
+                          ></div>
                           <div>
-                            <div className="font-medium text-white">{invoice.vendor}</div>
-                            <div className="text-sm text-slate-400">{invoice.description}</div>
-                            <div className="text-xs text-slate-500">Due: {invoice.dueDate}</div>
+                            <div className="font-medium text-white">
+                              {invoice.vendor}
+                            </div>
+                            <div className="text-sm text-slate-400">
+                              {invoice.description}
+                            </div>
+                            <div className="text-xs text-slate-500">
+                              Due: {invoice.dueDate}
+                            </div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-bold text-white">{invoice.amount} GTT</div>
-                          <Badge variant={invoice.status === 'paid' ? 'default' : 
-                                         invoice.status === 'pending' ? 'secondary' : 'destructive'}>
+                          <div className="font-bold text-white">
+                            {invoice.amount} GTT
+                          </div>
+                          <Badge
+                            variant={
+                              invoice.status === "paid"
+                                ? "default"
+                                : invoice.status === "pending"
+                                ? "secondary"
+                                : "destructive"
+                            }
+                          >
                             {invoice.status.toUpperCase()}
                           </Badge>
                         </div>
@@ -353,35 +412,57 @@ export default function BillingDashboard() {
                 <CardContent>
                   <div className="space-y-4">
                     {vendors.map((vendor) => (
-                      <div key={vendor.address} className="p-4 bg-slate-900/50 rounded-lg border border-slate-600">
+                      <div
+                        key={vendor.address}
+                        className="p-4 bg-slate-900/50 rounded-lg border border-slate-600"
+                      >
                         <div className="flex items-center justify-between mb-3">
                           <div>
-                            <div className="font-medium text-white">{vendor.name}</div>
-                            <div className="text-sm text-slate-400">{vendor.category}</div>
+                            <div className="font-medium text-white">
+                              {vendor.name}
+                            </div>
+                            <div className="text-sm text-slate-400">
+                              {vendor.category}
+                            </div>
                           </div>
                           <div className="text-right">
-                            <div className="font-bold text-white">{vendor.lifetimePayouts.toLocaleString()} GTT</div>
-                            <div className="text-sm text-slate-400">Lifetime Payouts</div>
+                            <div className="font-bold text-white">
+                              {vendor.lifetimePayouts.toLocaleString()} GTT
+                            </div>
+                            <div className="text-sm text-slate-400">
+                              Lifetime Payouts
+                            </div>
                           </div>
                         </div>
-                        
+
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
                             <div className="text-slate-400">Trust Score</div>
-                            <div className="text-white font-medium">{(vendor.trustScore * 100).toFixed(1)}%</div>
+                            <div className="text-white font-medium">
+                              {(vendor.trustScore * 100).toFixed(1)}%
+                            </div>
                           </div>
                           <div>
-                            <div className="text-slate-400">Monthly Average</div>
-                            <div className="text-white font-medium">{vendor.monthlyAverage} GTT</div>
+                            <div className="text-slate-400">
+                              Monthly Average
+                            </div>
+                            <div className="text-white font-medium">
+                              {vendor.monthlyAverage} GTT
+                            </div>
                           </div>
                           <div>
                             <div className="text-slate-400">Last Payment</div>
-                            <div className="text-white font-medium">{vendor.lastPayment}</div>
+                            <div className="text-white font-medium">
+                              {vendor.lastPayment}
+                            </div>
                           </div>
                         </div>
-                        
+
                         <div className="mt-3">
-                          <Progress value={vendor.trustScore * 100} className="h-2" />
+                          <Progress
+                            value={vendor.trustScore * 100}
+                            className="h-2"
+                          />
                         </div>
                       </div>
                     ))}
@@ -401,18 +482,26 @@ export default function BillingDashboard() {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span className="text-slate-400">Treasury Growth</span>
-                        <span className="text-green-400 font-medium">+12.4%</span>
+                        <span className="text-green-400 font-medium">
+                          +12.4%
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-slate-400">Volume Growth</span>
-                        <span className="text-green-400 font-medium">+8.7%</span>
+                        <span className="text-green-400 font-medium">
+                          +8.7%
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-slate-400">Revenue Growth</span>
-                        <span className="text-green-400 font-medium">+15.2%</span>
+                        <span className="text-green-400 font-medium">
+                          +15.2%
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400">Vendor Efficiency</span>
+                        <span className="text-slate-400">
+                          Vendor Efficiency
+                        </span>
                         <span className="text-blue-400 font-medium">92.5%</span>
                       </div>
                     </div>
@@ -427,19 +516,27 @@ export default function BillingDashboard() {
                     <div className="space-y-4">
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-5 h-5 text-green-400" />
-                        <span className="text-slate-300">Treasury reserves healthy</span>
+                        <span className="text-slate-300">
+                          Treasury reserves healthy
+                        </span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-5 h-5 text-green-400" />
-                        <span className="text-slate-300">Vendor diversification adequate</span>
+                        <span className="text-slate-300">
+                          Vendor diversification adequate
+                        </span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <AlertTriangle className="w-5 h-5 text-yellow-400" />
-                        <span className="text-slate-300">1 disputed invoice requires attention</span>
+                        <span className="text-slate-300">
+                          1 disputed invoice requires attention
+                        </span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="w-5 h-5 text-green-400" />
-                        <span className="text-slate-300">Compliance score: 95/100</span>
+                        <span className="text-slate-300">
+                          Compliance score: 95/100
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -459,10 +556,14 @@ export default function BillingDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-4">
-                      <h4 className="font-medium text-white">Compliance Standards</h4>
+                      <h4 className="font-medium text-white">
+                        Compliance Standards
+                      </h4>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">GAAP Compliance</span>
+                          <span className="text-slate-400">
+                            GAAP Compliance
+                          </span>
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                         <div className="flex items-center justify-between">
@@ -474,35 +575,45 @@ export default function BillingDashboard() {
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">IFRS Compatible</span>
+                          <span className="text-slate-400">
+                            IFRS Compatible
+                          </span>
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <h4 className="font-medium text-white">Audit Trail</h4>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">Immutable Records</span>
+                          <span className="text-slate-400">
+                            Immutable Records
+                          </span>
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">7-Year Retention</span>
+                          <span className="text-slate-400">
+                            7-Year Retention
+                          </span>
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">Third-party Auditable</span>
+                          <span className="text-slate-400">
+                            Third-party Auditable
+                          </span>
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">Protocol Feed Active</span>
+                          <span className="text-slate-400">
+                            Protocol Feed Active
+                          </span>
                           <CheckCircle className="w-5 h-5 text-green-400" />
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="mt-6">
                     <Button className="bg-blue-600 hover:bg-blue-700">
                       <Download className="w-4 h-4 mr-2" />

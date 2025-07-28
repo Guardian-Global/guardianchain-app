@@ -1,26 +1,31 @@
-import { useState } from 'react';
-import { useAccount, useWriteContract, useReadContract, useChainId } from 'wagmi';
-import { parseEther, formatEther } from 'viem';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { 
-  TRUTH_VAULT_ABI, 
-  GTT_TOKEN_ABI, 
+import { useState } from "react";
+import {
+  useAccount,
+  useWriteContract,
+  useReadContract,
+  useChainId,
+} from "wagmi";
+import { parseEther, formatEther } from "viem";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import {
+  TRUTH_VAULT_ABI,
+  GTT_TOKEN_ABI,
   getContractAddress,
   getNetworkName,
-  getExplorerUrl
-} from '@/lib/contracts';
-import { 
-  Coins, 
-  Wallet, 
-  CheckCircle, 
-  Clock, 
+  getExplorerUrl,
+} from "@/lib/contracts";
+import {
+  Coins,
+  Wallet,
+  CheckCircle,
+  Clock,
   AlertTriangle,
-  ExternalLink
-} from 'lucide-react';
-import type { Capsule } from '@shared/schema';
+  ExternalLink,
+} from "lucide-react";
+import type { Capsule } from "@shared/schema";
 
 interface CapsuleClaimButtonProps {
   capsule: Capsule;
@@ -28,10 +33,10 @@ interface CapsuleClaimButtonProps {
   showDetails?: boolean;
 }
 
-export default function CapsuleClaimButton({ 
-  capsule, 
+export default function CapsuleClaimButton({
+  capsule,
   isCreator = false,
-  showDetails = true 
+  showDetails = true,
 }: CapsuleClaimButtonProps) {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
@@ -42,15 +47,18 @@ export default function CapsuleClaimButton({
   // Check if connected to supported network and get contract addresses
   let vaultAddress, tokenAddress;
   try {
-    vaultAddress = getContractAddress(chainId, 'TRUTH_VAULT');
-    tokenAddress = getContractAddress(chainId, 'GTT_TOKEN');
+    vaultAddress = getContractAddress(chainId, "TRUTH_VAULT");
+    tokenAddress = getContractAddress(chainId, "GTT_TOKEN");
   } catch (error) {
     return (
       <Card className="bg-yellow-950 border-yellow-800">
         <CardContent className="p-4">
           <div className="flex items-center gap-2 text-yellow-200">
             <AlertTriangle className="h-4 w-4" />
-            <span className="text-sm">Please switch to a supported network (Hardhat local, Mumbai, or Amoy)</span>
+            <span className="text-sm">
+              Please switch to a supported network (Hardhat local, Mumbai, or
+              Amoy)
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -61,22 +69,22 @@ export default function CapsuleClaimButton({
   const { data: capsuleInfo } = useReadContract({
     address: vaultAddress as `0x${string}`,
     abi: TRUTH_VAULT_ABI,
-    functionName: 'capsules',
+    functionName: "capsules",
     args: [BigInt(capsule.id)],
     query: {
-      enabled: !!vaultAddress && isConnected
-    }
+      enabled: !!vaultAddress && isConnected,
+    },
   });
 
   // Read user's GTT balance
   const { data: gttBalance } = useReadContract({
     address: tokenAddress as `0x${string}`,
     abi: GTT_TOKEN_ABI,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address as `0x${string}`],
     query: {
-      enabled: !!tokenAddress && !!address && isConnected
-    }
+      enabled: !!tokenAddress && !!address && isConnected,
+    },
   });
 
   // Write contract hook for claiming yield
@@ -93,7 +101,7 @@ export default function CapsuleClaimButton({
     }
 
     try {
-      getContractAddress(chainId, 'TRUTH_VAULT');
+      getContractAddress(chainId, "TRUTH_VAULT");
     } catch (error) {
       toast({
         title: "Unsupported Network",
@@ -114,15 +122,14 @@ export default function CapsuleClaimButton({
       writeContract({
         address: vaultAddress as `0x${string}`,
         abi: TRUTH_VAULT_ABI,
-        functionName: 'claimYield',
+        functionName: "claimYield",
         args: [BigInt(capsule.id), yieldInWei],
       });
 
       // Note: Transaction confirmation and success handling would be done
       // by the useWriteContract hook's onSuccess callback if properly configured
-      
     } catch (error: any) {
-      console.error('Claim error:', error);
+      console.error("Claim error:", error);
       toast({
         title: "Claim Failed",
         description: error.message || "Failed to claim yield",
@@ -134,18 +141,21 @@ export default function CapsuleClaimButton({
   };
 
   // Parse claim info from contract
-  const claimData = claimInfo ? {
-    creator: claimInfo[0],
-    totalEarned: claimInfo[1],
-    totalClaimed: claimInfo[2],
-    claimable: claimInfo[3],
-    nextClaimTime: claimInfo[4],
-  } : null;
+  const claimData = claimInfo
+    ? {
+        creator: claimInfo[0],
+        totalEarned: claimInfo[1],
+        totalClaimed: claimInfo[2],
+        claimable: claimInfo[3],
+        nextClaimTime: claimInfo[4],
+      }
+    : null;
 
   // Check if user can claim
-  const canClaim = claimData && 
-    isCreator && 
-    isConnected && 
+  const canClaim =
+    claimData &&
+    isCreator &&
+    isConnected &&
     claimData.claimable > 0n &&
     Date.now() >= Number(claimData.nextClaimTime) * 1000;
 
@@ -161,11 +171,11 @@ export default function CapsuleClaimButton({
     const nextClaimTime = Number(claimData.nextClaimTime) * 1000;
     const now = Date.now();
     if (now >= nextClaimTime) return null;
-    
+
     const diff = nextClaimTime - now;
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
+
     if (days > 0) return `${days}d ${hours}h`;
     return `${hours}h`;
   };
@@ -181,7 +191,9 @@ export default function CapsuleClaimButton({
       <Card className="bg-slate-800 border-slate-700">
         <CardContent className="p-4 text-center">
           <Wallet className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-          <p className="text-sm text-slate-400">Connect wallet to view claim status</p>
+          <p className="text-sm text-slate-400">
+            Connect wallet to view claim status
+          </p>
         </CardContent>
       </Card>
     );
@@ -192,7 +204,9 @@ export default function CapsuleClaimButton({
       <Card className="bg-slate-800 border-slate-700">
         <CardContent className="p-4 text-center">
           <AlertTriangle className="h-8 w-8 text-red-400 mx-auto mb-2" />
-          <p className="text-sm text-red-400">Switch to a supported network to claim yield</p>
+          <p className="text-sm text-red-400">
+            Switch to a supported network to claim yield
+          </p>
         </CardContent>
       </Card>
     );
@@ -222,7 +236,7 @@ export default function CapsuleClaimButton({
         <div className="flex justify-between items-center">
           <span className="text-sm text-slate-400">Your GTT Balance:</span>
           <span className="font-semibold text-green-400">
-            {gttBalance ? formatGTT(gttBalance) : '0.00'} GTT
+            {gttBalance ? formatGTT(gttBalance) : "0.00"} GTT
           </span>
         </div>
 
@@ -231,16 +245,22 @@ export default function CapsuleClaimButton({
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-400">Total Earned:</span>
-              <span className="text-white">{formatGTT(claimData.totalEarned)} GTT</span>
+              <span className="text-white">
+                {formatGTT(claimData.totalEarned)} GTT
+              </span>
             </div>
-            
+
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-400">Already Claimed:</span>
-              <span className="text-slate-300">{formatGTT(claimData.totalClaimed)} GTT</span>
+              <span className="text-slate-300">
+                {formatGTT(claimData.totalClaimed)} GTT
+              </span>
             </div>
-            
+
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-400">Available to Claim:</span>
+              <span className="text-sm text-slate-400">
+                Available to Claim:
+              </span>
               <span className="font-semibold text-green-400">
                 {formatGTT(claimData.claimable)} GTT
               </span>
@@ -257,7 +277,9 @@ export default function CapsuleClaimButton({
               className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
             >
               <Coins className="h-4 w-4 mr-2" />
-              {isClaiming || isPending ? "Claiming..." : `Claim ${formatGTT(claimData!.claimable)} GTT`}
+              {isClaiming || isPending
+                ? "Claiming..."
+                : `Claim ${formatGTT(claimData!.claimable)} GTT`}
             </Button>
           ) : claimData && claimData.claimable === 0n ? (
             <div className="text-center">
@@ -281,9 +303,7 @@ export default function CapsuleClaimButton({
             </div>
           ) : !isCreator ? (
             <div className="text-center">
-              <Badge className="bg-slate-600">
-                Only Creator Can Claim
-              </Badge>
+              <Badge className="bg-slate-600">Only Creator Can Claim</Badge>
             </div>
           ) : (
             <div className="text-center">
@@ -304,7 +324,12 @@ export default function CapsuleClaimButton({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => window.open(`https://etherscan.io/address/${truthVaultAddress}`, '_blank')}
+              onClick={() =>
+                window.open(
+                  `https://etherscan.io/address/${truthVaultAddress}`,
+                  "_blank"
+                )
+              }
               className="w-full text-xs text-slate-400 hover:text-white"
             >
               <ExternalLink className="h-3 w-3 mr-1" />

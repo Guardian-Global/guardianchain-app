@@ -5,16 +5,44 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Shield, Upload, Brain, Coins, Lock, Globe, FileText, Zap } from "lucide-react";
+import {
+  Shield,
+  Upload,
+  Brain,
+  Coins,
+  Lock,
+  Globe,
+  FileText,
+  Zap,
+} from "lucide-react";
 
 const capsuleSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -136,16 +164,16 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
 
   const onSubmit = async (data: CapsuleFormData) => {
     const capsule = await createCapsuleMutation.mutateAsync(data);
-    
+
     // Auto-trigger NFT minting and Veritas seal for high-quality submissions
     if (data.content.length > 200 && data.evidence) {
       setPendingMint(true);
       setPendingVeritas(true);
-      
+
       setTimeout(() => {
         mintNFTMutation.mutate(capsule);
       }, 1000);
-      
+
       setTimeout(() => {
         veritasSealMutation.mutate(capsule);
       }, 2000);
@@ -168,7 +196,10 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <FormField
                   control={form.control}
                   name="title"
@@ -230,7 +261,10 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Category</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger className="bg-slate-700 border-slate-600">
                               <SelectValue placeholder="Select category" />
@@ -239,10 +273,16 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
                           <SelectContent>
                             <SelectItem value="politics">Politics</SelectItem>
                             <SelectItem value="science">Science</SelectItem>
-                            <SelectItem value="technology">Technology</SelectItem>
+                            <SelectItem value="technology">
+                              Technology
+                            </SelectItem>
                             <SelectItem value="economics">Economics</SelectItem>
-                            <SelectItem value="social">Social Issues</SelectItem>
-                            <SelectItem value="environment">Environment</SelectItem>
+                            <SelectItem value="social">
+                              Social Issues
+                            </SelectItem>
+                            <SelectItem value="environment">
+                              Environment
+                            </SelectItem>
                             <SelectItem value="health">Health</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                           </SelectContent>
@@ -259,11 +299,17 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border border-slate-600 p-4">
                         <div className="space-y-0.5">
                           <FormLabel className="text-base">
-                            {field.value ? <Globe className="inline h-4 w-4 mr-1" /> : <Lock className="inline h-4 w-4 mr-1" />}
+                            {field.value ? (
+                              <Globe className="inline h-4 w-4 mr-1" />
+                            ) : (
+                              <Lock className="inline h-4 w-4 mr-1" />
+                            )}
                             {field.value ? "Public" : "Private"}
                           </FormLabel>
                           <div className="text-sm text-slate-400">
-                            {field.value ? "Visible to everyone" : "Only visible to you"}
+                            {field.value
+                              ? "Visible to everyone"
+                              : "Only visible to you"}
                           </div>
                         </div>
                         <FormControl>
@@ -281,10 +327,17 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
                 <div className="border border-slate-600 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-semibold">Evidence & Verification</h3>
-                      <p className="text-sm text-slate-400">Additional supporting materials</p>
+                      <h3 className="text-lg font-semibold">
+                        Evidence & Verification
+                      </h3>
+                      <p className="text-sm text-slate-400">
+                        Additional supporting materials
+                      </p>
                     </div>
-                    <Switch checked={isAdvanced} onCheckedChange={setIsAdvanced} />
+                    <Switch
+                      checked={isAdvanced}
+                      onCheckedChange={setIsAdvanced}
+                    />
                   </div>
 
                   {isAdvanced && (
@@ -311,19 +364,31 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
                         <div className="flex items-center gap-4 p-4 bg-slate-700/50 rounded-lg">
                           <FileText className="h-5 w-5 text-blue-400" />
                           <div className="flex-1">
-                            <div className="text-sm font-medium">Veritas Seal</div>
-                            <div className="text-xs text-slate-400">DocuSign legal verification</div>
+                            <div className="text-sm font-medium">
+                              Veritas Seal
+                            </div>
+                            <div className="text-xs text-slate-400">
+                              DocuSign legal verification
+                            </div>
                           </div>
-                          {pendingVeritas && <Badge variant="secondary">Pending</Badge>}
+                          {pendingVeritas && (
+                            <Badge variant="secondary">Pending</Badge>
+                          )}
                         </div>
 
                         <div className="flex items-center gap-4 p-4 bg-slate-700/50 rounded-lg">
                           <Zap className="h-5 w-5 text-purple-400" />
                           <div className="flex-1">
-                            <div className="text-sm font-medium">NFT Minting</div>
-                            <div className="text-xs text-slate-400">Blockchain permanence</div>
+                            <div className="text-sm font-medium">
+                              NFT Minting
+                            </div>
+                            <div className="text-xs text-slate-400">
+                              Blockchain permanence
+                            </div>
                           </div>
-                          {pendingMint && <Badge variant="secondary">Pending</Badge>}
+                          {pendingMint && (
+                            <Badge variant="secondary">Pending</Badge>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -335,7 +400,9 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
                   disabled={createCapsuleMutation.isPending}
                   className="w-full gradient-primary py-6 text-lg font-semibold"
                 >
-                  {createCapsuleMutation.isPending ? "Creating Capsule..." : "Submit Truth Capsule"}
+                  {createCapsuleMutation.isPending
+                    ? "Creating Capsule..."
+                    : "Submit Truth Capsule"}
                 </Button>
               </form>
             </Form>
@@ -390,31 +457,47 @@ export function CapsuleForm({ onSuccess }: CapsuleFormProps) {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white">1</div>
+                <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-white">
+                  1
+                </div>
                 <div>
                   <div className="font-medium">Submission</div>
-                  <div className="text-sm text-slate-400">Content enters verification queue</div>
+                  <div className="text-sm text-slate-400">
+                    Content enters verification queue
+                  </div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold">2</div>
+                <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold">
+                  2
+                </div>
                 <div>
                   <div className="font-medium">Community Review</div>
-                  <div className="text-sm text-slate-400">Experts verify claims and evidence</div>
+                  <div className="text-sm text-slate-400">
+                    Experts verify claims and evidence
+                  </div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold">3</div>
+                <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold">
+                  3
+                </div>
                 <div>
                   <div className="font-medium">Grief Score</div>
-                  <div className="text-sm text-slate-400">Algorithmic truthfulness rating</div>
+                  <div className="text-sm text-slate-400">
+                    Algorithmic truthfulness rating
+                  </div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold">4</div>
+                <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold">
+                  4
+                </div>
                 <div>
                   <div className="font-medium">Blockchain Record</div>
-                  <div className="text-sm text-slate-400">Permanent truth verification</div>
+                  <div className="text-sm text-slate-400">
+                    Permanent truth verification
+                  </div>
                 </div>
               </div>
             </div>

@@ -20,7 +20,7 @@ interface UserMetrics {
 
 interface TrustScoreResult {
   score: number; // 0-100
-  tier: 'Explorer' | 'Seeker' | 'Creator' | 'Guardian' | 'Sovereign';
+  tier: "Explorer" | "Seeker" | "Creator" | "Guardian" | "Sovereign";
   multiplier: number;
   breakdown: {
     efficiency: number;
@@ -43,7 +43,7 @@ export class GuardianTrustCalculator {
     Seeker: 25,
     Creator: 50,
     Guardian: 75,
-    Sovereign: 90
+    Sovereign: 90,
   };
 
   private static readonly MULTIPLIERS = {
@@ -51,7 +51,7 @@ export class GuardianTrustCalculator {
     Seeker: 1.2,
     Creator: 1.5,
     Guardian: 2.0,
-    Sovereign: 3.0
+    Sovereign: 3.0,
   };
 
   /**
@@ -63,17 +63,16 @@ export class GuardianTrustCalculator {
       activity: this.calculateActivityScore(user),
       social: this.calculateSocialScore(user),
       legacy: this.calculateLegacyScore(user),
-      verification: this.calculateVerificationScore(user)
+      verification: this.calculateVerificationScore(user),
     };
 
     // Weighted combination of all factors
-    const rawScore = (
-      breakdown.efficiency * 0.30 +      // 30% - Financial efficiency
-      breakdown.activity * 0.25 +        // 25% - Platform activity
-      breakdown.social * 0.20 +          // 20% - Social engagement
-      breakdown.legacy * 0.15 +          // 15% - Long-term commitment
-      breakdown.verification * 0.10      // 10% - Identity verification
-    );
+    const rawScore =
+      breakdown.efficiency * 0.3 + // 30% - Financial efficiency
+      breakdown.activity * 0.25 + // 25% - Platform activity
+      breakdown.social * 0.2 + // 20% - Social engagement
+      breakdown.legacy * 0.15 + // 15% - Long-term commitment
+      breakdown.verification * 0.1; // 10% - Identity verification
 
     const score = Math.min(100, Math.max(0, rawScore));
     const tier = this.determineTier(score);
@@ -85,7 +84,7 @@ export class GuardianTrustCalculator {
       multiplier,
       breakdown,
       recommendations: this.generateRecommendations(user, breakdown),
-      billingEligibility: this.calculateBillingEligibility(score, tier)
+      billingEligibility: this.calculateBillingEligibility(score, tier),
     };
   }
 
@@ -98,22 +97,26 @@ export class GuardianTrustCalculator {
     }
 
     const efficiency = user.gttEarned / user.gttSpent;
-    
+
     // Scale efficiency to 0-100
-    if (efficiency >= 2.0) return 100;      // 2x return = perfect
-    if (efficiency >= 1.5) return 85;       // 1.5x return = excellent
-    if (efficiency >= 1.0) return 70;       // Break-even = good
-    if (efficiency >= 0.5) return 50;       // 50% return = fair
-    return Math.max(0, efficiency * 100);   // Below 50% = poor
+    if (efficiency >= 2.0) return 100; // 2x return = perfect
+    if (efficiency >= 1.5) return 85; // 1.5x return = excellent
+    if (efficiency >= 1.0) return 70; // Break-even = good
+    if (efficiency >= 0.5) return 50; // 50% return = fair
+    return Math.max(0, efficiency * 100); // Below 50% = poor
   }
 
   /**
    * Calculate platform activity score
    */
   private static calculateActivityScore(user: UserMetrics): number {
-    const totalActions = user.capsulesCreated + user.capsulesRemixed + 
-                        user.capsulesSealed + user.aiInteractions + 
-                        user.memorySaves + user.daoVotes;
+    const totalActions =
+      user.capsulesCreated +
+      user.capsulesRemixed +
+      user.capsulesSealed +
+      user.aiInteractions +
+      user.memorySaves +
+      user.daoVotes;
 
     // Activity score based on total platform engagement
     if (totalActions >= 100) return 100;
@@ -129,7 +132,7 @@ export class GuardianTrustCalculator {
    */
   private static calculateSocialScore(user: UserMetrics): number {
     const socialWeight = user.socialScore * 100;
-    
+
     // Bonus for capsule interactions
     const remixBonus = Math.min(30, user.capsulesRemixed * 3);
     const sealBonus = Math.min(20, user.capsulesSealed * 2);
@@ -170,50 +173,67 @@ export class GuardianTrustCalculator {
   /**
    * Determine user tier based on trust score
    */
-  private static determineTier(score: number): TrustScoreResult['tier'] {
-    if (score >= this.TIER_THRESHOLDS.Sovereign) return 'Sovereign';
-    if (score >= this.TIER_THRESHOLDS.Guardian) return 'Guardian';
-    if (score >= this.TIER_THRESHOLDS.Creator) return 'Creator';
-    if (score >= this.TIER_THRESHOLDS.Seeker) return 'Seeker';
-    return 'Explorer';
+  private static determineTier(score: number): TrustScoreResult["tier"] {
+    if (score >= this.TIER_THRESHOLDS.Sovereign) return "Sovereign";
+    if (score >= this.TIER_THRESHOLDS.Guardian) return "Guardian";
+    if (score >= this.TIER_THRESHOLDS.Creator) return "Creator";
+    if (score >= this.TIER_THRESHOLDS.Seeker) return "Seeker";
+    return "Explorer";
   }
 
   /**
    * Generate personalized recommendations for improving trust score
    */
-  private static generateRecommendations(user: UserMetrics, breakdown: any): string[] {
+  private static generateRecommendations(
+    user: UserMetrics,
+    breakdown: any
+  ): string[] {
     const recommendations: string[] = [];
 
     // Efficiency recommendations
     if (breakdown.efficiency < 60) {
       if (user.gttEarned === 0) {
-        recommendations.push("Create and seal your first truth capsule to start earning GTT");
+        recommendations.push(
+          "Create and seal your first truth capsule to start earning GTT"
+        );
       } else {
-        recommendations.push("Focus on high-yield capsule creation to improve efficiency ratio");
+        recommendations.push(
+          "Focus on high-yield capsule creation to improve efficiency ratio"
+        );
       }
     }
 
     // Activity recommendations
     if (breakdown.activity < 50) {
-      recommendations.push("Increase platform engagement through capsule remixing and AI interactions");
+      recommendations.push(
+        "Increase platform engagement through capsule remixing and AI interactions"
+      );
     }
 
     // Social recommendations
     if (breakdown.social < 60) {
-      recommendations.push("Participate in DAO governance and remix community capsules");
+      recommendations.push(
+        "Participate in DAO governance and remix community capsules"
+      );
     }
 
     // Legacy recommendations
     if (breakdown.legacy < 40) {
       if (!user.legacySet) {
-        recommendations.push("Set up Legacy Protocol to demonstrate long-term commitment");
+        recommendations.push(
+          "Set up Legacy Protocol to demonstrate long-term commitment"
+        );
       }
-      recommendations.push("Save important AI conversations to build digital legacy");
+      recommendations.push(
+        "Save important AI conversations to build digital legacy"
+      );
     }
 
     // Verification recommendations
     if (breakdown.verification < 80) {
-      recommendations.push("Complete identity verification to access premium features");
+      recommendations.push(
+        "Complete identity verification to access premium features"
+      );
     }
 
     return recommendations;
@@ -223,33 +243,39 @@ export class GuardianTrustCalculator {
    * Calculate billing eligibility based on trust score
    */
   private static calculateBillingEligibility(
-    score: number, 
-    tier: TrustScoreResult['tier']
-  ): TrustScoreResult['billingEligibility'] {
+    score: number,
+    tier: TrustScoreResult["tier"]
+  ): TrustScoreResult["billingEligibility"] {
     const baseCreditLimit = 1000; // GTT
     const tierMultipliers = {
       Explorer: 0.5,
       Seeker: 1.0,
       Creator: 2.0,
       Guardian: 5.0,
-      Sovereign: 10.0
+      Sovereign: 10.0,
     };
 
     const creditLimit = baseCreditLimit * tierMultipliers[tier];
-    
+
     // Interest rate decreases with higher trust score
     const baseRate = 5.0; // 5% base rate
     const interestRate = Math.max(0.5, baseRate - (score / 100) * 4); // Down to 0.5%
 
-    const paymentTerms = tier === 'Sovereign' ? '60 days' :
-                        tier === 'Guardian' ? '45 days' :
-                        tier === 'Creator' ? '30 days' :
-                        tier === 'Seeker' ? '14 days' : '7 days';
+    const paymentTerms =
+      tier === "Sovereign"
+        ? "60 days"
+        : tier === "Guardian"
+        ? "45 days"
+        : tier === "Creator"
+        ? "30 days"
+        : tier === "Seeker"
+        ? "14 days"
+        : "7 days";
 
     return {
       creditLimit,
       interestRate: Number(interestRate.toFixed(2)),
-      paymentTerms
+      paymentTerms,
     };
   }
 
@@ -265,27 +291,27 @@ export class GuardianTrustCalculator {
    * Batch calculate trust scores for multiple users
    */
   static batchCalculateTrustScores(users: UserMetrics[]): TrustScoreResult[] {
-    return users.map(user => this.calculateGuardianTrustScore(user));
+    return users.map((user) => this.calculateGuardianTrustScore(user));
   }
 
   /**
    * Get trust score statistics for analytics
    */
   static getTrustScoreStats(results: TrustScoreResult[]) {
-    const scores = results.map(r => r.score);
-    const tiers = results.map(r => r.tier);
+    const scores = results.map((r) => r.score);
+    const tiers = results.map((r) => r.tier);
 
     return {
       averageScore: scores.reduce((a, b) => a + b, 0) / scores.length,
       medianScore: scores.sort()[Math.floor(scores.length / 2)],
       tierDistribution: {
-        Explorer: tiers.filter(t => t === 'Explorer').length,
-        Seeker: tiers.filter(t => t === 'Seeker').length,
-        Creator: tiers.filter(t => t === 'Creator').length,
-        Guardian: tiers.filter(t => t === 'Guardian').length,
-        Sovereign: tiers.filter(t => t === 'Sovereign').length
+        Explorer: tiers.filter((t) => t === "Explorer").length,
+        Seeker: tiers.filter((t) => t === "Seeker").length,
+        Creator: tiers.filter((t) => t === "Creator").length,
+        Guardian: tiers.filter((t) => t === "Guardian").length,
+        Sovereign: tiers.filter((t) => t === "Sovereign").length,
       },
-      totalUsers: results.length
+      totalUsers: results.length,
     };
   }
 }

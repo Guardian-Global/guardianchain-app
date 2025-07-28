@@ -20,8 +20,8 @@ export async function claimYield(req: Request, res: Response) {
 
     // Verify the capsule is eligible for claiming (verified or sealed)
     if (capsule.status !== "verified" && capsule.status !== "sealed") {
-      return res.status(400).json({ 
-        message: "Capsule must be verified or sealed to claim yield" 
+      return res.status(400).json({
+        message: "Capsule must be verified or sealed to claim yield",
       });
     }
 
@@ -43,7 +43,7 @@ export async function claimYield(req: Request, res: Response) {
     const updatedCapsule = await storage.updateCapsule(capsuleId, {
       gttClaimed: updatedClaimed,
       claimTxHash: txHash,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     // Update user's GTT balance
@@ -61,7 +61,7 @@ export async function claimYield(req: Request, res: Response) {
       amount: gttAmount,
       description: `GTT yield claimed for capsule "${capsule.title}"`,
       capsuleId: capsuleId,
-      txHash: txHash
+      txHash: txHash,
     });
 
     res.json({
@@ -69,22 +69,21 @@ export async function claimYield(req: Request, res: Response) {
       capsule: updatedCapsule,
       claimedAmount: gttAmount,
       totalClaimed: updatedClaimed,
-      txHash: txHash
+      txHash: txHash,
     });
-
   } catch (error: any) {
     console.error("Claim yield error:", error);
-    
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         message: "Invalid request data",
-        errors: error.errors
+        errors: error.errors,
       });
     }
 
     res.status(500).json({
       message: "Internal server error",
-      error: error.message
+      error: error.message,
     });
   }
 }

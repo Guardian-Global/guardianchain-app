@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { getLatestTreasurySnapshot, TreasurySnapshot } from '@/lib/treasury';
-import { fetchGTTMarketData } from '@/lib/gttPrice';
+import React, { useEffect, useState } from "react";
+import { getLatestTreasurySnapshot, TreasurySnapshot } from "@/lib/treasury";
+import { fetchGTTMarketData } from "@/lib/gttPrice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, DollarSign, Coins, BarChart3, PieChart, Activity } from "lucide-react";
+import {
+  TrendingUp,
+  DollarSign,
+  Coins,
+  BarChart3,
+  PieChart,
+  Activity,
+} from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
 export default function TreasuryDashboard() {
@@ -17,12 +24,12 @@ export default function TreasuryDashboard() {
       try {
         const [treasuryData, marketInfo] = await Promise.all([
           getLatestTreasurySnapshot(),
-          fetchGTTMarketData()
+          fetchGTTMarketData(),
         ]);
         setSnapshot(treasuryData);
         setMarketData(marketInfo);
       } catch (error) {
-        console.error('Failed to load treasury data:', error);
+        console.error("Failed to load treasury data:", error);
       } finally {
         setLoading(false);
       }
@@ -59,7 +66,8 @@ export default function TreasuryDashboard() {
             GTT Treasury & Platform Financials
           </h1>
           <p className="text-xl text-slate-300 mb-6">
-            Real-time monitoring of {BRAND_NAME} economic health and token metrics
+            Real-time monitoring of {BRAND_NAME} economic health and token
+            metrics
           </p>
           <Badge className="bg-green-600 text-white px-4 py-2">
             <Activity className="w-4 h-4 mr-2" />
@@ -70,7 +78,6 @@ export default function TreasuryDashboard() {
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="bg-slate-800/50 border-slate-700">
@@ -96,7 +103,10 @@ export default function TreasuryDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold" style={{ color: BRAND_COLORS.SUCCESS }}>
+                <p
+                  className="text-2xl font-bold"
+                  style={{ color: BRAND_COLORS.SUCCESS }}
+                >
                   {snapshot.gttTreasury.toLocaleString()}
                 </p>
                 <p className="text-xs text-slate-500 mt-1">GTT Reserved</p>
@@ -111,7 +121,10 @@ export default function TreasuryDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold" style={{ color: BRAND_COLORS.GUARDIAN }}>
+                <p
+                  className="text-2xl font-bold"
+                  style={{ color: BRAND_COLORS.GUARDIAN }}
+                >
                   {snapshot.gttYieldPool.toLocaleString()}
                 </p>
                 <p className="text-xs text-slate-500 mt-1">Available Rewards</p>
@@ -149,7 +162,8 @@ export default function TreasuryDashboard() {
                     ${marketData.marketCap.toLocaleString()}
                   </p>
                   <p className="text-sm text-slate-400 mt-1">
-                    {marketData.circulatingSupply.toLocaleString()} GTT Circulating
+                    {marketData.circulatingSupply.toLocaleString()} GTT
+                    Circulating
                   </p>
                 </CardContent>
               </Card>
@@ -162,7 +176,9 @@ export default function TreasuryDashboard() {
                   <p className="text-xl font-bold text-white">
                     ${marketData.volume24h.toLocaleString()}
                   </p>
-                  <p className="text-sm text-slate-400 mt-1">Trading Activity</p>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Trading Activity
+                  </p>
                 </CardContent>
               </Card>
 
@@ -184,7 +200,9 @@ export default function TreasuryDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Token Burn Statistics</CardTitle>
+                <CardTitle className="text-white">
+                  Token Burn Statistics
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -197,11 +215,17 @@ export default function TreasuryDashboard() {
                   <div className="flex justify-between items-center">
                     <span className="text-slate-300">Burn Rate:</span>
                     <span className="text-slate-400">
-                      {((snapshot.gttBurned / snapshot.gttTotalSupply) * 100).toFixed(3)}%
+                      {(
+                        (snapshot.gttBurned / snapshot.gttTotalSupply) *
+                        100
+                      ).toFixed(3)}
+                      %
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Deflationary Pressure:</span>
+                    <span className="text-slate-300">
+                      Deflationary Pressure:
+                    </span>
                     <Badge className="bg-red-600 text-white">Active</Badge>
                   </div>
                 </div>
@@ -240,24 +264,24 @@ export default function TreasuryDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button 
+                <Button
                   className="w-full"
                   style={{ backgroundColor: BRAND_COLORS.GUARDIAN }}
-                  onClick={() => console.log('Generate treasury report')}
+                  onClick={() => console.log("Generate treasury report")}
                 >
                   Generate Report
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
-                  onClick={() => console.log('Sync treasury data')}
+                  onClick={() => console.log("Sync treasury data")}
                 >
                   Sync Data
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
-                  onClick={() => console.log('Export treasury data')}
+                  onClick={() => console.log("Export treasury data")}
                 >
                   Export Data
                 </Button>

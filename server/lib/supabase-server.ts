@@ -1,19 +1,20 @@
 // Server-side Supabase client for asset processing
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Import configuration utility
-import { logSupabaseStatus } from '../../lib/supabase/config';
+import { logSupabaseStatus } from "../../lib/supabase/config";
 
 // Log status only in development
 logSupabaseStatus();
 
 // Create Supabase client if credentials are available
-export const supabaseServer = supabaseUrl && supabaseServiceKey 
-  ? createClient(supabaseUrl, supabaseServiceKey)
-  : null;
+export const supabaseServer =
+  supabaseUrl && supabaseServiceKey
+    ? createClient(supabaseUrl, supabaseServiceKey)
+    : null;
 
 export interface AssetProcessingResult {
   success: boolean;
@@ -23,9 +24,12 @@ export interface AssetProcessingResult {
   capsules: any[];
 }
 
-export async function processAssetsForUser(userId: string, selectedAssetIds: string[]): Promise<AssetProcessingResult> {
+export async function processAssetsForUser(
+  userId: string,
+  selectedAssetIds: string[]
+): Promise<AssetProcessingResult> {
   if (!supabaseServer) {
-    throw new Error('Supabase not configured on server');
+    throw new Error("Supabase not configured on server");
   }
 
   const result: AssetProcessingResult = {
@@ -33,36 +37,40 @@ export async function processAssetsForUser(userId: string, selectedAssetIds: str
     processed: 0,
     failed: 0,
     errors: [],
-    capsules: []
+    capsules: [],
   };
 
   try {
     // Get all available assets from storage
-    const { data: buckets, error: bucketsError } = await supabaseServer.storage.listBuckets();
-    
+    const { data: buckets, error: bucketsError } =
+      await supabaseServer.storage.listBuckets();
+
     if (bucketsError) {
       result.errors.push(`Failed to list buckets: ${bucketsError.message}`);
       return result;
     }
 
     const allAssets = [];
-    
+
     // Collect all assets from all buckets
     for (const bucket of buckets) {
       try {
         const { data: files, error: filesError } = await supabaseServer.storage
           .from(bucket.name)
-          .list('', { limit: 1000, sortBy: { column: 'created_at', order: 'desc' } });
-        
+          .list("", {
+            limit: 1000,
+            sortBy: { column: "created_at", order: "desc" },
+          });
+
         if (!filesError && files) {
           for (const file of files) {
-            if (file.name && !file.name.endsWith('/')) {
+            if (file.name && !file.name.endsWith("/")) {
               const assetId = `${bucket.name}/${file.name}`;
               if (selectedAssetIds.includes(assetId)) {
                 const { data: urlData } = supabaseServer.storage
                   .from(bucket.name)
                   .getPublicUrl(file.name);
-                
+
                 allAssets.push({
                   id: assetId,
                   name: file.name,
@@ -71,7 +79,7 @@ export async function processAssetsForUser(userId: string, selectedAssetIds: str
                   type: getFileType(file.name),
                   url: urlData.publicUrl,
                   lastModified: file.updated_at || file.created_at,
-                  metadata: file.metadata
+                  metadata: file.metadata,
                 });
               }
             }
@@ -79,8 +87,12 @@ export async function processAssetsForUser(userId: string, selectedAssetIds: str
         }
       } catch (error) {
         // Silent fail for missing buckets in production
-        if (process.env.NODE_ENV === 'development') {
-          result.errors.push(`Error processing bucket ${bucket.name}: ${(error as Error).message}`);
+        if (process.env.NODE_ENV === "development") {
+          result.errors.push(
+            `Error processing bucket ${bucket.name}: ${
+              (error as Error).message
+            }`
+          );
         }
       }
     }
@@ -98,39 +110,42 @@ export async function processAssetsForUser(userId: string, selectedAssetIds: str
           creator_id: userId,
           metadata: {
             ...asset.metadata,
-            imported_from: 'supabase_storage',
+            imported_from: "supabase_storage",
             original_bucket: asset.bucket,
             auto_imported: true,
             import_date: new Date().toISOString(),
-            processing_version: '1.0'
+            processing_version: "1.0",
           },
-          status: 'draft',
+          status: "draft",
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         };
 
         const { data: capsule, error: insertError } = await supabaseServer
-          .from('capsules')
+          .from("capsules")
           .insert([capsuleData])
           .select()
           .single();
 
         if (insertError) {
-          result.errors.push(`Failed to create capsule for ${asset.name}: ${insertError.message}`);
+          result.errors.push(
+            `Failed to create capsule for ${asset.name}: ${insertError.message}`
+          );
           result.failed++;
         } else {
           result.capsules.push(capsule);
           result.processed++;
         }
       } catch (error) {
-        result.errors.push(`Error processing asset ${asset.name}: ${(error as Error).message}`);
+        result.errors.push(
+          `Error processing asset ${asset.name}: ${(error as Error).message}`
+        );
         result.failed++;
       }
     }
 
     result.success = result.processed > 0;
     return result;
-
   } catch (error) {
     result.errors.push(`General processing error: ${(error as Error).message}`);
     return result;
@@ -138,23 +153,23 @@ export async function processAssetsForUser(userId: string, selectedAssetIds: str
 }
 
 function getFileType(filename: string): string {
-  const ext = filename.split('.').pop()?.toLowerCase();
-  
-  if (!ext) return 'unknown';
-  
-  const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'];
-  const videoExts = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'];
-  const audioExts = ['mp3', 'wav', 'flac', 'aac', 'ogg'];
-  const docExts = ['pdf', 'doc', 'docx', 'txt', 'rtf'];
-  const dataExts = ['json', 'csv', 'xml', 'yaml'];
-  
-  if (imageExts.includes(ext)) return 'image';
-  if (videoExts.includes(ext)) return 'video';
-  if (audioExts.includes(ext)) return 'audio';
-  if (docExts.includes(ext)) return 'document';
-  if (dataExts.includes(ext)) return 'data';
-  
-  return 'file';
+  const ext = filename.split(".").pop()?.toLowerCase();
+
+  if (!ext) return "unknown";
+
+  const imageExts = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
+  const videoExts = ["mp4", "avi", "mov", "wmv", "flv", "webm"];
+  const audioExts = ["mp3", "wav", "flac", "aac", "ogg"];
+  const docExts = ["pdf", "doc", "docx", "txt", "rtf"];
+  const dataExts = ["json", "csv", "xml", "yaml"];
+
+  if (imageExts.includes(ext)) return "image";
+  if (videoExts.includes(ext)) return "video";
+  if (audioExts.includes(ext)) return "audio";
+  if (docExts.includes(ext)) return "document";
+  if (dataExts.includes(ext)) return "data";
+
+  return "file";
 }
 
 function generateAssetContent(asset: any): string {
@@ -164,10 +179,12 @@ function generateAssetContent(asset: any): string {
     audio: `Audio recording or music file`,
     document: `Document containing textual information`,
     data: `Structured data file with metadata`,
-    file: `Digital file with preserved metadata`
+    file: `Digital file with preserved metadata`,
   };
 
-  const description = typeDescriptions[asset.type as keyof typeof typeDescriptions] || 'Digital asset';
+  const description =
+    typeDescriptions[asset.type as keyof typeof typeDescriptions] ||
+    "Digital asset";
 
   return `# Imported Asset: ${asset.name}
 
@@ -194,9 +211,9 @@ This asset has been imported with full metadata preservation and cryptographic i
 }
 
 function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return "0 Bytes";
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const sizes = ["Bytes", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }

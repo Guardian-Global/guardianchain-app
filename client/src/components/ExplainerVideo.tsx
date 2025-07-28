@@ -25,7 +25,8 @@ export default function ExplainerVideo() {
               GUARDIAN<span className="text-yellow-400">CHAIN</span> Explainer
             </h3>
             <p className="text-sm text-slate-300">
-              Immutable Truth in Motion — See how capsules become verifiable digital proof
+              Immutable Truth in Motion — See how capsules become verifiable
+              digital proof
             </p>
           </div>
           <div className="flex items-center gap-2">

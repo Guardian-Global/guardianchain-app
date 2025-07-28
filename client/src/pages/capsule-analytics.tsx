@@ -4,7 +4,13 @@ import CapsuleAnalyticsChart from "@/components/analytics/CapsuleAnalyticsChart"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, TrendingUp, Zap, Award } from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
@@ -13,14 +19,31 @@ type TimeRange = "7d" | "30d" | "90d" | "1y";
 
 export default function CapsuleAnalyticsPage() {
   const [location] = useLocation();
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
-  const [selectedCapsuleId, setSelectedCapsuleId] = useState(urlParams.get("id") || "1");
+  const urlParams = new URLSearchParams(location.split("?")[1] || "");
+  const [selectedCapsuleId, setSelectedCapsuleId] = useState(
+    urlParams.get("id") || "1"
+  );
   const [timeRange, setTimeRange] = useState<TimeRange>("30d");
 
   const featuredCapsules = [
-    { id: "1", title: "Climate Change Evidence", performance: "High", yield: "12.5 GTT" },
-    { id: "2", title: "Medical Research Findings", performance: "Growing", yield: "8.2 GTT" },
-    { id: "3", title: "Economic Analysis Report", performance: "Viral", yield: "25.7 GTT" },
+    {
+      id: "1",
+      title: "Climate Change Evidence",
+      performance: "High",
+      yield: "12.5 GTT",
+    },
+    {
+      id: "2",
+      title: "Medical Research Findings",
+      performance: "Growing",
+      yield: "8.2 GTT",
+    },
+    {
+      id: "3",
+      title: "Economic Analysis Report",
+      performance: "Viral",
+      yield: "25.7 GTT",
+    },
   ];
 
   return (
@@ -38,7 +61,8 @@ export default function CapsuleAnalyticsPage() {
               </h1>
             </div>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Deep insights into capsule performance, yield generation, and community engagement patterns
+              Deep insights into capsule performance, yield generation, and
+              community engagement patterns
             </p>
           </div>
         </div>
@@ -54,7 +78,9 @@ export default function CapsuleAnalyticsPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">Capsule ID</label>
+                  <label className="text-sm text-slate-400 mb-2 block">
+                    Capsule ID
+                  </label>
                   <Input
                     placeholder="Enter Capsule ID"
                     value={selectedCapsuleId}
@@ -62,10 +88,15 @@ export default function CapsuleAnalyticsPage() {
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
-                
+
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">Time Range</label>
-                  <Select value={timeRange} onValueChange={(value: TimeRange) => setTimeRange(value)}>
+                  <label className="text-sm text-slate-400 mb-2 block">
+                    Time Range
+                  </label>
+                  <Select
+                    value={timeRange}
+                    onValueChange={(value: TimeRange) => setTimeRange(value)}
+                  >
                     <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                       <SelectValue />
                     </SelectTrigger>
@@ -77,7 +108,7 @@ export default function CapsuleAnalyticsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="flex items-end">
                   <Button
                     onClick={() => window.location.reload()}
@@ -98,14 +129,20 @@ export default function CapsuleAnalyticsPage() {
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {selectedCapsuleId ? (
-            <CapsuleAnalyticsChart capsuleId={selectedCapsuleId} timeRange={timeRange} />
+            <CapsuleAnalyticsChart
+              capsuleId={selectedCapsuleId}
+              timeRange={timeRange}
+            />
           ) : (
             <Card className="bg-slate-800/50 border-slate-700">
               <CardContent className="p-12 text-center">
                 <BarChart3 className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Select a Capsule to Analyze</h3>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Select a Capsule to Analyze
+                </h3>
                 <p className="text-slate-400">
-                  Enter a capsule ID above or choose from the featured capsules below to view detailed analytics.
+                  Enter a capsule ID above or choose from the featured capsules
+                  below to view detailed analytics.
                 </p>
               </CardContent>
             </Card>
@@ -121,16 +158,30 @@ export default function CapsuleAnalyticsPage() {
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {featuredCapsules.map((capsule) => (
-              <Card key={capsule.id} className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors cursor-pointer"
-                    onClick={() => setSelectedCapsuleId(capsule.id)}>
+              <Card
+                key={capsule.id}
+                className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors cursor-pointer"
+                onClick={() => setSelectedCapsuleId(capsule.id)}
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <CardTitle className="text-white text-lg">{capsule.title}</CardTitle>
-                    <Badge 
-                      variant={capsule.performance === "High" ? "default" : capsule.performance === "Viral" ? "secondary" : "outline"}
+                    <CardTitle className="text-white text-lg">
+                      {capsule.title}
+                    </CardTitle>
+                    <Badge
+                      variant={
+                        capsule.performance === "High"
+                          ? "default"
+                          : capsule.performance === "Viral"
+                          ? "secondary"
+                          : "outline"
+                      }
                       className={
-                        capsule.performance === "High" ? "bg-green-600" :
-                        capsule.performance === "Viral" ? "bg-purple-600" : "bg-yellow-600"
+                        capsule.performance === "High"
+                          ? "bg-green-600"
+                          : capsule.performance === "Viral"
+                          ? "bg-purple-600"
+                          : "bg-yellow-600"
                       }
                     >
                       {capsule.performance}
@@ -141,11 +192,15 @@ export default function CapsuleAnalyticsPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-slate-400">Capsule ID:</span>
-                      <span className="text-white font-mono">#{capsule.id}</span>
+                      <span className="text-white font-mono">
+                        #{capsule.id}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-400">Total Yield:</span>
-                      <span className="text-white font-semibold">{capsule.yield}</span>
+                      <span className="text-white font-semibold">
+                        {capsule.yield}
+                      </span>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -187,13 +242,17 @@ export default function CapsuleAnalyticsPage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Zap className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+                  <Zap
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  />
                   Yield Tracking
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400 text-sm">
-                  Monitor GTT token generation with historical trends and growth patterns
+                  Monitor GTT token generation with historical trends and growth
+                  patterns
                 </p>
               </CardContent>
             </Card>
@@ -207,7 +266,8 @@ export default function CapsuleAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400 text-sm">
-                  Track community emotional response and engagement quality over time
+                  Track community emotional response and engagement quality over
+                  time
                 </p>
               </CardContent>
             </Card>
@@ -235,7 +295,8 @@ export default function CapsuleAnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400 text-sm">
-                  AI-powered insights and recommendations for capsule optimization
+                  AI-powered insights and recommendations for capsule
+                  optimization
                 </p>
               </CardContent>
             </Card>

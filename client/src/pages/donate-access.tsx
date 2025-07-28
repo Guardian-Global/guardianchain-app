@@ -13,42 +13,46 @@ import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
 const donationCauses = [
   {
-    id: 'trauma-survivors',
-    name: 'Trauma Survivors',
-    description: 'Help survivors document their experiences for healing and legal protection',
+    id: "trauma-survivors",
+    name: "Trauma Survivors",
+    description:
+      "Help survivors document their experiences for healing and legal protection",
     icon: <Heart className="w-5 h-5" />,
     recipients: 1247,
-    color: 'bg-red-600'
+    color: "bg-red-600",
   },
   {
-    id: 'nonprofits',
-    name: 'Nonprofit Organizations',
-    description: 'Support NGOs documenting human rights violations and social impact',
+    id: "nonprofits",
+    name: "Nonprofit Organizations",
+    description:
+      "Support NGOs documenting human rights violations and social impact",
     icon: <Users className="w-5 h-5" />,
     recipients: 856,
-    color: 'bg-blue-600'
+    color: "bg-blue-600",
   },
   {
-    id: 'public-truth',
-    name: 'Public Truth Initiatives',
-    description: 'Citizen journalism and community-driven truth verification projects',
+    id: "public-truth",
+    name: "Public Truth Initiatives",
+    description:
+      "Citizen journalism and community-driven truth verification projects",
     icon: <Globe className="w-5 h-5" />,
     recipients: 923,
-    color: 'bg-green-600'
+    color: "bg-green-600",
   },
   {
-    id: 'whistleblowers',
-    name: 'Whistleblower Protection',
-    description: 'Anonymous capsule creation for reporting fraud and misconduct',
+    id: "whistleblowers",
+    name: "Whistleblower Protection",
+    description:
+      "Anonymous capsule creation for reporting fraud and misconduct",
     icon: <ShieldCheck className="w-5 h-5" />,
     recipients: 445,
-    color: 'bg-purple-600'
-  }
+    color: "bg-purple-600",
+  },
 ];
 
 export default function DonateAccessPage() {
   const [amount, setAmount] = useState(1);
-  const [selectedCause, setSelectedCause] = useState('trauma-survivors');
+  const [selectedCause, setSelectedCause] = useState("trauma-survivors");
   const [recipientEmail, setRecipientEmail] = useState("");
   const [isCustomRecipient, setIsCustomRecipient] = useState(false);
   const [status, setStatus] = useState("");
@@ -60,29 +64,29 @@ export default function DonateAccessPage() {
 
   async function handleDonate(e: React.FormEvent) {
     e.preventDefault();
-    
+
     if (amount > userCredits) {
       toast({
         title: "Insufficient Credits",
         description: `You only have ${userCredits} credits available to donate.`,
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setLoading(true);
     setStatus("Processing donation...");
-    
+
     try {
       const recipient = isCustomRecipient ? recipientEmail : selectedCause;
       await donateCapsuleCredits({ to: recipient, amount });
-      
+
       setStatus("Donation successful!");
       toast({
         title: "Donation Successful",
         description: `${amount} capsule credits donated successfully!`,
       });
-      
+
       // Reset form
       setAmount(1);
       setRecipientEmail("");
@@ -92,7 +96,7 @@ export default function DonateAccessPage() {
       toast({
         title: "Donation Failed",
         description: errorMessage,
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -104,11 +108,10 @@ export default function DonateAccessPage() {
       {/* Header */}
       <section className="pt-20 pb-8 bg-gradient-to-br from-purple-900 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">
-            Donate Capsule Credits
-          </h1>
+          <h1 className="text-4xl font-bold mb-4">Donate Capsule Credits</h1>
           <p className="text-xl text-slate-300 mb-6">
-            Share your unused credits with those who need truth verification most
+            Share your unused credits with those who need truth verification
+            most
           </p>
           <Badge className="bg-purple-600 text-white px-4 py-2">
             <Heart className="w-4 h-4 mr-2" />
@@ -120,18 +123,19 @@ export default function DonateAccessPage() {
       <div className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
             {/* Donation Form */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
-                  <Heart className="w-5 h-5 mr-2" style={{ color: BRAND_COLORS.GUARDIAN }} />
+                  <Heart
+                    className="w-5 h-5 mr-2"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  />
                   Make a Donation
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleDonate} className="space-y-6">
-                  
                   {/* Amount Selection */}
                   <div>
                     <Label htmlFor="amount" className="text-slate-300">
@@ -191,7 +195,10 @@ export default function DonateAccessPage() {
                       <Label className="text-slate-300">Select Cause</Label>
                       <div className="mt-2 space-y-2">
                         {donationCauses.map((cause) => (
-                          <div key={cause.id} className="flex items-center space-x-2">
+                          <div
+                            key={cause.id}
+                            className="flex items-center space-x-2"
+                          >
                             <input
                               type="radio"
                               id={cause.id}
@@ -201,8 +208,13 @@ export default function DonateAccessPage() {
                               onChange={(e) => setSelectedCause(e.target.value)}
                               className="text-purple-600"
                             />
-                            <label htmlFor={cause.id} className="text-slate-300 flex items-center">
-                              <span className={`p-1 rounded mr-2 ${cause.color}`}>
+                            <label
+                              htmlFor={cause.id}
+                              className="text-slate-300 flex items-center"
+                            >
+                              <span
+                                className={`p-1 rounded mr-2 ${cause.color}`}
+                              >
                                 {cause.icon}
                               </span>
                               {cause.name}
@@ -231,17 +243,25 @@ export default function DonateAccessPage() {
                     </div>
                   )}
 
-                  <Button 
+                  <Button
                     type="submit"
                     className="w-full"
                     style={{ backgroundColor: BRAND_COLORS.GUARDIAN }}
                     disabled={loading}
                   >
-                    {loading ? "Processing..." : `Donate ${amount} Credit${amount !== 1 ? 's' : ''}`}
+                    {loading
+                      ? "Processing..."
+                      : `Donate ${amount} Credit${amount !== 1 ? "s" : ""}`}
                   </Button>
 
                   {status && (
-                    <p className={`text-sm ${status.includes('Error') ? 'text-red-400' : 'text-green-400'}`}>
+                    <p
+                      className={`text-sm ${
+                        status.includes("Error")
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }`}
+                    >
                       {status}
                     </p>
                   )}
@@ -257,13 +277,18 @@ export default function DonateAccessPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {donationCauses.map((cause) => (
-                    <div key={cause.id} className="p-4 bg-slate-700/50 rounded-lg">
+                    <div
+                      key={cause.id}
+                      className="p-4 bg-slate-700/50 rounded-lg"
+                    >
                       <div className="flex items-center mb-2">
                         <span className={`p-2 rounded mr-3 ${cause.color}`}>
                           {cause.icon}
                         </span>
                         <div>
-                          <h4 className="text-white font-medium">{cause.name}</h4>
+                          <h4 className="text-white font-medium">
+                            {cause.name}
+                          </h4>
                           <p className="text-xs text-slate-400">
                             {cause.recipients} active recipients
                           </p>
@@ -284,15 +309,22 @@ export default function DonateAccessPage() {
                 <CardContent className="space-y-3 text-sm text-slate-300">
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Credits are transferred instantly to recipients' accounts</p>
+                    <p>
+                      Credits are transferred instantly to recipients' accounts
+                    </p>
                   </div>
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <p>Recipients receive email notification with instructions</p>
+                    <p>
+                      Recipients receive email notification with instructions
+                    </p>
                   </div>
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
-                    <p>All donations are tracked for transparency and tax purposes</p>
+                    <p>
+                      All donations are tracked for transparency and tax
+                      purposes
+                    </p>
                   </div>
                   <div className="flex items-start space-x-3">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -310,8 +342,10 @@ export default function DonateAccessPage() {
                 Your Impact Matters
               </h3>
               <p className="text-slate-300 max-w-2xl mx-auto">
-                Donated capsule credits go directly to trauma survivors, nonprofits, and public truth initiatives. 
-                Each credit helps someone document their story, seek justice, or contribute to collective memory preservation.
+                Donated capsule credits go directly to trauma survivors,
+                nonprofits, and public truth initiatives. Each credit helps
+                someone document their story, seek justice, or contribute to
+                collective memory preservation.
               </p>
             </div>
           </div>

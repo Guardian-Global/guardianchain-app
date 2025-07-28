@@ -1,14 +1,31 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  FileText, Scale, Brain, Palette, Building, DollarSign, 
-  Award, Bot, Link, Video, Newspaper, AlertTriangle, 
-  Eye, Heart, Check, Info 
-} from 'lucide-react';
-import { CapsuleType, CAPSULE_TYPE_CONFIGS, CapsuleTypeConfig } from '@/types/capsule';
-import { BRAND_COLORS } from '@/lib/constants';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  FileText,
+  Scale,
+  Brain,
+  Palette,
+  Building,
+  DollarSign,
+  Award,
+  Bot,
+  Link,
+  Video,
+  Newspaper,
+  AlertTriangle,
+  Eye,
+  Heart,
+  Check,
+  Info,
+} from "lucide-react";
+import {
+  CapsuleType,
+  CAPSULE_TYPE_CONFIGS,
+  CapsuleTypeConfig,
+} from "@/types/capsule";
+import { BRAND_COLORS } from "@/lib/constants";
 
 interface CapsuleTypeSelectorProps {
   selectedType: CapsuleType;
@@ -16,11 +33,26 @@ interface CapsuleTypeSelectorProps {
 }
 
 const iconMap = {
-  FileText, Scale, Brain, Palette, Building, DollarSign,
-  Award, Bot, Link, Video, Newspaper, AlertTriangle, Eye, Heart
+  FileText,
+  Scale,
+  Brain,
+  Palette,
+  Building,
+  DollarSign,
+  Award,
+  Bot,
+  Link,
+  Video,
+  Newspaper,
+  AlertTriangle,
+  Eye,
+  Heart,
 };
 
-export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: CapsuleTypeSelectorProps) {
+export default function CapsuleTypeSelector({
+  selectedType,
+  onTypeSelect,
+}: CapsuleTypeSelectorProps) {
   const [hoveredType, setHoveredType] = useState<CapsuleType | null>(null);
 
   const getIcon = (iconName: string) => {
@@ -37,13 +69,20 @@ export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: Caps
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <div className="p-2 rounded-lg" style={{ backgroundColor: `${BRAND_COLORS.GUARDIAN}20` }}>
-              <Award className="h-5 w-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+            <div
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: `${BRAND_COLORS.GUARDIAN}20` }}
+            >
+              <Award
+                className="h-5 w-5"
+                style={{ color: BRAND_COLORS.GUARDIAN }}
+              />
             </div>
             <span className="text-white">Choose Capsule Type</span>
           </CardTitle>
           <p className="text-slate-400 text-sm">
-            Select the type that best matches your content. Each type has specialized features and verification methods.
+            Select the type that best matches your content. Each type has
+            specialized features and verification methods.
           </p>
         </CardHeader>
         <CardContent>
@@ -58,10 +97,10 @@ export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: Caps
                   key={config.id}
                   className={`cursor-pointer transition-all duration-200 border ${
                     isSelected
-                      ? 'border-purple-500 bg-purple-900/20'
+                      ? "border-purple-500 bg-purple-900/20"
                       : isHovered
-                      ? 'border-slate-500 bg-slate-700/30'
-                      : 'border-slate-600 bg-slate-700/20 hover:bg-slate-700/30'
+                      ? "border-slate-500 bg-slate-700/30"
+                      : "border-slate-600 bg-slate-700/20 hover:bg-slate-700/30"
                   }`}
                   onClick={() => onTypeSelect(config.id)}
                   onMouseEnter={() => setHoveredType(config.id)}
@@ -82,14 +121,16 @@ export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: Caps
                     <h3 className="text-white font-semibold text-sm mb-2">
                       {config.name}
                     </h3>
-                    
+
                     <p className="text-slate-400 text-xs mb-3 line-clamp-2">
                       {config.description}
                     </p>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-500 text-xs">Total Cost</span>
+                        <span className="text-slate-500 text-xs">
+                          Total Cost
+                        </span>
                         <Badge className="bg-yellow-600/20 text-yellow-400 text-xs">
                           {getFeeCost(config)} GTT
                         </Badge>
@@ -129,7 +170,9 @@ export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: Caps
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Info className="h-5 w-5 text-blue-400" />
-              <span className="text-white">{CAPSULE_TYPE_CONFIGS[selectedType].name} Details</span>
+              <span className="text-white">
+                {CAPSULE_TYPE_CONFIGS[selectedType].name} Details
+              </span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -139,31 +182,45 @@ export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: Caps
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h4 className="text-white font-semibold mb-2">Features Included</h4>
+                <h4 className="text-white font-semibold mb-2">
+                  Features Included
+                </h4>
                 <div className="space-y-1">
-                  {CAPSULE_TYPE_CONFIGS[selectedType].features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Check className="h-3 w-3 text-green-400" />
-                      <span className="text-slate-300 text-sm">{feature}</span>
-                    </div>
-                  ))}
+                  {CAPSULE_TYPE_CONFIGS[selectedType].features.map(
+                    (feature, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <Check className="h-3 w-3 text-green-400" />
+                        <span className="text-slate-300 text-sm">
+                          {feature}
+                        </span>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
 
               <div>
-                <h4 className="text-white font-semibold mb-2">Cost Breakdown</h4>
+                <h4 className="text-white font-semibold mb-2">
+                  Cost Breakdown
+                </h4>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-400">Base Fee</span>
-                    <span className="text-white">{CAPSULE_TYPE_CONFIGS[selectedType].baseFee} GTT</span>
+                    <span className="text-white">
+                      {CAPSULE_TYPE_CONFIGS[selectedType].baseFee} GTT
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-400">Premium Features</span>
-                    <span className="text-white">{CAPSULE_TYPE_CONFIGS[selectedType].premiumFee} GTT</span>
+                    <span className="text-white">
+                      {CAPSULE_TYPE_CONFIGS[selectedType].premiumFee} GTT
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm font-semibold border-t border-slate-600 pt-2">
                     <span className="text-white">Total</span>
-                    <span className="text-yellow-400">{getFeeCost(CAPSULE_TYPE_CONFIGS[selectedType])} GTT</span>
+                    <span className="text-yellow-400">
+                      {getFeeCost(CAPSULE_TYPE_CONFIGS[selectedType])} GTT
+                    </span>
                   </div>
                 </div>
               </div>
@@ -171,13 +228,22 @@ export default function CapsuleTypeSelector({ selectedType, onTypeSelect }: Caps
 
             {CAPSULE_TYPE_CONFIGS[selectedType].requiredFields && (
               <div>
-                <h4 className="text-white font-semibold mb-2">Required Information</h4>
+                <h4 className="text-white font-semibold mb-2">
+                  Required Information
+                </h4>
                 <div className="flex flex-wrap gap-2">
-                  {CAPSULE_TYPE_CONFIGS[selectedType].requiredFields!.map((field, index) => (
-                    <Badge key={index} className="bg-orange-600/20 text-orange-400">
-                      {field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                    </Badge>
-                  ))}
+                  {CAPSULE_TYPE_CONFIGS[selectedType].requiredFields!.map(
+                    (field, index) => (
+                      <Badge
+                        key={index}
+                        className="bg-orange-600/20 text-orange-400"
+                      >
+                        {field
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, (str) => str.toUpperCase())}
+                      </Badge>
+                    )
+                  )}
                 </div>
               </div>
             )}

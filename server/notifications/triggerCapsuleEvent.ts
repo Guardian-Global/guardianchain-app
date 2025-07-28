@@ -1,11 +1,11 @@
 import { sendGuardianEmail } from "../lib/mailer";
 
-export async function notifyCapsuleRemix({ 
-  user, 
-  capsuleId, 
+export async function notifyCapsuleRemix({
+  user,
+  capsuleId,
   remixerName,
   remixerAddress,
-  originalCapsule
+  originalCapsule,
 }: {
   user: { email: string; name?: string };
   capsuleId: string;
@@ -36,7 +36,11 @@ Great news! Your truth capsule has been remixed by another creator.
 - 🌟 Original capsule gets enhanced visibility
 
 ## Current Earnings
-${originalCapsule.yield ? `Your capsule has generated **${originalCapsule.yield} GTT** so far.` : "Yield tracking starting now."}
+${
+  originalCapsule.yield
+    ? `Your capsule has generated **${originalCapsule.yield} GTT** so far.`
+    : "Yield tracking starting now."
+}
 
 ---
 
@@ -47,12 +51,12 @@ ${originalCapsule.yield ? `Your capsule has generated **${originalCapsule.yield}
   });
 }
 
-export async function notifyCapsuleSealed({ 
-  user, 
+export async function notifyCapsuleSealed({
+  user,
   capsuleId,
   capsuleTitle,
   sealType = "standard",
-  finalYield
+  finalYield,
 }: {
   user: { email: string; name?: string };
   capsuleId: string;
@@ -64,7 +68,7 @@ export async function notifyCapsuleSealed({
     standard: "🔒",
     premium: "💎",
     legal: "⚖️",
-    diamond: "💠"
+    diamond: "💠",
   };
 
   await sendGuardianEmail({
@@ -84,15 +88,19 @@ Your truth capsule has been permanently sealed and is now immutable.
 - **Status:** Permanently Immutable ✅
 
 ## What Happens Next
-${finalYield ? `
+${
+  finalYield
+    ? `
 - 💰 **Final Yield:** ${finalYield} GTT tokens
 - 🎯 Yield distribution begins immediately
 - 📈 NFT certificate available for minting
-` : `
+`
+    : `
 - ⏳ Yield calculation in progress
 - 🔄 Community verification ongoing
 - 📊 Results available within 24 hours
-`}
+`
+}
 
 ## Immutability Guarantee
 Your capsule is now:

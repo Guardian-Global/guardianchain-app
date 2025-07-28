@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Shield, Users, Zap, Globe } from "lucide-react";
 import VideoSection from "@/components/home/VideoSection";
 
@@ -14,28 +20,38 @@ export default function Landing() {
               <Shield className="text-white h-10 w-10" />
             </div>
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-green-400 bg-clip-text text-transparent">
             GUARDIAN<span className="text-green-400">CHAIN</span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
-            The world's first enterprise-grade blockchain protocol for truth verification and data sovereignty. 
-            Secure your ideas before sharing them with the world.
+            The world's first enterprise-grade blockchain protocol for truth
+            verification and data sovereignty. Secure your ideas before sharing
+            them with the world.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg" asChild>
+            <Button
+              size="lg"
+              className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg"
+              asChild
+            >
               <a href="/api/login">
                 <Users className="mr-2 h-5 w-5" />
                 Sign In with Replit
               </a>
             </Button>
-            
-            <Button variant="outline" size="lg" className="border-green-500 text-green-400 hover:bg-green-500/10 px-8 py-6 text-lg" onClick={() => {
-              const videoSection = document.getElementById('video-section');
-              videoSection?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-green-500 text-green-400 hover:bg-green-500/10 px-8 py-6 text-lg"
+              onClick={() => {
+                const videoSection = document.getElementById("video-section");
+                videoSection?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
               Watch Demo
             </Button>
           </div>
@@ -52,7 +68,8 @@ export default function Landing() {
               </div>
               <CardTitle className="text-white">Truth Verification</CardTitle>
               <CardDescription className="text-slate-400">
-                Immutable proof of your ideas and content before social media sharing
+                Immutable proof of your ideas and content before social media
+                sharing
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -71,7 +88,8 @@ export default function Landing() {
               </div>
               <CardTitle className="text-white">GTT Token Economy</CardTitle>
               <CardDescription className="text-slate-400">
-                Earn rewards for verified truth contributions and community participation
+                Earn rewards for verified truth contributions and community
+                participation
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -107,14 +125,20 @@ export default function Landing() {
       {/* Stats Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-white mb-8">Trusted by Global Leaders</h2>
+          <h2 className="text-3xl font-bold text-white mb-8">
+            Trusted by Global Leaders
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <div className="text-3xl font-bold text-purple-400 mb-2">$247.5K</div>
+              <div className="text-3xl font-bold text-purple-400 mb-2">
+                $247.5K
+              </div>
               <div className="text-slate-400">Treasury Balance</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-400 mb-2">1.25M</div>
+              <div className="text-3xl font-bold text-green-400 mb-2">
+                1.25M
+              </div>
               <div className="text-slate-400">GTT Circulation</div>
             </div>
             <div>
@@ -122,7 +146,9 @@ export default function Landing() {
               <div className="text-slate-400">Uptime</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400 mb-2">77/100</div>
+              <div className="text-3xl font-bold text-yellow-400 mb-2">
+                77/100
+              </div>
               <div className="text-slate-400">Compliance Score</div>
             </div>
           </div>
@@ -131,7 +157,7 @@ export default function Landing() {
 
       {/* Video Demo Section */}
       <div id="video-section">
-        <VideoSection 
+        <VideoSection
           title="See GUARDIANCHAIN in Action"
           description="Discover how our platform protects your intellectual property and enables truth verification on the blockchain"
         />

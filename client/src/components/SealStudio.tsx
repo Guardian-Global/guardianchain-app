@@ -1,30 +1,50 @@
-import { useState } from 'react';
-import { Palette, Download, Share2, Sparkles, FileText, Shield, Award } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import SealBadge from '@/components/SealBadge';
+import { useState } from "react";
+import {
+  Palette,
+  Download,
+  Share2,
+  Sparkles,
+  FileText,
+  Shield,
+  Award,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import SealBadge from "@/components/SealBadge";
 
 const SealStudio = () => {
-  const [title, setTitle] = useState('');
-  const [summary, setSummary] = useState('');
-  const [category, setCategory] = useState('');
-  const [sealType, setSealType] = useState('standard');
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [category, setCategory] = useState("");
+  const [sealType, setSealType] = useState("standard");
   const [generated, setGenerated] = useState(false);
   const { toast } = useToast();
 
   const sealTypes = [
-    { value: 'standard', label: 'Standard Verification', color: 'bg-blue-600' },
-    { value: 'premium', label: 'Premium Guardian', color: 'bg-purple-600' },
-    { value: 'legal', label: 'Legal Certification', color: 'bg-green-600' },
-    { value: 'diamond', label: 'Diamond Elite', color: 'bg-yellow-600' }
+    { value: "standard", label: "Standard Verification", color: "bg-blue-600" },
+    { value: "premium", label: "Premium Guardian", color: "bg-purple-600" },
+    { value: "legal", label: "Legal Certification", color: "bg-green-600" },
+    { value: "diamond", label: "Diamond Elite", color: "bg-yellow-600" },
   ];
 
   const categories = [
-    'Technology', 'Legal', 'Health', 'Environment', 'Economics', 'Politics', 'Research'
+    "Technology",
+    "Legal",
+    "Health",
+    "Environment",
+    "Economics",
+    "Politics",
+    "Research",
   ];
 
   const handleGenerate = () => {
@@ -53,7 +73,9 @@ const SealStudio = () => {
   };
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.origin + '/seal/' + Date.now());
+    navigator.clipboard.writeText(
+      window.location.origin + "/seal/" + Date.now()
+    );
     toast({
       title: "Share Link Copied",
       description: "Seal verification link copied to clipboard",
@@ -61,11 +83,11 @@ const SealStudio = () => {
   };
 
   const getSealTypeColor = (type: string) => {
-    return sealTypes.find(t => t.value === type)?.color || 'bg-blue-600';
+    return sealTypes.find((t) => t.value === type)?.color || "bg-blue-600";
   };
 
   const getSealTypeLabel = (type: string) => {
-    return sealTypes.find(t => t.value === type)?.label || 'Standard';
+    return sealTypes.find((t) => t.value === type)?.label || "Standard";
   };
 
   return (
@@ -119,8 +141,10 @@ const SealStudio = () => {
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map(cat => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -135,7 +159,7 @@ const SealStudio = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {sealTypes.map(type => (
+                  {sealTypes.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -144,7 +168,7 @@ const SealStudio = () => {
               </Select>
             </div>
 
-            <Button 
+            <Button
               onClick={handleGenerate}
               className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white"
             >
@@ -158,14 +182,18 @@ const SealStudio = () => {
             <label className="text-sm font-medium text-slate-400 mb-2 block">
               Seal Preview
             </label>
-            
+
             {generated ? (
               <Card className="border-2 border-purple-500/30 bg-gradient-to-br from-slate-800 to-slate-900">
                 <CardContent className="p-6">
                   {/* Seal Header */}
                   <div className="text-center mb-6">
                     <div className="flex justify-center mb-3">
-                      <div className={`p-4 ${getSealTypeColor(sealType)} rounded-full`}>
+                      <div
+                        className={`p-4 ${getSealTypeColor(
+                          sealType
+                        )} rounded-full`}
+                      >
                         <Shield className="w-8 h-8 text-white" />
                       </div>
                     </div>
@@ -173,7 +201,16 @@ const SealStudio = () => {
                       {title || "Veritas Certified Capsule"}
                     </h3>
                     <div className="mb-3">
-                      <SealBadge type={sealType as 'Standard' | 'Premium' | 'Legal' | 'Diamond'} size="lg" />
+                      <SealBadge
+                        type={
+                          sealType as
+                            | "Standard"
+                            | "Premium"
+                            | "Legal"
+                            | "Diamond"
+                        }
+                        size="lg"
+                      />
                     </div>
                   </div>
 
@@ -181,14 +218,17 @@ const SealStudio = () => {
                   <div className="space-y-4">
                     <div className="bg-slate-700/50 rounded-lg p-4">
                       <p className="text-slate-300 text-sm leading-relaxed">
-                        {summary || "This content has been authenticated under GuardianChain's Seal Framework."}
+                        {summary ||
+                          "This content has been authenticated under GuardianChain's Seal Framework."}
                       </p>
                     </div>
 
                     {category && (
                       <div className="flex items-center justify-center gap-2">
                         <FileText className="w-4 h-4 text-slate-400" />
-                        <span className="text-sm text-slate-400">Category: {category}</span>
+                        <span className="text-sm text-slate-400">
+                          Category: {category}
+                        </span>
                       </div>
                     )}
 
@@ -196,11 +236,15 @@ const SealStudio = () => {
                     <div className="border-t border-slate-600 pt-4">
                       <div className="grid grid-cols-2 gap-4 text-center">
                         <div>
-                          <div className="text-sm font-bold text-green-400">Verified</div>
+                          <div className="text-sm font-bold text-green-400">
+                            Verified
+                          </div>
                           <div className="text-xs text-slate-400">Status</div>
                         </div>
                         <div>
-                          <div className="text-sm font-bold text-blue-400">#{Date.now().toString().slice(-6)}</div>
+                          <div className="text-sm font-bold text-blue-400">
+                            #{Date.now().toString().slice(-6)}
+                          </div>
                           <div className="text-xs text-slate-400">Seal ID</div>
                         </div>
                       </div>
@@ -210,7 +254,9 @@ const SealStudio = () => {
                     <div className="border-t border-slate-600 pt-4 text-center">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <Award className="w-4 h-4 text-yellow-400" />
-                        <span className="text-sm text-slate-400">Soulbound NFT Issued</span>
+                        <span className="text-sm text-slate-400">
+                          Soulbound NFT Issued
+                        </span>
                       </div>
                       <div className="text-xs text-slate-500">
                         Powered by GuardianChain Veritas Protocol
@@ -222,24 +268,26 @@ const SealStudio = () => {
             ) : (
               <div className="border-2 border-dashed border-slate-600 rounded-lg p-8 text-center">
                 <Shield className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                <p className="text-slate-400">Fill in the details to generate your seal preview</p>
+                <p className="text-slate-400">
+                  Fill in the details to generate your seal preview
+                </p>
               </div>
             )}
 
             {/* Action Buttons */}
             {generated && (
               <div className="flex gap-3">
-                <Button 
+                <Button
                   onClick={handleDownload}
-                  variant="outline" 
+                  variant="outline"
                   className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </Button>
-                <Button 
+                <Button
                   onClick={handleShare}
-                  variant="outline" 
+                  variant="outline"
                   className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
                 >
                   <Share2 className="w-4 h-4 mr-2" />

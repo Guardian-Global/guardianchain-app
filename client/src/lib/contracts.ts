@@ -22,7 +22,7 @@ export const GTT_TOKEN_ABI = [
   "function distributeYield(address recipient, uint256 amount)",
   "event Transfer(address indexed from, address indexed to, uint256 value)",
   "event Approval(address indexed owner, address indexed spender, uint256 value)",
-  "event YieldDistributed(address indexed recipient, uint256 amount)"
+  "event YieldDistributed(address indexed recipient, uint256 amount)",
 ];
 
 // Legacy ABI export for compatibility
@@ -41,7 +41,7 @@ export const TRUTH_VAULT_ABI = [
   "function unpause()",
   "event CapsuleCreated(bytes32 indexed capsuleId, address indexed creator, string contentHash, uint256 yieldAmount)",
   "event CapsuleVerified(bytes32 indexed capsuleId, address indexed verifier, uint256 yieldAmount)",
-  "event YieldClaimed(address indexed user, bytes32 indexed capsuleId, uint256 amount)"
+  "event YieldClaimed(address indexed user, bytes32 indexed capsuleId, uint256 amount)",
 ];
 
 // Network Configuration
@@ -57,7 +57,7 @@ export const SUPPORTED_NETWORKS = [
     },
     rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
     blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
-  }
+  },
 ];
 
 export const DEFAULT_NETWORK = SUPPORTED_NETWORKS[0];
@@ -103,7 +103,11 @@ export function parseGTT(amount: string): bigint {
   return ethers.parseEther(amount);
 }
 
-export function generateCapsuleId(creator: string, content: string, timestamp: number): string {
+export function generateCapsuleId(
+  creator: string,
+  content: string,
+  timestamp: number
+): string {
   const data = ethers.solidityPackedKeccak256(
     ["address", "string", "uint256"],
     [creator, content, timestamp]
@@ -131,12 +135,15 @@ export function isValidChain(chainId: number): boolean {
 }
 
 export function getChainName(chainId: number): string {
-  const network = SUPPORTED_NETWORKS.find(n => n.chainIdNum === chainId);
+  const network = SUPPORTED_NETWORKS.find((n) => n.chainIdNum === chainId);
   return network?.chainName || `Unknown Chain (${chainId})`;
 }
 
 // Legacy export compatibility
-export function getContractAddress(contractName: string, chainId: number = DEFAULT_CHAIN_ID): string {
+export function getContractAddress(
+  contractName: string,
+  chainId: number = DEFAULT_CHAIN_ID
+): string {
   const addresses = getContractAddresses(chainId);
   return addresses[contractName as keyof typeof addresses] || "";
 }
@@ -149,7 +156,7 @@ export const TRUTH_AUCTION_ABI = [
   "function getAuction(bytes32 capsuleId) view returns (tuple)",
   "event AuctionCreated(bytes32 indexed capsuleId, address indexed creator, uint256 reservePrice)",
   "event BidPlaced(bytes32 indexed capsuleId, address indexed bidder, uint256 amount)",
-  "event AuctionFinalized(bytes32 indexed capsuleId, address indexed winner, uint256 amount)"
+  "event AuctionFinalized(bytes32 indexed capsuleId, address indexed winner, uint256 amount)",
 ];
 
 // Contract ABIs export for compatibility
@@ -157,5 +164,5 @@ export const CONTRACT_ABIS = {
   GTTToken: GTT_TOKEN_ABI,
   TruthVault: TRUTH_VAULT_ABI,
   CapsuleFactoryV2: CAPSULE_FACTORY_V2_ABI,
-  TruthAuction: TRUTH_AUCTION_ABI
+  TruthAuction: TRUTH_AUCTION_ABI,
 };

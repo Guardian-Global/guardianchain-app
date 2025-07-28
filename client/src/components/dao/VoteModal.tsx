@@ -1,14 +1,33 @@
-import { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
-import { ThumbsUp, ThumbsDown, Loader2, CheckCircle, XCircle, Users, Clock } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
-import { getContractAddress, CONTRACT_ABIS } from '@/lib/contracts';
-import { formatEther } from 'viem';
+import { useState } from "react";
+import {
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useReadContract,
+} from "wagmi";
+import {
+  ThumbsUp,
+  ThumbsDown,
+  Loader2,
+  CheckCircle,
+  XCircle,
+  Users,
+  Clock,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { getContractAddress, CONTRACT_ABIS } from "@/lib/contracts";
+import { formatEther } from "viem";
 
 interface VoteModalProps {
   isOpen: boolean;
@@ -26,19 +45,23 @@ interface VoteModalProps {
   };
 }
 
-export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps) {
+export default function VoteModal({
+  isOpen,
+  onClose,
+  proposal,
+}: VoteModalProps) {
   const [voteChoice, setVoteChoice] = useState<boolean | null>(null);
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
-  const daoAddress = chainId ? getContractAddress(chainId, 'dao') : undefined;
-  const gttAddress = chainId ? getContractAddress(chainId, 'gtt') : undefined;
+  const daoAddress = chainId ? getContractAddress(chainId, "dao") : undefined;
+  const gttAddress = chainId ? getContractAddress(chainId, "gtt") : undefined;
 
   // Check if user has already voted
   const { data: hasVoted } = useReadContract({
     address: daoAddress as `0x${string}`,
     abi: CONTRACT_ABIS.TruthDAO,
-    functionName: 'hasUserVoted',
+    functionName: "hasUserVoted",
     args: [BigInt(proposal.id), address],
     enabled: !!daoAddress && !!address,
   });
@@ -47,7 +70,7 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
   const { data: votingPower } = useReadContract({
     address: gttAddress as `0x${string}`,
     abi: CONTRACT_ABIS.GTTToken,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address],
     enabled: !!gttAddress && !!address,
   });
@@ -56,24 +79,17 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
   const { data: userVoteWeight } = useReadContract({
     address: daoAddress as `0x${string}`,
     abi: CONTRACT_ABIS.TruthDAO,
-    functionName: 'getUserVoteWeight',
+    functionName: "getUserVoteWeight",
     args: [BigInt(proposal.id), address],
     enabled: !!daoAddress && !!address && hasVoted,
   });
 
-  const { 
-    writeContract, 
-    data: hash, 
-    isPending, 
-    error 
-  } = useWriteContract();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-  const { 
-    isLoading: isConfirming, 
-    isSuccess: isConfirmed 
-  } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const handleVote = async (support: boolean) => {
     if (!daoAddress || !address) return;
@@ -82,7 +98,7 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
       writeContract({
         address: daoAddress as `0x${string}`,
         abi: CONTRACT_ABIS.TruthDAO,
-        functionName: 'vote',
+        functionName: "vote",
         args: [BigInt(proposal.id), support],
       });
 
@@ -116,12 +132,16 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
 
   const isVotingActive = Date.now() < proposal.deadline * 1000;
   const totalVotes = proposal.votesFor + proposal.votesAgainst;
-  const forPercentage = totalVotes > 0 ? Number(proposal.votesFor * 100n / totalVotes) : 0;
-  const againstPercentage = totalVotes > 0 ? Number(proposal.votesAgainst * 100n / totalVotes) : 0;
+  const forPercentage =
+    totalVotes > 0 ? Number((proposal.votesFor * 100n) / totalVotes) : 0;
+  const againstPercentage =
+    totalVotes > 0 ? Number((proposal.votesAgainst * 100n) / totalVotes) : 0;
 
   const timeRemaining = Math.max(0, proposal.deadline * 1000 - Date.now());
   const hoursRemaining = Math.floor(timeRemaining / (1000 * 60 * 60));
-  const minutesRemaining = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+  const minutesRemaining = Math.floor(
+    (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -132,7 +152,8 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
             {proposal.title}
           </DialogTitle>
           <DialogDescription className="text-slate-400">
-            Proposal #{proposal.id} • Created {new Date(proposal.createdAt * 1000).toLocaleDateString()}
+            Proposal #{proposal.id} • Created{" "}
+            {new Date(proposal.createdAt * 1000).toLocaleDateString()}
           </DialogDescription>
         </DialogHeader>
 
@@ -140,10 +161,14 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
           {/* Proposal Description */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-sm text-slate-400">Description</CardTitle>
+              <CardTitle className="text-sm text-slate-400">
+                Description
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-white whitespace-pre-wrap">{proposal.description}</p>
+              <p className="text-white whitespace-pre-wrap">
+                {proposal.description}
+              </p>
             </CardContent>
           </Card>
 
@@ -158,26 +183,40 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-slate-300">Status:</span>
-                <Badge variant={isVotingActive ? "default" : "secondary"} className={isVotingActive ? "bg-green-600" : "bg-gray-600"}>
-                  {isVotingActive ? "Active" : proposal.executed ? "Executed" : "Ended"}
+                <Badge
+                  variant={isVotingActive ? "default" : "secondary"}
+                  className={isVotingActive ? "bg-green-600" : "bg-gray-600"}
+                >
+                  {isVotingActive
+                    ? "Active"
+                    : proposal.executed
+                    ? "Executed"
+                    : "Ended"}
                 </Badge>
               </div>
-              
+
               {isVotingActive && (
                 <div className="flex items-center justify-between">
                   <span className="text-slate-300">Time Remaining:</span>
-                  <span className="text-white">{hoursRemaining}h {minutesRemaining}m</span>
+                  <span className="text-white">
+                    {hoursRemaining}h {minutesRemaining}m
+                  </span>
                 </div>
               )}
 
               <div className="flex items-center justify-between">
                 <span className="text-slate-300">Total Votes:</span>
-                <span className="text-white">{formatEther(totalVotes)} GTT</span>
+                <span className="text-white">
+                  {formatEther(totalVotes)} GTT
+                </span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-slate-300">Proposer:</span>
-                <span className="text-white font-mono text-sm">{proposal.proposer.slice(0, 6)}...{proposal.proposer.slice(-4)}</span>
+                <span className="text-white font-mono text-sm">
+                  {proposal.proposer.slice(0, 6)}...
+                  {proposal.proposer.slice(-4)}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -185,7 +224,9 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
           {/* Vote Results */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-sm text-slate-400">Current Results</CardTitle>
+              <CardTitle className="text-sm text-slate-400">
+                Current Results
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -194,11 +235,13 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
                     <ThumbsUp className="h-4 w-4 text-green-400" />
                     <span className="text-white">For</span>
                   </div>
-                  <span className="text-white">{formatEther(proposal.votesFor)} GTT ({forPercentage}%)</span>
+                  <span className="text-white">
+                    {formatEther(proposal.votesFor)} GTT ({forPercentage}%)
+                  </span>
                 </div>
                 <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300" 
+                  <div
+                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${forPercentage}%` }}
                   />
                 </div>
@@ -210,11 +253,14 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
                     <ThumbsDown className="h-4 w-4 text-red-400" />
                     <span className="text-white">Against</span>
                   </div>
-                  <span className="text-white">{formatEther(proposal.votesAgainst)} GTT ({againstPercentage}%)</span>
+                  <span className="text-white">
+                    {formatEther(proposal.votesAgainst)} GTT (
+                    {againstPercentage}%)
+                  </span>
                 </div>
                 <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-red-500 h-2 rounded-full transition-all duration-300" 
+                  <div
+                    className="bg-red-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${againstPercentage}%` }}
                   />
                 </div>
@@ -226,24 +272,33 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
           {address && (
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-sm text-slate-400">Your Voting Power</CardTitle>
+                <CardTitle className="text-sm text-slate-400">
+                  Your Voting Power
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-300">GTT Balance:</span>
-                  <span className="text-white">{votingPower ? formatEther(votingPower) : '0'} GTT</span>
+                  <span className="text-white">
+                    {votingPower ? formatEther(votingPower) : "0"} GTT
+                  </span>
                 </div>
-                
+
                 {hasVoted && userVoteWeight && (
                   <div className="flex items-center justify-between">
                     <span className="text-slate-300">Vote Weight Used:</span>
-                    <span className="text-white">{formatEther(userVoteWeight)} GTT</span>
+                    <span className="text-white">
+                      {formatEther(userVoteWeight)} GTT
+                    </span>
                   </div>
                 )}
-                
+
                 <div className="flex items-center justify-between">
                   <span className="text-slate-300">Vote Status:</span>
-                  <Badge variant={hasVoted ? "default" : "outline"} className={hasVoted ? "bg-blue-600" : "border-slate-600"}>
+                  <Badge
+                    variant={hasVoted ? "default" : "outline"}
+                    className={hasVoted ? "bg-blue-600" : "border-slate-600"}
+                  >
                     {hasVoted ? "Voted" : "Not Voted"}
                   </Badge>
                 </div>
@@ -256,11 +311,18 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
           {/* Voting Actions */}
           {address && isVotingActive && !hasVoted && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">Cast Your Vote</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Cast Your Vote
+              </h3>
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   onClick={() => handleVote(true)}
-                  disabled={isPending || isConfirming || !votingPower || votingPower === 0n}
+                  disabled={
+                    isPending ||
+                    isConfirming ||
+                    !votingPower ||
+                    votingPower === 0n
+                  }
                   className="bg-green-600 hover:bg-green-700 text-white"
                 >
                   {isPending || isConfirming ? (
@@ -275,10 +337,15 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
                     </>
                   )}
                 </Button>
-                
+
                 <Button
                   onClick={() => handleVote(false)}
-                  disabled={isPending || isConfirming || !votingPower || votingPower === 0n}
+                  disabled={
+                    isPending ||
+                    isConfirming ||
+                    !votingPower ||
+                    votingPower === 0n
+                  }
                   className="bg-red-600 hover:bg-red-700 text-white"
                 >
                   {isPending || isConfirming ? (
@@ -294,7 +361,7 @@ export default function VoteModal({ isOpen, onClose, proposal }: VoteModalProps)
                   )}
                 </Button>
               </div>
-              
+
               {(!votingPower || votingPower === 0n) && (
                 <p className="text-sm text-yellow-400 text-center">
                   You need GTT tokens to vote on proposals

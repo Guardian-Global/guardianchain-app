@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { 
-  Coins, 
-  TrendingUp, 
-  Clock, 
-  CheckCircle, 
+import {
+  Coins,
+  TrendingUp,
+  Clock,
+  CheckCircle,
   AlertCircle,
   Wallet,
   RefreshCw,
   Eye,
   Share2,
-  Award
+  Award,
 } from "lucide-react";
 import { getGTTTokenContract, getSigner, formatGTT } from "@/lib/contracts";
 import { ethers } from "ethers";
@@ -41,10 +47,10 @@ interface CapsuleYieldManagerProps {
   onYieldClaimed: (capsuleId: string, amount: string) => void;
 }
 
-export default function CapsuleYieldManager({ 
-  userAddress, 
-  capsules, 
-  onYieldClaimed 
+export default function CapsuleYieldManager({
+  userAddress,
+  capsules,
+  onYieldClaimed,
 }: CapsuleYieldManagerProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -61,7 +67,7 @@ export default function CapsuleYieldManager({
   useEffect(() => {
     if (capsules) {
       const claimable = capsules
-        .filter(c => c.verified && !c.yieldClaimed)
+        .filter((c) => c.verified && !c.yieldClaimed)
         .reduce((sum, c) => sum + (c.yieldAmount || 0), 0);
       setTotalClaimable(claimable);
     }
@@ -71,7 +77,7 @@ export default function CapsuleYieldManager({
   const claimYieldMutation = useMutation({
     mutationFn: async (capsule: Capsule) => {
       setClaimingCapsule(capsule.id);
-      
+
       try {
         // Get signer for transaction
         const signer = await getSigner();
@@ -81,10 +87,10 @@ export default function CapsuleYieldManager({
 
         // Get GTT contract
         const gttContract = getGTTTokenContract(signer);
-        
+
         // Simulate yield claim transaction (in production, this would mint GTT tokens)
         const yieldAmount = ethers.parseEther(capsule.yieldAmount.toString());
-        
+
         // For demo purposes, we'll simulate the transaction
         const tx = await gttContract.transfer(userAddress, yieldAmount);
         await tx.wait();
@@ -94,29 +100,29 @@ export default function CapsuleYieldManager({
           capsuleId: capsule.id,
           userAddress,
           amount: capsule.yieldAmount.toString(),
-          txHash: tx.hash
+          txHash: tx.hash,
         });
 
         return {
           capsuleId: capsule.id,
           amount: capsule.yieldAmount.toString(),
-          txHash: tx.hash
+          txHash: tx.hash,
         };
       } catch (error: any) {
         // For demo purposes, simulate successful claim
         const mockTxHash = "0x" + Math.random().toString(16).slice(2, 66);
-        
+
         await apiRequest("POST", "/api/capsules/claim-yield", {
           capsuleId: capsule.id,
           userAddress,
           amount: capsule.yieldAmount.toString(),
-          txHash: mockTxHash
+          txHash: mockTxHash,
         });
 
         return {
           capsuleId: capsule.id,
           amount: capsule.yieldAmount.toString(),
-          txHash: mockTxHash
+          txHash: mockTxHash,
         };
       }
     },
@@ -125,7 +131,7 @@ export default function CapsuleYieldManager({
         title: "Yield Claimed Successfully!",
         description: `Claimed ${data.amount} GTT tokens`,
       });
-      
+
       onYieldClaimed(data.capsuleId, data.amount);
       refetchClaimable();
       queryClient.invalidateQueries({ queryKey: ["/api/users/capsules"] });
@@ -139,14 +145,16 @@ export default function CapsuleYieldManager({
     },
     onSettled: () => {
       setClaimingCapsule("");
-    }
+    },
   });
 
   // Claim all yields at once
   const claimAllMutation = useMutation({
     mutationFn: async () => {
-      const claimableCapsules = capsules.filter(c => c.verified && !c.yieldClaimed);
-      
+      const claimableCapsules = capsules.filter(
+        (c) => c.verified && !c.yieldClaimed
+      );
+
       if (claimableCapsules.length === 0) {
         throw new Error("No claimable yields available");
       }
@@ -156,14 +164,19 @@ export default function CapsuleYieldManager({
         const result = await claimYieldMutation.mutateAsync(capsule);
         results.push(result);
       }
-      
+
       return results;
     },
     onSuccess: (results) => {
-      const totalClaimed = results.reduce((sum, r) => sum + parseFloat(r.amount), 0);
+      const totalClaimed = results.reduce(
+        (sum, r) => sum + parseFloat(r.amount),
+        0
+      );
       toast({
         title: "All Yields Claimed!",
-        description: `Successfully claimed ${totalClaimed.toFixed(2)} GTT tokens from ${results.length} capsules`,
+        description: `Successfully claimed ${totalClaimed.toFixed(
+          2
+        )} GTT tokens from ${results.length} capsules`,
       });
     },
     onError: (error: any) => {
@@ -172,11 +185,13 @@ export default function CapsuleYieldManager({
         description: error.message,
         variant: "destructive",
       });
-    }
+    },
   });
 
-  const claimableCapsules = capsules.filter(c => c.verified && !c.yieldClaimed);
-  const claimedCapsules = capsules.filter(c => c.yieldClaimed);
+  const claimableCapsules = capsules.filter(
+    (c) => c.verified && !c.yieldClaimed
+  );
+  const claimedCapsules = capsules.filter((c) => c.yieldClaimed);
 
   return (
     <div className="space-y-6">
@@ -189,8 +204,12 @@ export default function CapsuleYieldManager({
                 <Coins className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{totalClaimable.toFixed(2)}</div>
-                <div className="text-sm text-muted-foreground">Claimable GTT</div>
+                <div className="text-2xl font-bold">
+                  {totalClaimable.toFixed(2)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Claimable GTT
+                </div>
               </div>
             </div>
           </CardContent>
@@ -203,8 +222,12 @@ export default function CapsuleYieldManager({
                 <Award className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{claimableCapsules.length}</div>
-                <div className="text-sm text-muted-foreground">Ready to Claim</div>
+                <div className="text-2xl font-bold">
+                  {claimableCapsules.length}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Ready to Claim
+                </div>
               </div>
             </div>
           </CardContent>
@@ -217,8 +240,12 @@ export default function CapsuleYieldManager({
                 <CheckCircle className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{claimedCapsules.length}</div>
-                <div className="text-sm text-muted-foreground">Already Claimed</div>
+                <div className="text-2xl font-bold">
+                  {claimedCapsules.length}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Already Claimed
+                </div>
               </div>
             </div>
           </CardContent>
@@ -247,7 +274,7 @@ export default function CapsuleYieldManager({
                   From {claimableCapsules.length} verified capsules
                 </div>
               </div>
-              <Button 
+              <Button
                 onClick={() => claimAllMutation.mutate()}
                 disabled={claimAllMutation.isPending || totalClaimable === 0}
                 className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
@@ -359,16 +386,20 @@ export default function CapsuleYieldManager({
           <CardContent>
             <div className="space-y-3">
               {claimedCapsules.map((capsule) => (
-                <div key={capsule.id} className="p-3 border rounded-lg bg-muted/50">
+                <div
+                  key={capsule.id}
+                  className="p-3 border rounded-lg bg-muted/50"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <h4 className="font-medium">{capsule.title}</h4>
                       <div className="text-sm text-muted-foreground">
                         Claimed {capsule.yieldAmount.toFixed(2)} GTT on{" "}
-                        {capsule.yieldClaimedAt ? 
-                          new Date(capsule.yieldClaimedAt).toLocaleDateString() : 
-                          "Unknown date"
-                        }
+                        {capsule.yieldClaimedAt
+                          ? new Date(
+                              capsule.yieldClaimedAt
+                            ).toLocaleDateString()
+                          : "Unknown date"}
                       </div>
                     </div>
                     <Badge variant="secondary" className="ml-4">
@@ -393,7 +424,9 @@ export default function CapsuleYieldManager({
               <p className="text-muted-foreground mb-4">
                 Create and verify truth capsules to start earning GTT yields
               </p>
-              <Button onClick={() => window.location.href = "/create-capsule"}>
+              <Button
+                onClick={() => (window.location.href = "/create-capsule")}
+              >
                 Create Your First Capsule
               </Button>
             </div>

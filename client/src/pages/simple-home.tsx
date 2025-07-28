@@ -1,14 +1,20 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Zap, 
-  Shield, 
+import {
+  Zap,
+  Shield,
   Rocket,
   TrendingUp,
   Users,
   Globe,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 
 export default function SimpleHome() {
@@ -21,15 +27,24 @@ export default function SimpleHome() {
             GUARDIANCHAIN
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            The world's first blockchain-powered truth verification platform. 
+            The world's first blockchain-powered truth verification platform.
             Secure your content, verify information, and earn GTT tokens.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90" onClick={() => window.location.href = '/profile'}>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90"
+              onClick={() => (window.location.href = "/profile")}
+            >
               <Rocket className="h-5 w-5 mr-2" />
               Get Started
             </Button>
-            <Button variant="outline" size="lg" className="border-purple-500 text-purple-400 hover:bg-purple-500/10" onClick={() => window.location.href = '/token-launch'}>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-purple-500 text-purple-400 hover:bg-purple-500/10"
+              onClick={() => (window.location.href = "/token-launch")}
+            >
               View Token Launch
             </Button>
           </div>
@@ -49,7 +64,7 @@ export default function SimpleHome() {
               <div className="text-sm text-green-400">+19.05% (24h)</div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-blue-400">
@@ -62,7 +77,7 @@ export default function SimpleHome() {
               <div className="text-sm text-blue-400">Growing daily</div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-purple-400">
@@ -98,7 +113,8 @@ export default function SimpleHome() {
               </div>
               <CardTitle className="text-white">GTT Rewards</CardTitle>
               <CardDescription className="text-slate-300">
-                Earn tokens for creating verified content and accurate verification
+                Earn tokens for creating verified content and accurate
+                verification
               </CardDescription>
             </CardHeader>
           </Card>
@@ -110,7 +126,8 @@ export default function SimpleHome() {
               </div>
               <CardTitle className="text-white">Enterprise Ready</CardTitle>
               <CardDescription className="text-slate-300">
-                Professional-grade platform with 99.9% uptime and enterprise features
+                Professional-grade platform with 99.9% uptime and enterprise
+                features
               </CardDescription>
             </CardHeader>
           </Card>

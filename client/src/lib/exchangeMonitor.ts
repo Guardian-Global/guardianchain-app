@@ -5,7 +5,7 @@ const mockSupabaseClient = {
       then: (callback: (result: any) => void) => {
         console.log(`Exchange log inserted:`, data);
         callback({ data, error: null });
-      }
+      },
     }),
     select: (columns: string) => ({
       eq: (column: string, value: any) => ({
@@ -16,33 +16,33 @@ const mockSupabaseClient = {
                 {
                   id: 1,
                   userId: value,
-                  from: 'GTT',
-                  to: 'USD',
+                  from: "GTT",
+                  to: "USD",
                   amount: 100,
                   priceUSD: 0.15,
-                  txHash: '0x123...abc',
-                  region: 'US',
-                  timestamp: '2025-01-15T10:30:00Z'
+                  txHash: "0x123...abc",
+                  region: "US",
+                  timestamp: "2025-01-15T10:30:00Z",
                 },
                 {
                   id: 2,
                   userId: value,
-                  from: 'USD',
-                  to: 'GTT',
+                  from: "USD",
+                  to: "GTT",
                   amount: 50,
                   priceUSD: 0.14,
-                  txHash: '0x456...def',
-                  region: 'US',
-                  timestamp: '2025-02-20T14:15:00Z'
-                }
+                  txHash: "0x456...def",
+                  region: "US",
+                  timestamp: "2025-02-20T14:15:00Z",
+                },
               ];
               callback({ data: mockTransactions, error: null });
-            }
-          })
-        })
-      })
-    })
-  })
+            },
+          }),
+        }),
+      }),
+    }),
+  }),
 };
 
 export interface ExchangeTransaction {
@@ -75,27 +75,30 @@ export async function logExchange(tx: ExchangeTransaction) {
 
     return new Promise((resolve) => {
       mockSupabaseClient
-        .from('exchange_log')
+        .from("exchange_log")
         .insert([transactionWithTimestamp])
         .then((result) => {
           resolve(result);
         });
     });
   } catch (error) {
-    console.error('Exchange logging error:', error);
+    console.error("Exchange logging error:", error);
     throw error;
   }
 }
 
-export async function getTaxReport(userId: string, year: number): Promise<TaxReport> {
+export async function getTaxReport(
+  userId: string,
+  year: number
+): Promise<TaxReport> {
   try {
     const transactions = await new Promise<ExchangeTransaction[]>((resolve) => {
       mockSupabaseClient
-        .from('exchange_log')
-        .select('*')
-        .eq('userId', userId)
-        .gte('timestamp', `${year}-01-01`)
-        .lt('timestamp', `${year + 1}-01-01`)
+        .from("exchange_log")
+        .select("*")
+        .eq("userId", userId)
+        .gte("timestamp", `${year}-01-01`)
+        .lt("timestamp", `${year + 1}-01-01`)
         .then((result: any) => {
           resolve(result.data || []);
         });
@@ -107,11 +110,11 @@ export async function getTaxReport(userId: string, year: number): Promise<TaxRep
     let totalUSDValue = 0;
     let capitalGains = 0;
 
-    transactions.forEach(tx => {
-      if (tx.from === 'GTT' && tx.to === 'USD') {
+    transactions.forEach((tx) => {
+      if (tx.from === "GTT" && tx.to === "USD") {
         totalGTTSold += tx.amount;
         totalUSDValue += tx.amount * tx.priceUSD;
-      } else if (tx.from === 'USD' && tx.to === 'GTT') {
+      } else if (tx.from === "USD" && tx.to === "GTT") {
         totalGTTBought += tx.amount;
         totalUSDValue -= tx.amount * tx.priceUSD;
       }
@@ -127,10 +130,10 @@ export async function getTaxReport(userId: string, year: number): Promise<TaxRep
       totalGTTBought,
       totalUSDValue,
       capitalGains,
-      taxableEvents: transactions
+      taxableEvents: transactions,
     };
   } catch (error) {
-    console.error('Tax report error:', error);
+    console.error("Tax report error:", error);
     throw error;
   }
 }
@@ -139,20 +142,22 @@ export async function monitorLargeTransactions(threshold: number = 1000) {
   // Mock monitoring for transactions above threshold
   const mockLargeTransactions = [
     {
-      userId: 'whale-001',
+      userId: "whale-001",
       amount: 5000,
-      from: 'GTT',
-      to: 'USD',
+      from: "GTT",
+      to: "USD",
       priceUSD: 0.15,
-      flagReason: 'Large volume transaction',
-      timestamp: new Date().toISOString()
-    }
+      flagReason: "Large volume transaction",
+      timestamp: new Date().toISOString(),
+    },
   ];
 
   return mockLargeTransactions;
 }
 
-export async function getExchangeAnalytics(timeframe: '24h' | '7d' | '30d' = '24h') {
+export async function getExchangeAnalytics(
+  timeframe: "24h" | "7d" | "30d" = "24h"
+) {
   // Mock exchange analytics
   return {
     timeframe,
@@ -160,20 +165,20 @@ export async function getExchangeAnalytics(timeframe: '24h' | '7d' | '30d' = '24
     totalTransactions: 456,
     averageTransactionSize: 274,
     topTradingPairs: [
-      { pair: 'GTT/USD', volume: 85000, percentage: 68 },
-      { pair: 'USD/GTT', volume: 40000, percentage: 32 }
+      { pair: "GTT/USD", volume: 85000, percentage: 68 },
+      { pair: "USD/GTT", volume: 40000, percentage: 32 },
     ],
     priceRange: {
       high: 0.165,
       low: 0.145,
-      current: 0.152
+      current: 0.152,
     },
     uniqueTraders: 123,
     regions: [
-      { region: 'US', percentage: 45 },
-      { region: 'EU', percentage: 30 },
-      { region: 'APAC', percentage: 25 }
-    ]
+      { region: "US", percentage: 45 },
+      { region: "EU", percentage: 30 },
+      { region: "APAC", percentage: 25 },
+    ],
   };
 }
 
@@ -184,25 +189,28 @@ export async function detectSuspiciousPatterns(userId: string) {
     unusualVolume: false,
     crossBorderActivity: false,
     potentialWashTrading: false,
-    riskScore: 'low'
+    riskScore: "low",
   };
 
   return patterns;
 }
 
-export async function generateComplianceReport(startDate: string, endDate: string) {
+export async function generateComplianceReport(
+  startDate: string,
+  endDate: string
+) {
   return {
     reportPeriod: `${startDate} to ${endDate}`,
     totalTransactions: 1247,
     totalVolume: 450000,
     suspiciousActivities: 3,
-    regionsMonitored: ['US', 'EU', 'APAC'],
-    complianceStatus: 'compliant',
+    regionsMonitored: ["US", "EU", "APAC"],
+    complianceStatus: "compliant",
     recommendedActions: [
-      'Continue monitoring large transactions',
-      'Review cross-border activity patterns',
-      'Update AML procedures quarterly'
+      "Continue monitoring large transactions",
+      "Review cross-border activity patterns",
+      "Update AML procedures quarterly",
     ],
-    generatedAt: new Date().toISOString()
+    generatedAt: new Date().toISOString(),
   };
 }

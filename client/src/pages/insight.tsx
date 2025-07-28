@@ -1,16 +1,36 @@
-import { Brain, TrendingUp, Clock, Palette } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import DaoXpGraph from '@/components/DaoXpGraph';
-import DaoStatsCard from '@/components/DaoStatsCard';
-import CapsuleTimeline from '@/components/CapsuleTimeline';
-import SealStudio from '@/components/SealStudio';
+import { Brain, TrendingUp, Clock, Palette } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DaoXpGraph from "@/components/DaoXpGraph";
+import DaoStatsCard from "@/components/DaoStatsCard";
+import CapsuleTimeline from "@/components/CapsuleTimeline";
+import SealStudio from "@/components/SealStudio";
 
 export default function InsightPage() {
   const stats = [
-    { label: 'Total XP Earned', value: '2,140', icon: TrendingUp, color: 'text-blue-400' },
-    { label: 'Capsules Tracked', value: '847', icon: Clock, color: 'text-green-400' },
-    { label: 'Seals Generated', value: '312', icon: Palette, color: 'text-purple-400' },
-    { label: 'Success Rate', value: '94.7%', icon: Brain, color: 'text-yellow-400' }
+    {
+      label: "Total XP Earned",
+      value: "2,140",
+      icon: TrendingUp,
+      color: "text-blue-400",
+    },
+    {
+      label: "Capsules Tracked",
+      value: "847",
+      icon: Clock,
+      color: "text-green-400",
+    },
+    {
+      label: "Seals Generated",
+      value: "312",
+      icon: Palette,
+      color: "text-purple-400",
+    },
+    {
+      label: "Success Rate",
+      value: "94.7%",
+      icon: Brain,
+      color: "text-yellow-400",
+    },
   ];
 
   return (
@@ -24,9 +44,12 @@ export default function InsightPage() {
                 <Brain className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <span className="text-white text-xl font-bold">Insights & Reputation Center</span>
+                <span className="text-white text-xl font-bold">
+                  Insights & Reputation Center
+                </span>
                 <p className="text-slate-400 text-sm font-normal">
-                  Advanced analytics, reputation tracking, and certification tools
+                  Advanced analytics, reputation tracking, and certification
+                  tools
                 </p>
               </div>
             </CardTitle>
@@ -43,7 +66,9 @@ export default function InsightPage() {
                     <stat.icon className={`h-5 w-5 ${stat.color}`} />
                   </div>
                   <div>
-                    <div className={`text-lg font-bold ${stat.color}`}>{stat.value}</div>
+                    <div className={`text-lg font-bold ${stat.color}`}>
+                      {stat.value}
+                    </div>
                     <div className="text-xs text-slate-400">{stat.label}</div>
                   </div>
                 </div>
@@ -68,7 +93,9 @@ export default function InsightPage() {
               <div className="w-full border-t border-slate-700"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-slate-900 px-4 text-slate-400">Capsule Evolution</span>
+              <span className="bg-slate-900 px-4 text-slate-400">
+                Capsule Evolution
+              </span>
             </div>
           </div>
 
@@ -83,7 +110,9 @@ export default function InsightPage() {
               <div className="w-full border-t border-slate-700"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-slate-900 px-4 text-slate-400">Seal Studio</span>
+              <span className="bg-slate-900 px-4 text-slate-400">
+                Seal Studio
+              </span>
             </div>
           </div>
 

@@ -17,11 +17,15 @@ export async function notifyAdminOnCritical(message: string, context?: any) {
 ${message}
 
 ## System Context
-${context ? `
+${
+  context
+    ? `
 \`\`\`json
 ${JSON.stringify(context, null, 2)}
 \`\`\`
-` : '*No additional context provided*'}
+`
+    : "*No additional context provided*"
+}
 
 ## Immediate Actions Required
 1. Review system status dashboard
@@ -38,7 +42,11 @@ ${JSON.stringify(context, null, 2)}
   });
 }
 
-export async function notifyAdminUserAction(action: string, userEmail: string, details?: any) {
+export async function notifyAdminUserAction(
+  action: string,
+  userEmail: string,
+  details?: any
+) {
   await sendGuardianEmail({
     to: ADMIN_EMAIL,
     subject: `📊 User Action: ${action}`,
@@ -52,15 +60,21 @@ export async function notifyAdminUserAction(action: string, userEmail: string, d
 - **Timestamp:** ${new Date().toLocaleString()}
 
 ## Additional Details
-${details ? `
+${
+  details
+    ? `
 \`\`\`json
 ${JSON.stringify(details, null, 2)}
 \`\`\`
-` : '*No additional details*'}
+`
+    : "*No additional details*"
+}
 
 ---
 
-**[User Profile](https://guardianchain.app/admin/users?email=${encodeURIComponent(userEmail)})** | **[Activity Log](https://guardianchain.app/admin/activity)**
+**[User Profile](https://guardianchain.app/admin/users?email=${encodeURIComponent(
+      userEmail
+    )})** | **[Activity Log](https://guardianchain.app/admin/activity)**
 `,
   });
 }
@@ -76,20 +90,24 @@ export async function notifyAdminSystemHealth(healthData: any) {
 **Report Generated:** ${new Date().toLocaleString()}
 
 ## System Status
-- **Overall Health:** ${healthData.status || 'Unknown'}
-- **Uptime:** ${healthData.uptime || 'N/A'}
-- **Active Users:** ${healthData.activeUsers || '0'}
-- **GTT Transactions:** ${healthData.transactions || '0'}
+- **Overall Health:** ${healthData.status || "Unknown"}
+- **Uptime:** ${healthData.uptime || "N/A"}
+- **Active Users:** ${healthData.activeUsers || "0"}
+- **GTT Transactions:** ${healthData.transactions || "0"}
 
 ## Service Status
-${healthData.services ? Object.entries(healthData.services).map(([service, status]) => 
-  `- **${service}:** ${status}`
-).join('\n') : '*No service data available*'}
+${
+  healthData.services
+    ? Object.entries(healthData.services)
+        .map(([service, status]) => `- **${service}:** ${status}`)
+        .join("\n")
+    : "*No service data available*"
+}
 
 ## Performance Metrics
-- **Response Time:** ${healthData.responseTime || 'N/A'}ms
-- **Error Rate:** ${healthData.errorRate || '0'}%
-- **Database Performance:** ${healthData.dbPerformance || 'Normal'}
+- **Response Time:** ${healthData.responseTime || "N/A"}ms
+- **Error Rate:** ${healthData.errorRate || "0"}%
+- **Database Performance:** ${healthData.dbPerformance || "Normal"}
 
 ---
 

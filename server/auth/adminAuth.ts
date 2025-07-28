@@ -1,7 +1,7 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import type { Request, Response, NextFunction } from 'express';
-import { storage } from '../storage';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import type { Request, Response, NextFunction } from "express";
+import { storage } from "../storage";
 
 // Role hierarchy (higher numbers = more permissions)
 export const ROLE_HIERARCHY = {
@@ -9,7 +9,7 @@ export const ROLE_HIERARCHY = {
   MODERATOR: 1,
   ADMIN: 2,
   SUPER_ADMIN: 3,
-  MASTER_ADMIN: 4
+  MASTER_ADMIN: 4,
 } as const;
 
 export type UserRole = keyof typeof ROLE_HIERARCHY;
@@ -18,21 +18,24 @@ export type UserRole = keyof typeof ROLE_HIERARCHY;
 export async function hashPassword(password: string): Promise<string> {
   const pepper = process.env.PASSWORD_PEPPER;
   if (!pepper) {
-    throw new Error('PASSWORD_PEPPER not configured');
+    throw new Error("PASSWORD_PEPPER not configured");
   }
-  
+
   const pepperedPassword = password + pepper;
   const saltRounds = 12;
   return bcrypt.hash(pepperedPassword, saltRounds);
 }
 
 // Password verification
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
   const pepper = process.env.PASSWORD_PEPPER;
   if (!pepper) {
-    throw new Error('PASSWORD_PEPPER not configured');
+    throw new Error("PASSWORD_PEPPER not configured");
   }
-  
+
   const pepperedPassword = password + pepper;
   return bcrypt.compare(pepperedPassword, hash);
 }
@@ -41,32 +44,34 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 export function generateToken(userId: string, roles: string[]): string {
   const jwtSecret = process.env.JWT_SECRET;
   if (!jwtSecret) {
-    throw new Error('JWT_SECRET not configured');
+    throw new Error("JWT_SECRET not configured");
   }
 
   return jwt.sign(
-    { 
-      userId, 
+    {
+      userId,
       roles,
       iat: Math.floor(Date.now() / 1000),
     },
     jwtSecret,
-    { expiresIn: '24h' }
+    { expiresIn: "24h" }
   );
 }
 
 // JWT token verification
-export function verifyToken(token: string): { userId: string; roles: string[] } | null {
+export function verifyToken(
+  token: string
+): { userId: string; roles: string[] } | null {
   try {
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
-      throw new Error('JWT_SECRET not configured');
+      throw new Error("JWT_SECRET not configured");
     }
 
     const decoded = jwt.verify(token, jwtSecret) as any;
     return {
       userId: decoded.userId,
-      roles: decoded.roles || ['USER']
+      roles: decoded.roles || ["USER"],
     };
   } catch (error) {
     return null;
@@ -75,22 +80,28 @@ export function verifyToken(token: string): { userId: string; roles: string[] } 
 
 // Check if user has required role
 export function hasRole(userRoles: string[], requiredRole: UserRole): boolean {
-  const userMaxRole = Math.max(...userRoles.map(role => ROLE_HIERARCHY[role as UserRole] || 0));
+  const userMaxRole = Math.max(
+    ...userRoles.map((role) => ROLE_HIERARCHY[role as UserRole] || 0)
+  );
   return userMaxRole >= ROLE_HIERARCHY[requiredRole];
 }
 
 // Authentication middleware
-export function requireAuth(req: Request & { user?: any }, res: Response, next: NextFunction) {
+export function requireAuth(
+  req: Request & { user?: any },
+  res: Response,
+  next: NextFunction
+) {
   const authHeader = req.headers.authorization;
-  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
   if (!token) {
-    return res.status(401).json({ error: 'No authentication token provided' });
+    return res.status(401).json({ error: "No authentication token provided" });
   }
 
   const decoded = verifyToken(token);
   if (!decoded) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(401).json({ error: "Invalid or expired token" });
   }
 
   req.user = decoded;
@@ -101,14 +112,14 @@ export function requireAuth(req: Request & { user?: any }, res: Response, next: 
 export function requireRole(requiredRole: UserRole) {
   return (req: Request & { user?: any }, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     if (!hasRole(req.user.roles, requiredRole)) {
-      return res.status(403).json({ 
-        error: 'Insufficient permissions',
+      return res.status(403).json({
+        error: "Insufficient permissions",
         required: requiredRole,
-        current: req.user.roles
+        current: req.user.roles,
       });
     }
 
@@ -122,7 +133,7 @@ export async function initializeMasterAdmin(): Promise<void> {
   const masterPassword = process.env.MASTER_ADMIN_INIT_PASSWORD;
 
   if (!masterEmail || !masterPassword) {
-    console.warn('Master admin credentials not configured');
+    console.warn("Master admin credentials not configured");
     return;
   }
 
@@ -130,7 +141,7 @@ export async function initializeMasterAdmin(): Promise<void> {
     // Check if master admin already exists
     const existingAdmin = await storage.getUserByEmail(masterEmail);
     if (existingAdmin) {
-      console.log('Master admin already exists');
+      console.log("Master admin already exists");
       return;
     }
 
@@ -138,15 +149,15 @@ export async function initializeMasterAdmin(): Promise<void> {
     const passwordHash = await hashPassword(masterPassword);
     await storage.createAdminUser({
       email: masterEmail,
-      firstName: 'Master',
-      lastName: 'Admin',
-      roles: ['MASTER_ADMIN'],
+      firstName: "Master",
+      lastName: "Admin",
+      roles: ["MASTER_ADMIN"],
       isActive: true,
-      passwordHash
+      passwordHash,
     });
 
-    console.log('Master admin account created successfully');
+    console.log("Master admin account created successfully");
   } catch (error) {
-    console.error('Failed to initialize master admin:', error);
+    console.error("Failed to initialize master admin:", error);
   }
 }

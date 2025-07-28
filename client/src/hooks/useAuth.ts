@@ -1,4 +1,11 @@
-import { useState, useEffect, createContext, useContext, type ReactNode, createElement } from 'react';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  type ReactNode,
+  createElement,
+} from "react";
 
 // Authentication types
 export interface User {
@@ -46,16 +53,16 @@ export interface SignupData {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Token storage utilities
-const TOKEN_KEY = 'guardianchain_auth_token';
-const USER_KEY = 'guardianchain_user_data';
+const TOKEN_KEY = "guardianchain_auth_token";
+const USER_KEY = "guardianchain_user_data";
 
 function getStoredToken(): string | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY);
 }
 
 function getStoredUser(): User | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   const userData = localStorage.getItem(USER_KEY);
   if (userData) {
     try {
@@ -68,36 +75,41 @@ function getStoredUser(): User | null {
 }
 
 function setAuthData(session: AuthSession): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   localStorage.setItem(TOKEN_KEY, session.token);
   localStorage.setItem(USER_KEY, JSON.stringify(session.user));
 }
 
 function clearAuthData(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
 }
 
 // API request helper with auth
-async function authRequest(endpoint: string, options: RequestInit = {}): Promise<any> {
+async function authRequest(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<any> {
   const token = getStoredToken();
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...options.headers as Record<string, string>
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(`/api/auth${endpoint}`, {
     ...options,
-    headers
+    headers,
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: 'Request failed' }));
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Request failed" }));
     throw new Error(errorData.message || `HTTP ${response.status}`);
   }
 
@@ -120,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (storedUser && storedToken) {
           // Verify token is still valid
           try {
-            const response = await authRequest('/profile');
+            const response = await authRequest("/profile");
             if (response.success) {
               setUser(response.user);
             } else {
@@ -131,7 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
+        console.error("Auth initialization error:", error);
         clearAuthData();
       } finally {
         setIsLoading(false);
@@ -146,9 +158,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       setError(null);
 
-      const response = await authRequest('/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password })
+      const response = await authRequest("/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
       });
 
       if (response.success && response.session) {
@@ -157,9 +169,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return true;
       }
 
-      throw new Error(response.message || 'Login failed');
+      throw new Error(response.message || "Login failed");
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed';
+      const message = error instanceof Error ? error.message : "Login failed";
       setError(message);
       return false;
     } finally {
@@ -172,9 +184,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       setError(null);
 
-      const response = await authRequest('/signup', {
-        method: 'POST',
-        body: JSON.stringify(userData)
+      const response = await authRequest("/signup", {
+        method: "POST",
+        body: JSON.stringify(userData),
       });
 
       if (response.success && response.session) {
@@ -183,9 +195,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return true;
       }
 
-      throw new Error(response.message || 'Signup failed');
+      throw new Error(response.message || "Signup failed");
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Signup failed';
+      const message = error instanceof Error ? error.message : "Signup failed";
       setError(message);
       return false;
     } finally {
@@ -196,7 +208,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async (): Promise<void> => {
     try {
       // Call logout endpoint for logging
-      await authRequest('/logout', { method: 'POST' });
+      await authRequest("/logout", { method: "POST" });
     } catch {
       // Ignore logout endpoint errors
     } finally {
@@ -208,21 +220,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshToken = async (): Promise<boolean> => {
     try {
-      const response = await authRequest('/refresh', { method: 'POST' });
-      
+      const response = await authRequest("/refresh", { method: "POST" });
+
       if (response.success && response.token) {
         const currentUser = getStoredUser();
         if (currentUser) {
           const newSession: AuthSession = {
             user: currentUser,
             token: response.token,
-            expiresAt: response.expiresAt
+            expiresAt: response.expiresAt,
           };
           setAuthData(newSession);
           return true;
         }
       }
-      
+
       return false;
     } catch {
       logout();
@@ -232,9 +244,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateStake = async (amount: number): Promise<boolean> => {
     try {
-      const response = await authRequest('/update-stake', {
-        method: 'PATCH',
-        body: JSON.stringify({ stakeAmount: amount })
+      const response = await authRequest("/update-stake", {
+        method: "PATCH",
+        body: JSON.stringify({ stakeAmount: amount }),
       });
 
       if (response.success && user) {
@@ -246,20 +258,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return false;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to update stake';
+      const message =
+        error instanceof Error ? error.message : "Failed to update stake";
       setError(message);
       return false;
     }
   };
 
-  const upgradeTier = async (targetTier: string, paymentData?: any): Promise<boolean> => {
+  const upgradeTier = async (
+    targetTier: string,
+    paymentData?: any
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await authRequest('/upgrade-tier', {
-        method: 'POST',
-        body: JSON.stringify({ targetTier, ...paymentData })
+      const response = await authRequest("/upgrade-tier", {
+        method: "POST",
+        body: JSON.stringify({ targetTier, ...paymentData }),
       });
 
       if (response.success && user) {
@@ -269,9 +285,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return true;
       }
 
-      throw new Error(response.message || 'Tier upgrade failed');
+      throw new Error(response.message || "Tier upgrade failed");
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Tier upgrade failed';
+      const message =
+        error instanceof Error ? error.message : "Tier upgrade failed";
       setError(message);
       return false;
     } finally {
@@ -289,7 +306,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     refreshToken,
     updateStake,
-    upgradeTier
+    upgradeTier,
   };
 
   return createElement(AuthContext.Provider, { value: contextValue }, children);
@@ -299,7 +316,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

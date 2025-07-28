@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { getLatestTreasurySnapshot } from '@/lib/treasury';
-import { askAI } from '@/lib/ai';
+import React, { useEffect, useState } from "react";
+import { getLatestTreasurySnapshot } from "@/lib/treasury";
+import { askAI } from "@/lib/ai";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, TrendingUp, AlertTriangle, Lightbulb, RefreshCw } from "lucide-react";
+import {
+  Brain,
+  TrendingUp,
+  AlertTriangle,
+  Lightbulb,
+  RefreshCw,
+} from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
 export default function AIAdvisorPanel() {
-  const [advice, setAdvice] = useState<string>('Analyzing financial data...');
+  const [advice, setAdvice] = useState<string>("Analyzing financial data...");
   const [snapshot, setSnapshot] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -18,7 +24,7 @@ export default function AIAdvisorPanel() {
       setRefreshing(true);
       const data = await getLatestTreasurySnapshot();
       setSnapshot(data);
-      
+
       const prompt = `GuardianChain financial status:
 ${JSON.stringify(data, null, 2)}
 
@@ -35,11 +41,11 @@ Format as clear bullet points.`;
         model: "gpt-4o",
         max_tokens: 300,
       });
-      
+
       setAdvice(aiResponse);
     } catch (error) {
-      console.error('AI analysis error:', error);
-      setAdvice('AI analysis temporarily unavailable. Please try again.');
+      console.error("AI analysis error:", error);
+      setAdvice("AI analysis temporarily unavailable. Please try again.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -59,7 +65,8 @@ Format as clear bullet points.`;
             🤖 Veritus AI Financial Advisor
           </h1>
           <p className="text-xl text-slate-300 mb-6">
-            AI-powered strategic recommendations and financial optimization insights
+            AI-powered strategic recommendations and financial optimization
+            insights
           </p>
           <Badge className="bg-purple-600 text-white px-4 py-2">
             <Brain className="w-4 h-4 mr-2" />
@@ -70,13 +77,15 @@ Format as clear bullet points.`;
 
       <div className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* AI Insights */}
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-white flex items-center">
-                  <Lightbulb className="w-5 h-5 mr-2" style={{ color: BRAND_COLORS.GUARDIAN }} />
+                  <Lightbulb
+                    className="w-5 h-5 mr-2"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  />
                   Strategic Financial Recommendations
                 </CardTitle>
                 <Button
@@ -86,7 +95,11 @@ Format as clear bullet points.`;
                   disabled={refreshing}
                   className="border-slate-600 text-slate-300 hover:bg-slate-700"
                 >
-                  <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`w-4 h-4 mr-2 ${
+                      refreshing ? "animate-spin" : ""
+                    }`}
+                  />
                   Refresh Analysis
                 </Button>
               </div>
@@ -96,7 +109,9 @@ Format as clear bullet points.`;
                 {loading ? (
                   <div className="flex items-center justify-center py-8">
                     <div className="animate-spin w-6 h-6 border-4 border-purple-500 border-t-transparent rounded-full mr-3" />
-                    <span className="text-slate-300">AI analyzing financial data...</span>
+                    <span className="text-slate-300">
+                      AI analyzing financial data...
+                    </span>
                   </div>
                 ) : (
                   <div className="whitespace-pre-line text-slate-300 leading-relaxed">
@@ -112,7 +127,10 @@ Format as clear bullet points.`;
             <Card className="bg-slate-800/50 border-slate-700 mb-8">
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2" style={{ color: BRAND_COLORS.SUCCESS }} />
+                  <TrendingUp
+                    className="w-5 h-5 mr-2"
+                    style={{ color: BRAND_COLORS.SUCCESS }}
+                  />
                   Latest Treasury Snapshot
                 </CardTitle>
               </CardHeader>
@@ -138,7 +156,7 @@ Format as clear bullet points.`;
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-slate-400">Platform Revenue:</span>
@@ -167,7 +185,9 @@ Format as clear bullet points.`;
           {/* AI Capabilities */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white">AI Advisor Capabilities</CardTitle>
+              <CardTitle className="text-white">
+                AI Advisor Capabilities
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -183,7 +203,7 @@ Format as clear bullet points.`;
                     <li>• Token economics optimization</li>
                   </ul>
                 </div>
-                
+
                 <div>
                   <h4 className="text-white font-medium mb-3 flex items-center">
                     <AlertTriangle className="w-4 h-4 mr-2 text-yellow-400" />

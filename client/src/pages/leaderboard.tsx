@@ -1,5 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Trophy, Medal, Star, User, Coins, TrendingUp, Calendar, Award } from "lucide-react";
+import {
+  Trophy,
+  Medal,
+  Star,
+  User,
+  Coins,
+  TrendingUp,
+  Calendar,
+  Award,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +32,8 @@ const achievements = [
   {
     type: "first_nft",
     title: "First NFT Mint",
-    description: "@newbie_truthteller successfully minted their first Truth NFT",
+    description:
+      "@newbie_truthteller successfully minted their first Truth NFT",
     timeAgo: "1 day ago",
     color: "cyan",
   },
@@ -47,7 +57,11 @@ export default function Leaderboard() {
       case 3:
         return <Award className="h-6 w-6 text-orange-400" />;
       default:
-        return <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold text-white">{rank}</div>;
+        return (
+          <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-xs font-bold text-white">
+            {rank}
+          </div>
+        );
     }
   };
 
@@ -68,7 +82,9 @@ export default function Leaderboard() {
     <div className="min-h-screen pt-20 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4 gradient-text">Truth Leaders</h1>
+          <h1 className="text-4xl font-bold mb-4 gradient-text">
+            Truth Leaders
+          </h1>
           <p className="text-slate-400 text-lg">
             Top contributors ranked by Grief-Score and community impact
           </p>
@@ -80,7 +96,9 @@ export default function Leaderboard() {
             <CardContent className="p-6 text-center">
               <TrendingUp className="h-8 w-8 text-primary mx-auto mb-2" />
               <div className="text-2xl font-bold text-primary">
-                {statsLoading ? "..." : stats?.totalCapsules?.toLocaleString() || "0"}
+                {statsLoading
+                  ? "..."
+                  : stats?.totalCapsules?.toLocaleString() || "0"}
               </div>
               <div className="text-slate-400 text-sm">Total Capsules</div>
             </CardContent>
@@ -89,7 +107,9 @@ export default function Leaderboard() {
             <CardContent className="p-6 text-center">
               <Star className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
               <div className="text-2xl font-bold text-emerald-400">
-                {statsLoading ? "..." : stats?.verifiedTruths?.toLocaleString() || "0"}
+                {statsLoading
+                  ? "..."
+                  : stats?.verifiedTruths?.toLocaleString() || "0"}
               </div>
               <div className="text-slate-400 text-sm">Verified Truths</div>
             </CardContent>
@@ -107,7 +127,9 @@ export default function Leaderboard() {
             <CardContent className="p-6 text-center">
               <User className="h-8 w-8 text-secondary mx-auto mb-2" />
               <div className="text-2xl font-bold text-secondary">
-                {statsLoading ? "..." : stats?.activeUsers?.toLocaleString() || "0"}
+                {statsLoading
+                  ? "..."
+                  : stats?.activeUsers?.toLocaleString() || "0"}
               </div>
               <div className="text-slate-400 text-sm">Active Users</div>
             </CardContent>
@@ -128,7 +150,10 @@ export default function Leaderboard() {
                 {usersLoading ? (
                   <div className="space-y-4">
                     {Array.from({ length: 10 }).map((_, i) => (
-                      <div key={i} className="flex items-center space-x-4 p-4 bg-slate-700/50 rounded-xl">
+                      <div
+                        key={i}
+                        className="flex items-center space-x-4 p-4 bg-slate-700/50 rounded-xl"
+                      >
                         <div className="w-8 h-8 bg-slate-600 rounded-full animate-pulse"></div>
                         <div className="flex-1">
                           <div className="h-4 bg-slate-600 rounded w-32 mb-2 animate-pulse"></div>
@@ -144,9 +169,16 @@ export default function Leaderboard() {
                 ) : topUsers?.length ? (
                   <div className="space-y-4">
                     {topUsers.map((user, index) => (
-                      <div key={user.id} className="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl hover:bg-slate-700 transition-colors">
+                      <div
+                        key={user.id}
+                        className="flex items-center justify-between p-4 bg-slate-700/50 rounded-xl hover:bg-slate-700 transition-colors"
+                      >
                         <div className="flex items-center space-x-4">
-                          <Badge className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${getRankBadge(index + 1)}`}>
+                          <Badge
+                            className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${getRankBadge(
+                              index + 1
+                            )}`}
+                          >
                             {index + 1}
                           </Badge>
                           <Avatar>
@@ -156,12 +188,18 @@ export default function Leaderboard() {
                           </Avatar>
                           <div>
                             <div className="font-medium">@{user.username}</div>
-                            <div className="text-sm text-slate-400">{user.verifiedCapsules} verified capsules</div>
+                            <div className="text-sm text-slate-400">
+                              {user.verifiedCapsules} verified capsules
+                            </div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-semibold text-amber-400">{user.griefScore}</div>
-                          <div className="text-sm text-slate-400">Grief Score</div>
+                          <div className="font-semibold text-amber-400">
+                            {user.griefScore}
+                          </div>
+                          <div className="text-sm text-slate-400">
+                            Grief Score
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -210,9 +248,13 @@ export default function Leaderboard() {
                       >
                         {achievement.title}
                       </span>
-                      <span className="text-xs text-slate-400">{achievement.timeAgo}</span>
+                      <span className="text-xs text-slate-400">
+                        {achievement.timeAgo}
+                      </span>
                     </div>
-                    <p className="text-sm text-slate-300">{achievement.description}</p>
+                    <p className="text-sm text-slate-300">
+                      {achievement.description}
+                    </p>
                   </div>
                 ))}
               </CardContent>
@@ -250,7 +292,9 @@ export default function Leaderboard() {
             {/* Weekly Stats */}
             <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
               <CardHeader>
-                <CardTitle className="text-primary">Weekly Highlights</CardTitle>
+                <CardTitle className="text-primary">
+                  Weekly Highlights
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">

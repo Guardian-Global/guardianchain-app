@@ -10,9 +10,12 @@ import { Gavel, TrendingUp } from "lucide-react";
 export default function AuctionEngineDemo() {
   const { chainId } = useAccount();
   const { toast } = useToast();
-  
-  const auctionEngineAddress = getContractAddress(chainId || 31337, "auctionEngine");
-  
+
+  const auctionEngineAddress = getContractAddress(
+    chainId || 31337,
+    "auctionEngine"
+  );
+
   // Read auction counter
   const { data: auctionCounter } = useContractRead({
     address: auctionEngineAddress,
@@ -44,7 +47,7 @@ export default function AuctionEngineDemo() {
             <div className="text-xl font-bold text-white">2.5%</div>
           </div>
         </div>
-        
+
         <div className="text-xs text-slate-400 space-y-1">
           <p>✅ Contract successfully deployed to Hardhat network</p>
           <p>✅ Auction creation, bidding, and sealing functions ready</p>

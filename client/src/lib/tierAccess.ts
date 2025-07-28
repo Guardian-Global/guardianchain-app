@@ -5,7 +5,7 @@ export interface TierConfig {
   yieldBonus: number;
   canDonate: boolean;
   features: string[];
-  priority: 'low' | 'medium' | 'high' | 'premium';
+  priority: "low" | "medium" | "high" | "premium";
 }
 
 export const TIERS: TierConfig[] = [
@@ -19,9 +19,9 @@ export const TIERS: TierConfig[] = [
       "2 capsule mints per month",
       "Basic yield tracking",
       "Community access",
-      "Standard support"
+      "Standard support",
     ],
-    priority: 'low'
+    priority: "low",
   },
   {
     name: "Creator",
@@ -35,9 +35,9 @@ export const TIERS: TierConfig[] = [
       "Donation capabilities",
       "Priority capsule processing",
       "Advanced analytics",
-      "Email support"
+      "Email support",
     ],
-    priority: 'medium'
+    priority: "medium",
   },
   {
     name: "Guardian",
@@ -52,9 +52,9 @@ export const TIERS: TierConfig[] = [
       "Fast-track verification",
       "Custom capsule types",
       "Priority support",
-      "API access"
+      "API access",
     ],
-    priority: 'high'
+    priority: "high",
   },
   {
     name: "Institutional",
@@ -71,9 +71,9 @@ export const TIERS: TierConfig[] = [
       "Dedicated support",
       "Full API access",
       "Custom integrations",
-      "Compliance reporting"
+      "Compliance reporting",
     ],
-    priority: 'premium'
+    priority: "premium",
   },
 ];
 
@@ -83,12 +83,12 @@ export interface User {
   mintsThisMonth: number;
   maxMintsPerMonth?: number;
   yieldBonus?: number;
-  subscriptionStatus?: 'active' | 'inactive' | 'pending';
+  subscriptionStatus?: "active" | "inactive" | "pending";
   subscriptionExpiry?: string;
 }
 
 export function getTier(user: User): TierConfig {
-  const userTier = TIERS.find(t => t.name === user.tier);
+  const userTier = TIERS.find((t) => t.name === user.tier);
   return userTier || TIERS[0]; // Default to Starter if tier not found
 }
 
@@ -112,76 +112,79 @@ export function canDonate(user: User): boolean {
   return tier.canDonate;
 }
 
-export function getTierUpgradeBenefits(currentTier: string, targetTier: string) {
-  const current = TIERS.find(t => t.name === currentTier);
-  const target = TIERS.find(t => t.name === targetTier);
-  
+export function getTierUpgradeBenefits(
+  currentTier: string,
+  targetTier: string
+) {
+  const current = TIERS.find((t) => t.name === currentTier);
+  const target = TIERS.find((t) => t.name === targetTier);
+
   if (!current || !target) return [];
-  
+
   return {
     additionalMints: target.mintsPerMonth - current.mintsPerMonth,
     yieldBonusIncrease: target.yieldBonus - current.yieldBonus,
-    newFeatures: target.features.filter(f => !current.features.includes(f)),
-    priceDifference: target.priceUSD - current.priceUSD
+    newFeatures: target.features.filter((f) => !current.features.includes(f)),
+    priceDifference: target.priceUSD - current.priceUSD,
   };
 }
 
 export function isEligibleForTier(user: User, tierName: string): boolean {
   // In production, this would check payment status, compliance, etc.
-  const tier = TIERS.find(t => t.name === tierName);
+  const tier = TIERS.find((t) => t.name === tierName);
   if (!tier) return false;
-  
+
   // For now, just check if user can afford the tier (mock logic)
   return true;
 }
 
 export function calculateMonthlyCost(tierName: string): number {
-  const tier = TIERS.find(t => t.name === tierName);
+  const tier = TIERS.find((t) => t.name === tierName);
   return tier?.priceUSD || 0;
 }
 
 export function getNextTier(currentTier: string): TierConfig | null {
-  const currentIndex = TIERS.findIndex(t => t.name === currentTier);
+  const currentIndex = TIERS.findIndex((t) => t.name === currentTier);
   if (currentIndex === -1 || currentIndex === TIERS.length - 1) return null;
-  
+
   return TIERS[currentIndex + 1];
 }
 
 export function getTierByPrice(priceUSD: number): TierConfig | null {
-  return TIERS.find(t => t.priceUSD === priceUSD) || null;
+  return TIERS.find((t) => t.priceUSD === priceUSD) || null;
 }
 
 export function getUserTierStatus(user: User) {
   const tier = getTier(user);
   const remainingMints = getRemainingMints(user);
   const nextTier = getNextTier(user.tier);
-  
+
   return {
     currentTier: tier,
     remainingMints,
     yieldBonus: tier.yieldBonus,
     canDonate: tier.canDonate,
     nextTier,
-    subscriptionStatus: user.subscriptionStatus || 'inactive',
-    priority: tier.priority
+    subscriptionStatus: user.subscriptionStatus || "inactive",
+    priority: tier.priority,
   };
 }
 
 // Tier validation and enforcement
 export function validateTierAccess(user: User, action: string): boolean {
   const tier = getTier(user);
-  
+
   switch (action) {
-    case 'mint_capsule':
+    case "mint_capsule":
       return canMint(user);
-    case 'donate_capsules':
+    case "donate_capsules":
       return canDonate(user);
-    case 'api_access':
-      return tier.name === 'Guardian' || tier.name === 'Institutional';
-    case 'priority_support':
-      return tier.priority === 'high' || tier.priority === 'premium';
-    case 'custom_integrations':
-      return tier.name === 'Institutional';
+    case "api_access":
+      return tier.name === "Guardian" || tier.name === "Institutional";
+    case "priority_support":
+      return tier.priority === "high" || tier.priority === "premium";
+    case "custom_integrations":
+      return tier.name === "Institutional";
     default:
       return true;
   }

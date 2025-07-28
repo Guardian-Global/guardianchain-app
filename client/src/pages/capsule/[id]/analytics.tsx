@@ -30,12 +30,15 @@ export default function CapsuleDynamicAnalyticsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <Link href="/capsule-analytics">
-              <Button variant="ghost" className="text-slate-300 hover:text-white">
+              <Button
+                variant="ghost"
+                className="text-slate-300 hover:text-white"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Analytics Hub
               </Button>
             </Link>
-            
+
             <div className="flex items-center gap-3">
               <Button
                 variant="outline"
@@ -60,8 +63,8 @@ export default function CapsuleDynamicAnalyticsPage() {
 
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <Badge 
-                variant="outline" 
+              <Badge
+                variant="outline"
                 className="border-purple-400 text-purple-300 text-lg px-4 py-2"
               >
                 Capsule #{capsuleId}
@@ -71,7 +74,8 @@ export default function CapsuleDynamicAnalyticsPage() {
               Performance Analytics
             </h1>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Comprehensive yield tracking, engagement metrics, and emotional resonance analysis
+              Comprehensive yield tracking, engagement metrics, and emotional
+              resonance analysis
             </p>
           </div>
         </div>
@@ -131,7 +135,10 @@ export default function CapsuleDynamicAnalyticsPage() {
                   View the original capsule content and verification details
                 </p>
                 <Link href={`/capsule/${capsuleId}`}>
-                  <Button className="w-full" style={{ backgroundColor: BRAND_COLORS.GUARDIAN }}>
+                  <Button
+                    className="w-full"
+                    style={{ backgroundColor: BRAND_COLORS.GUARDIAN }}
+                  >
                     <ExternalLink className="w-4 h-4 mr-2" />
                     View Capsule
                   </Button>
@@ -148,7 +155,10 @@ export default function CapsuleDynamicAnalyticsPage() {
                   Monitor real-time yield generation and claim rewards
                 </p>
                 <Link href={`/yield-tracker?id=${capsuleId}`}>
-                  <Button variant="outline" className="w-full border-slate-600 text-slate-300 hover:bg-slate-700">
+                  <Button
+                    variant="outline"
+                    className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
                     Track Yield
                   </Button>
                 </Link>
@@ -164,7 +174,10 @@ export default function CapsuleDynamicAnalyticsPage() {
                   Get embeddable widget code for external sites
                 </p>
                 <Link href={`/embed/capsule?id=${capsuleId}`}>
-                  <Button variant="outline" className="w-full border-slate-600 text-slate-300 hover:bg-slate-700">
+                  <Button
+                    variant="outline"
+                    className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
                     Get Embed Code
                   </Button>
                 </Link>

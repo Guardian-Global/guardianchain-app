@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Brain, 
-  AlertTriangle, 
-  Loader2
-} from "lucide-react";
+import { Brain, AlertTriangle, Loader2 } from "lucide-react";
 import { runAccountingAI, generateFinancialInsights } from "@/lib/ai";
 
 export default function AIAccountingPanel() {
@@ -17,7 +13,7 @@ export default function AIAccountingPanel() {
     setIsLoading(true);
     setError("");
     setInsights("");
-    
+
     try {
       const analysis = await runAccountingAI();
       setInsights(analysis);
@@ -32,7 +28,7 @@ export default function AIAccountingPanel() {
     setIsLoading(true);
     setError("");
     setInsights("");
-    
+
     try {
       const analysis = await generateFinancialInsights();
       setInsights(analysis);
@@ -53,20 +49,24 @@ export default function AIAccountingPanel() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-2">
-          <Button 
+          <Button
             onClick={handleRunAnalysis}
             disabled={isLoading}
             className="bg-purple-600 hover:bg-purple-700"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : null}
             Run Treasury Analysis
           </Button>
-          <Button 
+          <Button
             onClick={handleGenerateInsights}
             disabled={isLoading}
             variant="outline"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : null}
             Generate Insights
           </Button>
         </div>
@@ -83,13 +83,16 @@ export default function AIAccountingPanel() {
         {insights && (
           <div className="bg-slate-700/50 rounded-lg p-4">
             <h4 className="text-white font-medium mb-2">AI Analysis Results</h4>
-            <pre className="text-slate-300 text-sm whitespace-pre-wrap">{insights}</pre>
+            <pre className="text-slate-300 text-sm whitespace-pre-wrap">
+              {insights}
+            </pre>
           </div>
         )}
 
         {!insights && !error && !isLoading && (
           <div className="text-slate-400 text-sm text-center py-8">
-            Connect OpenAI API to enable AI-powered financial analysis and strategic insights
+            Connect OpenAI API to enable AI-powered financial analysis and
+            strategic insights
           </div>
         )}
       </CardContent>

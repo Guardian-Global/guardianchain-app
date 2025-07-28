@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,35 +15,35 @@ export default function ConfigPage() {
     shareYieldRate: 0.01,
     resonanceYieldRate: 0.02,
     veritusMultiplier: 2.0,
-    
+
     // Tier Configuration
     tierBonuses: {
       starter: 0,
       creator: 0.05,
-      guardian: 0.10,
-      institutional: 0.25
+      guardian: 0.1,
+      institutional: 0.25,
     },
-    
+
     // Compliance Settings
     enableGeoBlocking: true,
-    restrictedRegions: ['XX', 'YY'],
+    restrictedRegions: ["XX", "YY"],
     largeTransactionThreshold: 1000,
     complianceAuditFrequency: 24, // hours
-    
+
     // System Settings
     distributionFrequency: 24, // hours
     maxDailyMints: 1000,
     enableAIAdvisor: true,
     enableAutomatedReports: true,
-    
+
     // Price Settings
     gttTargetPrice: 0.15,
     priceUpdateFrequency: 300, // seconds
-    
+
     // Security Settings
     enableRateLimiting: true,
     maxApiCallsPerHour: 1000,
-    enableTwoFactor: true
+    enableTwoFactor: true,
   });
 
   const [saving, setSaving] = useState(false);
@@ -53,11 +53,11 @@ export default function ConfigPage() {
     setSaving(true);
     try {
       // In production, this would call an API to save configuration
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setLastSaved(new Date().toLocaleString());
-      console.log('Configuration saved:', config);
+      console.log("Configuration saved:", config);
     } catch (error) {
-      console.error('Failed to save configuration:', error);
+      console.error("Failed to save configuration:", error);
     } finally {
       setSaving(false);
     }
@@ -73,11 +73,11 @@ export default function ConfigPage() {
       tierBonuses: {
         starter: 0,
         creator: 0.05,
-        guardian: 0.10,
-        institutional: 0.25
+        guardian: 0.1,
+        institutional: 0.25,
       },
       enableGeoBlocking: true,
-      restrictedRegions: ['XX', 'YY'],
+      restrictedRegions: ["XX", "YY"],
       largeTransactionThreshold: 1000,
       complianceAuditFrequency: 24,
       distributionFrequency: 24,
@@ -88,7 +88,7 @@ export default function ConfigPage() {
       priceUpdateFrequency: 300,
       enableRateLimiting: true,
       maxApiCallsPerHour: 1000,
-      enableTwoFactor: true
+      enableTwoFactor: true,
     });
   };
 
@@ -97,9 +97,7 @@ export default function ConfigPage() {
       {/* Header */}
       <section className="pt-20 pb-8 bg-gradient-to-br from-orange-900 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">
-            ⚙️ System Configuration
-          </h1>
+          <h1 className="text-4xl font-bold mb-4">⚙️ System Configuration</h1>
           <p className="text-xl text-slate-300 mb-6">
             Advanced configuration and settings management for {BRAND_NAME}
           </p>
@@ -112,7 +110,6 @@ export default function ConfigPage() {
 
       <div className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* Save Controls */}
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
@@ -160,51 +157,81 @@ export default function ConfigPage() {
           {/* Yield Engine Configuration */}
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
-              <CardTitle className="text-white">Yield Engine Configuration</CardTitle>
+              <CardTitle className="text-white">
+                Yield Engine Configuration
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="viewRate" className="text-slate-300">View Yield Rate</Label>
+                  <Label htmlFor="viewRate" className="text-slate-300">
+                    View Yield Rate
+                  </Label>
                   <Input
                     id="viewRate"
                     type="number"
                     step="0.001"
                     value={config.viewYieldRate}
-                    onChange={(e) => setConfig({...config, viewYieldRate: parseFloat(e.target.value)})}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        viewYieldRate: parseFloat(e.target.value),
+                      })
+                    }
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="shareRate" className="text-slate-300">Share Yield Rate</Label>
+                  <Label htmlFor="shareRate" className="text-slate-300">
+                    Share Yield Rate
+                  </Label>
                   <Input
                     id="shareRate"
                     type="number"
                     step="0.001"
                     value={config.shareYieldRate}
-                    onChange={(e) => setConfig({...config, shareYieldRate: parseFloat(e.target.value)})}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        shareYieldRate: parseFloat(e.target.value),
+                      })
+                    }
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="resonanceRate" className="text-slate-300">Resonance Yield Rate</Label>
+                  <Label htmlFor="resonanceRate" className="text-slate-300">
+                    Resonance Yield Rate
+                  </Label>
                   <Input
                     id="resonanceRate"
                     type="number"
                     step="0.001"
                     value={config.resonanceYieldRate}
-                    onChange={(e) => setConfig({...config, resonanceYieldRate: parseFloat(e.target.value)})}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        resonanceYieldRate: parseFloat(e.target.value),
+                      })
+                    }
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="veritusMultiplier" className="text-slate-300">Veritus Multiplier</Label>
+                  <Label htmlFor="veritusMultiplier" className="text-slate-300">
+                    Veritus Multiplier
+                  </Label>
                   <Input
                     id="veritusMultiplier"
                     type="number"
                     step="0.1"
                     value={config.veritusMultiplier}
-                    onChange={(e) => setConfig({...config, veritusMultiplier: parseFloat(e.target.value)})}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        veritusMultiplier: parseFloat(e.target.value),
+                      })
+                    }
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
@@ -224,33 +251,53 @@ export default function ConfigPage() {
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-slate-300">Enable Geo-blocking</Label>
-                    <p className="text-sm text-slate-400">Block access from restricted regions</p>
+                    <Label className="text-slate-300">
+                      Enable Geo-blocking
+                    </Label>
+                    <p className="text-sm text-slate-400">
+                      Block access from restricted regions
+                    </p>
                   </div>
                   <Switch
                     checked={config.enableGeoBlocking}
-                    onCheckedChange={(checked) => setConfig({...config, enableGeoBlocking: checked})}
+                    onCheckedChange={(checked) =>
+                      setConfig({ ...config, enableGeoBlocking: checked })
+                    }
                   />
                 </div>
-                
+
                 <div>
-                  <Label htmlFor="threshold" className="text-slate-300">Large Transaction Threshold ($)</Label>
+                  <Label htmlFor="threshold" className="text-slate-300">
+                    Large Transaction Threshold ($)
+                  </Label>
                   <Input
                     id="threshold"
                     type="number"
                     value={config.largeTransactionThreshold}
-                    onChange={(e) => setConfig({...config, largeTransactionThreshold: parseInt(e.target.value)})}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        largeTransactionThreshold: parseInt(e.target.value),
+                      })
+                    }
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
-                
+
                 <div>
-                  <Label htmlFor="auditFreq" className="text-slate-300">Compliance Audit Frequency (hours)</Label>
+                  <Label htmlFor="auditFreq" className="text-slate-300">
+                    Compliance Audit Frequency (hours)
+                  </Label>
                   <Input
                     id="auditFreq"
                     type="number"
                     value={config.complianceAuditFrequency}
-                    onChange={(e) => setConfig({...config, complianceAuditFrequency: parseInt(e.target.value)})}
+                    onChange={(e) =>
+                      setConfig({
+                        ...config,
+                        complianceAuditFrequency: parseInt(e.target.value),
+                      })
+                    }
                     className="bg-slate-700 border-slate-600 text-white"
                   />
                 </div>
@@ -268,43 +315,65 @@ export default function ConfigPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-slate-300">Enable AI Advisor</Label>
-                    <p className="text-sm text-slate-400">AI-powered financial recommendations</p>
+                    <p className="text-sm text-slate-400">
+                      AI-powered financial recommendations
+                    </p>
                   </div>
                   <Switch
                     checked={config.enableAIAdvisor}
-                    onCheckedChange={(checked) => setConfig({...config, enableAIAdvisor: checked})}
+                    onCheckedChange={(checked) =>
+                      setConfig({ ...config, enableAIAdvisor: checked })
+                    }
                   />
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <Label className="text-slate-300">Automated Reports</Label>
-                    <p className="text-sm text-slate-400">Generate nightly treasury reports</p>
+                    <p className="text-sm text-slate-400">
+                      Generate nightly treasury reports
+                    </p>
                   </div>
                   <Switch
                     checked={config.enableAutomatedReports}
-                    onCheckedChange={(checked) => setConfig({...config, enableAutomatedReports: checked})}
+                    onCheckedChange={(checked) =>
+                      setConfig({ ...config, enableAutomatedReports: checked })
+                    }
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="distFreq" className="text-slate-300">Distribution Frequency (hours)</Label>
+                    <Label htmlFor="distFreq" className="text-slate-300">
+                      Distribution Frequency (hours)
+                    </Label>
                     <Input
                       id="distFreq"
                       type="number"
                       value={config.distributionFrequency}
-                      onChange={(e) => setConfig({...config, distributionFrequency: parseInt(e.target.value)})}
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          distributionFrequency: parseInt(e.target.value),
+                        })
+                      }
                       className="bg-slate-700 border-slate-600 text-white"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="maxMints" className="text-slate-300">Max Daily Mints</Label>
+                    <Label htmlFor="maxMints" className="text-slate-300">
+                      Max Daily Mints
+                    </Label>
                     <Input
                       id="maxMints"
                       type="number"
                       value={config.maxDailyMints}
-                      onChange={(e) => setConfig({...config, maxDailyMints: parseInt(e.target.value)})}
+                      onChange={(e) =>
+                        setConfig({
+                          ...config,
+                          maxDailyMints: parseInt(e.target.value),
+                        })
+                      }
                       className="bg-slate-700 border-slate-600 text-white"
                     />
                   </div>
@@ -323,9 +392,10 @@ export default function ConfigPage() {
             </CardHeader>
             <CardContent>
               <p className="text-yellow-200 text-sm">
-                Changes to system configuration can affect platform behavior. 
-                Test thoroughly in a staging environment before applying to production.
-                Some changes may require system restart to take effect.
+                Changes to system configuration can affect platform behavior.
+                Test thoroughly in a staging environment before applying to
+                production. Some changes may require system restart to take
+                effect.
               </p>
             </CardContent>
           </Card>

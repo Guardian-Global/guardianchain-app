@@ -1,9 +1,9 @@
-import React from 'react';
-import PremiumFeatures from '@/components/PremiumFeatures';
-import EnhancedAuth from '@/components/EnhancedAuth';
-import AdvancedAI from '@/components/AdvancedAI';
-import CrossChainHub from '@/components/CrossChainHub';
-import MetaMaskTest from '@/components/MetaMaskTest';
+import React from "react";
+import PremiumFeatures from "@/components/PremiumFeatures";
+import EnhancedAuth from "@/components/EnhancedAuth";
+import AdvancedAI from "@/components/AdvancedAI";
+import CrossChainHub from "@/components/CrossChainHub";
+import MetaMaskTest from "@/components/MetaMaskTest";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Crown, Shield, Zap, TrendingUp } from "lucide-react";
@@ -22,8 +22,8 @@ const PremiumFeaturesPage: React.FC = () => {
               </h1>
             </div>
             <p className="text-xl text-slate-300 max-w-4xl mx-auto">
-              Unlock billion-dollar protocol value with enterprise-grade authentication, 
-              premium features, and maximum GTT token rewards.
+              Unlock billion-dollar protocol value with enterprise-grade
+              authentication, premium features, and maximum GTT token rewards.
             </p>
           </div>
         </div>
@@ -77,8 +77,12 @@ const PremiumFeaturesPage: React.FC = () => {
           <Card className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border-purple-500/30">
             <CardHeader>
               <CardTitle className="text-white text-center">
-                <div className="text-3xl font-bold mb-2">Complete Enterprise Value Package</div>
-                <div className="text-lg text-purple-400">Everything needed to dominate the $231B NFT market</div>
+                <div className="text-3xl font-bold mb-2">
+                  Complete Enterprise Value Package
+                </div>
+                <div className="text-lg text-purple-400">
+                  Everything needed to dominate the $231B NFT market
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -86,19 +90,26 @@ const PremiumFeaturesPage: React.FC = () => {
                 <div className="text-center">
                   <div className="bg-green-900/20 rounded-lg p-6 mb-4">
                     <TrendingUp className="w-12 h-12 text-green-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-green-400">$10M+</div>
+                    <div className="text-2xl font-bold text-green-400">
+                      $10M+
+                    </div>
                     <div className="text-sm text-slate-400">Annual Savings</div>
                   </div>
                   <p className="text-slate-300 text-sm">
-                    Massive cost reductions through automation and AI verification
+                    Massive cost reductions through automation and AI
+                    verification
                   </p>
                 </div>
 
                 <div className="text-center">
                   <div className="bg-blue-900/20 rounded-lg p-6 mb-4">
                     <Shield className="w-12 h-12 text-blue-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-blue-400">Enterprise Auth</div>
-                    <div className="text-sm text-slate-400">Bank-Level Security</div>
+                    <div className="text-2xl font-bold text-blue-400">
+                      Enterprise Auth
+                    </div>
+                    <div className="text-sm text-slate-400">
+                      Bank-Level Security
+                    </div>
                   </div>
                   <p className="text-slate-300 text-sm">
                     Multiple authentication methods with global compliance
@@ -108,8 +119,12 @@ const PremiumFeaturesPage: React.FC = () => {
                 <div className="text-center">
                   <div className="bg-purple-900/20 rounded-lg p-6 mb-4">
                     <Zap className="w-12 h-12 text-purple-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-purple-400">1000x ROI</div>
-                    <div className="text-sm text-slate-400">Value Multiplier</div>
+                    <div className="text-2xl font-bold text-purple-400">
+                      1000x ROI
+                    </div>
+                    <div className="text-sm text-slate-400">
+                      Value Multiplier
+                    </div>
                   </div>
                   <p className="text-slate-300 text-sm">
                     Unprecedented returns through efficiency and automation
@@ -119,8 +134,12 @@ const PremiumFeaturesPage: React.FC = () => {
                 <div className="text-center">
                   <div className="bg-yellow-900/20 rounded-lg p-6 mb-4">
                     <Crown className="w-12 h-12 text-yellow-400 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-yellow-400">1M+ GTT</div>
-                    <div className="text-sm text-slate-400">Monthly Rewards</div>
+                    <div className="text-2xl font-bold text-yellow-400">
+                      1M+ GTT
+                    </div>
+                    <div className="text-sm text-slate-400">
+                      Monthly Rewards
+                    </div>
                   </div>
                   <p className="text-slate-300 text-sm">
                     Maximum token rewards for enterprise tier subscribers

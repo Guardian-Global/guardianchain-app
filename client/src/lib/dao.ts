@@ -6,38 +6,38 @@ const DAO_ADDRESS = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"; // Local deplo
 
 const DAO_ABI = [
   {
-    "inputs": [
-      {"internalType": "string", "name": "title", "type": "string"},
-      {"internalType": "string", "name": "description", "type": "string"}
+    inputs: [
+      { internalType: "string", name: "title", type: "string" },
+      { internalType: "string", name: "description", type: "string" },
     ],
-    "name": "createProposal",
-    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "createProposal",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [
-      {"internalType": "uint256", "name": "proposalId", "type": "uint256"},
-      {"internalType": "bool", "name": "support", "type": "bool"}
+    inputs: [
+      { internalType: "uint256", name: "proposalId", type: "uint256" },
+      { internalType: "bool", name: "support", type: "bool" },
     ],
-    "name": "vote",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "vote",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
-    "name": "proposals",
-    "outputs": [
-      {"internalType": "string", "name": "title", "type": "string"},
-      {"internalType": "string", "name": "description", "type": "string"},
-      {"internalType": "uint256", "name": "votesFor", "type": "uint256"},
-      {"internalType": "uint256", "name": "votesAgainst", "type": "uint256"},
-      {"internalType": "bool", "name": "executed", "type": "bool"}
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "proposals",
+    outputs: [
+      { internalType: "string", name: "title", type: "string" },
+      { internalType: "string", name: "description", type: "string" },
+      { internalType: "uint256", name: "votesFor", type: "uint256" },
+      { internalType: "uint256", name: "votesAgainst", type: "uint256" },
+      { internalType: "bool", name: "executed", type: "bool" },
     ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 export async function createBrandingProposal(): Promise<string> {
@@ -68,7 +68,10 @@ This proposal locks in our brand identity at the protocol level and ensures prof
   }
 }
 
-export async function voteOnProposal(proposalId: number, support: boolean): Promise<string> {
+export async function voteOnProposal(
+  proposalId: number,
+  support: boolean
+): Promise<string> {
   try {
     const { hash } = await writeContract({
       address: DAO_ADDRESS,
@@ -98,7 +101,7 @@ export async function getProposal(proposalId: number) {
       description: proposal[1],
       votesFor: Number(proposal[2]),
       votesAgainst: Number(proposal[3]),
-      executed: proposal[4]
+      executed: proposal[4],
     };
   } catch (error) {
     console.error("Failed to fetch proposal:", error);
@@ -121,6 +124,6 @@ export async function getDAOStats(): Promise<DAOStats> {
     activeProposals: 3,
     totalVotes: 1247,
     treasuryBalance: "125000",
-    governanceToken: "GTT"
+    governanceToken: "GTT",
   };
 }

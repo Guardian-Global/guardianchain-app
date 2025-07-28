@@ -1,5 +1,9 @@
-import { useState, useEffect } from 'react';
-import { enterpriseAuth, type UserProfile, type AuthSession } from '@/lib/auth/enterprise-auth';
+import { useState, useEffect } from "react";
+import {
+  enterpriseAuth,
+  type UserProfile,
+  type AuthSession,
+} from "@/lib/auth/enterprise-auth";
 
 export function useEnterpriseAuth() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -15,16 +19,16 @@ export function useEnterpriseAuth() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const [sessionData, profileData] = await Promise.all([
         enterpriseAuth.getSession(),
-        enterpriseAuth.getProfile()
+        enterpriseAuth.getProfile(),
       ]);
-      
+
       setSession(sessionData);
       setUser(profileData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication error');
+      setError(err instanceof Error ? err.message : "Authentication error");
       setSession(null);
       setUser(null);
     } finally {
@@ -38,7 +42,7 @@ export function useEnterpriseAuth() {
       await enterpriseAuth.authenticate(provider, options);
       // After successful auth, the callback will redirect
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? err.message : "Login failed");
     }
   };
 
@@ -49,7 +53,7 @@ export function useEnterpriseAuth() {
       setUser(null);
       setSession(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Logout failed');
+      setError(err instanceof Error ? err.message : "Logout failed");
     }
   };
 
@@ -60,7 +64,7 @@ export function useEnterpriseAuth() {
       setUser(updatedUser);
       return updatedUser;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Profile update failed');
+      setError(err instanceof Error ? err.message : "Profile update failed");
       throw err;
     }
   };
@@ -83,7 +87,7 @@ export function useEnterpriseAuth() {
     logout,
     updateProfile,
     hasPermission,
-    refreshSession
+    refreshSession,
   };
 }
 

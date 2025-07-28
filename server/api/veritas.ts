@@ -42,7 +42,7 @@ Smart Contract: 0x742d35Cc6634C0532925a3b8D295a7B76e0Cd5a7
 This seal provides legal authenticity and tamper-proof evidence 
 that this truth claim was submitted at the specified time and date.
 `;
-  
+
   return Buffer.from(pdfContent).toString("base64");
 }
 
@@ -51,7 +51,9 @@ router.post("/seal", async (req, res) => {
     const { userEmail, capsuleId } = req.body;
 
     if (!userEmail || !capsuleId) {
-      return res.status(400).json({ error: "userEmail and capsuleId are required" });
+      return res
+        .status(400)
+        .json({ error: "userEmail and capsuleId are required" });
     }
 
     // Fetch capsule data from Supabase
@@ -85,10 +87,10 @@ router.post("/seal", async (req, res) => {
                   documentId: "1",
                   pageNumber: "1",
                   xPosition: "100",
-                  yPosition: "100"
-                }
-              ]
-            }
+                  yPosition: "100",
+                },
+              ],
+            },
           },
         ],
       },
@@ -104,7 +106,7 @@ router.post("/seal", async (req, res) => {
     };
 
     console.log("Creating DocuSign envelope for capsule:", capsuleId);
-    
+
     const response = await axios.post(
       `${process.env.DOCUSIGN_BASE_URL}/v2.1/accounts/${process.env.DOCUSIGN_USER_ID}/envelopes`,
       envelopeData,
@@ -112,7 +114,7 @@ router.post("/seal", async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.AUTH0_ACCESS_TOKEN}`,
           "Content-Type": "application/json",
-          "X-DocuSign-SDK": "GuardianChain-v1.0"
+          "X-DocuSign-SDK": "GuardianChain-v1.0",
         },
       }
     );
@@ -127,13 +129,15 @@ router.post("/seal", async (req, res) => {
         docusignEnvelopeId: envelopeId,
         veritasSealUrl: `${process.env.DOCUSIGN_BASE_URL}/v2.1/accounts/${process.env.DOCUSIGN_USER_ID}/envelopes/${envelopeId}`,
         status: "sealed",
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       })
       .eq("id", capsuleId);
 
     if (updateError) {
       console.error("Error updating capsule:", updateError);
-      return res.status(500).json({ error: "Failed to update capsule with seal information" });
+      return res
+        .status(500)
+        .json({ error: "Failed to update capsule with seal information" });
     }
 
     return res.status(200).json({
@@ -142,14 +146,19 @@ router.post("/seal", async (req, res) => {
       capsuleId: capsuleId,
       status: "sealed",
       veritasUrl: response.data.uri,
-      message: "Veritas Seal successfully applied to truth capsule"
+      message: "Veritas Seal successfully applied to truth capsule",
     });
-    
   } catch (err: any) {
-    console.error("DocuSign Veritas Seal Error:", err.response?.data || err.message);
-    return res.status(500).json({ 
-      error: err.response?.data?.message || err.message || "Failed to create Veritas seal",
-      details: err.response?.data || null
+    console.error(
+      "DocuSign Veritas Seal Error:",
+      err.response?.data || err.message
+    );
+    return res.status(500).json({
+      error:
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to create Veritas seal",
+      details: err.response?.data || null,
     });
   }
 });
@@ -162,20 +171,26 @@ router.post("/test-seal", async (req, res) => {
     const mockCapsuleData = {
       id: 999,
       title: "Test Veritas Seal Integration",
-      content: "This is a test of the DocuSign Veritas Seal integration with GuardianChain.",
-      description: "Sample capsule for testing the verification sealing process",
+      content:
+        "This is a test of the DocuSign Veritas Seal integration with GuardianChain.",
+      description:
+        "Sample capsule for testing the verification sealing process",
       category: "test",
       griefScore: "1.0",
       status: "pending",
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     // Generate the PDF content
     const documentBase64 = generateCapsulePDF(mockCapsuleData);
 
     console.log("🧪 Testing DocuSign Veritas Seal Integration");
-    console.log("Generated document size:", Buffer.from(documentBase64, 'base64').length, "bytes");
-    
+    console.log(
+      "Generated document size:",
+      Buffer.from(documentBase64, "base64").length,
+      "bytes"
+    );
+
     // Mock successful DocuSign response
     const mockSealResponse = {
       success: true,
@@ -186,7 +201,7 @@ router.post("/test-seal", async (req, res) => {
       message: "Veritas Seal successfully applied to truth capsule",
       testMode: true,
       documentGenerated: true,
-      pdfSize: Buffer.from(documentBase64, 'base64').length
+      pdfSize: Buffer.from(documentBase64, "base64").length,
     };
 
     return res.status(200).json({
@@ -194,12 +209,16 @@ router.post("/test-seal", async (req, res) => {
       capsule: mockCapsuleData,
       seal: mockSealResponse,
       config: {
-        docusignConfigured: !!(process.env.DOCUSIGN_BASE_URL && process.env.DOCUSIGN_USER_ID),
-        supabaseConfigured: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
-        readyForProduction: true
-      }
+        docusignConfigured: !!(
+          process.env.DOCUSIGN_BASE_URL && process.env.DOCUSIGN_USER_ID
+        ),
+        supabaseConfigured: !!(
+          process.env.NEXT_PUBLIC_SUPABASE_URL &&
+          process.env.SUPABASE_SERVICE_ROLE_KEY
+        ),
+        readyForProduction: true,
+      },
     });
-
   } catch (error: any) {
     console.error("Test seal endpoint error:", error.message);
     return res.status(500).json({ error: error.message });
@@ -213,7 +232,8 @@ router.post("/test", async (req, res) => {
     const sampleCapsule = {
       title: "Sample Truth: Climate Change Evidence",
       description: "Scientific evidence supporting climate change impacts",
-      content: "According to NASA data from 2024, global temperatures have risen by 1.1°C since pre-industrial times. This is supported by ice core data, satellite measurements, and temperature records from weather stations worldwide. The evidence shows accelerating warming trends with significant impacts on polar ice caps and sea levels.",
+      content:
+        "According to NASA data from 2024, global temperatures have risen by 1.1°C since pre-industrial times. This is supported by ice core data, satellite measurements, and temperature records from weather stations worldwide. The evidence shows accelerating warming trends with significant impacts on polar ice caps and sea levels.",
       category: "science",
       creatorId: 1, // Use a valid creator ID
       griefScore: "0.95",
@@ -223,13 +243,13 @@ router.post("/test", async (req, res) => {
       evidence: {
         sources: ["NASA GISS", "NOAA Climate.gov"],
         method: "Temperature data analysis",
-        confidence: "95%"
+        confidence: "95%",
       },
       metadata: {
         generated: true,
         test: true,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     };
 
     const { data: capsule, error: createError } = await supabase
@@ -240,7 +260,12 @@ router.post("/test", async (req, res) => {
 
     if (createError) {
       console.error("Sample capsule creation error:", createError);
-      return res.status(500).json({ error: "Failed to create sample capsule", details: createError });
+      return res
+        .status(500)
+        .json({
+          error: "Failed to create sample capsule",
+          details: createError,
+        });
     }
 
     // Now seal the capsule
@@ -248,16 +273,15 @@ router.post("/test", async (req, res) => {
       `http://localhost:5000/api/veritas/seal`,
       {
         capsuleId: capsule.id,
-        userEmail: "test@guardianchain.app"
+        userEmail: "test@guardianchain.app",
       }
     );
 
     return res.status(200).json({
       message: "Sample capsule created and sealed successfully",
       capsule: capsule,
-      seal: sealResponse.data
+      seal: sealResponse.data,
     });
-
   } catch (error: any) {
     console.error("Test endpoint error:", error.message);
     return res.status(500).json({ error: error.message });

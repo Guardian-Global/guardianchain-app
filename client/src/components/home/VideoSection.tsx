@@ -9,10 +9,10 @@ interface VideoSectionProps {
   description?: string;
 }
 
-export default function VideoSection({ 
+export default function VideoSection({
   videoUrl = "https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4",
   title = "Experience the GUARDIANCHAIN Protocol",
-  description = "Watch how our decentralized truth verification system revolutionizes content integrity and creator rewards"
+  description = "Watch how our decentralized truth verification system revolutionizes content integrity and creator rewards",
 }: VideoSectionProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -31,19 +31,23 @@ export default function VideoSection({
             setIsPlaying(true);
           } else {
             // Wait for video to load
-            videoRef.addEventListener('canplay', async () => {
-              try {
-                await videoRef.play();
-                setIsPlaying(true);
-              } catch (e) {
-                console.log('Video autoplay blocked:', e);
-                setIsPlaying(false);
-              }
-            }, { once: true });
+            videoRef.addEventListener(
+              "canplay",
+              async () => {
+                try {
+                  await videoRef.play();
+                  setIsPlaying(true);
+                } catch (e) {
+                  console.log("Video autoplay blocked:", e);
+                  setIsPlaying(false);
+                }
+              },
+              { once: true }
+            );
           }
         }
       } catch (error) {
-        console.log('Video play interrupted:', error);
+        console.log("Video play interrupted:", error);
         setIsPlaying(false);
       }
     }
@@ -68,7 +72,7 @@ export default function VideoSection({
     if (video) {
       setVideoRef(video);
       video.muted = true; // Always start muted
-      console.log('Video setup complete:', videoUrl);
+      console.log("Video setup complete:", videoUrl);
     }
   };
 
@@ -168,18 +172,18 @@ export default function VideoSection({
         {/* CTA Section */}
         <div className="text-center mt-12">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white px-8 py-6 text-lg"
-              onClick={() => window.location.href = "/dashboard"}
+              onClick={() => (window.location.href = "/dashboard")}
             >
               Launch GUARDIANCHAIN App
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="lg"
               className="px-8 py-6 text-lg"
-              onClick={() => window.location.href = "/how-it-works"}
+              onClick={() => (window.location.href = "/how-it-works")}
             >
               Learn How It Works
             </Button>
@@ -188,15 +192,21 @@ export default function VideoSection({
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">10M+</div>
-              <div className="text-sm text-muted-foreground">GTT Yield Pool</div>
+              <div className="text-sm text-muted-foreground">
+                GTT Yield Pool
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">99.9%</div>
-              <div className="text-sm text-muted-foreground">Truth Accuracy</div>
+              <div className="text-sm text-muted-foreground">
+                Truth Accuracy
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">24/7</div>
-              <div className="text-sm text-muted-foreground">Global Operations</div>
+              <div className="text-sm text-muted-foreground">
+                Global Operations
+              </div>
             </div>
           </div>
         </div>

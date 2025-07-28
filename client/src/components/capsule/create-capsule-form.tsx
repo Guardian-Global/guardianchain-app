@@ -2,12 +2,33 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Upload, FileText, Image, Link as LinkIcon, X, Plus } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  Image,
+  Link as LinkIcon,
+  X,
+  Plus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,17 +36,30 @@ import { useToast } from "@/hooks/use-toast";
 import { CAPSULE_CATEGORIES } from "@/lib/constants";
 
 const createCapsuleFormSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
-  description: z.string().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
-  content: z.string().min(1, "Content is required").max(10000, "Content must be less than 10,000 characters"),
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(200, "Title must be less than 200 characters"),
+  description: z
+    .string()
+    .min(1, "Description is required")
+    .max(500, "Description must be less than 500 characters"),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .max(10000, "Content must be less than 10,000 characters"),
   category: z.string().min(1, "Category is required"),
   isPublic: z.boolean().default(true),
   tags: z.array(z.string()).optional(),
-  evidence: z.array(z.object({
-    type: z.enum(["link", "document", "image", "video", "other"]),
-    url: z.string().url("Must be a valid URL"),
-    description: z.string().min(1, "Description is required"),
-  })).optional(),
+  evidence: z
+    .array(
+      z.object({
+        type: z.enum(["link", "document", "image", "video", "other"]),
+        url: z.string().url("Must be a valid URL"),
+        description: z.string().min(1, "Description is required"),
+      })
+    )
+    .optional(),
 });
 
 type CreateCapsuleFormData = z.infer<typeof createCapsuleFormSchema>;
@@ -35,12 +69,21 @@ interface CreateCapsuleFormProps {
   isSubmitting?: boolean;
 }
 
-export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: CreateCapsuleFormProps) {
+export default function CreateCapsuleForm({
+  onSubmit,
+  isSubmitting = false,
+}: CreateCapsuleFormProps) {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
-  const [evidence, setEvidence] = useState<Array<{ type: string; url: string; description: string }>>([]);
+  const [evidence, setEvidence] = useState<
+    Array<{ type: string; url: string; description: string }>
+  >([]);
   const [showEvidenceForm, setShowEvidenceForm] = useState(false);
-  const [newEvidence, setNewEvidence] = useState({ type: "link", url: "", description: "" });
+  const [newEvidence, setNewEvidence] = useState({
+    type: "link",
+    url: "",
+    description: "",
+  });
   const { toast } = useToast();
 
   const form = useForm<CreateCapsuleFormData>({
@@ -62,7 +105,7 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
       tags: tags.length > 0 ? tags : undefined,
       evidence: evidence.length > 0 ? evidence : undefined,
     };
-    
+
     try {
       await onSubmit(formData);
       form.reset();
@@ -81,7 +124,7 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
   const addEvidence = () => {
@@ -130,7 +173,8 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                     />
                   </FormControl>
                   <FormDescription>
-                    A clear, concise title that summarizes your claim or statement.
+                    A clear, concise title that summarizes your claim or
+                    statement.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -143,7 +187,10 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="bg-slate-800 border-slate-600 focus:border-primary">
                         <SelectValue placeholder="Select a category" />
@@ -179,7 +226,8 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                     />
                   </FormControl>
                   <FormDescription>
-                    A summary that will be visible in capsule previews and search results.
+                    A summary that will be visible in capsule previews and
+                    search results.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -194,7 +242,8 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">Public Capsule</FormLabel>
                     <FormDescription>
-                      Make this capsule visible to all users and eligible for community verification.
+                      Make this capsule visible to all users and eligible for
+                      community verification.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -217,7 +266,11 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="bg-primary/20 text-primary border-primary/30">
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="bg-primary/20 text-primary border-primary/30"
+                    >
                       {tag}
                       <button
                         type="button"
@@ -234,7 +287,9 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                     placeholder="Add a tag"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addTag())
+                    }
                     className="bg-slate-900 border-slate-600 focus:border-primary"
                   />
                   <Button
@@ -260,7 +315,10 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
               </CardHeader>
               <CardContent className="space-y-4">
                 {evidence.map((item, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-3 bg-slate-900/50 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-center space-x-3 p-3 bg-slate-900/50 rounded-lg"
+                  >
                     <div className="text-slate-400">
                       {getEvidenceIcon(item.type)}
                     </div>
@@ -288,7 +346,9 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                   <div className="space-y-3 p-3 bg-slate-900/50 rounded-lg">
                     <Select
                       value={newEvidence.type}
-                      onValueChange={(value) => setNewEvidence({ ...newEvidence, type: value })}
+                      onValueChange={(value) =>
+                        setNewEvidence({ ...newEvidence, type: value })
+                      }
                     >
                       <SelectTrigger className="bg-slate-800 border-slate-600">
                         <SelectValue />
@@ -304,13 +364,20 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                     <Input
                       placeholder="URL"
                       value={newEvidence.url}
-                      onChange={(e) => setNewEvidence({ ...newEvidence, url: e.target.value })}
+                      onChange={(e) =>
+                        setNewEvidence({ ...newEvidence, url: e.target.value })
+                      }
                       className="bg-slate-800 border-slate-600"
                     />
                     <Input
                       placeholder="Description"
                       value={newEvidence.description}
-                      onChange={(e) => setNewEvidence({ ...newEvidence, description: e.target.value })}
+                      onChange={(e) =>
+                        setNewEvidence({
+                          ...newEvidence,
+                          description: e.target.value,
+                        })
+                      }
                       className="bg-slate-800 border-slate-600"
                     />
                     <div className="flex gap-2">
@@ -346,7 +413,8 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                 )}
 
                 <p className="text-xs text-slate-400">
-                  Add supporting evidence to strengthen your capsule's credibility.
+                  Add supporting evidence to strengthen your capsule's
+                  credibility.
                 </p>
               </CardContent>
             </Card>
@@ -367,7 +435,9 @@ export default function CreateCapsuleForm({ onSubmit, isSubmitting = false }: Cr
                 />
               </FormControl>
               <FormDescription>
-                Include all relevant details, sources, evidence, and reasoning. The more comprehensive and well-documented, the better your verification chances.
+                Include all relevant details, sources, evidence, and reasoning.
+                The more comprehensive and well-documented, the better your
+                verification chances.
               </FormDescription>
               <FormMessage />
             </FormItem>

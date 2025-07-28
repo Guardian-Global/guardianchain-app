@@ -18,7 +18,7 @@ export async function sendDigest(user: {
 }) {
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - 7);
-  
+
   await sendGuardianEmail({
     to: user.email,
     subject: "📈 Your Weekly GUARDIANCHAIN Report",
@@ -26,14 +26,18 @@ export async function sendDigest(user: {
     markdown: `
 # 📈 Weekly Performance Report
 
-Hello **${user.name || 'Guardian'}**! Here's your GUARDIANCHAIN activity summary for the week ending ${new Date().toLocaleDateString()}.
+Hello **${
+      user.name || "Guardian"
+    }**! Here's your GUARDIANCHAIN activity summary for the week ending ${new Date().toLocaleDateString()}.
 
 ## 🎯 Weekly Highlights
 
 ### Capsule Activity
 - **Capsules Sealed:** ${user.sealedCount} (+${Math.floor(Math.random() * 3)})
 - **Capsules Remixed:** ${user.remixedCount} 
-- **Total Views:** ${user.capsuleHighlights.reduce((sum, cap) => sum + cap.views, 0).toLocaleString()}
+- **Total Views:** ${user.capsuleHighlights
+      .reduce((sum, cap) => sum + cap.views, 0)
+      .toLocaleString()}
 
 ### GTT Earnings
 - **This Week:** **${user.weeklyYield.toLocaleString()} GTT** 🔥
@@ -41,19 +45,26 @@ Hello **${user.name || 'Guardian'}**! Here's your GUARDIANCHAIN activity summary
 - **Global Rank:** #${user.rank.toLocaleString()}
 
 ## 🏆 New Achievements
-${user.achievementsUnlocked.length > 0 ? 
-  user.achievementsUnlocked.map(achievement => `- 🎖️ ${achievement}`).join('\n') :
-  '*No new achievements this week - keep creating!*'
+${
+  user.achievementsUnlocked.length > 0
+    ? user.achievementsUnlocked
+        .map((achievement) => `- 🎖️ ${achievement}`)
+        .join("\n")
+    : "*No new achievements this week - keep creating!*"
 }
 
 ## 📦 Top Performing Capsules
 
-${user.capsuleHighlights.map((capsule, index) => `
+${user.capsuleHighlights
+  .map(
+    (capsule, index) => `
 ### ${index + 1}. "${capsule.title}"
 - **Yield:** ${capsule.yield} GTT
 - **Views:** ${capsule.views.toLocaleString()}
 - **[View Details](https://guardianchain.app/capsule/${capsule.id})**
-`).join('\n')}
+`
+  )
+  .join("\n")}
 
 ## 🌟 Market Insights
 
@@ -70,7 +81,9 @@ ${user.capsuleHighlights.map((capsule, index) => `
 ## 🎯 Next Week's Goals
 
 Based on your activity, we recommend:
-- 🎨 **Create ${3 - user.sealedCount > 0 ? 3 - user.sealedCount : 1} more capsules** to maximize yield
+- 🎨 **Create ${
+      3 - user.sealedCount > 0 ? 3 - user.sealedCount : 1
+    } more capsules** to maximize yield
 - 🔄 **Remix trending capsules** for collaboration rewards
 - 🗳️ **Participate in DAO governance** for bonus GTT
 - 💎 **Stake your GTT** for ${(Math.random() * 10 + 15).toFixed(1)}% APY

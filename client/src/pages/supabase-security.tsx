@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, AlertTriangle, CheckCircle, Settings, Zap } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  Settings,
+  Zap,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface SecurityCheck {
   auth_configured: boolean;
@@ -23,7 +29,9 @@ interface SecurityStatus {
 }
 
 export default function SupabaseSecurity() {
-  const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(null);
+  const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
   const [hardening, setHardening] = useState(false);
   const { toast } = useToast();
@@ -31,9 +39,9 @@ export default function SupabaseSecurity() {
   const checkSecurityStatus = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/supabase/security/status');
+      const response = await fetch("/api/supabase/security/status");
       const data = await response.json();
-      
+
       if (data.success) {
         setSecurityStatus(data.data);
         toast({
@@ -61,17 +69,17 @@ export default function SupabaseSecurity() {
   const applyHardening = async () => {
     setHardening(true);
     try {
-      const response = await fetch('/api/supabase/security/harden', {
-        method: 'POST',
+      const response = await fetch("/api/supabase/security/harden", {
+        method: "POST",
       });
       const data = await response.json();
-      
+
       if (data.success) {
         toast({
           title: "Security Hardening Applied",
           description: `Completed ${data.data.total_steps} hardening steps`,
         });
-        
+
         // Refresh security status
         await checkSecurityStatus();
       } else {
@@ -95,10 +103,10 @@ export default function SupabaseSecurity() {
   const fixSpecificIssue = async (issue: string) => {
     try {
       const response = await fetch(`/api/supabase/security/fix/${issue}`, {
-        method: 'POST',
+        method: "POST",
       });
       const data = await response.json();
-      
+
       if (data.success) {
         toast({
           title: "Issue Fixed",
@@ -122,9 +130,9 @@ export default function SupabaseSecurity() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
-    return 'text-red-400';
+    if (score >= 80) return "text-green-400";
+    if (score >= 60) return "text-yellow-400";
+    return "text-red-400";
   };
 
   const getScoreBadge = (score: number) => {
@@ -145,7 +153,8 @@ export default function SupabaseSecurity() {
             </h1>
           </div>
           <p className="text-slate-300 text-lg max-w-3xl mx-auto">
-            Monitor and enhance Supabase security configuration with enterprise-grade protection
+            Monitor and enhance Supabase security configuration with
+            enterprise-grade protection
           </p>
         </div>
 
@@ -162,28 +171,39 @@ export default function SupabaseSecurity() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Score */}
                 <div className="text-center">
-                  <div className={`text-6xl font-bold ${getScoreColor(securityStatus.security_score)}`}>
+                  <div
+                    className={`text-6xl font-bold ${getScoreColor(
+                      securityStatus.security_score
+                    )}`}
+                  >
                     {securityStatus.security_score}%
                   </div>
                   <div className="text-slate-400">Security Score</div>
-                  <div className="mt-2">{getScoreBadge(securityStatus.security_score)}</div>
+                  <div className="mt-2">
+                    {getScoreBadge(securityStatus.security_score)}
+                  </div>
                 </div>
 
                 {/* Security Checks */}
                 <div className="space-y-3">
                   <h3 className="text-white font-semibold">Security Checks</h3>
-                  {Object.entries(securityStatus.security_checks).map(([key, value]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <span className="text-slate-300 capitalize">
-                        {key.replace(/_/g, ' ')}
-                      </span>
-                      {value ? (
-                        <CheckCircle className="h-5 w-5 text-green-400" />
-                      ) : (
-                        <AlertTriangle className="h-5 w-5 text-red-400" />
-                      )}
-                    </div>
-                  ))}
+                  {Object.entries(securityStatus.security_checks).map(
+                    ([key, value]) => (
+                      <div
+                        key={key}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-slate-300 capitalize">
+                          {key.replace(/_/g, " ")}
+                        </span>
+                        {value ? (
+                          <CheckCircle className="h-5 w-5 text-green-400" />
+                        ) : (
+                          <AlertTriangle className="h-5 w-5 text-red-400" />
+                        )}
+                      </div>
+                    )
+                  )}
                 </div>
 
                 {/* Details */}
@@ -191,7 +211,10 @@ export default function SupabaseSecurity() {
                   <h3 className="text-white font-semibold">Status Details</h3>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {securityStatus.details.map((detail, index) => (
-                      <div key={index} className="text-sm text-slate-400 p-2 bg-slate-700/30 rounded">
+                      <div
+                        key={index}
+                        className="text-sm text-slate-400 p-2 bg-slate-700/30 rounded"
+                      >
                         {detail}
                       </div>
                     ))}
@@ -232,28 +255,28 @@ export default function SupabaseSecurity() {
 
               <div className="grid grid-cols-2 gap-2">
                 <Button
-                  onClick={() => fixSpecificIssue('exposed-auth-users')}
+                  onClick={() => fixSpecificIssue("exposed-auth-users")}
                   variant="outline"
                   className="text-sm border-slate-600 text-slate-300"
                 >
                   Fix Auth Exposure
                 </Button>
                 <Button
-                  onClick={() => fixSpecificIssue('function-search-path')}
+                  onClick={() => fixSpecificIssue("function-search-path")}
                   variant="outline"
                   className="text-sm border-slate-600 text-slate-300"
                 >
                   Fix Functions
                 </Button>
                 <Button
-                  onClick={() => fixSpecificIssue('foreign-table-api')}
+                  onClick={() => fixSpecificIssue("foreign-table-api")}
                   variant="outline"
                   className="text-sm border-slate-600 text-slate-300"
                 >
                   Fix Foreign Tables
                 </Button>
                 <Button
-                  onClick={() => fixSpecificIssue('password-protection')}
+                  onClick={() => fixSpecificIssue("password-protection")}
                   variant="outline"
                   className="text-sm border-slate-600 text-slate-300"
                 >
@@ -275,7 +298,10 @@ export default function SupabaseSecurity() {
               <CardContent>
                 <div className="space-y-3">
                   {securityStatus.recommendations.map((rec, index) => (
-                    <Alert key={index} className="bg-slate-700/30 border-slate-600">
+                    <Alert
+                      key={index}
+                      className="bg-slate-700/30 border-slate-600"
+                    >
                       <AlertDescription className="text-slate-300">
                         {rec}
                       </AlertDescription>
@@ -301,33 +327,46 @@ export default function SupabaseSecurity() {
                 <h3 className="text-red-400 font-semibold">Critical Issues</h3>
                 <div className="space-y-2">
                   <div className="p-3 bg-red-900/20 border border-red-700 rounded">
-                    <div className="font-medium text-red-300">Exposed Auth Users</div>
+                    <div className="font-medium text-red-300">
+                      Exposed Auth Users
+                    </div>
                     <div className="text-sm text-red-400">
-                      public.users_with_roles - auth.users exposed via view or authenticated roles
+                      public.users_with_roles - auth.users exposed via view or
+                      authenticated roles
                     </div>
                   </div>
                   <div className="p-3 bg-red-900/20 border border-red-700 rounded">
-                    <div className="font-medium text-red-300">Security Definer Views</div>
+                    <div className="font-medium text-red-300">
+                      Security Definer Views
+                    </div>
                     <div className="text-sm text-red-400">
-                      Views defined with SECURITY DEFINER property enforcement needed
+                      Views defined with SECURITY DEFINER property enforcement
+                      needed
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-yellow-400 font-semibold">Function Issues</h3>
+                <h3 className="text-yellow-400 font-semibold">
+                  Function Issues
+                </h3>
                 <div className="space-y-2">
                   <div className="p-3 bg-yellow-900/20 border border-yellow-700 rounded">
-                    <div className="font-medium text-yellow-300">Function Search Path</div>
+                    <div className="font-medium text-yellow-300">
+                      Function Search Path
+                    </div>
                     <div className="text-sm text-yellow-400">
                       Multiple functions with search_path parameter not set
                     </div>
                   </div>
                   <div className="p-3 bg-yellow-900/20 border border-yellow-700 rounded">
-                    <div className="font-medium text-yellow-300">Foreign Table API</div>
+                    <div className="font-medium text-yellow-300">
+                      Foreign Table API
+                    </div>
                     <div className="text-sm text-yellow-400">
-                      Foreign tables accessible over APIs without proper restrictions
+                      Foreign tables accessible over APIs without proper
+                      restrictions
                     </div>
                   </div>
                 </div>

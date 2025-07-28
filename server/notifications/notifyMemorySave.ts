@@ -1,11 +1,11 @@
 import { sendGuardianEmail } from "../lib/mailer";
 
-export async function notifyMemorySaved({ 
-  user, 
-  message, 
-  reply, 
+export async function notifyMemorySaved({
+  user,
+  message,
+  reply,
   threadId,
-  importance = "medium"
+  importance = "medium",
 }: {
   user: { email: string; name?: string };
   message: string;
@@ -13,8 +13,9 @@ export async function notifyMemorySaved({
   threadId: string;
   importance?: "low" | "medium" | "high" | "critical";
 }) {
-  const emoji = importance === "critical" ? "🚨" : importance === "high" ? "⚡" : "🧠";
-  
+  const emoji =
+    importance === "critical" ? "🚨" : importance === "high" ? "⚡" : "🧠";
+
   await sendGuardianEmail({
     to: user.email,
     subject: `${emoji} AI Memory Saved - ${importance.toUpperCase()} Priority`,

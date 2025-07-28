@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  DollarSign, 
-  TrendingUp, 
+import {
+  DollarSign,
+  TrendingUp,
   TrendingDown,
   AlertTriangle,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import { getTreasuryMetrics } from "@/lib/analytics";
 
@@ -30,7 +30,7 @@ export default function TreasuryDashboard() {
   const loadTreasuryData = async () => {
     setIsLoading(true);
     setError("");
-    
+
     try {
       const data = await getTreasuryMetrics();
       if (data) {
@@ -39,7 +39,7 @@ export default function TreasuryDashboard() {
           gttPrice: data.gtt_price || 0,
           marketCap: data.market_cap || 0,
           change24h: data.change_24h || 0,
-          lastUpdate: data.updated_at || new Date().toISOString()
+          lastUpdate: data.updated_at || new Date().toISOString(),
         });
       } else {
         setError("No treasury data available");
@@ -110,20 +110,20 @@ export default function TreasuryDashboard() {
   }
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(value);
   };
 
   const formatPrice = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 4,
-      maximumFractionDigits: 4
+      maximumFractionDigits: 4,
     }).format(value);
   };
 
@@ -153,8 +153,15 @@ export default function TreasuryDashboard() {
               ) : (
                 <TrendingDown className="w-4 h-4 mr-1 text-red-400" />
               )}
-              <span className={`text-sm ${treasuryData.change24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {treasuryData.change24h >= 0 ? '+' : ''}{treasuryData.change24h.toFixed(2)}%
+              <span
+                className={`text-sm ${
+                  treasuryData.change24h >= 0
+                    ? "text-green-400"
+                    : "text-red-400"
+                }`}
+              >
+                {treasuryData.change24h >= 0 ? "+" : ""}
+                {treasuryData.change24h.toFixed(2)}%
               </span>
             </div>
           </div>

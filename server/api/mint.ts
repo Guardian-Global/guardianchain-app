@@ -1,5 +1,9 @@
 import type { Express } from "express";
-import { calculateGTT, calculateAdvancedGTT, type CapsuleMetrics } from "../../client/src/lib/gttEngine";
+import {
+  calculateGTT,
+  calculateAdvancedGTT,
+  type CapsuleMetrics,
+} from "../../client/src/lib/gttEngine";
 
 /**
  * GTT Minting API endpoints
@@ -32,18 +36,21 @@ interface MintResponse {
  * Simulate GTT minting to wallet address
  * In production, this would interact with the actual smart contract
  */
-async function simulateGTTMint(amount: number, wallet: string): Promise<MintResponse> {
+async function simulateGTTMint(
+  amount: number,
+  wallet: string
+): Promise<MintResponse> {
   // Validate inputs
   if (amount <= 0) {
     throw new Error("Amount must be greater than 0");
   }
-  
+
   if (!wallet || !wallet.startsWith("0x") || wallet.length !== 42) {
     throw new Error("Invalid wallet address");
   }
 
   // Simulate blockchain transaction delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  await new Promise((resolve) => setTimeout(resolve, 1500));
 
   // Generate mock transaction hash
   const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
@@ -55,22 +62,25 @@ async function simulateGTTMint(amount: number, wallet: string): Promise<MintResp
     success: true,
     amount,
     wallet,
-    transactionHash
+    transactionHash,
   };
 }
 
 /**
  * Calculate and mint GTT rewards for capsule performance
  */
-async function calculateAndMintRewards(capsuleMetrics: CapsuleMetrics, wallet: string): Promise<MintResponse> {
+async function calculateAndMintRewards(
+  capsuleMetrics: CapsuleMetrics,
+  wallet: string
+): Promise<MintResponse> {
   const rewards = calculateAdvancedGTT(capsuleMetrics);
-  
+
   console.log(`[GTT REWARDS] Calculated rewards for capsule:`, {
     baseReward: rewards.baseReward,
     griefMultiplier: rewards.griefMultiplier,
     engagementBonus: rewards.engagementBonus,
     sealBonus: rewards.sealBonus,
-    totalGTT: rewards.totalGTT
+    totalGTT: rewards.totalGTT,
   });
 
   return await simulateGTTMint(rewards.totalGTT, wallet);
@@ -87,7 +97,7 @@ export function registerMintRoutes(app: Express) {
 
       if (!amount || !wallet) {
         return res.status(400).json({
-          error: "Missing required fields: amount and wallet"
+          error: "Missing required fields: amount and wallet",
         });
       }
 
@@ -97,17 +107,20 @@ export function registerMintRoutes(app: Express) {
       // }
 
       const result = await simulateGTTMint(amount, wallet);
-      
+
       // Log the mint operation
-      console.log(`[ADMIN MINT] ${amount} GTT minted to ${wallet}. Reason: ${reason || 'Manual mint'}`);
+      console.log(
+        `[ADMIN MINT] ${amount} GTT minted to ${wallet}. Reason: ${
+          reason || "Manual mint"
+        }`
+      );
 
       res.status(200).json(result);
-
     } catch (error: any) {
       console.error("GTT mint error:", error);
       res.status(500).json({
         error: "Failed to mint GTT tokens",
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -115,11 +128,12 @@ export function registerMintRoutes(app: Express) {
   // Claim GTT rewards for capsule performance
   app.post("/api/mint/claim", async (req, res) => {
     try {
-      const { capsuleId, griefScore, replayCount, userWallet } = req.body as ClaimRequest;
+      const { capsuleId, griefScore, replayCount, userWallet } =
+        req.body as ClaimRequest;
 
       if (!capsuleId || !userWallet) {
         return res.status(400).json({
-          error: "Missing required fields: capsuleId and userWallet"
+          error: "Missing required fields: capsuleId and userWallet",
         });
       }
 
@@ -134,7 +148,7 @@ export function registerMintRoutes(app: Express) {
         verificationCount: Math.floor((griefScore || 0) / 20), // Estimate verifications
         timeActive: 24, // Default 24 hours
         sealStatus: griefScore > 70, // Assume high grief score means sealed
-        creatorReputation: 750 // Default reputation
+        creatorReputation: 750, // Default reputation
       };
 
       const result = await calculateAndMintRewards(capsuleMetrics, userWallet);
@@ -144,14 +158,13 @@ export function registerMintRoutes(app: Express) {
         capsuleId,
         simpleCalculation: simpleGTT,
         advancedCalculation: result.amount,
-        metrics: capsuleMetrics
+        metrics: capsuleMetrics,
       });
-
     } catch (error: any) {
       console.error("GTT claim error:", error);
       res.status(500).json({
         error: "Failed to claim GTT rewards",
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -163,21 +176,24 @@ export function registerMintRoutes(app: Express) {
 
       if (!recipients || !Array.isArray(recipients)) {
         return res.status(400).json({
-          error: "Invalid recipients array"
+          error: "Invalid recipients array",
         });
       }
 
       const results = [];
-      
+
       for (const recipient of recipients) {
         try {
-          const result = await simulateGTTMint(recipient.amount, recipient.wallet);
+          const result = await simulateGTTMint(
+            recipient.amount,
+            recipient.wallet
+          );
           results.push({ ...result, recipient: recipient.wallet });
         } catch (error: any) {
-          results.push({ 
-            success: false, 
-            error: error.message, 
-            recipient: recipient.wallet 
+          results.push({
+            success: false,
+            error: error.message,
+            recipient: recipient.wallet,
           });
         }
       }
@@ -186,15 +202,14 @@ export function registerMintRoutes(app: Express) {
         success: true,
         results,
         totalMinted: results
-          .filter(r => r.success)
-          .reduce((sum, r) => sum + (r.amount || 0), 0)
+          .filter((r) => r.success)
+          .reduce((sum, r) => sum + (r.amount || 0), 0),
       });
-
     } catch (error: any) {
       console.error("Batch mint error:", error);
       res.status(500).json({
         error: "Failed to process batch mint",
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -203,15 +218,22 @@ export function registerMintRoutes(app: Express) {
   app.get("/api/mint/history", async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 50;
-      
+
       // Generate mock mint history
       const history = Array.from({ length: limit }, (_, i) => ({
         id: `mint_${Date.now()}_${i}`,
         amount: Math.floor(Math.random() * 500) + 10,
         recipient: `0x${Math.random().toString(16).substr(2, 40)}`,
         transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-        timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
-        reason: ['Capsule reward', 'Admin mint', 'Staking reward', 'Governance participation'][Math.floor(Math.random() * 4)]
+        timestamp: new Date(
+          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+        ).toISOString(),
+        reason: [
+          "Capsule reward",
+          "Admin mint",
+          "Staking reward",
+          "Governance participation",
+        ][Math.floor(Math.random() * 4)],
       }));
 
       res.status(200).json(history);
@@ -219,7 +241,7 @@ export function registerMintRoutes(app: Express) {
       console.error("Mint history error:", error);
       res.status(500).json({
         error: "Failed to fetch mint history",
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -239,8 +261,8 @@ export function registerMintRoutes(app: Express) {
           { address: "0xB2c3D4e5F6g7890...", balance: 9800 },
           { address: "0xC3d4E5f6G7h8901...", balance: 7600 },
           { address: "0xD4e5F6g7H8i9012...", balance: 6200 },
-          { address: "0xE5f6G7h8I9j0123...", balance: 5100 }
-        ]
+          { address: "0xE5f6G7h8I9j0123...", balance: 5100 },
+        ],
       };
 
       res.status(200).json(stats);
@@ -248,7 +270,7 @@ export function registerMintRoutes(app: Express) {
       console.error("Mint stats error:", error);
       res.status(500).json({
         error: "Failed to fetch mint statistics",
-        details: error.message
+        details: error.message,
       });
     }
   });

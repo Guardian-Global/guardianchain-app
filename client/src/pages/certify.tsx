@@ -1,15 +1,35 @@
-import { ShieldCheck, Award, Zap, Users, TrendingUp } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import VerifyCapsule from '@/components/VerifyCapsule';
-import ClaimNFT from '@/components/ClaimNFT';
+import { ShieldCheck, Award, Zap, Users, TrendingUp } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import VerifyCapsule from "@/components/VerifyCapsule";
+import ClaimNFT from "@/components/ClaimNFT";
 
 export default function Certify() {
   const stats = [
-    { label: 'Verified Capsules', value: '2,847', icon: ShieldCheck, color: 'text-green-400' },
-    { label: 'NFTs Claimed', value: '1,923', icon: Award, color: 'text-purple-400' },
-    { label: 'Active Verifiers', value: '456', icon: Users, color: 'text-blue-400' },
-    { label: 'Success Rate', value: '94.7%', icon: TrendingUp, color: 'text-yellow-400' }
+    {
+      label: "Verified Capsules",
+      value: "2,847",
+      icon: ShieldCheck,
+      color: "text-green-400",
+    },
+    {
+      label: "NFTs Claimed",
+      value: "1,923",
+      icon: Award,
+      color: "text-purple-400",
+    },
+    {
+      label: "Active Verifiers",
+      value: "456",
+      icon: Users,
+      color: "text-blue-400",
+    },
+    {
+      label: "Success Rate",
+      value: "94.7%",
+      icon: TrendingUp,
+      color: "text-yellow-400",
+    },
   ];
 
   return (
@@ -23,9 +43,12 @@ export default function Certify() {
                 <ShieldCheck className="h-6 w-6 text-green-400" />
               </div>
               <div>
-                <span className="text-white text-xl font-bold">Capsule Integrity & Certification</span>
+                <span className="text-white text-xl font-bold">
+                  Capsule Integrity & Certification
+                </span>
                 <p className="text-slate-400 text-sm font-normal">
-                  Verify capsule authenticity and claim your blockchain certificate
+                  Verify capsule authenticity and claim your blockchain
+                  certificate
                 </p>
               </div>
             </CardTitle>
@@ -42,7 +65,9 @@ export default function Certify() {
                     <stat.icon className={`h-5 w-5 ${stat.color}`} />
                   </div>
                   <div>
-                    <div className={`text-lg font-bold ${stat.color}`}>{stat.value}</div>
+                    <div className={`text-lg font-bold ${stat.color}`}>
+                      {stat.value}
+                    </div>
                     <div className="text-xs text-slate-400">{stat.label}</div>
                   </div>
                 </div>
@@ -64,7 +89,9 @@ export default function Certify() {
               <div className="w-full border-t border-slate-700"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-slate-900 px-4 text-slate-400">Certificate Claiming</span>
+              <span className="bg-slate-900 px-4 text-slate-400">
+                Certificate Claiming
+              </span>
             </div>
           </div>
 

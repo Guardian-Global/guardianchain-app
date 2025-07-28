@@ -1,52 +1,56 @@
-import { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseEther } from 'viem';
-import { Image, Loader2, CheckCircle, XCircle, Shield, AlertTriangle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
-import { getContractAddress, CONTRACT_ABIS } from '@/lib/contracts';
+import { useState } from "react";
+import {
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { parseEther } from "viem";
+import {
+  Image,
+  Loader2,
+  CheckCircle,
+  XCircle,
+  Shield,
+  AlertTriangle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useToast } from "@/hooks/use-toast";
+import { getContractAddress, CONTRACT_ABIS } from "@/lib/contracts";
 
 interface MintNFTButtonProps {
   capsuleId?: string;
   recipient?: string;
   onMintSuccess?: (txHash: string, tokenId: string) => void;
-  variant?: 'button' | 'card';
+  variant?: "button" | "card";
 }
 
-export default function MintNFTButton({ 
+export default function MintNFTButton({
   capsuleId: initialCapsuleId,
-  recipient: initialRecipient, 
+  recipient: initialRecipient,
   onMintSuccess,
-  variant = 'button'
+  variant = "button",
 }: MintNFTButtonProps) {
-  const [tokenUri, setTokenUri] = useState('');
-  const [capsuleId, setCapsuleId] = useState(initialCapsuleId || '');
-  const [recipient, setRecipient] = useState(initialRecipient || '');
+  const [tokenUri, setTokenUri] = useState("");
+  const [capsuleId, setCapsuleId] = useState(initialCapsuleId || "");
+  const [recipient, setRecipient] = useState(initialRecipient || "");
   const [soulbound, setSoulbound] = useState(true);
-  const [griefScore, setGriefScore] = useState('42');
-  const [vaultLabel, setVaultLabel] = useState('VERIFIED');
-  const [signature, setSignature] = useState('GUARDIAN_SEAL_V1');
+  const [griefScore, setGriefScore] = useState("42");
+  const [vaultLabel, setVaultLabel] = useState("VERIFIED");
+  const [signature, setSignature] = useState("GUARDIAN_SEAL_V1");
 
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
-  const { 
-    writeContract, 
-    data: hash, 
-    isPending, 
-    error 
-  } = useWriteContract();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-  const { 
-    isLoading: isConfirming, 
-    isSuccess: isConfirmed 
-  } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const handleMint = async () => {
     if (!tokenUri || !capsuleId || !recipient) {
@@ -68,23 +72,22 @@ export default function MintNFTButton({
     }
 
     try {
-      const nftAddress = getContractAddress(chainId, 'nft');
-      
+      const nftAddress = getContractAddress(chainId, "nft");
+
       writeContract({
         address: nftAddress as `0x${string}`,
         abi: CONTRACT_ABIS.VeritasCapsuleNFT,
-        functionName: 'mintVeritasCapsule',
+        functionName: "mintVeritasCapsule",
         args: [
-          recipient as `0x${string}`, 
+          recipient as `0x${string}`,
           tokenUri,
           BigInt(capsuleId),
           soulbound,
           BigInt(griefScore),
           vaultLabel,
-          signature
+          signature,
         ],
       });
-
     } catch (error: any) {
       toast({
         title: "Mint Failed",
@@ -99,7 +102,7 @@ export default function MintNFTButton({
     if (onMintSuccess) {
       onMintSuccess(hash, capsuleId);
     }
-    
+
     toast({
       title: "NFT Minted Successfully!",
       description: `Veritas Capsule NFT for capsule ${capsuleId} has been minted`,
@@ -115,7 +118,7 @@ export default function MintNFTButton({
     });
   }
 
-  if (variant === 'card') {
+  if (variant === "card") {
     return (
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
@@ -138,7 +141,7 @@ export default function MintNFTButton({
                 className="bg-slate-700 border-slate-600 text-white"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="capsuleId" className="text-slate-300">
                 Capsule ID
@@ -181,7 +184,7 @@ export default function MintNFTButton({
                 className="bg-slate-700 border-slate-600 text-white"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="vaultLabel" className="text-slate-300">
                 Vault Label
@@ -202,7 +205,10 @@ export default function MintNFTButton({
               checked={soulbound}
               onCheckedChange={(checked) => setSoulbound(checked as boolean)}
             />
-            <Label htmlFor="soulbound" className="text-slate-300 flex items-center gap-2">
+            <Label
+              htmlFor="soulbound"
+              className="text-slate-300 flex items-center gap-2"
+            >
               <Shield className="h-4 w-4" />
               Soulbound (Non-transferable)
             </Label>
@@ -216,7 +222,7 @@ export default function MintNFTButton({
             {isPending || isConfirming ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {isPending ? 'Confirming...' : 'Minting...'}
+                {isPending ? "Confirming..." : "Minting..."}
               </>
             ) : isConfirmed ? (
               <>
@@ -264,7 +270,7 @@ export default function MintNFTButton({
       {isPending || isConfirming ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {isPending ? 'Confirming...' : 'Minting...'}
+          {isPending ? "Confirming..." : "Minting..."}
         </>
       ) : error ? (
         <>

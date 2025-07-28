@@ -1,4 +1,15 @@
-import { pgTable, serial, text, integer, boolean, timestamp, jsonb, decimal, varchar, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  jsonb,
+  decimal,
+  varchar,
+  index,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -6,7 +17,7 @@ import { z } from "zod";
 export const CapsuleType = z.enum([
   "STANDARD",
   "LEGAL",
-  "KNOWLEDGE", 
+  "KNOWLEDGE",
   "CREATOR",
   "CIVIC",
   "FINANCIAL",
@@ -17,7 +28,7 @@ export const CapsuleType = z.enum([
   "CITIZEN_JOURNALISM",
   "FRAUD_PROOF",
   "WITNESS_TESTIMONY",
-  "SOULBOUND_MEMOIR"
+  "SOULBOUND_MEMOIR",
 ]);
 
 export type CapsuleTypeEnum = z.infer<typeof CapsuleType>;
@@ -31,7 +42,7 @@ export const sessions = pgTable(
     sess: jsonb("sess").notNull(),
     expire: timestamp("expire").notNull(),
   },
-  (table) => [index("IDX_session_expire").on(table.expire)],
+  (table) => [index("IDX_session_expire").on(table.expire)]
 );
 
 // Enhanced Users table with Replit Auth integration
@@ -53,14 +64,19 @@ export const users = pgTable("users", {
   gttBalance: decimal("gtt_balance", { precision: 18, scale: 8 }).default("0"),
   badges: jsonb("badges").$type<string[]>().default([]),
   achievements: jsonb("achievements").$type<object[]>().default([]),
-  socialLinks: jsonb("social_links").$type<Record<string, string>>().default({}),
+  socialLinks: jsonb("social_links")
+    .$type<Record<string, string>>()
+    .default({}),
   isVerified: boolean("is_verified").default(false),
   roles: jsonb("roles").$type<string[]>().default(["USER"]),
   isActive: boolean("is_active").default(true),
   passwordHash: varchar("password_hash"),
   lastLoginAt: timestamp("last_login_at"),
   userTier: text("user_tier").default("EXPLORER"),
-  totalYieldClaimed: decimal("total_yield_claimed", { precision: 18, scale: 8 }).default("0"),
+  totalYieldClaimed: decimal("total_yield_claimed", {
+    precision: 18,
+    scale: 8,
+  }).default("0"),
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at").defaultNow(),
@@ -150,12 +166,16 @@ export const insertCapsuleSchema = createInsertSchema(capsules).omit({
   updatedAt: true,
 });
 
-export const insertCapsuleInteractionSchema = createInsertSchema(capsuleInteractions).omit({
+export const insertCapsuleInteractionSchema = createInsertSchema(
+  capsuleInteractions
+).omit({
   id: true,
   createdAt: true,
 });
 
-export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({
+export const insertUserAchievementSchema = createInsertSchema(
+  userAchievements
+).omit({
   id: true,
   unlockedAt: true,
 });
@@ -173,7 +193,9 @@ export type Capsule = typeof capsules.$inferSelect;
 export type InsertCapsule = z.infer<typeof insertCapsuleSchema>;
 
 export type CapsuleInteraction = typeof capsuleInteractions.$inferSelect;
-export type InsertCapsuleInteraction = z.infer<typeof insertCapsuleInteractionSchema>;
+export type InsertCapsuleInteraction = z.infer<
+  typeof insertCapsuleInteractionSchema
+>;
 
 export type UserAchievement = typeof userAchievements.$inferSelect;
 export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;

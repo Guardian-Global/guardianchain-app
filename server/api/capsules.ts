@@ -11,11 +11,14 @@ const supabase = createClient(
 
 // POST /api/capsules
 router.post("/", async (req, res) => {
-  const { creator, title, content, griefScore, status, gttEarned, visibility } = req.body;
+  const { creator, title, content, griefScore, status, gttEarned, visibility } =
+    req.body;
 
   const { data, error } = await supabase
     .from("capsules")
-    .insert([{ creator, title, content, griefScore, status, gttEarned, visibility }]);
+    .insert([
+      { creator, title, content, griefScore, status, gttEarned, visibility },
+    ]);
 
   if (error) return res.status(500).json({ error: error.message });
   return res.status(200).json(data);

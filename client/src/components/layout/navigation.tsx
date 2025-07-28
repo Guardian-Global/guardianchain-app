@@ -13,15 +13,47 @@ import { LogoDisplay } from "@/components/assets/LogoDisplay";
 const navigation = [
   { name: "Explore", href: "/explore", translationKey: "nav.explore" },
   { name: "Create", href: "/create", translationKey: "nav.create" },
-  { name: "Specialized Intake", href: "/specialized-intake", translationKey: "nav.specialized" },
-  { name: "Whistleblower", href: "/whistleblower-sanctuary", translationKey: "nav.whistleblower" },
-  { name: "Token Launch", href: "/token-launch", translationKey: "token.launch" },
-  { name: "Blockchain Playground", href: "/blockchain-playground", translationKey: "nav.playground" },
-  { name: "Analytics", href: "/capsule-analytics", translationKey: "nav.analytics" },
+  {
+    name: "Specialized Intake",
+    href: "/specialized-intake",
+    translationKey: "nav.specialized",
+  },
+  {
+    name: "Whistleblower",
+    href: "/whistleblower-sanctuary",
+    translationKey: "nav.whistleblower",
+  },
+  {
+    name: "Token Launch",
+    href: "/token-launch",
+    translationKey: "token.launch",
+  },
+  {
+    name: "Blockchain Playground",
+    href: "/blockchain-playground",
+    translationKey: "nav.playground",
+  },
+  {
+    name: "Analytics",
+    href: "/capsule-analytics",
+    translationKey: "nav.analytics",
+  },
   { name: "Profile", href: "/profile", translationKey: "nav.profile" },
-  { name: "Category Discovery", href: "/category-discovery", translationKey: "nav.categories" },
-  { name: "Asset Gallery", href: "/asset-showcase", translationKey: "nav.assets" },
-  { name: "Master Access", href: "/master-access", translationKey: "nav.master" },
+  {
+    name: "Category Discovery",
+    href: "/category-discovery",
+    translationKey: "nav.categories",
+  },
+  {
+    name: "Asset Gallery",
+    href: "/asset-showcase",
+    translationKey: "nav.assets",
+  },
+  {
+    name: "Master Access",
+    href: "/master-access",
+    translationKey: "nav.master",
+  },
 ];
 
 export default function Navigation() {
@@ -37,8 +69,8 @@ export default function Navigation() {
           <div className="flex items-center space-x-8">
             <Link href="/">
               <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                <LogoDisplay 
-                  size="lg" 
+                <LogoDisplay
+                  size="lg"
                   variant="icon"
                   className="w-8 h-8"
                   fallback={
@@ -62,7 +94,9 @@ export default function Navigation() {
                       location === item.href ? "text-primary" : ""
                     }`}
                   >
-                    {item.translationKey ? t(item.translationKey as any) : item.name}
+                    {item.translationKey
+                      ? t(item.translationKey as any)
+                      : item.name}
                   </Button>
                 </Link>
               ))}
@@ -71,40 +105,55 @@ export default function Navigation() {
 
           <div className="flex items-center space-x-4">
             <Link href="/login">
-              <Button variant="outline" size="sm" className="text-purple-400 border-purple-400 hover:bg-purple-400/10">
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-purple-400 border-purple-400 hover:bg-purple-400/10"
+              >
                 Login
               </Button>
             </Link>
-            
+
             <div className="hidden sm:block">
               <div className="flex items-center space-x-2 bg-slate-800 rounded-lg px-3 py-2">
                 <Coins className="h-4 w-4 text-amber-400" />
                 <span className="text-sm font-mono">1,247 GTT</span>
               </div>
             </div>
-            
+
             <WalletConnect />
-            
+
             <LanguageSelector />
-            
+
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="text-slate-300 hover:text-white"
             >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
 
             {/* Mobile menu */}
             <div className="md:hidden">
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-slate-300">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-slate-300"
+                  >
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="bg-slate-900 border-slate-800">
+                <SheetContent
+                  side="right"
+                  className="bg-slate-900 border-slate-800"
+                >
                   <div className="flex flex-col space-y-4 mt-8">
                     {navigation.map((item) => (
                       <Link key={item.name} href={item.href}>

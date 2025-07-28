@@ -1,9 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { distributeYield, getYieldDistributionStats, getUserYieldSummary } from '@/lib/yieldEngine';
+import React, { useEffect, useState } from "react";
+import {
+  distributeYield,
+  getYieldDistributionStats,
+  getUserYieldSummary,
+} from "@/lib/yieldEngine";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, Coins, Activity, Play, BarChart3 } from "lucide-react";
+import {
+  TrendingUp,
+  Users,
+  Coins,
+  Activity,
+  Play,
+  BarChart3,
+} from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
 export default function YieldDistributionPage() {
@@ -18,7 +29,7 @@ export default function YieldDistributionPage() {
       setStats(distributionStats);
       setLastRun(distributionStats.lastDistribution);
     } catch (error) {
-      console.error('Failed to load yield stats:', error);
+      console.error("Failed to load yield stats:", error);
     } finally {
       setLoading(false);
     }
@@ -35,7 +46,7 @@ export default function YieldDistributionPage() {
       await loadStats(); // Refresh stats after distribution
       setLastRun(new Date().toISOString());
     } catch (error) {
-      console.error('Yield distribution error:', error);
+      console.error("Yield distribution error:", error);
     } finally {
       setIsDistributing(false);
     }
@@ -62,19 +73,23 @@ export default function YieldDistributionPage() {
           </p>
           <Badge className="bg-green-600 text-white px-4 py-2">
             <Activity className="w-4 h-4 mr-2" />
-            {stats?.distributionStatus === 'healthy' ? 'System Healthy' : 'Monitoring'}
+            {stats?.distributionStatus === "healthy"
+              ? "System Healthy"
+              : "Monitoring"}
           </Badge>
         </div>
       </section>
 
       <div className="py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* Distribution Controls */}
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
               <CardTitle className="text-white flex items-center">
-                <Play className="w-5 h-5 mr-2" style={{ color: BRAND_COLORS.SUCCESS }} />
+                <Play
+                  className="w-5 h-5 mr-2"
+                  style={{ color: BRAND_COLORS.SUCCESS }}
+                />
                 Yield Distribution Controls
               </CardTitle>
             </CardHeader>
@@ -82,7 +97,8 @@ export default function YieldDistributionPage() {
               <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                 <div>
                   <p className="text-slate-300 mb-2">
-                    Distribute pending yield rewards to all eligible capsule creators
+                    Distribute pending yield rewards to all eligible capsule
+                    creators
                   </p>
                   {lastRun && (
                     <p className="text-sm text-slate-400">
@@ -153,7 +169,10 @@ export default function YieldDistributionPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold" style={{ color: BRAND_COLORS.GUARDIAN }}>
+                  <p
+                    className="text-2xl font-bold"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  >
                     {stats.activeCapsules}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">Earning Yield</p>
@@ -190,20 +209,32 @@ export default function YieldDistributionPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-300">Average Yield per Capsule:</span>
+                      <span className="text-slate-300">
+                        Average Yield per Capsule:
+                      </span>
                       <span className="text-green-400 font-semibold">
                         {stats.averageYieldPerCapsule} GTT
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-300">Top Earning Capsule:</span>
+                      <span className="text-slate-300">
+                        Top Earning Capsule:
+                      </span>
                       <span className="text-yellow-400 font-semibold">
                         {stats.topEarningCapsule} GTT
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-300">Distribution Status:</span>
-                      <Badge className={stats.distributionStatus === 'healthy' ? 'bg-green-600' : 'bg-yellow-600'}>
+                      <span className="text-slate-300">
+                        Distribution Status:
+                      </span>
+                      <Badge
+                        className={
+                          stats.distributionStatus === "healthy"
+                            ? "bg-green-600"
+                            : "bg-yellow-600"
+                        }
+                      >
                         {stats.distributionStatus}
                       </Badge>
                     </div>
@@ -213,7 +244,9 @@ export default function YieldDistributionPage() {
 
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-white">Distribution Formula</CardTitle>
+                  <CardTitle className="text-white">
+                    Distribution Formula
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -222,7 +255,8 @@ export default function YieldDistributionPage() {
                     </p>
                     <div className="bg-slate-700/50 p-4 rounded-lg">
                       <code className="text-green-400 text-sm">
-                        yield = (views × 0.005) + (shares × 0.01) + (resonance × 0.02)
+                        yield = (views × 0.005) + (shares × 0.01) + (resonance ×
+                        0.02)
                       </code>
                     </div>
                     <div className="space-y-2 text-sm text-slate-300">
@@ -239,30 +273,44 @@ export default function YieldDistributionPage() {
           {/* Recent Activity */}
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white">Recent Distribution Activity</CardTitle>
+              <CardTitle className="text-white">
+                Recent Distribution Activity
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
                   <div>
-                    <p className="text-white font-medium">Capsule #1247: "Community Memorial"</p>
-                    <p className="text-sm text-slate-400">15.5 GTT distributed to creator</p>
+                    <p className="text-white font-medium">
+                      Capsule #1247: "Community Memorial"
+                    </p>
+                    <p className="text-sm text-slate-400">
+                      15.5 GTT distributed to creator
+                    </p>
                   </div>
                   <span className="text-xs text-slate-500">2 hours ago</span>
                 </div>
-                
+
                 <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
                   <div>
-                    <p className="text-white font-medium">Capsule #1246: "Whistleblower Testimony"</p>
-                    <p className="text-sm text-slate-400">8.2 GTT distributed to creator</p>
+                    <p className="text-white font-medium">
+                      Capsule #1246: "Whistleblower Testimony"
+                    </p>
+                    <p className="text-sm text-slate-400">
+                      8.2 GTT distributed to creator
+                    </p>
                   </div>
                   <span className="text-xs text-slate-500">4 hours ago</span>
                 </div>
-                
+
                 <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
                   <div>
-                    <p className="text-white font-medium">Capsule #1245: "Legal Evidence Archive"</p>
-                    <p className="text-sm text-slate-400">22.1 GTT distributed to creator</p>
+                    <p className="text-white font-medium">
+                      Capsule #1245: "Legal Evidence Archive"
+                    </p>
+                    <p className="text-sm text-slate-400">
+                      22.1 GTT distributed to creator
+                    </p>
                   </div>
                   <span className="text-xs text-slate-500">6 hours ago</span>
                 </div>

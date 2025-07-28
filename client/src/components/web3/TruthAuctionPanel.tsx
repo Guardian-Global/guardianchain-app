@@ -14,14 +14,17 @@ import { Gavel, TrendingUp, Clock, Shield, Loader2 } from "lucide-react";
 export default function TruthAuctionPanel() {
   const { address, chainId } = useAccount();
   const { toast } = useToast();
-  
+
   const [capsuleHash, setCapsuleHash] = useState("");
   const [reservePrice, setReservePrice] = useState("");
   const [auctionId, setAuctionId] = useState("");
   const [bidAmount, setBidAmount] = useState("");
 
-  const auctionEngineAddress = getContractAddress(chainId || 31337, "auctionEngine");
-  
+  const auctionEngineAddress = getContractAddress(
+    chainId || 31337,
+    "auctionEngine"
+  );
+
   // Read auction counter
   const { data: auctionCounter } = useContractRead({
     address: auctionEngineAddress,
@@ -39,27 +42,29 @@ export default function TruthAuctionPanel() {
   });
 
   // Create Auction
-  const { write: createAuction, isLoading: isCreatePending } = useContractWrite({
-    address: auctionEngineAddress,
-    abi: TRUTH_AUCTION_ABI,
-    functionName: "createAuction",
-    args: [capsuleHash, parseEther(reservePrice || "0")],
-    onSuccess: (data) => {
-      toast({
-        title: "Auction Created!",
-        description: `Transaction hash: ${data.hash}`,
-      });
-      setCapsuleHash("");
-      setReservePrice("");
-    },
-    onError: (error) => {
-      toast({
-        title: "Creation Failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+  const { write: createAuction, isLoading: isCreatePending } = useContractWrite(
+    {
+      address: auctionEngineAddress,
+      abi: TRUTH_AUCTION_ABI,
+      functionName: "createAuction",
+      args: [capsuleHash, parseEther(reservePrice || "0")],
+      onSuccess: (data) => {
+        toast({
+          title: "Auction Created!",
+          description: `Transaction hash: ${data.hash}`,
+        });
+        setCapsuleHash("");
+        setReservePrice("");
+      },
+      onError: (error) => {
+        toast({
+          title: "Creation Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    }
+  );
 
   // Place Bid
   const { write: placeBid, isLoading: isBidPending } = useContractWrite({
@@ -113,7 +118,12 @@ export default function TruthAuctionPanel() {
   const isAuctionActive = (auction: any) => {
     if (!auction) return false;
     const now = Math.floor(Date.now() / 1000);
-    return !auction.complete && !auction.sealed && !auction.cancelled && now < Number(auction.endTime);
+    return (
+      !auction.complete &&
+      !auction.sealed &&
+      !auction.cancelled &&
+      now < Number(auction.endTime)
+    );
   };
 
   return (
@@ -122,16 +132,22 @@ export default function TruthAuctionPanel() {
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
-            <Gavel className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+            <Gavel
+              className="w-5 h-5"
+              style={{ color: BRAND_COLORS.GUARDIAN }}
+            />
             {BRAND_NAME} Truth Auction Engine
           </CardTitle>
           <p className="text-slate-400">
-            Create auctions for capsule yield rights and participate in truth value discovery
+            Create auctions for capsule yield rights and participate in truth
+            value discovery
           </p>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-400">Total Auctions Created:</span>
+            <span className="text-sm text-slate-400">
+              Total Auctions Created:
+            </span>
             <Badge variant="outline" className="text-white">
               {auctionCounter?.toString() || "0"}
             </Badge>
@@ -144,13 +160,18 @@ export default function TruthAuctionPanel() {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <TrendingUp className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+              <TrendingUp
+                className="w-4 h-4"
+                style={{ color: BRAND_COLORS.CHAIN }}
+              />
               Create Capsule Auction
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="capsuleHash" className="text-white">Capsule Hash</Label>
+              <Label htmlFor="capsuleHash" className="text-white">
+                Capsule Hash
+              </Label>
               <Input
                 id="capsuleHash"
                 value={capsuleHash}
@@ -161,7 +182,9 @@ export default function TruthAuctionPanel() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="reservePrice" className="text-white">Reserve Price (ETH)</Label>
+              <Label htmlFor="reservePrice" className="text-white">
+                Reserve Price (ETH)
+              </Label>
               <Input
                 id="reservePrice"
                 type="number"
@@ -204,13 +227,18 @@ export default function TruthAuctionPanel() {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Shield className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+              <Shield
+                className="w-4 h-4"
+                style={{ color: BRAND_COLORS.CHAIN }}
+              />
               Place Bid
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="auctionId" className="text-white">Auction ID</Label>
+              <Label htmlFor="auctionId" className="text-white">
+                Auction ID
+              </Label>
               <Input
                 id="auctionId"
                 type="number"
@@ -226,7 +254,8 @@ export default function TruthAuctionPanel() {
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-400">Creator:</span>
                   <span className="text-white font-mono text-xs">
-                    {auctionData.creator?.slice(0, 6)}...{auctionData.creator?.slice(-4)}
+                    {auctionData.creator?.slice(0, 6)}...
+                    {auctionData.creator?.slice(-4)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -243,7 +272,11 @@ export default function TruthAuctionPanel() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-400">Status:</span>
-                  <Badge variant={isAuctionActive(auctionData) ? "default" : "destructive"}>
+                  <Badge
+                    variant={
+                      isAuctionActive(auctionData) ? "default" : "destructive"
+                    }
+                  >
                     {isAuctionActive(auctionData) ? "Active" : "Ended"}
                   </Badge>
                 </div>
@@ -259,7 +292,9 @@ export default function TruthAuctionPanel() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="bidAmount" className="text-white">Your Bid (ETH)</Label>
+              <Label htmlFor="bidAmount" className="text-white">
+                Your Bid (ETH)
+              </Label>
               <Input
                 id="bidAmount"
                 type="number"

@@ -16,7 +16,7 @@ interface VeritasSealRequest {
 interface VeritasSealResponse {
   sealId: string;
   envelopeId: string;
-  status: 'created' | 'sent' | 'completed' | 'failed';
+  status: "created" | "sent" | "completed" | "failed";
   veritasUrl?: string;
   certificateUrl?: string;
   expiresAt?: string;
@@ -26,22 +26,26 @@ interface VeritasSealResponse {
  * Mock DocuSign Veritas Seal API call
  * In production, this would integrate with actual DocuSign API
  */
-async function createVeritasSeal(request: VeritasSealRequest): Promise<VeritasSealResponse> {
+async function createVeritasSeal(
+  request: VeritasSealRequest
+): Promise<VeritasSealResponse> {
   // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
   // Generate mock seal ID (in production this would come from DocuSign)
   const sealId = `VS-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  const envelopeId = `ENV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  
+  const envelopeId = `ENV-${Date.now()}-${Math.random()
+    .toString(36)
+    .substr(2, 9)}`;
+
   // Mock successful response
   return {
     sealId,
     envelopeId,
-    status: 'completed',
+    status: "completed",
     veritasUrl: `https://seal.docusign.com/veritas/${sealId}`,
     certificateUrl: `https://seal.docusign.com/certificate/${sealId}.pdf`,
-    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() // 1 year
+    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year
   };
 }
 
@@ -53,10 +57,10 @@ export function registerSealRoutes(app: Express) {
   app.post("/api/seal", async (req, res) => {
     try {
       const { capsuleId, content, creatorId, metadata } = req.body;
-      
+
       if (!capsuleId || !content) {
         return res.status(400).json({
-          error: "Missing required fields: capsuleId and content"
+          error: "Missing required fields: capsuleId and content",
         });
       }
 
@@ -64,14 +68,14 @@ export function registerSealRoutes(app: Express) {
       const capsule = await storage.getCapsule(capsuleId);
       if (!capsule) {
         return res.status(404).json({
-          error: "Capsule not found"
+          error: "Capsule not found",
         });
       }
 
       // Verify the user owns this capsule or has permission to seal it
       if (req.user && capsule.creatorId !== req.user.id) {
         return res.status(403).json({
-          error: "You can only seal your own capsules"
+          error: "You can only seal your own capsules",
         });
       }
 
@@ -81,8 +85,8 @@ export function registerSealRoutes(app: Express) {
           error: "Capsule is already sealed",
           existingSeal: {
             sealId: capsule.veritasSealId,
-            url: capsule.veritasSealUrl
-          }
+            url: capsule.veritasSealUrl,
+          },
         });
       }
 
@@ -94,8 +98,8 @@ export function registerSealRoutes(app: Express) {
         metadata: {
           title: metadata?.title || capsule.title,
           tags: metadata?.tags || capsule.tags,
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       };
 
       const sealResponse = await createVeritasSeal(sealRequest);
@@ -106,20 +110,19 @@ export function registerSealRoutes(app: Express) {
         veritasSealUrl: sealResponse.veritasUrl,
         isSealed: true,
         sealedAt: new Date().toISOString(),
-        verificationStatus: 'sealed'
+        verificationStatus: "sealed",
       });
 
       res.status(200).json({
         success: true,
         seal: sealResponse,
-        capsule: updatedCapsule
+        capsule: updatedCapsule,
       });
-
     } catch (error: any) {
       console.error("Veritas seal error:", error);
       res.status(500).json({
         error: "Failed to create Veritas seal",
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -128,16 +131,18 @@ export function registerSealRoutes(app: Express) {
   app.get("/api/seal/:sealId", async (req, res) => {
     try {
       const { sealId } = req.params;
-      
+
       // In production, this would query DocuSign API for seal status
       // For now, return mock status
       const mockStatus = {
         sealId,
-        status: 'completed',
+        status: "completed",
         createdAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        expiresAt: new Date(
+          Date.now() + 365 * 24 * 60 * 60 * 1000
+        ).toISOString(),
         veritasUrl: `https://seal.docusign.com/veritas/${sealId}`,
-        certificateUrl: `https://seal.docusign.com/certificate/${sealId}.pdf`
+        certificateUrl: `https://seal.docusign.com/certificate/${sealId}.pdf`,
       };
 
       res.status(200).json(mockStatus);
@@ -145,7 +150,7 @@ export function registerSealRoutes(app: Express) {
       console.error("Seal status error:", error);
       res.status(500).json({
         error: "Failed to get seal status",
-        details: error.message
+        details: error.message,
       });
     }
   });
@@ -154,10 +159,10 @@ export function registerSealRoutes(app: Express) {
   app.post("/api/seal/verify", async (req, res) => {
     try {
       const { sealId, content } = req.body;
-      
+
       if (!sealId || !content) {
         return res.status(400).json({
-          error: "Missing required fields: sealId and content"
+          error: "Missing required fields: sealId and content",
         });
       }
 
@@ -167,17 +172,19 @@ export function registerSealRoutes(app: Express) {
         isValid: true,
         sealId,
         verifiedAt: new Date().toISOString(),
-        integrity: 'intact',
+        integrity: "intact",
         tamperEvidence: false,
         originalContent: content,
         certificateChain: [
           {
-            issuer: 'DocuSign Veritas CA',
+            issuer: "DocuSign Veritas CA",
             subject: `Veritas Seal ${sealId}`,
             validFrom: new Date().toISOString(),
-            validUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-          }
-        ]
+            validUntil: new Date(
+              Date.now() + 365 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+          },
+        ],
       };
 
       res.status(200).json(verificationResult);
@@ -185,7 +192,7 @@ export function registerSealRoutes(app: Express) {
       console.error("Seal verification error:", error);
       res.status(500).json({
         error: "Failed to verify seal",
-        details: error.message
+        details: error.message,
       });
     }
   });

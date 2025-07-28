@@ -1,7 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Smartphone, Tablet, Monitor, Zap, Users, TrendingUp } from "lucide-react";
+import {
+  Smartphone,
+  Tablet,
+  Monitor,
+  Zap,
+  Users,
+  TrendingUp,
+} from "lucide-react";
 
 export default function MobileOptimizations() {
   return (
@@ -21,7 +28,8 @@ export default function MobileOptimizations() {
               </div>
               <h3 className="text-xl font-bold">Mobile Optimized</h3>
               <p className="text-slate-400">
-                98% mobile performance score with touch-friendly interfaces and responsive design
+                98% mobile performance score with touch-friendly interfaces and
+                responsive design
               </p>
               <Badge className="bg-green-500/20 text-green-400">
                 Performance: 98/100
@@ -34,7 +42,8 @@ export default function MobileOptimizations() {
               </div>
               <h3 className="text-xl font-bold">Tablet Ready</h3>
               <p className="text-slate-400">
-                Optimized layouts for iPad and Android tablets with gesture support
+                Optimized layouts for iPad and Android tablets with gesture
+                support
               </p>
               <Badge className="bg-blue-500/20 text-blue-400">
                 Touch Optimized
@@ -47,7 +56,8 @@ export default function MobileOptimizations() {
               </div>
               <h3 className="text-xl font-bold">Desktop Enhanced</h3>
               <p className="text-slate-400">
-                Full-featured desktop experience with advanced analytics and controls
+                Full-featured desktop experience with advanced analytics and
+                controls
               </p>
               <Badge className="bg-purple-500/20 text-purple-400">
                 Advanced Features
@@ -69,19 +79,27 @@ export default function MobileOptimizations() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span>Mobile Load Time</span>
-                <Badge className="bg-green-500/20 text-green-400">&lt; 2 seconds</Badge>
+                <Badge className="bg-green-500/20 text-green-400">
+                  &lt; 2 seconds
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span>Core Web Vitals</span>
-                <Badge className="bg-green-500/20 text-green-400">Excellent</Badge>
+                <Badge className="bg-green-500/20 text-green-400">
+                  Excellent
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span>Touch Response</span>
-                <Badge className="bg-green-500/20 text-green-400">&lt; 100ms</Badge>
+                <Badge className="bg-green-500/20 text-green-400">
+                  &lt; 100ms
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span>Bundle Size</span>
-                <Badge className="bg-green-500/20 text-green-400">480KB gzipped</Badge>
+                <Badge className="bg-green-500/20 text-green-400">
+                  480KB gzipped
+                </Badge>
               </div>
             </div>
           </CardContent>
@@ -102,11 +120,15 @@ export default function MobileOptimizations() {
               </div>
               <div className="flex justify-between items-center">
                 <span>Push Notifications</span>
-                <Badge className="bg-blue-500/20 text-blue-400">Available</Badge>
+                <Badge className="bg-blue-500/20 text-blue-400">
+                  Available
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span>Offline Mode</span>
-                <Badge className="bg-blue-500/20 text-blue-400">Cached Data</Badge>
+                <Badge className="bg-blue-500/20 text-blue-400">
+                  Cached Data
+                </Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span>Share Integration</span>

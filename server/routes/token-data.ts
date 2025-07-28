@@ -8,13 +8,15 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
   try {
     // ATTEMPT TO FETCH REAL GTT TOKEN DATA FROM BLOCKCHAIN/PRICE FEEDS
     let tokenData;
-    
+
     try {
       // Try to fetch from actual Web3 source
-      const { fetchTokenData, fetchGTTPrice } = await import('../../lib/web3/token');
+      const { fetchTokenData, fetchGTTPrice } = await import(
+        "../../lib/web3/token"
+      );
       const contractData = await fetchTokenData();
       const priceData = await fetchGTTPrice();
-      
+
       tokenData = {
         contractAddress: contractData.contractAddress,
         symbol: contractData.symbol,
@@ -27,12 +29,12 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
         circulatingSupply: contractData.totalSupply || null,
         totalSupply: contractData.totalSupply || null,
         verified: contractData.verified || false,
-        source: priceData.source || 'blockchain',
-        error: priceData.error || null
+        source: priceData.source || "blockchain",
+        error: priceData.error || null,
       };
     } catch (error) {
       // If Web3 fails, return authentic contract info from configuration
-      const { GTT_CONFIG } = await import('../../lib/web3/token');
+      const { GTT_CONFIG } = await import("../../lib/web3/token");
       tokenData = {
         contractAddress: GTT_CONFIG.address,
         symbol: GTT_CONFIG.symbol,
@@ -46,10 +48,11 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
         totalSupply: "2500000000000000000000000000",
         verified: true,
         source: "No data available",
-        error: "GTT token not found on major price feeds - may not be publicly traded"
+        error:
+          "GTT token not found on major price feeds - may not be publicly traded",
       };
     }
-    
+
     const finalResponse = {
       success: true,
       data: {
@@ -60,14 +63,14 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
         userBalanceUSD: 0,
         dailyYield: 0, // Requires real capsule verification data
         weeklyYield: 0,
-        monthlyYield: 0, 
+        monthlyYield: 0,
         totalEarned: 0,
         activeCapsules: 0, // Requires database query
         verifiedCapsules: 0,
         pendingCapsules: 0,
         listings: [], // Real listings require database connection
-        lastUpdated: new Date().toISOString()
-      }
+        lastUpdated: new Date().toISOString(),
+      },
     };
 
     res.json(finalResponse);
@@ -76,7 +79,7 @@ router.get("/gtt-data", async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: "Failed to fetch token data",
-      message: error instanceof Error ? error.message : "Unknown error"
+      message: error instanceof Error ? error.message : "Unknown error",
     });
   }
 });
@@ -88,22 +91,24 @@ router.get("/live-feed", async (req: Request, res: Response) => {
   try {
     const basePrice = 2.47;
     const currentPrice = basePrice + (Math.random() - 0.5) * 0.2;
-    
+
     res.json({
       success: true,
       data: {
         type: "price_update",
         price: parseFloat(currentPrice.toFixed(4)),
-        change24h: parseFloat(((currentPrice - basePrice) / basePrice * 100).toFixed(2)),
+        change24h: parseFloat(
+          (((currentPrice - basePrice) / basePrice) * 100).toFixed(2)
+        ),
         timestamp: Date.now(),
         volume: Math.floor(Math.random() * 100000) + 50000,
-        status: "connected"
-      }
+        status: "connected",
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Failed to fetch live feed data"
+      error: "Failed to fetch live feed data",
     });
   }
 });
@@ -112,7 +117,7 @@ router.get("/live-feed", async (req: Request, res: Response) => {
 router.get("/user/:userId/listings", async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    
+
     // In real implementation, fetch from database using userId
     // For now, return demo listings
     const listings = [
@@ -130,8 +135,8 @@ router.get("/user/:userId/listings", async (req: Request, res: Response) => {
         likes: 28,
         category: "Personal Research",
         tags: ["personal", "verified", "research"],
-        earnings: 847
-      }
+        earnings: 847,
+      },
     ];
 
     res.json({
@@ -139,15 +144,15 @@ router.get("/user/:userId/listings", async (req: Request, res: Response) => {
       data: {
         listings: listings,
         totalListings: listings.length,
-        activeListings: listings.filter(l => l.status === "active").length,
+        activeListings: listings.filter((l) => l.status === "active").length,
         totalEarnings: listings.reduce((sum, l) => sum + (l.earnings || 0), 0),
-        totalViews: listings.reduce((sum, l) => sum + l.views, 0)
-      }
+        totalViews: listings.reduce((sum, l) => sum + l.views, 0),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: "Failed to fetch user listings"
+      error: "Failed to fetch user listings",
     });
   }
 });

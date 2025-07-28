@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet, AlertTriangle, CheckCircle } from "lucide-react";
@@ -15,67 +15,69 @@ const MetaMaskTest: React.FC = () => {
 
     try {
       // Check if MetaMask is installed
-      if (typeof window.ethereum === 'undefined') {
+      if (typeof window.ethereum === "undefined") {
         setConnectionResult({
           success: false,
-          error: 'MetaMask not detected. Please install MetaMask.'
+          error: "MetaMask not detected. Please install MetaMask.",
         });
         return;
       }
 
       // Request account access
-      const accounts = await window.ethereum.request({ 
-        method: 'eth_requestAccounts' 
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
       });
 
       if (!accounts || accounts.length === 0) {
         setConnectionResult({
           success: false,
-          error: 'No accounts found. Please unlock MetaMask.'
+          error: "No accounts found. Please unlock MetaMask.",
         });
         return;
       }
 
       // Get additional wallet info
-      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
       const balance = await window.ethereum.request({
-        method: 'eth_getBalance',
-        params: [accounts[0], 'latest']
+        method: "eth_getBalance",
+        params: [accounts[0], "latest"],
       });
 
       setConnectionResult({
         success: true,
         address: accounts[0],
         chainId: parseInt(chainId, 16),
-        balance: parseInt(balance, 16) / Math.pow(10, 18)
+        balance: parseInt(balance, 16) / Math.pow(10, 18),
       });
 
       toast({
         title: "MetaMask Connected",
-        description: `Successfully connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`
+        description: `Successfully connected to ${accounts[0].slice(
+          0,
+          6
+        )}...${accounts[0].slice(-4)}`,
       });
-
     } catch (error: any) {
-      console.error('MetaMask connection error:', error);
-      
-      let errorMessage = 'Unknown error occurred';
+      console.error("MetaMask connection error:", error);
+
+      let errorMessage = "Unknown error occurred";
       if (error.code === 4001) {
-        errorMessage = 'User rejected the connection request';
+        errorMessage = "User rejected the connection request";
       } else if (error.code === -32002) {
-        errorMessage = 'Connection request already pending in MetaMask';
+        errorMessage = "Connection request already pending in MetaMask";
       } else if (error.message) {
         errorMessage = error.message;
       }
 
       setConnectionResult({
         success: false,
-        error: errorMessage
+        error: errorMessage,
       });
 
       toast({
         title: "Connection Failed",
         description: errorMessage,
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsConnecting(false);
@@ -92,7 +94,7 @@ const MetaMaskTest: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Button 
+          <Button
             onClick={testMetaMaskConnection}
             disabled={isConnecting}
             className="w-full bg-blue-600 hover:bg-blue-700"
@@ -111,21 +113,27 @@ const MetaMaskTest: React.FC = () => {
           </Button>
 
           {connectionResult && (
-            <div className={`rounded-lg p-4 ${
-              connectionResult.success 
-                ? 'bg-green-900/20 border border-green-700' 
-                : 'bg-red-900/20 border border-red-700'
-            }`}>
+            <div
+              className={`rounded-lg p-4 ${
+                connectionResult.success
+                  ? "bg-green-900/20 border border-green-700"
+                  : "bg-red-900/20 border border-red-700"
+              }`}
+            >
               <div className="flex items-center mb-3">
                 {connectionResult.success ? (
                   <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
                 ) : (
                   <AlertTriangle className="w-5 h-5 text-red-400 mr-2" />
                 )}
-                <h3 className={`font-bold ${
-                  connectionResult.success ? 'text-green-400' : 'text-red-400'
-                }`}>
-                  {connectionResult.success ? 'Connection Successful' : 'Connection Failed'}
+                <h3
+                  className={`font-bold ${
+                    connectionResult.success ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {connectionResult.success
+                    ? "Connection Successful"
+                    : "Connection Failed"}
                 </h3>
               </div>
 
@@ -138,7 +146,8 @@ const MetaMaskTest: React.FC = () => {
                     <strong>Chain ID:</strong> {connectionResult.chainId}
                   </div>
                   <div className="text-slate-300 text-sm">
-                    <strong>Balance:</strong> {connectionResult.balance.toFixed(4)} ETH
+                    <strong>Balance:</strong>{" "}
+                    {connectionResult.balance.toFixed(4)} ETH
                   </div>
                 </div>
               ) : (
@@ -152,9 +161,17 @@ const MetaMaskTest: React.FC = () => {
           <div className="bg-slate-700/50 rounded-lg p-3">
             <h4 className="text-white font-semibold mb-2">Debug Info</h4>
             <div className="text-slate-300 text-sm space-y-1">
-              <div>MetaMask Detected: {typeof window.ethereum !== 'undefined' ? 'Yes' : 'No'}</div>
-              <div>Is MetaMask: {window.ethereum?.isMetaMask ? 'Yes' : 'No'}</div>
-              <div>Browser: {navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Other'}</div>
+              <div>
+                MetaMask Detected:{" "}
+                {typeof window.ethereum !== "undefined" ? "Yes" : "No"}
+              </div>
+              <div>
+                Is MetaMask: {window.ethereum?.isMetaMask ? "Yes" : "No"}
+              </div>
+              <div>
+                Browser:{" "}
+                {navigator.userAgent.includes("Chrome") ? "Chrome" : "Other"}
+              </div>
             </div>
           </div>
         </div>

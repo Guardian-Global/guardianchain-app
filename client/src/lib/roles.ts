@@ -19,15 +19,16 @@ export const TIERS: Tier[] = [
     priceUSD: 0,
     capsuleLimit: 3,
     yieldBonus: 0,
-    description: "Perfect for newcomers. Mint up to 3 truth capsules per month, completely free.",
+    description:
+      "Perfect for newcomers. Mint up to 3 truth capsules per month, completely free.",
     badge: "🌱",
     features: [
       "3 capsule mints per month",
       "Basic verification access",
       "Community support",
-      "Standard yield rate"
+      "Standard yield rate",
     ],
-    color: "#10b981"
+    color: "#10b981",
   },
   {
     id: "seeker",
@@ -35,24 +36,26 @@ export const TIERS: Tier[] = [
     priceUSD: 9.99,
     capsuleLimit: 15,
     yieldBonus: 0.05,
-    description: "For active truth seekers. Enhanced capacity with yield boost and priority support.",
+    description:
+      "For active truth seekers. Enhanced capacity with yield boost and priority support.",
     badge: "🔍",
     features: [
       "15 capsule mints per month",
       "5% yield bonus",
       "Priority verification queue",
       "Basic analytics dashboard",
-      "Email support"
+      "Email support",
     ],
-    color: "#3b82f6"
+    color: "#3b82f6",
   },
   {
     id: "creator",
     name: "Creator",
     priceUSD: 24.99,
     capsuleLimit: 50,
-    yieldBonus: 0.10,
-    description: "Built for content creators and active community members with advanced features.",
+    yieldBonus: 0.1,
+    description:
+      "Built for content creators and active community members with advanced features.",
     badge: "🎨",
     features: [
       "50 capsule mints per month",
@@ -60,9 +63,9 @@ export const TIERS: Tier[] = [
       "Advanced analytics",
       "Custom verification seals",
       "Priority support",
-      "Creator marketplace access"
+      "Creator marketplace access",
     ],
-    color: "#8b5cf6"
+    color: "#8b5cf6",
   },
   {
     id: "sovereign",
@@ -70,7 +73,8 @@ export const TIERS: Tier[] = [
     priceUSD: 49.99,
     capsuleLimit: 200,
     yieldBonus: 0.25,
-    description: "Maximum tier for institutions, DAOs, and power users with unlimited potential.",
+    description:
+      "Maximum tier for institutions, DAOs, and power users with unlimited potential.",
     badge: "👑",
     features: [
       "200 capsule mints per month",
@@ -80,17 +84,17 @@ export const TIERS: Tier[] = [
       "Dedicated support",
       "Early feature access",
       "API access",
-      "Bulk operations"
+      "Bulk operations",
     ],
-    color: "#f59e0b"
-  }
+    color: "#f59e0b",
+  },
 ];
 
 /**
  * Get tier configuration by ID
  */
 export function getTierById(id: string): Tier {
-  return TIERS.find(t => t.id === id) || TIERS[0];
+  return TIERS.find((t) => t.id === id) || TIERS[0];
 }
 
 /**
@@ -104,14 +108,14 @@ export function getAllTiers(): Tier[] {
  * Check if a tier exists
  */
 export function isValidTier(id: string): boolean {
-  return TIERS.some(t => t.id === id);
+  return TIERS.some((t) => t.id === id);
 }
 
 /**
  * Get the next tier in progression
  */
 export function getNextTier(currentTierId: string): Tier | null {
-  const currentIndex = TIERS.findIndex(t => t.id === currentTierId);
+  const currentIndex = TIERS.findIndex((t) => t.id === currentTierId);
   if (currentIndex === -1 || currentIndex === TIERS.length - 1) {
     return null;
   }
@@ -132,25 +136,28 @@ export function calculateAnnualSavings(tier: Tier): number {
  * Get tier comparison data
  */
 export function getTierComparison() {
-  return TIERS.map(tier => ({
+  return TIERS.map((tier) => ({
     ...tier,
     annualSavings: calculateAnnualSavings(tier),
     monthlyPrice: tier.priceUSD,
-    annualPrice: tier.priceUSD === 0 ? 0 : tier.priceUSD * 10
+    annualPrice: tier.priceUSD === 0 ? 0 : tier.priceUSD * 10,
   }));
 }
 
 /**
  * Check if user can access a feature based on tier
  */
-export function canAccessFeature(userTierId: string, requiredTierId: string): boolean {
-  const userTierIndex = TIERS.findIndex(t => t.id === userTierId);
-  const requiredTierIndex = TIERS.findIndex(t => t.id === requiredTierId);
-  
+export function canAccessFeature(
+  userTierId: string,
+  requiredTierId: string
+): boolean {
+  const userTierIndex = TIERS.findIndex((t) => t.id === userTierId);
+  const requiredTierIndex = TIERS.findIndex((t) => t.id === requiredTierId);
+
   if (userTierIndex === -1 || requiredTierIndex === -1) {
     return false;
   }
-  
+
   return userTierIndex >= requiredTierIndex;
 }
 
@@ -163,7 +170,8 @@ export function getTierBenefits(tierId: string) {
     capsuleLimit: tier.capsuleLimit,
     yieldBonus: tier.yieldBonus,
     monthlyValue: tier.capsuleLimit * 0.5, // Estimate $0.50 per capsule value
-    totalValue: (tier.capsuleLimit * 0.5) + (tier.yieldBonus * 100),
-    roi: tier.priceUSD > 0 ? ((tier.capsuleLimit * 0.5) / tier.priceUSD * 100) : 0
+    totalValue: tier.capsuleLimit * 0.5 + tier.yieldBonus * 100,
+    roi:
+      tier.priceUSD > 0 ? ((tier.capsuleLimit * 0.5) / tier.priceUSD) * 100 : 0,
   };
 }

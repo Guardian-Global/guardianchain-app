@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,22 +13,27 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  User, 
-  Wallet, 
-  Trophy, 
-  Activity, 
-  BarChart3, 
+import {
+  User,
+  Wallet,
+  Trophy,
+  Activity,
+  BarChart3,
   Coins,
   Settings,
   CheckCircle,
   Clock,
   Share2,
-  Eye
+  Eye,
 } from "lucide-react";
 import CapsuleYieldManager from "@/components/web3/CapsuleYieldManager";
 import { getAccount, getBalance, getNetwork } from "@/lib/web3";
-import { formatGTT, getGTTTokenContract, getSigner, getChainName } from "@/lib/contracts";
+import {
+  formatGTT,
+  getGTTTokenContract,
+  getSigner,
+  getChainName,
+} from "@/lib/contracts";
 
 interface UserProfile {
   id: string;
@@ -63,13 +74,18 @@ export default function ProfileDashboard() {
   });
 
   // Fetch capsule statistics
-  const { data: capsuleStats, isLoading: statsLoading } = useQuery<CapsuleStats>({
-    queryKey: ["/api/users/capsule-stats"],
-    enabled: isAuthenticated,
-  });
+  const { data: capsuleStats, isLoading: statsLoading } =
+    useQuery<CapsuleStats>({
+      queryKey: ["/api/users/capsule-stats"],
+      enabled: isAuthenticated,
+    });
 
   // Fetch user's capsules for yield management
-  const { data: userCapsules = [], isLoading: capsulesLoading, refetch: refetchCapsules } = useQuery({
+  const {
+    data: userCapsules = [],
+    isLoading: capsulesLoading,
+    refetch: refetchCapsules,
+  } = useQuery({
     queryKey: ["/api/users/capsules"],
     enabled: isAuthenticated,
   });
@@ -81,15 +97,15 @@ export default function ProfileDashboard() {
         const account = await getAccount();
         if (account) {
           setWalletAddress(account);
-          
+
           // Get MATIC balance
           const balance = await getBalance(account);
           setWalletBalance(balance);
-          
+
           // Get network name
           const network = await getNetwork();
           setNetworkName(network);
-          
+
           // Get GTT balance
           const signer = await getSigner();
           if (signer) {
@@ -111,10 +127,10 @@ export default function ProfileDashboard() {
       title: "Yield Claimed Successfully!",
       description: `Claimed ${amount} GTT tokens`,
     });
-    
+
     // Refresh data
     refetchCapsules();
-    
+
     // Update GTT balance
     const newBalance = parseFloat(gttBalance) + parseFloat(amount);
     setGttBalance(newBalance.toString());
@@ -127,11 +143,13 @@ export default function ProfileDashboard() {
           <CardContent className="pt-6">
             <div className="text-center">
               <User className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
+              <h2 className="text-xl font-semibold mb-2">
+                Authentication Required
+              </h2>
               <p className="text-muted-foreground mb-4">
                 Please log in to access your profile dashboard
               </p>
-              <Button onClick={() => window.location.href = "/api/login"}>
+              <Button onClick={() => (window.location.href = "/api/login")}>
                 Log In
               </Button>
             </div>
@@ -164,7 +182,8 @@ export default function ProfileDashboard() {
           <Avatar className="h-16 w-16">
             <AvatarImage src={profile?.profileImageUrl} />
             <AvatarFallback className="text-lg">
-              {profile?.firstName?.[0]}{profile?.lastName?.[0]}
+              {profile?.firstName?.[0]}
+              {profile?.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
           <div>
@@ -177,7 +196,7 @@ export default function ProfileDashboard() {
             </Badge>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm">
             <Settings className="h-4 w-4 mr-2" />
@@ -200,7 +219,9 @@ export default function ProfileDashboard() {
                 <Coins className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{parseFloat(profile?.gttBalance || "0").toFixed(2)}</div>
+                <div className="text-2xl font-bold">
+                  {parseFloat(profile?.gttBalance || "0").toFixed(2)}
+                </div>
                 <div className="text-sm text-muted-foreground">GTT Balance</div>
               </div>
             </div>
@@ -214,8 +235,12 @@ export default function ProfileDashboard() {
                 <Trophy className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{profile?.capsulesVerified || 0}</div>
-                <div className="text-sm text-muted-foreground">Verified Capsules</div>
+                <div className="text-2xl font-bold">
+                  {profile?.capsulesVerified || 0}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Verified Capsules
+                </div>
               </div>
             </div>
           </CardContent>
@@ -228,8 +253,12 @@ export default function ProfileDashboard() {
                 <Activity className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{profile?.reputationScore || 0}</div>
-                <div className="text-sm text-muted-foreground">Reputation Score</div>
+                <div className="text-2xl font-bold">
+                  {profile?.reputationScore || 0}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Reputation Score
+                </div>
               </div>
             </div>
           </CardContent>
@@ -242,8 +271,12 @@ export default function ProfileDashboard() {
                 <BarChart3 className="h-6 w-6 text-orange-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{parseFloat(profile?.totalYieldEarned || "0").toFixed(2)}</div>
-                <div className="text-sm text-muted-foreground">Total Yield Earned</div>
+                <div className="text-2xl font-bold">
+                  {parseFloat(profile?.totalYieldEarned || "0").toFixed(2)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Total Yield Earned
+                </div>
               </div>
             </div>
           </CardContent>
@@ -265,16 +298,36 @@ export default function ProfileDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your latest GUARDIANCHAIN activities</CardDescription>
+                <CardDescription>
+                  Your latest GUARDIANCHAIN activities
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { type: "capsule", title: "Created new truth capsule", time: "2 hours ago", status: "pending" },
-                    { type: "yield", title: "Claimed 125 GTT yield", time: "1 day ago", status: "completed" },
-                    { type: "verification", title: "Verified public document", time: "3 days ago", status: "completed" },
+                    {
+                      type: "capsule",
+                      title: "Created new truth capsule",
+                      time: "2 hours ago",
+                      status: "pending",
+                    },
+                    {
+                      type: "yield",
+                      title: "Claimed 125 GTT yield",
+                      time: "1 day ago",
+                      status: "completed",
+                    },
+                    {
+                      type: "verification",
+                      title: "Verified public document",
+                      time: "3 days ago",
+                      status: "completed",
+                    },
                   ].map((activity, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
+                    >
                       {activity.status === "completed" ? (
                         <CheckCircle className="h-5 w-5 text-green-500" />
                       ) : (
@@ -282,7 +335,9 @@ export default function ProfileDashboard() {
                       )}
                       <div className="flex-1">
                         <div className="font-medium">{activity.title}</div>
-                        <div className="text-sm text-muted-foreground">{activity.time}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {activity.time}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -294,13 +349,18 @@ export default function ProfileDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Performance Statistics</CardTitle>
-                <CardDescription>Your truth capsule performance metrics</CardDescription>
+                <CardDescription>
+                  Your truth capsule performance metrics
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {statsLoading ? (
                   <div className="space-y-3">
                     {[...Array(4)].map((_, i) => (
-                      <div key={i} className="h-4 bg-muted rounded animate-pulse" />
+                      <div
+                        key={i}
+                        className="h-4 bg-muted rounded animate-pulse"
+                      />
                     ))}
                   </div>
                 ) : (
@@ -310,28 +370,36 @@ export default function ProfileDashboard() {
                         <Eye className="h-4 w-4" />
                         Total Views
                       </span>
-                      <span className="font-bold">{capsuleStats?.totalViews?.toLocaleString() || 0}</span>
+                      <span className="font-bold">
+                        {capsuleStats?.totalViews?.toLocaleString() || 0}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-2">
                         <Share2 className="h-4 w-4" />
                         Total Shares
                       </span>
-                      <span className="font-bold">{capsuleStats?.totalShares?.toLocaleString() || 0}</span>
+                      <span className="font-bold">
+                        {capsuleStats?.totalShares?.toLocaleString() || 0}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-2">
                         <Trophy className="h-4 w-4" />
                         Verifications
                       </span>
-                      <span className="font-bold">{capsuleStats?.totalVerifications || 0}</span>
+                      <span className="font-bold">
+                        {capsuleStats?.totalVerifications || 0}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-2">
                         <Coins className="h-4 w-4" />
                         Average Yield
                       </span>
-                      <span className="font-bold">{capsuleStats?.averageYield?.toFixed(2) || "0.00"} GTT</span>
+                      <span className="font-bold">
+                        {capsuleStats?.averageYield?.toFixed(2) || "0.00"} GTT
+                      </span>
                     </div>
                   </div>
                 )}
@@ -352,14 +420,22 @@ export default function ProfileDashboard() {
               {capsulesLoading ? (
                 <div className="space-y-4">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-20 bg-muted rounded animate-pulse" />
+                    <div
+                      key={i}
+                      className="h-20 bg-muted rounded animate-pulse"
+                    />
                   ))}
                 </div>
               ) : userCapsules.length === 0 ? (
                 <div className="text-center py-8">
                   <Trophy className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No capsules created yet</p>
-                  <Button className="mt-4" onClick={() => window.location.href = "/create-capsule"}>
+                  <p className="text-muted-foreground">
+                    No capsules created yet
+                  </p>
+                  <Button
+                    className="mt-4"
+                    onClick={() => (window.location.href = "/create-capsule")}
+                  >
                     Create Your First Capsule
                   </Button>
                 </div>
@@ -370,9 +446,13 @@ export default function ProfileDashboard() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="font-semibold">{capsule.title}</h4>
-                          <p className="text-sm text-muted-foreground">{capsule.summary}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {capsule.summary}
+                          </p>
                         </div>
-                        <Badge variant={capsule.verified ? "default" : "secondary"}>
+                        <Badge
+                          variant={capsule.verified ? "default" : "secondary"}
+                        >
                           {capsule.verified ? "Verified" : "Pending"}
                         </Badge>
                       </div>
@@ -401,7 +481,9 @@ export default function ProfileDashboard() {
                   <Wallet className="h-5 w-5" />
                   Wallet Connection
                 </CardTitle>
-                <CardDescription>Connect your Web3 wallet to claim GTT rewards</CardDescription>
+                <CardDescription>
+                  Connect your Web3 wallet to claim GTT rewards
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {walletAddress ? (
@@ -414,8 +496,13 @@ export default function ProfileDashboard() {
                       <div className="text-sm space-y-1">
                         <div>Address: {walletAddress}</div>
                         <div>Network: {networkName}</div>
-                        <div>MATIC Balance: {parseFloat(walletBalance).toFixed(4)} MATIC</div>
-                        <div>GTT Balance: {parseFloat(gttBalance).toFixed(2)} GTT</div>
+                        <div>
+                          MATIC Balance: {parseFloat(walletBalance).toFixed(4)}{" "}
+                          MATIC
+                        </div>
+                        <div>
+                          GTT Balance: {parseFloat(gttBalance).toFixed(2)} GTT
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -423,7 +510,8 @@ export default function ProfileDashboard() {
                   <div className="text-center py-6">
                     <Wallet className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                     <p className="text-muted-foreground mb-4">
-                      Connect your wallet to claim GTT rewards and interact with the blockchain
+                      Connect your wallet to claim GTT rewards and interact with
+                      the blockchain
                     </p>
                     <Button onClick={() => window.location.reload()}>
                       Connect Wallet
@@ -437,7 +525,9 @@ export default function ProfileDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Account Information</CardTitle>
-                <CardDescription>Your GUARDIANCHAIN account details</CardDescription>
+                <CardDescription>
+                  Your GUARDIANCHAIN account details
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -448,15 +538,21 @@ export default function ProfileDashboard() {
                     </div>
                     <div>
                       <div className="text-muted-foreground">Member Since</div>
-                      <div>{new Date(profile?.joinedAt || "").toLocaleDateString()}</div>
+                      <div>
+                        {new Date(profile?.joinedAt || "").toLocaleDateString()}
+                      </div>
                     </div>
                     <div>
                       <div className="text-muted-foreground">Current Tier</div>
                       <div className="font-medium">{profile?.tier}</div>
                     </div>
                     <div>
-                      <div className="text-muted-foreground">Capsules Created</div>
-                      <div className="font-medium">{profile?.capsulesCreated || 0}</div>
+                      <div className="text-muted-foreground">
+                        Capsules Created
+                      </div>
+                      <div className="font-medium">
+                        {profile?.capsulesCreated || 0}
+                      </div>
                     </div>
                   </div>
                 </div>

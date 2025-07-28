@@ -15,7 +15,7 @@ interface SealStatusProps {
 
 export default function SealStatus({ capsule }: SealStatusProps) {
   const isSealed = capsule.status === "sealed" && capsule.docusignEnvelopeId;
-  
+
   if (!isSealed) {
     return null;
   }
@@ -39,11 +39,11 @@ export default function SealStatus({ capsule }: SealStatusProps) {
             <span className="text-sm font-medium">Verified Authentic</span>
           </div>
         </div>
-        
+
         <div className="space-y-2 text-sm">
           <p className="text-slate-300">
-            This truth capsule has been sealed with DocuSign's Veritas technology, 
-            providing legal authenticity and tamper-proof evidence.
+            This truth capsule has been sealed with DocuSign's Veritas
+            technology, providing legal authenticity and tamper-proof evidence.
           </p>
           <div className="text-slate-400">
             <strong>Envelope ID:</strong> {capsule.docusignEnvelopeId}
@@ -51,11 +51,11 @@ export default function SealStatus({ capsule }: SealStatusProps) {
         </div>
 
         {capsule.veritasSealUrl && (
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="w-full border-purple-600 text-purple-400 hover:bg-purple-600 hover:text-white"
-            onClick={() => window.open(capsule.veritasSealUrl!, '_blank')}
+            onClick={() => window.open(capsule.veritasSealUrl!, "_blank")}
           >
             <ExternalLink className="h-4 w-4 mr-2" />
             View Veritas Certificate
@@ -63,9 +63,9 @@ export default function SealStatus({ capsule }: SealStatusProps) {
         )}
 
         <div className="pt-2 border-t border-slate-700 text-xs text-slate-500">
-          This verification provides immutable proof that the content was submitted 
-          at the specified time with legal validity through DocuSign's blockchain-backed 
-          verification system.
+          This verification provides immutable proof that the content was
+          submitted at the specified time with legal validity through DocuSign's
+          blockchain-backed verification system.
         </div>
       </CardContent>
     </Card>

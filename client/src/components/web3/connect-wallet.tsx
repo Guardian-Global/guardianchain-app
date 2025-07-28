@@ -1,17 +1,23 @@
-import { useState } from 'react';
-import { useAccount, useConnect, useDisconnect, useChainId, useSwitchChain } from 'wagmi';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { NETWORK_NAMES, isSupportedNetwork } from '@/lib/web3-config';
-import { 
-  Wallet, 
-  LogOut, 
-  AlertTriangle, 
+import { useState } from "react";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useChainId,
+  useSwitchChain,
+} from "wagmi";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { NETWORK_NAMES, isSupportedNetwork } from "@/lib/web3-config";
+import {
+  Wallet,
+  LogOut,
+  AlertTriangle,
   CheckCircle,
-  ExternalLink 
-} from 'lucide-react';
+  ExternalLink,
+} from "lucide-react";
 
 interface ConnectWalletProps {
   onConnect?: (address: string, chainId: number) => void;
@@ -19,10 +25,10 @@ interface ConnectWalletProps {
   showNetworkInfo?: boolean;
 }
 
-export default function ConnectWallet({ 
-  onConnect, 
+export default function ConnectWallet({
+  onConnect,
   onDisconnect,
-  showNetworkInfo = true 
+  showNetworkInfo = true,
 }: ConnectWalletProps) {
   const { address, isConnected } = useAccount();
   const { connect, connectors, isPending } = useConnect();
@@ -36,12 +42,15 @@ export default function ConnectWallet({
     try {
       setIsConnecting(true);
       await connect({ connector });
-      
+
       if (address && chainId) {
         onConnect?.(address, chainId);
         toast({
           title: "Wallet Connected",
-          description: `Connected to ${NETWORK_NAMES[chainId as keyof typeof NETWORK_NAMES] || 'Unknown Network'}`,
+          description: `Connected to ${
+            NETWORK_NAMES[chainId as keyof typeof NETWORK_NAMES] ||
+            "Unknown Network"
+          }`,
         });
       }
     } catch (error: any) {
@@ -69,7 +78,9 @@ export default function ConnectWallet({
       await switchChain({ chainId: targetChainId });
       toast({
         title: "Network Switched",
-        description: `Switched to ${NETWORK_NAMES[targetChainId as keyof typeof NETWORK_NAMES]}`,
+        description: `Switched to ${
+          NETWORK_NAMES[targetChainId as keyof typeof NETWORK_NAMES]
+        }`,
       });
     } catch (error: any) {
       toast({
@@ -84,7 +95,9 @@ export default function ConnectWallet({
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  const currentNetworkName = chainId ? NETWORK_NAMES[chainId as keyof typeof NETWORK_NAMES] : 'Unknown';
+  const currentNetworkName = chainId
+    ? NETWORK_NAMES[chainId as keyof typeof NETWORK_NAMES]
+    : "Unknown";
   const isUnsupportedNetwork = chainId ? !isSupportedNetwork(chainId) : false;
 
   if (isConnected && address) {
@@ -110,7 +123,11 @@ export default function ConnectWallet({
             <div className="flex items-center justify-between">
               <span className="text-sm text-slate-400">Network:</span>
               <div className="flex items-center gap-2">
-                <Badge className={isUnsupportedNetwork ? 'bg-red-600' : 'bg-green-600'}>
+                <Badge
+                  className={
+                    isUnsupportedNetwork ? "bg-red-600" : "bg-green-600"
+                  }
+                >
                   {currentNetworkName}
                 </Badge>
                 {isUnsupportedNetwork && (
@@ -128,7 +145,8 @@ export default function ConnectWallet({
                 Unsupported Network
               </div>
               <p className="text-xs text-red-300 mt-1">
-                Please switch to Ethereum, Polygon, or their testnets to use GuardianChain features.
+                Please switch to Ethereum, Polygon, or their testnets to use
+                GuardianChain features.
               </p>
             </div>
           )}
@@ -160,7 +178,9 @@ export default function ConnectWallet({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => window.open(`https://etherscan.io/address/${address}`, '_blank')}
+              onClick={() =>
+                window.open(`https://etherscan.io/address/${address}`, "_blank")
+              }
               className="flex-1"
             >
               <ExternalLink className="h-3 w-3 mr-1" />
@@ -191,7 +211,8 @@ export default function ConnectWallet({
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="text-sm text-slate-400">
-          Connect your wallet to claim GTT yield rewards and interact with the TruthVault.
+          Connect your wallet to claim GTT yield rewards and interact with the
+          TruthVault.
         </p>
 
         <div className="space-y-2">
@@ -204,7 +225,7 @@ export default function ConnectWallet({
               variant="outline"
             >
               <Wallet className="h-4 w-4 mr-2" />
-              {isConnecting ? 'Connecting...' : `Connect ${connector.name}`}
+              {isConnecting ? "Connecting..." : `Connect ${connector.name}`}
             </Button>
           ))}
         </div>

@@ -5,8 +5,21 @@ import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
@@ -22,7 +35,10 @@ const registerSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  username: z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be less than 20 characters"),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be less than 20 characters"),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -61,12 +77,12 @@ export default function Login() {
       // Store the token
       localStorage.setItem("auth_token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      
+
       toast({
         title: "Login Successful",
         description: `Welcome back, ${data.user.firstName}!`,
       });
-      
+
       // Redirect to home
       setLocation("/");
     },
@@ -88,12 +104,12 @@ export default function Login() {
       // Store the token
       localStorage.setItem("auth_token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      
+
       toast({
         title: "Registration Successful",
         description: `Welcome to GUARDIANCHAIN, ${data.user.firstName}!`,
       });
-      
+
       // Redirect to home
       setLocation("/");
     },
@@ -128,17 +144,26 @@ export default function Login() {
         <CardContent className="p-4 sm:p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-2 bg-slate-800 text-xs sm:text-sm">
-              <TabsTrigger value="login" className="data-[state=active]:bg-purple-600 py-2">
+              <TabsTrigger
+                value="login"
+                className="data-[state=active]:bg-purple-600 py-2"
+              >
                 Login
               </TabsTrigger>
-              <TabsTrigger value="register" className="data-[state=active]:bg-purple-600 py-2">
+              <TabsTrigger
+                value="register"
+                className="data-[state=active]:bg-purple-600 py-2"
+              >
                 Register
               </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="login" className="space-y-4">
               <Form {...loginForm}>
-                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                <form
+                  onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+                  className="space-y-4"
+                >
                   <FormField
                     control={loginForm.control}
                     name="email"
@@ -162,7 +187,9 @@ export default function Login() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-200">Password</FormLabel>
+                        <FormLabel className="text-slate-200">
+                          Password
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -185,17 +212,22 @@ export default function Login() {
                 </form>
               </Form>
             </TabsContent>
-            
+
             <TabsContent value="register" className="space-y-4">
               <Form {...registerForm}>
-                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                <form
+                  onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+                  className="space-y-4"
+                >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                       control={registerForm.control}
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-200">First Name</FormLabel>
+                          <FormLabel className="text-slate-200">
+                            First Name
+                          </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -212,7 +244,9 @@ export default function Login() {
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-200">Last Name</FormLabel>
+                          <FormLabel className="text-slate-200">
+                            Last Name
+                          </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -230,7 +264,9 @@ export default function Login() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-200">Username</FormLabel>
+                        <FormLabel className="text-slate-200">
+                          Username
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -265,7 +301,9 @@ export default function Login() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-200">Password</FormLabel>
+                        <FormLabel className="text-slate-200">
+                          Password
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -283,15 +321,20 @@ export default function Login() {
                     className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
                     disabled={registerMutation.isPending}
                   >
-                    {registerMutation.isPending ? "Creating Account..." : "Create Account"}
+                    {registerMutation.isPending
+                      ? "Creating Account..."
+                      : "Create Account"}
                   </Button>
                 </form>
               </Form>
             </TabsContent>
           </Tabs>
-          
+
           <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-purple-400 hover:text-purple-300">
+            <Link
+              href="/"
+              className="text-sm text-purple-400 hover:text-purple-300"
+            >
               ← Back to Home
             </Link>
           </div>

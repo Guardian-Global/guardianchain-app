@@ -1,9 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { 
-  Edit3, Eye, TrendingUp, DollarSign, Calendar, 
-  Tag, Search, Filter, Plus, MoreVertical,
-  ExternalLink, Copy, Trash2, Archive
+import {
+  Edit3,
+  Eye,
+  TrendingUp,
+  DollarSign,
+  Calendar,
+  Tag,
+  Search,
+  Filter,
+  Plus,
+  MoreVertical,
+  ExternalLink,
+  Copy,
+  Trash2,
+  Archive,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,28 +43,38 @@ export default function MyListings() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  
+
   const listings = gttData?.listings || [];
-  
+
   // Filter listings based on search and filters
-  const filteredListings = listings.filter(listing => {
-    const matchesSearch = listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         listing.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         listing.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesStatus = statusFilter === "all" || listing.status === statusFilter;
-    const matchesCategory = categoryFilter === "all" || listing.category === categoryFilter;
-    
+  const filteredListings = listings.filter((listing) => {
+    const matchesSearch =
+      listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.tags.some((tag) =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    const matchesStatus =
+      statusFilter === "all" || listing.status === statusFilter;
+    const matchesCategory =
+      categoryFilter === "all" || listing.category === categoryFilter;
+
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-900/50 text-green-400 border-green-400';
-      case 'sold': return 'bg-blue-900/50 text-blue-400 border-blue-400';
-      case 'pending': return 'bg-yellow-900/50 text-yellow-400 border-yellow-400';
-      case 'draft': return 'bg-gray-900/50 text-gray-400 border-gray-400';
-      default: return 'bg-gray-900/50 text-gray-400 border-gray-400';
+      case "active":
+        return "bg-green-900/50 text-green-400 border-green-400";
+      case "sold":
+        return "bg-blue-900/50 text-blue-400 border-blue-400";
+      case "pending":
+        return "bg-yellow-900/50 text-yellow-400 border-yellow-400";
+      case "draft":
+        return "bg-gray-900/50 text-gray-400 border-gray-400";
+      default:
+        return "bg-gray-900/50 text-gray-400 border-gray-400";
     }
   };
 
@@ -78,7 +99,7 @@ export default function MyListings() {
     });
   };
 
-  const categories = [...new Set(listings.map(l => l.category))];
+  const categories = [...new Set(listings.map((l) => l.category))];
 
   return (
     <div className="min-h-screen bg-slate-900 text-white pt-20">
@@ -108,7 +129,9 @@ export default function MyListings() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-slate-400 text-sm">Total Listings</p>
-                  <p className="text-2xl font-bold text-white">{listings.length}</p>
+                  <p className="text-2xl font-bold text-white">
+                    {listings.length}
+                  </p>
                 </div>
                 <Tag className="h-8 w-8 text-purple-400" />
               </div>
@@ -121,7 +144,7 @@ export default function MyListings() {
                 <div>
                   <p className="text-slate-400 text-sm">Active Listings</p>
                   <p className="text-2xl font-bold text-green-400">
-                    {listings.filter(l => l.status === 'active').length}
+                    {listings.filter((l) => l.status === "active").length}
                   </p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-green-400" />
@@ -135,7 +158,9 @@ export default function MyListings() {
                 <div>
                   <p className="text-slate-400 text-sm">Total Views</p>
                   <p className="text-2xl font-bold text-blue-400">
-                    {listings.reduce((sum, l) => sum + l.views, 0).toLocaleString()}
+                    {listings
+                      .reduce((sum, l) => sum + l.views, 0)
+                      .toLocaleString()}
                   </p>
                 </div>
                 <Eye className="h-8 w-8 text-blue-400" />
@@ -149,7 +174,10 @@ export default function MyListings() {
                 <div>
                   <p className="text-slate-400 text-sm">Total Earnings</p>
                   <p className="text-2xl font-bold text-yellow-400">
-                    {listings.filter(l => l.status === 'sold').reduce((sum, l) => sum + l.price, 0)} GTT
+                    {listings
+                      .filter((l) => l.status === "sold")
+                      .reduce((sum, l) => sum + l.price, 0)}{" "}
+                    GTT
                   </p>
                 </div>
                 <DollarSign className="h-8 w-8 text-yellow-400" />
@@ -161,7 +189,10 @@ export default function MyListings() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={16}
+            />
             <Input
               type="text"
               placeholder="Search listings by title, description, or tags..."
@@ -222,12 +253,16 @@ export default function MyListings() {
             <div className="col-span-full text-center py-12">
               <Tag className="mx-auto h-12 w-12 text-slate-600 mb-4" />
               <h3 className="text-lg font-medium text-slate-400 mb-2">
-                {searchTerm || statusFilter !== "all" || categoryFilter !== "all" 
-                  ? "No listings match your filters" 
+                {searchTerm ||
+                statusFilter !== "all" ||
+                categoryFilter !== "all"
+                  ? "No listings match your filters"
                   : "No listings yet"}
               </h3>
               <p className="text-slate-500 mb-4">
-                {searchTerm || statusFilter !== "all" || categoryFilter !== "all"
+                {searchTerm ||
+                statusFilter !== "all" ||
+                categoryFilter !== "all"
                   ? "Try adjusting your search criteria"
                   : "Create your first truth capsule listing to get started"}
               </p>
@@ -237,7 +272,10 @@ export default function MyListings() {
             </div>
           ) : (
             filteredListings.map((listing) => (
-              <Card key={listing.id} className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors">
+              <Card
+                key={listing.id}
+                className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -248,19 +286,27 @@ export default function MyListings() {
                         {listing.description}
                       </p>
                     </div>
-                    
+
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-slate-400 hover:text-white"
+                        >
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="bg-slate-800 border-slate-700">
-                        <DropdownMenuItem onClick={() => editListing(listing.id)}>
+                        <DropdownMenuItem
+                          onClick={() => editListing(listing.id)}
+                        >
                           <Edit3 className="mr-2 h-4 w-4" />
                           Edit Listing
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => copyListingUrl(listing.id)}>
+                        <DropdownMenuItem
+                          onClick={() => copyListingUrl(listing.id)}
+                        >
                           <Copy className="mr-2 h-4 w-4" />
                           Copy Link
                         </DropdownMenuItem>
@@ -271,7 +317,7 @@ export default function MyListings() {
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-slate-700" />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => deleteListing(listing.id)}
                           className="text-red-400 focus:text-red-300"
                         >
@@ -286,14 +332,18 @@ export default function MyListings() {
                 <CardContent className="pt-0">
                   <div className="flex items-center justify-between mb-4">
                     <Badge className={getStatusBadgeColor(listing.status)}>
-                      {listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
+                      {listing.status.charAt(0).toUpperCase() +
+                        listing.status.slice(1)}
                     </Badge>
                     <div className="text-right">
                       <div className="text-lg font-bold text-yellow-400">
                         {listing.price} GTT
                       </div>
                       <div className="text-xs text-slate-500">
-                        ${(listing.price * (gttData?.priceUSD || 2.47)).toFixed(2)}
+                        $
+                        {(listing.price * (gttData?.priceUSD || 2.47)).toFixed(
+                          2
+                        )}
                       </div>
                     </div>
                   </div>
@@ -316,17 +366,24 @@ export default function MyListings() {
                   <div className="flex items-center justify-between">
                     <div className="flex flex-wrap gap-1">
                       {listing.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs border-slate-600 text-slate-400">
+                        <Badge
+                          key={tag}
+                          variant="outline"
+                          className="text-xs border-slate-600 text-slate-400"
+                        >
                           {tag}
                         </Badge>
                       ))}
                       {listing.tags.length > 3 && (
-                        <Badge variant="outline" className="text-xs border-slate-600 text-slate-500">
+                        <Badge
+                          variant="outline"
+                          className="text-xs border-slate-600 text-slate-500"
+                        >
                           +{listing.tags.length - 3}
                         </Badge>
                       )}
                     </div>
-                    
+
                     <div className="text-xs text-slate-500">
                       {listing.category}
                     </div>

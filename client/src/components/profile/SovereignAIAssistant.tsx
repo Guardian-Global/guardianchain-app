@@ -8,18 +8,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { 
-  Bot, Send, Sparkles, Brain, Crown, Shield, 
-  MessageSquare, Zap, Settings, Save, Trash2,
-  Star, Lock, Globe, Heart
+import {
+  Bot,
+  Send,
+  Sparkles,
+  Brain,
+  Crown,
+  Shield,
+  MessageSquare,
+  Zap,
+  Settings,
+  Save,
+  Trash2,
+  Star,
+  Lock,
+  Globe,
+  Heart,
 } from "lucide-react";
 
 interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: Date;
-  importance?: 'critical' | 'high' | 'medium' | 'low';
+  importance?: "critical" | "high" | "medium" | "low";
   saved?: boolean;
   gttCost?: number;
 }
@@ -34,36 +46,50 @@ const TIER_FEATURES = {
   EXPLORER: {
     maxMemories: 10,
     dailyMessages: 50,
-    importanceThreshold: 'high',
-    features: ['Basic Assistance', 'Content Help']
+    importanceThreshold: "high",
+    features: ["Basic Assistance", "Content Help"],
   },
   SEEKER: {
     maxMemories: 25,
     dailyMessages: 100,
-    importanceThreshold: 'medium',
-    features: ['Advanced Assistance', 'Yield Optimization', 'Market Insights']
+    importanceThreshold: "medium",
+    features: ["Advanced Assistance", "Yield Optimization", "Market Insights"],
   },
   CREATOR: {
     maxMemories: 100,
     dailyMessages: 250,
-    importanceThreshold: 'medium',
-    features: ['Professional AI', 'Content Strategy', 'Performance Analytics']
+    importanceThreshold: "medium",
+    features: ["Professional AI", "Content Strategy", "Performance Analytics"],
   },
   SOVEREIGN: {
     maxMemories: 1000,
     dailyMessages: 1000,
-    importanceThreshold: 'low',
-    features: ['Unlimited Access', 'Strategic Insights', 'Personal Assistant', 'Predictive Analytics']
+    importanceThreshold: "low",
+    features: [
+      "Unlimited Access",
+      "Strategic Insights",
+      "Personal Assistant",
+      "Predictive Analytics",
+    ],
   },
   FOUNDER: {
     maxMemories: 10000,
     dailyMessages: 10000,
-    importanceThreshold: 'low',
-    features: ['Founder AI', 'Strategic Planning', 'Business Intelligence', 'Operations Management']
-  }
+    importanceThreshold: "low",
+    features: [
+      "Founder AI",
+      "Strategic Planning",
+      "Business Intelligence",
+      "Operations Management",
+    ],
+  },
 };
 
-export default function SovereignAIAssistant({ userId, userTier, gttBalance }: AIAssistantProps) {
+export default function SovereignAIAssistant({
+  userId,
+  userTier,
+  gttBalance,
+}: AIAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -71,33 +97,41 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const tierConfig = TIER_FEATURES[userTier as keyof typeof TIER_FEATURES] || TIER_FEATURES.EXPLORER;
+  const tierConfig =
+    TIER_FEATURES[userTier as keyof typeof TIER_FEATURES] ||
+    TIER_FEATURES.EXPLORER;
 
   // Send message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: async ({ message, context }: { message: string; context: any }) => {
-      return apiRequest('POST', '/api/ai/chat', {
+    mutationFn: async ({
+      message,
+      context,
+    }: {
+      message: string;
+      context: any;
+    }) => {
+      return apiRequest("POST", "/api/ai/chat", {
         userId,
         message,
         context: {
           ...context,
           userTier,
           gttBalance,
-          recentActivity: messages.slice(-5)
-        }
+          recentActivity: messages.slice(-5),
+        },
       });
     },
     onSuccess: (response: any) => {
       const assistantMessage: Message = {
         id: `ai-${Date.now()}`,
-        role: 'assistant',
+        role: "assistant",
         content: response.message,
         timestamp: new Date(),
         importance: response.importance,
-        gttCost: response.gttCost
+        gttCost: response.gttCost,
       };
 
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, assistantMessage]);
       setIsTyping(false);
 
       // Auto-save important messages based on tier threshold
@@ -126,18 +160,18 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
   // Save memory mutation
   const saveMemoryMutation = useMutation({
     mutationFn: async (message: Message) => {
-      return apiRequest('POST', '/api/ai/save-memory', {
+      return apiRequest("POST", "/api/ai/save-memory", {
         userId,
         messageId: message.id,
         content: message.content,
         importance: message.importance,
-        gttCost: 10 // Memory storage costs 10 GTT
+        gttCost: 10, // Memory storage costs 10 GTT
       });
     },
     onSuccess: (_, savedMessage) => {
-      setSavedMemories(prev => [...prev, { ...savedMessage, saved: true }]);
-      setMessages(prev => 
-        prev.map(msg => 
+      setSavedMemories((prev) => [...prev, { ...savedMessage, saved: true }]);
+      setMessages((prev) =>
+        prev.map((msg) =>
           msg.id === savedMessage.id ? { ...msg, saved: true } : msg
         )
       );
@@ -150,12 +184,14 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
 
   const shouldAutoSave = (importance: string) => {
     const thresholds = {
-      critical: ['critical'],
-      high: ['critical', 'high'],
-      medium: ['critical', 'high', 'medium'],
-      low: ['critical', 'high', 'medium', 'low']
+      critical: ["critical"],
+      high: ["critical", "high"],
+      medium: ["critical", "high", "medium"],
+      low: ["critical", "high", "medium", "low"],
     };
-    return thresholds[tierConfig.importanceThreshold as keyof typeof thresholds]?.includes(importance);
+    return thresholds[
+      tierConfig.importanceThreshold as keyof typeof thresholds
+    ]?.includes(importance);
   };
 
   const handleSendMessage = () => {
@@ -163,21 +199,21 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
-      role: 'user',
+      role: "user",
       content: inputMessage,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
-    
+
     sendMessageMutation.mutate({
       message: inputMessage,
       context: {
         capsuleCount: 0,
         totalYield: 0,
-        recentMemories: savedMemories.slice(-3)
-      }
+        recentMemories: savedMemories.slice(-3),
+      },
     });
 
     setInputMessage("");
@@ -202,11 +238,13 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
   useEffect(() => {
     // Initialize with welcome message
     const welcomeMessage: Message = {
-      id: 'welcome',
-      role: 'assistant',
-      content: `Welcome! I'm your Sovereign AI Assistant. I'm here to help you maximize your GUARDIANCHAIN experience with personalized insights and strategic guidance.\n\nAs a ${userTier} member, you have access to ${tierConfig.features.join(', ')}.\n\nHow can I assist you today?`,
+      id: "welcome",
+      role: "assistant",
+      content: `Welcome! I'm your Sovereign AI Assistant. I'm here to help you maximize your GUARDIANCHAIN experience with personalized insights and strategic guidance.\n\nAs a ${userTier} member, you have access to ${tierConfig.features.join(
+        ", "
+      )}.\n\nHow can I assist you today?`,
       timestamp: new Date(),
-      importance: 'medium'
+      importance: "medium",
     };
     setMessages([welcomeMessage]);
   }, [userTier]);
@@ -223,8 +261,12 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
             <div>
               <span className="flex items-center gap-2">
                 Sovereign AI Assistant
-                {userTier === 'SOVEREIGN' && <Crown className="w-5 h-5 text-yellow-500" />}
-                {userTier === 'FOUNDER' && <Crown className="w-5 h-5 text-gold-500" />}
+                {userTier === "SOVEREIGN" && (
+                  <Crown className="w-5 h-5 text-yellow-500" />
+                )}
+                {userTier === "FOUNDER" && (
+                  <Crown className="w-5 h-5 text-gold-500" />
+                )}
               </span>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Badge variant="outline">{userTier} Tier</Badge>
@@ -269,31 +311,38 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                     <div
                       key={message.id}
                       className={`flex gap-3 ${
-                        message.role === 'user' ? 'justify-end' : 'justify-start'
+                        message.role === "user"
+                          ? "justify-end"
+                          : "justify-start"
                       }`}
                     >
-                      {message.role === 'assistant' && (
+                      {message.role === "assistant" && (
                         <Avatar className="w-8 h-8">
                           <AvatarFallback className="bg-purple-100 dark:bg-purple-900">
                             <Bot className="w-4 h-4 text-purple-600" />
                           </AvatarFallback>
                         </Avatar>
                       )}
-                      
+
                       <div
                         className={`max-w-md p-3 rounded-lg ${
-                          message.role === 'user'
-                            ? 'bg-primary text-primary-foreground ml-12'
-                            : 'bg-muted mr-12'
+                          message.role === "user"
+                            ? "bg-primary text-primary-foreground ml-12"
+                            : "bg-muted mr-12"
                         }`}
                       >
-                        <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-                        
-                        {message.role === 'assistant' && (
+                        <div className="whitespace-pre-wrap text-sm">
+                          {message.content}
+                        </div>
+
+                        {message.role === "assistant" && (
                           <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/50">
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               {message.importance && (
-                                <Badge variant="outline" className="text-xs py-0">
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs py-0"
+                                >
                                   {message.importance}
                                 </Badge>
                               )}
@@ -304,8 +353,8 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                                 </span>
                               )}
                             </div>
-                            
-                            {!message.saved && message.importance !== 'low' && (
+
+                            {!message.saved && message.importance !== "low" && (
                               <Button
                                 size="sm"
                                 variant="ghost"
@@ -315,22 +364,22 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                                 <Save className="w-3 h-3" />
                               </Button>
                             )}
-                            
+
                             {message.saved && (
                               <Heart className="w-4 h-4 text-red-500" />
                             )}
                           </div>
                         )}
                       </div>
-                      
-                      {message.role === 'user' && (
+
+                      {message.role === "user" && (
                         <Avatar className="w-8 h-8">
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                       )}
                     </div>
                   ))}
-                  
+
                   {isTyping && (
                     <div className="flex gap-3 justify-start">
                       <Avatar className="w-8 h-8">
@@ -341,8 +390,14 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                       <div className="bg-muted p-3 rounded-lg">
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-current rounded-full animate-bounce" />
-                          <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
-                          <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                          <div
+                            className="w-2 h-2 bg-current rounded-full animate-bounce"
+                            style={{ animationDelay: "0.1s" }}
+                          />
+                          <div
+                            className="w-2 h-2 bg-current rounded-full animate-bounce"
+                            style={{ animationDelay: "0.2s" }}
+                          />
                         </div>
                       </div>
                     </div>
@@ -350,17 +405,20 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                   <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
-              
+
               <div className="p-4 border-t">
                 <div className="flex gap-2">
                   <Input
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     placeholder="Ask your AI assistant anything..."
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                     disabled={isTyping}
                   />
-                  <Button onClick={handleSendMessage} disabled={isTyping || !inputMessage.trim()}>
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={isTyping || !inputMessage.trim()}
+                  >
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
@@ -401,7 +459,11 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                               </span>
                             </div>
                           </div>
-                          <Button size="sm" variant="ghost" className="h-6 w-6 p-0">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-6 w-6 p-0"
+                          >
                             <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
@@ -411,7 +473,9 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
                     <div className="text-center py-8 text-muted-foreground">
                       <Save className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p className="text-sm">No memories saved yet</p>
-                      <p className="text-xs">Important conversations will be automatically saved</p>
+                      <p className="text-xs">
+                        Important conversations will be automatically saved
+                      </p>
                     </div>
                   )}
                 </div>
@@ -432,7 +496,10 @@ export default function SovereignAIAssistant({ userId, userTier, gttBalance }: A
         <CardContent>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {tierConfig.features.map((feature, index) => (
-              <div key={index} className="flex items-center gap-2 p-2 bg-muted rounded-lg">
+              <div
+                key={index}
+                className="flex items-center gap-2 p-2 bg-muted rounded-lg"
+              >
                 <div className="w-2 h-2 bg-green-500 rounded-full" />
                 <span className="text-sm">{feature}</span>
               </div>

@@ -1,9 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Shield, Zap, Globe, TrendingUp, Coins, Users, Target,
-  ArrowRight, CheckCircle, Star, Sparkles, Crown
+import {
+  Shield,
+  Zap,
+  Globe,
+  TrendingUp,
+  Coins,
+  Users,
+  Target,
+  ArrowRight,
+  CheckCircle,
+  Star,
+  Sparkles,
+  Crown,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useGTTLiveData } from "@/lib/gttLiveData";
@@ -17,10 +33,10 @@ export default function GTTLaunch() {
       <div className="relative overflow-hidden">
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <video 
-            autoPlay 
-            loop 
-            muted 
+          <video
+            autoPlay
+            loop
+            muted
             playsInline
             className="w-full h-full object-cover opacity-20"
           >
@@ -35,9 +51,9 @@ export default function GTTLaunch() {
             {/* GTT Logo */}
             <div className="flex justify-center mb-8">
               <div className="relative">
-                <img 
-                  src="/assets/logo.png" 
-                  alt="GTT Token" 
+                <img
+                  src="/assets/logo.png"
+                  alt="GTT Token"
                   className="w-32 h-32 rounded-2xl shadow-2xl border-4 border-purple-500/30"
                 />
                 <div className="absolute -top-2 -right-2">
@@ -47,18 +63,19 @@ export default function GTTLaunch() {
                 </div>
               </div>
             </div>
-            
+
             <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-green-400 bg-clip-text text-transparent">
               GTT TOKEN
             </h1>
-            
+
             <p className="text-2xl md:text-3xl font-semibold mb-4 bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
               GUARDIAN<span className="text-green-400">CHAIN</span> Truth Token
             </p>
-            
+
             <p className="text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-4xl mx-auto">
-              The world's first enterprise-grade truth verification token. 
-              Secure your ideas, verify authenticity, and earn rewards on Polygon mainnet.
+              The world's first enterprise-grade truth verification token.
+              Secure your ideas, verify authenticity, and earn rewards on
+              Polygon mainnet.
             </p>
 
             {/* Live Token Data */}
@@ -98,18 +115,27 @@ export default function GTTLaunch() {
                 </Card>
               </div>
             )}
-            
+
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 text-xl shadow-2xl" asChild>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 text-xl shadow-2xl"
+                asChild
+              >
                 <Link href="/token-launch">
                   <Sparkles className="mr-3 h-6 w-6" />
                   Launch Platform
                   <ArrowRight className="ml-3 h-6 w-6" />
                 </Link>
               </Button>
-              
-              <Button size="lg" variant="outline" className="border-2 border-purple-500 text-purple-300 hover:bg-purple-500/20 px-12 py-6 text-xl" asChild>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-purple-500 text-purple-300 hover:bg-purple-500/20 px-12 py-6 text-xl"
+                asChild
+              >
                 <Link href="/token-listings">
                   <Coins className="mr-3 h-6 w-6" />
                   View Token Data
@@ -126,34 +152,43 @@ export default function GTTLaunch() {
           <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
             Revolutionary Truth Verification
           </h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <Card className="bg-gradient-to-br from-purple-900/50 to-slate-900/50 border-purple-500/30 hover:border-purple-400/50 transition-all duration-300">
               <CardHeader>
                 <Shield className="h-12 w-12 text-purple-400 mb-4" />
-                <CardTitle className="text-2xl text-white">Immutable Truth</CardTitle>
+                <CardTitle className="text-2xl text-white">
+                  Immutable Truth
+                </CardTitle>
                 <CardDescription className="text-slate-300">
-                  Blockchain-secured verification ensuring your content remains authentic and tamper-proof forever.
+                  Blockchain-secured verification ensuring your content remains
+                  authentic and tamper-proof forever.
                 </CardDescription>
               </CardHeader>
             </Card>
-            
+
             <Card className="bg-gradient-to-br from-green-900/50 to-slate-900/50 border-green-500/30 hover:border-green-400/50 transition-all duration-300">
               <CardHeader>
                 <Zap className="h-12 w-12 text-green-400 mb-4" />
-                <CardTitle className="text-2xl text-white">Instant Rewards</CardTitle>
+                <CardTitle className="text-2xl text-white">
+                  Instant Rewards
+                </CardTitle>
                 <CardDescription className="text-slate-300">
-                  Earn GTT tokens for creating verified content and participating in truth consensus mechanisms.
+                  Earn GTT tokens for creating verified content and
+                  participating in truth consensus mechanisms.
                 </CardDescription>
               </CardHeader>
             </Card>
-            
+
             <Card className="bg-gradient-to-br from-blue-900/50 to-slate-900/50 border-blue-500/30 hover:border-blue-400/50 transition-all duration-300">
               <CardHeader>
                 <Globe className="h-12 w-12 text-blue-400 mb-4" />
-                <CardTitle className="text-2xl text-white">Global Network</CardTitle>
+                <CardTitle className="text-2xl text-white">
+                  Global Network
+                </CardTitle>
                 <CardDescription className="text-slate-300">
-                  Connect with truth-seekers worldwide on the most advanced decentralized verification platform.
+                  Connect with truth-seekers worldwide on the most advanced
+                  decentralized verification platform.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -168,7 +203,7 @@ export default function GTTLaunch() {
             <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
               GTT Token Economics
             </h2>
-            
+
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               <Card className="bg-slate-800/50 border-purple-500/30">
                 <CardHeader>
@@ -181,7 +216,7 @@ export default function GTTLaunch() {
                   </CardDescription>
                 </CardHeader>
               </Card>
-              
+
               <Card className="bg-slate-800/50 border-green-500/30">
                 <CardHeader>
                   <CardTitle className="text-xl text-green-400 flex items-center">
@@ -198,11 +233,15 @@ export default function GTTLaunch() {
             <div className="text-left space-y-4 max-w-2xl mx-auto">
               <div className="flex items-center space-x-3">
                 <CheckCircle className="h-5 w-5 text-green-400" />
-                <span className="text-slate-300">Truth Capsule Creation & Verification</span>
+                <span className="text-slate-300">
+                  Truth Capsule Creation & Verification
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="h-5 w-5 text-green-400" />
-                <span className="text-slate-300">Staking Rewards up to 25% APY</span>
+                <span className="text-slate-300">
+                  Staking Rewards up to 25% APY
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="h-5 w-5 text-green-400" />
@@ -224,10 +263,15 @@ export default function GTTLaunch() {
             Ready to Join the Truth Revolution?
           </h2>
           <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Be part of the first enterprise-grade blockchain protocol securing truth and authenticity worldwide.
+            Be part of the first enterprise-grade blockchain protocol securing
+            truth and authenticity worldwide.
           </p>
-          
-          <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white px-12 py-6 text-xl shadow-2xl" asChild>
+
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white px-12 py-6 text-xl shadow-2xl"
+            asChild
+          >
             <Link href="/create">
               <Crown className="mr-3 h-6 w-6" />
               Start Creating Truth Capsules

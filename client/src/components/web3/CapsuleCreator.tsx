@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,21 +17,21 @@ import { Loader2, Upload, Sparkles } from "lucide-react";
 export default function CapsuleCreator() {
   const { address, chainId } = useAccount();
   const { toast } = useToast();
-  
+
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [contentHash, setContentHash] = useState("");
   const [yieldEstimate, setYieldEstimate] = useState(100);
 
   const { writeContract, data: hash, isPending } = useWriteContract();
-  
+
   const { isLoading: isConfirming } = useWaitForTransactionReceipt({
     hash,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!address || !chainId) {
       toast({
         title: "Wallet Not Connected",
@@ -47,12 +51,15 @@ export default function CapsuleCreator() {
     }
 
     try {
-      const factoryAddress = getContractAddress(chainId, 'factoryV2') as `0x${string}`;
-      
+      const factoryAddress = getContractAddress(
+        chainId,
+        "factoryV2"
+      ) as `0x${string}`;
+
       writeContract({
         address: factoryAddress,
         abi: CAPSULE_FACTORY_V2_ABI,
-        functionName: 'createCapsule',
+        functionName: "createCapsule",
         args: [contentHash, title, summary, BigInt(yieldEstimate)],
       });
 
@@ -61,7 +68,7 @@ export default function CapsuleCreator() {
         description: "Transaction submitted. Please wait for confirmation...",
       });
     } catch (error) {
-      console.error('Error creating capsule:', error);
+      console.error("Error creating capsule:", error);
       toast({
         title: "Creation Failed",
         description: "Failed to create capsule. Please try again.",
@@ -76,7 +83,7 @@ export default function CapsuleCreator() {
         title: "Capsule Created Successfully!",
         description: `Your memory capsule "${title}" has been created and is pending verification.`,
       });
-      
+
       // Reset form
       setTitle("");
       setSummary("");
@@ -91,7 +98,10 @@ export default function CapsuleCreator() {
     <Card className="bg-slate-800/50 border-slate-700">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Sparkles className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+          <Sparkles
+            className="w-5 h-5"
+            style={{ color: BRAND_COLORS.GUARDIAN }}
+          />
           Create Memory Capsule
         </CardTitle>
         <p className="text-slate-400 text-sm">
@@ -101,7 +111,9 @@ export default function CapsuleCreator() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-white">Story Title *</Label>
+            <Label htmlFor="title" className="text-white">
+              Story Title *
+            </Label>
             <Input
               id="title"
               value={title}
@@ -113,7 +125,9 @@ export default function CapsuleCreator() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="summary" className="text-white">Story Summary *</Label>
+            <Label htmlFor="summary" className="text-white">
+              Story Summary *
+            </Label>
             <Textarea
               id="summary"
               value={summary}
@@ -126,7 +140,9 @@ export default function CapsuleCreator() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contentHash" className="text-white">Content Hash *</Label>
+            <Label htmlFor="contentHash" className="text-white">
+              Content Hash *
+            </Label>
             <Input
               id="contentHash"
               value={contentHash}
@@ -141,7 +157,9 @@ export default function CapsuleCreator() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="yieldEstimate" className="text-white">Emotional Yield Estimate</Label>
+            <Label htmlFor="yieldEstimate" className="text-white">
+              Emotional Yield Estimate
+            </Label>
             <Input
               id="yieldEstimate"
               type="number"
@@ -152,7 +170,8 @@ export default function CapsuleCreator() {
               className="bg-slate-700/50 border-slate-600 text-white"
             />
             <p className="text-xs text-slate-500">
-              Estimate the emotional impact value (1-1000). This will be reviewed by Veritus.
+              Estimate the emotional impact value (1-1000). This will be
+              reviewed by Veritus.
             </p>
           </div>
 
@@ -160,15 +179,15 @@ export default function CapsuleCreator() {
             type="submit"
             disabled={isLoading || !address}
             className="w-full"
-            style={{ 
+            style={{
               backgroundColor: BRAND_COLORS.GUARDIAN,
-              color: 'white'
+              color: "white",
             }}
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {isPending ? 'Creating...' : 'Confirming...'}
+                {isPending ? "Creating..." : "Confirming..."}
               </>
             ) : (
               <>

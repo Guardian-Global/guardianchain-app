@@ -1,10 +1,10 @@
 import { sendGuardianEmail } from "../lib/mailer";
 
-export async function notifyLegacySetup({ 
-  user, 
+export async function notifyLegacySetup({
+  user,
   delegate,
   delegateAddress,
-  executionConditions
+  executionConditions,
 }: {
   user: { email: string; name?: string };
   delegate: { name: string; email: string };
@@ -29,7 +29,7 @@ export async function notifyLegacySetup({
 
 ## Execution Conditions
 Your legacy will be activated when any of these conditions are met:
-${executionConditions.map(condition => `- ${condition}`).join('\n')}
+${executionConditions.map((condition) => `- ${condition}`).join("\n")}
 
 ## What Your Delegate Inherits
 - 🧠 **AI Memory Archive:** Complete conversation history and personality model
@@ -64,7 +64,9 @@ Only you can modify this configuration using your private key. No third party, i
     markdown: `
 # 👁️ Digital Legacy Delegate Appointment
 
-You have been appointed as a digital legacy delegate for **${user.name || user.email}**.
+You have been appointed as a digital legacy delegate for **${
+      user.name || user.email
+    }**.
 
 ## Your Responsibilities
 As a delegate, you are authorized to inherit and manage:
@@ -75,7 +77,7 @@ As a delegate, you are authorized to inherit and manage:
 
 ## Activation Process
 Legacy inheritance is activated when:
-${executionConditions.map(condition => `- ${condition}`).join('\n')}
+${executionConditions.map((condition) => `- ${condition}`).join("\n")}
 
 ## Legal Requirements
 - ✅ Multi-signature validation required

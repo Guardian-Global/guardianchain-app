@@ -1,19 +1,19 @@
-import React from 'react';
-import { Link } from 'wouter';
+import React from "react";
+import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Shield, 
-  DollarSign, 
-  TrendingUp, 
-  Users, 
-  Settings, 
+import {
+  Shield,
+  DollarSign,
+  TrendingUp,
+  Users,
+  Settings,
   BarChart3,
   Activity,
   Brain,
   Coins,
-  AlertTriangle
+  AlertTriangle,
 } from "lucide-react";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
       href: "/treasury",
       icon: DollarSign,
       color: BRAND_COLORS.SUCCESS,
-      status: "operational"
+      status: "operational",
     },
     {
       title: "AI Financial Advisor",
@@ -33,7 +33,7 @@ export default function AdminDashboard() {
       href: "/ai-advisor",
       icon: Brain,
       color: BRAND_COLORS.GUARDIAN,
-      status: "active"
+      status: "active",
     },
     {
       title: "Compliance Monitor",
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
       href: "/compliance",
       icon: Shield,
       color: "#3b82f6",
-      status: "monitoring"
+      status: "monitoring",
     },
     {
       title: "Yield Distribution",
@@ -49,15 +49,16 @@ export default function AdminDashboard() {
       href: "/yield-distribution",
       icon: Coins,
       color: "#10b981",
-      status: "healthy"
+      status: "healthy",
     },
     {
       title: "Financial Dashboard",
-      description: "Comprehensive financial analytics and business intelligence",
+      description:
+        "Comprehensive financial analytics and business intelligence",
       href: "/financial-dashboard",
       icon: BarChart3,
       color: "#8b5cf6",
-      status: "operational"
+      status: "operational",
     },
     {
       title: "Tier Management",
@@ -65,15 +66,25 @@ export default function AdminDashboard() {
       href: "/tiers",
       icon: Users,
       color: "#f59e0b",
-      status: "active"
-    }
+      status: "active",
+    },
   ];
 
   const systemMetrics = [
     { label: "Active Users", value: "1,247", icon: Users, color: "#3b82f6" },
     { label: "GTT Distributed", value: "18.5K", icon: Coins, color: "#10b981" },
-    { label: "Revenue (30d)", value: "$12.4K", icon: DollarSign, color: "#f59e0b" },
-    { label: "System Health", value: "98.5%", icon: Activity, color: "#8b5cf6" }
+    {
+      label: "Revenue (30d)",
+      value: "$12.4K",
+      icon: DollarSign,
+      color: "#f59e0b",
+    },
+    {
+      label: "System Health",
+      value: "98.5%",
+      icon: Activity,
+      color: "#8b5cf6",
+    },
   ];
 
   return (
@@ -85,7 +96,8 @@ export default function AdminDashboard() {
             👑 {BRAND_NAME} Commander Admin Dashboard
           </h1>
           <p className="text-xl text-slate-300 mb-6">
-            Central command center for platform administration and system oversight
+            Central command center for platform administration and system
+            oversight
           </p>
           <Badge className="bg-purple-600 text-white px-4 py-2">
             <Settings className="w-4 h-4 mr-2" />
@@ -96,14 +108,16 @@ export default function AdminDashboard() {
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* System Metrics Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {systemMetrics.map((metric, index) => (
               <Card key={index} className="bg-slate-800/50 border-slate-700">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm text-slate-400 flex items-center">
-                    <metric.icon className="w-4 h-4 mr-2" style={{ color: metric.color }} />
+                    <metric.icon
+                      className="w-4 h-4 mr-2"
+                      style={{ color: metric.color }}
+                    />
                     {metric.label}
                   </CardTitle>
                 </CardHeader>
@@ -119,18 +133,28 @@ export default function AdminDashboard() {
           {/* Admin Sections */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {adminSections.map((section, index) => (
-              <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors">
+              <Card
+                key={index}
+                className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-colors"
+              >
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-white flex items-center">
-                      <section.icon className="w-5 h-5 mr-2" style={{ color: section.color }} />
+                      <section.icon
+                        className="w-5 h-5 mr-2"
+                        style={{ color: section.color }}
+                      />
                       {section.title}
                     </CardTitle>
-                    <Badge 
+                    <Badge
                       className={`text-xs ${
-                        section.status === 'operational' || section.status === 'healthy' ? 'bg-green-600' :
-                        section.status === 'active' || section.status === 'monitoring' ? 'bg-blue-600' :
-                        'bg-yellow-600'
+                        section.status === "operational" ||
+                        section.status === "healthy"
+                          ? "bg-green-600"
+                          : section.status === "active" ||
+                            section.status === "monitoring"
+                          ? "bg-blue-600"
+                          : "bg-yellow-600"
                       }`}
                     >
                       {section.status}
@@ -142,8 +166,8 @@ export default function AdminDashboard() {
                     {section.description}
                   </p>
                   <Link href={section.href}>
-                    <Button 
-                      className="w-full" 
+                    <Button
+                      className="w-full"
                       style={{ backgroundColor: section.color }}
                     >
                       Access Dashboard
@@ -157,34 +181,39 @@ export default function AdminDashboard() {
           {/* Quick Actions */}
           <Card className="bg-slate-800/50 border-slate-700 mb-8">
             <CardHeader>
-              <CardTitle className="text-white">Quick Administrative Actions</CardTitle>
+              <CardTitle className="text-white">
+                Quick Administrative Actions
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Link href="/yield-distribution">
-                  <Button className="w-full" style={{ backgroundColor: BRAND_COLORS.SUCCESS }}>
+                  <Button
+                    className="w-full"
+                    style={{ backgroundColor: BRAND_COLORS.SUCCESS }}
+                  >
                     Run Yield Distribution
                   </Button>
                 </Link>
                 <Link href="/compliance">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
                   >
                     Compliance Audit
                   </Button>
                 </Link>
                 <Link href="/treasury">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
                   >
                     Treasury Report
                   </Button>
                 </Link>
                 <Link href="/ai-advisor">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full border-slate-600 text-slate-300 hover:bg-slate-700"
                   >
                     AI Analysis
@@ -207,7 +236,9 @@ export default function AdminDashboard() {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-300">API Services:</span>
-                    <Badge className="bg-green-600 text-white">Operational</Badge>
+                    <Badge className="bg-green-600 text-white">
+                      Operational
+                    </Badge>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-300">Database:</span>

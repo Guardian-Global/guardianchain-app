@@ -20,7 +20,8 @@ export default function YieldTrackerPage() {
               </h1>
             </div>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Track truth capsule performance, yield generation, and emotional resonance in real-time
+              Track truth capsule performance, yield generation, and emotional
+              resonance in real-time
             </p>
           </div>
         </div>
@@ -33,13 +34,17 @@ export default function YieldTrackerPage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <TrendingUp className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+                  <TrendingUp
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  />
                   Real-Time Yield
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400">
-                  Monitor GTT token yield generation as your capsules gain traction and verification
+                  Monitor GTT token yield generation as your capsules gain
+                  traction and verification
                 </p>
               </CardContent>
             </Card>
@@ -47,13 +52,17 @@ export default function YieldTrackerPage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <BarChart3 className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+                  <BarChart3
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  />
                   Performance Analytics
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400">
-                  Deep insights into emotional resonance scores and community engagement metrics
+                  Deep insights into emotional resonance scores and community
+                  engagement metrics
                 </p>
               </CardContent>
             </Card>
@@ -61,13 +70,17 @@ export default function YieldTrackerPage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Award className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+                  <Award
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.GUARDIAN }}
+                  />
                   Share & Embed
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-slate-400">
-                  Share your capsule performance across platforms with embeddable widgets
+                  Share your capsule performance across platforms with
+                  embeddable widgets
                 </p>
               </CardContent>
             </Card>
@@ -90,11 +103,15 @@ export default function YieldTrackerPage() {
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">High Performance</h3>
+              <h3 className="text-lg font-semibold text-white">
+                High Performance
+              </h3>
               <CapsuleYieldTracker capsuleId="1" />
             </div>
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">Growing Capsule</h3>
+              <h3 className="text-lg font-semibold text-white">
+                Growing Capsule
+              </h3>
               <CapsuleYieldTracker capsuleId="2" />
             </div>
             <div className="space-y-4">
@@ -110,12 +127,16 @@ export default function YieldTrackerPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white">How to Use the Yield Tracker</CardTitle>
+              <CardTitle className="text-white">
+                How to Use the Yield Tracker
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-slate-300">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-white mb-2">Track Your Capsules</h4>
+                  <h4 className="font-semibold text-white mb-2">
+                    Track Your Capsules
+                  </h4>
                   <ul className="space-y-1 text-sm">
                     <li>• Enter any capsule ID to view its performance</li>
                     <li>• Monitor real-time yield generation</li>
@@ -124,7 +145,9 @@ export default function YieldTrackerPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-white mb-2">Share & Embed</h4>
+                  <h4 className="font-semibold text-white mb-2">
+                    Share & Embed
+                  </h4>
                   <ul className="space-y-1 text-sm">
                     <li>• Generate shareable links for social media</li>
                     <li>• Copy embed codes for external sites</li>

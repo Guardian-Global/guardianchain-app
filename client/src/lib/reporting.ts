@@ -1,6 +1,6 @@
-import { askAI } from './ai';
-import { getLatestTreasurySnapshot } from './treasury';
-import { getTreasurySummary } from './veritus.engine';
+import { askAI } from "./ai";
+import { getLatestTreasurySnapshot } from "./treasury";
+import { getTreasurySummary } from "./veritus.engine";
 
 export interface DailyReportData {
   date: string;
@@ -42,43 +42,44 @@ export async function generateDailyReportData(): Promise<DailyReportData> {
     // Gather data from various sources
     const [treasurySnapshot, treasurySummary] = await Promise.all([
       getLatestTreasurySnapshot(),
-      getTreasurySummary()
+      getTreasurySummary(),
     ]);
 
     // Mock data for demonstration - replace with actual data sources
     const reportData: DailyReportData = {
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       capsuleStats: {
         newMints: Math.floor(Math.random() * 50) + 20,
         totalActive: 1247,
         avgResonanceScore: Math.floor(Math.random() * 30) + 70,
-        verifiedCapsules: Math.floor(Math.random() * 15) + 5
+        verifiedCapsules: Math.floor(Math.random() * 15) + 5,
       },
       yieldStats: {
         totalDistributed: Math.floor(Math.random() * 500) + 200,
         avgYieldPerCapsule: Math.floor(Math.random() * 20) + 10,
         topEarningCapsule: Math.floor(Math.random() * 100) + 50,
-        uniqueEarners: Math.floor(Math.random() * 100) + 80
+        uniqueEarners: Math.floor(Math.random() * 100) + 80,
       },
       financialStats: {
         gttMinted: Math.floor(Math.random() * 2000) + 1000,
-        platformRevenue: treasurySummary?.revenue || Math.floor(Math.random() * 5000) + 2000,
+        platformRevenue:
+          treasurySummary?.revenue || Math.floor(Math.random() * 5000) + 2000,
         treasuryBalance: treasurySnapshot?.gttTreasury || 135000000,
-        yieldPoolSize: treasurySnapshot?.gttYieldPool || 75000000
+        yieldPoolSize: treasurySnapshot?.gttYieldPool || 75000000,
       },
       userStats: {
         newRegistrations: Math.floor(Math.random() * 20) + 10,
         activeUsers: Math.floor(Math.random() * 200) + 800,
         tierUpgrades: Math.floor(Math.random() * 10) + 2,
-        retentionRate: Math.floor(Math.random() * 15) + 85
+        retentionRate: Math.floor(Math.random() * 15) + 85,
       },
       complianceStats: {
         flaggedActivities: Math.floor(Math.random() * 3),
         regionBlocks: 0,
         suspiciousTransactions: Math.floor(Math.random() * 2),
-        complianceScore: Math.floor(Math.random() * 5) + 95
+        complianceScore: Math.floor(Math.random() * 5) + 95,
       },
-      aiInsights: ''
+      aiInsights: "",
     };
 
     // Generate AI insights
@@ -109,13 +110,13 @@ Provide:
 
     const aiInsights = await askAI({
       prompt: aiPrompt,
-      max_tokens: 400
+      max_tokens: 400,
     });
 
     reportData.aiInsights = aiInsights;
     return reportData;
   } catch (error) {
-    console.error('Error generating daily report data:', error);
+    console.error("Error generating daily report data:", error);
     throw error;
   }
 }
@@ -123,7 +124,7 @@ Provide:
 export async function getDailyReport(): Promise<string> {
   try {
     const data = await generateDailyReportData();
-    
+
     return `
 === GUARDIANCHAIN DAILY OPERATIONS REPORT ===
 Date: ${data.date}
@@ -165,10 +166,10 @@ Report generated: ${new Date().toLocaleString()}
 System status: Operational ✅
     `.trim();
   } catch (error) {
-    console.error('Error generating daily report:', error);
+    console.error("Error generating daily report:", error);
     return `
 === GUARDIANCHAIN DAILY OPERATIONS REPORT ===
-Date: ${new Date().toISOString().split('T')[0]}
+Date: ${new Date().toISOString().split("T")[0]}
 
 ❌ Report Generation Failed
 Unable to generate complete daily report due to system error.
@@ -190,16 +191,16 @@ export async function scheduleNightlyReport() {
   // This would typically be called by a cron job or scheduler
   try {
     const report = await getDailyReport();
-    
+
     // In production, send email notification
-    console.log('Nightly report generated:', report);
-    
+    console.log("Nightly report generated:", report);
+
     // Save to database/storage for historical tracking
     // await saveReportToDatabase(report);
-    
+
     return report;
   } catch (error) {
-    console.error('Nightly report generation failed:', error);
+    console.error("Nightly report generation failed:", error);
     throw error;
   }
 }
@@ -211,9 +212,9 @@ export async function getHistoricalReports(days: number = 7) {
     const date = new Date();
     date.setDate(date.getDate() - i);
     reports.push({
-      date: date.toISOString().split('T')[0],
+      date: date.toISOString().split("T")[0],
       summary: `Daily report for ${date.toLocaleDateString()}`,
-      status: 'completed'
+      status: "completed",
     });
   }
   return reports;

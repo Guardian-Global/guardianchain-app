@@ -20,9 +20,9 @@ export function registerEmailPrefsRoutes(app: Express) {
     try {
       const { email } = req.params;
       const preferences = req.body;
-      
+
       const success = await setUserPreferences(email, preferences);
-      
+
       if (success) {
         // Send confirmation email
         await sendGuardianEmail({
@@ -35,11 +35,17 @@ export function registerEmailPrefsRoutes(app: Express) {
 Your GUARDIANCHAIN email notification preferences have been successfully updated.
 
 ## Current Settings
-- **Email Notifications:** ${preferences.emailEnabled ? 'Enabled ✅' : 'Disabled ❌'}
-- **Capsule Events:** ${preferences.capsuleEvents ? 'Enabled ✅' : 'Disabled ❌'}
-- **AI Memory Saves:** ${preferences.aiMemorySaves ? 'Enabled ✅' : 'Disabled ❌'}
-- **DAO Votes:** ${preferences.daoVotes ? 'Enabled ✅' : 'Disabled ❌'}
-- **Weekly Digest:** ${preferences.weeklyDigest ? 'Enabled ✅' : 'Disabled ❌'}
+- **Email Notifications:** ${
+            preferences.emailEnabled ? "Enabled ✅" : "Disabled ❌"
+          }
+- **Capsule Events:** ${
+            preferences.capsuleEvents ? "Enabled ✅" : "Disabled ❌"
+          }
+- **AI Memory Saves:** ${
+            preferences.aiMemorySaves ? "Enabled ✅" : "Disabled ❌"
+          }
+- **DAO Votes:** ${preferences.daoVotes ? "Enabled ✅" : "Disabled ❌"}
+- **Weekly Digest:** ${preferences.weeklyDigest ? "Enabled ✅" : "Disabled ❌"}
 
 ## Important Notes
 - Critical security alerts will always be delivered regardless of your preferences
@@ -53,7 +59,7 @@ Your GUARDIANCHAIN email notification preferences have been successfully updated
 *Your privacy and communication preferences are important to us.*
 `,
         });
-        
+
         res.json({ success: true, preferences });
       } else {
         res.status(500).json({ error: "Failed to update preferences" });
@@ -68,7 +74,7 @@ Your GUARDIANCHAIN email notification preferences have been successfully updated
   app.post("/api/test-email", async (req, res) => {
     try {
       const { to, type = "test" } = req.body;
-      
+
       await sendGuardianEmail({
         to,
         subject: "🧪 GUARDIANCHAIN Email Test",
@@ -91,7 +97,7 @@ If you received this email, the notification system is functioning properly.
 **[GUARDIANCHAIN Platform](https://guardianchain.app)** | **[Contact Support](https://guardianchain.app/contact)**
 `,
       });
-      
+
       res.json({ success: true, message: "Test email sent successfully" });
     } catch (error) {
       console.error("Failed to send test email:", error);
@@ -103,19 +109,19 @@ If you received this email, the notification system is functioning properly.
   app.post("/api/unsubscribe/:email", async (req, res) => {
     try {
       const { email } = req.params;
-      
-      const success = await setUserPreferences(email, { 
+
+      const success = await setUserPreferences(email, {
         emailEnabled: false,
         capsuleEvents: false,
         aiMemorySaves: false,
         daoVotes: false,
-        weeklyDigest: false
+        weeklyDigest: false,
       });
-      
+
       if (success) {
-        res.json({ 
-          success: true, 
-          message: "Successfully unsubscribed from all non-critical emails" 
+        res.json({
+          success: true,
+          message: "Successfully unsubscribed from all non-critical emails",
         });
       } else {
         res.status(500).json({ error: "Failed to unsubscribe" });

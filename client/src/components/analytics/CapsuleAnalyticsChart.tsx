@@ -44,7 +44,10 @@ interface CapsuleAnalyticsProps {
   timeRange?: "7d" | "30d" | "90d" | "1y";
 }
 
-export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: CapsuleAnalyticsProps) {
+export default function CapsuleAnalyticsChart({
+  capsuleId,
+  timeRange = "30d",
+}: CapsuleAnalyticsProps) {
   const [dataPoints, setDataPoints] = useState<YieldDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalYield, setTotalYield] = useState(0);
@@ -53,11 +56,13 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
   useEffect(() => {
     async function fetchAnalyticsData() {
       setIsLoading(true);
-      
+
       try {
         // First attempt to fetch from API/Supabase
-        const response = await fetch(`/api/capsule/${capsuleId}/analytics?timeRange=${timeRange}`);
-        
+        const response = await fetch(
+          `/api/capsule/${capsuleId}/analytics?timeRange=${timeRange}`
+        );
+
         if (response.ok) {
           const apiData = await response.json();
           setDataPoints(apiData.dataPoints || []);
@@ -69,41 +74,63 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
       } catch (error) {
         console.log("API not available, using demo data");
       }
-      
+
       // Fallback to realistic demo data based on capsule ID and time range
-      const generateMockData = (id: string, range: string): YieldDataPoint[] => {
-        const days = range === "7d" ? 7 : range === "30d" ? 30 : range === "90d" ? 90 : 365;
+      const generateMockData = (
+        id: string,
+        range: string
+      ): YieldDataPoint[] => {
+        const days =
+          range === "7d"
+            ? 7
+            : range === "30d"
+            ? 30
+            : range === "90d"
+            ? 90
+            : 365;
         const data: YieldDataPoint[] = [];
-        
+
         for (let i = days - 1; i >= 0; i--) {
           const date = new Date();
           date.setDate(date.getDate() - i);
-          
+
           // Create varied performance patterns based on capsule ID
-          const baseMultiplier = parseInt(id) % 3 + 1;
+          const baseMultiplier = (parseInt(id) % 3) + 1;
           const timeVariation = Math.sin((i / days) * Math.PI * 2) * 0.3 + 0.7;
           const randomFactor = 0.8 + Math.random() * 0.4;
-          
+
           data.push({
-            date: date.toISOString().split('T')[0],
-            yieldAmount: baseMultiplier * timeVariation * randomFactor * (1 + i / 100),
-            emotionalResonance: Math.min(95, 40 + baseMultiplier * 15 + timeVariation * 20 + Math.random() * 10),
-            viewCount: Math.floor(baseMultiplier * timeVariation * randomFactor * (50 + i * 2)),
-            verificationCount: Math.floor(baseMultiplier * timeVariation * (3 + i / 10)),
-            shareCount: Math.floor(baseMultiplier * timeVariation * (8 + i / 5)),
+            date: date.toISOString().split("T")[0],
+            yieldAmount:
+              baseMultiplier * timeVariation * randomFactor * (1 + i / 100),
+            emotionalResonance: Math.min(
+              95,
+              40 + baseMultiplier * 15 + timeVariation * 20 + Math.random() * 10
+            ),
+            viewCount: Math.floor(
+              baseMultiplier * timeVariation * randomFactor * (50 + i * 2)
+            ),
+            verificationCount: Math.floor(
+              baseMultiplier * timeVariation * (3 + i / 10)
+            ),
+            shareCount: Math.floor(
+              baseMultiplier * timeVariation * (8 + i / 5)
+            ),
           });
         }
-        
+
         return data;
       };
 
       const mockData = generateMockData(capsuleId, timeRange);
       setDataPoints(mockData);
-      
+
       // Calculate totals
       const total = mockData.reduce((sum, point) => sum + point.yieldAmount, 0);
-      const avgRes = mockData.reduce((sum, point) => sum + point.emotionalResonance, 0) / mockData.length;
-      
+      const avgRes =
+        mockData.reduce((sum, point) => sum + point.emotionalResonance, 0) /
+        mockData.length;
+
       setTotalYield(total);
       setAvgResonance(avgRes);
       setIsLoading(false);
@@ -113,16 +140,20 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
   }, [capsuleId, timeRange]);
 
   const yieldChartData = {
-    labels: dataPoints.map(dp => {
+    labels: dataPoints.map((dp) => {
       const date = new Date(dp.date);
-      return timeRange === "7d" ? 
-        date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) :
-        date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      return timeRange === "7d"
+        ? date.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+          })
+        : date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
     }),
     datasets: [
       {
         label: "Daily Yield (GTT)",
-        data: dataPoints.map(dp => dp.yieldAmount),
+        data: dataPoints.map((dp) => dp.yieldAmount),
         borderColor: BRAND_COLORS.GUARDIAN,
         backgroundColor: `${BRAND_COLORS.GUARDIAN}20`,
         tension: 0.4,
@@ -132,7 +163,7 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
       },
       {
         label: "Emotional Resonance",
-        data: dataPoints.map(dp => dp.emotionalResonance),
+        data: dataPoints.map((dp) => dp.emotionalResonance),
         borderColor: "#FF6B9D",
         backgroundColor: "#FF6B9D20",
         tension: 0.4,
@@ -145,26 +176,26 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
   };
 
   const engagementChartData = {
-    labels: dataPoints.slice(-7).map(dp => {
+    labels: dataPoints.slice(-7).map((dp) => {
       const date = new Date(dp.date);
       return date.toLocaleDateString("en-US", { weekday: "short" });
     }),
     datasets: [
       {
         label: "Views",
-        data: dataPoints.slice(-7).map(dp => dp.viewCount),
+        data: dataPoints.slice(-7).map((dp) => dp.viewCount),
         backgroundColor: "#4ECDC4",
         borderRadius: 6,
       },
       {
         label: "Verifications",
-        data: dataPoints.slice(-7).map(dp => dp.verificationCount),
+        data: dataPoints.slice(-7).map((dp) => dp.verificationCount),
         backgroundColor: "#45B7D1",
         borderRadius: 6,
       },
       {
         label: "Shares",
-        data: dataPoints.slice(-7).map(dp => dp.shareCount),
+        data: dataPoints.slice(-7).map((dp) => dp.shareCount),
         backgroundColor: "#96CEB4",
         borderRadius: 6,
       },
@@ -300,7 +331,10 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
                   {totalYield.toFixed(2)} GTT
                 </p>
               </div>
-              <Zap className="w-8 h-8" style={{ color: BRAND_COLORS.GUARDIAN }} />
+              <Zap
+                className="w-8 h-8"
+                style={{ color: BRAND_COLORS.GUARDIAN }}
+              />
             </div>
           </CardContent>
         </Card>
@@ -325,7 +359,9 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
               <div>
                 <p className="text-sm text-slate-400">Total Views</p>
                 <p className="text-2xl font-bold text-white">
-                  {dataPoints.reduce((sum, dp) => sum + dp.viewCount, 0).toLocaleString()}
+                  {dataPoints
+                    .reduce((sum, dp) => sum + dp.viewCount, 0)
+                    .toLocaleString()}
                 </p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-400" />
@@ -339,7 +375,10 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
               <div>
                 <p className="text-sm text-slate-400">Verifications</p>
                 <p className="text-2xl font-bold text-white">
-                  {dataPoints.reduce((sum, dp) => sum + dp.verificationCount, 0)}
+                  {dataPoints.reduce(
+                    (sum, dp) => sum + dp.verificationCount,
+                    0
+                  )}
                 </p>
               </div>
               <BarChart3 className="w-8 h-8 text-green-400" />
@@ -352,14 +391,23 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
-            <TrendingUp className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+            <TrendingUp
+              className="w-5 h-5"
+              style={{ color: BRAND_COLORS.GUARDIAN }}
+            />
             Yield & Emotional Resonance Trends
           </CardTitle>
           <div className="flex gap-2">
-            <Badge variant="outline" className="border-purple-400 text-purple-300">
+            <Badge
+              variant="outline"
+              className="border-purple-400 text-purple-300"
+            >
               Capsule #{capsuleId}
             </Badge>
-            <Badge variant="outline" className="border-slate-500 text-slate-300">
+            <Badge
+              variant="outline"
+              className="border-slate-500 text-slate-300"
+            >
               {timeRange} view
             </Badge>
           </div>
@@ -375,7 +423,10 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
-            <BarChart3 className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+            <BarChart3
+              className="w-5 h-5"
+              style={{ color: BRAND_COLORS.GUARDIAN }}
+            />
             Weekly Engagement Breakdown
           </CardTitle>
         </CardHeader>
@@ -399,7 +450,10 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
                 <div className="flex justify-between">
                   <span className="text-slate-400">Peak daily yield:</span>
                   <span className="text-white font-medium">
-                    {Math.max(...dataPoints.map(dp => dp.yieldAmount)).toFixed(2)} GTT
+                    {Math.max(
+                      ...dataPoints.map((dp) => dp.yieldAmount)
+                    ).toFixed(2)}{" "}
+                    GTT
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -411,33 +465,56 @@ export default function CapsuleAnalyticsChart({ capsuleId, timeRange = "30d" }: 
                 <div className="flex justify-between">
                   <span className="text-slate-400">Yield growth trend:</span>
                   <span className="text-green-400 font-medium">
-                    +{((dataPoints[dataPoints.length - 1]?.yieldAmount / dataPoints[0]?.yieldAmount - 1) * 100).toFixed(1)}%
+                    +
+                    {(
+                      (dataPoints[dataPoints.length - 1]?.yieldAmount /
+                        dataPoints[0]?.yieldAmount -
+                        1) *
+                      100
+                    ).toFixed(1)}
+                    %
                   </span>
                 </div>
               </div>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold text-white mb-3">Engagement Insights</h4>
+              <h4 className="font-semibold text-white mb-3">
+                Engagement Insights
+              </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-slate-400">Peak resonance:</span>
                   <span className="text-white font-medium">
-                    {Math.max(...dataPoints.map(dp => dp.emotionalResonance)).toFixed(0)}%
+                    {Math.max(
+                      ...dataPoints.map((dp) => dp.emotionalResonance)
+                    ).toFixed(0)}
+                    %
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Verification rate:</span>
                   <span className="text-white font-medium">
-                    {((dataPoints.reduce((sum, dp) => sum + dp.verificationCount, 0) / 
-                       dataPoints.reduce((sum, dp) => sum + dp.viewCount, 0)) * 100).toFixed(1)}%
+                    {(
+                      (dataPoints.reduce(
+                        (sum, dp) => sum + dp.verificationCount,
+                        0
+                      ) /
+                        dataPoints.reduce((sum, dp) => sum + dp.viewCount, 0)) *
+                      100
+                    ).toFixed(1)}
+                    %
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Share engagement:</span>
                   <span className="text-blue-400 font-medium">
-                    {((dataPoints.reduce((sum, dp) => sum + dp.shareCount, 0) / 
-                       dataPoints.reduce((sum, dp) => sum + dp.viewCount, 0)) * 100).toFixed(1)}%
+                    {(
+                      (dataPoints.reduce((sum, dp) => sum + dp.shareCount, 0) /
+                        dataPoints.reduce((sum, dp) => sum + dp.viewCount, 0)) *
+                      100
+                    ).toFixed(1)}
+                    %
                   </span>
                 </div>
               </div>

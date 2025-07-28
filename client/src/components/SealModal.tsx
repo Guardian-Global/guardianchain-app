@@ -1,11 +1,19 @@
-import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Shield, Check, X, Loader2, ExternalLink, Download, AlertTriangle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Shield,
+  Check,
+  X,
+  Loader2,
+  ExternalLink,
+  Download,
+  AlertTriangle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface SealModalProps {
   capsuleId: string;
@@ -28,12 +36,12 @@ interface SealResponse {
   capsule: any;
 }
 
-export default function SealModal({ 
-  capsuleId, 
-  capsuleTitle, 
-  content, 
-  onClose, 
-  onSealed 
+export default function SealModal({
+  capsuleId,
+  capsuleTitle,
+  content,
+  onClose,
+  onSealed,
 }: SealModalProps) {
   const [sealData, setSealData] = useState<SealResponse | null>(null);
   const { toast } = useToast();
@@ -41,24 +49,27 @@ export default function SealModal({
 
   const sealMutation = useMutation({
     mutationFn: async (data: { capsuleId: string; content: string }) => {
-      const response = await apiRequest('POST', '/api/seal', data);
+      const response = await apiRequest("POST", "/api/seal", data);
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to create Veritas seal');
+        throw new Error(error.error || "Failed to create Veritas seal");
       }
       return response.json();
     },
     onSuccess: (data: SealResponse) => {
       setSealData(data);
       onSealed?.(data);
-      
+
       // Invalidate relevant queries to refresh UI
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules'] });
-      queryClient.invalidateQueries({ queryKey: [`/api/capsules/${capsuleId}`] });
-      
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
+      queryClient.invalidateQueries({
+        queryKey: [`/api/capsules/${capsuleId}`],
+      });
+
       toast({
         title: "Veritas Seal Created",
-        description: "Your capsule has been successfully sealed with DocuSign Veritas",
+        description:
+          "Your capsule has been successfully sealed with DocuSign Veritas",
       });
     },
     onError: (error: Error) => {
@@ -67,13 +78,13 @@ export default function SealModal({
         description: error.message,
         variant: "destructive",
       });
-    }
+    },
   });
 
   const handleSeal = () => {
     sealMutation.mutate({
       capsuleId,
-      content
+      content,
     });
   };
 
@@ -88,7 +99,7 @@ export default function SealModal({
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">
-                  {sealData ? 'Veritas Seal Created' : 'Create Veritas Seal'}
+                  {sealData ? "Veritas Seal Created" : "Create Veritas Seal"}
                 </h3>
                 <p className="text-sm text-slate-400 font-normal">
                   {capsuleTitle || `Capsule #${capsuleId}`}
@@ -111,11 +122,14 @@ export default function SealModal({
             // Pre-seal state
             <div className="space-y-4">
               <div className="bg-slate-900 p-4 rounded-lg border border-slate-700">
-                <h4 className="font-semibold text-white mb-2">What is a Veritas Seal?</h4>
+                <h4 className="font-semibold text-white mb-2">
+                  What is a Veritas Seal?
+                </h4>
                 <p className="text-slate-300 text-sm leading-relaxed">
-                  A Veritas Seal is a DocuSign-powered digital certificate that creates 
-                  immutable proof of your capsule's authenticity and timestamp. Once sealed, 
-                  the content cannot be altered without detection.
+                  A Veritas Seal is a DocuSign-powered digital certificate that
+                  creates immutable proof of your capsule's authenticity and
+                  timestamp. Once sealed, the content cannot be altered without
+                  detection.
                 </p>
               </div>
 
@@ -123,19 +137,26 @@ export default function SealModal({
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-blue-400 mb-1">Important Notice</h4>
+                    <h4 className="font-semibold text-blue-400 mb-1">
+                      Important Notice
+                    </h4>
                     <p className="text-blue-200 text-sm">
-                      Sealing this capsule will make it permanently immutable. You will not be 
-                      able to edit the content after sealing. Please review your content carefully.
+                      Sealing this capsule will make it permanently immutable.
+                      You will not be able to edit the content after sealing.
+                      Please review your content carefully.
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="bg-slate-900 p-4 rounded-lg max-h-40 overflow-y-auto">
-                <h4 className="font-semibold text-white mb-2">Content Preview</h4>
+                <h4 className="font-semibold text-white mb-2">
+                  Content Preview
+                </h4>
                 <p className="text-slate-300 text-sm whitespace-pre-wrap">
-                  {content.length > 300 ? `${content.substring(0, 300)}...` : content}
+                  {content.length > 300
+                    ? `${content.substring(0, 300)}...`
+                    : content}
                 </p>
               </div>
 
@@ -184,7 +205,10 @@ export default function SealModal({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-900 p-4 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="border-green-500 text-green-400">
+                    <Badge
+                      variant="outline"
+                      className="border-green-500 text-green-400"
+                    >
                       <Shield className="h-3 w-3 mr-1" />
                       Sealed
                     </Badge>
@@ -212,20 +236,22 @@ export default function SealModal({
                 </div>
 
                 <div className="bg-slate-900 p-4 rounded-lg">
-                  <h4 className="font-semibold text-white mb-3">Quick Actions</h4>
+                  <h4 className="font-semibold text-white mb-3">
+                    Quick Actions
+                  </h4>
                   <div className="space-y-2">
-                    <a 
-                      href={sealData.seal.veritasUrl} 
-                      target="_blank" 
+                    <a
+                      href={sealData.seal.veritasUrl}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm"
                     >
                       <ExternalLink className="h-4 w-4" />
                       View Veritas Seal
                     </a>
-                    <a 
-                      href={sealData.seal.certificateUrl} 
-                      target="_blank" 
+                    <a
+                      href={sealData.seal.certificateUrl}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-blue-400 hover:text-blue-300 text-sm"
                     >
@@ -237,12 +263,25 @@ export default function SealModal({
               </div>
 
               <div className="bg-green-900/20 p-4 rounded-lg border border-green-700">
-                <h4 className="font-semibold text-green-400 mb-2">What happens next?</h4>
+                <h4 className="font-semibold text-green-400 mb-2">
+                  What happens next?
+                </h4>
                 <ul className="text-green-200 text-sm space-y-1">
-                  <li>• Your capsule is now immutably sealed and timestamped</li>
-                  <li>• The Veritas certificate provides legal-grade proof of authenticity</li>
-                  <li>• You can now share the sealed capsule with verified provenance</li>
-                  <li>• The seal will be visible to all viewers as a trust indicator</li>
+                  <li>
+                    • Your capsule is now immutably sealed and timestamped
+                  </li>
+                  <li>
+                    • The Veritas certificate provides legal-grade proof of
+                    authenticity
+                  </li>
+                  <li>
+                    • You can now share the sealed capsule with verified
+                    provenance
+                  </li>
+                  <li>
+                    • The seal will be visible to all viewers as a trust
+                    indicator
+                  </li>
                 </ul>
               </div>
 

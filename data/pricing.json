@@ -20,7 +20,7 @@
     "color": "blue"
   },
   "seeker": {
-    "name": "Seeker", 
+    "name": "Seeker",
     "price": 29,
     "priceAnnual": 290,
     "gttRequired": 100,
@@ -47,7 +47,7 @@
     "gttRequired": 1000,
     "features": [
       "Content monetization tools",
-      "500 GTT monthly bonus", 
+      "500 GTT monthly bonus",
       "Custom branding options",
       "20 capsules per month",
       "Advanced analytics",

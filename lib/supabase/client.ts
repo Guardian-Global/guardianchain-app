@@ -1,5 +1,5 @@
 // Centralized Supabase client configuration with proper error handling
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 let supabaseInstance: SupabaseClient | null = null;
 
@@ -21,27 +21,30 @@ export function getSupabaseClient(): SupabaseClient | null {
     supabaseInstance = createClient(supabaseUrl, supabaseKey, {
       auth: {
         persistSession: false, // Server-side doesn't need session persistence
-        autoRefreshToken: false
+        autoRefreshToken: false,
       },
       global: {
         headers: {
-          'x-application': 'guardianchain-platform'
-        }
-      }
+          "x-application": "guardianchain-platform",
+        },
+      },
     });
-    
+
     return supabaseInstance;
   } catch (error) {
     // Silent fail in production, log in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Failed to initialize Supabase client:', error);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Failed to initialize Supabase client:", error);
     }
     return null;
   }
 }
 
 export function isSupabaseConfigured(): boolean {
-  return !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+  return !!(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
 }
 
 // Health check function
@@ -51,32 +54,32 @@ export async function checkSupabaseHealth(): Promise<{
   error?: string;
 }> {
   const client = getSupabaseClient();
-  
+
   if (!client) {
     return {
       configured: false,
       connected: false,
-      error: 'Supabase not configured'
+      error: "Supabase not configured",
     };
   }
 
   try {
     // Simple connection test
     const { data, error } = await client
-      .from('sessions')
-      .select('count')
+      .from("sessions")
+      .select("count")
       .limit(1);
-    
+
     return {
       configured: true,
       connected: true,
-      error: error?.message
+      error: error?.message,
     };
   } catch (error) {
     return {
       configured: true,
       connected: false,
-      error: (error as Error).message
+      error: (error as Error).message,
     };
   }
 }

@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  Crown, 
-  Zap, 
-  Settings, 
-  Database, 
-  Users, 
-  Shield, 
-  TrendingUp, 
+import {
+  Crown,
+  Zap,
+  Settings,
+  Database,
+  Users,
+  Shield,
+  TrendingUp,
   DollarSign,
   AlertTriangle,
   Cpu,
   Activity,
   BarChart3,
   RefreshCw,
-  Download
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,10 +46,10 @@ export default function CommanderView() {
 
   const mintGTTMutation = useMutation({
     mutationFn: async (data: { amount: number; wallet: string }) => {
-      const response = await apiRequest('POST', '/api/mint/gtt', data);
+      const response = await apiRequest("POST", "/api/mint/gtt", data);
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to mint GTT');
+        throw new Error(error.error || "Failed to mint GTT");
       }
       return response.json();
     },
@@ -68,13 +68,13 @@ export default function CommanderView() {
         description: error.message,
         variant: "destructive",
       });
-    }
+    },
   });
 
   const syncIndexMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/system/sync-index', {});
-      if (!response.ok) throw new Error('Sync failed');
+      const response = await apiRequest("POST", "/api/system/sync-index", {});
+      if (!response.ok) throw new Error("Sync failed");
       return response.json();
     },
     onSuccess: () => {
@@ -83,7 +83,7 @@ export default function CommanderView() {
         description: "Capsule index has been synchronized successfully",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/system/health"] });
-    }
+    },
   });
 
   const handleMintGTT = () => {
@@ -98,7 +98,7 @@ export default function CommanderView() {
 
     mintGTTMutation.mutate({
       amount: parseFloat(mintAmount),
-      wallet: targetWallet
+      wallet: targetWallet,
     });
   };
 
@@ -119,7 +119,10 @@ export default function CommanderView() {
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
               Root-level protocol management and system oversight
             </p>
-            <Badge variant="outline" className="border-purple-500 text-purple-400">
+            <Badge
+              variant="outline"
+              className="border-purple-500 text-purple-400"
+            >
               Administrator Access Required
             </Badge>
           </div>
@@ -132,7 +135,7 @@ export default function CommanderView() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* GTT Mint Controls */}
             <div className="space-y-4">
-              <MintGTTButton 
+              <MintGTTButton
                 variant="card"
                 amount={mintAmount}
                 recipient={targetWallet}
@@ -141,10 +144,12 @@ export default function CommanderView() {
                     title: "On-Chain Mint Successful",
                     description: `Minted ${amount} GTT tokens via smart contract`,
                   });
-                  queryClient.invalidateQueries({ queryKey: ["/api/protocol/stats"] });
+                  queryClient.invalidateQueries({
+                    queryKey: ["/api/protocol/stats"],
+                  });
                 }}
               />
-              
+
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-sm">
@@ -168,17 +173,21 @@ export default function CommanderView() {
                       className="bg-slate-700 border-slate-600 text-white text-sm"
                     />
                   </div>
-                  <Button 
+                  <Button
                     onClick={handleMintGTT}
                     disabled={mintGTTMutation.isPending}
                     variant="outline"
                     className="w-full border-slate-600 text-xs"
                   >
-                    {mintGTTMutation.isPending ? "Minting..." : "Simulate API Mint"}
+                    {mintGTTMutation.isPending
+                      ? "Minting..."
+                      : "Simulate API Mint"}
                   </Button>
                   <div className="text-xs text-slate-400 space-y-1">
                     <p>• Current Supply: {protocolStats?.totalGTT || 0} GTT</p>
-                    <p>• Circulating: {protocolStats?.circulatingGTT || 0} GTT</p>
+                    <p>
+                      • Circulating: {protocolStats?.circulatingGTT || 0} GTT
+                    </p>
                     <p>• Vault Holdings: {protocolStats?.vaultGTT || 0} GTT</p>
                   </div>
                 </CardContent>
@@ -194,13 +203,15 @@ export default function CommanderView() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button 
+                <Button
                   onClick={() => syncIndexMutation.mutate()}
                   disabled={syncIndexMutation.isPending}
                   className="w-full bg-blue-600 hover:bg-blue-700"
                 >
                   <Database className="mr-2 h-4 w-4" />
-                  {syncIndexMutation.isPending ? "Syncing..." : "Sync Capsule Index"}
+                  {syncIndexMutation.isPending
+                    ? "Syncing..."
+                    : "Sync Capsule Index"}
                 </Button>
                 <Button variant="outline" className="w-full border-slate-600">
                   <RefreshCw className="mr-2 h-4 w-4" />
@@ -228,23 +239,33 @@ export default function CommanderView() {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-400">API Server</span>
-                  <Badge variant="default" className="bg-green-600">Online</Badge>
+                  <Badge variant="default" className="bg-green-600">
+                    Online
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-400">Database</span>
-                  <Badge variant="default" className="bg-green-600">Healthy</Badge>
+                  <Badge variant="default" className="bg-green-600">
+                    Healthy
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-400">IPFS Gateway</span>
-                  <Badge variant="default" className="bg-green-600">Connected</Badge>
+                  <Badge variant="default" className="bg-green-600">
+                    Connected
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-400">DocuSign API</span>
-                  <Badge variant="default" className="bg-green-600">Active</Badge>
+                  <Badge variant="default" className="bg-green-600">
+                    Active
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-400">Blockchain RPC</span>
-                  <Badge variant="default" className="bg-green-600">Synced</Badge>
+                  <Badge variant="default" className="bg-green-600">
+                    Synced
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-400">Memory Usage</span>
@@ -424,19 +445,29 @@ export default function CommanderView() {
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-3 gap-4">
-                <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white"
+                >
                   Pause Protocol
                 </Button>
-                <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white"
+                >
                   Emergency Withdraw
                 </Button>
-                <Button variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white"
+                >
                   Lock All Capsules
                 </Button>
               </div>
               <p className="text-xs text-red-300 mt-4">
-                ⚠️ Emergency controls should only be used in critical situations. 
-                All actions are logged and require multi-signature approval.
+                ⚠️ Emergency controls should only be used in critical
+                situations. All actions are logged and require multi-signature
+                approval.
               </p>
             </CardContent>
           </Card>

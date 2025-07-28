@@ -7,12 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  Terminal, 
-  Shield, 
-  Settings, 
-  Users, 
-  FileText, 
+import {
+  Terminal,
+  Shield,
+  Settings,
+  Users,
+  FileText,
   AlertTriangle,
   CheckCircle,
   Clock,
@@ -20,7 +20,7 @@ import {
   Activity,
   Database,
   Network,
-  Eye
+  Eye,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -50,12 +50,12 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
   const [commandHistory, setCommandHistory] = useState<AdminCommand[]>([]);
   const [systemHealth, setSystemHealth] = useState<SystemHealth>({
     api: "healthy",
-    database: "healthy", 
+    database: "healthy",
     blockchain: "warning",
-    storage: "healthy"
+    storage: "healthy",
   });
   const [isExecuting, setIsExecuting] = useState(false);
-  
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -66,22 +66,22 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
         command: "system:health-check",
         result: "All systems operational. GTT balance: 247,500 tokens",
         status: "success",
-        timestamp: new Date(Date.now() - 300000)
+        timestamp: new Date(Date.now() - 300000),
       },
       {
-        id: "2", 
+        id: "2",
         command: "capsule:verify --id=caps_001",
         result: "Capsule verified successfully. Yield assigned: 150 GTT",
         status: "success",
-        timestamp: new Date(Date.now() - 180000)
+        timestamp: new Date(Date.now() - 180000),
       },
       {
         id: "3",
         command: "contracts:deploy --network=mumbai",
         result: "Warning: Insufficient MATIC balance for deployment",
         status: "error",
-        timestamp: new Date(Date.now() - 120000)
-      }
+        timestamp: new Date(Date.now() - 120000),
+      },
     ]);
   }, []);
 
@@ -93,16 +93,16 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
       command: commandInput,
       result: "",
       status: "pending",
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
-    setCommandHistory(prev => [newCommand, ...prev]);
+    setCommandHistory((prev) => [newCommand, ...prev]);
     setIsExecuting(true);
 
     try {
       // Simulate command execution
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       let result = "";
       let status: "success" | "error" = "success";
 
@@ -120,28 +120,25 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
       }
 
       // Update command result
-      setCommandHistory(prev => 
-        prev.map(cmd => 
-          cmd.id === newCommand.id 
-            ? { ...cmd, result, status }
-            : cmd
+      setCommandHistory((prev) =>
+        prev.map((cmd) =>
+          cmd.id === newCommand.id ? { ...cmd, result, status } : cmd
         )
       );
 
       toast({
         title: "Command Executed",
         description: result,
-        variant: status === "success" ? "default" : "destructive"
+        variant: status === "success" ? "default" : "destructive",
       });
-
     } catch (error) {
-      setCommandHistory(prev => 
-        prev.map(cmd => 
-          cmd.id === newCommand.id 
-            ? { 
-                ...cmd, 
-                result: "Command execution failed", 
-                status: "error" as const 
+      setCommandHistory((prev) =>
+        prev.map((cmd) =>
+          cmd.id === newCommand.id
+            ? {
+                ...cmd,
+                result: "Command execution failed",
+                status: "error" as const,
               }
             : cmd
         )
@@ -184,7 +181,7 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
     { label: "Sync Blockchain", command: "blockchain:sync" },
     { label: "Backup Database", command: "database:backup" },
     { label: "Clear Cache", command: "cache:clear" },
-    { label: "Verify Capsules", command: "capsule:verify-batch" }
+    { label: "Verify Capsules", command: "capsule:verify-batch" },
   ];
 
   return (
@@ -202,8 +199,8 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
           </h2>
         </div>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Master admin controls for GUARDIANCHAIN protocol management, 
-          system monitoring, and emergency operations.
+          Master admin controls for GUARDIANCHAIN protocol management, system
+          monitoring, and emergency operations.
         </p>
       </motion.div>
 
@@ -276,7 +273,9 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
               <CardContent className="p-4 text-center">
                 <FileText className="h-8 w-8 text-green-500 mx-auto mb-2" />
                 <div className="text-2xl font-bold">3,892</div>
-                <div className="text-sm text-muted-foreground">Capsules Created</div>
+                <div className="text-sm text-muted-foreground">
+                  Capsules Created
+                </div>
               </CardContent>
             </Card>
             <Card>
@@ -311,7 +310,7 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
                   }}
                   className="font-mono"
                 />
-                <Button 
+                <Button
                   onClick={executeCommand}
                   disabled={isExecuting || !commandInput.trim()}
                 >
@@ -321,7 +320,9 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
 
               {/* Quick Commands */}
               <div className="space-y-2">
-                <div className="text-sm text-muted-foreground">Quick Commands:</div>
+                <div className="text-sm text-muted-foreground">
+                  Quick Commands:
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {quickCommands.map((cmd) => (
                     <Button
@@ -360,8 +361,11 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
                         <div className="flex items-center space-x-2">
                           <Badge
                             variant={
-                              cmd.status === "success" ? "default" :
-                              cmd.status === "error" ? "destructive" : "secondary"
+                              cmd.status === "success"
+                                ? "default"
+                                : cmd.status === "error"
+                                ? "destructive"
+                                : "secondary"
                             }
                           >
                             {cmd.status}

@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import TreasuryDashboard from '@/components/TreasuryDashboard';
-import AIAccountingPanel from '@/components/AIAccountingPanel';
+import React, { useState, useEffect } from "react";
+import TreasuryDashboard from "@/components/TreasuryDashboard";
+import AIAccountingPanel from "@/components/AIAccountingPanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  FileText, 
-  Download, 
+import {
+  FileText,
+  Download,
   Calendar,
   TrendingUp,
   Activity,
   Clock,
   CheckCircle,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 import { BRAND_NAME } from "@/lib/constants";
 
@@ -35,42 +35,46 @@ export default function ReportingDashboard() {
   const fetchReports = async () => {
     try {
       setLoading(true);
-      
+
       // Mock data for development - replace with real API calls
       const mockReports: DailyReport[] = [
         {
-          date: new Date().toISOString().split('T')[0],
+          date: new Date().toISOString().split("T")[0],
           gttMinted: 3420,
           yieldDistributed: 1247,
           activeUsers: 892,
           revenue: 15600,
           complianceScore: 98.5,
-          systemUptime: 99.8
+          systemUptime: 99.8,
         },
         {
-          date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           gttMinted: 3280,
           yieldDistributed: 1189,
           activeUsers: 867,
           revenue: 14200,
           complianceScore: 99.2,
-          systemUptime: 100.0
+          systemUptime: 100.0,
         },
         {
-          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           gttMinted: 3156,
           yieldDistributed: 1134,
           activeUsers: 823,
           revenue: 13800,
           complianceScore: 97.8,
-          systemUptime: 99.9
-        }
+          systemUptime: 99.9,
+        },
       ];
 
       setReports(mockReports);
       setLastGenerated(new Date());
     } catch (error) {
-      console.error('Error fetching reports:', error);
+      console.error("Error fetching reports:", error);
     } finally {
       setLoading(false);
     }
@@ -79,25 +83,25 @@ export default function ReportingDashboard() {
   const generateNightlyReport = async () => {
     try {
       setGenerating(true);
-      
+
       // Simulate AI report generation
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       // Add new report to the list
       const newReport: DailyReport = {
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString().split("T")[0],
         gttMinted: Math.floor(Math.random() * 1000) + 3000,
         yieldDistributed: Math.floor(Math.random() * 500) + 1000,
         activeUsers: Math.floor(Math.random() * 200) + 800,
         revenue: Math.floor(Math.random() * 5000) + 12000,
         complianceScore: Math.random() * 5 + 95,
-        systemUptime: Math.random() * 1 + 99
+        systemUptime: Math.random() * 1 + 99,
       };
 
-      setReports(prev => [newReport, ...prev.slice(0, 6)]);
+      setReports((prev) => [newReport, ...prev.slice(0, 6)]);
       setLastGenerated(new Date());
     } catch (error) {
-      console.error('Error generating report:', error);
+      console.error("Error generating report:", error);
     } finally {
       setGenerating(false);
     }
@@ -106,10 +110,10 @@ export default function ReportingDashboard() {
   const exportReport = (report: DailyReport) => {
     const csvContent = `Date,GTT Minted,Yield Distributed,Active Users,Revenue USD,Compliance Score,System Uptime
 ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUsers},${report.revenue},${report.complianceScore},${report.systemUptime}`;
-    
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `guardianchain-report-${report.date}.csv`;
     a.click();
@@ -131,7 +135,8 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                 📊 {BRAND_NAME} Reporting Dashboard
               </h1>
               <p className="text-xl text-slate-300">
-                Automated daily operations reports with AI-powered insights and analytics
+                Automated daily operations reports with AI-powered insights and
+                analytics
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -158,12 +163,14 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                 variant="outline"
                 className="border-slate-600 text-slate-300 hover:text-white"
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                />
                 Refresh
               </Button>
             </div>
           </div>
-          
+
           {lastGenerated && (
             <div className="mt-4">
               <Badge className="bg-green-600 text-white">
@@ -177,10 +184,9 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          
           {/* Live Treasury Dashboard */}
           <TreasuryDashboard />
-          
+
           {/* AI Financial Intelligence */}
           <AIAccountingPanel />
 
@@ -195,8 +201,11 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
             <CardContent>
               {loading ? (
                 <div className="space-y-4">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="animate-pulse bg-slate-700/30 rounded-lg p-4">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse bg-slate-700/30 rounded-lg p-4"
+                    >
                       <div className="grid grid-cols-6 gap-4">
                         <div className="h-4 bg-slate-600 rounded"></div>
                         <div className="h-4 bg-slate-600 rounded"></div>
@@ -223,7 +232,10 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
 
                   {/* Reports List */}
                   {reports.map((report, index) => (
-                    <div key={report.date} className="grid grid-cols-7 gap-4 items-center py-3 border-b border-slate-800 hover:bg-slate-700/20">
+                    <div
+                      key={report.date}
+                      className="grid grid-cols-7 gap-4 items-center py-3 border-b border-slate-800 hover:bg-slate-700/20"
+                    >
                       <div className="text-white font-medium">
                         {new Date(report.date).toLocaleDateString()}
                       </div>
@@ -240,11 +252,15 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                         ${report.revenue.toLocaleString()}
                       </div>
                       <div>
-                        <Badge className={`${
-                          report.complianceScore >= 99 ? 'bg-green-600' :
-                          report.complianceScore >= 95 ? 'bg-yellow-600' :
-                          'bg-red-600'
-                        } text-white`}>
+                        <Badge
+                          className={`${
+                            report.complianceScore >= 99
+                              ? "bg-green-600"
+                              : report.complianceScore >= 95
+                              ? "bg-yellow-600"
+                              : "bg-red-600"
+                          } text-white`}
+                        >
                           {report.complianceScore.toFixed(1)}%
                         </Badge>
                       </div>
@@ -282,7 +298,8 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                     Daily Operations
                   </h4>
                   <p className="text-slate-300 text-sm mb-3">
-                    Generated every night at 03:00 UTC with comprehensive platform metrics
+                    Generated every night at 03:00 UTC with comprehensive
+                    platform metrics
                   </p>
                   <Badge className="bg-green-600 text-white">Active</Badge>
                 </div>
@@ -293,7 +310,8 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                     Weekly Analytics
                   </h4>
                   <p className="text-slate-300 text-sm mb-3">
-                    Deep-dive analysis every Sunday with growth insights and recommendations
+                    Deep-dive analysis every Sunday with growth insights and
+                    recommendations
                   </p>
                   <Badge className="bg-blue-600 text-white">Scheduled</Badge>
                 </div>
@@ -304,7 +322,8 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                     Compliance Audits
                   </h4>
                   <p className="text-slate-300 text-sm mb-3">
-                    Monthly compliance reports with regulatory assessment and risk analysis
+                    Monthly compliance reports with regulatory assessment and
+                    risk analysis
                   </p>
                   <Badge className="bg-purple-600 text-white">Monthly</Badge>
                 </div>
@@ -312,10 +331,12 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
 
               <div className="mt-6 p-4 bg-blue-900/20 border border-blue-700 rounded-lg">
                 <p className="text-blue-300 text-sm">
-                  <strong>Next scheduled report:</strong> Tonight at 03:00 UTC (in {Math.floor((24 - new Date().getHours() + 3) % 24)} hours)
+                  <strong>Next scheduled report:</strong> Tonight at 03:00 UTC
+                  (in {Math.floor((24 - new Date().getHours() + 3) % 24)} hours)
                 </p>
                 <p className="text-blue-300 text-sm mt-1">
-                  All reports are automatically exported to CSV and sent via email to administrators.
+                  All reports are automatically exported to CSV and sent via
+                  email to administrators.
                 </p>
               </div>
             </CardContent>

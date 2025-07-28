@@ -5,13 +5,13 @@ import { storage } from "../storage";
 export async function getUserProfile(req: Request, res: Response) {
   try {
     const { address } = req.params;
-    
+
     if (!address) {
       return res.status(400).json({ error: "Wallet address required" });
     }
 
     const user = await storage.getUserByWallet(address);
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -32,14 +32,14 @@ export async function getUserProfile(req: Request, res: Response) {
         achievements: user.achievements,
         socialLinks: user.socialLinks,
         isVerified: user.isVerified,
-        createdAt: user.createdAt
-      }
+        createdAt: user.createdAt,
+      },
     });
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to fetch user profile",
-      details: error instanceof Error ? error.message : "Unknown error"
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -48,29 +48,30 @@ export async function getUserProfile(req: Request, res: Response) {
 export async function getUserAchievements(req: Request, res: Response) {
   try {
     const { address } = req.params;
-    
+
     const user = await storage.getUserByWallet(address);
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
     // Return achievements with enhanced formatting
     const achievements = (user.achievements as any[]) || [];
-    const formattedAchievements = achievements.map(achievement => ({
+    const formattedAchievements = achievements.map((achievement) => ({
       id: achievement.id,
       name: achievement.title || achievement.name,
       title: achievement.title,
       description: achievement.description,
-      image: achievement.metadata?.imageUrl || `/api/badges/${achievement.id}.svg`,
-      rarity: achievement.rarity || 'common',
+      image:
+        achievement.metadata?.imageUrl || `/api/badges/${achievement.id}.svg`,
+      rarity: achievement.rarity || "common",
       unlockedAt: achievement.unlockedAt || achievement.createdAt,
-      metadata: achievement.metadata
+      metadata: achievement.metadata,
     }));
 
     res.json({
       achievements: formattedAchievements,
-      count: formattedAchievements.length
+      count: formattedAchievements.length,
     });
   } catch (error) {
     console.error("Error fetching user achievements:", error);
@@ -82,16 +83,16 @@ export async function getUserAchievements(req: Request, res: Response) {
 export async function getUserCapsules(req: Request, res: Response) {
   try {
     const { address } = req.params;
-    
+
     const user = await storage.getUserByWallet(address);
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const capsules = await storage.getCapsulesByCreator(user.id);
-    
-    const formattedCapsules = capsules.map(capsule => ({
+
+    const formattedCapsules = capsules.map((capsule) => ({
       id: capsule.id,
       title: capsule.title,
       type: capsule.type,
@@ -104,13 +105,13 @@ export async function getUserCapsules(req: Request, res: Response) {
       stats: {
         views: capsule.viewCount,
         shares: capsule.shareCount,
-        votes: capsule.voteCount
-      }
+        votes: capsule.voteCount,
+      },
     }));
 
     res.json({
       capsules: formattedCapsules,
-      count: formattedCapsules.length
+      count: formattedCapsules.length,
     });
   } catch (error) {
     console.error("Error fetching user capsules:", error);
@@ -122,18 +123,18 @@ export async function getUserCapsules(req: Request, res: Response) {
 export async function getUserTransactions(req: Request, res: Response) {
   try {
     const { address } = req.params;
-    
+
     const user = await storage.getUserByWallet(address);
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const transactions = await storage.getTransactionsByUser(user.id);
-    
+
     res.json({
       transactions: transactions || [],
-      count: transactions?.length || 0
+      count: transactions?.length || 0,
     });
   } catch (error) {
     console.error("Error fetching user transactions:", error);
@@ -145,9 +146,9 @@ export async function getUserTransactions(req: Request, res: Response) {
 export async function getUserXPHistory(req: Request, res: Response) {
   try {
     const { address } = req.params;
-    
+
     const user = await storage.getUserByWallet(address);
-    
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -156,31 +157,31 @@ export async function getUserXPHistory(req: Request, res: Response) {
     const currentXP = user.xpPoints || 0;
     const days = 30;
     const xpHistory = [];
-    
+
     for (let i = days; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
-      
+
       // Simulate gradual XP growth
       const dayProgress = (days - i) / days;
       const xp = Math.floor(currentXP * dayProgress);
       const reputation = Math.floor(xp * 0.5);
       const capsules = Math.floor(xp / 100);
-      
+
       xpHistory.push({
-        date: date.toISOString().split('T')[0],
-        day: i === 0 ? 'Today' : `Day ${days - i}`,
+        date: date.toISOString().split("T")[0],
+        day: i === 0 ? "Today" : `Day ${days - i}`,
         xp,
         XP: xp, // For compatibility
         reputation,
-        capsules
+        capsules,
       });
     }
 
     res.json({
       xpHistory,
       currentXP,
-      currentLevel: Math.floor(currentXP / 1000) + 1
+      currentLevel: Math.floor(currentXP / 1000) + 1,
     });
   } catch (error) {
     console.error("Error fetching user XP history:", error);

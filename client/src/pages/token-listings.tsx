@@ -1,11 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Search, ExternalLink, Copy, TrendingUp, Eye, Heart } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { GTT_CONTRACT_ADDRESS } from '@/lib/web3GTTService';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Search,
+  ExternalLink,
+  Copy,
+  TrendingUp,
+  Eye,
+  Heart,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { GTT_CONTRACT_ADDRESS } from "@/lib/web3GTTService";
 
 interface TokenListing {
   id: string;
@@ -13,7 +26,7 @@ interface TokenListing {
   description: string;
   price: number;
   priceUSD: number;
-  status: 'active' | 'sold' | 'pending';
+  status: "active" | "sold" | "pending";
   capsuleId: string;
   createdAt: string;
   views: number;
@@ -25,7 +38,7 @@ interface TokenListing {
 
 export default function TokenListings() {
   const [listings, setListings] = useState<TokenListing[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -43,10 +56,13 @@ export default function TokenListings() {
     });
   };
 
-  const filteredListings = listings.filter(listing =>
-    listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredListings = listings.filter(
+    (listing) =>
+      listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.tags.some((tag) =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      )
   );
 
   return (
@@ -58,9 +74,10 @@ export default function TokenListings() {
             GTT Token Listings
           </h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-            Authentic GTT token marketplace for verified truth capsules and digital assets
+            Authentic GTT token marketplace for verified truth capsules and
+            digital assets
           </p>
-          
+
           {/* Contract Info */}
           <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4 max-w-2xl mx-auto">
             <div className="flex items-center justify-between">
@@ -85,7 +102,7 @@ export default function TokenListings() {
                   asChild
                   className="border-slate-600 hover:bg-slate-700"
                 >
-                  <a 
+                  <a
                     href={`https://etherscan.io/token/${GTT_CONTRACT_ADDRESS}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -125,27 +142,41 @@ export default function TokenListings() {
                 No Listings Available
               </h3>
               <p className="text-slate-400 mb-4">
-                Real GTT token listings will appear here once truth capsules are created and verified.
+                Real GTT token listings will appear here once truth capsules are
+                created and verified.
               </p>
               <p className="text-sm text-slate-500">
-                This marketplace only displays authentic, blockchain-verified listings.
+                This marketplace only displays authentic, blockchain-verified
+                listings.
               </p>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredListings.map((listing) => (
-              <Card key={listing.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all">
+              <Card
+                key={listing.id}
+                className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all"
+              >
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <Badge 
-                      variant={listing.status === 'active' ? 'default' : 'secondary'}
-                      className={listing.status === 'active' ? 'bg-green-600' : 'bg-slate-600'}
+                    <Badge
+                      variant={
+                        listing.status === "active" ? "default" : "secondary"
+                      }
+                      className={
+                        listing.status === "active"
+                          ? "bg-green-600"
+                          : "bg-slate-600"
+                      }
                     >
                       {listing.status}
                     </Badge>
                     {listing.verified && (
-                      <Badge variant="outline" className="border-purple-500 text-purple-400">
+                      <Badge
+                        variant="outline"
+                        className="border-purple-500 text-purple-400"
+                      >
                         Verified
                       </Badge>
                     )}
@@ -184,14 +215,21 @@ export default function TokenListings() {
 
                     <div className="flex flex-wrap gap-1">
                       {listing.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {tag}
                         </Badge>
                       ))}
                     </div>
 
-                    <Button className="w-full" disabled={listing.status !== 'active'}>
-                      {listing.status === 'active' ? 'View Details' : 'Sold'}
+                    <Button
+                      className="w-full"
+                      disabled={listing.status !== "active"}
+                    >
+                      {listing.status === "active" ? "View Details" : "Sold"}
                     </Button>
                   </div>
                 </CardContent>
@@ -203,7 +241,9 @@ export default function TokenListings() {
         {/* Info Footer */}
         <div className="text-center py-8">
           <p className="text-slate-500 text-sm">
-            All listings are verified on-chain using GTT token contract {GTT_CONTRACT_ADDRESS.slice(0, 6)}...{GTT_CONTRACT_ADDRESS.slice(-4)}
+            All listings are verified on-chain using GTT token contract{" "}
+            {GTT_CONTRACT_ADDRESS.slice(0, 6)}...
+            {GTT_CONTRACT_ADDRESS.slice(-4)}
           </p>
         </div>
       </div>

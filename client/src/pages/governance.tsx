@@ -1,20 +1,25 @@
-import { useState } from 'react';
-import { useAccount, useReadContract, useWriteContract, useChainId } from 'wagmi';
-import { formatEther, parseEther } from 'viem';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { 
-  TRUTH_VAULT_ABI, 
-  GTT_TOKEN_ABI, 
+import { useState } from "react";
+import {
+  useAccount,
+  useReadContract,
+  useWriteContract,
+  useChainId,
+} from "wagmi";
+import { formatEther, parseEther } from "viem";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import {
+  TRUTH_VAULT_ABI,
+  GTT_TOKEN_ABI,
   getContractAddress,
   getNetworkName,
-  getExplorerUrl
-} from '@/lib/contracts';
+  getExplorerUrl,
+} from "@/lib/contracts";
 import {
   Vote,
   Users,
@@ -25,8 +30,8 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  ExternalLink
-} from 'lucide-react';
+  ExternalLink,
+} from "lucide-react";
 
 interface Proposal {
   title: string;
@@ -44,23 +49,25 @@ export default function Governance() {
   const chainId = useChainId();
   const { toast } = useToast();
   const [newProposal, setNewProposal] = useState({
-    title: '',
-    description: '',
-    capsuleId: ''
+    title: "",
+    description: "",
+    capsuleId: "",
   });
 
   // Get contract addresses
   let vaultAddress, tokenAddress;
   try {
-    vaultAddress = getContractAddress(chainId, 'TRUTH_VAULT');
-    tokenAddress = getContractAddress(chainId, 'GTT_TOKEN');
+    vaultAddress = getContractAddress(chainId, "TRUTH_VAULT");
+    tokenAddress = getContractAddress(chainId, "GTT_TOKEN");
   } catch (error) {
     return (
       <div className="min-h-screen bg-slate-900 text-white p-6">
         <div className="max-w-4xl mx-auto">
           <div className="bg-yellow-950 border border-yellow-800 rounded-lg p-6 text-center">
             <Shield className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Network Not Supported</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              Network Not Supported
+            </h2>
             <p className="text-yellow-200">
               Please connect to a supported network to access DAO governance.
             </p>
@@ -74,21 +81,21 @@ export default function Governance() {
   const { data: gttBalance } = useReadContract({
     address: tokenAddress as `0x${string}`,
     abi: GTT_TOKEN_ABI,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address as `0x${string}`],
     query: {
-      enabled: !!tokenAddress && !!address && isConnected
-    }
+      enabled: !!tokenAddress && !!address && isConnected,
+    },
   });
 
   // Read proposal count
   const { data: proposalCount } = useReadContract({
     address: vaultAddress as `0x${string}`,
     abi: TRUTH_VAULT_ABI,
-    functionName: 'proposalCount',
+    functionName: "proposalCount",
     query: {
-      enabled: !!vaultAddress && isConnected
-    }
+      enabled: !!vaultAddress && isConnected,
+    },
   });
 
   // Write contract hooks
@@ -108,17 +115,17 @@ export default function Governance() {
       writeContract({
         address: vaultAddress as `0x${string}`,
         abi: TRUTH_VAULT_ABI,
-        functionName: 'createProposal',
+        functionName: "createProposal",
         args: [
           newProposal.title,
           newProposal.description,
-          BigInt(newProposal.capsuleId || 0)
+          BigInt(newProposal.capsuleId || 0),
         ],
       });
 
       // Reset form
-      setNewProposal({ title: '', description: '', capsuleId: '' });
-      
+      setNewProposal({ title: "", description: "", capsuleId: "" });
+
       toast({
         title: "Proposal Created",
         description: "Your governance proposal has been submitted",
@@ -139,13 +146,13 @@ export default function Governance() {
       writeContract({
         address: vaultAddress as `0x${string}`,
         abi: TRUTH_VAULT_ABI,
-        functionName: 'vote',
+        functionName: "vote",
         args: [BigInt(proposalId), support],
       });
 
       toast({
         title: "Vote Cast",
-        description: `You voted ${support ? 'for' : 'against'} the proposal`,
+        description: `You voted ${support ? "for" : "against"} the proposal`,
       });
     } catch (error: any) {
       toast({
@@ -164,7 +171,8 @@ export default function Governance() {
             <Shield className="h-12 w-12 text-blue-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Connect Your Wallet</h2>
             <p className="text-slate-300">
-              Connect your wallet to participate in DAO governance and view your GTT balance.
+              Connect your wallet to participate in DAO governance and view your
+              GTT balance.
             </p>
           </div>
         </div>
@@ -181,7 +189,8 @@ export default function Governance() {
             TruthDAO Governance
           </h1>
           <p className="text-slate-400 text-lg">
-            Shape the future of truth verification through decentralized governance
+            Shape the future of truth verification through decentralized
+            governance
           </p>
         </div>
 
@@ -195,7 +204,7 @@ export default function Governance() {
                 </div>
                 <div>
                   <div className="text-lg font-semibold">
-                    {gttBalance ? formatEther(gttBalance) : '0'} GTT
+                    {gttBalance ? formatEther(gttBalance) : "0"} GTT
                   </div>
                   <div className="text-sm text-slate-400">Your Balance</div>
                 </div>
@@ -211,7 +220,7 @@ export default function Governance() {
                 </div>
                 <div>
                   <div className="text-lg font-semibold">
-                    {proposalCount ? proposalCount.toString() : '0'}
+                    {proposalCount ? proposalCount.toString() : "0"}
                   </div>
                   <div className="text-sm text-slate-400">Total Proposals</div>
                 </div>
@@ -262,7 +271,9 @@ export default function Governance() {
               <Input
                 id="title"
                 value={newProposal.title}
-                onChange={(e) => setNewProposal(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setNewProposal((prev) => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="Enter proposal title..."
                 className="bg-slate-700 border-slate-600"
               />
@@ -272,7 +283,12 @@ export default function Governance() {
               <Textarea
                 id="description"
                 value={newProposal.description}
-                onChange={(e) => setNewProposal(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setNewProposal((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Describe your proposal in detail..."
                 className="bg-slate-700 border-slate-600 min-h-24"
               />
@@ -283,14 +299,21 @@ export default function Governance() {
                 id="capsuleId"
                 type="number"
                 value={newProposal.capsuleId}
-                onChange={(e) => setNewProposal(prev => ({ ...prev, capsuleId: e.target.value }))}
+                onChange={(e) =>
+                  setNewProposal((prev) => ({
+                    ...prev,
+                    capsuleId: e.target.value,
+                  }))
+                }
                 placeholder="Enter capsule ID if relevant..."
                 className="bg-slate-700 border-slate-600"
               />
             </div>
             <Button
               onClick={handleCreateProposal}
-              disabled={isPending || !newProposal.title || !newProposal.description}
+              disabled={
+                isPending || !newProposal.title || !newProposal.description
+              }
               className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
             >
               {isPending ? "Creating..." : "Create Proposal"}
@@ -310,7 +333,9 @@ export default function Governance() {
             <div className="text-center py-8 text-slate-400">
               <Vote className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No active proposals at the moment.</p>
-              <p className="text-sm mt-2">Create the first proposal to get started!</p>
+              <p className="text-sm mt-2">
+                Create the first proposal to get started!
+              </p>
             </div>
           </CardContent>
         </Card>

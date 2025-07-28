@@ -14,7 +14,9 @@ export interface WalletConnection {
 }
 
 export const isMetaMaskInstalled = (): boolean => {
-  return typeof window !== "undefined" && typeof window.ethereum !== "undefined";
+  return (
+    typeof window !== "undefined" && typeof window.ethereum !== "undefined"
+  );
 };
 
 export const connectWallet = async (): Promise<WalletConnection> => {
@@ -39,8 +41,10 @@ export const connectWallet = async (): Promise<WalletConnection> => {
 
     // Check if we're on the correct network
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
-    const currentNetwork = SUPPORTED_NETWORKS.find((network: any) => network.chainId === chainId);
-    
+    const currentNetwork = SUPPORTED_NETWORKS.find(
+      (network: any) => network.chainId === chainId
+    );
+
     if (!currentNetwork) {
       // Try to switch to the default network
       try {
@@ -82,7 +86,7 @@ export const connectWallet = async (): Promise<WalletConnection> => {
         error: "Connection rejected by user.",
       };
     }
-    
+
     return {
       success: false,
       error: error.message || "Failed to connect wallet.",
@@ -137,7 +141,9 @@ export const getNetwork = async (): Promise<string> => {
 
   try {
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
-    const network = SUPPORTED_NETWORKS.find((net: any) => net.chainId === chainId);
+    const network = SUPPORTED_NETWORKS.find(
+      (net: any) => net.chainId === chainId
+    );
     return network?.chainName || "Unknown Network";
   } catch (error) {
     console.error("Error getting network:", error);
@@ -159,7 +165,9 @@ export const switchNetwork = async (chainId: string): Promise<boolean> => {
   } catch (error: any) {
     if (error.code === 4902) {
       // Network not added, try to add it
-      const network = SUPPORTED_NETWORKS.find((net: any) => net.chainId === chainId);
+      const network = SUPPORTED_NETWORKS.find(
+        (net: any) => net.chainId === chainId
+      );
       if (network) {
         try {
           await window.ethereum.request({

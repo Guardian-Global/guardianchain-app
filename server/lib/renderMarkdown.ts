@@ -9,7 +9,7 @@ export function renderMarkdown(markdown: string): string {
 
   // Add GUARDIANCHAIN styling to the rendered HTML
   const html = marked.parse(markdown);
-  
+
   // Wrap in GUARDIANCHAIN email template
   return `
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1e293b 0%, #4c1d95 50%, #1e293b 100%); color: #f1f5f9; padding: 20px; border-radius: 12px;">

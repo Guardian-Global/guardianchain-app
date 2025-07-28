@@ -152,7 +152,12 @@ export interface LeaderboardEntry {
 export interface ActivityLog {
   id: string;
   userId: number;
-  type: "capsule_created" | "capsule_verified" | "verification_submitted" | "reward_earned" | "achievement_unlocked";
+  type:
+    | "capsule_created"
+    | "capsule_verified"
+    | "verification_submitted"
+    | "reward_earned"
+    | "achievement_unlocked";
   description: string;
   metadata?: Record<string, any>;
   timestamp: Date;

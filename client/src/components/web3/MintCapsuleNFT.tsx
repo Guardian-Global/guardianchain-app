@@ -12,7 +12,7 @@ import { Sparkles, Loader2, Hash, User } from "lucide-react";
 export default function MintCapsuleNFT() {
   const { address, chainId } = useAccount();
   const { toast } = useToast();
-  
+
   const [capsuleHash, setCapsuleHash] = useState("");
   const [recipient, setRecipient] = useState(address || "");
   const [griefScore, setGriefScore] = useState("50");
@@ -24,11 +24,7 @@ export default function MintCapsuleNFT() {
     address: nftAddress,
     abi: VERITAS_NFT_ABI,
     functionName: "mint",
-    args: [
-      recipient || address, 
-      capsuleHash, 
-      parseInt(griefScore) || 50
-    ],
+    args: [recipient || address, capsuleHash, parseInt(griefScore) || 50],
     onSuccess: (data) => {
       toast({
         title: "Capsule NFT Minted!",
@@ -56,7 +52,10 @@ export default function MintCapsuleNFT() {
     <Card className="bg-slate-800/50 border-slate-700">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Sparkles className="w-5 h-5" style={{ color: BRAND_COLORS.GUARDIAN }} />
+          <Sparkles
+            className="w-5 h-5"
+            style={{ color: BRAND_COLORS.GUARDIAN }}
+          />
           Mint Capsule NFT Certificate
         </CardTitle>
         <p className="text-slate-400 text-sm">
@@ -65,7 +64,10 @@ export default function MintCapsuleNFT() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="capsuleHash" className="text-white flex items-center gap-2">
+          <Label
+            htmlFor="capsuleHash"
+            className="text-white flex items-center gap-2"
+          >
             <Hash className="w-4 h-4" />
             Capsule Hash
           </Label>
@@ -82,7 +84,10 @@ export default function MintCapsuleNFT() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="recipient" className="text-white flex items-center gap-2">
+          <Label
+            htmlFor="recipient"
+            className="text-white flex items-center gap-2"
+          >
             <User className="w-4 h-4" />
             Recipient Address
           </Label>
@@ -96,7 +101,9 @@ export default function MintCapsuleNFT() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="griefScore" className="text-white">Grief Score (0-100)</Label>
+          <Label htmlFor="griefScore" className="text-white">
+            Grief Score (0-100)
+          </Label>
           <Input
             id="griefScore"
             type="number"

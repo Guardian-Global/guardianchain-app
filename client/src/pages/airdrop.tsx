@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Copy, Gift, Users, Zap, Check, ExternalLink } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { apiRequest, queryClient } from '@/lib/queryClient';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Copy, Gift, Users, Zap, Check, ExternalLink } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface AirdropStatus {
   claimed: boolean;
@@ -28,69 +34,71 @@ interface ReferralData {
     address: string;
     joinDate: string;
     rewardEarned: string;
-    status: 'pending' | 'completed';
+    status: "pending" | "completed";
   }>;
 }
 
 export default function AirdropPage() {
   const { toast } = useToast();
-  const [referralCode, setReferralCode] = useState('');
-  const [walletAddress, setWalletAddress] = useState('');
+  const [referralCode, setReferralCode] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
 
   // Fetch airdrop status
-  const { data: airdropStatus, isLoading: airdropLoading } = useQuery<AirdropStatus>({
-    queryKey: ['/api/airdrop/status'],
-    queryFn: async () => {
-      // Mock data for demo - replace with actual API call
-      return {
-        claimed: false,
-        amount: '100',
-        eligible: true,
-        eligibilityReason: 'Early platform user'
-      };
-    }
-  });
+  const { data: airdropStatus, isLoading: airdropLoading } =
+    useQuery<AirdropStatus>({
+      queryKey: ["/api/airdrop/status"],
+      queryFn: async () => {
+        // Mock data for demo - replace with actual API call
+        return {
+          claimed: false,
+          amount: "100",
+          eligible: true,
+          eligibilityReason: "Early platform user",
+        };
+      },
+    });
 
   // Fetch referral data
-  const { data: referralData, isLoading: referralLoading } = useQuery<ReferralData>({
-    queryKey: ['/api/referral/data'],
-    queryFn: async () => {
-      // Mock data for demo - replace with actual API call
-      return {
-        code: 'GUARD1234',
-        totalReferrals: 8,
-        totalRewards: '400',
-        pendingRewards: '150',
-        referralLink: 'https://guardianchain.app/signup?ref=GUARD1234',
-        recentReferrals: [
-          {
-            address: '0x1234...5678',
-            joinDate: '2025-01-15',
-            rewardEarned: '50',
-            status: 'completed'
-          },
-          {
-            address: '0x9876...4321',
-            joinDate: '2025-01-20',
-            rewardEarned: '50',
-            status: 'pending'
-          }
-        ]
-      };
-    }
-  });
+  const { data: referralData, isLoading: referralLoading } =
+    useQuery<ReferralData>({
+      queryKey: ["/api/referral/data"],
+      queryFn: async () => {
+        // Mock data for demo - replace with actual API call
+        return {
+          code: "GUARD1234",
+          totalReferrals: 8,
+          totalRewards: "400",
+          pendingRewards: "150",
+          referralLink: "https://guardianchain.app/signup?ref=GUARD1234",
+          recentReferrals: [
+            {
+              address: "0x1234...5678",
+              joinDate: "2025-01-15",
+              rewardEarned: "50",
+              status: "completed",
+            },
+            {
+              address: "0x9876...4321",
+              joinDate: "2025-01-20",
+              rewardEarned: "50",
+              status: "pending",
+            },
+          ],
+        };
+      },
+    });
 
   // Claim airdrop mutation
   const claimAirdropMutation = useMutation({
     mutationFn: async (address: string) => {
-      return apiRequest('POST', '/api/airdrop/claim', { address });
+      return apiRequest("POST", "/api/airdrop/claim", { address });
     },
     onSuccess: () => {
       toast({
         title: "Airdrop Claimed!",
         description: "Successfully claimed 100 GTT tokens",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/airdrop/status'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/airdrop/status"] });
     },
     onError: (error: any) => {
       toast({
@@ -104,14 +112,14 @@ export default function AirdropPage() {
   // Generate referral code mutation
   const generateReferralMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest('POST', '/api/referral/generate', {});
+      return apiRequest("POST", "/api/referral/generate", {});
     },
     onSuccess: () => {
       toast({
         title: "Referral Code Generated",
         description: "Your unique referral code has been created",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/referral/data'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/referral/data"] });
     },
     onError: (error: any) => {
       toast({
@@ -147,8 +155,10 @@ export default function AirdropPage() {
   const shareOnTwitter = () => {
     if (referralData?.referralLink) {
       const tweetText = `Join me on GUARDIANCHAIN and earn GTT tokens! 🚀\n\nSign up with my referral link and we both get 50 GTT tokens when you start staking.\n\n${referralData.referralLink}\n\n#GUARDIANCHAIN #GTT #DeFi`;
-      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-      window.open(tweetUrl, '_blank');
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        tweetText
+      )}`;
+      window.open(tweetUrl, "_blank");
     }
   };
 
@@ -160,7 +170,8 @@ export default function AirdropPage() {
           GTT Airdrop & Referrals
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Claim your free GTT tokens and earn rewards by inviting friends to join GUARDIANCHAIN
+          Claim your free GTT tokens and earn rewards by inviting friends to
+          join GUARDIANCHAIN
         </p>
       </div>
 
@@ -173,7 +184,8 @@ export default function AirdropPage() {
               GTT Token Airdrop
             </CardTitle>
             <CardDescription>
-              Claim your free GTT tokens for being an early GUARDIANCHAIN supporter
+              Claim your free GTT tokens for being an early GUARDIANCHAIN
+              supporter
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -191,7 +203,7 @@ export default function AirdropPage() {
                   <div className="text-2xl font-semibold text-muted-foreground">
                     GTT Tokens
                   </div>
-                  <Badge 
+                  <Badge
                     variant={airdropStatus.eligible ? "default" : "secondary"}
                     className="mt-2"
                   >
@@ -210,8 +222,8 @@ export default function AirdropPage() {
                         onChange={(e) => setWalletAddress(e.target.value)}
                       />
                     </div>
-                    
-                    <Button 
+
+                    <Button
                       onClick={handleClaimAirdrop}
                       disabled={claimAirdropMutation.isPending}
                       className="w-full bg-purple-600 hover:bg-purple-700"
@@ -311,7 +323,10 @@ export default function AirdropPage() {
                       size="icon"
                       onClick={() => {
                         navigator.clipboard.writeText(referralData.code);
-                        toast({ title: "Copied!", description: "Referral code copied" });
+                        toast({
+                          title: "Copied!",
+                          description: "Referral code copied",
+                        });
                       }}
                     >
                       <Copy className="h-4 w-4" />
@@ -340,31 +355,29 @@ export default function AirdropPage() {
 
                 {/* Share Buttons */}
                 <div className="grid grid-cols-2 gap-2">
-                  <Button 
+                  <Button
                     onClick={shareOnTwitter}
                     className="bg-blue-500 hover:bg-blue-600"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Share on Twitter
                   </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={copyReferralLink}
-                  >
+                  <Button variant="outline" onClick={copyReferralLink}>
                     <Copy className="h-4 w-4 mr-2" />
                     Copy Link
                   </Button>
                 </div>
 
                 {/* Pending Rewards */}
-                {referralData.pendingRewards !== '0' && (
+                {referralData.pendingRewards !== "0" && (
                   <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                     <div className="flex items-center gap-2">
                       <Zap className="h-5 w-5 text-yellow-600" />
                       <span className="font-semibold">Pending Rewards</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {referralData.pendingRewards} GTT will be distributed when your referrals complete their first stake
+                      {referralData.pendingRewards} GTT will be distributed when
+                      your referrals complete their first stake
                     </p>
                   </div>
                 )}
@@ -375,15 +388,28 @@ export default function AirdropPage() {
                     <Label>Recent Referrals</Label>
                     <div className="space-y-2">
                       {referralData.recentReferrals.map((referral, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 border rounded-lg"
+                        >
                           <div>
-                            <p className="font-mono text-sm">{referral.address}</p>
-                            <p className="text-xs text-muted-foreground">{referral.joinDate}</p>
+                            <p className="font-mono text-sm">
+                              {referral.address}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {referral.joinDate}
+                            </p>
                           </div>
                           <div className="text-right">
-                            <p className="font-semibold">{referral.rewardEarned} GTT</p>
-                            <Badge 
-                              variant={referral.status === 'completed' ? 'default' : 'secondary'}
+                            <p className="font-semibold">
+                              {referral.rewardEarned} GTT
+                            </p>
+                            <Badge
+                              variant={
+                                referral.status === "completed"
+                                  ? "default"
+                                  : "secondary"
+                              }
                               className="text-xs"
                             >
                               {referral.status}
@@ -397,8 +423,10 @@ export default function AirdropPage() {
               </>
             ) : (
               <div className="text-center space-y-4">
-                <p className="text-muted-foreground">No referral code generated yet</p>
-                <Button 
+                <p className="text-muted-foreground">
+                  No referral code generated yet
+                </p>
+                <Button
                   onClick={() => generateReferralMutation.mutate()}
                   disabled={generateReferralMutation.isPending}
                 >
@@ -426,17 +454,18 @@ export default function AirdropPage() {
                 Share your unique referral link with friends and on social media
               </p>
             </div>
-            
+
             <div className="text-center space-y-2">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-xl font-bold text-purple-600">2</span>
               </div>
               <h3 className="font-semibold">Friends Join & Stake</h3>
               <p className="text-sm text-muted-foreground">
-                When they sign up and make their first stake, you both get rewarded
+                When they sign up and make their first stake, you both get
+                rewarded
               </p>
             </div>
-            
+
             <div className="text-center space-y-2">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-xl font-bold text-green-600">3</span>

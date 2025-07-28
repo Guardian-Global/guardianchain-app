@@ -9,9 +9,9 @@ export const FEE_CONFIG = {
 
 // USD equivalent estimates (for display purposes)
 export const FEE_USD_ESTIMATES = {
-  MINT_FEE: 2.50, // ~$2.50 USD
-  SEAL_FEE: 5.00, // ~$5.00 USD
-  PROPOSAL_FEE: 25.00, // ~$25.00 USD
+  MINT_FEE: 2.5, // ~$2.50 USD
+  SEAL_FEE: 5.0, // ~$5.00 USD
+  PROPOSAL_FEE: 25.0, // ~$25.00 USD
   VERIFICATION_FEE: 1.25, // ~$1.25 USD
 } as const;
 
@@ -19,24 +19,44 @@ export const FEE_USD_ESTIMATES = {
 export const FEE_JUSTIFICATIONS = {
   mint: {
     title: "NFT Minting Fee",
-    description: "Covers blockchain storage, IPFS metadata hosting, and platform maintenance costs",
-    benefits: ["Permanent NFT storage", "IPFS metadata hosting", "Platform sustainability"]
+    description:
+      "Covers blockchain storage, IPFS metadata hosting, and platform maintenance costs",
+    benefits: [
+      "Permanent NFT storage",
+      "IPFS metadata hosting",
+      "Platform sustainability",
+    ],
   },
   seal: {
-    title: "Capsule Sealing Fee", 
-    description: "Funds truth verification infrastructure and rewards for accurate content verification",
-    benefits: ["Truth verification process", "Verifier rewards", "Content quality assurance"]
+    title: "Capsule Sealing Fee",
+    description:
+      "Funds truth verification infrastructure and rewards for accurate content verification",
+    benefits: [
+      "Truth verification process",
+      "Verifier rewards",
+      "Content quality assurance",
+    ],
   },
   proposal: {
     title: "DAO Proposal Fee",
-    description: "Prevents spam proposals and funds governance infrastructure maintenance",
-    benefits: ["Spam prevention", "Governance infrastructure", "Democratic decision making"]
+    description:
+      "Prevents spam proposals and funds governance infrastructure maintenance",
+    benefits: [
+      "Spam prevention",
+      "Governance infrastructure",
+      "Democratic decision making",
+    ],
   },
   verification: {
     title: "Content Verification Fee",
-    description: "Supports the verification ecosystem and rewards accurate truth assessments",
-    benefits: ["Verification rewards", "Truth accuracy", "Community incentives"]
-  }
+    description:
+      "Supports the verification ecosystem and rewards accurate truth assessments",
+    benefits: [
+      "Verification rewards",
+      "Truth accuracy",
+      "Community incentives",
+    ],
+  },
 } as const;
 
 // Fee action types
@@ -86,7 +106,10 @@ export function formatGTTAmount(amount: string): string {
 }
 
 // Helper function to check if user has sufficient balance
-export function hasSufficientBalance(userBalance: string, feeAmount: string): boolean {
+export function hasSufficientBalance(
+  userBalance: string,
+  feeAmount: string
+): boolean {
   const balance = BigInt(userBalance);
   const fee = BigInt(feeAmount);
   return balance >= fee;

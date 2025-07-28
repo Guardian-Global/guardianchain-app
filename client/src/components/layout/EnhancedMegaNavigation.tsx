@@ -1,11 +1,35 @@
 import { useState, useMemo } from "react";
 import { Link, useLocation } from "wouter";
-import { 
-  Shield, Menu, X, Search, ChevronDown, Home, User, Settings, 
-  TrendingUp, Zap, Database, Coins, Target, Brain, Globe, 
-  Lock, Award, Users, BarChart3, PieChart, FileText,
-  Briefcase, DollarSign, Crown, Layers, Sparkles, Eye,
-  Sun, Moon
+import {
+  Shield,
+  Menu,
+  X,
+  Search,
+  ChevronDown,
+  Home,
+  User,
+  Settings,
+  TrendingUp,
+  Zap,
+  Database,
+  Coins,
+  Target,
+  Brain,
+  Globe,
+  Lock,
+  Award,
+  Users,
+  BarChart3,
+  PieChart,
+  FileText,
+  Briefcase,
+  DollarSign,
+  Crown,
+  Layers,
+  Sparkles,
+  Eye,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,7 +61,7 @@ const pageCategories = {
       { name: "Create Capsule", href: "/create", icon: Sparkles },
       { name: "Leaderboard", href: "/leaderboard", icon: Award },
       { name: "Governance", href: "/governance", icon: Users },
-    ]
+    ],
   },
   trading: {
     title: "Trading & Finance",
@@ -45,12 +69,24 @@ const pageCategories = {
     color: "text-green-400",
     pages: [
       { name: "Token Launch", href: "/token-launch", icon: Coins },
-      { name: "Simple Token Launch", href: "/simple-token-launch", icon: Target },
+      {
+        name: "Simple Token Launch",
+        href: "/simple-token-launch",
+        icon: Target,
+      },
       { name: "Staking", href: "/stake", icon: DollarSign },
       { name: "Treasury", href: "/treasury", icon: Database },
-      { name: "Financial Dashboard", href: "/financial-dashboard", icon: PieChart },
-      { name: "Billing Dashboard", href: "/billing-dashboard", icon: Briefcase },
-    ]
+      {
+        name: "Financial Dashboard",
+        href: "/financial-dashboard",
+        icon: PieChart,
+      },
+      {
+        name: "Billing Dashboard",
+        href: "/billing-dashboard",
+        icon: Briefcase,
+      },
+    ],
   },
   profile: {
     title: "Profile & Listings",
@@ -60,10 +96,22 @@ const pageCategories = {
       { name: "My Profile", href: "/profile", icon: User },
       { name: "My Listings", href: "/my-listings", icon: Eye },
       { name: "Enhanced Profile", href: "/enhanced-profile", icon: Crown },
-      { name: "Profile Dashboard", href: "/profile-dashboard", icon: BarChart3 },
-      { name: "Profile Customization", href: "/profile-customization", icon: Settings },
-      { name: "Enhanced Leaderboard", href: "/enhanced-leaderboard", icon: Award },
-    ]
+      {
+        name: "Profile Dashboard",
+        href: "/profile-dashboard",
+        icon: BarChart3,
+      },
+      {
+        name: "Profile Customization",
+        href: "/profile-customization",
+        icon: Settings,
+      },
+      {
+        name: "Enhanced Leaderboard",
+        href: "/enhanced-leaderboard",
+        icon: Award,
+      },
+    ],
   },
   analytics: {
     title: "Analytics & Insights",
@@ -75,20 +123,24 @@ const pageCategories = {
       { name: "Insights", href: "/insight", icon: Brain },
       { name: "Explorer", href: "/explorer", icon: Eye },
       { name: "Reporting", href: "/reporting", icon: FileText },
-    ]
+    ],
   },
   advanced: {
     title: "Advanced Features",
     icon: Zap,
     color: "text-orange-400",
     pages: [
-      { name: "Blockchain Playground", href: "/blockchain-playground", icon: Layers },
+      {
+        name: "Blockchain Playground",
+        href: "/blockchain-playground",
+        icon: Layers,
+      },
       { name: "Viral Tools", href: "/viral-tools", icon: Sparkles },
       { name: "AI Advisor", href: "/ai-advisor", icon: Brain },
       { name: "Asset Integration", href: "/asset-integration", icon: Database },
       { name: "Enterprise Suite", href: "/enterprise-suite", icon: Briefcase },
       { name: "Premium Features", href: "/premium-features", icon: Crown },
-    ]
+    ],
   },
   specialized: {
     title: "Specialized Tools",
@@ -96,11 +148,15 @@ const pageCategories = {
     color: "text-red-400",
     pages: [
       { name: "Specialized Intake", href: "/specialized-intake", icon: Target },
-      { name: "Whistleblower Sanctuary", href: "/whistleblower-sanctuary", icon: Lock },
+      {
+        name: "Whistleblower Sanctuary",
+        href: "/whistleblower-sanctuary",
+        icon: Lock,
+      },
       { name: "Category Discovery", href: "/category-discovery", icon: Globe },
       { name: "Capsule Forge", href: "/capsule-forge", icon: Sparkles },
       { name: "Certify", href: "/certify", icon: Award },
-    ]
+    ],
   },
   admin: {
     title: "Administration",
@@ -114,8 +170,8 @@ const pageCategories = {
       { name: "Config", href: "/config", icon: Settings },
       { name: "Compliance", href: "/compliance", icon: Lock },
       { name: "Security Center", href: "/supabase-security", icon: Shield },
-    ]
-  }
+    ],
+  },
 };
 
 // GTT Token Quick Access Component
@@ -125,29 +181,46 @@ const GTTQuickAccess = () => {
   return (
     <div className="bg-gradient-to-r from-purple-900/20 to-green-900/20 border border-purple-500/30 rounded-lg p-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-purple-400">GTT LIVE DATA</span>
-        <Badge variant="outline" className={`${(gttData?.change24hPercent || 0) > 0 ? 'text-green-400 border-green-400' : 'text-red-400 border-red-400'}`}>
+        <span className="text-xs font-medium text-purple-400">
+          GTT LIVE DATA
+        </span>
+        <Badge
+          variant="outline"
+          className={`${
+            (gttData?.change24hPercent || 0) > 0
+              ? "text-green-400 border-green-400"
+              : "text-red-400 border-red-400"
+          }`}
+        >
           {isLoading ? "..." : gttData?.change24h || "+0.00%"}
         </Badge>
       </div>
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div>
           <div className="text-gray-400">Price</div>
-          <div className="font-bold text-white">{isLoading ? "..." : gttData?.price || "$0.00"}</div>
+          <div className="font-bold text-white">
+            {isLoading ? "..." : gttData?.price || "$0.00"}
+          </div>
         </div>
         <div>
           <div className="text-gray-400">Balance</div>
-          <div className="font-bold text-white">{isLoading ? "..." : `${gttData?.balance || '0'} GTT`}</div>
+          <div className="font-bold text-white">
+            {isLoading ? "..." : `${gttData?.balance || "0"} GTT`}
+          </div>
         </div>
       </div>
       <div className="mt-2 pt-2 border-t border-gray-700">
         <div className="text-gray-400 text-xs">Daily Yield</div>
-        <div className="font-bold text-green-400">{isLoading ? "..." : `${gttData?.dailyYield || '0'} GTT`}</div>
+        <div className="font-bold text-green-400">
+          {isLoading ? "..." : `${gttData?.dailyYield || "0"} GTT`}
+        </div>
       </div>
       {gttData?.listings && gttData.listings.length > 0 && (
         <div className="mt-2 pt-2 border-t border-gray-700">
           <div className="text-gray-400 text-xs">Active Listings</div>
-          <div className="font-bold text-blue-400">{gttData.listings.filter(l => l.status === 'active').length}</div>
+          <div className="font-bold text-blue-400">
+            {gttData.listings.filter((l) => l.status === "active").length}
+          </div>
         </div>
       )}
     </div>
@@ -164,31 +237,44 @@ export default function EnhancedMegaNavigation() {
   // Search functionality across all pages
   const searchResults = useMemo(() => {
     if (!searchTerm) return [];
-    
-    const allPages = Object.values(pageCategories).flatMap(category => 
-      category.pages.map(page => ({ ...page, category: category.title }))
+
+    const allPages = Object.values(pageCategories).flatMap((category) =>
+      category.pages.map((page) => ({ ...page, category: category.title }))
     );
-    
-    return allPages.filter(page => 
-      page.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      page.category.toLowerCase().includes(searchTerm.toLowerCase())
+
+    return allPages.filter(
+      (page) =>
+        page.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        page.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm]);
 
-  const CategoryDropdown = ({ category, data }: { category: string, data: any }) => {
+  const CategoryDropdown = ({
+    category,
+    data,
+  }: {
+    category: string;
+    data: any;
+  }) => {
     const IconComponent = data.icon;
-    
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className={`${data.color} hover:text-white transition-colors flex items-center gap-1`}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`${data.color} hover:text-white transition-colors flex items-center gap-1`}
+          >
             <IconComponent size={16} />
             {data.title}
             <ChevronDown size={14} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-slate-900 border-slate-800 min-w-[200px]">
-          <DropdownMenuLabel className={data.color}>{data.title}</DropdownMenuLabel>
+          <DropdownMenuLabel className={data.color}>
+            {data.title}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-slate-700" />
           {data.pages.map((page: any) => {
             const PageIcon = page.icon;
@@ -215,8 +301,8 @@ export default function EnhancedMegaNavigation() {
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <LogoDisplay 
-                size="lg" 
+              <LogoDisplay
+                size="lg"
                 variant="icon"
                 className="w-8 h-8"
                 fallback={
@@ -241,7 +327,10 @@ export default function EnhancedMegaNavigation() {
 
           {/* Search Bar */}
           <div className="hidden md:flex relative max-w-sm flex-1 mx-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={16}
+            />
             <Input
               type="text"
               placeholder="Search all pages..."
@@ -257,7 +346,9 @@ export default function EnhancedMegaNavigation() {
                       <result.icon size={16} />
                       <div>
                         <div className="font-medium">{result.name}</div>
-                        <div className="text-xs text-gray-400">{result.category}</div>
+                        <div className="text-xs text-gray-400">
+                          {result.category}
+                        </div>
                       </div>
                     </div>
                   </Link>
@@ -271,7 +362,7 @@ export default function EnhancedMegaNavigation() {
             <div className="hidden xl:block">
               <GTTQuickAccess />
             </div>
-            
+
             <Button
               variant="ghost"
               size="sm"
@@ -284,11 +375,18 @@ export default function EnhancedMegaNavigation() {
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild className="lg:hidden">
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-slate-400 hover:text-white"
+                >
                   <Menu size={20} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-slate-900 border-slate-800 w-80">
+              <SheetContent
+                side="right"
+                className="bg-slate-900 border-slate-800 w-80"
+              >
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between mb-6">
                     <span className="text-lg font-bold">
@@ -310,7 +408,10 @@ export default function EnhancedMegaNavigation() {
                   </div>
 
                   <div className="relative mb-4">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <Search
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                      size={16}
+                    />
                     <Input
                       type="text"
                       placeholder="Search all pages..."
@@ -325,7 +426,9 @@ export default function EnhancedMegaNavigation() {
                       const IconComponent = data.icon;
                       return (
                         <div key={key} className="space-y-2">
-                          <div className={`flex items-center gap-2 text-sm font-medium ${data.color}`}>
+                          <div
+                            className={`flex items-center gap-2 text-sm font-medium ${data.color}`}
+                          >
                             <IconComponent size={16} />
                             {data.title}
                           </div>

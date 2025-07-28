@@ -33,14 +33,16 @@ export function WalletConnect() {
   }, []);
 
   const checkConnection = async () => {
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
+    if (typeof window !== "undefined" && (window as any).ethereum) {
       try {
-        const accounts = await (window as any).ethereum.request({ method: 'eth_accounts' });
+        const accounts = await (window as any).ethereum.request({
+          method: "eth_accounts",
+        });
         if (accounts.length > 0) {
           await updateWalletState(accounts[0]);
         }
       } catch (error) {
-        console.error('Error checking wallet connection:', error);
+        console.error("Error checking wallet connection:", error);
       }
     }
   };
@@ -49,16 +51,18 @@ export function WalletConnect() {
     try {
       const ethereum = (window as any).ethereum;
       const balance = await ethereum.request({
-        method: 'eth_getBalance',
-        params: [address, 'latest']
-      });
-      
-      const network = await ethereum.request({
-        method: 'eth_chainId'
+        method: "eth_getBalance",
+        params: [address, "latest"],
       });
 
-      const balanceInEth = (parseInt(balance, 16) / Math.pow(10, 18)).toFixed(4);
-      
+      const network = await ethereum.request({
+        method: "eth_chainId",
+      });
+
+      const balanceInEth = (parseInt(balance, 16) / Math.pow(10, 18)).toFixed(
+        4
+      );
+
       setWallet({
         address,
         balance: balanceInEth,
@@ -66,23 +70,23 @@ export function WalletConnect() {
         isConnected: true,
       });
     } catch (error) {
-      console.error('Error updating wallet state:', error);
+      console.error("Error updating wallet state:", error);
     }
   };
 
   const getNetworkName = (chainId: string) => {
     const networks: { [key: string]: string } = {
-      '0x1': 'Ethereum',
-      '0x89': 'Polygon',
-      '0xa4b1': 'Arbitrum',
-      '0xaa36a7': 'Sepolia',
-      '0x13881': 'Mumbai',
+      "0x1": "Ethereum",
+      "0x89": "Polygon",
+      "0xa4b1": "Arbitrum",
+      "0xaa36a7": "Sepolia",
+      "0x13881": "Mumbai",
     };
-    return networks[chainId] || 'Unknown Network';
+    return networks[chainId] || "Unknown Network";
   };
 
   const connectWallet = async () => {
-    if (typeof window === 'undefined' || !(window as any).ethereum) {
+    if (typeof window === "undefined" || !(window as any).ethereum) {
       toast({
         title: "MetaMask Required",
         description: "Please install MetaMask to connect your wallet.",
@@ -95,18 +99,21 @@ export function WalletConnect() {
     try {
       const ethereum = (window as any).ethereum;
       const accounts = await ethereum.request({
-        method: 'eth_requestAccounts'
+        method: "eth_requestAccounts",
       });
-      
+
       if (accounts.length > 0) {
         await updateWalletState(accounts[0]);
         toast({
           title: "Wallet Connected",
-          description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`,
+          description: `Connected to ${accounts[0].slice(
+            0,
+            6
+          )}...${accounts[0].slice(-4)}`,
         });
       }
     } catch (error: any) {
-      console.error('Error connecting wallet:', error);
+      console.error("Error connecting wallet:", error);
       toast({
         title: "Connection Failed",
         description: error.message || "Failed to connect wallet",
@@ -142,10 +149,11 @@ export function WalletConnect() {
 
   const openInExplorer = () => {
     if (wallet.address) {
-      const baseUrl = wallet.network === 'Polygon' 
-        ? 'https://polygonscan.com/address/'
-        : 'https://etherscan.io/address/';
-      window.open(`${baseUrl}${wallet.address}`, '_blank');
+      const baseUrl =
+        wallet.network === "Polygon"
+          ? "https://polygonscan.com/address/"
+          : "https://etherscan.io/address/";
+      window.open(`${baseUrl}${wallet.address}`, "_blank");
     }
   };
 
@@ -165,7 +173,10 @@ export function WalletConnect() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="border-slate-600 hover:border-slate-400">
+        <Button
+          variant="outline"
+          className="border-slate-600 hover:border-slate-400"
+        >
           <Wallet className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">
             {wallet.address?.slice(0, 6)}...{wallet.address?.slice(-4)}
@@ -190,7 +201,10 @@ export function WalletConnect() {
           View on Explorer
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={disconnectWallet} className="cursor-pointer text-red-400">
+        <DropdownMenuItem
+          onClick={disconnectWallet}
+          className="cursor-pointer text-red-400"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Disconnect
         </DropdownMenuItem>

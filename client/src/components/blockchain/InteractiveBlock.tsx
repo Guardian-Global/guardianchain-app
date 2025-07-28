@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Hash, Clock, Database, Zap, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Hash, Clock, Database, Zap, CheckCircle } from "lucide-react";
 
 interface InteractiveBlockProps {
   blockId: number;
@@ -11,20 +11,25 @@ interface InteractiveBlockProps {
   isActive: boolean;
 }
 
-export default function InteractiveBlock({ blockId, previousHash, onBlockMined, isActive }: InteractiveBlockProps) {
+export default function InteractiveBlock({
+  blockId,
+  previousHash,
+  onBlockMined,
+  isActive,
+}: InteractiveBlockProps) {
   const [nonce, setNonce] = useState(0);
   const [isMining, setIsMining] = useState(false);
-  const [hash, setHash] = useState('');
+  const [hash, setHash] = useState("");
   const [difficulty, setDifficulty] = useState(4);
   const [attempts, setAttempts] = useState(0);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
   const transactions = [
-    'Alice sends 50 GTT to Bob',
-    'Capsule #247 verified as TRUE',
-    'Guardian Pass #42 minted',
-    'Vault auto-compound: +125 GTT'
+    "Alice sends 50 GTT to Bob",
+    "Capsule #247 verified as TRUE",
+    "Guardian Pass #42 minted",
+    "Vault auto-compound: +125 GTT",
   ];
 
   // Simulate hash calculation
@@ -33,15 +38,15 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
       const timer = setInterval(() => {
         const newNonce = nonce + 1;
         setNonce(newNonce);
-        setAttempts(prev => prev + 1);
-        setTimeElapsed(prev => prev + 0.1);
+        setAttempts((prev) => prev + 1);
+        setTimeElapsed((prev) => prev + 0.1);
 
         // Simulate hash generation
         const mockHash = generateMockHash(blockId, previousHash, newNonce);
         setHash(mockHash);
 
         // Check if hash meets difficulty requirement
-        if (mockHash.startsWith('0'.repeat(difficulty))) {
+        if (mockHash.startsWith("0".repeat(difficulty))) {
           setIsMining(false);
           setIsComplete(true);
           onBlockMined({
@@ -51,13 +56,13 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
             nonce: newNonce,
             timestamp: Date.now(),
             attempts,
-            timeElapsed
+            timeElapsed,
           });
         }
 
         // Auto-complete after reasonable attempts for demo
         if (attempts > 100) {
-          const validHash = '0'.repeat(difficulty) + mockHash.slice(difficulty);
+          const validHash = "0".repeat(difficulty) + mockHash.slice(difficulty);
           setHash(validHash);
           setIsMining(false);
           setIsComplete(true);
@@ -68,19 +73,33 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
             nonce: newNonce,
             timestamp: Date.now(),
             attempts,
-            timeElapsed
+            timeElapsed,
           });
         }
       }, 100);
 
       return () => clearInterval(timer);
     }
-  }, [isMining, nonce, blockId, previousHash, difficulty, attempts, timeElapsed, isComplete, onBlockMined]);
+  }, [
+    isMining,
+    nonce,
+    blockId,
+    previousHash,
+    difficulty,
+    attempts,
+    timeElapsed,
+    isComplete,
+    onBlockMined,
+  ]);
 
-  const generateMockHash = (id: number, prevHash: string, nonceValue: number) => {
+  const generateMockHash = (
+    id: number,
+    prevHash: string,
+    nonceValue: number
+  ) => {
     // Simple hash simulation for demo purposes
     const data = `${id}${prevHash}${nonceValue}${Date.now()}`;
-    let hash = '';
+    let hash = "";
     for (let i = 0; i < 64; i++) {
       hash += Math.floor(Math.random() * 16).toString(16);
     }
@@ -98,32 +117,53 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
   const resetBlock = () => {
     setNonce(0);
     setIsMining(false);
-    setHash('');
+    setHash("");
     setAttempts(0);
     setTimeElapsed(0);
     setIsComplete(false);
   };
 
   return (
-    <Card className={`p-6 transition-all duration-300 ${
-      !isActive ? 'opacity-50 scale-95' : 
-      isComplete ? 'border-green-500 shadow-green-500/20 shadow-lg' :
-      isMining ? 'border-yellow-500 shadow-yellow-500/20 shadow-lg animate-pulse' :
-      'border-slate-600 hover:border-slate-500'
-    }`}>
+    <Card
+      className={`p-6 transition-all duration-300 ${
+        !isActive
+          ? "opacity-50 scale-95"
+          : isComplete
+          ? "border-green-500 shadow-green-500/20 shadow-lg"
+          : isMining
+          ? "border-yellow-500 shadow-yellow-500/20 shadow-lg animate-pulse"
+          : "border-slate-600 hover:border-slate-500"
+      }`}
+    >
       <div className="space-y-4">
         {/* Block Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-              isComplete ? 'bg-green-600' : isMining ? 'bg-yellow-600' : 'bg-slate-600'
-            }`}>
-              {isComplete ? <CheckCircle className="w-4 h-4" /> : <Database className="w-4 h-4" />}
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                isComplete
+                  ? "bg-green-600"
+                  : isMining
+                  ? "bg-yellow-600"
+                  : "bg-slate-600"
+              }`}
+            >
+              {isComplete ? (
+                <CheckCircle className="w-4 h-4" />
+              ) : (
+                <Database className="w-4 h-4" />
+              )}
             </div>
-            <h3 className="text-lg font-semibold text-white">Block #{blockId}</h3>
+            <h3 className="text-lg font-semibold text-white">
+              Block #{blockId}
+            </h3>
           </div>
-          <Badge variant={isComplete ? 'default' : isMining ? 'secondary' : 'outline'}>
-            {isComplete ? 'Mined' : isMining ? 'Mining...' : 'Pending'}
+          <Badge
+            variant={
+              isComplete ? "default" : isMining ? "secondary" : "outline"
+            }
+          >
+            {isComplete ? "Mined" : isMining ? "Mining..." : "Pending"}
           </Badge>
         </div>
 
@@ -135,7 +175,7 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
               Previous Hash
             </div>
             <div className="font-mono text-xs text-slate-300 bg-slate-800 p-2 rounded">
-              {previousHash || '0000000000000000...'}
+              {previousHash || "0000000000000000..."}
             </div>
           </div>
 
@@ -146,7 +186,10 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
             </div>
             <div className="space-y-1">
               {transactions.map((tx, i) => (
-                <div key={i} className="text-xs text-slate-300 bg-slate-800/50 p-2 rounded">
+                <div
+                  key={i}
+                  className="text-xs text-slate-300 bg-slate-800/50 p-2 rounded"
+                >
                   {tx}
                 </div>
               ))}
@@ -156,11 +199,15 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="text-slate-400 mb-1">Nonce</div>
-              <div className="font-mono text-white">{nonce.toLocaleString()}</div>
+              <div className="font-mono text-white">
+                {nonce.toLocaleString()}
+              </div>
             </div>
             <div>
               <div className="text-slate-400 mb-1">Attempts</div>
-              <div className="font-mono text-white">{attempts.toLocaleString()}</div>
+              <div className="font-mono text-white">
+                {attempts.toLocaleString()}
+              </div>
             </div>
           </div>
 
@@ -171,7 +218,7 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
                 Current Hash
               </div>
               <div className="font-mono text-xs text-slate-300 bg-slate-800 p-2 rounded break-all">
-                {hash || 'Calculating...'}
+                {hash || "Calculating..."}
               </div>
               {isComplete && (
                 <div className="text-xs text-green-400 mt-1">
@@ -202,12 +249,16 @@ export default function InteractiveBlock({ blockId, previousHash, onBlockMined, 
               onClick={startMining}
               disabled={isMining || !isActive}
               size="sm"
-              className={isMining ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}
+              className={
+                isMining
+                  ? "bg-yellow-600 hover:bg-yellow-700"
+                  : "bg-green-600 hover:bg-green-700"
+              }
             >
-              {isMining ? 'Mining...' : 'Start Mining'}
+              {isMining ? "Mining..." : "Start Mining"}
             </Button>
           )}
-          
+
           <Button
             onClick={resetBlock}
             disabled={isMining}

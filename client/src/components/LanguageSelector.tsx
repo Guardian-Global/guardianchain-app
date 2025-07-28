@@ -14,7 +14,9 @@ export default function LanguageSelector() {
   const { currentLanguage, setLanguage, supportedLanguages } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
-  const currentLang = supportedLanguages.find(lang => lang.code === currentLanguage);
+  const currentLang = supportedLanguages.find(
+    (lang) => lang.code === currentLanguage
+  );
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -25,26 +27,32 @@ export default function LanguageSelector() {
           className="text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 transition-colors"
         >
           <Globe className="w-4 h-4 mr-2" />
-          <span className="hidden sm:inline mr-1">{currentLang?.nativeName}</span>
+          <span className="hidden sm:inline mr-1">
+            {currentLang?.nativeName}
+          </span>
           <span className="text-lg">{currentLang?.flag}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end" 
+      <DropdownMenuContent
+        align="end"
         className="w-64 bg-slate-800 border-slate-700 max-h-96 overflow-y-auto"
       >
         <div className="p-2 border-b border-slate-700">
-          <div className="text-sm font-medium text-slate-300 mb-1">Select Language</div>
-          <div className="text-xs text-slate-400">Available in {supportedLanguages.length} languages</div>
+          <div className="text-sm font-medium text-slate-300 mb-1">
+            Select Language
+          </div>
+          <div className="text-xs text-slate-400">
+            Available in {supportedLanguages.length} languages
+          </div>
         </div>
-        
+
         {/* Primary Languages (Top Markets) */}
         <div className="p-2">
           <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">
             Primary Markets
           </div>
-          {SUPPORTED_LANGUAGES.filter(lang => 
-            ['en', 'zh', 'ja', 'ko', 'es', 'fr', 'de', 'ru'].includes(lang.code)
+          {SUPPORTED_LANGUAGES.filter((lang) =>
+            ["en", "zh", "ja", "ko", "es", "fr", "de", "ru"].includes(lang.code)
           ).map((language) => (
             <DropdownMenuItem
               key={language.code}
@@ -57,18 +65,26 @@ export default function LanguageSelector() {
               <div className="flex items-center space-x-3">
                 <span className="text-lg">{language.flag}</span>
                 <div>
-                  <div className="font-medium text-slate-200">{language.nativeName}</div>
+                  <div className="font-medium text-slate-200">
+                    {language.nativeName}
+                  </div>
                   <div className="text-xs text-slate-400">{language.name}</div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                {language.code === 'zh' && (
-                  <Badge variant="outline" className="text-xs border-green-600 text-green-400">
+                {language.code === "zh" && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs border-green-600 text-green-400"
+                  >
                     Major Market
                   </Badge>
                 )}
-                {language.code === 'ja' && (
-                  <Badge variant="outline" className="text-xs border-purple-600 text-purple-400">
+                {language.code === "ja" && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs border-purple-600 text-purple-400"
+                  >
                     High Volume
                   </Badge>
                 )}
@@ -85,8 +101,11 @@ export default function LanguageSelector() {
           <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">
             Additional Markets
           </div>
-          {SUPPORTED_LANGUAGES.filter(lang => 
-            !['en', 'zh', 'ja', 'ko', 'es', 'fr', 'de', 'ru'].includes(lang.code)
+          {SUPPORTED_LANGUAGES.filter(
+            (lang) =>
+              !["en", "zh", "ja", "ko", "es", "fr", "de", "ru"].includes(
+                lang.code
+              )
           ).map((language) => (
             <DropdownMenuItem
               key={language.code}
@@ -99,18 +118,26 @@ export default function LanguageSelector() {
               <div className="flex items-center space-x-3">
                 <span className="text-lg">{language.flag}</span>
                 <div>
-                  <div className="font-medium text-slate-200">{language.nativeName}</div>
+                  <div className="font-medium text-slate-200">
+                    {language.nativeName}
+                  </div>
                   <div className="text-xs text-slate-400">{language.name}</div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                {language.code === 'ar' && (
-                  <Badge variant="outline" className="text-xs border-yellow-600 text-yellow-400">
+                {language.code === "ar" && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs border-yellow-600 text-yellow-400"
+                  >
                     RTL
                   </Badge>
                 )}
-                {language.code === 'hi' && (
-                  <Badge variant="outline" className="text-xs border-blue-600 text-blue-400">
+                {language.code === "hi" && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs border-blue-600 text-blue-400"
+                  >
                     Emerging
                   </Badge>
                 )}

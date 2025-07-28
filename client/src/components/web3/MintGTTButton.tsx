@@ -1,45 +1,42 @@
-import { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { parseEther } from 'viem';
-import { Zap, Loader2, CheckCircle, XCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { getContractAddress, CONTRACT_ABIS } from '@/lib/contracts';
+import { useState } from "react";
+import {
+  useAccount,
+  useWriteContract,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { parseEther } from "viem";
+import { Zap, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { getContractAddress, CONTRACT_ABIS } from "@/lib/contracts";
 
 interface MintGTTButtonProps {
   amount?: string;
   recipient?: string;
   onMintSuccess?: (txHash: string, amount: string) => void;
-  variant?: 'button' | 'card';
+  variant?: "button" | "card";
 }
 
-export default function MintGTTButton({ 
-  amount: initialAmount, 
-  recipient: initialRecipient, 
+export default function MintGTTButton({
+  amount: initialAmount,
+  recipient: initialRecipient,
   onMintSuccess,
-  variant = 'button'
+  variant = "button",
 }: MintGTTButtonProps) {
-  const [amount, setAmount] = useState(initialAmount || '');
-  const [recipient, setRecipient] = useState(initialRecipient || '');
+  const [amount, setAmount] = useState(initialAmount || "");
+  const [recipient, setRecipient] = useState(initialRecipient || "");
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
-  const { 
-    writeContract, 
-    data: hash, 
-    isPending, 
-    error 
-  } = useWriteContract();
+  const { writeContract, data: hash, isPending, error } = useWriteContract();
 
-  const { 
-    isLoading: isConfirming, 
-    isSuccess: isConfirmed 
-  } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const handleMint = async () => {
     if (!amount || !recipient) {
@@ -61,15 +58,14 @@ export default function MintGTTButton({
     }
 
     try {
-      const gttAddress = getContractAddress(chainId, 'gtt');
-      
+      const gttAddress = getContractAddress(chainId, "gtt");
+
       writeContract({
         address: gttAddress as `0x${string}`,
         abi: CONTRACT_ABIS.GTTToken,
-        functionName: 'mint',
+        functionName: "mint",
         args: [recipient as `0x${string}`, parseEther(amount)],
       });
-
     } catch (error: any) {
       toast({
         title: "Mint Failed",
@@ -84,7 +80,7 @@ export default function MintGTTButton({
     if (onMintSuccess) {
       onMintSuccess(hash, amount);
     }
-    
+
     toast({
       title: "Mint Successful!",
       description: `Minted ${amount} GTT tokens to ${recipient}`,
@@ -100,7 +96,7 @@ export default function MintGTTButton({
     });
   }
 
-  if (variant === 'card') {
+  if (variant === "card") {
     return (
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
@@ -123,7 +119,7 @@ export default function MintGTTButton({
               className="bg-slate-700 border-slate-600 text-white"
             />
           </div>
-          
+
           <div>
             <Label htmlFor="recipient" className="text-slate-300">
               Recipient Address
@@ -145,7 +141,7 @@ export default function MintGTTButton({
             {isPending || isConfirming ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {isPending ? 'Confirming...' : 'Minting...'}
+                {isPending ? "Confirming..." : "Minting..."}
               </>
             ) : isConfirmed ? (
               <>
@@ -180,7 +176,7 @@ export default function MintGTTButton({
       {isPending || isConfirming ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {isPending ? 'Confirming...' : 'Minting...'}
+          {isPending ? "Confirming..." : "Minting..."}
         </>
       ) : error ? (
         <>

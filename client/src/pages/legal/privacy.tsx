@@ -9,7 +9,11 @@ export default function PrivacyPolicy() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-4 mb-8">
           <Link href="/">
-            <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-slate-400 hover:text-white"
+            >
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -18,15 +22,17 @@ export default function PrivacyPolicy() {
 
         <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
           <h1 className="text-3xl font-bold mb-6 text-white">Privacy Policy</h1>
-          <p className="text-slate-300 mb-6">
-            Last Updated: January 19, 2025
-          </p>
+          <p className="text-slate-300 mb-6">Last Updated: January 19, 2025</p>
 
           <div className="space-y-8 text-slate-300">
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">1. Information We Collect</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
+                1. Information We Collect
+              </h2>
               <p className="mb-4">
-                GUARDIANCHAIN is committed to protecting your privacy and digital sovereignty. We collect minimal information necessary to provide our decentralized truth verification services:
+                GUARDIANCHAIN is committed to protecting your privacy and
+                digital sovereignty. We collect minimal information necessary to
+                provide our decentralized truth verification services:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Wallet addresses for blockchain interactions</li>
@@ -37,7 +43,9 @@ export default function PrivacyPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">2. How We Use Your Information</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
+                2. How We Use Your Information
+              </h2>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Process truth verification and GTT token transactions</li>
                 <li>Send notification emails via ProtonMail encryption</li>
@@ -47,7 +55,9 @@ export default function PrivacyPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">3. Data Security</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
+                3. Data Security
+              </h2>
               <p className="mb-4">
                 Your data is protected by enterprise-grade security measures:
               </p>
@@ -60,10 +70,10 @@ export default function PrivacyPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">4. Your Rights</h2>
-              <p className="mb-4">
-                You have complete control over your data:
-              </p>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
+                4. Your Rights
+              </h2>
+              <p className="mb-4">You have complete control over your data:</p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Access and export your data at any time</li>
                 <li>Delete your account and associated data</li>
@@ -73,7 +83,9 @@ export default function PrivacyPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">5. Contact Us</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
+                5. Contact Us
+              </h2>
               <p>
                 For privacy-related questions, contact us at:
                 <br />
@@ -86,7 +98,8 @@ export default function PrivacyPolicy() {
 
           <div className="mt-8 pt-6 border-t border-slate-700">
             <p className="text-slate-400 text-sm">
-              This privacy policy is effective as of January 19, 2025. Changes will be communicated via encrypted email.
+              This privacy policy is effective as of January 19, 2025. Changes
+              will be communicated via encrypted email.
             </p>
           </div>
         </div>

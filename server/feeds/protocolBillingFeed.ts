@@ -67,30 +67,34 @@ export class ProtocolBillingFeedPublisher {
         balance: 150000, // This would come from real treasury data
         circulation: 1000000,
         weekly_volume: 25000,
-        monthly_revenue: 85000
+        monthly_revenue: 85000,
       },
       risk_assessment: {
-        level: data.complianceScore >= 90 ? "LOW" : 
-               data.complianceScore >= 80 ? "MEDIUM" : "HIGH",
+        level:
+          data.complianceScore >= 90
+            ? "LOW"
+            : data.complianceScore >= 80
+            ? "MEDIUM"
+            : "HIGH",
         factors: data.flags,
-        recommendations: this.generateRecommendations(data)
+        recommendations: this.generateRecommendations(data),
       },
       regulatory_compliance: {
         gaap_compliant: true,
         xbrl_ready: true,
         retention_policy: "7_years_immutable_ipfs_arweave",
-        audit_trail_complete: data.flags.length === 0
-      }
+        audit_trail_complete: data.flags.length === 0,
+      },
     };
 
     // Ensure public directory exists
     const publicDir = path.join(process.cwd(), "public");
     const feedsDir = path.join(publicDir, "feeds");
-    
+
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true });
     }
-    
+
     if (!fs.existsSync(feedsDir)) {
       fs.mkdirSync(feedsDir, { recursive: true });
     }
@@ -113,16 +117,20 @@ export class ProtocolBillingFeedPublisher {
   /**
    * Archive historical billing feeds for regulatory compliance
    */
-  private static async archiveHistoricalFeed(feed: ProtocolFeed): Promise<void> {
+  private static async archiveHistoricalFeed(
+    feed: ProtocolFeed
+  ): Promise<void> {
     const archiveDir = path.join(process.cwd(), "public", "feeds", "archive");
-    
+
     if (!fs.existsSync(archiveDir)) {
       fs.mkdirSync(archiveDir, { recursive: true });
     }
 
-    const archiveFileName = `protocol_billing_${new Date().toISOString().split('T')[0]}.json`;
+    const archiveFileName = `protocol_billing_${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     const archivePath = path.join(archiveDir, archiveFileName);
-    
+
     fs.writeFileSync(archivePath, JSON.stringify(feed, null, 2));
   }
 
@@ -133,14 +141,25 @@ export class ProtocolBillingFeedPublisher {
     const stats = {
       last_updated: feed.timestamp,
       total_vendors: feed.vendor_payouts.length,
-      total_payout_amount: feed.vendor_payouts.reduce((sum, payout) => sum + payout.amount, 0),
+      total_payout_amount: feed.vendor_payouts.reduce(
+        (sum, payout) => sum + payout.amount,
+        0
+      ),
       compliance_trend: feed.compliance_score >= 90 ? "improving" : "stable",
       risk_trending: feed.risk_assessment.level,
-      treasury_health: feed.treasury_summary.balance > 100000 ? "healthy" : "monitor",
-      regulatory_status: feed.regulatory_compliance.gaap_compliant ? "compliant" : "review_required"
+      treasury_health:
+        feed.treasury_summary.balance > 100000 ? "healthy" : "monitor",
+      regulatory_status: feed.regulatory_compliance.gaap_compliant
+        ? "compliant"
+        : "review_required",
     };
 
-    const statsPath = path.join(process.cwd(), "public", "feeds", "billing_summary.json");
+    const statsPath = path.join(
+      process.cwd(),
+      "public",
+      "feeds",
+      "billing_summary.json"
+    );
     fs.writeFileSync(statsPath, JSON.stringify(stats, null, 2));
   }
 
@@ -151,20 +170,31 @@ export class ProtocolBillingFeedPublisher {
     const recommendations: string[] = [];
 
     if (data.complianceScore < 90) {
-      recommendations.push("Review and address compliance gaps to maintain regulatory standing");
+      recommendations.push(
+        "Review and address compliance gaps to maintain regulatory standing"
+      );
     }
 
     if (data.flags.includes("High vendor payout concentration")) {
-      recommendations.push("Diversify vendor relationships to reduce concentration risk");
+      recommendations.push(
+        "Diversify vendor relationships to reduce concentration risk"
+      );
     }
 
     if (data.payouts.length > 20) {
-      recommendations.push("Consider implementing automated payment processing for efficiency");
+      recommendations.push(
+        "Consider implementing automated payment processing for efficiency"
+      );
     }
 
-    const totalPayouts = data.payouts.reduce((sum, payout) => sum + payout.amount, 0);
+    const totalPayouts = data.payouts.reduce(
+      (sum, payout) => sum + payout.amount,
+      0
+    );
     if (totalPayouts > data.totalYield * 0.3) {
-      recommendations.push("Monitor vendor costs relative to protocol yield generation");
+      recommendations.push(
+        "Monitor vendor costs relative to protocol yield generation"
+      );
     }
 
     return recommendations;
@@ -181,20 +211,25 @@ export class ProtocolBillingFeedPublisher {
         "guardianchain:ProtocolName": this.PROTOCOL_NAME,
         "guardianchain:ReportingPeriod": new Date().toISOString().substr(0, 7),
         "guardianchain:TreasuryBalance": data.totalYield,
-        "guardianchain:VendorPayouts": data.payouts.map(payout => ({
+        "guardianchain:VendorPayouts": data.payouts.map((payout) => ({
           "guardianchain:VendorName": payout.vendor,
           "guardianchain:PayoutAmount": payout.amount,
           "guardianchain:PayoutDate": payout.timestamp,
-          "guardianchain:InvoiceReference": payout.invoiceId
+          "guardianchain:InvoiceReference": payout.invoiceId,
         })),
         "guardianchain:ComplianceScore": data.complianceScore,
-        "guardianchain:AuditDate": data.auditTimestamp
-      }
+        "guardianchain:AuditDate": data.auditTimestamp,
+      },
     };
 
-    const xbrlPath = path.join(process.cwd(), "public", "feeds", "protocol_billing.xbrl");
+    const xbrlPath = path.join(
+      process.cwd(),
+      "public",
+      "feeds",
+      "protocol_billing.xbrl"
+    );
     fs.writeFileSync(xbrlPath, JSON.stringify(xbrlData, null, 2));
-    
+
     console.log("✅ XBRL export generated for institutional compliance");
   }
 

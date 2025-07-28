@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +32,7 @@ import {
   Coins,
   FileText,
   Ban,
-  Star
+  Star,
 } from "lucide-react";
 
 interface AdminStats {
@@ -77,31 +83,43 @@ export default function AdminDashboard() {
   });
 
   // Pending capsules for moderation
-  const { data: pendingCapsules = [], isLoading: capsulesLoading } = useQuery<CapsuleModerationItem[]>({
+  const { data: pendingCapsules = [], isLoading: capsulesLoading } = useQuery<
+    CapsuleModerationItem[]
+  >({
     queryKey: ["/api/admin/capsules/pending"],
     enabled: isAuthenticated,
   });
 
   // Flagged content
-  const { data: flaggedContent = [], isLoading: flaggedLoading } = useQuery<CapsuleModerationItem[]>({
+  const { data: flaggedContent = [], isLoading: flaggedLoading } = useQuery<
+    CapsuleModerationItem[]
+  >({
     queryKey: ["/api/admin/capsules/flagged"],
     enabled: isAuthenticated,
   });
 
   // User management
-  const { data: users = [], isLoading: usersLoading } = useQuery<UserModerationItem[]>({
+  const { data: users = [], isLoading: usersLoading } = useQuery<
+    UserModerationItem[]
+  >({
     queryKey: ["/api/admin/users"],
     enabled: isAuthenticated,
   });
 
   // Capsule moderation mutations
   const approveCapsuleMutation = useMutation({
-    mutationFn: async (data: { capsuleId: string; yieldAmount?: string; notes?: string }) => {
+    mutationFn: async (data: {
+      capsuleId: string;
+      yieldAmount?: string;
+      notes?: string;
+    }) => {
       return apiRequest("POST", "/api/admin/capsules/approve", data);
     },
     onSuccess: () => {
       toast({ title: "Capsule approved successfully" });
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/capsules/pending"] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/admin/capsules/pending"],
+      });
       queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
     },
     onError: (error: any) => {
@@ -119,7 +137,9 @@ export default function AdminDashboard() {
     },
     onSuccess: () => {
       toast({ title: "Capsule rejected" });
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/capsules/pending"] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/admin/capsules/pending"],
+      });
     },
   });
 
@@ -128,15 +148,21 @@ export default function AdminDashboard() {
       return apiRequest("POST", "/api/admin/capsules/feature", data);
     },
     onSuccess: (_, variables) => {
-      toast({ 
-        title: variables.featured ? "Capsule featured" : "Capsule unfeatured" 
+      toast({
+        title: variables.featured ? "Capsule featured" : "Capsule unfeatured",
       });
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/capsules/pending"] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/admin/capsules/pending"],
+      });
     },
   });
 
   const awardGTTMutation = useMutation({
-    mutationFn: async (data: { capsuleId: string; amount: string; notes: string }) => {
+    mutationFn: async (data: {
+      capsuleId: string;
+      amount: string;
+      notes: string;
+    }) => {
       return apiRequest("POST", "/api/admin/capsules/award-gtt", data);
     },
     onSuccess: () => {
@@ -149,7 +175,11 @@ export default function AdminDashboard() {
 
   // User moderation mutations
   const moderateUserMutation = useMutation({
-    mutationFn: async (data: { userId: string; action: string; reason?: string }) => {
+    mutationFn: async (data: {
+      userId: string;
+      action: string;
+      reason?: string;
+    }) => {
       return apiRequest("POST", "/api/admin/users/moderate", data);
     },
     onSuccess: (_, variables) => {
@@ -191,7 +221,11 @@ export default function AdminDashboard() {
     });
   };
 
-  const handleModerateUser = (userId: string, action: string, reason?: string) => {
+  const handleModerateUser = (
+    userId: string,
+    action: string,
+    reason?: string
+  ) => {
     moderateUserMutation.mutate({ userId, action, reason });
   };
 
@@ -223,9 +257,14 @@ export default function AdminDashboard() {
             <Shield className="h-8 w-8 text-purple-600" />
             Admin Command Center
           </h1>
-          <p className="text-muted-foreground">GUARDIANCHAIN Protocol Management</p>
+          <p className="text-muted-foreground">
+            GUARDIANCHAIN Protocol Management
+          </p>
         </div>
-        <Badge variant="outline" className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300">
+        <Badge
+          variant="outline"
+          className="bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300"
+        >
           Master Admin
         </Badge>
       </div>
@@ -239,8 +278,12 @@ export default function AdminDashboard() {
                 <FileText className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{stats?.totalCapsules || 0}</div>
-                <div className="text-sm text-muted-foreground">Total Capsules</div>
+                <div className="text-2xl font-bold">
+                  {stats?.totalCapsules || 0}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Total Capsules
+                </div>
               </div>
             </div>
           </CardContent>
@@ -253,8 +296,12 @@ export default function AdminDashboard() {
                 <AlertTriangle className="h-6 w-6 text-yellow-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{stats?.pendingCapsules || 0}</div>
-                <div className="text-sm text-muted-foreground">Pending Review</div>
+                <div className="text-2xl font-bold">
+                  {stats?.pendingCapsules || 0}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Pending Review
+                </div>
               </div>
             </div>
           </CardContent>
@@ -267,8 +314,12 @@ export default function AdminDashboard() {
                 <Users className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{stats?.activeUsers || 0}</div>
-                <div className="text-sm text-muted-foreground">Active Users</div>
+                <div className="text-2xl font-bold">
+                  {stats?.activeUsers || 0}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Active Users
+                </div>
               </div>
             </div>
           </CardContent>
@@ -281,8 +332,12 @@ export default function AdminDashboard() {
                 <Coins className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold">{parseFloat(stats?.gttDistributed || "0").toFixed(0)}</div>
-                <div className="text-sm text-muted-foreground">GTT Distributed</div>
+                <div className="text-2xl font-bold">
+                  {parseFloat(stats?.gttDistributed || "0").toFixed(0)}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  GTT Distributed
+                </div>
               </div>
             </div>
           </CardContent>
@@ -307,13 +362,18 @@ export default function AdminDashboard() {
                   <Eye className="h-5 w-5" />
                   Pending Review ({pendingCapsules.length})
                 </CardTitle>
-                <CardDescription>Capsules awaiting moderation approval</CardDescription>
+                <CardDescription>
+                  Capsules awaiting moderation approval
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {capsulesLoading ? (
                   <div className="space-y-4">
                     {[...Array(3)].map((_, i) => (
-                      <div key={i} className="h-20 bg-muted rounded animate-pulse" />
+                      <div
+                        key={i}
+                        className="h-20 bg-muted rounded animate-pulse"
+                      />
                     ))}
                   </div>
                 ) : pendingCapsules.length === 0 ? (
@@ -324,18 +384,25 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {pendingCapsules.map((capsule) => (
-                      <div key={capsule.id} className="p-4 border rounded-lg space-y-3">
+                      <div
+                        key={capsule.id}
+                        className="p-4 border rounded-lg space-y-3"
+                      >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h4 className="font-semibold">{capsule.title}</h4>
-                            <p className="text-sm text-muted-foreground">by {capsule.creator}</p>
-                            <p className="text-sm mt-1 line-clamp-2">{capsule.content}</p>
+                            <p className="text-sm text-muted-foreground">
+                              by {capsule.creator}
+                            </p>
+                            <p className="text-sm mt-1 line-clamp-2">
+                              {capsule.content}
+                            </p>
                           </div>
                           <Badge variant="secondary">
                             {capsule.yieldAmount} GTT
                           </Badge>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                           <Button
                             size="sm"
@@ -348,7 +415,12 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleRejectCapsule(capsule.id, "Content policy violation")}
+                            onClick={() =>
+                              handleRejectCapsule(
+                                capsule.id,
+                                "Content policy violation"
+                              )
+                            }
                             disabled={rejectCapsuleMutation.isPending}
                           >
                             <EyeOff className="h-4 w-4 mr-1" />
@@ -357,7 +429,9 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleFeatureCapsule(capsule.id, true)}
+                            onClick={() =>
+                              handleFeatureCapsule(capsule.id, true)
+                            }
                             disabled={featureCapsuleMutation.isPending}
                           >
                             <Star className="h-4 w-4 mr-1" />
@@ -378,13 +452,18 @@ export default function AdminDashboard() {
                   <Flag className="h-5 w-5 text-red-500" />
                   Flagged Content ({flaggedContent.length})
                 </CardTitle>
-                <CardDescription>Community-reported content requiring review</CardDescription>
+                <CardDescription>
+                  Community-reported content requiring review
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {flaggedLoading ? (
                   <div className="space-y-4">
                     {[...Array(2)].map((_, i) => (
-                      <div key={i} className="h-20 bg-muted rounded animate-pulse" />
+                      <div
+                        key={i}
+                        className="h-20 bg-muted rounded animate-pulse"
+                      />
                     ))}
                   </div>
                 ) : flaggedContent.length === 0 ? (
@@ -395,7 +474,10 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {flaggedContent.map((item) => (
-                      <div key={item.id} className="p-4 border border-red-200 rounded-lg space-y-3">
+                      <div
+                        key={item.id}
+                        className="p-4 border border-red-200 rounded-lg space-y-3"
+                      >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h4 className="font-semibold">{item.title}</h4>
@@ -403,11 +485,9 @@ export default function AdminDashboard() {
                               {item.reportCount} reports • by {item.creator}
                             </p>
                           </div>
-                          <Badge variant="destructive">
-                            Flagged
-                          </Badge>
+                          <Badge variant="destructive">Flagged</Badge>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                           <Button
                             size="sm"
@@ -419,7 +499,12 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="destructive"
-                            onClick={() => handleRejectCapsule(item.id, "Confirmed policy violation")}
+                            onClick={() =>
+                              handleRejectCapsule(
+                                item.id,
+                                "Confirmed policy violation"
+                              )
+                            }
                             disabled={rejectCapsuleMutation.isPending}
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
@@ -442,13 +527,18 @@ export default function AdminDashboard() {
                 <Users className="h-5 w-5" />
                 User Management ({users.length})
               </CardTitle>
-              <CardDescription>Manage user accounts and moderation actions</CardDescription>
+              <CardDescription>
+                Manage user accounts and moderation actions
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {usersLoading ? (
                 <div className="space-y-4">
                   {[...Array(5)].map((_, i) => (
-                    <div key={i} className="h-16 bg-muted rounded animate-pulse" />
+                    <div
+                      key={i}
+                      className="h-16 bg-muted rounded animate-pulse"
+                    />
                   ))}
                 </div>
               ) : (
@@ -460,35 +550,57 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-2">
                             <h4 className="font-semibold">{user.name}</h4>
                             <Badge variant="outline">{user.tier}</Badge>
-                            <Badge variant={
-                              user.status === "active" ? "default" :
-                              user.status === "warned" ? "secondary" :
-                              user.status === "suspended" ? "destructive" : "destructive"
-                            }>
+                            <Badge
+                              variant={
+                                user.status === "active"
+                                  ? "default"
+                                  : user.status === "warned"
+                                  ? "secondary"
+                                  : user.status === "suspended"
+                                  ? "destructive"
+                                  : "destructive"
+                              }
+                            >
                               {user.status}
                             </Badge>
                           </div>
-                          <p className="text-sm text-muted-foreground">{user.email}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.email}
+                          </p>
                           <div className="text-xs text-muted-foreground mt-1">
-                            {user.capsulesCreated} capsules • Reputation: {user.reputation}
-                            {user.flaggedContent > 0 && ` • ${user.flaggedContent} flags`}
+                            {user.capsulesCreated} capsules • Reputation:{" "}
+                            {user.reputation}
+                            {user.flaggedContent > 0 &&
+                              ` • ${user.flaggedContent} flags`}
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center gap-2">
                           {user.status === "active" && (
                             <>
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => handleModerateUser(user.id, "warn", "Community guidelines reminder")}
+                                onClick={() =>
+                                  handleModerateUser(
+                                    user.id,
+                                    "warn",
+                                    "Community guidelines reminder"
+                                  )
+                                }
                               >
                                 Warn
                               </Button>
                               <Button
                                 size="sm"
                                 variant="destructive"
-                                onClick={() => handleModerateUser(user.id, "suspend", "Policy violation")}
+                                onClick={() =>
+                                  handleModerateUser(
+                                    user.id,
+                                    "suspend",
+                                    "Policy violation"
+                                  )
+                                }
                               >
                                 Suspend
                               </Button>
@@ -497,7 +609,9 @@ export default function AdminDashboard() {
                           {user.status === "suspended" && (
                             <Button
                               size="sm"
-                              onClick={() => handleModerateUser(user.id, "activate")}
+                              onClick={() =>
+                                handleModerateUser(user.id, "activate")
+                              }
                             >
                               Restore
                             </Button>
@@ -582,12 +696,23 @@ export default function AdminDashboard() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>GTT in Circulation</span>
-                    <span className="font-bold">{parseFloat(stats?.gttDistributed || "0").toLocaleString()}</span>
+                    <span className="font-bold">
+                      {parseFloat(
+                        stats?.gttDistributed || "0"
+                      ).toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Verification Rate</span>
                     <span className="font-bold">
-                      {stats ? Math.round((stats.totalCapsules - stats.pendingCapsules) / stats.totalCapsules * 100) : 0}%
+                      {stats
+                        ? Math.round(
+                            ((stats.totalCapsules - stats.pendingCapsules) /
+                              stats.totalCapsules) *
+                              100
+                          )
+                        : 0}
+                      %
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -609,13 +734,17 @@ export default function AdminDashboard() {
                 <Award className="h-5 w-5" />
                 GTT Award System
               </CardTitle>
-              <CardDescription>Award additional GTT tokens to exceptional content</CardDescription>
+              <CardDescription>
+                Award additional GTT tokens to exceptional content
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium">Award Amount (GTT)</label>
+                    <label className="text-sm font-medium">
+                      Award Amount (GTT)
+                    </label>
                     <Input
                       type="number"
                       placeholder="Enter GTT amount"
@@ -632,7 +761,7 @@ export default function AdminDashboard() {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium">Award Notes</label>
                   <Textarea
@@ -641,10 +770,14 @@ export default function AdminDashboard() {
                     onChange={(e) => setAdminNotes(e.target.value)}
                   />
                 </div>
-                
+
                 <Button
                   onClick={() => handleAwardGTT(selectedCapsule)}
-                  disabled={!selectedCapsule || !awardAmount || awardGTTMutation.isPending}
+                  disabled={
+                    !selectedCapsule ||
+                    !awardAmount ||
+                    awardGTTMutation.isPending
+                  }
                   className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
                 >
                   <Award className="h-4 w-4 mr-2" />

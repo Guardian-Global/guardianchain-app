@@ -36,7 +36,7 @@ export default function PrivateFeed() {
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
               Exclusive truth capsules from your verified friend network
             </p>
-            
+
             {/* Friend Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
               <Card className="bg-slate-800/50 border-slate-700">
@@ -85,7 +85,10 @@ export default function PrivateFeed() {
                     You have friend requests waiting for approval
                   </p>
                   <Link href="/friends">
-                    <Button variant="outline" className="border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white">
+                    <Button
+                      variant="outline"
+                      className="border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white"
+                    >
                       Review Requests
                     </Button>
                   </Link>
@@ -107,11 +110,17 @@ export default function PrivateFeed() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="border-green-500 text-green-400">
+              <Badge
+                variant="outline"
+                className="border-green-500 text-green-400"
+              >
                 <Eye className="h-3 w-3 mr-1" />
                 Private
               </Badge>
-              <Badge variant="outline" className="border-purple-500 text-purple-400">
+              <Badge
+                variant="outline"
+                className="border-purple-500 text-purple-400"
+              >
                 <Shield className="h-3 w-3 mr-1" />
                 Verified Friends Only
               </Badge>
@@ -142,9 +151,12 @@ export default function PrivateFeed() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardContent className="p-12 text-center">
                 <Users className="h-16 w-16 text-slate-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No Private Capsules Yet</h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  No Private Capsules Yet
+                </h3>
                 <p className="text-slate-400 mb-6 max-w-md mx-auto">
-                  Start connecting with friends to see their exclusive truth capsules in your private feed.
+                  Start connecting with friends to see their exclusive truth
+                  capsules in your private feed.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/explore">
@@ -154,7 +166,10 @@ export default function PrivateFeed() {
                     </Button>
                   </Link>
                   <Link href="/create">
-                    <Button variant="outline" className="border-slate-600 hover:border-slate-400">
+                    <Button
+                      variant="outline"
+                      className="border-slate-600 hover:border-slate-400"
+                    >
                       Create Private Capsule
                     </Button>
                   </Link>
@@ -177,9 +192,10 @@ export default function PrivateFeed() {
                 <div>
                   <h3 className="font-semibold mb-2">Privacy Protection</h3>
                   <p className="text-slate-400 text-sm">
-                    All private capsules are encrypted and only visible to verified friends. 
-                    Your friend network and viewing history remain completely private and 
-                    are never shared with third parties.
+                    All private capsules are encrypted and only visible to
+                    verified friends. Your friend network and viewing history
+                    remain completely private and are never shared with third
+                    parties.
                   </p>
                 </div>
               </div>

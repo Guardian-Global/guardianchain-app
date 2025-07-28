@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Users, 
-  Shield, 
+import {
+  TrendingUp,
+  DollarSign,
+  Users,
+  Shield,
   Flame,
   Target,
   Zap,
@@ -15,11 +15,11 @@ import {
   BarChart3,
   PieChart,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
 } from "lucide-react";
 
 const TokenomicsEngine: React.FC = () => {
-  const [selectedMetric, setSelectedMetric] = useState('revenue');
+  const [selectedMetric, setSelectedMetric] = useState("revenue");
 
   const tokenomicsData = {
     totalSupply: "1,000,000,000",
@@ -28,15 +28,40 @@ const TokenomicsEngine: React.FC = () => {
     protocolRevenue: "$125,000,000",
     burnRate: "2.5%",
     stakingAPY: "15.2%",
-    treasuryValue: "$850,000,000"
+    treasuryValue: "$850,000,000",
   };
 
   const distributionData = [
-    { category: "Community Rewards", percentage: 40, amount: "400M GTT", color: "bg-blue-500" },
-    { category: "Protocol Development", percentage: 25, amount: "250M GTT", color: "bg-green-500" },
-    { category: "Enterprise Partnerships", percentage: 15, amount: "150M GTT", color: "bg-purple-500" },
-    { category: "Team & Advisors", percentage: 10, amount: "100M GTT", color: "bg-yellow-500" },
-    { category: "Treasury Reserve", percentage: 10, amount: "100M GTT", color: "bg-red-500" }
+    {
+      category: "Community Rewards",
+      percentage: 40,
+      amount: "400M GTT",
+      color: "bg-blue-500",
+    },
+    {
+      category: "Protocol Development",
+      percentage: 25,
+      amount: "250M GTT",
+      color: "bg-green-500",
+    },
+    {
+      category: "Enterprise Partnerships",
+      percentage: 15,
+      amount: "150M GTT",
+      color: "bg-purple-500",
+    },
+    {
+      category: "Team & Advisors",
+      percentage: 10,
+      amount: "100M GTT",
+      color: "bg-yellow-500",
+    },
+    {
+      category: "Treasury Reserve",
+      percentage: 10,
+      amount: "100M GTT",
+      color: "bg-red-500",
+    },
   ];
 
   const revenueStreams = [
@@ -45,29 +70,29 @@ const TokenomicsEngine: React.FC = () => {
       monthly: "$15M",
       annual: "$180M",
       growth: "+45%",
-      icon: <Shield className="w-5 h-5" />
+      icon: <Shield className="w-5 h-5" />,
     },
     {
       source: "Transaction Fees",
       monthly: "$8M",
       annual: "$96M",
       growth: "+62%",
-      icon: <DollarSign className="w-5 h-5" />
+      icon: <DollarSign className="w-5 h-5" />,
     },
     {
       source: "NFT Marketplace Commission",
       monthly: "$5M",
       annual: "$60M",
       growth: "+38%",
-      icon: <Target className="w-5 h-5" />
+      icon: <Target className="w-5 h-5" />,
     },
     {
       source: "Staking Protocol Fees",
       monthly: "$3M",
       annual: "$36M",
       growth: "+28%",
-      icon: <Lock className="w-5 h-5" />
-    }
+      icon: <Lock className="w-5 h-5" />,
+    },
   ];
 
   const valueCaptureMetrics = [
@@ -75,26 +100,29 @@ const TokenomicsEngine: React.FC = () => {
       metric: "Protocol Revenue",
       value: "$125M",
       change: "+156%",
-      description: "Annual recurring revenue from enterprise clients and transaction fees"
+      description:
+        "Annual recurring revenue from enterprise clients and transaction fees",
     },
     {
       metric: "Token Burns",
       value: "12.5M GTT",
       change: "+89%",
-      description: "Quarterly token burns reducing circulating supply and increasing scarcity"
+      description:
+        "Quarterly token burns reducing circulating supply and increasing scarcity",
     },
     {
       metric: "Staking Rewards",
       value: "15.2% APY",
       change: "+3.2%",
-      description: "Competitive staking yields driving long-term token holding behavior"
+      description:
+        "Competitive staking yields driving long-term token holding behavior",
     },
     {
       metric: "Treasury Growth",
       value: "$850M",
       change: "+234%",
-      description: "Protocol-owned liquidity and diversified treasury assets"
-    }
+      description: "Protocol-owned liquidity and diversified treasury assets",
+    },
   ];
 
   const deflatinaryMechanisms = [
@@ -102,26 +130,29 @@ const TokenomicsEngine: React.FC = () => {
       mechanism: "Transaction Fee Burns",
       description: "50% of all transaction fees automatically burned",
       impact: "1.2M GTT/month",
-      status: "active"
+      status: "active",
     },
     {
       mechanism: "Enterprise License Burns",
-      description: "25% of enterprise licensing revenue used for token buyback and burn",
+      description:
+        "25% of enterprise licensing revenue used for token buyback and burn",
       impact: "3.8M GTT/month",
-      status: "active"
+      status: "active",
     },
     {
       mechanism: "Governance Vote Burns",
-      description: "Failed proposals result in deposited GTT being permanently burned",
+      description:
+        "Failed proposals result in deposited GTT being permanently burned",
       impact: "150K GTT/month",
-      status: "active"
+      status: "active",
     },
     {
       mechanism: "Premium Feature Access",
-      description: "Advanced features require GTT payment which is immediately burned",
+      description:
+        "Advanced features require GTT payment which is immediately burned",
       impact: "500K GTT/month",
-      status: "active"
-    }
+      status: "active",
+    },
   ];
 
   return (
@@ -136,7 +167,8 @@ const TokenomicsEngine: React.FC = () => {
             <Badge className="bg-green-600">Revenue-Backed</Badge>
           </CardTitle>
           <p className="text-slate-300">
-            Sustainable tokenomics designed for billion-dollar protocol valuation with real revenue backing and deflationary mechanisms.
+            Sustainable tokenomics designed for billion-dollar protocol
+            valuation with real revenue backing and deflationary mechanisms.
           </p>
         </CardHeader>
       </Card>
@@ -145,7 +177,9 @@ const TokenomicsEngine: React.FC = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="bg-slate-800/50 border-slate-700 text-center">
           <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-green-400">{tokenomicsData.marketCap}</div>
+            <div className="text-2xl font-bold text-green-400">
+              {tokenomicsData.marketCap}
+            </div>
             <div className="text-sm text-slate-400">Market Cap</div>
             <div className="flex items-center justify-center mt-1">
               <ArrowUp className="w-3 h-3 text-green-400 mr-1" />
@@ -156,7 +190,9 @@ const TokenomicsEngine: React.FC = () => {
 
         <Card className="bg-slate-800/50 border-slate-700 text-center">
           <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-blue-400">{tokenomicsData.protocolRevenue}</div>
+            <div className="text-2xl font-bold text-blue-400">
+              {tokenomicsData.protocolRevenue}
+            </div>
             <div className="text-sm text-slate-400">Annual Revenue</div>
             <div className="flex items-center justify-center mt-1">
               <ArrowUp className="w-3 h-3 text-green-400 mr-1" />
@@ -167,7 +203,9 @@ const TokenomicsEngine: React.FC = () => {
 
         <Card className="bg-slate-800/50 border-slate-700 text-center">
           <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-red-400">{tokenomicsData.burnRate}</div>
+            <div className="text-2xl font-bold text-red-400">
+              {tokenomicsData.burnRate}
+            </div>
             <div className="text-sm text-slate-400">Monthly Burn Rate</div>
             <div className="flex items-center justify-center mt-1">
               <Flame className="w-3 h-3 text-red-400 mr-1" />
@@ -178,7 +216,9 @@ const TokenomicsEngine: React.FC = () => {
 
         <Card className="bg-slate-800/50 border-slate-700 text-center">
           <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-purple-400">{tokenomicsData.stakingAPY}</div>
+            <div className="text-2xl font-bold text-purple-400">
+              {tokenomicsData.stakingAPY}
+            </div>
             <div className="text-sm text-slate-400">Staking APY</div>
             <div className="flex items-center justify-center mt-1">
               <Lock className="w-3 h-3 text-purple-400 mr-1" />
@@ -202,27 +242,37 @@ const TokenomicsEngine: React.FC = () => {
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className={`w-4 h-4 rounded ${item.color}`}></div>
-                  <span className="text-white font-medium">{item.category}</span>
+                  <span className="text-white font-medium">
+                    {item.category}
+                  </span>
                 </div>
                 <div className="text-right">
                   <div className="text-white font-bold">{item.amount}</div>
-                  <div className="text-slate-400 text-sm">{item.percentage}%</div>
+                  <div className="text-slate-400 text-sm">
+                    {item.percentage}%
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-              <div className="text-lg font-bold text-white">{tokenomicsData.totalSupply}</div>
+              <div className="text-lg font-bold text-white">
+                {tokenomicsData.totalSupply}
+              </div>
               <div className="text-sm text-slate-400">Total Supply</div>
             </div>
             <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-              <div className="text-lg font-bold text-blue-400">{tokenomicsData.circulatingSupply}</div>
+              <div className="text-lg font-bold text-blue-400">
+                {tokenomicsData.circulatingSupply}
+              </div>
               <div className="text-sm text-slate-400">Circulating Supply</div>
             </div>
             <div className="bg-slate-700/50 rounded-lg p-4 text-center">
-              <div className="text-lg font-bold text-green-400">{tokenomicsData.treasuryValue}</div>
+              <div className="text-lg font-bold text-green-400">
+                {tokenomicsData.treasuryValue}
+              </div>
               <div className="text-sm text-slate-400">Treasury Value</div>
             </div>
           </div>
@@ -248,15 +298,23 @@ const TokenomicsEngine: React.FC = () => {
                         {stream.icon}
                       </div>
                       <div>
-                        <div className="text-white font-medium">{stream.source}</div>
-                        <div className="text-slate-400 text-sm">Annual: {stream.annual}</div>
+                        <div className="text-white font-medium">
+                          {stream.source}
+                        </div>
+                        <div className="text-slate-400 text-sm">
+                          Annual: {stream.annual}
+                        </div>
                       </div>
                     </div>
                     <Badge className="bg-green-600">{stream.growth}</Badge>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-green-400">{stream.monthly}</div>
-                    <div className="text-sm text-slate-400">Monthly Revenue</div>
+                    <div className="text-2xl font-bold text-green-400">
+                      {stream.monthly}
+                    </div>
+                    <div className="text-sm text-slate-400">
+                      Monthly Revenue
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -281,7 +339,9 @@ const TokenomicsEngine: React.FC = () => {
                   <h3 className="text-white font-semibold">{metric.metric}</h3>
                   <Badge className="bg-green-600">{metric.change}</Badge>
                 </div>
-                <div className="text-2xl font-bold text-blue-400 mb-2">{metric.value}</div>
+                <div className="text-2xl font-bold text-blue-400 mb-2">
+                  {metric.value}
+                </div>
                 <p className="text-slate-300 text-sm">{metric.description}</p>
               </div>
             ))}
@@ -302,28 +362,42 @@ const TokenomicsEngine: React.FC = () => {
             {deflatinaryMechanisms.map((mechanism, index) => (
               <div key={index} className="bg-slate-700/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-white font-semibold">{mechanism.mechanism}</h3>
+                  <h3 className="text-white font-semibold">
+                    {mechanism.mechanism}
+                  </h3>
                   <Badge className="bg-red-600">
-                    {mechanism.status === 'active' ? 'Active' : 'Pending'}
+                    {mechanism.status === "active" ? "Active" : "Pending"}
                   </Badge>
                 </div>
-                <p className="text-slate-300 text-sm mb-3">{mechanism.description}</p>
+                <p className="text-slate-300 text-sm mb-3">
+                  {mechanism.description}
+                </p>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">Monthly Impact:</span>
-                  <span className="text-red-400 font-bold">{mechanism.impact}</span>
+                  <span className="text-slate-400 text-sm">
+                    Monthly Impact:
+                  </span>
+                  <span className="text-red-400 font-bold">
+                    {mechanism.impact}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <div className="mt-6 bg-red-900/20 border border-red-700 rounded-lg p-4">
             <div className="flex items-center mb-2">
               <Flame className="w-5 h-5 text-red-400 mr-2" />
-              <h3 className="text-white font-semibold">Total Monthly Burn Rate</h3>
+              <h3 className="text-white font-semibold">
+                Total Monthly Burn Rate
+              </h3>
             </div>
-            <div className="text-2xl font-bold text-red-400 mb-2">6.15M GTT</div>
+            <div className="text-2xl font-bold text-red-400 mb-2">
+              6.15M GTT
+            </div>
             <p className="text-slate-300 text-sm">
-              Approximately 2.5% of circulating supply burned monthly, creating sustained deflationary pressure and value accrual for long-term holders.
+              Approximately 2.5% of circulating supply burned monthly, creating
+              sustained deflationary pressure and value accrual for long-term
+              holders.
             </p>
           </div>
         </CardContent>
@@ -340,27 +414,31 @@ const TokenomicsEngine: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-400 mb-2">$100B+</div>
+              <div className="text-3xl font-bold text-green-400 mb-2">
+                $100B+
+              </div>
               <div className="text-slate-400 mb-2">Target Market Cap</div>
               <Progress value={42} className="h-2" />
               <div className="text-xs text-slate-500 mt-1">42% to target</div>
             </div>
-            
+
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-400 mb-2">$1B+</div>
               <div className="text-slate-400 mb-2">Annual Protocol Revenue</div>
               <Progress value={12} className="h-2" />
               <div className="text-xs text-slate-500 mt-1">12% to target</div>
             </div>
-            
+
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-400 mb-2">100M</div>
+              <div className="text-3xl font-bold text-purple-400 mb-2">
+                100M
+              </div>
               <div className="text-slate-400 mb-2">Active Users</div>
               <Progress value={8} className="h-2" />
               <div className="text-xs text-slate-500 mt-1">8% to target</div>
             </div>
           </div>
-          
+
           <div className="mt-6 text-center">
             <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
               <TrendingUp className="w-4 h-4 mr-2" />

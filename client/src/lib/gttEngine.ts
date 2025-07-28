@@ -53,7 +53,11 @@ export function calculateAdvancedGTT(metrics: CapsuleMetrics): GTTReward {
   const reputationBonus = baseReward * (metrics.creatorReputation / 1000);
 
   // Calculate total with diminishing returns for very high values
-  const preTotal = (baseReward * griefMultiplier) + engagementBonus + sealBonus + reputationBonus;
+  const preTotal =
+    baseReward * griefMultiplier +
+    engagementBonus +
+    sealBonus +
+    reputationBonus;
   const totalGTT = Math.min(preTotal, 1000); // Cap at 1000 GTT per capsule
 
   return {
@@ -62,7 +66,7 @@ export function calculateAdvancedGTT(metrics: CapsuleMetrics): GTTReward {
     engagementBonus: parseFloat(engagementBonus.toFixed(2)),
     sealBonus: parseFloat(sealBonus.toFixed(2)),
     reputationBonus: parseFloat(reputationBonus.toFixed(2)),
-    totalGTT: parseFloat(totalGTT.toFixed(2))
+    totalGTT: parseFloat(totalGTT.toFixed(2)),
   };
 }
 
@@ -72,9 +76,9 @@ export function calculateAdvancedGTT(metrics: CapsuleMetrics): GTTReward {
 export function calculateTruthYield(metrics: CapsuleMetrics): number {
   const baseYield = metrics.griefScore * 0.8; // Base yield from grief score
   const engagementYield = (metrics.viewCount + metrics.shareCount * 3) * 0.1;
-  const timeDecay = Math.max(0.5, 1 - (metrics.timeActive / (24 * 30))); // Decay over 30 days
+  const timeDecay = Math.max(0.5, 1 - metrics.timeActive / (24 * 30)); // Decay over 30 days
   const sealBonus = metrics.sealStatus ? 1.3 : 1.0; // 30% bonus for sealed content
-  
+
   const totalYield = (baseYield + engagementYield) * timeDecay * sealBonus;
   return parseFloat(Math.max(0, totalYield).toFixed(2));
 }
@@ -83,23 +87,23 @@ export function calculateTruthYield(metrics: CapsuleMetrics): number {
  * Calculate staking rewards for GTT holders
  */
 export function calculateStakingRewards(
-  stakedAmount: number, 
+  stakedAmount: number,
   stakingDuration: number, // in days
   totalStaked: number,
   rewardPool: number
 ): number {
   const annualRate = 0.08; // 8% APY base rate
   const dailyRate = annualRate / 365;
-  
+
   // Your share of the total staked amount
   const stakeShare = stakedAmount / totalStaked;
-  
+
   // Your portion of the reward pool
   const poolReward = rewardPool * stakeShare;
-  
+
   // Time-based staking reward
   const stakingReward = stakedAmount * dailyRate * stakingDuration;
-  
+
   return parseFloat((poolReward + stakingReward).toFixed(2));
 }
 
@@ -112,23 +116,27 @@ export function calculateVotingPower(
   stakingBonus: number = 0
 ): number {
   const baseVotingPower = Math.sqrt(gttBalance); // Square root to prevent whale dominance
-  const reputationMultiplier = 1 + (reputation / 1000); // Max 2x multiplier
+  const reputationMultiplier = 1 + reputation / 1000; // Max 2x multiplier
   const stakingMultiplier = 1 + stakingBonus; // Bonus for staked tokens
-  
-  return parseFloat((baseVotingPower * reputationMultiplier * stakingMultiplier).toFixed(2));
+
+  return parseFloat(
+    (baseVotingPower * reputationMultiplier * stakingMultiplier).toFixed(2)
+  );
 }
 
 /**
  * Calculate creator rewards for successful capsules
  */
-export function calculateCreatorRewards(capsuleMetrics: CapsuleMetrics[]): number {
+export function calculateCreatorRewards(
+  capsuleMetrics: CapsuleMetrics[]
+): number {
   let totalRewards = 0;
-  
-  capsuleMetrics.forEach(metrics => {
+
+  capsuleMetrics.forEach((metrics) => {
     const reward = calculateAdvancedGTT(metrics);
     totalRewards += reward.totalGTT;
   });
-  
+
   // Apply creator multiplier (creators get 10% bonus)
   return parseFloat((totalRewards * 1.1).toFixed(2));
 }
@@ -136,15 +144,18 @@ export function calculateCreatorRewards(capsuleMetrics: CapsuleMetrics[]): numbe
 /**
  * Calculate network fees for various operations
  */
-export function calculateNetworkFees(operation: string, amount: number): number {
+export function calculateNetworkFees(
+  operation: string,
+  amount: number
+): number {
   const feeRates = {
-    mint: 0.001,     // 0.1% fee for minting
+    mint: 0.001, // 0.1% fee for minting
     transfer: 0.005, // 0.5% fee for transfers
-    claim: 0.002,    // 0.2% fee for claiming rewards
-    stake: 0.001,    // 0.1% fee for staking
-    vote: 0,         // No fee for voting
+    claim: 0.002, // 0.2% fee for claiming rewards
+    stake: 0.001, // 0.1% fee for staking
+    vote: 0, // No fee for voting
   };
-  
+
   const rate = feeRates[operation as keyof typeof feeRates] || 0.005;
   return parseFloat((amount * rate).toFixed(2));
 }
@@ -158,29 +169,33 @@ export function simulateYieldProjection(
 ): { day: number; cumulativeYield: number; dailyYield: number }[] {
   const projection = [];
   let cumulativeYield = 0;
-  
+
   for (let day = 1; day <= daysToProject; day++) {
     // Simulate growth in engagement over time
-    const growthFactor = 1 + (day * 0.05); // 5% daily growth initially
+    const growthFactor = 1 + day * 0.05; // 5% daily growth initially
     const decayFactor = Math.exp(-day / 30); // Exponential decay over 30 days
-    
+
     const simulatedMetrics: CapsuleMetrics = {
       ...initialMetrics,
-      viewCount: Math.floor(initialMetrics.viewCount * growthFactor * decayFactor),
-      shareCount: Math.floor(initialMetrics.shareCount * growthFactor * decayFactor),
+      viewCount: Math.floor(
+        initialMetrics.viewCount * growthFactor * decayFactor
+      ),
+      shareCount: Math.floor(
+        initialMetrics.shareCount * growthFactor * decayFactor
+      ),
       timeActive: day * 24, // Convert days to hours
     };
-    
+
     const dailyYield = calculateTruthYield(simulatedMetrics) / 30; // Spread over 30 days
     cumulativeYield += dailyYield;
-    
+
     projection.push({
       day,
       cumulativeYield: parseFloat(cumulativeYield.toFixed(2)),
-      dailyYield: parseFloat(dailyYield.toFixed(2))
+      dailyYield: parseFloat(dailyYield.toFixed(2)),
     });
   }
-  
+
   return projection;
 }
 
@@ -202,8 +217,8 @@ export function getGTTTier(gttBalance: number): {
         "Priority verification queue",
         "Exclusive governance proposals",
         "Custom capsule themes",
-        "Direct creator support"
-      ]
+        "Direct creator support",
+      ],
     };
   } else if (gttBalance >= 5000) {
     return {
@@ -213,9 +228,9 @@ export function getGTTTier(gttBalance: number): {
         "30% bonus on all rewards",
         "Fast-track verification",
         "Enhanced governance weight",
-        "Premium analytics access"
+        "Premium analytics access",
       ],
-      nextTierThreshold: 10000
+      nextTierThreshold: 10000,
     };
   } else if (gttBalance >= 1000) {
     return {
@@ -225,9 +240,9 @@ export function getGTTTier(gttBalance: number): {
         "20% bonus on all rewards",
         "Priority support",
         "Advanced analytics",
-        "Beta feature access"
+        "Beta feature access",
       ],
-      nextTierThreshold: 5000
+      nextTierThreshold: 5000,
     };
   } else if (gttBalance >= 100) {
     return {
@@ -236,19 +251,16 @@ export function getGTTTier(gttBalance: number): {
       benefits: [
         "10% bonus on all rewards",
         "Basic analytics access",
-        "Community events access"
+        "Community events access",
       ],
-      nextTierThreshold: 1000
+      nextTierThreshold: 1000,
     };
   } else {
     return {
       tier: "Common",
       name: "Truth Novice",
-      benefits: [
-        "Standard rewards",
-        "Basic platform access"
-      ],
-      nextTierThreshold: 100
+      benefits: ["Standard rewards", "Basic platform access"],
+      nextTierThreshold: 100,
     };
   }
 }

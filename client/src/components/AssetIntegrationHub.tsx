@@ -1,19 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Database, 
-  Search, 
-  Upload, 
-  FileText, 
-  Image, 
-  Video, 
-  Music, 
+import {
+  Database,
+  Search,
+  Upload,
+  FileText,
+  Image,
+  Video,
+  Music,
   File,
   CheckCircle,
   AlertCircle,
@@ -21,9 +27,16 @@ import {
   Filter,
   Grid,
   List,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
-import { getAllAssets, getAssetsByType, searchAssets, createCapsuleFromAsset, getAllTables, getTableData } from "@/lib/supabase";
+import {
+  getAllAssets,
+  getAssetsByType,
+  searchAssets,
+  createCapsuleFromAsset,
+  getAllTables,
+  getTableData,
+} from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 interface Asset {
@@ -41,13 +54,13 @@ const AssetIntegrationHub: React.FC = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [filteredAssets, setFilteredAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
   const [tables, setTables] = useState<string[]>([]);
   const [tableData, setTableData] = useState<any[]>([]);
-  const [selectedTable, setSelectedTable] = useState<string>('');
+  const [selectedTable, setSelectedTable] = useState<string>("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -84,13 +97,13 @@ const AssetIntegrationHub: React.FC = () => {
       const tableNames = await getAllTables();
       setTables(tableNames);
     } catch (error) {
-      console.warn('Could not load tables:', error);
+      console.warn("Could not load tables:", error);
     }
   };
 
   const loadTableData = async (tableName: string) => {
     if (!tableName) return;
-    
+
     try {
       const data = await getTableData(tableName);
       setTableData(data || []);
@@ -107,14 +120,15 @@ const AssetIntegrationHub: React.FC = () => {
     let filtered = assets;
 
     if (searchQuery) {
-      filtered = filtered.filter(asset =>
-        asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        asset.bucket.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (asset) =>
+          asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          asset.bucket.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    if (selectedType !== 'all') {
-      filtered = filtered.filter(asset => asset.type === selectedType);
+    if (selectedType !== "all") {
+      filtered = filtered.filter((asset) => asset.type === selectedType);
     }
 
     setFilteredAssets(filtered);
@@ -122,30 +136,40 @@ const AssetIntegrationHub: React.FC = () => {
 
   const getAssetIcon = (type: string) => {
     switch (type) {
-      case 'image': return <Image className="w-5 h-5" />;
-      case 'video': return <Video className="w-5 h-5" />;
-      case 'audio': return <Music className="w-5 h-5" />;
-      case 'document': return <FileText className="w-5 h-5" />;
-      default: return <File className="w-5 h-5" />;
+      case "image":
+        return <Image className="w-5 h-5" />;
+      case "video":
+        return <Video className="w-5 h-5" />;
+      case "audio":
+        return <Music className="w-5 h-5" />;
+      case "document":
+        return <FileText className="w-5 h-5" />;
+      default:
+        return <File className="w-5 h-5" />;
     }
   };
 
   const getAssetTypeColor = (type: string) => {
     switch (type) {
-      case 'image': return 'bg-blue-500';
-      case 'video': return 'bg-red-500';
-      case 'audio': return 'bg-green-500';
-      case 'document': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
+      case "image":
+        return "bg-blue-500";
+      case "video":
+        return "bg-red-500";
+      case "audio":
+        return "bg-green-500";
+      case "document":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const toggleAssetSelection = (assetId: string) => {
@@ -173,17 +197,25 @@ const AssetIntegrationHub: React.FC = () => {
     let errorCount = 0;
 
     for (const assetId of selectedAssets) {
-      const asset = assets.find(a => a.id === assetId);
+      const asset = assets.find((a) => a.id === assetId);
       if (!asset) continue;
 
       try {
         await createCapsuleFromAsset(asset, {
-          title: `${asset.type.charAt(0).toUpperCase() + asset.type.slice(1)}: ${asset.name}`,
-          content: `Automatically imported ${asset.type} asset from Supabase storage.\n\nBucket: ${asset.bucket}\nSize: ${formatFileSize(asset.size)}\nLast Modified: ${new Date(asset.lastModified).toLocaleDateString()}`,
+          title: `${
+            asset.type.charAt(0).toUpperCase() + asset.type.slice(1)
+          }: ${asset.name}`,
+          content: `Automatically imported ${
+            asset.type
+          } asset from Supabase storage.\n\nBucket: ${
+            asset.bucket
+          }\nSize: ${formatFileSize(asset.size)}\nLast Modified: ${new Date(
+            asset.lastModified
+          ).toLocaleDateString()}`,
           metadata: {
             auto_imported: true,
-            import_date: new Date().toISOString()
-          }
+            import_date: new Date().toISOString(),
+          },
         });
         successCount++;
       } catch (error) {
@@ -197,12 +229,14 @@ const AssetIntegrationHub: React.FC = () => {
 
     toast({
       title: "Capsule Creation Complete",
-      description: `${successCount} capsules created successfully${errorCount > 0 ? `, ${errorCount} failed` : ''}`,
+      description: `${successCount} capsules created successfully${
+        errorCount > 0 ? `, ${errorCount} failed` : ""
+      }`,
       variant: errorCount > 0 ? "destructive" : "default",
     });
   };
 
-  const assetTypes = [...new Set(assets.map(a => a.type))];
+  const assetTypes = [...new Set(assets.map((a) => a.type))];
 
   return (
     <div className="w-full space-y-6">
@@ -219,7 +253,11 @@ const AssetIntegrationHub: React.FC = () => {
               size="sm"
               className="bg-blue-600 hover:bg-blue-700"
             >
-              {loading ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-1" />}
+              {loading ? (
+                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4 mr-1" />
+              )}
               Refresh
             </Button>
           </CardTitle>
@@ -227,8 +265,12 @@ const AssetIntegrationHub: React.FC = () => {
         <CardContent>
           <Tabs defaultValue="assets" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="assets">Storage Assets ({assets.length})</TabsTrigger>
-              <TabsTrigger value="database">Database Tables ({tables.length})</TabsTrigger>
+              <TabsTrigger value="assets">
+                Storage Assets ({assets.length})
+              </TabsTrigger>
+              <TabsTrigger value="database">
+                Database Tables ({tables.length})
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="assets" className="space-y-4">
@@ -245,14 +287,14 @@ const AssetIntegrationHub: React.FC = () => {
                     />
                   </div>
                 </div>
-                
+
                 <Select value={selectedType} onValueChange={setSelectedType}>
                   <SelectTrigger className="w-48 bg-slate-700 border-slate-600">
                     <SelectValue placeholder="Filter by type" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Types</SelectItem>
-                    {assetTypes.map(type => (
+                    {assetTypes.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type.charAt(0).toUpperCase() + type.slice(1)}
                       </SelectItem>
@@ -262,17 +304,17 @@ const AssetIntegrationHub: React.FC = () => {
 
                 <div className="flex">
                   <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    variant={viewMode === "grid" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setViewMode('grid')}
+                    onClick={() => setViewMode("grid")}
                     className="rounded-r-none"
                   >
                     <Grid className="w-4 h-4" />
                   </Button>
                   <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    variant={viewMode === "list" ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setViewMode('list')}
+                    onClick={() => setViewMode("list")}
                     className="rounded-l-none"
                   >
                     <List className="w-4 h-4" />
@@ -284,7 +326,8 @@ const AssetIntegrationHub: React.FC = () => {
               {selectedAssets.size > 0 && (
                 <div className="flex items-center justify-between bg-blue-900/20 border border-blue-700 rounded-lg p-4">
                   <span className="text-blue-300">
-                    {selectedAssets.size} asset{selectedAssets.size !== 1 ? 's' : ''} selected
+                    {selectedAssets.size} asset
+                    {selectedAssets.size !== 1 ? "s" : ""} selected
                   </span>
                   <div className="flex space-x-2">
                     <Button
@@ -300,7 +343,11 @@ const AssetIntegrationHub: React.FC = () => {
                       size="sm"
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      {loading ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Upload className="w-4 h-4 mr-1" />}
+                      {loading ? (
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      ) : (
+                        <Upload className="w-4 h-4 mr-1" />
+                      )}
                       Create Capsules
                     </Button>
                   </div>
@@ -312,38 +359,65 @@ const AssetIntegrationHub: React.FC = () => {
                 <div className="flex items-center justify-center py-12">
                   <div className="text-center">
                     <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-400" />
-                    <p className="text-slate-400">Loading your Supabase assets...</p>
+                    <p className="text-slate-400">
+                      Loading your Supabase assets...
+                    </p>
                   </div>
                 </div>
               ) : filteredAssets.length === 0 ? (
                 <div className="text-center py-12">
                   <Database className="w-12 h-12 mx-auto mb-4 text-slate-500" />
                   <p className="text-slate-400">
-                    {assets.length === 0 ? 'No assets found in your Supabase storage' : 'No assets match your search criteria'}
+                    {assets.length === 0
+                      ? "No assets found in your Supabase storage"
+                      : "No assets match your search criteria"}
                   </p>
                 </div>
               ) : (
-                <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-2'}>
+                <div
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                      : "space-y-2"
+                  }
+                >
                   {filteredAssets.map((asset) => (
-                    <Card 
-                      key={asset.id} 
-                      className={`${selectedAssets.has(asset.id) 
-                        ? 'bg-blue-900/20 border-blue-600' 
-                        : 'bg-slate-700/50 border-slate-600'
+                    <Card
+                      key={asset.id}
+                      className={`${
+                        selectedAssets.has(asset.id)
+                          ? "bg-blue-900/20 border-blue-600"
+                          : "bg-slate-700/50 border-slate-600"
                       } cursor-pointer transition-all hover:border-slate-500`}
                       onClick={() => toggleAssetSelection(asset.id)}
                     >
-                      <CardContent className={viewMode === 'grid' ? 'p-4' : 'p-3'}>
-                        <div className={viewMode === 'grid' ? 'space-y-3' : 'flex items-center space-x-4'}>
+                      <CardContent
+                        className={viewMode === "grid" ? "p-4" : "p-3"}
+                      >
+                        <div
+                          className={
+                            viewMode === "grid"
+                              ? "space-y-3"
+                              : "flex items-center space-x-4"
+                          }
+                        >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                              <div className={`p-2 rounded ${getAssetTypeColor(asset.type)}`}>
+                              <div
+                                className={`p-2 rounded ${getAssetTypeColor(
+                                  asset.type
+                                )}`}
+                              >
                                 {getAssetIcon(asset.type)}
                               </div>
-                              {viewMode === 'list' && (
+                              {viewMode === "list" && (
                                 <div className="flex-1 min-w-0">
-                                  <h3 className="text-white font-medium truncate">{asset.name}</h3>
-                                  <p className="text-slate-400 text-sm">{asset.bucket}</p>
+                                  <h3 className="text-white font-medium truncate">
+                                    {asset.name}
+                                  </h3>
+                                  <p className="text-slate-400 text-sm">
+                                    {asset.bucket}
+                                  </p>
                                 </div>
                               )}
                             </div>
@@ -351,16 +425,22 @@ const AssetIntegrationHub: React.FC = () => {
                               <CheckCircle className="w-5 h-5 text-blue-400" />
                             )}
                           </div>
-                          
-                          {viewMode === 'grid' && (
+
+                          {viewMode === "grid" && (
                             <>
                               <div>
-                                <h3 className="text-white font-medium truncate">{asset.name}</h3>
-                                <p className="text-slate-400 text-sm">{asset.bucket}</p>
+                                <h3 className="text-white font-medium truncate">
+                                  {asset.name}
+                                </h3>
+                                <p className="text-slate-400 text-sm">
+                                  {asset.bucket}
+                                </p>
                               </div>
-                              
+
                               <div className="flex justify-between items-center">
-                                <Badge className={getAssetTypeColor(asset.type)}>
+                                <Badge
+                                  className={getAssetTypeColor(asset.type)}
+                                >
                                   {asset.type}
                                 </Badge>
                                 <span className="text-slate-400 text-xs">
@@ -369,8 +449,8 @@ const AssetIntegrationHub: React.FC = () => {
                               </div>
                             </>
                           )}
-                          
-                          {viewMode === 'list' && (
+
+                          {viewMode === "list" && (
                             <div className="flex items-center space-x-4 ml-auto">
                               <Badge className={getAssetTypeColor(asset.type)}>
                                 {asset.type}
@@ -390,16 +470,21 @@ const AssetIntegrationHub: React.FC = () => {
 
             <TabsContent value="database" className="space-y-4">
               <div className="flex items-center space-x-4">
-                <Select value={selectedTable} onValueChange={(value) => {
-                  setSelectedTable(value);
-                  loadTableData(value);
-                }}>
+                <Select
+                  value={selectedTable}
+                  onValueChange={(value) => {
+                    setSelectedTable(value);
+                    loadTableData(value);
+                  }}
+                >
                   <SelectTrigger className="w-64 bg-slate-700 border-slate-600">
                     <SelectValue placeholder="Select table to review" />
                   </SelectTrigger>
                   <SelectContent>
-                    {tables.map(table => (
-                      <SelectItem key={table} value={table}>{table}</SelectItem>
+                    {tables.map((table) => (
+                      <SelectItem key={table} value={table}>
+                        {table}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

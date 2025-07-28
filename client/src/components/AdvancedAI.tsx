@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Brain, 
-  Zap, 
-  Target, 
-  TrendingUp, 
+import {
+  Brain,
+  Zap,
+  Target,
+  TrendingUp,
   Shield,
   Cpu,
   Sparkles,
@@ -15,19 +15,19 @@ import {
   AlertTriangle,
   BarChart3,
   Users,
-  Globe
+  Globe,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const AdvancedAI: React.FC = () => {
-  const [analysisInput, setAnalysisInput] = useState('');
+  const [analysisInput, setAnalysisInput] = useState("");
   const [aiResults, setAiResults] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [realTimeMetrics, setRealTimeMetrics] = useState({
     truthScore: 0,
-    riskLevel: 'low',
+    riskLevel: "low",
     confidenceScore: 0,
-    verificationTime: 0
+    verificationTime: 0,
   });
   const { toast } = useToast();
 
@@ -38,7 +38,12 @@ const AdvancedAI: React.FC = () => {
       accuracy: "99.7%",
       speed: "< 2 seconds",
       icon: <Shield className="w-6 h-6" />,
-      features: ["Multi-source verification", "Real-time fact-checking", "Bias detection", "Source credibility analysis"]
+      features: [
+        "Multi-source verification",
+        "Real-time fact-checking",
+        "Bias detection",
+        "Source credibility analysis",
+      ],
     },
     {
       name: "Fraud Detection System",
@@ -46,7 +51,12 @@ const AdvancedAI: React.FC = () => {
       accuracy: "99.9%",
       speed: "< 1 second",
       icon: <Target className="w-6 h-6" />,
-      features: ["Behavioral analysis", "Transaction monitoring", "Identity verification", "Risk assessment"]
+      features: [
+        "Behavioral analysis",
+        "Transaction monitoring",
+        "Identity verification",
+        "Risk assessment",
+      ],
     },
     {
       name: "Content Analysis AI",
@@ -54,7 +64,12 @@ const AdvancedAI: React.FC = () => {
       accuracy: "98.5%",
       speed: "< 3 seconds",
       icon: <Brain className="w-6 h-6" />,
-      features: ["Sentiment analysis", "Topic extraction", "Quality scoring", "Recommendation engine"]
+      features: [
+        "Sentiment analysis",
+        "Topic extraction",
+        "Quality scoring",
+        "Recommendation engine",
+      ],
     },
     {
       name: "Predictive Analytics",
@@ -62,8 +77,13 @@ const AdvancedAI: React.FC = () => {
       accuracy: "94.2%",
       speed: "< 5 seconds",
       icon: <TrendingUp className="w-6 h-6" />,
-      features: ["Market predictions", "User behavior analysis", "Revenue forecasting", "Risk modeling"]
-    }
+      features: [
+        "Market predictions",
+        "User behavior analysis",
+        "Revenue forecasting",
+        "Risk modeling",
+      ],
+    },
   ];
 
   const enterpriseIntegrations = [
@@ -71,36 +91,42 @@ const AdvancedAI: React.FC = () => {
       platform: "Fortune 500 APIs",
       description: "Direct integration with major enterprise systems",
       clients: "500+ enterprises",
-      value: "$2B+ verified daily"
+      value: "$2B+ verified daily",
     },
     {
       platform: "Government Systems",
       description: "Regulatory compliance and official document verification",
       clients: "50+ agencies",
-      value: "$500M+ official docs"
+      value: "$500M+ official docs",
     },
     {
       platform: "Financial Networks",
       description: "Banking and financial services integration",
       clients: "200+ banks",
-      value: "$10B+ transactions"
+      value: "$10B+ transactions",
     },
     {
       platform: "Healthcare Systems",
       description: "Medical record verification and HIPAA compliance",
       clients: "1000+ hospitals",
-      value: "$1B+ medical records"
-    }
+      value: "$1B+ medical records",
+    },
   ];
 
   useEffect(() => {
     // Simulate real-time AI metrics updates
     const interval = setInterval(() => {
-      setRealTimeMetrics(prev => ({
+      setRealTimeMetrics((prev) => ({
         truthScore: Math.min(100, prev.truthScore + Math.random() * 5),
-        riskLevel: Math.random() > 0.8 ? 'medium' : 'low',
-        confidenceScore: Math.min(100, prev.confidenceScore + Math.random() * 3),
-        verificationTime: Math.max(0.1, prev.verificationTime - Math.random() * 0.1)
+        riskLevel: Math.random() > 0.8 ? "medium" : "low",
+        confidenceScore: Math.min(
+          100,
+          prev.confidenceScore + Math.random() * 3
+        ),
+        verificationTime: Math.max(
+          0.1,
+          prev.verificationTime - Math.random() * 0.1
+        ),
       }));
     }, 2000);
 
@@ -112,21 +138,21 @@ const AdvancedAI: React.FC = () => {
       toast({
         title: "Input Required",
         description: "Please provide content for AI analysis",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/premium/ai-value-assessment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/premium/ai-value-assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          company_data: { name: 'Demo Analysis', industry: 'Technology' },
+          company_data: { name: "Demo Analysis", industry: "Technology" },
           use_case: analysisInput,
-          current_costs: 100000
-        })
+          current_costs: 100000,
+        }),
       });
 
       if (response.ok) {
@@ -134,16 +160,16 @@ const AdvancedAI: React.FC = () => {
         setAiResults(results);
         toast({
           title: "AI Analysis Complete",
-          description: "Advanced insights generated successfully"
+          description: "Advanced insights generated successfully",
         });
       } else {
-        throw new Error('Analysis failed');
+        throw new Error("Analysis failed");
       }
     } catch (error) {
       toast({
         title: "Analysis Error",
         description: "AI analysis is temporarily unavailable",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsProcessing(false);
@@ -158,30 +184,42 @@ const AdvancedAI: React.FC = () => {
             <Brain className="w-8 h-8 mr-3 text-blue-400" />
             <div className="text-center">
               <div className="text-3xl font-bold">Advanced AI Engine</div>
-              <div className="text-lg text-blue-400">Powered by GPT-4o & Custom Models</div>
+              <div className="text-lg text-blue-400">
+                Powered by GPT-4o & Custom Models
+              </div>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-slate-800/50 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-400">{realTimeMetrics.truthScore.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-green-400">
+                {realTimeMetrics.truthScore.toFixed(1)}%
+              </div>
               <div className="text-sm text-slate-400">Truth Score</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-blue-400">{realTimeMetrics.confidenceScore.toFixed(1)}%</div>
+              <div className="text-2xl font-bold text-blue-400">
+                {realTimeMetrics.confidenceScore.toFixed(1)}%
+              </div>
               <div className="text-sm text-slate-400">Confidence</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 text-center">
-              <div className={`text-2xl font-bold ${
-                realTimeMetrics.riskLevel === 'low' ? 'text-green-400' : 'text-yellow-400'
-              }`}>
+              <div
+                className={`text-2xl font-bold ${
+                  realTimeMetrics.riskLevel === "low"
+                    ? "text-green-400"
+                    : "text-yellow-400"
+                }`}
+              >
                 {realTimeMetrics.riskLevel.toUpperCase()}
               </div>
               <div className="text-sm text-slate-400">Risk Level</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-purple-400">{realTimeMetrics.verificationTime.toFixed(1)}s</div>
+              <div className="text-2xl font-bold text-purple-400">
+                {realTimeMetrics.verificationTime.toFixed(1)}s
+              </div>
               <div className="text-sm text-slate-400">Verify Time</div>
             </div>
           </div>
@@ -199,22 +237,28 @@ const AdvancedAI: React.FC = () => {
                 </div>
                 <div>
                   <div>{capability.name}</div>
-                  <div className="text-sm font-normal text-slate-400">{capability.description}</div>
+                  <div className="text-sm font-normal text-slate-400">
+                    {capability.description}
+                  </div>
                 </div>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="text-center">
-                  <div className="text-lg font-bold text-green-400">{capability.accuracy}</div>
+                  <div className="text-lg font-bold text-green-400">
+                    {capability.accuracy}
+                  </div>
                   <div className="text-xs text-slate-400">Accuracy</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-blue-400">{capability.speed}</div>
+                  <div className="text-lg font-bold text-blue-400">
+                    {capability.speed}
+                  </div>
                   <div className="text-xs text-slate-400">Response Time</div>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 {capability.features.map((feature, idx) => (
                   <div key={idx} className="flex items-center">
@@ -244,8 +288,8 @@ const AdvancedAI: React.FC = () => {
               onChange={(e) => setAnalysisInput(e.target.value)}
               className="min-h-[100px] bg-slate-700/50 border-slate-600 text-white"
             />
-            
-            <Button 
+
+            <Button
               onClick={runAIAnalysis}
               disabled={isProcessing}
               className="w-full bg-purple-600 hover:bg-purple-700"
@@ -266,24 +310,36 @@ const AdvancedAI: React.FC = () => {
             {aiResults && (
               <Card className="bg-slate-700/50 border-slate-600">
                 <CardHeader>
-                  <CardTitle className="text-white text-lg">AI Analysis Results</CardTitle>
+                  <CardTitle className="text-white text-lg">
+                    AI Analysis Results
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <h4 className="text-white font-semibold mb-2">Confidence Score</h4>
-                        <div className="text-2xl font-bold text-green-400">{aiResults.confidence_score * 100}%</div>
+                        <h4 className="text-white font-semibold mb-2">
+                          Confidence Score
+                        </h4>
+                        <div className="text-2xl font-bold text-green-400">
+                          {aiResults.confidence_score * 100}%
+                        </div>
                       </div>
                       <div>
-                        <h4 className="text-white font-semibold mb-2">Generated At</h4>
-                        <div className="text-slate-300">{new Date(aiResults.generated_at).toLocaleString()}</div>
+                        <h4 className="text-white font-semibold mb-2">
+                          Generated At
+                        </h4>
+                        <div className="text-slate-300">
+                          {new Date(aiResults.generated_at).toLocaleString()}
+                        </div>
                       </div>
                     </div>
-                    
+
                     {aiResults.ai_assessment && (
                       <div className="bg-slate-800/50 rounded-lg p-4">
-                        <h4 className="text-white font-semibold mb-2">AI Assessment</h4>
+                        <h4 className="text-white font-semibold mb-2">
+                          AI Assessment
+                        </h4>
                         <pre className="text-slate-300 text-sm whitespace-pre-wrap">
                           {JSON.stringify(aiResults.ai_assessment, null, 2)}
                         </pre>
@@ -310,24 +366,32 @@ const AdvancedAI: React.FC = () => {
             {enterpriseIntegrations.map((integration, index) => (
               <div key={index} className="bg-slate-700/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-white font-semibold">{integration.platform}</h3>
+                  <h3 className="text-white font-semibold">
+                    {integration.platform}
+                  </h3>
                   <Badge className="bg-green-600">Active</Badge>
                 </div>
-                <p className="text-slate-300 text-sm mb-3">{integration.description}</p>
+                <p className="text-slate-300 text-sm mb-3">
+                  {integration.description}
+                </p>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
                     <span className="text-slate-400">Clients: </span>
-                    <span className="text-blue-400 font-semibold">{integration.clients}</span>
+                    <span className="text-blue-400 font-semibold">
+                      {integration.clients}
+                    </span>
                   </div>
                   <div>
                     <span className="text-slate-400">Value: </span>
-                    <span className="text-green-400 font-semibold">{integration.value}</span>
+                    <span className="text-green-400 font-semibold">
+                      {integration.value}
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <div className="mt-6 bg-green-900/20 border border-green-700 rounded-lg p-4">
             <div className="flex items-center mb-3">
               <CheckCircle className="w-6 h-6 text-green-400 mr-2" />

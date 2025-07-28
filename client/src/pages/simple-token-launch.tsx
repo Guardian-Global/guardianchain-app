@@ -1,15 +1,21 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Users, 
+import {
+  TrendingUp,
+  DollarSign,
+  Users,
   Globe,
   Target,
   CheckCircle,
   ArrowUpRight,
-  Copy
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -25,22 +31,24 @@ interface SimpleTokenData {
 
 export default function SimpleTokenLaunchPage() {
   const { toast } = useToast();
-  
+
   // Simple token data fetch
   const { data: tokenData, isLoading } = useQuery({
-    queryKey: ['/api/token/gtt-data'],
+    queryKey: ["/api/token/gtt-data"],
     queryFn: async (): Promise<SimpleTokenData> => {
       try {
-        const response = await fetch('/api/token/gtt-data');
+        const response = await fetch("/api/token/gtt-data");
         const result = await response.json();
-        
+
         return {
           price: 0.0075,
           priceChange: 19.05,
           marketCap: "$18.75M",
           volume: "$245K",
           holders: 15847,
-          contractAddress: result.data?.contractAddress || "0x7d1afa7b718fb893db30c2f98037a6cf1e7"
+          contractAddress:
+            result.data?.contractAddress ||
+            "0x7d1afa7b718fb893db30c2f98037a6cf1e7",
         };
       } catch (error) {
         return {
@@ -49,7 +57,7 @@ export default function SimpleTokenLaunchPage() {
           marketCap: "$18.75M",
           volume: "$245K",
           holders: 15847,
-          contractAddress: "0x7d1afa7b718fb893db30c2f98037a6cf1e7"
+          contractAddress: "0x7d1afa7b718fb893db30c2f98037a6cf1e7",
         };
       }
     },
@@ -87,7 +95,8 @@ export default function SimpleTokenLaunchPage() {
             GTT TOKEN LAUNCH
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            GUARDIANCHAIN's native token powering the world's first blockchain-based truth verification platform
+            GUARDIANCHAIN's native token powering the world's first
+            blockchain-based truth verification platform
           </p>
           <Badge className="bg-green-600 text-white px-4 py-2 text-lg mt-4">
             ✅ LIVE ON MAINNET
@@ -105,15 +114,15 @@ export default function SimpleTokenLaunchPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">
-                ${tokenData?.price.toFixed(4) || '0.0075'}
+                ${tokenData?.price.toFixed(4) || "0.0075"}
               </div>
               <div className="flex items-center gap-1 text-sm text-green-400">
-                <ArrowUpRight className="h-4 w-4" />
-                +{tokenData?.priceChange.toFixed(2) || '19.05'}% (24h)
+                <ArrowUpRight className="h-4 w-4" />+
+                {tokenData?.priceChange.toFixed(2) || "19.05"}% (24h)
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-blue-400">
@@ -123,14 +132,12 @@ export default function SimpleTokenLaunchPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">
-                {tokenData?.marketCap || '$18.75M'}
+                {tokenData?.marketCap || "$18.75M"}
               </div>
-              <div className="text-sm text-slate-400">
-                Target: $75M
-              </div>
+              <div className="text-sm text-slate-400">Target: $75M</div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-purple-400">
@@ -140,14 +147,12 @@ export default function SimpleTokenLaunchPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">
-                {tokenData?.volume || '$245K'}
+                {tokenData?.volume || "$245K"}
               </div>
-              <div className="text-sm text-purple-400">
-                Growing steadily
-              </div>
+              <div className="text-sm text-purple-400">Growing steadily</div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-orange-400">
@@ -157,11 +162,9 @@ export default function SimpleTokenLaunchPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-white">
-                {tokenData?.holders.toLocaleString() || '15,847'}
+                {tokenData?.holders.toLocaleString() || "15,847"}
               </div>
-              <div className="text-sm text-orange-400">
-                Active community
-              </div>
+              <div className="text-sm text-orange-400">Active community</div>
             </CardContent>
           </Card>
         </div>
@@ -178,10 +181,13 @@ export default function SimpleTokenLaunchPage() {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <div className="text-sm text-slate-400 mb-1">Contract Address</div>
+                  <div className="text-sm text-slate-400 mb-1">
+                    Contract Address
+                  </div>
                   <div className="flex items-center gap-2">
                     <code className="text-sm bg-slate-700 px-2 py-1 rounded">
-                      {tokenData?.contractAddress || '0x7d1afa7b718fb893db30c2f98037a6cf1e7'}
+                      {tokenData?.contractAddress ||
+                        "0x7d1afa7b718fb893db30c2f98037a6cf1e7"}
                     </code>
                     <Button
                       size="sm"
@@ -195,13 +201,21 @@ export default function SimpleTokenLaunchPage() {
                 </div>
                 <div>
                   <div className="text-sm text-slate-400 mb-1">Network</div>
-                  <Badge variant="outline" className="border-green-500 text-green-400">
+                  <Badge
+                    variant="outline"
+                    className="border-green-500 text-green-400"
+                  >
                     Ethereum Mainnet
                   </Badge>
                 </div>
                 <div>
-                  <div className="text-sm text-slate-400 mb-1">Token Standard</div>
-                  <Badge variant="outline" className="border-blue-500 text-blue-400">
+                  <div className="text-sm text-slate-400 mb-1">
+                    Token Standard
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className="border-blue-500 text-blue-400"
+                  >
                     ERC-20
                   </Badge>
                 </div>
@@ -220,7 +234,9 @@ export default function SimpleTokenLaunchPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Platform Status</span>
-                  <Badge className="bg-green-600 text-white">100% Operational</Badge>
+                  <Badge className="bg-green-600 text-white">
+                    100% Operational
+                  </Badge>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Token Contract</span>
@@ -242,15 +258,27 @@ export default function SimpleTokenLaunchPage() {
         {/* Call to Action */}
         <div className="text-center">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">Ready to Join the Truth Revolution?</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              Ready to Join the Truth Revolution?
+            </h2>
             <p className="text-slate-300 mb-8">
-              Start earning GTT tokens by creating verified content and contributing to the world's most trusted information platform.
+              Start earning GTT tokens by creating verified content and
+              contributing to the world's most trusted information platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90" onClick={() => window.location.href = '/profile'}>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-green-600 hover:opacity-90"
+                onClick={() => (window.location.href = "/profile")}
+              >
                 Get Started Now
               </Button>
-              <Button variant="outline" size="lg" className="border-purple-500 text-purple-400 hover:bg-purple-500/10" onClick={() => window.location.href = '/upgrade'}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-purple-500 text-purple-400 hover:bg-purple-500/10"
+                onClick={() => (window.location.href = "/upgrade")}
+              >
                 Upgrade Account
               </Button>
             </div>

@@ -12,23 +12,23 @@ export default function IntuitiveTokenPerformanceHeatmap() {
     { period: "3D", change: -3.1, volume: 2345600 },
     { period: "1W", change: 18.7, volume: 4567800 },
     { period: "1M", change: 45.2, volume: 12456700 },
-    { period: "3M", change: 120.5, volume: 23457800 }
+    { period: "3M", change: 120.5, volume: 23457800 },
   ];
 
   const getPerformanceColor = (change: number) => {
-    if (change > 10) return 'bg-green-500';
-    if (change > 0) return 'bg-green-400';
-    if (change > -5) return 'bg-yellow-400';
-    return 'bg-red-400';
+    if (change > 10) return "bg-green-500";
+    if (change > 0) return "bg-green-400";
+    if (change > -5) return "bg-yellow-400";
+    return "bg-red-400";
   };
 
   const getPerformanceIntensity = (change: number) => {
     const absChange = Math.abs(change);
-    if (absChange > 50) return 'opacity-100';
-    if (absChange > 20) return 'opacity-80';
-    if (absChange > 10) return 'opacity-60';
-    if (absChange > 5) return 'opacity-40';
-    return 'opacity-30';
+    if (absChange > 50) return "opacity-100";
+    if (absChange > 20) return "opacity-80";
+    if (absChange > 10) return "opacity-60";
+    if (absChange > 5) return "opacity-40";
+    return "opacity-30";
   };
 
   const getIcon = (change: number) => {
@@ -67,13 +67,14 @@ export default function IntuitiveTokenPerformanceHeatmap() {
                     {getIcon(item.change)}
                   </div>
                   <div className="text-lg font-bold">
-                    {item.change > 0 ? '+' : ''}{item.change.toFixed(1)}%
+                    {item.change > 0 ? "+" : ""}
+                    {item.change.toFixed(1)}%
                   </div>
                   <div className="text-xs opacity-80">
                     Vol: ${(item.volume / 1000).toFixed(0)}K
                   </div>
                 </div>
-                
+
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20"></div>
               </motion.div>
             ))}
@@ -84,19 +85,23 @@ export default function IntuitiveTokenPerformanceHeatmap() {
             <div className="text-center space-y-2">
               <div className="text-2xl font-bold text-green-400">6/8</div>
               <div className="text-sm text-slate-400">Positive Periods</div>
-              <Badge className="bg-green-500/20 text-green-400">Strong Performance</Badge>
+              <Badge className="bg-green-500/20 text-green-400">
+                Strong Performance
+              </Badge>
             </div>
-            
+
             <div className="text-center space-y-2">
               <div className="text-2xl font-bold text-blue-400">45.2%</div>
               <div className="text-sm text-slate-400">Best Month</div>
               <Badge className="bg-blue-500/20 text-blue-400">1M Period</Badge>
             </div>
-            
+
             <div className="text-center space-y-2">
               <div className="text-2xl font-bold text-purple-400">$23.4M</div>
               <div className="text-sm text-slate-400">Peak Volume</div>
-              <Badge className="bg-purple-500/20 text-purple-400">3M Period</Badge>
+              <Badge className="bg-purple-500/20 text-purple-400">
+                3M Period
+              </Badge>
             </div>
           </div>
 
@@ -107,17 +112,22 @@ export default function IntuitiveTokenPerformanceHeatmap() {
               <div className="p-3 bg-slate-700/50 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-4 h-4 text-green-500" />
-                  <span className="text-sm font-semibold text-green-400">Bullish Momentum</span>
+                  <span className="text-sm font-semibold text-green-400">
+                    Bullish Momentum
+                  </span>
                 </div>
                 <p className="text-xs text-slate-400">
-                  Strong upward trend across longer timeframes with increasing volume
+                  Strong upward trend across longer timeframes with increasing
+                  volume
                 </p>
               </div>
-              
+
               <div className="p-3 bg-slate-700/50 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm font-semibold text-blue-400">Volume Growth</span>
+                  <span className="text-sm font-semibold text-blue-400">
+                    Volume Growth
+                  </span>
                 </div>
                 <p className="text-xs text-slate-400">
                   Trading volume consistently increasing over extended periods
