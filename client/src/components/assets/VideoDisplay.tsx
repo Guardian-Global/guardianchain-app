@@ -44,6 +44,8 @@ export function VideoDisplay({
       onError={(e) => {
         console.error(`Failed to load ${type} logo video:`, videoSrc);
       }}
+      onLoadStart={() => console.log(`🎬 Loading ${type} video:`, videoSrc)}
+      onCanPlay={() => console.log(`✅ ${type} video ready to play:`, videoSrc)}
     >
       Your browser does not support the video tag.
     </video>

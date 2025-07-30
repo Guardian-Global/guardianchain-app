@@ -30,6 +30,7 @@ import {
   Eye,
   Sun,
   Moon,
+  Monitor,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -345,6 +346,17 @@ export default function EnhancedMegaNavigation() {
             {Object.entries(pageCategories).map(([key, data]) => (
               <CategoryDropdown key={key} category={key} data={data} />
             ))}
+            
+            {/* Responsive Demo Link */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-blue-400 hover:text-white transition-colors flex items-center gap-1"
+              onClick={() => window.location.href = '/responsive-demo'}
+            >
+              <Monitor size={16} />
+              Responsive Demo
+            </Button>
           </div>
 
           {/* Search Bar */}

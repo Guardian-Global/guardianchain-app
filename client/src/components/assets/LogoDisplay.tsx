@@ -36,9 +36,9 @@ export function LogoDisplay({
     xl: "text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
   };
 
-  // Fallback component
+  // Fallback component with enhanced styling
   const FallbackLogo = () => (
-    <div className={`${sizeClasses[size]} bg-gradient-to-r from-purple-600 to-green-600 rounded-lg flex items-center justify-center ${className}`}>
+    <div className={`${sizeClasses[size]} bg-gradient-to-r from-purple-600 to-green-600 rounded-lg flex items-center justify-center shadow-lg ${className}`}>
       <Shield className="text-white h-4/5 w-4/5" />
     </div>
   );
@@ -61,14 +61,17 @@ export function LogoDisplay({
       {(variant === "full" || variant === "icon" || variant === "main") && (
         <img
           src={logoSrc}
-          alt={`${type.toUpperCase()} Logo`}
-          className={`${sizeClasses[size]} object-contain ${className}`}
+          alt={`${type === "guardianchain" ? "GUARDIANCHAIN" : "GTT"} Logo`}
+          className={`${sizeClasses[size]} object-contain transition-all duration-300 hover:scale-105 ${className}`}
           onError={(e) => {
-            // Fallback to gradient logo on error
-            e.currentTarget.style.display = 'none';
-            const fallback = e.currentTarget.nextElementSibling;
+            console.log(`Failed to load ${type} logo:`, logoSrc);
+            const target = e.currentTarget;
+            target.style.display = 'none';
+            const fallback = target.nextElementSibling;
             if (fallback) fallback.style.display = 'flex';
           }}
+          onLoad={() => console.log(`✅ Successfully loaded ${type} logo:`, logoSrc)}
+          style={{ display: 'block' }}
         />
       )}
       {(variant === "full" || variant === "icon" || variant === "main") && (
