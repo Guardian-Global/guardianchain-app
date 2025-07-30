@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -144,7 +144,8 @@ export function SupabaseImageGallery({
                           <ZoomIn className="h-4 w-4" />
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-4xl bg-slate-900 border-slate-700">
+                      <DialogContent className="max-w-4xl bg-slate-900 border-slate-700" aria-describedby="image-preview">
+                        <DialogTitle className="sr-only">Image Preview - {image.name}</DialogTitle>
                         <div className="relative">
                           <img
                             src={image.url}

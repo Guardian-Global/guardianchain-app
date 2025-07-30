@@ -18,6 +18,7 @@ import {
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import SupabaseImageGallery from "@/components/assets/SupabaseImageGallery";
 import SupabaseHeroBackground from "@/components/assets/SupabaseHeroBackground";
+import AssetImplementationStatus from "@/components/assets/AssetImplementationStatus";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AssetIntegration() {
@@ -310,60 +311,7 @@ export default function AssetIntegration() {
             </TabsContent>
 
             <TabsContent value="integration">
-              <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Zap className="h-5 w-5 mr-2 text-yellow-400" />
-                    Live Asset Integration Status
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-green-900/20 border border-green-500/30">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="h-5 w-5 text-green-400" />
-                        <div>
-                          <div className="text-white font-medium">Enhanced Logo Display</div>
-                          <div className="text-sm text-green-300">Successfully integrated in navigation</div>
-                        </div>
-                      </div>
-                      <Badge className="bg-green-600">Active</Badge>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-green-900/20 border border-green-500/30">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="h-5 w-5 text-green-400" />
-                        <div>
-                          <div className="text-white font-medium">Hero Background</div>
-                          <div className="text-sm text-green-300">Applied to this page as demonstration</div>
-                        </div>
-                      </div>
-                      <Badge className="bg-green-600">Active</Badge>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 rounded-lg bg-blue-900/20 border border-blue-500/30">
-                      <div className="flex items-center space-x-3">
-                        <ArrowRight className="h-5 w-5 text-blue-400" />
-                        <div>
-                          <div className="text-white font-medium">Image Galleries</div>
-                          <div className="text-sm text-blue-300">Ready for deployment across all pages</div>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="border-blue-400 text-blue-400">Ready</Badge>
-                    </div>
-
-                    <div className="p-4 bg-purple-900/20 border border-purple-500/30 rounded-lg">
-                      <h3 className="text-white font-semibold mb-2">Next Steps</h3>
-                      <ul className="space-y-2 text-sm text-purple-300">
-                        <li>• Deploy asset components to remaining dashboard pages</li>
-                        <li>• Integrate video assets with custom video player components</li>
-                        <li>• Create asset-specific landing pages for high-value content</li>
-                        <li>• Implement asset caching and optimization strategies</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <AssetImplementationStatus />
             </TabsContent>
           </Tabs>
         </div>
