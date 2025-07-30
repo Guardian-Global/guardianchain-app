@@ -146,6 +146,8 @@ const pageCategories = {
       { name: "Minting Tests", href: "/minting-test", icon: TestTube2 },
       { name: "Enterprise Suite", href: "/enterprise-suite", icon: Briefcase },
       { name: "Premium Features", href: "/premium-features", icon: Crown },
+      { name: "Replit Tools", href: "/replit-tools", icon: Zap, badge: "NEW" },
+      { name: "Advanced Features", href: "/advanced-features", icon: Sparkles, badge: "LIVE" },
     ],
   },
   specialized: {

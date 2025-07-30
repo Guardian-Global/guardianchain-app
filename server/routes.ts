@@ -52,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/replit", replitToolsRoutes);
   
   // Enhanced Replit Tools Implementation
-  import replitToolsImplementation from './replit-tools-implementation';
+  const replitToolsImplementation = (await import('./routes/replit-tools-implementation')).default;
   app.use("/api/replit", replitToolsImplementation);
 
   // Supabase health and management routes

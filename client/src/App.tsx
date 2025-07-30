@@ -109,6 +109,7 @@ import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDash
 import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
 import ReplitToolsPage from "./pages/replit-tools";
+import AdvancedFeaturesPage from "./pages/advanced-features";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 import OnboardingChecker from "./components/auth/OnboardingChecker";
@@ -241,6 +242,8 @@ function Router() {
         </Route>
         <Route path="/asset-manager" component={SupabaseAssetManager} />
         <Route path="/asset-integration" component={AssetIntegration} />
+        <Route path="/replit-tools" component={ReplitToolsPage} />
+        <Route path="/advanced-features" component={AdvancedFeaturesPage} />
         <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
