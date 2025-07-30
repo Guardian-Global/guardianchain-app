@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +11,7 @@ import { Shield, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 
 export default function MobileHome() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useUnifiedAuth();
 
   if (!isAuthenticated) {
     return (
@@ -226,25 +226,25 @@ export default function MobileHome() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-xl font-bold text-purple-400">
-                  {user?.gttBalance || "0"}
+                  {user?.gttStakeAmount || "0"}
                 </div>
                 <div className="text-sm text-slate-400">GTT Balance</div>
               </div>
               <div className="text-center">
                 <div className="text-xl font-bold text-green-400">
-                  {user?.totalCapsules || 0}
+                  {0}
                 </div>
                 <div className="text-sm text-slate-400">Capsules Created</div>
               </div>
               <div className="text-center">
                 <div className="text-xl font-bold text-blue-400">
-                  {user?.reputation || 0}
+                  {0}
                 </div>
                 <div className="text-sm text-slate-400">Reputation</div>
               </div>
               <div className="text-center">
                 <div className="text-xl font-bold text-yellow-400">
-                  {user?.userTier || "Explorer"}
+                  {user?.tier || "Explorer"}
                 </div>
                 <div className="text-sm text-slate-400">Current Tier</div>
               </div>

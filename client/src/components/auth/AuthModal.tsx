@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +28,7 @@ export function AuthModal({
   onClose,
   initialMode = "login",
 }: AuthModalProps) {
-  const { login, signup, error, isLoading } = useAuth();
+  const { login, register, error, isLoading } = useUnifiedAuth();
   const [activeTab, setActiveTab] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -45,7 +45,7 @@ export function AuthModal({
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login(loginData.email, loginData.password);
+    const success = await login({ email: loginData.email, password: loginData.password });
     if (success) {
       onClose();
       setLoginData({ email: "", password: "" });
@@ -57,7 +57,7 @@ export function AuthModal({
     if (!signupData.agreedToTerms) {
       return;
     }
-    const success = await signup(signupData);
+    const success = await register(signupData);
     if (success) {
       onClose();
       setSignupData({

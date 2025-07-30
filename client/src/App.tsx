@@ -79,7 +79,7 @@ import ContactInfo from "./components/ContactInfo";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./pages/BillingDashboard";
 import Landing from "./pages/Landing";
-import { useAuth } from "./hooks/useAuth";
+import { useUnifiedAuth } from "./hooks/useUnifiedAuth";
 import PrivacyPolicy from "./pages/legal/privacy";
 // Removed duplicate AuthProvider import
 import TermsOfService from "./pages/legal/terms";
@@ -115,7 +115,7 @@ import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./co
 import OnboardingChecker from "./components/auth/OnboardingChecker";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useUnifiedAuth();
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
@@ -269,20 +269,20 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-        <UnifiedAuthProvider>
-            <WalletProvider>
-              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <AssetProvider>
-                  <TooltipProvider>
-                    <main className="flex-1">
-                      <Router />
-                    </main>
-                    <Toaster />
-                  </TooltipProvider>
-                </AssetProvider>
-              </ThemeProvider>
-            </WalletProvider>
-        </UnifiedAuthProvider>
+      <UnifiedAuthProvider>
+        <WalletProvider>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <AssetProvider>
+              <TooltipProvider>
+                <main className="flex-1">
+                  <Router />
+                </main>
+                <Toaster />
+              </TooltipProvider>
+            </AssetProvider>
+          </ThemeProvider>
+        </WalletProvider>
+      </UnifiedAuthProvider>
     </QueryClientProvider>
   );
 }

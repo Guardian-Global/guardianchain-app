@@ -6,13 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Shield, Coins, TrendingUp, Users } from "lucide-react";
 import LogoDisplay from "@/components/assets/LogoDisplay";
 import VideoPlayer from "@/components/assets/VideoPlayer";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user } = useUnifiedAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
@@ -20,12 +20,10 @@ export default function Home() {
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            {user?.avatar ? (
-              <img
-                src={user.avatar}
-                alt="Profile"
-                className="w-20 h-20 rounded-full object-cover border-4 border-purple-500"
-              />
+            {user?.walletAddress ? (
+              <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center">
+                <Users className="text-white h-10 w-10" />
+              </div>
             ) : (
               <div className="w-20 h-20 gradient-primary rounded-full flex items-center justify-center">
                 <Users className="text-white h-10 w-10" />

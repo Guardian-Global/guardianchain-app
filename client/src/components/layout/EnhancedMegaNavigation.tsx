@@ -39,7 +39,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/components/web3/theme-provider";
 import { AuthButton } from "@/components/auth/AuthButton";
-import { useAuth } from "@/hooks/useAuth";
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -236,7 +236,7 @@ export default function EnhancedMegaNavigation() {
   const [searchTerm, setSearchTerm] = useState("");
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user } = useUnifiedAuth();
 
   // Search functionality across all pages
   const searchResults = useMemo(() => {
