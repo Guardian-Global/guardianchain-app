@@ -63,7 +63,7 @@ module.exports = {
     polygon: {
       url: "https://polygon-bor-rpc.publicnode.com",
       accounts: [
-        "de6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde",
+        "0x8b170cf9fdb9a9dc5b1e6229ab0e8ac2fde5198e422f8d72f6861b59edf8c7b8",
       ],
       chainId: 137,
       gasPrice: 30000000000, // 30 gwei
