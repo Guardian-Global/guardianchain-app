@@ -114,9 +114,9 @@ export const LogoDisplay: React.FC<LogoDisplayProps> = ({
           if (fallback && target.parentElement) {
             const fallbackContainer = document.createElement("div");
             target.parentElement.appendChild(fallbackContainer);
-            // Use React to render fallback
+            // Use safe DOM methods to prevent XSS
             if (typeof fallback === "string") {
-              fallbackContainer.innerHTML = fallback;
+              fallbackContainer.textContent = fallback;
             }
           }
         }}
