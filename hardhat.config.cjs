@@ -61,12 +61,12 @@ module.exports = {
     },
     // Polygon networks
     polygon: {
-      url: "https://polygon-rpc.com",
+      url: "https://polygon-bor-rpc.publicnode.com",
       accounts: [
-        "0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde",
+        "de6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde",
       ],
       chainId: 137,
-      gasPrice: 25000000000, // 25 gwei
+      gasPrice: 30000000000, // 30 gwei
       timeout: 120000,
       confirmations: 1,
     },
