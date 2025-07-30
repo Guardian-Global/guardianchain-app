@@ -170,6 +170,7 @@ const pageCategories = {
       { name: "Config", href: "/config", icon: Settings },
       { name: "Compliance", href: "/compliance", icon: Lock },
       { name: "Security Center", href: "/supabase-security", icon: Shield },
+      { name: "Teams Upgrades", href: "/teams-upgrades", icon: Crown },
     ],
   },
 };
