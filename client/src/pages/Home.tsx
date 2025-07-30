@@ -8,9 +8,8 @@ import {
 } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { Shield, Coins, TrendingUp, Users } from "lucide-react";
-import { VideoDisplay } from "@/components/assets/VideoDisplay";
-import { NFTIconDisplay } from "@/components/assets/NFTIconDisplay";
-import { CapsuleArtDisplay } from "@/components/assets/CapsuleArtDisplay";
+import LogoDisplay from "@/components/assets/LogoDisplay";
+import VideoPlayer from "@/components/assets/VideoPlayer";
 
 export default function Home() {
   const { user } = useAuth();
@@ -21,9 +20,9 @@ export default function Home() {
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            {user?.profileImageUrl ? (
+            {user?.avatar ? (
               <img
-                src={user.profileImageUrl}
+                src={user.avatar}
                 alt="Profile"
                 className="w-20 h-20 rounded-full object-cover border-4 border-purple-500"
               />
@@ -58,21 +57,15 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-white mb-6 text-center">
               GUARDIANCHAIN Protocol Overview
             </h2>
-            <VideoDisplay
-              variant="explainer"
-              autoplay={false}
-              controls={true}
-              className="w-full aspect-video rounded-lg"
-              fallback={
-                <div className="w-full aspect-video bg-gradient-to-br from-purple-900 to-slate-900 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <Shield className="w-16 h-16 mx-auto mb-4 text-purple-400" />
-                    <h3 className="text-xl font-bold">
-                      GUARDIANCHAIN Explainer
-                    </h3>
-                    <p className="text-slate-300">Coming Soon</p>
-                  </div>
-                </div>
+            <div className="relative aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-purple-900 to-slate-900">
+              <VideoPlayer
+                autoplay={false}
+                controls={true}
+                className="w-full h-full rounded-lg"
+                poster="/assets/GUARDIANCHAIN_logo.png"
+              />
+              <div className="absolute top-4 left-4">
+                <LogoDisplay size="lg" variant="full" />
               }
             />
           </div>

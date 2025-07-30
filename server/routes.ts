@@ -48,6 +48,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Supabase security hardening routes
   app.use(supabaseSecurityRouter);
 
+  // API diagnostics routes
+  app.use("/api", async (req, res, next) => {
+    const apiDiagnosticsRouter = (await import("./routes/api-diagnostics")).default;
+    apiDiagnosticsRouter(req, res, next);
+  });
+
   // Auth middleware for Replit Auth
   await setupAuth(app);
 
