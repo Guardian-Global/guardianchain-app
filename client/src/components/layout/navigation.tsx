@@ -68,16 +68,12 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <Link href="/">
-              <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+              <div className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                 <LogoDisplay
-                  size="lg"
+                  size="md"
                   variant="icon"
-                  className="w-8 h-8"
-                  fallback={
-                    <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                      <Shield className="text-white h-5 w-5" />
-                    </div>
-                  }
+                  type="gtt"
+                  className="w-10 h-10"
                 />
                 <span className="text-xl font-bold">
                   <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>

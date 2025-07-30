@@ -20,10 +20,10 @@ export function VideoDisplay({
   muted = true,
   controls = false
 }: VideoDisplayProps) {
-  // Local video assets from public/assets/ with cache busting
+  // Local video assets from public/assets/ - no cache busting for now  
   const videoSrc = type === "guardianchain" 
-    ? "/assets/GAURDIANCHAIN_logo_video.mp4?v=1"
-    : "/assets/GTT_logo_video.mp4?v=1";
+    ? "/assets/GAURDIANCHAIN_logo_video.mp4"
+    : "/assets/GTT_logo_video.mp4";
 
   // Responsive size classes for video display
   const sizeClasses = {
@@ -44,26 +44,30 @@ export function VideoDisplay({
     <div className="relative">
       <video
         src={videoSrc}
-        className={`${sizeClasses[size]} object-contain ${className}`}
+        className={`${sizeClasses[size]} object-contain rounded-lg shadow-lg ${className}`}
         autoPlay={autoPlay}
         loop={loop}
         muted={muted}
         controls={controls}
         playsInline
         onError={(e) => {
-          console.log(`Loading fallback for ${type} video`);
-          e.currentTarget.style.display = 'none';
-          const fallback = e.currentTarget.nextElementSibling;
-          if (fallback) fallback.style.display = 'flex';
+          console.log(`❌ Failed to load ${type} video from: ${videoSrc}`);
+          console.log('🔄 Loading fallback video component');
+          const target = e.currentTarget;
+          const parent = target.parentElement;
+          if (parent) {
+            parent.innerHTML = '';
+            const fallbackDiv = document.createElement('div');
+            fallbackDiv.className = `${sizeClasses[size]} bg-gradient-to-r ${type === "guardianchain" ? "from-purple-600 to-green-600" : "from-green-600 to-blue-600"} rounded-lg flex items-center justify-center shadow-lg animate-pulse`;
+            fallbackDiv.innerHTML = `<svg class="text-white h-4/5 w-4/5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>`;
+            parent.appendChild(fallbackDiv);
+          }
         }}
-        onLoadStart={() => console.log(`Video loading: ${type}`)}
-        onCanPlay={() => console.log(`Video ready: ${type}`)}
+        onLoadStart={() => console.log(`🎬 Video loading: ${type} from ${videoSrc}`)}
+        onCanPlay={() => console.log(`✅ Video ready: ${type}`)}
       >
         Your browser does not support the video tag.
       </video>
-      <div style={{ display: 'none' }}>
-        <FallbackVideo />
-      </div>
     </div>
   );
 }

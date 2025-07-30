@@ -63,6 +63,8 @@ import AssetShowcase from "./pages/asset-showcase";
 import Homepage from "./pages/index";
 import ResponsiveDemo from "./pages/responsive-demo";
 import MintingTestPage from "./pages/minting-test";
+import LogoTestPage from "./pages/logo-test";
+import AssetDebugPage from "./pages/asset-debug";
 
 import MasterAccess from "./pages/master-access";
 import ProfileCustomization from "./pages/profile-customization";
@@ -223,6 +225,8 @@ function Router() {
         <Route path="/responsive-demo" component={ResponsiveDemo} />
         <Route path="/logo-sync" component={LogoSyncPage} />
         <Route path="/minting-test" component={MintingTestPage} />
+        <Route path="/logo-test" component={LogoTestPage} />
+        <Route path="/asset-debug" component={AssetDebugPage} />
         <Route path="/unified-login" component={Login} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />
