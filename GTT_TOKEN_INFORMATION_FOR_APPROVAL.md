@@ -19,11 +19,17 @@
 - **Video Assets**: Animated logo sequences
 - **Color Scheme**: Purple (#8B5CF6) and Green (#10B981)
 
-### TOKENOMICS STRUCTURE
+### TOKENOMICS STRUCTURE (UPDATED TO INDUSTRY STANDARD)
 - **Founder Control**: 100% of transaction fees
-- **Transaction Fee**: 1% (adjustable 0-5%)
+- **Transaction Fee**: 5% (adjustable 0-10%) - INDUSTRY STANDARD
 - **Revenue Model**: Fee collection to founder wallet
+- **Burn Mechanism**: Optional deflationary burns
 - **Use Cases**: Truth verification, content monetization, staking rewards
+
+### REVENUE COMPARISON:
+- **1% Fee**: $365,000/year (too low)
+- **5% Fee**: $1,825,000/year (INDUSTRY STANDARD)
+- **SafeMoon/BabyDoge**: 10% fees (aggressive but proven)
 
 ### AUTOMATIC EXCHANGE LISTINGS
 ✅ **Uniswap V3**: Instant listing upon deployment  

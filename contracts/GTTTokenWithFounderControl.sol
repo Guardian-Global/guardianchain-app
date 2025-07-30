@@ -9,8 +9,8 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract GTTToken is ERC20, Ownable, Pausable {
     address public founder;
     address public revenueWallet;
-    uint256 public transactionFee = 100; // 1% = 100 basis points
-    uint256 public constant MAX_FEE = 500; // 5% maximum
+    uint256 public transactionFee = 500; // 5% = 500 basis points (INDUSTRY STANDARD)
+    uint256 public constant MAX_FEE = 1000; // 10% maximum (like SafeMoon)
     
     mapping(address => bool) public exemptFromFees;
     mapping(address => uint256) public userInteractions;
