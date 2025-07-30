@@ -76,7 +76,6 @@ import Notifications from "./pages/Notifications";
 import BillingDashboard from "./pages/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
-import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/legal/privacy";
 import { AuthProvider } from "@/hooks/useAuth";
 import TermsOfService from "./pages/legal/terms";
@@ -99,8 +98,9 @@ import GTTLaunch from "./pages/gtt-launch";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
-import UnifiedLogin from "./pages/UnifiedLogin";
+import Login from "./pages/Login";
 import { CompleteAuthProvider } from "./hooks/useCompleteAuth";
+import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
 import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
@@ -115,7 +115,7 @@ function Router() {
     <div className="min-h-screen bg-slate-900 text-white">
       <EnhancedMegaNavigation />
       <Switch>
-        <Route path="/login" component={UnifiedLogin} />
+        <Route path="/login" component={Login} />
         <Route path="/" component={Homepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={SimpleHome} />
@@ -221,7 +221,7 @@ function Router() {
         <Route path="/responsive-demo" component={ResponsiveDemo} />
         <Route path="/logo-sync" component={LogoSyncPage} />
         <Route path="/minting-test" component={MintingTestPage} />
-        <Route path="/unified-login" component={UnifiedLogin} />
+        <Route path="/unified-login" component={Login} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />
         <Route path="/founder-dashboard">
@@ -249,25 +249,27 @@ function Router() {
 
 function App() {
   return (
-    <CompleteAuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <WalletProvider>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-              <AssetProvider>
-                <TooltipProvider>
-                  <main className="flex-1">
-                    <Router />
-                  </main>
-                  <Toaster />
-                </TooltipProvider>
-              </AssetProvider>
-            </ThemeProvider>
-          </WalletProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </CompleteAuthProvider>
-  );
-}
+    <UnifiedAuthProvider>
+      <CompleteAuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <WalletProvider>
+              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <AssetProvider>
+                    <TooltipProvider>
+                      <main className="flex-1">
+                        <Router />
+                      </main>
+                      <Toaster />
+                    </TooltipProvider>
+                  </AssetProvider>
+                </ThemeProvider>
+              </WalletProvider>
+            </AuthProvider>
+          </QueryClientProvider>
+        </CompleteAuthProvider>
+      </UnifiedAuthProvider>
+    );
+  }
 
 export default App;
