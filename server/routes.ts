@@ -11,6 +11,7 @@ import stripePaymentsRouter from "./routes/stripe-payments";
 import supabaseHealthRouter from "./routes/supabase-health";
 import supabaseSecurityRouter from "./routes/supabase-security";
 import { registerAdminRoutes } from "./routes/admin";
+import replitToolsRoutes from "./routes/replit-tools";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -46,6 +47,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Stripe payment routes
   app.use("/api/stripe", stripePaymentsRouter);
+  
+  // Replit Tools Integration routes
+  app.use("/api/replit", replitToolsRoutes);
 
   // Supabase health and management routes
   app.use(supabaseHealthRouter);

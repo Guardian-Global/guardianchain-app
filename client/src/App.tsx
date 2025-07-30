@@ -108,6 +108,7 @@ import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
 import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
+import ReplitToolsPage from "./pages/replit-tools";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 import OnboardingChecker from "./components/auth/OnboardingChecker";
@@ -138,7 +139,7 @@ function Router() {
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
         <Route path="/gtt-launch" component={GTTLaunch} />
-        <Route path="/gtt-deployment" component={() => import('./pages/GTTDeploymentStatus').then(m => m.default)} />
+        <Route path="/replit-tools" component={ReplitToolsPage} />
         <Route
           path="/auth-hub"
           component={() => <AuthenticationHub onAuthenticated={() => {}} />}

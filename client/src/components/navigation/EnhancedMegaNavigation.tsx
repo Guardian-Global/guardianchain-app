@@ -35,6 +35,7 @@ export default function EnhancedMegaNavigation() {
       { href: '/token-launch', label: 'GTT Launch', icon: Rocket, featured: true },
       { href: '/professional-homepage', label: 'Platform', icon: Shield },
       { href: '/asset-debug', label: 'Diagnostics', icon: Zap },
+      { href: '/replit-tools', label: 'Replit Tools', icon: Crown },
     ],
     assets: [
       { href: '/logo-test', label: 'Logo System', icon: Star },
