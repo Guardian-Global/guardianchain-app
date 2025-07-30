@@ -93,6 +93,7 @@ import TokenListings from "./pages/token-listings";
 import GTTLaunch from "./pages/gtt-launch";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
+import ApiStatus from "./pages/api-status";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -189,6 +190,7 @@ function Router() {
         <Route path="/profile-customization" component={ProfileCustomization} />
         <Route path="/supabase-security" component={SupabaseSecurity} />
         <Route path="/teams-upgrades" component={TeamsUpgrades} />
+        <Route path="/api-status" component={ApiStatus} />
         <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />

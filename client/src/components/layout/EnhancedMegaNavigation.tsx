@@ -171,6 +171,7 @@ const pageCategories = {
       { name: "Compliance", href: "/compliance", icon: Lock },
       { name: "Security Center", href: "/supabase-security", icon: Shield },
       { name: "Teams Upgrades", href: "/teams-upgrades", icon: Crown },
+      { name: "API Status", href: "/api-status", icon: Settings },
     ],
   },
 };

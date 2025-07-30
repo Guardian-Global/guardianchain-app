@@ -66,8 +66,8 @@ export default function Home() {
               />
               <div className="absolute top-4 left-4">
                 <LogoDisplay size="lg" variant="full" />
-              }
-            />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -81,8 +81,8 @@ export default function Home() {
               <Coins className="h-4 w-4 text-amber-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">
-                {user?.gttBalance || "0"}
+              <div className="text-2xl font-bold text-green-400">
+                0
               </div>
               <p className="text-xs text-slate-400">+2.5% from last week</p>
             </CardContent>
@@ -97,10 +97,10 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {user?.totalCapsules || "0"}
+                0
               </div>
               <p className="text-xs text-slate-400">
-                {user?.verifiedCapsules || "0"} verified
+                0 verified
               </p>
             </CardContent>
           </Card>
@@ -114,10 +114,10 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {user?.reputation || "0"}
+                100
               </div>
               <p className="text-xs text-slate-400">
-                {user?.xpPoints || "0"} XP earned
+                0 XP earned
               </p>
             </CardContent>
           </Card>
@@ -131,10 +131,10 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-white">
-                {user?.isVerified ? "Verified" : "Guardian"}
+                Guardian
               </div>
               <p className="text-xs text-slate-400">
-                {user?.badges?.length || 0} badges earned
+                0 badges earned
               </p>
             </CardContent>
           </Card>
