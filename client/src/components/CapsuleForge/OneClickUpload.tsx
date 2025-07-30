@@ -28,7 +28,7 @@ export default function OneClickUpload({
   onFilesUploaded,
   onContentExtracted,
   maxFiles = 5,
-  acceptedTypes = ['.txt', '.md', '.pdf', '.jpg', '.png', '.mp4', '.json']
+  acceptedTypes = ['text/plain', 'text/markdown', 'application/pdf', 'image/jpeg', 'image/png', 'video/mp4', 'application/json']
 }: OneClickUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -160,7 +160,15 @@ export default function OneClickUpload({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     maxFiles,
-    accept: acceptedTypes.reduce((acc, type) => ({ ...acc, [type]: [] }), {})
+    accept: {
+      'text/plain': ['.txt'],
+      'text/markdown': ['.md'],
+      'application/pdf': ['.pdf'],
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'video/mp4': ['.mp4'],
+      'application/json': ['.json']
+    }
   });
 
   const getFileIcon = (type: string) => {
@@ -223,7 +231,7 @@ export default function OneClickUpload({
                 Supports: Text, Images, Videos, Documents
               </p>
               <div className="flex flex-wrap justify-center gap-1 mt-3">
-                {acceptedTypes.map(type => (
+                {['.txt', '.md', '.pdf', '.jpg', '.png', '.mp4', '.json'].map(type => (
                   <Badge key={type} variant="outline" className="text-xs">
                     {type}
                   </Badge>
@@ -323,7 +331,7 @@ function detectLanguage(text: string): string {
 
 async function getImageDimensions(file: File): Promise<{ width: number; height: number }> {
   return new Promise((resolve) => {
-    const img = new Image();
+    const img = document.createElement('img');
     img.onload = () => resolve({ width: img.width, height: img.height });
     img.onerror = () => resolve({ width: 0, height: 0 });
     img.src = URL.createObjectURL(file);

@@ -395,7 +395,7 @@ const EnhancedCapsuleCreator: React.FC = () => {
           onFilesUploaded={handleFilesUploaded}
           onContentExtracted={handleContentExtracted}
           maxFiles={5}
-          acceptedTypes={['.txt', '.md', '.pdf', '.jpg', '.png', '.mp4', '.json']}
+          acceptedTypes={['text/plain', 'text/markdown', 'application/pdf', 'image/jpeg', 'image/png', 'video/mp4', 'application/json']}
         />
       </div>
 
