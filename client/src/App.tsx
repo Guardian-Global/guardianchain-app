@@ -119,6 +119,7 @@ function Router() {
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={SimpleHome} />
         <Route path="/create" component={CreateCapsule} />
+        <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route

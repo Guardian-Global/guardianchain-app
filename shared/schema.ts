@@ -72,19 +72,71 @@ export const users = pgTable("users", {
   isActive: boolean("is_active").default(true),
   passwordHash: varchar("password_hash"),
   lastLoginAt: timestamp("last_login_at"),
+  
+  // Authentication-required fields
+  tier: text("tier").default("EXPLORER"),
   userTier: text("user_tier").default("EXPLORER"),
+  gttStakeAmount: decimal("gtt_stake_amount", { precision: 18, scale: 8 }).default("0"),
+  emailVerified: boolean("email_verified").default(false),
+  
   totalYieldClaimed: decimal("total_yield_claimed", {
     precision: 18,
     scale: 8,
   }).default("0"),
   stripeCustomerId: text("stripe_customer_id"),
   stripeSubscriptionId: text("stripe_subscription_id"),
+  
+  // Enterprise authentication fields
+  permissions: jsonb("permissions").$type<string[]>().default([]),
+  role: text("role").default("USER"),
+  
+  // 2FA and security fields
+  twoFactorSecret: text("two_factor_secret"),
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  backupCodes: jsonb("backup_codes").$type<string[]>().default([]),
+  
+  // Session and security tracking
+  sessionToken: text("session_token"),
+  tokenExpiresAt: timestamp("token_expires_at"),
+  failedLoginAttempts: integer("failed_login_attempts").default(0),
+  lockedUntil: timestamp("locked_until"),
+  
+  // Compliance and audit
+  agreedToTermsAt: timestamp("agreed_to_terms_at"),
+  privacyPolicyAcceptedAt: timestamp("privacy_policy_accepted_at"),
+  lastPasswordChangeAt: timestamp("last_password_change_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export type UpsertUser = typeof users.$inferInsert;
 export type UserSelect = typeof users.$inferSelect;
+export type User = typeof users.$inferSelect;
+
+// Enhanced authentication schemas
+export const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export const registerSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  agreedToTerms: z.boolean().refine(val => val === true, "Must agree to terms"),
+});
+
+export const masterLoginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  role: z.string().min(1, "Role is required"),
+  masterKey: z.string().min(1, "Master key is required"),
+});
+
+export type LoginInput = z.infer<typeof loginSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;
+export type MasterLoginInput = z.infer<typeof masterLoginSchema>;
 
 // Enhanced Capsules table
 export const capsules = pgTable("capsules", {

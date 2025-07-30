@@ -28,11 +28,13 @@ export interface IStorage {
     passwordHash: string;
     firstName?: string;
     lastName?: string;
-    tier: string;
-    gttStakeAmount: number;
-    emailVerified: boolean;
-    isActive: boolean;
-    agreedToTermsAt: Date;
+    tier?: string;
+    gttStakeAmount?: number;
+    emailVerified?: boolean;
+    isActive?: boolean;
+    agreedToTermsAt?: Date;
+    role?: string;
+    permissions?: string[];
   }): Promise<User>;
   getUserById(userId: string): Promise<User | undefined>;
 
@@ -164,11 +166,13 @@ export class DatabaseStorage implements IStorage {
     passwordHash: string;
     firstName?: string;
     lastName?: string;
-    tier: string;
-    gttStakeAmount: number;
-    emailVerified: boolean;
-    isActive: boolean;
-    agreedToTermsAt: Date;
+    tier?: string;
+    gttStakeAmount?: number;
+    emailVerified?: boolean;
+    isActive?: boolean;
+    agreedToTermsAt?: Date;
+    role?: string;
+    permissions?: string[];
   }): Promise<User> {
     const userId = `user_${Date.now()}_${Math.random()
       .toString(36)
@@ -182,9 +186,14 @@ export class DatabaseStorage implements IStorage {
         passwordHash: userData.passwordHash,
         firstName: userData.firstName,
         lastName: userData.lastName,
-        userTier: userData.tier,
-        gttBalance: userData.gttStakeAmount.toString(),
-        isActive: userData.isActive,
+        tier: userData.tier || "EXPLORER",
+        userTier: userData.tier || "EXPLORER",
+        gttStakeAmount: userData.gttStakeAmount?.toString() || "0",
+        emailVerified: userData.emailVerified || false,
+        isActive: userData.isActive !== false,
+        role: userData.role || "USER",
+        permissions: userData.permissions || [],
+        agreedToTermsAt: userData.agreedToTermsAt,
         createdAt: new Date(),
         updatedAt: new Date(),
       })

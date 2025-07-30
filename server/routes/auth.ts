@@ -92,12 +92,12 @@ router.post("/signup", authRateLimit, async (req: Request, res: Response) => {
           email: newUser.email,
           firstName: newUser.firstName,
           lastName: newUser.lastName,
-          tier: newUser.tier,
-          gttStakeAmount: newUser.gttStakeAmount,
+          tier: newUser.tier || newUser.userTier,
+          gttStakeAmount: Number(newUser.gttStakeAmount || 0),
           createdAt: newUser.createdAt,
           lastLoginAt: new Date(),
           isActive: newUser.isActive,
-          emailVerified: newUser.emailVerified,
+          emailVerified: newUser.emailVerified || false,
         },
         token,
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
@@ -152,7 +152,7 @@ router.post("/login", loginRateLimit, async (req: Request, res: Response) => {
     }
 
     // Verify password
-    const isValidPassword = await verifyPassword(password, user.passwordHash);
+    const isValidPassword = await verifyPassword(password, user.passwordHash || "");
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
@@ -172,16 +172,16 @@ router.post("/login", loginRateLimit, async (req: Request, res: Response) => {
       session: {
         user: {
           id: user.id,
-          email: user.email,
+          email: user.email || "",
           firstName: user.firstName,
           lastName: user.lastName,
-          tier: user.tier,
-          gttStakeAmount: user.gttStakeAmount,
+          tier: user.tier || user.userTier,
+          gttStakeAmount: Number(user.gttStakeAmount || 0),
           walletAddress: user.walletAddress,
           createdAt: user.createdAt,
           lastLoginAt: new Date(),
           isActive: user.isActive,
-          emailVerified: user.emailVerified,
+          emailVerified: user.emailVerified || false,
         },
         token,
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
@@ -386,16 +386,16 @@ router.get(
         success: true,
         user: {
           id: user.id,
-          email: user.email,
+          email: user.email || "",
           firstName: user.firstName,
           lastName: user.lastName,
-          tier: user.tier,
-          gttStakeAmount: user.gttStakeAmount,
+          tier: user.tier || user.userTier,
+          gttStakeAmount: Number(user.gttStakeAmount || 0),
           walletAddress: user.walletAddress,
           createdAt: user.createdAt,
           lastLoginAt: user.lastLoginAt,
           isActive: user.isActive,
-          emailVerified: user.emailVerified,
+          emailVerified: user.emailVerified || false,
         },
       });
     } catch (error) {
