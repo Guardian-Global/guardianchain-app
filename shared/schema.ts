@@ -84,7 +84,7 @@ export const users = pgTable("users", {
 });
 
 export type UpsertUser = typeof users.$inferInsert;
-export type User = typeof users.$inferSelect;
+export type UserSelect = typeof users.$inferSelect;
 
 // Enhanced Capsules table
 export const capsules = pgTable("capsules", {
@@ -108,12 +108,43 @@ export const capsules = pgTable("capsules", {
   nftContractAddress: text("nft_contract_address"),
   metadata: jsonb("metadata").$type<object>().default({}),
   blocks: jsonb("blocks").$type<object[]>().default([]),
-  parentCapsuleId: integer("parent_capsule_id").references(() => capsules.id), // For forks/versions
+  parentCapsuleId: integer("parent_capsule_id"), // For forks/versions
   version: integer("version").default(1),
   evolutionLevel: integer("evolution_level").default(1),
   collaborators: jsonb("collaborators").$type<string[]>().default([]),
   heirAddress: text("heir_address"), // Inheritance field
   unlockDate: timestamp("unlock_date"), // Inheritance field
+  
+  // Enhanced Privacy & Access Controls
+  accessLevel: text("access_level").default("public"), // public, private, restricted, premium
+  authorizedViewers: jsonb("authorized_viewers").$type<string[]>().default([]), // User IDs or email addresses
+  viewingCost: decimal("viewing_cost", { precision: 18, scale: 2 }).default("0"), // Cost in USD to view
+  requiresAuth: boolean("requires_auth").default(false), // Requires authentication to view
+  authLevel: text("auth_level").default("basic"), // basic, enhanced, biometric
+  
+  // Time Capsule Controls
+  isTimeCapsule: boolean("is_time_capsule").default(false),
+  revealDate: timestamp("reveal_date"), // When time capsule becomes viewable
+  requiredApprovals: integer("required_approvals").default(0), // Number of approvals needed
+  approvedBy: jsonb("approved_by").$type<string[]>().default([]), // User IDs who approved
+  
+  // Social Media Integration
+  autoShare: boolean("auto_share").default(false),
+  shareToFacebook: boolean("share_to_facebook").default(false),
+  shareToTwitter: boolean("share_to_twitter").default(false),
+  shareToLinkedIn: boolean("share_to_linkedin").default(false),
+  shareToInstagram: boolean("share_to_instagram").default(false),
+  shareToTikTok: boolean("share_to_tiktok").default(false),
+  shareToYouTube: boolean("share_to_youtube").default(false),
+  shareToReddit: boolean("share_to_reddit").default(false),
+  shareToDiscord: boolean("share_to_discord").default(false),
+  shareToTelegram: boolean("share_to_telegram").default(false),
+  socialShareMessage: text("social_share_message"),
+  
+  // IPFS Automation
+  autoIpfs: boolean("auto_ipfs").default(true), // Automatically upload to IPFS
+  ipfsProvider: text("ipfs_provider").default("pinata"), // pinata, infura, web3storage
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

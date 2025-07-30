@@ -49,6 +49,10 @@ app.use("/api/ai", aiRoutes);
 import web3Routes from "./routes/web3.js";
 app.use("/api/web3", web3Routes);
 
+// Capsules routes for enhanced creation system
+import capsulesRoutes from "./routes/capsules.js";
+app.use("/api/capsules", capsulesRoutes);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
