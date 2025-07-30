@@ -14,8 +14,12 @@ import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Public authentication routes (for direct user registration/login)
-  app.use("/api/auth", publicAuthRouter);
+  // Complete authentication system
+  const completeAuthRouter = (await import("./routes/complete-auth")).default;
+  app.use("/api/auth", completeAuthRouter);
+  
+  // Legacy public auth routes (kept for backward compatibility)
+  app.use("/api/legacy-auth", publicAuthRouter);
 
   // Pricing routes
   app.use("/api/pricing", async (req, res, next) => {

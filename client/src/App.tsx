@@ -94,6 +94,11 @@ import GTTLaunch from "./pages/gtt-launch";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
+import UnifiedLogin from "./pages/UnifiedLogin";
+import { CompleteAuthProvider } from "./hooks/useCompleteAuth";
+import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
+import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
+import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -191,6 +196,10 @@ function Router() {
         <Route path="/supabase-security" component={SupabaseSecurity} />
         <Route path="/teams-upgrades" component={TeamsUpgrades} />
         <Route path="/api-status" component={ApiStatus} />
+        <Route path="/unified-login" component={UnifiedLogin} />
+        <Route path="/auth-dashboard" component={RoleBasedDashboard} />
+        <Route path="/commander" component={EnhancedCommanderDashboard} />
+        <Route path="/founder-dashboard" component={EnhancedFounderDashboard} />
         <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
@@ -209,22 +218,24 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <WalletProvider>
-          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <AssetProvider>
-              <TooltipProvider>
-                <main className="flex-1">
-                  <Router />
-                </main>
-                <Toaster />
-              </TooltipProvider>
-            </AssetProvider>
-          </ThemeProvider>
-        </WalletProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <CompleteAuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <WalletProvider>
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              <AssetProvider>
+                <TooltipProvider>
+                  <main className="flex-1">
+                    <Router />
+                  </main>
+                  <Toaster />
+                </TooltipProvider>
+              </AssetProvider>
+            </ThemeProvider>
+          </WalletProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </CompleteAuthProvider>
   );
 }
 

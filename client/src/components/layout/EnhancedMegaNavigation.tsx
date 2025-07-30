@@ -172,6 +172,8 @@ const pageCategories = {
       { name: "Security Center", href: "/supabase-security", icon: Shield },
       { name: "Teams Upgrades", href: "/teams-upgrades", icon: Crown },
       { name: "API Status", href: "/api-status", icon: Settings },
+      { name: "Auth Dashboard", href: "/auth-dashboard", icon: User },
+      { name: "Unified Login", href: "/unified-login", icon: Lock },
     ],
   },
 };
@@ -307,11 +309,6 @@ export default function EnhancedMegaNavigation() {
                 size="lg"
                 variant="icon"
                 className="w-8 h-8"
-                fallback={
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-green-600 rounded-lg flex items-center justify-center">
-                    <Shield className="text-white h-5 w-5" />
-                  </div>
-                }
               />
               <span className="text-xl font-bold">
                 <span className="text-purple-400">GUARDIAN</span>
