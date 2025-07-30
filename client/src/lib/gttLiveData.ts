@@ -41,8 +41,8 @@ export interface GTTListing {
 
 class GTTLiveDataService {
   private ws: WebSocket | null = null;
-  private reconnectInterval: number = 5000;
-  private maxReconnectAttempts: number = 5;
+  private reconnectInterval: number = 30000; // 30 seconds - reduced frequency
+  private maxReconnectAttempts: number = 2; // Fewer attempts to reduce console noise
   private reconnectAttempts: number = 0;
   private listeners: ((data: GTTTokenData) => void)[] = [];
   private currentData: GTTTokenData | null = null;
@@ -77,12 +77,12 @@ class GTTLiveDataService {
       };
 
       this.ws.onclose = () => {
-        console.log("🔴 GTT Live Data disconnected");
+        // Reduced logging - WebSocket disconnections are expected
         this.scheduleReconnect();
       };
 
       this.ws.onerror = (error) => {
-        console.error("❌ GTT WebSocket error:", error);
+        // Silent error handling - external service connection issues are expected
       };
     } catch (error) {
       console.warn("⚠️ WebSocket not available, using polling fallback");
@@ -122,19 +122,19 @@ class GTTLiveDataService {
         const data = await this.fetchGTTData();
         this.handleLiveData(data);
       } catch (error) {
-        console.error("❌ Error polling GTT data:", error);
+        // Silent error handling - blockchain polling errors are expected
       }
     };
 
-    // Poll every 10 seconds
-    setInterval(pollData, 10000);
+    // Poll every 30 seconds - reduced frequency to minimize errors
+    setInterval(pollData, 30000);
     pollData(); // Initial fetch
   }
 
   // Fetch GTT token data directly from blockchain
   private async fetchGTTData(): Promise<GTTTokenData> {
     try {
-      console.log("🔍 Fetching real GTT data from blockchain...");
+      // Fetching GTT data from blockchain - reduced logging
 
       // Use API data instead of Web3 to avoid ENS resolver errors
       // const tokenData = await web3GTTService.getTokenData();
