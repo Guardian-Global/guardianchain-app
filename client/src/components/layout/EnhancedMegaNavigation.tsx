@@ -303,18 +303,40 @@ export default function EnhancedMegaNavigation() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Responsive Logo */}
           <Link href="/">
             <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <EnhancedLogoDisplay
-                size="lg"
-                variant="icon"
-                className="w-8 h-8"
-              />
-              <span className="text-xl font-bold">
-                <span className="text-purple-400">GUARDIAN</span>
-                <span className="text-green-400">CHAIN</span>
-              </span>
+              {/* Mobile: Icon only */}
+              <div className="block sm:hidden">
+                <EnhancedLogoDisplay
+                  size="md"
+                  variant="icon"
+                  className="w-6 h-6"
+                />
+              </div>
+              {/* Tablet: Icon + abbreviated text */}
+              <div className="hidden sm:flex lg:hidden items-center space-x-2">
+                <EnhancedLogoDisplay
+                  size="md"
+                  variant="icon"
+                  className="w-7 h-7"
+                />
+                <span className="text-lg font-bold">
+                  <span className="text-purple-400">GC</span>
+                </span>
+              </div>
+              {/* Desktop: Full logo + text */}
+              <div className="hidden lg:flex items-center space-x-2">
+                <EnhancedLogoDisplay
+                  size="lg"
+                  variant="icon"
+                  className="w-8 h-8"
+                />
+                <span className="text-xl font-bold">
+                  <span className="text-purple-400">GUARDIAN</span>
+                  <span className="text-green-400">CHAIN</span>
+                </span>
+              </div>
             </div>
           </Link>
 

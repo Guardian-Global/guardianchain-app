@@ -18,19 +18,20 @@ export function EnhancedLogoDisplay({
   const guardianChainLogo = "/assets/GUARDIANCHAIN_logo.png";
   const gttLogo = "/assets/GTT_logo.png";
 
-  // Size classes
+  // Responsive size classes for different devices
   const sizeClasses = {
-    sm: "h-6 w-6",
-    md: "h-8 w-8", 
-    lg: "h-12 w-12",
-    xl: "h-16 w-16"
+    sm: "h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6",
+    md: "h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-10 lg:w-10", 
+    lg: "h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16",
+    xl: "h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 xl:h-24 xl:w-24"
   };
 
+  // Responsive text size classes
   const textSizeClasses = {
-    sm: "text-sm",
-    md: "text-base",
-    lg: "text-xl",
-    xl: "text-2xl"
+    sm: "text-xs sm:text-sm",
+    md: "text-sm sm:text-base md:text-lg",
+    lg: "text-base sm:text-lg md:text-xl lg:text-2xl",
+    xl: "text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
   };
 
   // Fallback component

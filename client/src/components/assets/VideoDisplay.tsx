@@ -24,12 +24,12 @@ export function VideoDisplay({
     ? "/assets/GAURDIANCHAIN_logo_video.mp4"
     : "/assets/GTT_logo_video.mp4";
 
-  // Size classes
+  // Responsive size classes for video display
   const sizeClasses = {
-    sm: "h-24 w-24",
-    md: "h-32 w-32", 
-    lg: "h-48 w-48",
-    xl: "h-64 w-64"
+    sm: "h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24",
+    md: "h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36", 
+    lg: "h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56 xl:h-64 xl:w-64",
+    xl: "h-48 w-48 sm:h-56 sm:w-56 md:h-64 md:w-64 lg:h-72 lg:w-72 xl:h-80 xl:w-80"
   };
 
   return (

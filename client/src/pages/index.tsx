@@ -37,10 +37,11 @@ export default function Homepage() {
                 </Button>
               </div>
 
-              {/* Live Logo Display */}
-              <div className="flex items-center space-x-4 pt-4">
+              {/* Responsive Live Logo Display */}
+              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 pt-4">
                 <LogoDisplay size="lg" variant="full" type="guardianchain" />
-                <div className="h-8 w-px bg-slate-600"></div>
+                <div className="hidden sm:block h-8 w-px bg-slate-600"></div>
+                <div className="block sm:hidden h-px w-8 bg-slate-600"></div>
                 <LogoDisplay size="lg" variant="full" type="gtt" />
               </div>
             </div>
@@ -144,17 +145,17 @@ export default function Homepage() {
               revolutionary truth verification system.
             </p>
             
-            {/* Both Video Logos Side by Side */}
-            <div className="flex justify-center items-center space-x-8 py-8">
+            {/* Responsive Video Logos */}
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 py-8">
               <VideoDisplay 
                 type="guardianchain" 
                 size="md" 
-                className="rounded-lg shadow-xl shadow-purple-500/30"
+                className="rounded-lg shadow-xl shadow-purple-500/30 transition-all duration-300 hover:scale-105"
               />
               <VideoDisplay 
                 type="gtt" 
                 size="md" 
-                className="rounded-lg shadow-xl shadow-green-500/30"
+                className="rounded-lg shadow-xl shadow-green-500/30 transition-all duration-300 hover:scale-105"
               />
             </div>
 
