@@ -322,8 +322,9 @@ export default function EnhancedMegaNavigation() {
                   variant="icon"
                   className="w-7 h-7"
                 />
-                <span className="text-lg font-bold">
-                  <span className="text-purple-400">GC</span>
+                <span className="text-sm font-bold">
+                  <span className="text-purple-400">GUARDIAN</span>
+                  <span className="text-green-400">CHAIN</span>
                 </span>
               </div>
               {/* Desktop: Full logo + text */}
