@@ -107,6 +107,7 @@ import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboar
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
+import OnboardingChecker from "./components/auth/OnboardingChecker";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();

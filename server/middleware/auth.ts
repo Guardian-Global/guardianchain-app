@@ -67,6 +67,12 @@ export const requireTier = (requiredTier: string) => {
       return;
     }
 
+    // Master admin and founder have access to all tiers
+    if (req.user.role === "MASTER_ADMIN" || req.user.role === "FOUNDER") {
+      next();
+      return;
+    }
+
     const tierHierarchy = ["EXPLORER", "SEEKER", "CREATOR", "SOVEREIGN"];
     const userTierIndex = tierHierarchy.indexOf(req.user.tier.toUpperCase());
     const requiredTierIndex = tierHierarchy.indexOf(requiredTier.toUpperCase());
@@ -76,7 +82,8 @@ export const requireTier = (requiredTier: string) => {
         success: false,
         message: "Insufficient tier access",
         requiredTier,
-        currentTier: req.user.tier
+        currentTier: req.user.tier,
+        upgradeRequired: true
       });
       return;
     }
@@ -97,19 +104,17 @@ export const simpleAuth = (req: Request, res: Response, next: NextFunction): voi
  * Admin-only middleware (placeholder for missing adminOnly)
  */
 export const adminOnly = (req: Request, res: Response, next: NextFunction): void => {
-  // For development, allow all requests
-  next();
-        success: false,
-        message: `${requiredTier} tier or higher required. Current tier: ${req.user.tier}`,
-        upgradeRequired: true,
-        requiredTier,
-        currentTier: req.user.tier,
-      });
-      return;
-    }
+  if (!req.user) {
+    res.status(401).json({ success: false, message: "Authentication required" });
+    return;
+  }
 
-    next();
-  };
+  if (req.user.role !== "ADMIN" && req.user.role !== "MASTER_ADMIN" && req.user.role !== "FOUNDER") {
+    res.status(403).json({ success: false, message: "Admin access required" });
+    return;
+  }
+
+  next();
 };
 
 /**

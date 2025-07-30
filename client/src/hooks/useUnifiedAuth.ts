@@ -392,6 +392,12 @@ export function UnifiedAuthProvider({ children }: { children: ReactNode }) {
   // Permission and access control methods
   const hasPermission = (permission: string): boolean => {
     if (!user?.permissions) return false;
+    
+    // Master admin and founder have all permissions
+    if (user.role === "MASTER_ADMIN" || user.role === "FOUNDER") {
+      return true;
+    }
+    
     return user.permissions.includes(permission) || user.permissions.includes("*");
   };
 
@@ -401,6 +407,12 @@ export function UnifiedAuthProvider({ children }: { children: ReactNode }) {
 
   const hasTier = (requiredTier: string): boolean => {
     if (!user?.tier) return false;
+    
+    // Master admin and founder have access to all tiers
+    if (user.role === "MASTER_ADMIN" || user.role === "FOUNDER") {
+      return true;
+    }
+    
     const userTierIndex = TIER_HIERARCHY.indexOf(user.tier.toUpperCase());
     const requiredTierIndex = TIER_HIERARCHY.indexOf(requiredTier.toUpperCase());
     return userTierIndex >= requiredTierIndex;
