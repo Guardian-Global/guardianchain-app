@@ -54,7 +54,7 @@ export default function FinancialDashboard() {
 
         setTreasury(treasuryData);
         setCompliance(complianceData);
-        setGttPrice(priceData);
+        setGttPrice(priceData || 0);
         setPriceChange(changeData);
         setMarketData(marketInfo);
 
@@ -107,7 +107,7 @@ export default function FinancialDashboard() {
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <DollarSign
               className="w-6 h-6 mr-3"
-              style={{ color: BRAND_COLORS.SUCCESS }}
+              style={{ color: "#10B981" }}
             />
             Treasury Summary
           </h2>
@@ -137,7 +137,7 @@ export default function FinancialDashboard() {
                 <CardContent>
                   <p
                     className="text-2xl font-bold"
-                    style={{ color: BRAND_COLORS.SUCCESS }}
+                    style={{ color: "#10B981" }}
                   >
                     {treasury.yield_paid?.toLocaleString() || "0"}
                   </p>
@@ -186,9 +186,9 @@ export default function FinancialDashboard() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-2xl font-bold text-white">
-                    ${gttPrice.toFixed(4)}
+                    ${gttPrice?.toFixed(4) || "0.0000"}
                   </p>
-                  {priceChange && (
+                  {priceChange?.change && (
                     <p
                       className={`text-xs mt-1 ${
                         priceChange.isPositive
@@ -197,7 +197,7 @@ export default function FinancialDashboard() {
                       }`}
                     >
                       {priceChange.isPositive ? "+" : ""}
-                      {priceChange.change.toFixed(2)}% 24h
+                      {priceChange?.change?.toFixed(2) || "0.00"}% 24h
                     </p>
                   )}
                 </CardContent>
@@ -215,7 +215,7 @@ export default function FinancialDashboard() {
           <h2 className="text-2xl font-bold mb-6 flex items-center">
             <Zap
               className="w-6 h-6 mr-3"
-              style={{ color: BRAND_COLORS.GUARDIAN }}
+              style={{ color: "#8B5CF6" }}
             />
             AI Business Intelligence
           </h2>

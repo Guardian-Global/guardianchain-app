@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
+// Removed duplicate UnifiedAuthProvider import
 import EnhancedMegaNavigation from "@/components/layout/EnhancedMegaNavigation";
 import Footer from "@/components/layout/footer";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
@@ -80,7 +81,7 @@ import BillingDashboard from "./pages/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
 import PrivacyPolicy from "./pages/legal/privacy";
-import { AuthProvider } from "@/hooks/useAuth";
+// Removed duplicate AuthProvider import
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
 import SimpleTokenLaunch from "@/pages/simple-token-launch";
@@ -102,7 +103,6 @@ import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
 import Login from "./pages/Login";
-import { CompleteAuthProvider } from "./hooks/useCompleteAuth";
 import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
@@ -146,6 +146,7 @@ function Router() {
           component={() => <AuthenticationHub onAuthenticated={() => {}} />}
         />
         <Route path="/onboarding" component={OnboardingPage} />
+        <Route path="/unified-onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
@@ -267,10 +268,8 @@ function App() {
   });
 
   return (
-    <UnifiedAuthProvider>
-      <CompleteAuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+        <UnifiedAuthProvider>
             <WalletProvider>
               <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <AssetProvider>
@@ -283,10 +282,8 @@ function App() {
                 </AssetProvider>
               </ThemeProvider>
             </WalletProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </CompleteAuthProvider>
-    </UnifiedAuthProvider>
+        </UnifiedAuthProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -1,110 +1,84 @@
 import {
   users,
   capsules,
-  capsuleInteractions,
+  verifications,
+  transactions,
+  achievements,
+  assets,
   type User,
   type UpsertUser,
+  type NewUser,
   type Capsule,
-  type InsertCapsule,
-  type CapsuleInteraction,
-  type InsertCapsuleInteraction,
+  type NewCapsule,
+  type Verification,
+  type NewVerification,
+  type Transaction,
+  type NewTransaction,
+  type Achievement,
+  type NewAchievement,
+  type Asset,
+  type NewAsset,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
-  // User operations (IMPORTANT: mandatory for Replit Auth)
+  // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: NewUser): Promise<User>;
+  updateUser(id: string, user: Partial<User>): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
-  updateUser(id: string, userData: Partial<UpsertUser>): Promise<User>;
-  updateUserTier(id: string, tier: string): Promise<User | undefined>;
-  updateUserLastLogin(userId: string): Promise<void>;
-  updateUserStake(userId: string, stakeAmount: number): Promise<void>;
-  createUser(userData: {
-    email: string;
-    passwordHash: string;
-    firstName?: string;
-    lastName?: string;
-    tier?: string;
-    gttStakeAmount?: number;
-    emailVerified?: boolean;
-    isActive?: boolean;
-    agreedToTermsAt?: Date;
-    role?: string;
-    permissions?: string[];
-  }): Promise<User>;
-  getUserById(userId: string): Promise<User | undefined>;
-
+  
   // Capsule operations
-  createCapsule(capsuleData: any): Promise<Capsule>;
-  getUserCapsules(userId: string): Promise<Capsule[]>;
-  getCapsule(id: number): Promise<Capsule | undefined>;
-  updateCapsule(
-    id: number,
-    updates: Partial<Capsule>
-  ): Promise<Capsule | undefined>;
-
-  // Interaction operations
-  recordInteraction(
-    interaction: InsertCapsuleInteraction
-  ): Promise<CapsuleInteraction>;
-  getCapsuleInteractions(capsuleId: number): Promise<CapsuleInteraction[]>;
-
-  // Airdrop operations
-  getAirdropClaim(address: string): Promise<any | undefined>;
-  createAirdropClaim(claim: any): Promise<any>;
-
-  // Referral operations
-  createReferralCode(referral: any): Promise<any>;
-  getReferralData(userId: string): Promise<any | undefined>;
-  getReferralByCode(code: string): Promise<any | undefined>;
-  getReferralReward(address: string): Promise<any | undefined>;
-  createReferralReward(reward: any): Promise<any>;
-
-  // Guardian Pass operations
-  getGuardianPassCollection(address: string): Promise<any | undefined>;
-  getGuardianPassMarketplaceData(): Promise<any>;
-  checkGuardianPassEligibility(address: string): Promise<boolean>;
-  createGuardianPass(passData: any): Promise<any>;
-  getGuardianPassBenefits(address: string): Promise<any>;
-  hasGuardianPass(address: string): Promise<boolean>;
-  getHighestRarityPass(address: string): Promise<string | undefined>;
-  getGuardianPassAPYBonus(address: string): Promise<number>;
-
-  // Vault operations
-  getVaultStats(): Promise<any>;
-  getUserVaultPosition(address: string): Promise<any>;
-  recordVaultDeposit(deposit: any): Promise<any>;
-  recordVaultWithdrawal(withdrawal: any): Promise<any>;
-  recordVaultCompound(compound: any): Promise<any>;
+  getCapsule(id: string): Promise<Capsule | undefined>;
+  getCapsulesByUser(userId: string): Promise<Capsule[]>;
+  createCapsule(capsule: NewCapsule): Promise<Capsule>;
+  updateCapsule(id: string, capsule: Partial<Capsule>): Promise<Capsule>;
+  
+  // Verification operations
+  getVerificationsByCapsule(capsuleId: string): Promise<Verification[]>;
+  createVerification(verification: NewVerification): Promise<Verification>;
+  
+  // Transaction operations
+  getTransactionsByUser(userId: string): Promise<Transaction[]>;
+  createTransaction(transaction: NewTransaction): Promise<Transaction>;
+  
+  // Achievement operations
+  getAchievementsByUser(userId: string): Promise<Achievement[]>;
+  createAchievement(achievement: NewAchievement): Promise<Achievement>;
+  
+  // Asset operations
+  getAssetsByUser(userId: string): Promise<Asset[]>;
+  createAsset(asset: NewAsset): Promise<Asset>;
 }
 
 export class DatabaseStorage implements IStorage {
-  // User operations (IMPORTANT: mandatory for Replit Auth)
+  // User operations
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async createUser(userData: NewUser): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
+      .values({
+        ...userData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       })
       .returning();
     return user;
   }
 
-  async updateUser(id: string, userData: Partial<UpsertUser>): Promise<User> {
+  async updateUser(id: string, userData: Partial<User>): Promise<User> {
     const [user] = await db
       .update(users)
       .set({
@@ -116,144 +90,56 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserTier(id: string, tier: string): Promise<User | undefined> {
+  async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
-      .update(users)
-      .set({
-        userTier: tier,
+      .insert(users)
+      .values({
+        ...userData,
+        createdAt: new Date(),
         updatedAt: new Date(),
       })
-      .where(eq(users.id, id))
+      .onConflictDoUpdate({
+        target: users.email,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
       .returning();
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
-    return user;
+  // Capsule operations
+  async getCapsule(id: string): Promise<Capsule | undefined> {
+    const [capsule] = await db.select().from(capsules).where(eq(capsules.id, id));
+    return capsule;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db
+  async getCapsulesByUser(userId: string): Promise<Capsule[]> {
+    return await db
       .select()
-      .from(users)
-      .where(eq(users.username, username));
-    return user;
+      .from(capsules)
+      .where(eq(capsules.authorId, userId))
+      .orderBy(desc(capsules.createdAt));
   }
 
-  async updateUserLastLogin(userId: string): Promise<void> {
-    await db
-      .update(users)
-      .set({
-        lastLoginAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, userId));
-  }
-
-  async updateUserStake(userId: string, stakeAmount: number): Promise<void> {
-    await db
-      .update(users)
-      .set({
-        gttBalance: stakeAmount.toString(),
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, userId));
-  }
-
-  async createUser(userData: {
-    email: string;
-    passwordHash: string;
-    firstName?: string;
-    lastName?: string;
-    tier?: string;
-    gttStakeAmount?: number;
-    emailVerified?: boolean;
-    isActive?: boolean;
-    agreedToTermsAt?: Date;
-    role?: string;
-    permissions?: string[];
-  }): Promise<User> {
-    const userId = `user_${Date.now()}_${Math.random()
-      .toString(36)
-      .substr(2, 9)}`;
-
-    const [user] = await db
-      .insert(users)
+  async createCapsule(capsuleData: NewCapsule): Promise<Capsule> {
+    const [capsule] = await db
+      .insert(capsules)
       .values({
-        id: userId,
-        email: userData.email,
-        passwordHash: userData.passwordHash,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        tier: userData.tier || "EXPLORER",
-        userTier: userData.tier || "EXPLORER",
-        gttStakeAmount: userData.gttStakeAmount?.toString() || "0",
-        emailVerified: userData.emailVerified || false,
-        isActive: userData.isActive !== false,
-        role: userData.role || "USER",
-        permissions: userData.permissions || [],
-        agreedToTermsAt: userData.agreedToTermsAt,
+        ...capsuleData,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
       .returning();
-
-    return user;
-  }
-
-  async getUserById(userId: string): Promise<User | undefined> {
-    return this.getUser(userId);
-  }
-
-  // Capsule operations
-  async createCapsule(capsuleData: any): Promise<Capsule> {
-    const [capsule] = await db
-      .insert(capsules)
-      .values({
-        title: capsuleData.title,
-        content: capsuleData.content,
-        creatorId: capsuleData.userId,
-        type: capsuleData.capsuleType || "KNOWLEDGE",
-        category: capsuleData.category,
-        tags: capsuleData.tags || [],
-        status: "draft",
-        isPublic: true,
-        griefScore: 0,
-        credibilityScore: 0,
-        truthYield: "0",
-        metadata: capsuleData.metadata || {},
-        heirAddress: capsuleData.heirAddress,
-        unlockDate: capsuleData.unlockDate,
-      })
-      .returning();
     return capsule;
   }
 
-  async getUserCapsules(userId: string): Promise<Capsule[]> {
-    return await db
-      .select()
-      .from(capsules)
-      .where(eq(capsules.creatorId, userId))
-      .orderBy(desc(capsules.createdAt));
-  }
-
-  async getCapsule(id: number): Promise<Capsule | undefined> {
-    const [capsule] = await db
-      .select()
-      .from(capsules)
-      .where(eq(capsules.id, id));
-    return capsule;
-  }
-
-  async updateCapsule(
-    id: number,
-    updates: Partial<Capsule>
-  ): Promise<Capsule | undefined> {
+  async updateCapsule(id: string, capsuleData: Partial<Capsule>): Promise<Capsule> {
     const [capsule] = await db
       .update(capsules)
       .set({
-        ...updates,
+        ...capsuleData,
         updatedAt: new Date(),
       })
       .where(eq(capsules.id, id))
@@ -261,258 +147,91 @@ export class DatabaseStorage implements IStorage {
     return capsule;
   }
 
-  // Interaction operations
-  async recordInteraction(
-    interaction: InsertCapsuleInteraction
-  ): Promise<CapsuleInteraction> {
-    const [result] = await db
-      .insert(capsuleInteractions)
-      .values(interaction)
-      .returning();
-    return result;
-  }
-
-  async getCapsuleInteractions(
-    capsuleId: number
-  ): Promise<CapsuleInteraction[]> {
+  // Verification operations
+  async getVerificationsByCapsule(capsuleId: string): Promise<Verification[]> {
     return await db
       .select()
-      .from(capsuleInteractions)
-      .where(eq(capsuleInteractions.capsuleId, capsuleId))
-      .orderBy(desc(capsuleInteractions.createdAt));
+      .from(verifications)
+      .where(eq(verifications.capsuleId, capsuleId))
+      .orderBy(desc(verifications.createdAt));
   }
 
-  // Mock implementations for mainnet launch features
-  // In production, these would use proper database tables
-
-  // Airdrop operations
-  async getAirdropClaim(address: string): Promise<any | undefined> {
-    // Mock implementation - in production would query airdrop_claims table
-    return null; // No claims found
+  async createVerification(verificationData: NewVerification): Promise<Verification> {
+    const [verification] = await db
+      .insert(verifications)
+      .values({
+        ...verificationData,
+        createdAt: new Date(),
+      })
+      .returning();
+    return verification;
   }
 
-  async createAirdropClaim(claim: any): Promise<any> {
-    // Mock implementation - in production would insert into airdrop_claims table
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...claim,
-      createdAt: new Date().toISOString(),
-    };
+  // Transaction operations
+  async getTransactionsByUser(userId: string): Promise<Transaction[]> {
+    return await db
+      .select()
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.fromUserId, userId),
+          eq(transactions.toUserId, userId)
+        )
+      )
+      .orderBy(desc(transactions.createdAt));
   }
 
-  // Referral operations
-  async createReferralCode(referral: any): Promise<any> {
-    // Mock implementation - in production would insert into referral_codes table
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...referral,
-      referralLink: `https://guardianchain.app/signup?ref=${referral.code}`,
-    };
+  async createTransaction(transactionData: NewTransaction): Promise<Transaction> {
+    const [transaction] = await db
+      .insert(transactions)
+      .values({
+        ...transactionData,
+        createdAt: new Date(),
+      })
+      .returning();
+    return transaction;
   }
 
-  async getReferralData(userId: string): Promise<any | undefined> {
-    // Mock implementation - return sample referral data
-    return {
-      code: "GUARD1234",
-      totalReferrals: 8,
-      totalRewards: "400",
-      pendingRewards: "150",
-      referralLink: "https://guardianchain.app/signup?ref=GUARD1234",
-      recentReferrals: [
-        {
-          address: "0x1234...5678",
-          joinDate: "2025-01-15",
-          rewardEarned: "50",
-          status: "completed",
-        },
-        {
-          address: "0x9876...4321",
-          joinDate: "2025-01-20",
-          rewardEarned: "50",
-          status: "pending",
-        },
-      ],
-    };
+  // Achievement operations
+  async getAchievementsByUser(userId: string): Promise<Achievement[]> {
+    return await db
+      .select()
+      .from(achievements)
+      .where(eq(achievements.userId, userId))
+      .orderBy(desc(achievements.unlockedAt));
   }
 
-  async getReferralByCode(code: string): Promise<any | undefined> {
-    // Mock implementation
-    return {
-      userId: "demo-user",
-      code,
-      createdAt: new Date().toISOString(),
-    };
+  async createAchievement(achievementData: NewAchievement): Promise<Achievement> {
+    const [achievement] = await db
+      .insert(achievements)
+      .values({
+        ...achievementData,
+        unlockedAt: new Date(),
+      })
+      .returning();
+    return achievement;
   }
 
-  async getReferralReward(address: string): Promise<any | undefined> {
-    // Mock implementation - check if user already used referral
-    return null; // No existing reward found
+  // Asset operations
+  async getAssetsByUser(userId: string): Promise<Asset[]> {
+    return await db
+      .select()
+      .from(assets)
+      .where(eq(assets.userId, userId))
+      .orderBy(desc(assets.uploadedAt));
   }
 
-  async createReferralReward(reward: any): Promise<any> {
-    // Mock implementation
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...reward,
-      createdAt: new Date().toISOString(),
-    };
-  }
-
-  // Guardian Pass operations
-  async getGuardianPassCollection(address: string): Promise<any | undefined> {
-    // Mock implementation - return sample Guardian Pass collection
-    return {
-      ownedPasses: [
-        {
-          tokenId: 42,
-          rarity: "Rare",
-          tierName: "Rare Guardian",
-          boostedAPY: 500,
-          stakingMultiplier: 12000,
-          earlyDAOAccess: true,
-          mintTime: "2025-01-15T10:30:00Z",
-        },
-        {
-          tokenId: 157,
-          rarity: "Uncommon",
-          tierName: "Uncommon Guardian",
-          boostedAPY: 250,
-          stakingMultiplier: 11000,
-          earlyDAOAccess: false,
-          mintTime: "2025-01-20T14:45:00Z",
-        },
-      ],
-      totalValue: "2,847.50",
-      highestRarity: "Rare",
-      benefits: {
-        totalAPYBoost: 750,
-        stakingMultiplier: 1.2,
-        daoVotingPower: 150,
-        exclusiveFeatures: [
-          "Early DAO proposal access",
-          "Premium vault strategies",
-          "Priority customer support",
-          "Exclusive community channels",
-        ],
-      },
-    };
-  }
-
-  async getGuardianPassMarketplaceData(): Promise<any> {
-    // Mock marketplace data
-    return {
-      totalSupply: 847,
-      floorPrice: "0.25",
-      volume24h: "12.5",
-      rarityDistribution: {
-        Common: { minted: 423, available: 77 },
-        Uncommon: { minted: 267, available: 33 },
-        Rare: { minted: 128, available: 22 },
-        Epic: { minted: 24, available: 16 },
-        Legendary: { minted: 5, available: 5 },
-      },
-    };
-  }
-
-  async checkGuardianPassEligibility(address: string): Promise<boolean> {
-    // Mock implementation - in production would check eligibility criteria
-    return true; // All addresses eligible for demo
-  }
-
-  async createGuardianPass(passData: any): Promise<any> {
-    // Mock implementation
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...passData,
-      createdAt: new Date().toISOString(),
-    };
-  }
-
-  async getGuardianPassBenefits(address: string): Promise<any> {
-    // Mock implementation
-    return {
-      totalAPYBoost: 750,
-      stakingMultiplier: 1.2,
-      daoVotingPower: 150,
-      exclusiveFeatures: [
-        "Early DAO proposal access",
-        "Premium vault strategies",
-      ],
-    };
-  }
-
-  async hasGuardianPass(address: string): Promise<boolean> {
-    // Mock implementation
-    return Math.random() > 0.3; // 70% chance of having a pass
-  }
-
-  async getHighestRarityPass(address: string): Promise<string | undefined> {
-    // Mock implementation
-    const rarities = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
-    return rarities[Math.floor(Math.random() * rarities.length)];
-  }
-
-  async getGuardianPassAPYBonus(address: string): Promise<number> {
-    // Mock implementation - return APY bonus in basis points
-    const hasPass = await this.hasGuardianPass(address);
-    return hasPass ? 500 : 0; // 5% bonus if has pass
-  }
-
-  // Vault operations
-  async getVaultStats(): Promise<any> {
-    // Mock vault statistics
-    return {
-      tvl: "2,547,832",
-      apy: "25.7",
-      userStaked: "15,000",
-      pendingRewards: "1,247.50",
-      sharePrice: "1.0847",
-      nextCompoundTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
-      totalUsers: 1247,
-      performanceFee: "2%",
-    };
-  }
-
-  async getUserVaultPosition(address: string): Promise<any> {
-    // Mock user vault position
-    return {
-      stakedAmount: "15,000",
-      shares: "13,833.24",
-      totalRewardsEarned: "3,247.89",
-      autoCompoundedAmount: "1,847.32",
-      lastDepositTime: new Date(
-        Date.now() - 15 * 24 * 60 * 60 * 1000
-      ).toISOString(),
-    };
-  }
-
-  async recordVaultDeposit(deposit: any): Promise<any> {
-    // Mock implementation
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...deposit,
-      status: "completed",
-    };
-  }
-
-  async recordVaultWithdrawal(withdrawal: any): Promise<any> {
-    // Mock implementation
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...withdrawal,
-      status: "completed",
-    };
-  }
-
-  async recordVaultCompound(compound: any): Promise<any> {
-    // Mock implementation
-    return {
-      id: Math.floor(Math.random() * 10000),
-      ...compound,
-      status: "completed",
-    };
+  async createAsset(assetData: NewAsset): Promise<Asset> {
+    const [asset] = await db
+      .insert(assets)
+      .values({
+        ...assetData,
+        uploadedAt: new Date(),
+      })
+      .returning();
+    return asset;
   }
 }
 
-// Export storage instance
+// Create storage instance
 export const storage = new DatabaseStorage();

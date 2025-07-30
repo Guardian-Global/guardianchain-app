@@ -1,6 +1,26 @@
 import React, { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { z } from "zod";
-import { loginSchema, registerSchema, masterLoginSchema } from "@shared/schema";
+
+// Simple schemas for authentication
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+  isMaster: z.boolean().optional()
+});
+
+const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  agreedToTerms: z.boolean()
+});
+
+const masterLoginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+  masterKey: z.string().optional()
+});
 
 // Unified authentication types
 export interface UnifiedUser {
