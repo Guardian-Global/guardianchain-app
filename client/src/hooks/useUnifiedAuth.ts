@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import React, { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { z } from "zod";
 import { loginSchema, registerSchema, masterLoginSchema } from "@shared/schema";
 
@@ -533,10 +533,10 @@ export function UnifiedAuthProvider({ children }: { children: ReactNode }) {
     resetPassword
   };
 
-  return (
-    <UnifiedAuthContext.Provider value={contextValue}>
-      {children}
-    </UnifiedAuthContext.Provider>
+  return React.createElement(
+    UnifiedAuthContext.Provider,
+    { value: contextValue },
+    children
   );
 }
 

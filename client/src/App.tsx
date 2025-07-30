@@ -106,6 +106,7 @@ import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDash
 import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
 import AssetIntegration from "./pages/asset-integration";
+import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -114,7 +115,7 @@ function Router() {
     <div className="min-h-screen bg-slate-900 text-white">
       <EnhancedMegaNavigation />
       <Switch>
-        <Route path="/login" component={Login} />
+        <Route path="/login" component={UnifiedLogin} />
         <Route path="/" component={Homepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={SimpleHome} />
@@ -142,7 +143,11 @@ function Router() {
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
         <Route path="/dashboard" component={Dashboard} />
-        <Route path="/commander" component={Commander} />
+        <Route path="/commander">
+          <ProtectedRoute requiredRole="COMMANDER">
+            <Commander />
+          </ProtectedRoute>
+        </Route>
 
         <Route path="/mint-nft" component={MintNFT} />
         <Route path="/govern" component={Govern} />
@@ -176,7 +181,11 @@ function Router() {
         <Route path="/ai-advisor" component={AIAdvisorPanel} />
         <Route path="/compliance" component={CompliancePanel} />
         <Route path="/yield-distribution" component={YieldDistributionPage} />
-        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/admin">
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        </Route>
         <Route path="/config" component={ConfigPage} />
         <Route path="/reporting" component={ReportingDashboard} />
         <Route path="/dashboard" component={CommanderDashboard} />
@@ -186,7 +195,11 @@ function Router() {
         <Route path="/enterprise-suite" component={EnterpriseSuite} />
         <Route path="/premium-features" component={PremiumFeaturesPage} />
         <Route path="/viral-tools" component={ViralTools} />
-        <Route path="/master-admin" component={MasterAdmin} />
+        <Route path="/master-admin">
+          <MasterAdminRoute>
+            <MasterAdmin />
+          </MasterAdminRoute>
+        </Route>
         <Route path="/contact" component={() => <ContactInfo />} />
         <Route path="/notifications" component={Notifications} />
         <Route path="/billing-dashboard" component={BillingDashboard} />
@@ -211,7 +224,11 @@ function Router() {
         <Route path="/unified-login" component={UnifiedLogin} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />
-        <Route path="/founder-dashboard" component={EnhancedFounderDashboard} />
+        <Route path="/founder-dashboard">
+          <FounderRoute>
+            <EnhancedFounderDashboard />
+          </FounderRoute>
+        </Route>
         <Route path="/asset-manager" component={SupabaseAssetManager} />
         <Route path="/asset-integration" component={AssetIntegration} />
         <Route path="/upgrade" component={StripeCheckout} />

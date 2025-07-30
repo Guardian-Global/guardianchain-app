@@ -19,11 +19,8 @@ const footerSections = [
   {
     title: "Enterprise",
     links: [
-      { name: "Master Admin", href: "/master-admin" },
-      { name: "Enterprise Auth", href: "/auth-hub" },
-      { name: "Notifications", href: "/notifications" },
-      { name: "Treasury", href: "/treasury" },
-      { name: "Financial", href: "/financial-dashboard" },
+      { name: "Login / Sign Up", href: "/login" },
+      { name: "Notifications", href: "/notifications", authRequired: true },
       { name: "Contact", href: "/contact" },
     ],
   },

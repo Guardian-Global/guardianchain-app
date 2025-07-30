@@ -1,419 +1,392 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { useCompleteAuth } from "@/hooks/useCompleteAuth";
-import { Shield, Crown, Zap, User, Lock, Mail } from "lucide-react";
-import LogoDisplay from "@/components/assets/LogoDisplay";
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-const registerSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  username: z.string().min(3, "Username must be at least 3 characters").optional(),
-});
-
-const masterLoginSchema = z.object({
-  email: z.string().email("Invalid email address").optional(),
-  password: z.string().optional(),
-  role: z.string().min(1, "Role is required"),
-  masterKey: z.string().min(1, "Master key is required"),
-});
-
-type LoginForm = z.infer<typeof loginSchema>;
-type RegisterForm = z.infer<typeof registerSchema>;
-type MasterLoginForm = z.infer<typeof masterLoginSchema>;
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Shield, Lock, Crown, Mail, Github, Chrome } from "lucide-react";
+import { BrandedText } from "@/components/BrandEnforcement";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { loginSchema, registerSchema, masterLoginSchema } from "@shared/schema";
 
 export default function UnifiedLogin() {
   const [, setLocation] = useLocation();
+  const { login, register, masterLogin, isLoading } = useUnifiedAuth();
   const { toast } = useToast();
-  const { login, register, masterLogin, isLoading } = useCompleteAuth();
   const [activeTab, setActiveTab] = useState("login");
 
-  const loginForm = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+  // Form states
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: ""
   });
 
-  const registerForm = useForm<RegisterForm>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: { email: "", password: "", firstName: "", lastName: "", username: "" },
+  const [registerForm, setRegisterForm] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    agreedToTerms: false
   });
 
-  const masterForm = useForm<MasterLoginForm>({
-    resolver: zodResolver(masterLoginSchema),
-    defaultValues: { email: "", password: "", role: "", masterKey: "" },
+  const [masterForm, setMasterForm] = useState({
+    email: "",
+    password: "",
+    role: "",
+    masterKey: ""
   });
 
-  const handleLogin = async (data: LoginForm) => {
-    const result = await login(data.email, data.password);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    if (result.success) {
-      toast({
-        title: "Login Successful",
-        description: result.message || "Welcome back!",
-      });
-      setLocation(result.redirectTo || "/dashboard");
-    } else {
-      toast({
-        title: "Login Failed",
-        description: result.message || "Invalid credentials",
-        variant: "destructive",
-      });
+    try {
+      const validatedData = loginSchema.parse(loginForm);
+      const result = await login(validatedData);
+      
+      if (result.success) {
+        toast({
+          title: "Login Successful",
+          description: "Welcome back to GUARDIANCHAIN",
+        });
+        
+        // Redirect based on user role/tier
+        setLocation(result.redirectTo || "/dashboard");
+      } else {
+        toast({
+          title: "Login Failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0]?.message,
+          variant: "destructive",
+        });
+      }
     }
   };
 
-  const handleRegister = async (data: RegisterForm) => {
-    const result = await register(data);
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    if (result.success) {
-      toast({
-        title: "Registration Successful",
-        description: result.message || "Welcome to GUARDIANCHAIN!",
-      });
-      setLocation(result.redirectTo || "/dashboard");
-    } else {
-      toast({
-        title: "Registration Failed",
-        description: result.message || "Registration failed",
-        variant: "destructive",
-      });
+    try {
+      const validatedData = registerSchema.parse(registerForm);
+      const result = await register(validatedData);
+      
+      if (result.success) {
+        toast({
+          title: "Registration Successful",
+          description: "Welcome to GUARDIANCHAIN! Please complete onboarding.",
+        });
+        
+        setLocation(result.redirectTo || "/onboarding");
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0]?.message,
+          variant: "destructive",
+        });
+      }
     }
   };
 
-  const handleMasterLogin = async (data: MasterLoginForm) => {
-    const result = await masterLogin(
-      data.email || "",
-      data.password || "",
-      data.role,
-      data.masterKey
-    );
+  const handleMasterLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    if (result.success) {
-      toast({
-        title: "Master Access Granted",
-        description: `Welcome, ${data.role.toUpperCase()}`,
-      });
-      setLocation(result.redirectTo || "/commander");
-    } else {
-      toast({
-        title: "Master Access Denied",
-        description: result.message || "Invalid master credentials",
-        variant: "destructive",
-      });
+    try {
+      const validatedData = masterLoginSchema.parse(masterForm);
+      const result = await masterLogin(validatedData);
+      
+      if (result.success) {
+        toast({
+          title: "Master Access Granted",
+          description: "Welcome, Master Administrator",
+        });
+        
+        setLocation(result.redirectTo || "/master-admin");
+      } else {
+        toast({
+          title: "Access Denied",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0]?.message,
+          variant: "destructive",
+        });
+      }
     }
   };
 
-  const roles = [
-    { id: "commander", title: "Commander", icon: Crown, description: "Full protocol control" },
-    { id: "founder", title: "Founder", icon: Shield, description: "Strategic oversight" },
-    { id: "architect", title: "Architect", icon: Zap, description: "Technical leadership" },
-    { id: "admin", title: "Admin", icon: User, description: "System administration" },
-  ];
+  const handleSocialLogin = async (provider: string) => {
+    toast({
+      title: "Feature Coming Soon",
+      description: `${provider} authentication will be available soon`,
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Logo and Title */}
-        <div className="text-center space-y-4">
-          <LogoDisplay size="xl" variant="full" className="justify-center" />
-          <div>
-            <h1 className="text-3xl font-bold text-white">Welcome to GUARDIANCHAIN</h1>
-            <p className="text-slate-300">Access your truth verification platform</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center p-6">
+      <Card className="w-full max-w-md bg-slate-800/50 border-purple-500/30 backdrop-blur-sm">
+        <CardHeader className="text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
+              <Shield className="text-white h-5 w-5" />
+            </div>
+            <BrandedText size="lg" className="gradient-text" />
           </div>
-        </div>
-
-        {/* Login Tabs */}
-        <Card className="bg-slate-800/90 border-slate-700 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-center text-white">Authentication</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-3 bg-slate-700">
-                <TabsTrigger value="login" className="text-white">Login</TabsTrigger>
-                <TabsTrigger value="register" className="text-white">Register</TabsTrigger>
-                <TabsTrigger value="master" className="text-white">Master</TabsTrigger>
-              </TabsList>
-
-              {/* Regular Login */}
-              <TabsContent value="login" className="space-y-4">
-                <Form {...loginForm}>
-                  <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
-                    <FormField
-                      control={loginForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Email</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                              <Input
-                                {...field}
-                                type="email"
-                                placeholder="your@email.com"
-                                className="pl-10 bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={loginForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Password</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                              <Input
-                                {...field}
-                                type="password"
-                                placeholder="••••••••"
-                                className="pl-10 bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Logging in..." : "Login"}
-                    </Button>
-                  </form>
-                </Form>
-              </TabsContent>
-
-              {/* Registration */}
-              <TabsContent value="register" className="space-y-4">
-                <Form {...registerForm}>
-                  <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={registerForm.control}
-                        name="firstName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-slate-200">First Name</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="John"
-                                className="bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={registerForm.control}
-                        name="lastName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-slate-200">Last Name</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Doe"
-                                className="bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <FormField
-                      control={registerForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Email</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                              <Input
-                                {...field}
-                                type="email"
-                                placeholder="your@email.com"
-                                className="pl-10 bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={registerForm.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Username (Optional)</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="johndoe"
-                              className="bg-slate-900/50 border-slate-600 text-white"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={registerForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Password</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                              <Input
-                                {...field}
-                                type="password"
-                                placeholder="••••••••"
-                                className="pl-10 bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Creating Account..." : "Create Account"}
-                    </Button>
-                  </form>
-                </Form>
-              </TabsContent>
-
-              {/* Master Login */}
-              <TabsContent value="master" className="space-y-4">
-                <Form {...masterForm}>
-                  <form onSubmit={masterForm.handleSubmit(handleMasterLogin)} className="space-y-4">
-                    <FormField
-                      control={masterForm.control}
-                      name="role"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Role</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="bg-slate-900/50 border-slate-600 text-white">
-                                <SelectValue placeholder="Select your role" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-slate-800 border-slate-600">
-                              {roles.map((role) => (
-                                <SelectItem key={role.id} value={role.id} className="text-white">
-                                  <div className="flex items-center space-x-2">
-                                    <role.icon className="h-4 w-4" />
-                                    <span>{role.title}</span>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={masterForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Email (Optional)</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                              <Input
-                                {...field}
-                                type="email"
-                                placeholder="admin@guardianchain.org"
-                                className="pl-10 bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={masterForm.control}
-                      name="masterKey"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-slate-200">Master Key</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Shield className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                              <Input
-                                {...field}
-                                type="password"
-                                placeholder="GUARDIAN_MASTER_2025"
-                                className="pl-10 bg-slate-900/50 border-slate-600 text-white"
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-700 hover:to-purple-700"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Authenticating..." : "Master Access"}
-                    </Button>
-                  </form>
-                </Form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        {/* Quick Access */}
-        <div className="text-center space-y-2">
-          <p className="text-slate-400 text-sm">
-            Demo credentials: master@guardianchain.org / masterkey123
+          <CardTitle className="text-2xl font-bold">
+            Access GUARDIANCHAIN
+          </CardTitle>
+          <p className="text-slate-400">
+            Single entry point for all services
           </p>
-          <p className="text-slate-400 text-sm">
-            Master Key: GUARDIAN_MASTER_2025
-          </p>
-        </div>
-      </div>
+        </CardHeader>
+
+        <CardContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsTrigger value="login" className="text-xs">
+                <Lock className="w-4 h-4 mr-1" />
+                Login
+              </TabsTrigger>
+              <TabsTrigger value="register" className="text-xs">
+                <Mail className="w-4 h-4 mr-1" />
+                Sign Up
+              </TabsTrigger>
+              <TabsTrigger value="master" className="text-xs">
+                <Crown className="w-4 h-4 mr-1" />
+                Master
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="login">
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={loginForm.email}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={loginForm.password}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing In..." : "Sign In"}
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="register">
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      value={registerForm.firstName}
+                      onChange={(e) => setRegisterForm(prev => ({ ...prev, firstName: e.target.value }))}
+                      placeholder="First name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      value={registerForm.lastName}
+                      onChange={(e) => setRegisterForm(prev => ({ ...prev, lastName: e.target.value }))}
+                      placeholder="Last name"
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="registerEmail">Email</Label>
+                  <Input
+                    id="registerEmail"
+                    type="email"
+                    value={registerForm.email}
+                    onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="registerPassword">Password</Label>
+                  <Input
+                    id="registerPassword"
+                    type="password"
+                    value={registerForm.password}
+                    onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Create a strong password"
+                    required
+                  />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="terms"
+                    checked={registerForm.agreedToTerms}
+                    onCheckedChange={(checked) => 
+                      setRegisterForm(prev => ({ ...prev, agreedToTerms: !!checked }))
+                    }
+                  />
+                  <Label htmlFor="terms" className="text-sm">
+                    I agree to the Terms of Service and Privacy Policy
+                  </Label>
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                  disabled={isLoading || !registerForm.agreedToTerms}
+                >
+                  {isLoading ? "Creating Account..." : "Create Account"}
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="master">
+              <form onSubmit={handleMasterLogin} className="space-y-4">
+                <div>
+                  <Label htmlFor="masterEmail">Master Email</Label>
+                  <Input
+                    id="masterEmail"
+                    type="email"
+                    value={masterForm.email}
+                    onChange={(e) => setMasterForm(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="master@guardianchain.org"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="masterPassword">Master Password</Label>
+                  <Input
+                    id="masterPassword"
+                    type="password"
+                    value={masterForm.password}
+                    onChange={(e) => setMasterForm(prev => ({ ...prev, password: e.target.value }))}
+                    placeholder="Master password"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="role">Role</Label>
+                  <Input
+                    id="role"
+                    value={masterForm.role}
+                    onChange={(e) => setMasterForm(prev => ({ ...prev, role: e.target.value }))}
+                    placeholder="MASTER_ADMIN"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="masterKey">Master Key</Label>
+                  <Input
+                    id="masterKey"
+                    type="password"
+                    value={masterForm.masterKey}
+                    onChange={(e) => setMasterForm(prev => ({ ...prev, masterKey: e.target.value }))}
+                    placeholder="Master authentication key"
+                    required
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-700 hover:to-purple-700"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Authenticating..." : "Master Access"}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
+
+          {/* Social Login Options */}
+          <div className="mt-6 space-y-3">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-slate-600" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-slate-800 px-2 text-slate-400">
+                  Or continue with
+                </span>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSocialLogin("Google")}
+                className="border-slate-600 hover:bg-slate-700"
+              >
+                <Chrome className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSocialLogin("GitHub")}
+                className="border-slate-600 hover:bg-slate-700"
+              >
+                <Github className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSocialLogin("Web3")}
+                className="border-slate-600 hover:bg-slate-700"
+              >
+                <Shield className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Information Section */}
+          <div className="mt-6 pt-4 border-t border-slate-600">
+            <p className="text-xs text-slate-400 text-center">
+              By signing in, you agree to our enterprise security standards and access controls.
+              Features available based on your subscription tier.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
