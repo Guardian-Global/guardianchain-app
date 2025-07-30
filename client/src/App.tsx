@@ -53,6 +53,8 @@ import CompliancePanel from "./pages/compliance";
 import YieldDistributionPage from "./pages/yield-distribution";
 import AdminDashboard from "./pages/admin";
 import ConfigPage from "./pages/config";
+import ResponsiveDemoPage from "./pages/responsive-demo";
+import LogoSyncPage from "./pages/logo-sync";
 import ReportingDashboard from "./pages/reporting";
 import CommanderDashboard from "./pages/dashboard";
 
@@ -202,6 +204,7 @@ function Router() {
         <Route path="/teams-upgrades" component={TeamsUpgrades} />
         <Route path="/api-status" component={ApiStatus} />
         <Route path="/responsive-demo" component={ResponsiveDemo} />
+        <Route path="/logo-sync" component={LogoSyncPage} />
         <Route path="/unified-login" component={UnifiedLogin} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />
