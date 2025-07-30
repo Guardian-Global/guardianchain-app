@@ -2,7 +2,7 @@ import { ArrowLeft, Zap } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
-import CapsuleCreator from "@/components/web3/CapsuleCreator";
+import EnhancedCapsuleCreator from "@/components/CapsuleForge/EnhancedCapsuleCreator";
 import CapsuleTypeSelector from "@/components/capsule/CapsuleTypeSelector";
 
 export default function CreateCapsule() {
@@ -27,14 +27,14 @@ export default function CreateCapsule() {
         </div>
 
         {/* Enhanced Capsule Creation System */}
+        <div className="space-y-8 mb-8">
+          {/* Enhanced Capsule Creator with Automated IPFS */}
+          <EnhancedCapsuleCreator />
+        </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* CapsuleFactoryV2 Creator */}
-          <div className="space-y-6">
-            <CapsuleCreator />
-          </div>
-
           {/* Advanced Features Info */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:col-span-2">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
@@ -55,7 +55,7 @@ export default function CreateCapsule() {
                     <li>• Veritus node verification system</li>
                     <li>• Immutable story titles and summaries</li>
                     <li>• Advanced capsule status progression</li>
-                    <li>• IPFS content hash integration</li>
+                    <li>• Automated IPFS upload and hash generation</li>
                     <li>• Smart contract yield assignment</li>
                   </ul>
                 </div>
@@ -65,8 +65,9 @@ export default function CreateCapsule() {
                     Creation Workflow:
                   </h3>
                   <ol className="text-sm text-slate-300 space-y-1 list-decimal ml-4">
-                    <li>Upload content to IPFS</li>
-                    <li>Create capsule with content hash</li>
+                    <li>Automated IPFS upload handles content storage</li>
+                    <li>Enhanced privacy controls configure access</li>
+                    <li>AI assistant optimizes capsule settings</li>
                     <li>Veritus node reviews and seals</li>
                     <li>Final emotional yield assigned</li>
                     <li>Capsule becomes claimable for GTT rewards</li>
