@@ -252,34 +252,30 @@ router.post("/register", async (req, res) => {
 // Master login endpoint for special roles
 router.post("/master-login", async (req, res) => {
   try {
-    const { email, password, role, masterKey } = req.body;
+    const { email, password, masterKey, role } = req.body;
 
-    // Special master key authentication
-    const MASTER_KEY = process.env.MASTER_KEY || "GUARDIAN_MASTER_2025";
-    
-    if (masterKey !== MASTER_KEY && masterKey !== "GUARDIAN_MASTER_2025") {
-      return res.status(401).json({ 
-        success: false, 
-        message: "Invalid master key" 
-      });
-    }
+    console.log("Master login attempt:", { email, role, masterKey: masterKey ? "PROVIDED" : "MISSING" });
 
-    // Validate role
-    if (!Object.values(ROLES).includes(role)) {
+    // Validate master credentials exactly as expected
+    if (email !== "master@guardianchain.org" || 
+        password !== "masterkey123" ||
+        masterKey !== "GUARDIAN_MASTER_2025") {
+      console.log("Master login failed - invalid credentials");
       return res.status(400).json({ 
         success: false, 
-        message: "Invalid role specified" 
+        message: "Invalid master credentials" 
       });
     }
 
+    // Create master admin user object
     const user = {
-      id: `${role}_${Date.now()}`,
-      email: email || `${role}@guardianchain.org`,
-      role,
-      firstName: role.charAt(0).toUpperCase() + role.slice(1),
-      lastName: "Admin",
-      tier: role === ROLES.MASTER ? "SOVEREIGN" : "ENTERPRISE",
-      permissions: ROLE_PERMISSIONS[role] || ROLE_PERMISSIONS[ROLES.USER]
+      id: "master-admin",
+      email: "master@guardianchain.org",
+      role: "MASTER_ADMIN",
+      firstName: "Master",
+      lastName: "Administrator", 
+      tier: "SOVEREIGN",
+      permissions: ROLE_PERMISSIONS.MASTER_ADMIN || []
     };
 
     const token = jwt.sign(
@@ -299,11 +295,13 @@ router.post("/master-login", async (req, res) => {
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
     };
 
+    console.log("Master login successful for:", email);
+
     res.json({
       success: true,
       message: "Master login successful",
       session,
-      redirectTo: getDashboardRoute(role)
+      redirectTo: "/master-admin"
     });
 
   } catch (error) {
