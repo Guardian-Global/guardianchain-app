@@ -3,8 +3,8 @@ const fs = require("fs");
 const path = require("path");
 
 async function main() {
-  console.log("🚀 GTT TOKEN SIMPLE DEPLOYMENT STARTING...");
-  console.log("==========================================");
+  console.log("🚀 GTT TOKEN MUMBAI TESTNET DEPLOYMENT");
+  console.log("======================================");
 
   // Get deployer account
   const [deployer] = await hre.ethers.getSigners();
@@ -15,31 +15,16 @@ async function main() {
   const balanceInMatic = hre.ethers.formatEther(balance);
   console.log("Account balance:", balanceInMatic, "MATIC");
 
-  if (parseFloat(balanceInMatic) < 0.02) {
-    console.log(
-      "⚠️  WARNING: Low MATIC balance. Need at least 0.02 MATIC for deployment."
-    );
-    console.log("Please fund the deployer wallet:", deployer.address);
-    console.log("Required: ~0.02 MATIC (~$0.02 USD)");
-    process.exit(1);
-  }
-
   // Network verification
   const network = await hre.ethers.provider.getNetwork();
-  console.log(
-    "Network:",
-    network.name,
-    "Chain ID:",
-    network.chainId.toString()
-  );
+  console.log("Network:", network.name);
+  console.log("Chain ID:", network.chainId.toString());
 
-  if (network.chainId !== 137n) {
-    throw new Error(
-      "❌ Not connected to Polygon Mainnet! Expected Chain ID: 137"
-    );
+  if (network.chainId !== 80001n) {
+    throw new Error("❌ Not connected to Mumbai Testnet! Expected Chain ID: 80001");
   }
 
-  console.log("✅ Connected to Polygon Mainnet");
+  console.log("✅ Connected to Mumbai Testnet");
 
   // Deploy GTT Token
   console.log("\n📄 Deploying GTT Token Contract...");
@@ -75,8 +60,8 @@ async function main() {
 
   // Save deployment info
   const deploymentInfo = {
-    network: "polygon",
-    chainId: 137,
+    network: "mumbai",
+    chainId: 80001,
     timestamp: new Date().toISOString(),
     deployer: deployer.address,
     contractAddress: gttAddress,
@@ -91,7 +76,7 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    "polygon-mainnet-gtt.json"
+    "mumbai-testnet-gtt.json"
   );
 
   // Create deployments directory if it doesn't exist
@@ -102,26 +87,24 @@ async function main() {
 
   fs.writeFileSync(deploymentPath, JSON.stringify(deploymentInfo, null, 2));
 
-  console.log("\n🎉 GTT TOKEN MAINNET DEPLOYMENT COMPLETE!");
-  console.log("==========================================");
+  console.log("\n🎉 GTT TOKEN MUMBAI DEPLOYMENT COMPLETE!");
+  console.log("=========================================");
   console.log("Contract Address:", gttAddress);
   console.log("Total Supply:", hre.ethers.formatEther(tokenSupply), "GTT");
   console.log("Deployment info saved to:", deploymentPath);
 
   console.log("\n📋 NEXT STEPS:");
-  console.log("1. Update frontend configuration with contract address");
-  console.log("2. Verify contract on PolygonScan");
-  console.log("3. Create initial liquidity pool");
-  console.log("4. Submit to token listing sites");
+  console.log("1. Test token functionality on Mumbai");
+  console.log("2. Get Mumbai faucet tokens for testing");
+  console.log("3. Deploy to Polygon mainnet when ready");
 
-  console.log("\n🌐 PolygonScan Link:");
-  console.log(`https://polygonscan.com/address/${gttAddress}`);
+  console.log("\n🌐 Mumbai PolygonScan Link:");
+  console.log(`https://mumbai.polygonscan.com/address/${gttAddress}`);
 
-  console.log("\n🔧 Frontend Update Required:");
-  console.log("Update GTT_CONTRACT_ADDRESS in:");
-  console.log("- client/src/lib/contractConfig.ts");
-  console.log("- lib/web3/token.ts");
-  console.log(`New address: ${gttAddress}`);
+  console.log("\n🔧 Testnet Configuration:");
+  console.log("Network: Mumbai Testnet");
+  console.log("Chain ID: 80001");
+  console.log("Contract:", gttAddress);
 }
 
 main()

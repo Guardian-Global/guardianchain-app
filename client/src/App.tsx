@@ -135,6 +135,7 @@ function Router() {
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
         <Route path="/gtt-launch" component={GTTLaunch} />
+        <Route path="/gtt-deployment" component={() => import('./pages/GTTDeploymentStatus').then(m => m.default)} />
         <Route
           path="/auth-hub"
           component={() => <AuthenticationHub onAuthenticated={() => {}} />}

@@ -61,7 +61,7 @@ module.exports = {
     },
     // Polygon networks
     polygon: {
-      url: "https://chaotic-cosmopolitan-tab.matic.quiknode.pro/a62225077279679a5957c8304e1c7042baec8c11",
+      url: "https://polygon-rpc.com",
       accounts: [
         "0xde6354f59a5448fc6df8abc332707767bd3f1f35b74f1accc053d5276e749bde",
       ],
