@@ -52,6 +52,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Supabase security hardening routes
   app.use(supabaseSecurityRouter);
 
+  // Supabase assets discovery and optimization routes
+  const supabaseAssetsRouter = (await import("./routes/supabase-assets")).default;
+  app.use("/api/supabase/assets", supabaseAssetsRouter);
+
   // API diagnostics routes
   app.use("/api", async (req, res, next) => {
     const apiDiagnosticsRouter = (await import("./routes/api-diagnostics")).default;

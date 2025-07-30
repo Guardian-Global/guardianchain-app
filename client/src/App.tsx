@@ -99,6 +99,8 @@ import { CompleteAuthProvider } from "./hooks/useCompleteAuth";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
 import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
+import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
+import AssetIntegration from "./pages/asset-integration";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -200,6 +202,8 @@ function Router() {
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />
         <Route path="/founder-dashboard" component={EnhancedFounderDashboard} />
+        <Route path="/asset-manager" component={SupabaseAssetManager} />
+        <Route path="/asset-integration" component={AssetIntegration} />
         <Route path="/upgrade" component={StripeCheckout} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboardPage} />

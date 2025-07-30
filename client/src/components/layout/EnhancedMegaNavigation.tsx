@@ -37,7 +37,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/components/web3/theme-provider";
 import { AuthButton } from "@/components/auth/AuthButton";
 import { useAuth } from "@/hooks/useAuth";
-import { LogoDisplay } from "@/components/assets/LogoDisplay";
+import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -137,6 +137,7 @@ const pageCategories = {
       },
       { name: "Viral Tools", href: "/viral-tools", icon: Sparkles },
       { name: "AI Advisor", href: "/ai-advisor", icon: Brain },
+      { name: "Asset Manager", href: "/asset-manager", icon: Database },
       { name: "Asset Integration", href: "/asset-integration", icon: Database },
       { name: "Enterprise Suite", href: "/enterprise-suite", icon: Briefcase },
       { name: "Premium Features", href: "/premium-features", icon: Crown },
@@ -305,7 +306,7 @@ export default function EnhancedMegaNavigation() {
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <LogoDisplay
+              <EnhancedLogoDisplay
                 size="lg"
                 variant="icon"
                 className="w-8 h-8"

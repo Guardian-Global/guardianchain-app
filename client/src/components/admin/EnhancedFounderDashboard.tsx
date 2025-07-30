@@ -18,7 +18,8 @@ import {
   Activity
 } from "lucide-react";
 import { useCompleteAuth } from "@/hooks/useCompleteAuth";
-import LogoDisplay from "@/components/assets/LogoDisplay";
+import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
+import SupabaseHeroBackground from "@/components/assets/SupabaseHeroBackground";
 import AuthGuard from "@/components/auth/AuthGuard";
 
 export function EnhancedFounderDashboard() {
@@ -51,11 +52,12 @@ export function EnhancedFounderDashboard() {
 
   return (
     <AuthGuard requiredRoles={["founder", "master"]}>
-      <div className="min-h-screen bg-slate-900 p-6">
+      <SupabaseHeroBackground overlay={true} className="min-h-screen">
+        <div className="p-6">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Header */}
           <div className="text-center space-y-4">
-            <LogoDisplay size="lg" variant="full" className="justify-center" />
+            <EnhancedLogoDisplay size="lg" variant="full" className="justify-center" />
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
                 FOUNDER STRATEGIC DASHBOARD
@@ -395,8 +397,9 @@ export function EnhancedFounderDashboard() {
               </Card>
             </TabsContent>
           </Tabs>
+          </div>
         </div>
-      </div>
+      </SupabaseHeroBackground>
     </AuthGuard>
   );
 }
