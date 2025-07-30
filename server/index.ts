@@ -41,6 +41,14 @@ app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 import authRoutes from "./auth";
 app.use("/api/auth", authRoutes);
 
+// AI Routes for enhanced capsule experience
+import aiRoutes from "./routes/ai.js";
+app.use("/api/ai", aiRoutes);
+
+// Web3 testing routes
+import web3Routes from "./routes/web3.js";
+app.use("/api/web3", web3Routes);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

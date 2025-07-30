@@ -32,6 +32,7 @@ import {
   Moon,
   Monitor,
   RefreshCw,
+  TestTube2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -142,6 +143,7 @@ const pageCategories = {
       { name: "Asset Manager", href: "/asset-manager", icon: Database },
       { name: "Asset Integration", href: "/asset-integration", icon: Database },
       { name: "Logo Sync", href: "/logo-sync", icon: RefreshCw },
+      { name: "Minting Tests", href: "/minting-test", icon: TestTube2 },
       { name: "Enterprise Suite", href: "/enterprise-suite", icon: Briefcase },
       { name: "Premium Features", href: "/premium-features", icon: Crown },
     ],

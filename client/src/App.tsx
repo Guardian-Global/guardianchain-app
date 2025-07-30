@@ -62,6 +62,7 @@ import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
 import Homepage from "./pages/index";
 import ResponsiveDemo from "./pages/responsive-demo";
+import MintingTestPage from "./pages/minting-test";
 
 import MasterAccess from "./pages/master-access";
 import ProfileCustomization from "./pages/profile-customization";
@@ -205,6 +206,7 @@ function Router() {
         <Route path="/api-status" component={ApiStatus} />
         <Route path="/responsive-demo" component={ResponsiveDemo} />
         <Route path="/logo-sync" component={LogoSyncPage} />
+        <Route path="/minting-test" component={MintingTestPage} />
         <Route path="/unified-login" component={UnifiedLogin} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ForgeEditor from "@/components/CapsuleForge/ForgeEditor";
 import MetadataPreview from "@/components/CapsuleForge/MetadataPreview";
 import ForgeControls from "@/components/CapsuleForge/ForgeControls";
-import AIAssistant from "@/components/CapsuleForge/AIAssistant";
+import CapsuleAIAssistant from "@/components/CapsuleForge/CapsuleAIAssistant";
 
 export default function CapsuleForgePage() {
   const [capsuleData, setCapsuleData] = useState({
@@ -110,9 +110,26 @@ export default function CapsuleForgePage() {
           {/* Sidebar */}
           <div className="space-y-6">
             <MetadataPreview capsuleData={capsuleData} />
-            <AIAssistant
+            <CapsuleAIAssistant 
               capsuleData={capsuleData}
-              setCapsuleData={setCapsuleData}
+              onSuggestionApply={(improvements) => {
+                // Apply AI suggestions to capsule data
+                if (improvements.title) {
+                  setCapsuleData(prev => ({ ...prev, title: improvements.title }));
+                }
+                if (improvements.tags) {
+                  setCapsuleData(prev => ({
+                    ...prev,
+                    metadata: { ...prev.metadata, tags: improvements.tags }
+                  }));
+                }
+                if (improvements.category) {
+                  setCapsuleData(prev => ({
+                    ...prev,
+                    metadata: { ...prev.metadata, category: improvements.category }
+                  }));
+                }
+              }}
             />
           </div>
         </div>
