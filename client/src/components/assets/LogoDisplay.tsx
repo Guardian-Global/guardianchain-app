@@ -59,7 +59,24 @@ export function LogoDisplay({
   return (
     <div className="flex items-center space-x-2">
       {(variant === "full" || variant === "icon" || variant === "main") && (
-        <FallbackLogo />
+        <img
+          src={logoSrc}
+          alt={`${type === "guardianchain" ? "GUARDIANCHAIN" : "GTT"} Logo`}
+          className={`${sizeClasses[size]} object-contain transition-all duration-300 hover:scale-105 ${className}`}
+          onError={(e) => {
+            console.log(`Loading fallback for ${type} logo`);
+            const target = e.currentTarget;
+            target.style.display = 'none';
+            const fallback = target.nextElementSibling;
+            if (fallback) fallback.style.display = 'flex';
+          }}
+          onLoad={() => console.log(`Logo loaded: ${type}`)}
+        />
+      )}
+      {(variant === "full" || variant === "icon" || variant === "main") && (
+        <div style={{ display: 'none' }}>
+          <FallbackLogo />
+        </div>
       )}
       {(variant === "full" || variant === "text") && <BrandText />}
     </div>

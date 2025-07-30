@@ -40,7 +40,32 @@ export function VideoDisplay({
     </div>
   );
 
-  return <FallbackVideo />;
+  return (
+    <div className="relative">
+      <video
+        src={videoSrc}
+        className={`${sizeClasses[size]} object-contain ${className}`}
+        autoPlay={autoPlay}
+        loop={loop}
+        muted={muted}
+        controls={controls}
+        playsInline
+        onError={(e) => {
+          console.log(`Loading fallback for ${type} video`);
+          e.currentTarget.style.display = 'none';
+          const fallback = e.currentTarget.nextElementSibling;
+          if (fallback) fallback.style.display = 'flex';
+        }}
+        onLoadStart={() => console.log(`Video loading: ${type}`)}
+        onCanPlay={() => console.log(`Video ready: ${type}`)}
+      >
+        Your browser does not support the video tag.
+      </video>
+      <div style={{ display: 'none' }}>
+        <FallbackVideo />
+      </div>
+    </div>
+  );
 }
 
 export default VideoDisplay;

@@ -100,18 +100,12 @@ export default function Homepage() {
 
             {/* Right Visual Showcase */}
             <div className="space-y-8">
-              {/* Interactive Asset Preview */}
+              {/* Logo Showcase */}
               <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Monitor className="h-5 w-5 text-purple-400" />
-                    Interactive Asset Preview with Hover Zoom
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="p-8 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* GUARDIANCHAIN Video Logo */}
-                    <div className="group relative overflow-hidden rounded-lg bg-slate-900/50 p-4 hover:bg-slate-900/80 transition-all duration-300">
+                    <div className="group relative overflow-hidden rounded-lg bg-slate-900/50 p-6 hover:bg-slate-900/80 transition-all duration-300">
                       <VideoDisplay 
                         type="guardianchain" 
                         size="lg" 
@@ -128,7 +122,7 @@ export default function Homepage() {
                     </div>
 
                     {/* GTT Video Logo */}
-                    <div className="group relative overflow-hidden rounded-lg bg-slate-900/50 p-4 hover:bg-slate-900/80 transition-all duration-300">
+                    <div className="group relative overflow-hidden rounded-lg bg-slate-900/50 p-6 hover:bg-slate-900/80 transition-all duration-300">
                       <VideoDisplay 
                         type="gtt" 
                         size="lg" 
@@ -142,17 +136,6 @@ export default function Homepage() {
                         <p className="text-sm text-slate-400">Guardian Truth Token</p>
                       </div>
                       <div className="absolute inset-0 border-2 border-transparent group-hover:border-green-500/50 rounded-lg transition-all duration-300"></div>
-                    </div>
-                  </div>
-                  
-                  {/* Smart Asset Loading Performance Optimizer */}
-                  <div className="bg-slate-900/30 rounded-lg p-4 border border-slate-700">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Smartphone className="h-4 w-4 text-blue-400" />
-                      <span className="text-sm font-semibold text-white">Smart Asset Loading Performance Optimizer</span>
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      Adaptive loading • Responsive scaling • CDN optimization
                     </div>
                   </div>
                 </CardContent>
@@ -272,15 +255,9 @@ export default function Homepage() {
             </div>
 
             <div className="space-y-8">
-              {/* Dynamic Background Video Integration */}
+              {/* Performance Metrics */}
               <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Layers className="h-5 w-5 text-green-400" />
-                    Dynamic Background Video Integration
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="p-8 space-y-6">
                   <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-purple-900/30 to-green-900/30 p-8">
                     <div className="flex justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 flex-col sm:flex-row">
                       <VideoDisplay 
@@ -374,14 +351,8 @@ export default function Homepage() {
               ))}
             </div>
 
-            {/* Animated Logo Transition Effects */}
+            {/* Brand Showcase */}
             <Card className="bg-gradient-to-br from-purple-900/20 to-green-900/20 border-purple-500/20">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center justify-center gap-2">
-                  <Zap className="h-5 w-5 text-purple-400" />
-                  Animated Logo Transition Effects
-                </CardTitle>
-              </CardHeader>
               <CardContent className="p-8">
                 <ResponsiveLogoSuite 
                   showVideo={true}
