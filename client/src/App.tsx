@@ -58,6 +58,7 @@ import CommanderDashboard from "./pages/dashboard";
 
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
+import Homepage from "./pages/index";
 
 import MasterAccess from "./pages/master-access";
 import ProfileCustomization from "./pages/profile-customization";
@@ -110,7 +111,8 @@ function Router() {
       <EnhancedMegaNavigation />
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={GTTLaunch} />
+        <Route path="/" component={Homepage} />
+        <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={SimpleHome} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />

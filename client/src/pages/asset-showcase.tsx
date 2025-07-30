@@ -109,10 +109,26 @@ export default function AssetShowcase() {
                   <LogoDisplay
                     size="xl"
                     variant={variant as any}
+                    type="guardianchain"
                     className="mx-auto mb-3"
                   />
                   <p className="text-sm text-slate-300 capitalize">
                     {variant} Logo
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+            {["main", "icon", "text", "full"].map((variant) => (
+              <Card key={`gtt-${variant}`} className="bg-slate-800/50 border-slate-700">
+                <CardContent className="p-6 text-center">
+                  <LogoDisplay
+                    size="xl"
+                    variant={variant as any}
+                    type="gtt"
+                    className="mx-auto mb-3"
+                  />
+                  <p className="text-sm text-slate-300 capitalize">
+                    GTT {variant} Logo
                   </p>
                 </CardContent>
               </Card>
