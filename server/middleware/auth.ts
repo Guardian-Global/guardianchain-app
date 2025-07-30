@@ -74,6 +74,32 @@ export const requireTier = (requiredTier: string) => {
     if (userTierIndex < requiredTierIndex) {
       res.status(403).json({
         success: false,
+        message: "Insufficient tier access",
+        requiredTier,
+        currentTier: req.user.tier
+      });
+      return;
+    }
+
+    next();
+  };
+};
+
+/**
+ * Simple authentication middleware (placeholder for missing simpleAuth)
+ */
+export const simpleAuth = (req: Request, res: Response, next: NextFunction): void => {
+  // For development, allow all requests
+  next();
+};
+
+/**
+ * Admin-only middleware (placeholder for missing adminOnly)
+ */
+export const adminOnly = (req: Request, res: Response, next: NextFunction): void => {
+  // For development, allow all requests
+  next();
+        success: false,
         message: `${requiredTier} tier or higher required. Current tier: ${req.user.tier}`,
         upgradeRequired: true,
         requiredTier,

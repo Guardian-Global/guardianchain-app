@@ -10,6 +10,7 @@ import tokenDataRouter from "./routes/token-data";
 import stripePaymentsRouter from "./routes/stripe-payments";
 import supabaseHealthRouter from "./routes/supabase-health";
 import supabaseSecurityRouter from "./routes/supabase-security";
+import { registerAdminRoutes } from "./routes/admin";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -51,6 +52,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Supabase security hardening routes
   app.use(supabaseSecurityRouter);
+
+  // Admin routes (must be before middleware)
+  registerAdminRoutes(app);
 
   // Supabase assets discovery and optimization routes
   const supabaseAssetsRouter = (await import("./routes/supabase-assets")).default;

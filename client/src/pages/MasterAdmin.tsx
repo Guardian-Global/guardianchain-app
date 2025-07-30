@@ -82,19 +82,38 @@ export default function MasterAdmin() {
 
   const loadAdminData = async () => {
     try {
+      const responses = await Promise.all([
+        fetch("/api/admin/system-health"),
+        fetch("/api/admin/financial-overview"),
+        fetch("/api/admin/security-status"),
+        fetch("/api/admin/compliance-status")
+      ]);
+
+      // Check if all responses are OK
+      responses.forEach((r, index) => {
+        if (!r.ok) {
+          throw new Error(`API ${index} failed with status ${r.status}`);
+        }
+      });
+
+      // Parse JSON safely
       const [health, financial, security, compliance] = await Promise.all([
-        fetch("/api/admin/system-health").then((r) =>
-          r.ok ? r.json() : Promise.reject("Health API failed")
-        ),
-        fetch("/api/admin/financial-overview").then((r) =>
-          r.ok ? r.json() : Promise.reject("Financial API failed")
-        ),
-        fetch("/api/admin/security-status").then((r) =>
-          r.ok ? r.json() : Promise.reject("Security API failed")
-        ),
-        fetch("/api/admin/compliance-status").then((r) =>
-          r.ok ? r.json() : Promise.reject("Compliance API failed")
-        ),
+        responses[0].text().then(text => {
+          try { return JSON.parse(text); } 
+          catch { throw new Error('Health API returned invalid JSON'); }
+        }),
+        responses[1].text().then(text => {
+          try { return JSON.parse(text); } 
+          catch { throw new Error('Financial API returned invalid JSON'); }
+        }),
+        responses[2].text().then(text => {
+          try { return JSON.parse(text); } 
+          catch { throw new Error('Security API returned invalid JSON'); }
+        }),
+        responses[3].text().then(text => {
+          try { return JSON.parse(text); } 
+          catch { throw new Error('Compliance API returned invalid JSON'); }
+        })
       ]);
 
       setSystemHealth(health);
