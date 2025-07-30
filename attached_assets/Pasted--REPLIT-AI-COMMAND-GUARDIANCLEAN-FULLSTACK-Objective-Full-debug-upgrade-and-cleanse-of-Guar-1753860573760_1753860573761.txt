@@ -1,0 +1,48 @@
+🔧 REPLIT AI COMMAND: GUARDIANCLEAN-FULLSTACK
+
+Objective: Full debug, upgrade, and cleanse of GuardianChain for production-scale, including missing feature discovery, file-tree cleanup, best-practice enforcement, and robust auth/tiered access fixes.
+
+Steps:
+
+1. 📋 **Project Inventory & Orphan Detection**  
+   - Scan entire `/components`, `/pages`, `/app`, `/lib`, `/hooks`, `/api` folders.  
+   - List every `.tsx`, `.ts`, `.mdx`, and static asset.  
+   - Identify files never imported or referenced. Flag them in `/system_audit_logs/orphan_components.md`.
+
+2. 🔍 **Missing Feature & Sync Search**  
+   - Cross-reference your feature list (friend system, tiered access, DAO modules, capsule types, etc.) against actual code files.  
+   - Highlight any “missing” feature files or orphaned modules (e.g. unmounted pages, broken MDX components).  
+   - Generate `/system_audit_logs/missing_features.md`.
+
+3. 🛠 **File-Tree Cleanup Suggestions**  
+   - Identify truly unused, duplicate, or “dummy” files by name patterns (`test`, `example`, `placeholder`).  
+   - Propose deletion or archiving (but do not delete automatically).  
+   - Summarize in `/system_audit_logs/cleanup_suggestions.md`.
+
+4. 📐 **Best-Practice & Replit Rules Enforcement**  
+   - Ensure `.replit` and `replit.nix` are configured for production (`build` then `start`).  
+   - Validate Next.js config (`allowedDevOrigins`, proper middleware setup).  
+   - Ensure all CSS is Tailwind or clean imports, no inline styles.  
+   - Output a “best practices” report: `/system_audit_logs/best_practices_report.md`.
+
+5. 🔐 **Auth & Tiered User System Fix**  
+   - Scan for every protected route (`/dashboard`, `/vault`, `/command`, etc.).  
+   - Auto-wrap them with your `withAuth` or `createMiddlewareSupabaseClient` logic.  
+   - Ensure role/tier checks (admin, member, guest) are in place and consistent.  
+   - Report any pages missing protection in `/system_audit_logs/auth_issues.md`.
+
+6. 🧩 **Navigation & Routing Reconciliation**  
+   - Rebuild your global nav component to include all working pages.  
+   - Auto-generate `nav_routes.json` with URL → component mappings.  
+   - Highlight any broken links or duplicate entries.
+
+7. 📈 **Output & Reporting**  
+   - Save all logs and reports under `/system_audit_logs/`.  
+   - Summarize overall health, errors fixed, and remaining manual tasks in `guardianchain_audit_summary.md`.
+
+Constraints:  
+- **Do not delete** any logic, feature, or Veritas/Truth components—only flag for review.  
+- Only archive or suggest removal of provably unused dummies/duplicates.  
+- Maintain full feature integrity; no resets or data loss.
+
+Run this once and wait for all logs under `/system_audit_logs/`. Then share the reports for next manual refinements.
