@@ -268,16 +268,18 @@ function App() {
       <CompleteAuthProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-              <AssetProvider>
-                <TooltipProvider>
-                  <main className="flex-1">
-                    <Router />
-                  </main>
-                  <Toaster />
-                </TooltipProvider>
-              </AssetProvider>
-            </ThemeProvider>
+            <WalletProvider>
+              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <AssetProvider>
+                  <TooltipProvider>
+                    <main className="flex-1">
+                      <Router />
+                    </main>
+                    <Toaster />
+                  </TooltipProvider>
+                </AssetProvider>
+              </ThemeProvider>
+            </WalletProvider>
           </AuthProvider>
         </QueryClientProvider>
       </CompleteAuthProvider>
