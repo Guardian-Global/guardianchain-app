@@ -248,28 +248,31 @@ function Router() {
 }
 
 function App() {
+  // Initialize safe Web3 provider without auto-connecting
+  import("./lib/web3/safeProvider").then(({ safeWeb3Provider }) => {
+    safeWeb3Provider.safeInit().catch(console.warn);
+  });
+
   return (
     <UnifiedAuthProvider>
       <CompleteAuthProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <WalletProvider>
-              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <AssetProvider>
-                    <TooltipProvider>
-                      <main className="flex-1">
-                        <Router />
-                      </main>
-                      <Toaster />
-                    </TooltipProvider>
-                  </AssetProvider>
-                </ThemeProvider>
-              </WalletProvider>
-            </AuthProvider>
-          </QueryClientProvider>
-        </CompleteAuthProvider>
-      </UnifiedAuthProvider>
-    );
-  }
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              <AssetProvider>
+                <TooltipProvider>
+                  <main className="flex-1">
+                    <Router />
+                  </main>
+                  <Toaster />
+                </TooltipProvider>
+              </AssetProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </CompleteAuthProvider>
+    </UnifiedAuthProvider>
+  );
+}
 
 export default App;
