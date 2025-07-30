@@ -14,9 +14,9 @@ export function LogoDisplay({
   className = "",
   type = "guardianchain"
 }: LogoDisplayProps) {
-  // Use local assets from public/assets/
-  const guardianChainLogo = "/assets/GUARDIANCHAIN_logo.png";
-  const gttLogo = "/assets/GTT_logo.png";
+  // Use local assets from public/assets/ with cache busting
+  const guardianChainLogo = "/assets/GUARDIANCHAIN_logo.png?v=1";
+  const gttLogo = "/assets/GTT_logo.png?v=1";
   
   const logoSrc = type === "guardianchain" ? guardianChainLogo : gttLogo;
 
@@ -59,25 +59,7 @@ export function LogoDisplay({
   return (
     <div className="flex items-center space-x-2">
       {(variant === "full" || variant === "icon" || variant === "main") && (
-        <img
-          src={logoSrc}
-          alt={`${type === "guardianchain" ? "GUARDIANCHAIN" : "GTT"} Logo`}
-          className={`${sizeClasses[size]} object-contain transition-all duration-300 hover:scale-105 ${className}`}
-          onError={(e) => {
-            console.log(`Failed to load ${type} logo:`, logoSrc);
-            const target = e.currentTarget;
-            target.style.display = 'none';
-            const fallback = target.nextElementSibling;
-            if (fallback) fallback.style.display = 'flex';
-          }}
-          onLoad={() => console.log(`✅ Successfully loaded ${type} logo:`, logoSrc)}
-          style={{ display: 'block' }}
-        />
-      )}
-      {(variant === "full" || variant === "icon" || variant === "main") && (
-        <div style={{ display: 'none' }}>
-          <FallbackLogo />
-        </div>
+        <FallbackLogo />
       )}
       {(variant === "full" || variant === "text") && <BrandText />}
     </div>

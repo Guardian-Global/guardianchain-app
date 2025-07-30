@@ -52,27 +52,7 @@ export function EnhancedLogoDisplay({
   return (
     <div className="flex items-center space-x-2">
       {(variant === "full" || variant === "icon") && (
-        <img
-          src={guardianChainLogo}
-          alt="GUARDIANCHAIN Logo"
-          className={`${sizeClasses[size]} object-contain ${className}`}
-          onError={(e) => {
-            // Fallback to GTT logo, then to gradient logo on error
-            const target = e.currentTarget;
-            if (target.src === guardianChainLogo) {
-              target.src = gttLogo;
-            } else if (showFallback) {
-              target.style.display = 'none';
-              const fallback = target.nextElementSibling;
-              if (fallback) fallback.style.display = 'flex';
-            }
-          }}
-        />
-      )}
-      {(variant === "full" || variant === "icon") && showFallback && (
-        <div style={{ display: 'none' }}>
-          <FallbackLogo />
-        </div>
+        <FallbackLogo />
       )}
       {(variant === "full" || variant === "text") && <BrandText />}
     </div>

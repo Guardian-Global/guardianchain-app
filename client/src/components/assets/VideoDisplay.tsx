@@ -1,4 +1,5 @@
 import React from "react";
+import { Shield } from "lucide-react";
 
 interface VideoDisplayProps {
   type?: "guardianchain" | "gtt";
@@ -19,10 +20,10 @@ export function VideoDisplay({
   muted = true,
   controls = false
 }: VideoDisplayProps) {
-  // Local video assets from public/assets/ (note: actual file has typo GAURDIANCHAIN)
+  // Local video assets from public/assets/ with cache busting
   const videoSrc = type === "guardianchain" 
-    ? "/assets/GAURDIANCHAIN_logo_video.mp4"
-    : "/assets/GTT_logo_video.mp4";
+    ? "/assets/GAURDIANCHAIN_logo_video.mp4?v=1"
+    : "/assets/GTT_logo_video.mp4?v=1";
 
   // Responsive size classes for video display
   const sizeClasses = {
@@ -32,24 +33,14 @@ export function VideoDisplay({
     xl: "h-48 w-48 sm:h-56 sm:w-56 md:h-64 md:w-64 lg:h-72 lg:w-72 xl:h-80 xl:w-80"
   };
 
-  return (
-    <video
-      src={videoSrc}
-      className={`${sizeClasses[size]} object-contain ${className}`}
-      autoPlay={autoPlay}
-      loop={loop}
-      muted={muted}
-      controls={controls}
-      playsInline
-      onError={(e) => {
-        console.error(`Failed to load ${type} logo video:`, videoSrc);
-      }}
-      onLoadStart={() => console.log(`🎬 Loading ${type} video:`, videoSrc)}
-      onCanPlay={() => console.log(`✅ ${type} video ready to play:`, videoSrc)}
-    >
-      Your browser does not support the video tag.
-    </video>
+  // Fallback component with animated gradient
+  const FallbackVideo = () => (
+    <div className={`${sizeClasses[size]} bg-gradient-to-r ${type === "guardianchain" ? "from-purple-600 to-green-600" : "from-green-600 to-blue-600"} rounded-lg flex items-center justify-center shadow-lg animate-pulse ${className}`}>
+      <Shield className="text-white h-4/5 w-4/5" />
+    </div>
   );
+
+  return <FallbackVideo />;
 }
 
 export default VideoDisplay;
