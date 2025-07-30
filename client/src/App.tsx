@@ -65,6 +65,7 @@ import ResponsiveDemo from "./pages/responsive-demo";
 import MintingTestPage from "./pages/minting-test";
 import LogoTestPage from "./pages/logo-test";
 import AssetDebugPage from "./pages/asset-debug";
+import ProfessionalHomepage from "./pages/professional-homepage";
 
 import MasterAccess from "./pages/master-access";
 import ProfileCustomization from "./pages/profile-customization";
@@ -119,7 +120,7 @@ function Router() {
       <EnhancedMegaNavigation />
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={Homepage} />
+        <Route path="/" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={SimpleHome} />
         <Route path="/create" component={CreateCapsule} />
@@ -227,6 +228,8 @@ function Router() {
         <Route path="/minting-test" component={MintingTestPage} />
         <Route path="/logo-test" component={LogoTestPage} />
         <Route path="/asset-debug" component={AssetDebugPage} />
+        <Route path="/professional-homepage" component={ProfessionalHomepage} />
+        <Route path="/supabase-assets" component={() => <ProfessionalHomepage />} />
         <Route path="/unified-login" component={Login} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={EnhancedCommanderDashboard} />

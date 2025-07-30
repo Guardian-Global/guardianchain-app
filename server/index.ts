@@ -9,6 +9,7 @@ import {
   validateContent,
 } from "./middleware/security";
 import { complianceMiddleware } from "./middleware/compliance";
+import { assetMiddleware } from "./middleware/assets";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(productionHeaders);
 app.use(apiRateLimit);
 app.use(validateContent);
 app.use(complianceMiddleware);
+app.use(assetMiddleware);
 
 // Session configuration for enterprise authentication
 app.use(
