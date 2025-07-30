@@ -44,6 +44,19 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import CapsuleAIAssistant from "./CapsuleAIAssistant";
 
+// Import advanced AI features
+import ProgressTracker from "./ProgressTracker";
+import IntelligentPreview from "./IntelligentPreview";
+import OneClickUpload from "./OneClickUpload";
+import { 
+  IPFSTooltip, 
+  ContentHashTooltip, 
+  AccessLevelTooltip, 
+  AIOptimizationTooltip,
+  BlockchainTooltip,
+  GTTRewardsTooltip
+} from "./ContextualTooltips";
+
 interface CapsuleFormData {
   // Basic Content
   title: string;
@@ -153,6 +166,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
   const [aiAssisting, setAiAssisting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [ipfsHash, setIpfsHash] = useState<string>("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState("content-analysis");
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
   const { toast } = useToast();
 
   const updateFormData = (updates: Partial<CapsuleFormData>) => {
@@ -254,6 +270,16 @@ const EnhancedCapsuleCreator: React.FC = () => {
   const handleMintCapsule = async () => {
     try {
       setUploading(true);
+      setUploadProgress(0);
+      setCurrentStep("content-analysis");
+      
+      // Progress tracking for advanced UX
+      const steps = ["content-analysis", "metadata-extraction", "ipfs-upload", "blockchain-mint"];
+      for (let i = 0; i < steps.length; i++) {
+        setCurrentStep(steps[i]);
+        setUploadProgress((i / steps.length) * 100);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
       
       // Auto-upload to IPFS if enabled
       const contentHash = await automaticIpfsUpload(formData.content);
@@ -266,6 +292,7 @@ const EnhancedCapsuleCreator: React.FC = () => {
           ipfsProvider: formData.ipfsProvider,
           createdWith: "EnhancedCapsuleCreator",
           version: "2.0",
+          uploadedFiles: uploadedFiles.length,
         },
       };
 
@@ -296,7 +323,38 @@ const EnhancedCapsuleCreator: React.FC = () => {
       });
     } finally {
       setUploading(false);
+      setUploadProgress(100);
     }
+  };
+
+  // Handle file uploads from OneClickUpload
+  const handleFilesUploaded = (files: any[]) => {
+    setUploadedFiles(files);
+    toast({
+      title: "Files Uploaded",
+      description: `${files.length} file(s) uploaded to IPFS successfully`,
+    });
+  };
+
+  // Handle content extraction from uploaded files
+  const handleContentExtracted = (content: string, metadata: any) => {
+    updateFormData({ 
+      content: formData.content ? `${formData.content}\n\n${content}` : content,
+      tags: [...formData.tags, ...metadata.sources?.map((s: any) => s.name.split('.')[0]) || []]
+    });
+    toast({
+      title: "Content Extracted",
+      description: "File content has been automatically added to your capsule",
+    });
+  };
+
+  // Handle AI optimization suggestions
+  const handleOptimization = (suggestions: any) => {
+    updateFormData(suggestions);
+    toast({
+      title: "AI Optimization Applied",
+      description: "Your capsule has been optimized based on AI analysis",
+    });
   };
 
   return (
@@ -310,6 +368,35 @@ const EnhancedCapsuleCreator: React.FC = () => {
           Create truth capsules with advanced privacy controls, social sharing, and automated IPFS storage. 
           AI assistance available for optimal configuration.
         </p>
+      </div>
+
+      {/* Advanced Features Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Progress Tracker */}
+        <ProgressTracker
+          currentStep={currentStep}
+          progress={uploadProgress}
+          isUploading={uploading}
+          metadata={{
+            ipfsHash: ipfsHash,
+            estimatedTime: uploading ? "~30 seconds" : "",
+            fileSize: uploadedFiles.length > 0 ? `${uploadedFiles.length} files` : ""
+          }}
+        />
+
+        {/* Intelligent Preview */}
+        <IntelligentPreview
+          formData={formData}
+          onOptimize={handleOptimization}
+        />
+
+        {/* One-Click Upload */}
+        <OneClickUpload
+          onFilesUploaded={handleFilesUploaded}
+          onContentExtracted={handleContentExtracted}
+          maxFiles={5}
+          acceptedTypes={['.txt', '.md', '.pdf', '.jpg', '.png', '.mp4', '.json']}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -335,7 +422,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="title" className="text-slate-300">Title</Label>
+                    <BlockchainTooltip>
+                      <Label htmlFor="title" className="text-slate-300">Capsule Title</Label>
+                    </BlockchainTooltip>
                     <Input
                       id="title"
                       value={formData.title}
@@ -346,12 +435,14 @@ const EnhancedCapsuleCreator: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="content" className="text-slate-300">Content</Label>
+                    <IPFSTooltip>
+                      <Label htmlFor="content" className="text-slate-300">Truth Content</Label>
+                    </IPFSTooltip>
                     <Textarea
                       id="content"
                       value={formData.content}
                       onChange={(e) => updateFormData({ content: e.target.value })}
-                      placeholder="Share your truth, evidence, or important information..."
+                      placeholder="Share your truth, evidence, or important information... (Automatically uploaded to IPFS)"
                       rows={8}
                       className="bg-slate-900 border-slate-600 text-white"
                     />
@@ -432,7 +523,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
-                    <Label className="text-slate-300">Access Level</Label>
+                    <AccessLevelTooltip>
+                      <Label className="text-slate-300">Access Level</Label>
+                    </AccessLevelTooltip>
                     <Select value={formData.accessLevel} onValueChange={(value: any) => updateFormData({ accessLevel: value })}>
                       <SelectTrigger className="bg-slate-900 border-slate-600 text-white">
                         <SelectValue />

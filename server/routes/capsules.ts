@@ -37,8 +37,8 @@ router.post("/", async (req, res) => {
       }, 0);
       const ipfsHash = `Qm${Math.abs(hash).toString(36).padStart(44, '0').substr(0, 44)}`;
       
-      capsuleData.ipfsHash = ipfsHash;
-      capsuleData.contentHash = ipfsHash; // For compatibility
+      (capsuleData as any).ipfsHash = ipfsHash;
+      (capsuleData as any).contentHash = ipfsHash; // For compatibility
     }
 
     // Insert capsule into database
@@ -46,7 +46,6 @@ router.post("/", async (req, res) => {
       .insert(capsules)
       .values({
         ...capsuleData,
-        creatorId: req.body.creatorId || "demo-user", // In production, get from authenticated user
         status: "draft",
       })
       .returning();
