@@ -23,16 +23,19 @@ export default function AuthGate({
 
   useEffect(() => {
     // Mock auth check - replace with actual Replit Auth integration
-    setTimeout(() => {
+    const checkAuth = async () => {
       // Simulate user data from Replit Auth
       const mockUser = {
+        id: "mock-user-id",
         metadata: {
           tier: "guest" // This would come from actual Replit user metadata
         }
       };
       setUser(mockUser);
       setIsLoading(false);
-    }, 100);
+    };
+    
+    checkAuth();
   }, []);
 
   useEffect(() => {

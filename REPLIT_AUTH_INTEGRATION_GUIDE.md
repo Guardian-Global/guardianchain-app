@@ -69,15 +69,27 @@ export default function AuthGate({ allowedRoles, children, fallback }: AuthGateP
 
 #### In `pages/login.tsx`:
 ```typescript
-// Replace mock auth with:
-import { useAuth } from '@replit/extensions';
+// Replace mock implementation with:
+import { useEffect } from "react";
+import { useAuth } from "@replit/extensions";
+import { getUserTier } from "@/utils/getUserTier";
 
-const handleReplitLogin = async () => {
-  const result = await auth.signIn();
-  const userTier = result.user?.metadata?.tier || 'guest';
-  const redirectRoute = getRedirectRouteForTier(userTier);
-  window.location.href = redirectRoute;
-};
+export default function LoginPage() {
+  const { user, isLoading, login } = useAuth();
+
+  useEffect(() => {
+    if (!user && !isLoading) {
+      login();
+    } else if (user) {
+      const tier = getUserTier(user);
+      if (tier === "admin") window.location.href = "/command";
+      else if (tier === "pro") window.location.href = "/dashboard";
+      else window.location.href = "/vault";
+    }
+  }, [user, isLoading, login]);
+
+  return <div className="text-center pt-20 text-lg">Redirecting you based on your access tier...</div>;
+}
 ```
 
 ### 3. Configure User Metadata
@@ -93,7 +105,24 @@ const user = await replit.getCurrentUser();
 const tier = user?.metadata?.tier || 'guest';
 ```
 
-### 4. Update Environment Configuration
+### 4. Configure User Tier Management
+
+Use the provided `assignUserTier` utilities for tier management:
+
+```typescript
+import { assignUserTier, fetchUserTier, updateUserTier } from '@/utils/assignUserTier';
+
+// Assign tier to new user
+await assignUserTier(user.id, 'pro');
+
+// Fetch existing tier
+const tier = await fetchUserTier(user.id);
+
+// Update tier (for upgrades)
+await updateUserTier(user.id, 'admin');
+```
+
+### 5. Update Environment Configuration
 
 Add any required Replit Auth configuration to your environment:
 
