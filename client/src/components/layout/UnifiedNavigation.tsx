@@ -35,6 +35,8 @@ import {
   LogOut,
   AlertTriangle,
   Globe,
+  Gift,
+  Trophy,
 } from "lucide-react";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
 import WalletConnect from "@/components/web3/wallet-connect";
@@ -134,6 +136,18 @@ export default function UnifiedNavigation() {
           href: "/capsule-pricing", 
           icon: FileText, 
           description: "Pay-per-capsule rates"
+        },
+        { 
+          name: "Launch Bonuses", 
+          href: "/launch-bonuses", 
+          icon: Gift, 
+          description: "24-hour volume challenge"
+        },
+        { 
+          name: "Trade Competition", 
+          href: "/trade-competition", 
+          icon: Trophy, 
+          description: "$25K prize pool"
         },
         { 
           name: "Wallet Connect", 

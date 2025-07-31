@@ -132,6 +132,8 @@ import AdvancedFeaturesPage from "./pages/advanced-features";
 import AdminVisualsPage from "./pages/admin-visuals";
 import PricingPage from "./pages/pricing";
 import CapsulePricingPage from "./pages/capsule-pricing";
+import LaunchBonuses from "./pages/launch-bonuses";
+import TradeCompetition from "./pages/trade-competition";
 import UpgradePage from "./pages/upgrade";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
@@ -319,6 +321,8 @@ function Router() {
         <Route path="/admin-visuals" component={AdminVisualsPage} />
         <Route path="/pricing" component={PricingPage} />
         <Route path="/capsule-pricing" component={CapsulePricingPage} />
+        <Route path="/launch-bonuses" component={LaunchBonuses} />
+        <Route path="/trade-competition" component={TradeCompetition} />
         <Route path="/plans" component={PricingPage} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
