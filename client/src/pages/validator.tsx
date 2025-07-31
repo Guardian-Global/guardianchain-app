@@ -5,6 +5,7 @@ import CapsuleInbox from '@/components/CapsuleInbox';
 import NodeLogStream from '@/components/NodeLogStream';
 import QueueStats from '@/components/QueueStats';
 import YieldClaim from '@/components/YieldClaim';
+import PressKitGenerator from '@/components/PressKitGenerator';
 import { useAuth } from '@/hooks/useAuth';
 import { withAuthGuard } from '@/utils/withAuthGuard';
 
@@ -96,6 +97,7 @@ function ValidatorDashboard() {
             totalEarned={2847.3}
             nextClaimTime={new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString()}
           />
+          <PressKitGenerator />
         </div>
       </div>
 
