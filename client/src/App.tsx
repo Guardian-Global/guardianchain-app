@@ -211,6 +211,8 @@ function Router() {
             <Route path="/validator" component={() => import("./pages/validator")} />
             <Route path="/validator-dashboard" component={() => import("./pages/validator")} />
             <Route path="/jury" component={() => import("./pages/jury")} />
+            <Route path="/explorer" component={() => import("./pages/explorer")} />
+            <Route path="/capsule-explorer" component={() => import("./pages/explorer")} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 
