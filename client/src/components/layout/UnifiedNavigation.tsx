@@ -130,6 +130,12 @@ export default function UnifiedNavigation() {
           description: "Pro & Enterprise tiers"
         },
         { 
+          name: "Capsule Pricing", 
+          href: "/capsule-pricing", 
+          icon: FileText, 
+          description: "Pay-per-capsule rates"
+        },
+        { 
           name: "Wallet Connect", 
           href: "/wallet", 
           icon: Shield, 

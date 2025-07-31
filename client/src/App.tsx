@@ -131,6 +131,7 @@ import ReplitToolsPage from "./pages/replit-tools";
 import AdvancedFeaturesPage from "./pages/advanced-features";
 import AdminVisualsPage from "./pages/admin-visuals";
 import PricingPage from "./pages/pricing";
+import CapsulePricingPage from "./pages/capsule-pricing";
 import UpgradePage from "./pages/upgrade";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
@@ -317,6 +318,7 @@ function Router() {
         <Route path="/advanced-features" component={AdvancedFeaturesPage} />
         <Route path="/admin-visuals" component={AdminVisualsPage} />
         <Route path="/pricing" component={PricingPage} />
+        <Route path="/capsule-pricing" component={CapsulePricingPage} />
         <Route path="/plans" component={PricingPage} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}

@@ -5,10 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 import EnhancedCapsuleCreator from "@/components/CapsuleForge/EnhancedCapsuleCreator";
 import CapsuleTypeSelector from "@/components/capsule/CapsuleTypeSelector";
+import PaymentGate from "@/components/capsule/PaymentGate";
 import { CapsuleType } from "@/types/capsule";
 
 export default function CreateCapsule() {
   const [selectedType, setSelectedType] = useState<CapsuleType>("STANDARD");
+  const [showPaymentGate, setShowPaymentGate] = useState(true);
+  const [selectedTier, setSelectedTier] = useState<string>("");
   return (
     <div className="min-h-screen pt-20 pb-12 bg-slate-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +39,18 @@ export default function CreateCapsule() {
             onTypeSelect={setSelectedType}
           />
           {/* Enhanced Capsule Creator with Automated IPFS */}
-          <EnhancedCapsuleCreator />
+          {!showPaymentGate ? (
+            <EnhancedCapsuleCreator />
+          ) : (
+            <div className="text-center p-8 bg-slate-800/30 border border-slate-600 rounded-lg">
+              <p className="text-slate-300 mb-4">
+                💎 Capsule creation requires payment to ensure quality and prevent spam
+              </p>
+              <p className="text-slate-400 text-sm">
+                Choose your verification tier to continue
+              </p>
+            </div>
+          )}
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -111,6 +125,17 @@ export default function CreateCapsule() {
           </div>
         </div>
       </div>
+      
+      {/* Payment Gate Modal */}
+      {showPaymentGate && (
+        <PaymentGate
+          onPaymentComplete={(tier) => {
+            setSelectedTier(tier);
+            setShowPaymentGate(false);
+          }}
+          onCancel={() => window.history.back()}
+        />
+      )}
     </div>
   );
 }
