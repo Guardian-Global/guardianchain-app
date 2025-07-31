@@ -29,7 +29,7 @@ export default function QueueStats() {
   });
 
   // Fallback data for demo
-  const queueStats: QueueStatsData = stats || {
+  const queueStats: QueueStatsData = stats as QueueStatsData || {
     total: 1247,
     verified: 943,
     pending: 156,

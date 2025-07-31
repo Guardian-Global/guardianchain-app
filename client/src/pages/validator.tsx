@@ -6,7 +6,7 @@ import NodeLogStream from '@/components/NodeLogStream';
 import QueueStats from '@/components/QueueStats';
 import YieldClaim from '@/components/YieldClaim';
 import { useAuth } from '@/hooks/useAuth';
-import withAuthGuard from '@/utils/withAuthGuard';
+import { withAuthGuard } from '@/utils/withAuthGuard';
 
 function ValidatorDashboard() {
   const { user } = useAuth();

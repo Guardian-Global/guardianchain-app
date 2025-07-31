@@ -200,7 +200,12 @@ export function getEmotionRecommendations(classification: EmotionClassification)
   suggestedAudience: string;
   contentWarning?: string;
 } {
-  const recommendations = {
+  const recommendations: Record<EmotionLabel, {
+    category: string;
+    tags: string[];
+    suggestedAudience: string;
+    contentWarning?: string;
+  }> = {
     grief: {
       category: 'Memory & Loss',
       tags: ['grief-support', 'memorial', 'healing', 'remembrance'],
@@ -228,6 +233,46 @@ export function getEmotionRecommendations(classification: EmotionClassification)
       tags: ['fear', 'vulnerability', 'courage', 'truth'],
       suggestedAudience: 'Those facing similar fears',
       contentWarning: 'May contain anxiety-inducing content'
+    },
+    love: {
+      category: 'Connection & Bonds',
+      tags: ['love', 'relationships', 'family', 'connection'],
+      suggestedAudience: 'General audience, heartwarming content',
+    },
+    nostalgia: {
+      category: 'Memory & Reflection',
+      tags: ['nostalgia', 'memories', 'past', 'reflection'],
+      suggestedAudience: 'Those who appreciate reminiscence',
+    },
+    regret: {
+      category: 'Learning & Growth',
+      tags: ['regret', 'lessons', 'growth', 'reflection'],
+      suggestedAudience: 'Those seeking personal growth',
+    },
+    peace: {
+      category: 'Serenity & Calm',
+      tags: ['peace', 'calm', 'serenity', 'mindfulness'],
+      suggestedAudience: 'General audience, calming content',
+    },
+    determination: {
+      category: 'Motivation & Drive',
+      tags: ['determination', 'motivation', 'goals', 'perseverance'],
+      suggestedAudience: 'Those seeking motivation',
+    },
+    confusion: {
+      category: 'Uncertainty & Questions',
+      tags: ['confusion', 'uncertainty', 'questions', 'exploration'],
+      suggestedAudience: 'Those navigating uncertainty',
+    },
+    joy: {
+      category: 'Happiness & Celebration',
+      tags: ['joy', 'happiness', 'celebration', 'positive'],
+      suggestedAudience: 'General audience, uplifting content',
+    },
+    acceptance: {
+      category: 'Wisdom & Understanding',
+      tags: ['acceptance', 'wisdom', 'understanding', 'peace'],
+      suggestedAudience: 'Those seeking wisdom and understanding',
     }
   };
 

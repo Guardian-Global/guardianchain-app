@@ -210,6 +210,7 @@ function Router() {
             <Route path="/governance" component={() => import("./pages/dao")} />
             <Route path="/validator" component={() => import("./pages/validator")} />
             <Route path="/validator-dashboard" component={() => import("./pages/validator")} />
+            <Route path="/jury" component={() => import("./pages/jury")} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 
