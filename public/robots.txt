@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://your-domain.repl.co/sitemap.xml
+
+# High-value pages for SEO
+Allow: /
+Allow: /vault
+Allow: /pricing
+Allow: /create-capsule
+Allow: /gamified-onboarding
+
+# Protect admin areas
+Disallow: /admin
+Disallow: /master-admin
+Disallow: /api/

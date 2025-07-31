@@ -1,0 +1,21 @@
+# GUARDIANCHAIN Security Contact Information
+Contact: mailto:security@guardianchain.org
+Contact: https://guardianchain.org/security
+
+# Disclosure Policy
+Policy: https://guardianchain.org/security-policy
+
+# Preferred Languages
+Preferred-Languages: en
+
+# Canonical URL
+Canonical: https://guardianchain.org/.well-known/security.txt
+
+# This security.txt file is valid for 1 year
+Expires: 2026-01-31T23:59:59.000Z
+
+# Acknowledgments
+Acknowledgments: https://guardianchain.org/security-acknowledgments
+
+# Hiring
+Hiring: https://guardianchain.org/careers
