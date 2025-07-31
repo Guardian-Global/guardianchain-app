@@ -40,6 +40,12 @@ import VaultDashboard from "@/components/VaultDashboard";
 import Govern from "@/pages/govern";
 import NotFound from "./pages/NotFound";
 
+// Veritas Tools Components
+import VeritasSealPage from "./pages/veritas-seal";
+import TruthBountyPage from "./pages/truth-bounty";
+import TruthRedemptionPage from "./pages/truth-redemption";
+import ConspiracyCapsulePage from "./pages/conspiracy-capsule";
+
 import AuctionHousePage from "./pages/auction-house";
 import EmbedCapsulePage from "./pages/embed-capsule";
 import YieldTrackerPage from "./pages/yield-tracker";
@@ -143,6 +149,12 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/create-with-help" component={CreateCapsule} />
+        
+        {/* Veritas Tools - Working Pages */}
+        <Route path="/veritas-seal" component={VeritasSealPage} />
+        <Route path="/truth-bounty" component={TruthBountyPage} />
+        <Route path="/truth-redemption" component={TruthRedemptionPage} />
+        <Route path="/conspiracy-capsule" component={ConspiracyCapsulePage} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route

@@ -1,11 +1,14 @@
 import { ArrowLeft, Zap } from "lucide-react";
 import { Link } from "wouter";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BRAND_COLORS, BRAND_NAME } from "@/lib/constants";
 import EnhancedCapsuleCreator from "@/components/CapsuleForge/EnhancedCapsuleCreator";
 import CapsuleTypeSelector from "@/components/capsule/CapsuleTypeSelector";
+import { CapsuleType } from "@/types/capsule";
 
 export default function CreateCapsule() {
+  const [selectedType, setSelectedType] = useState<CapsuleType>("STANDARD");
   return (
     <div className="min-h-screen pt-20 pb-12 bg-slate-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,8 +29,12 @@ export default function CreateCapsule() {
           </p>
         </div>
 
-        {/* Enhanced Capsule Creation System */}
+        {/* Capsule Type Selection */}
         <div className="space-y-8 mb-8">
+          <CapsuleTypeSelector 
+            selectedType={selectedType}
+            onTypeSelect={setSelectedType}
+          />
           {/* Enhanced Capsule Creator with Automated IPFS */}
           <EnhancedCapsuleCreator />
         </div>
