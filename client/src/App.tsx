@@ -149,6 +149,8 @@ import UpgradePage from "./pages/upgrade";
 import AssetIntegration from "./pages/asset-integration";
 import TopRevenueDrivers from "./pages/top-revenue-drivers";
 import TruthVaultDashboard from "./pages/truth-vault-dashboard";
+import CrossTradingPage from "./pages/cross-trading";
+import RedemptionCapsulePage from "./pages/redemption-capsule";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 // OnboardingChecker moved to different import location
 
@@ -199,6 +201,10 @@ function Router() {
         {/* Revenue Analysis & Truth Vault Dashboard */}
         <Route path="/top-revenue-drivers" component={TopRevenueDrivers} />
         <Route path="/truth-vault-dashboard" component={TruthVaultDashboard} />
+        
+        {/* Advanced Trading & Verification Features */}
+        <Route path="/cross-trading" component={CrossTradingPage} />
+        <Route path="/redemption-capsule" component={RedemptionCapsulePage} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route

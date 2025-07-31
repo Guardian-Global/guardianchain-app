@@ -193,6 +193,8 @@ export default function UnifiedNavigation() {
         { name: "Viral Tools", href: "/viral-tools", icon: Zap },
         { name: "Revenue Dashboard", href: "/revenue-dashboard", icon: Database },
         { name: "Top Revenue Drivers", href: "/top-revenue-drivers", icon: TrendingUp, badge: "STRATEGIC" },
+        { name: "Cross-Chain Trading", href: "/cross-trading", icon: Network, badge: "BETA" },
+        { name: "Redemption System", href: "/redemption-capsule", icon: Shield, badge: "NEW" },
       ],
     },
     {
