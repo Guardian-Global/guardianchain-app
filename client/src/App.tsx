@@ -72,7 +72,8 @@ import ReportingDashboard from "./pages/reporting";
 
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
-import Homepage from "./pages/index";
+import Home from "./pages/home";
+import Vault from "./pages/vault";
 import ResponsiveDemo from "./pages/responsive-demo";
 import MintingTestPage from "./pages/minting-test";
 // LogoTestPage moved to archive
@@ -123,6 +124,8 @@ import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
 import ReplitToolsPage from "./pages/replit-tools";
 import AdvancedFeaturesPage from "./pages/advanced-features";
+import AdminVisualsPage from "./pages/admin-visuals";
+import PricingPage from "./pages/pricing";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 // OnboardingChecker moved to different import location
@@ -144,10 +147,11 @@ function Router() {
         }>
           <Switch>
           {/* Login page archived - using UnifiedAuthModal */}
-        <Route path="/" component={ProfessionalHomepage} />
+        <Route path="/" component={Vault} />
+        <Route path="/home" component={Home} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
-        <Route path="/home" component={ProfessionalHomepage} />
+
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/create-with-help" component={CreateCapsule} />
@@ -298,6 +302,9 @@ function Router() {
         <Route path="/asset-integration" component={AssetIntegration} />
         <Route path="/replit-tools" component={ReplitToolsPage} />
         <Route path="/advanced-features" component={AdvancedFeaturesPage} />
+        <Route path="/admin-visuals" component={AdminVisualsPage} />
+        <Route path="/pricing" component={PricingPage} />
+        <Route path="/plans" component={PricingPage} />
         <Route path="/upgrade" component={() => <BillingDashboard />} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
