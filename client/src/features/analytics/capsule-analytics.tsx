@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, Link } from "wouter";
-import CapsuleAnalyticsChart from "@/components/analytics/CapsuleAnalyticsChart";
+// CapsuleAnalyticsChart moved to features/analytics/components/
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -129,10 +129,14 @@ export default function CapsuleAnalyticsPage() {
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {selectedCapsuleId ? (
-            <CapsuleAnalyticsChart
-              capsuleId={selectedCapsuleId}
-              timeRange={timeRange}
-            />
+            <Card className="bg-slate-800/50 border-slate-700">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Analytics for Capsule {selectedCapsuleId}
+                </h3>
+                <p className="text-slate-400">Analytics chart component temporarily unavailable during refactor.</p>
+              </CardContent>
+            </Card>
           ) : (
             <Card className="bg-slate-800/50 border-slate-700">
               <CardContent className="p-12 text-center">

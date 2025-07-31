@@ -8,6 +8,7 @@ import { useTheme } from "@/components/web3/theme-provider";
 import LanguageSelector from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/i18n";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
+import { MascotTrigger } from "@/components/mascot/OnboardingMascot";
 
 // Core navigation focused on enterprise features
 const navigation = [
@@ -118,6 +119,9 @@ export default function Navigation() {
             </div>
 
             <WalletConnect />
+
+            {/* Mascot Trigger */}
+            <MascotTrigger className="hidden lg:flex" />
 
             <LanguageSelector />
 

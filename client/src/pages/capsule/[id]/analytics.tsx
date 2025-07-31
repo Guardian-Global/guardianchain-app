@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "wouter";
-import CapsuleAnalyticsChart from "@/components/analytics/CapsuleAnalyticsChart";
+import CapsuleAnalyticsChart from "@/features/analytics/components/CapsuleAnalyticsChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

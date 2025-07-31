@@ -86,7 +86,7 @@ import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
 import SimpleTokenLaunch from "@/pages/simple-token-launch";
 // SimpleHome and WorkingProfileDashboard moved to archive
-import { EnhancedProfileDashboard } from "@/components/profile/EnhancedProfileDashboard";
+import EnhancedProfileDashboard from "@/components/profile/EnhancedProfileDashboard";
 // StripeCheckout moved to features/payments/components/
 // AdminLogin and AdminDashboard moved to archive - using unified auth
 import AdminDashboardPage from "./pages/admin";
@@ -98,6 +98,7 @@ import CategoryDiscovery from "./pages/category-discovery";
 import Whitepapers from "./pages/whitepapers";
 import MyListings from "./pages/my-listings";
 import TokenListings from "./pages/token-listings";
+import MascotSettingsPage from "./pages/mascot-settings";
 import GTTLaunch from "./pages/gtt-launch";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
@@ -105,6 +106,7 @@ import ApiStatus from "./pages/api-status";
 // Login page moved to archive - using UnifiedAuthModal
 import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
 import { OnboardingChecker } from "./components/onboarding/OnboardingChecker";
+import { MascotProvider } from "./components/mascot/MascotProvider";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 // Admin components temporarily using role-based dashboard
 // import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
@@ -141,6 +143,7 @@ function Router() {
         />
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
+        <Route path="/mascot-settings" component={MascotSettingsPage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/replit-tools" component={ReplitToolsPage} />
         <Route
@@ -235,7 +238,7 @@ function Router() {
         <Route path="/asset-debug" component={AssetDebugPage} />
         <Route path="/professional-homepage" component={ProfessionalHomepage} />
         <Route path="/supabase-assets" component={() => <ProfessionalHomepage />} />
-        <Route path="/unified-login" component={Login} />
+        <Route path="/unified-login" component={RoleBasedDashboard} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
         <Route path="/commander" component={RoleBasedDashboard} />
         <Route path="/founder-dashboard">
@@ -273,18 +276,20 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <UnifiedAuthProvider>
         <OnboardingChecker>
-          <WalletProvider>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-              <AssetProvider>
-                <TooltipProvider>
-                  <main className="flex-1">
-                    <Router />
-                  </main>
-                  <Toaster />
-                </TooltipProvider>
-              </AssetProvider>
-            </ThemeProvider>
-          </WalletProvider>
+          <MascotProvider>
+            <WalletProvider>
+              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <AssetProvider>
+                  <TooltipProvider>
+                    <main className="flex-1">
+                      <Router />
+                    </main>
+                    <Toaster />
+                  </TooltipProvider>
+                </AssetProvider>
+              </ThemeProvider>
+            </WalletProvider>
+          </MascotProvider>
         </OnboardingChecker>
       </UnifiedAuthProvider>
     </QueryClientProvider>

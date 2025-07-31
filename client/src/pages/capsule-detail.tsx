@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ShareButtons from "@/components/social/share-buttons";
-import CapsuleAnalytics from "@/components/analytics/capsule-analytics";
+import CapsuleAnalytics from "@/features/analytics/capsule-analytics";
 import DynamicMeta, {
   generateCapsuleStructuredData,
 } from "@/components/seo/dynamic-meta";
