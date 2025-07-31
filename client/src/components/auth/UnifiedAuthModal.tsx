@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -106,6 +106,9 @@ export default function UnifiedAuthModal({
       </DialogTrigger>
       <DialogContent className="max-w-md bg-slate-900 border-slate-700">
         <DialogTitle className="sr-only">GUARDIANCHAIN Authentication</DialogTitle>
+        <DialogDescription className="sr-only">
+          Secure login, registration, and master admin access for GUARDIANCHAIN platform
+        </DialogDescription>
         
         <div className="text-center mb-6">
           <div className="flex items-center justify-center mb-4">

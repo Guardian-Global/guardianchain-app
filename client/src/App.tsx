@@ -104,6 +104,7 @@ import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
 import Login from "./pages/Login";
 import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
+import { OnboardingChecker } from "./components/onboarding/OnboardingChecker";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
 import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
@@ -112,7 +113,7 @@ import ReplitToolsPage from "./pages/replit-tools";
 import AdvancedFeaturesPage from "./pages/advanced-features";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
-import OnboardingChecker from "./components/auth/OnboardingChecker";
+// OnboardingChecker moved to different import location
 
 function Router() {
   const { isAuthenticated, isLoading } = useUnifiedAuth();
@@ -270,18 +271,20 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <UnifiedAuthProvider>
-        <WalletProvider>
-          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <AssetProvider>
-              <TooltipProvider>
-                <main className="flex-1">
-                  <Router />
-                </main>
-                <Toaster />
-              </TooltipProvider>
-            </AssetProvider>
-          </ThemeProvider>
-        </WalletProvider>
+        <OnboardingChecker>
+          <WalletProvider>
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              <AssetProvider>
+                <TooltipProvider>
+                  <main className="flex-1">
+                    <Router />
+                  </main>
+                  <Toaster />
+                </TooltipProvider>
+              </AssetProvider>
+            </ThemeProvider>
+          </WalletProvider>
+        </OnboardingChecker>
       </UnifiedAuthProvider>
     </QueryClientProvider>
   );

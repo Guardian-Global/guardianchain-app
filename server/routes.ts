@@ -2,12 +2,18 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import authRoutes from "./routes/auth-system";
 import unifiedAuthRoutes from "./unified-auth-routes";
+import aiOnboardingRoutes from "./routes/ai-onboarding";
+import mediaUploadRoutes from "./routes/media-upload";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register auth routes
   app.use('/api/auth', authRoutes);
   app.use('/api/auth', unifiedAuthRoutes);
+  
+  // Register AI and onboarding routes
+  app.use('/api/ai', aiOnboardingRoutes);
+  app.use('/api/upload', mediaUploadRoutes);
 
   // Health check endpoint
   app.get('/api/health', (req, res) => {
