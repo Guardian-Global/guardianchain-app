@@ -16,7 +16,7 @@ import {
   Eye,
   Download
 } from 'lucide-react';
-import { generatePressKitPDF } from '@/utils/generatePressKit';
+import { generateComprehensivePressKit } from '@/utils/generatePressKit';
 import { useToast } from '@/hooks/use-toast';
 
 export default function LaunchAnnouncementPage() {
@@ -24,26 +24,11 @@ export default function LaunchAnnouncementPage() {
 
   const handlePressKitDownload = () => {
     try {
-      generatePressKitPDF({
-        companyName: 'GUARDIANCHAIN',
-        tagline: 'Veritas Sealed. Truth Tokenized.',
-        description: 'GUARDIANCHAIN has officially launched as the world\'s first sovereign memory infrastructure built for high-integrity capsule authorship, immutable emotional yield, and decentralized witness validation.',
-        features: [
-          'Truth Capsules - Seal personal or institutional memory',
-          'Veritas Certificates - On-chain authorship & emotion proof',
-          'GTT Token - Grief-weighted yield for testimony',
-          'Jury Validation - Decentralized truth voting',
-          'Capsule Explorer - Public or private memory graph'
-        ],
-        contact: {
-          email: 'founder@guardianchain.app',
-          website: 'https://guardianchain.app'
-        }
-      });
+      const filename = generateComprehensivePressKit();
       
       toast({
         title: "Press Kit Downloaded",
-        description: "Professional press materials ready for distribution",
+        description: `${filename} - Professional press materials ready for distribution`,
       });
     } catch (error: any) {
       toast({

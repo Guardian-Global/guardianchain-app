@@ -5,240 +5,185 @@ interface PressKitData {
   tagline: string;
   description: string;
   features: string[];
-  stats: {
-    totalCapsules: number;
-    verifiedCapsules: number;
-    activeValidators: number;
-    gttCirculating: number;
-  };
   contact: {
     email: string;
     website: string;
-    twitter?: string;
-    linkedin?: string;
   };
+  launchDate?: string;
+  additionalInfo?: string[];
 }
 
-export function generatePressKitPDF(data?: Partial<PressKitData>) {
-  const pressKitData: PressKitData = {
+export function generatePressKitPDF(data?: PressKitData) {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  let yPosition = 30;
+
+  // Default data if none provided
+  const pressData: PressKitData = data || {
     companyName: 'GUARDIANCHAIN',
     tagline: 'Veritas Sealed. Truth Tokenized.',
-    description: `GUARDIANCHAIN has officially launched as the world's first sovereign memory infrastructure for high-integrity capsule authorship, emotional yield, and validator witness protection. Our platform transforms digital memories into immutable blockchain assets with community-driven truth verification.`,
+    description: 'GUARDIANCHAIN has officially launched as the world\'s first sovereign memory infrastructure built for high-integrity capsule authorship, immutable emotional yield, and decentralized witness validation.',
     features: [
-      'Truth Capsules: Immutable digital memory preservation',
-      'Veritas Certificates: On-chain authorship proofs with legal standing',
-      'GTT Token: Grief-weighted yield claims and emotional economics',
-      'Jury Validation: Community-backed truth scoring and consensus',
-      'Capsule Explorer: Memory access across all membership tiers',
-      'Professional Validator Tools: Enterprise-grade content moderation',
-      'AI-Powered Classification: Emotional content analysis and verification',
-      'Real-Time Node Network: Live broadcast and synchronization'
+      'Truth Capsules - Seal personal or institutional memory',
+      'Veritas Certificates - On-chain authorship & emotion proof',
+      'GTT Token - Grief-weighted yield for testimony',
+      'Jury Validation - Decentralized truth voting',
+      'Capsule Explorer - Public or private memory graph'
     ],
-    stats: {
-      totalCapsules: 12847,
-      verifiedCapsules: 8932,
-      activeValidators: 247,
-      gttCirculating: 2847392
-    },
     contact: {
       email: 'founder@guardianchain.app',
-      website: 'https://guardianchain.app',
-      twitter: '@GuardianChainHQ',
-      linkedin: 'company/guardianchain'
+      website: 'https://guardianchain.app'
     },
-    ...data
+    launchDate: new Date().toLocaleDateString(),
+    additionalInfo: [
+      'Tiered yield claiming with automatic distribution',
+      'Public replay with professional certifier dashboard',
+      'PDF veritas proof bundles for legal documentation',
+      'Institution onboarding with multi-role access control'
+    ]
   };
 
-  const doc = new jsPDF();
-  
-  // Header Section
+  // Header
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
-  doc.text(pressKitData.companyName, 20, 25);
-  
-  doc.setFontSize(14);
+  doc.text(pressData.companyName, pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += 15;
+
+  // Tagline
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'italic');
-  doc.text(pressKitData.tagline, 20, 35);
-  
-  // Horizontal line
-  doc.setLineWidth(0.5);
-  doc.line(20, 45, 190, 45);
-  
+  doc.text(pressData.tagline, pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += 20;
+
+  // Launch announcement
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('OFFICIAL LAUNCH ANNOUNCEMENT', pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += 15;
+
   // Description
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  const splitDescription = doc.splitTextToSize(pressKitData.description, 170);
-  doc.text(splitDescription, 20, 55);
-  
-  // Key Features Section
+  const descriptionLines = doc.splitTextToSize(pressData.description, pageWidth - 40);
+  doc.text(descriptionLines, 20, yPosition);
+  yPosition += descriptionLines.length * 5 + 15;
+
+  // Core Features
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.text('Platform Features:', 20, 85);
-  
+  doc.text('CORE FEATURES', 20, yPosition);
+  yPosition += 10;
+
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  pressKitData.features.forEach((feature, index) => {
-    doc.text(`• ${feature}`, 25, 95 + (index * 6));
+  pressData.features.forEach((feature) => {
+    const featureLines = doc.splitTextToSize(`• ${feature}`, pageWidth - 40);
+    doc.text(featureLines, 25, yPosition);
+    yPosition += featureLines.length * 4 + 3;
   });
-  
-  // Statistics Section
-  const statsY = 95 + (pressKitData.features.length * 6) + 10;
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Platform Statistics:', 20, statsY);
-  
+  yPosition += 10;
+
+  // Mainnet Launch Features
+  if (pressData.additionalInfo && pressData.additionalInfo.length > 0) {
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('MAINNET LAUNCH INCLUDES', 20, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    pressData.additionalInfo.forEach((info) => {
+      const infoLines = doc.splitTextToSize(`• ${info}`, pageWidth - 40);
+      doc.text(infoLines, 25, yPosition);
+      yPosition += infoLines.length * 4 + 3;
+    });
+    yPosition += 15;
+  }
+
+  // Founder Quote
+  if (yPosition > pageHeight - 60) {
+    doc.addPage();
+    yPosition = 30;
+  }
+
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'italic');
+  const quote = '"GUARDIANCHAIN isn\'t just a platform — it\'s a sovereign engine for preserving what mattered most."';
+  const quoteLines = doc.splitTextToSize(quote, pageWidth - 60);
+  doc.text(quoteLines, pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += quoteLines.length * 5 + 5;
+
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  const stats = [
-    `Total Capsules: ${pressKitData.stats.totalCapsules.toLocaleString()}`,
-    `Verified Capsules: ${pressKitData.stats.verifiedCapsules.toLocaleString()}`,
-    `Active Validators: ${pressKitData.stats.activeValidators.toLocaleString()}`,
-    `GTT Tokens in Circulation: ${pressKitData.stats.gttCirculating.toLocaleString()}`
-  ];
-  
-  stats.forEach((stat, index) => {
-    doc.text(`• ${stat}`, 25, statsY + 10 + (index * 6));
-  });
-  
+  doc.text('— Troy A. Cronin, Founder', pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += 20;
+
   // Contact Information
-  const contactY = statsY + 10 + (stats.length * 6) + 15;
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
-  doc.text('Media Contact:', 20, contactY);
-  
-  doc.setFontSize(10);
+  doc.text('CONTACT INFORMATION', 20, yPosition);
+  yPosition += 10;
+
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Email: ${pressKitData.contact.email}`, 25, contactY + 10);
-  doc.text(`Website: ${pressKitData.contact.website}`, 25, contactY + 18);
-  
-  if (pressKitData.contact.twitter) {
-    doc.text(`Twitter: ${pressKitData.contact.twitter}`, 25, contactY + 26);
+  doc.text(`Website: ${pressData.contact.website}`, 20, yPosition);
+  yPosition += 8;
+  doc.text(`Email: ${pressData.contact.email}`, 20, yPosition);
+  yPosition += 8;
+
+  if (pressData.launchDate) {
+    doc.text(`Launch Date: ${pressData.launchDate}`, 20, yPosition);
+    yPosition += 8;
   }
-  
-  if (pressKitData.contact.linkedin) {
-    doc.text(`LinkedIn: ${pressKitData.contact.linkedin}`, 25, contactY + 34);
-  }
-  
+
   // Footer
   doc.setFontSize(8);
   doc.setFont('helvetica', 'italic');
-  doc.text('This press kit contains forward-looking statements about blockchain technology and digital asset markets.', 20, 280);
-  doc.text(`Generated: ${new Date().toLocaleDateString()} | GUARDIANCHAIN Enterprise Suite`, 20, 290);
+  doc.text('This press kit contains confidential and proprietary information.', pageWidth / 2, pageHeight - 20, { align: 'center' });
+  doc.text('© 2025 GUARDIANCHAIN. All rights reserved.', pageWidth / 2, pageHeight - 12, { align: 'center' });
+
+  // Generate and download
+  const filename = 'GuardianChain_Launch_PressKit.pdf';
+  doc.save(filename);
   
-  // Save the PDF
-  const timestamp = new Date().toISOString().split('T')[0];
-  doc.save(`GUARDIANCHAIN_Press_Kit_${timestamp}.pdf`);
-  
-  return {
-    success: true,
-    filename: `GUARDIANCHAIN_Press_Kit_${timestamp}.pdf`,
-    data: pressKitData
-  };
+  return filename;
 }
 
-export function generateExecutiveSummary() {
-  const doc = new jsPDF();
-  
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.text('GUARDIANCHAIN', 20, 25);
-  doc.text('Executive Summary', 20, 35);
-  
-  doc.setLineWidth(0.5);
-  doc.line(20, 45, 190, 45);
-  
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  
-  const sections = [
-    {
-      title: 'Mission Statement',
-      content: 'GUARDIANCHAIN preserves human truth through immutable blockchain technology, creating a sovereign memory infrastructure that protects authentic narratives from digital manipulation and censorship.'
+// Function to generate a comprehensive press kit with multiple sections
+export function generateComprehensivePressKit() {
+  return generatePressKitPDF({
+    companyName: 'GUARDIANCHAIN',
+    tagline: 'Veritas Sealed. Truth Tokenized.',
+    description: 'GUARDIANCHAIN has officially launched as the world\'s first sovereign memory infrastructure built for high-integrity capsule authorship, immutable emotional yield, and decentralized witness validation. Our platform revolutionizes how truth is preserved, validated, and monetized in the digital age.',
+    features: [
+      'Truth Capsules - Cryptographically sealed personal or institutional memory preservation',
+      'Veritas Certificates - Blockchain-verified authorship and emotional authenticity proof',
+      'GTT Token - Grief-weighted yield rewards based on emotional resonance and truth value',
+      'Jury Validation - Decentralized community-driven truth verification and consensus',
+      'Capsule Explorer - Advanced search and discovery for public and private memory graphs',
+      'Institutional Access - Enterprise-grade tools for legal and corporate truth preservation',
+      'Validator Dashboard - Professional certification and verification workflow management',
+      'Live Broadcasting - Real-time node monitoring and network health visualization'
+    ],
+    contact: {
+      email: 'founder@guardianchain.app',
+      website: 'https://guardianchain.app'
     },
-    {
-      title: 'Market Opportunity',
-      content: 'The global need for truth verification has reached critical mass. With AI-generated content proliferating, our platform provides essential infrastructure for authentic memory preservation and community-driven verification.'
-    },
-    {
-      title: 'Technology Innovation',
-      content: 'Our grief-weighted tokenomics, jury-based validation system, and emotional AI classification represent breakthrough innovations in blockchain-based truth preservation and community governance.'
-    },
-    {
-      title: 'Business Model',
-      content: 'Revenue streams include transaction fees, enterprise API subscriptions, premium verification services, and institutional access licensing. Target: $50M ARR within 24 months.'
-    }
-  ];
-  
-  let currentY = 55;
-  sections.forEach(section => {
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text(section.title, 20, currentY);
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    const splitContent = doc.splitTextToSize(section.content, 170);
-    doc.text(splitContent, 20, currentY + 8);
-    
-    currentY += 8 + (splitContent.length * 4) + 10;
+    launchDate: new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }),
+    additionalInfo: [
+      'Tiered yield claiming system with automatic GTT token distribution',
+      'Public capsule replay functionality with professional certifier dashboard',
+      'Legal-grade PDF Veritas proof bundles for court admissibility',
+      'Multi-role institutional onboarding with granular access controls',
+      'AI-powered grief scoring and emotional resonance analysis',
+      'Cross-platform mobile compatibility with responsive design',
+      'Comprehensive API suite for enterprise integration',
+      'Advanced analytics dashboard with yield tracking and performance metrics'
+    ]
   });
-  
-  doc.save('GUARDIANCHAIN_Executive_Summary.pdf');
-}
-
-export function generateTechnicalWhitepaper() {
-  const doc = new jsPDF();
-  
-  // Title Page
-  doc.setFontSize(22);
-  doc.setFont('helvetica', 'bold');
-  doc.text('GUARDIANCHAIN', 105, 100, { align: 'center' });
-  doc.text('Technical Whitepaper', 105, 115, { align: 'center' });
-  
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Sovereign Memory Infrastructure', 105, 130, { align: 'center' });
-  doc.text('Version 1.0', 105, 145, { align: 'center' });
-  
-  doc.setFontSize(10);
-  doc.text(`Published: ${new Date().toLocaleDateString()}`, 105, 200, { align: 'center' });
-  
-  // Add new page for content
-  doc.addPage();
-  
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Abstract', 20, 25);
-  
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  const abstract = `GUARDIANCHAIN introduces a novel blockchain infrastructure for truth preservation through immutable memory capsules, grief-weighted tokenomics, and community-driven validation. This technical specification outlines our ERC-721 implementation, consensus mechanisms, and emotional AI classification system.`;
-  
-  const splitAbstract = doc.splitTextToSize(abstract, 170);
-  doc.text(splitAbstract, 20, 35);
-  
-  // Table of Contents
-  let currentY = 35 + (splitAbstract.length * 4) + 15;
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Table of Contents', 20, currentY);
-  
-  const tableOfContents = [
-    '1. Introduction',
-    '2. Architecture Overview',
-    '3. Smart Contract Implementation',
-    '4. Tokenomics and Yield Mechanics',
-    '5. Validation and Consensus',
-    '6. AI Integration and Classification',
-    '7. Security Considerations',
-    '8. Future Developments'
-  ];
-  
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  tableOfContents.forEach((item, index) => {
-    doc.text(item, 25, currentY + 10 + (index * 6));
-  });
-  
-  doc.save('GUARDIANCHAIN_Technical_Whitepaper.pdf');
 }
