@@ -215,6 +215,7 @@ function Router() {
             <Route path="/capsule-explorer" component={() => import("./pages/explorer")} />
             <Route path="/create-capsule" component={() => import("./pages/create-capsule")} />
             <Route path="/system-validation" component={() => import("./pages/system-validation")} />
+            <Route path="/launch" component={() => import("./pages/launch-announcement")} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 

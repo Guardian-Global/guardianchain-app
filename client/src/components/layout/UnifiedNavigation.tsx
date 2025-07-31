@@ -98,6 +98,7 @@ export default function UnifiedNavigation() {
         { name: "Profile", href: "/profile", icon: User },
         { name: "Onboarding Guide", href: "/gamified-onboarding", icon: Target, badge: "NEW" },
         { name: "System Validation", href: "/system-validation", icon: Shield, badge: "TEST" },
+        { name: "Launch Announcement", href: "/launch", icon: Rocket, badge: "LIVE" },
       ],
     },
     {
