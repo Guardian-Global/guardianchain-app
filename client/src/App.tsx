@@ -206,6 +206,8 @@ function Router() {
             <Route path="/" component={Vault} />
             <Route path="/home" component={Home} />
             <Route path="/unauthorized" component={() => import("./pages/unauthorized")} />
+            <Route path="/dao" component={() => import("./pages/dao")} />
+            <Route path="/governance" component={() => import("./pages/dao")} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 

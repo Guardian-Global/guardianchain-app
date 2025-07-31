@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CapsuleCard from "@/components/capsule/capsule-card";
+import CapsuleSearch from "@/components/CapsuleSearch";
+import FilterPanel from "@/components/FilterPanel";
 
 const categories = [
   "All",
@@ -47,6 +49,12 @@ export default function Explore() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [filters, setFilters] = useState({
+    sortBy: "recent",
+    tier: "all",
+    category: "all",
+    verificationStatus: "all"
+  });
 
   const { data: allCapsules, isLoading: allLoading } = useQuery({
     queryKey: ["/api/capsules", { limit: 50 }],
@@ -70,6 +78,23 @@ export default function Explore() {
       return matchesSearch && matchesCategory;
     }) || [];
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      sortBy: "recent",
+      tier: "all", 
+      category: "all",
+      verificationStatus: "all"
+    });
+    setSearchQuery("");
+    setSelectedCategory("All");
+  };
+
+  const activeFiltersCount = Object.values(filters).filter(value => value !== "all" && value !== "recent").length;
+
   return (
     <div className="min-h-screen pt-20 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,17 +107,20 @@ export default function Explore() {
           </p>
         </div>
 
-        {/* Search and Filters */}
+        {/* Search and Filter Components */}
+        <CapsuleSearch onSearch={handleSearch} />
+        <FilterPanel 
+          filters={filters} 
+          setFilters={setFilters}
+          activeFiltersCount={activeFiltersCount}
+          onClearFilters={handleClearFilters}
+        />
+
+        {/* Legacy Filters */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-              <Input
-                placeholder="Search capsules by title or description..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-slate-800 border-slate-600"
-              />
+            <div className="hidden">
+              {/* Hidden legacy search - replaced by CapsuleSearch */}
             </div>
             <Select
               value={selectedCategory}
