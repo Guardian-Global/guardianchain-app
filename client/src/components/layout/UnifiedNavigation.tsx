@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
+import { useTierContext } from "@/context/TierContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -55,13 +56,15 @@ interface NavigationSection {
 
 export default function UnifiedNavigation() {
   const { user, isAuthenticated, logout } = useUnifiedAuth();
+  const { userRole: tierRole, isLoading: tierLoading } = useTierContext();
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const userTier = user?.tier || "EXPLORER";
+  // Use TierContext for role-based navigation
+  const userTier = tierRole || user?.tier || "guest";
   const userRole = user?.role || "USER";
   const isAdmin = userRole === "ADMIN" || userRole === "FOUNDER" || userRole === "MASTER_ADMIN";
-  const isPro = ["CREATOR", "SOVEREIGN"].includes(userTier) || isAdmin;
+  const isPro = ["pro", "enterprise", "CREATOR", "SOVEREIGN"].includes(userTier) || isAdmin;
 
   // Main navigation sections organized by functionality
   const navigationSections: NavigationSection[] = [
@@ -167,7 +170,18 @@ export default function UnifiedNavigation() {
   const canAccessItem = (item: NavigationItem) => {
     if (!item.tier) return true; // Public access
     if (isAdmin) return true; // Admins can access everything
-    return item.tier.includes(userTier);
+    
+    // Map tier levels for access control
+    const tierMap: { [key: string]: string[] } = {
+      "guest": [],
+      "explorer": ["EXPLORER"],
+      "pro": ["CREATOR", "SOVEREIGN", "pro"],
+      "enterprise": ["CREATOR", "SOVEREIGN", "pro", "enterprise"],
+      "admin": ["ADMIN", "CREATOR", "SOVEREIGN", "pro", "enterprise"]
+    };
+    
+    const allowedTiers = tierMap[userTier] || [];
+    return item.tier.some(tier => allowedTiers.includes(tier) || allowedTiers.includes(tier.toLowerCase()));
   };
 
   const renderNavigationItem = (item: NavigationItem, isMobile = false) => {

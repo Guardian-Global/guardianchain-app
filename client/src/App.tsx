@@ -340,24 +340,26 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <UnifiedAuthProvider>
-        <OnboardingChecker>
-          <HelpProvider>
-            <MascotProvider>
-            <WalletProvider>
-              <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <AssetProvider>
-                  <TooltipProvider>
-                    <main className="flex-1">
-                      <Router />
-                    </main>
-                    <Toaster />
-                  </TooltipProvider>
-                </AssetProvider>
-              </ThemeProvider>
-            </WalletProvider>
-            </MascotProvider>
-          </HelpProvider>
-        </OnboardingChecker>
+        <TierProvider>
+          <OnboardingChecker>
+            <HelpProvider>
+              <MascotProvider>
+              <WalletProvider>
+                <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                  <AssetProvider>
+                    <TooltipProvider>
+                      <main className="flex-1">
+                        <Router />
+                      </main>
+                      <Toaster />
+                    </TooltipProvider>
+                  </AssetProvider>
+                </ThemeProvider>
+              </WalletProvider>
+              </MascotProvider>
+            </HelpProvider>
+          </OnboardingChecker>
+        </TierProvider>
       </UnifiedAuthProvider>
     </QueryClientProvider>
   );
