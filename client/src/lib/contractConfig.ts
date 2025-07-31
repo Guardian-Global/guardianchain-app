@@ -1,8 +1,8 @@
 // GTT Token Contract Configuration - PRODUCTION READY
 // This file contains the verified contract address and ABI for the GTT token
 
-// CRITICAL: Real GTT contract address on Polygon mainnet
-// This is the AUTHENTIC deployed GTT token - NOT a demo/test version
+// CRITICAL: Plan B GTT contract address on Polygon mainnet  
+// This is the OPTIMIZED Plan B tokenomics configuration
 export const GTT_CONTRACT_ADDRESS =
   "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C";
 

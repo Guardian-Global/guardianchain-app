@@ -75,7 +75,7 @@ export async function fetchTokenData() {
     name: GTT_CONFIG.name,
     symbol: GTT_CONFIG.symbol,
     decimals: GTT_CONFIG.decimals,
-    totalSupply: "2500000000000000000000000000", // 2.5B with 18 decimals
+    totalSupply: "1000000000000000000000000000", // PLAN B: 1B with 18 decimals
     network: GTT_CONFIG.network,
     chainId: GTT_CONFIG.chainId,
     timestamp: new Date().toISOString(),
