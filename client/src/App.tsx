@@ -147,6 +147,8 @@ import WhaleAlerts from "./pages/whale-alerts";
 import FOMOCountdown from "./pages/fomo-countdown";
 import UpgradePage from "./pages/upgrade";
 import AssetIntegration from "./pages/asset-integration";
+import TopRevenueDrivers from "./pages/top-revenue-drivers";
+import TruthVaultDashboard from "./pages/truth-vault-dashboard";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 // OnboardingChecker moved to different import location
 
@@ -193,6 +195,10 @@ function Router() {
         <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
         <Route path="/specialized-intake" component={SpecializedIntake} />
         <Route path="/category-discovery" component={CategoryDiscoveryPage} />
+        
+        {/* Revenue Analysis & Truth Vault Dashboard */}
+        <Route path="/top-revenue-drivers" component={TopRevenueDrivers} />
+        <Route path="/truth-vault-dashboard" component={TruthVaultDashboard} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route

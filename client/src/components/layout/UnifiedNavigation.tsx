@@ -192,6 +192,7 @@ export default function UnifiedNavigation() {
         { name: "Performance Analytics", href: "/capsule-analytics", icon: BarChart2 },
         { name: "Viral Tools", href: "/viral-tools", icon: Zap },
         { name: "Revenue Dashboard", href: "/revenue-dashboard", icon: Database },
+        { name: "Top Revenue Drivers", href: "/top-revenue-drivers", icon: TrendingUp, badge: "STRATEGIC" },
       ],
     },
     {
