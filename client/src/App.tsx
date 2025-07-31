@@ -80,6 +80,13 @@ const TradingBots = lazy(() => import("@/pages/trading-bots"));
 const DeFiIntegrations = lazy(() => import("@/pages/defi-integrations"));
 const InstitutionalDashboard = lazy(() => import("@/pages/institutional-dashboard"));
 const MarketMaker = lazy(() => import("@/pages/market-maker"));
+
+// Revolutionary Revenue Components
+const AITradingOracle = lazy(() => import("@/pages/ai-trading-oracle"));
+const CryptoHedgeFund = lazy(() => import("@/pages/crypto-hedge-fund"));
+const TokenLaunchpadPro = lazy(() => import("@/pages/token-launchpad-pro"));
+const NFTMarketplacePro = lazy(() => import("@/pages/nft-marketplace-pro"));
+const EnterpriseDAOSuite = lazy(() => import("@/pages/enterprise-dao-suite"));
 import Home from "./pages/home";
 
 // Memory Vault System Components
@@ -380,6 +387,13 @@ function Router() {
         <Route path="/defi-integrations" component={DeFiIntegrations} />
         <Route path="/institutional-dashboard" component={InstitutionalDashboard} />
         <Route path="/market-maker" component={MarketMaker} />
+        
+        {/* Revolutionary Revenue Components */}
+        <Route path="/ai-trading-oracle" component={AITradingOracle} />
+        <Route path="/crypto-hedge-fund" component={CryptoHedgeFund} />
+        <Route path="/token-launchpad-pro" component={TokenLaunchpadPro} />
+        <Route path="/nft-marketplace-pro" component={NFTMarketplacePro} />
+        <Route path="/enterprise-dao-suite" component={EnterpriseDAOSuite} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />

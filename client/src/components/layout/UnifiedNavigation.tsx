@@ -59,6 +59,7 @@ import {
   Timer,
   Bot,
   DollarSign,
+  Brain,
 } from 'lucide-react';
 
 // Navigation section interface
@@ -225,6 +226,46 @@ export default function UnifiedNavigation() {
           icon: DollarSign, 
           description: "Automated market making strategies",
           badge: "PROFESSIONAL"
+        },
+      ],
+    },
+    {
+      title: "Revolutionary Revenue Hub",
+      items: [
+        { 
+          name: "AI Trading Oracle", 
+          href: "/ai-trading-oracle", 
+          icon: Brain, 
+          description: "Advanced AI predictions with $2.56M monthly revenue",
+          badge: "BREAKTHROUGH"
+        },
+        { 
+          name: "Crypto Hedge Fund", 
+          href: "/crypto-hedge-fund", 
+          icon: Building2, 
+          description: "Managing $2.5B+ AUM across institutional clients",
+          badge: "ELITE"
+        },
+        { 
+          name: "Token Launchpad Pro", 
+          href: "/token-launchpad-pro", 
+          icon: Rocket, 
+          description: "$2.85B raised across 147 successful launches",
+          badge: "PREMIUM"
+        },
+        { 
+          name: "NFT Marketplace Pro", 
+          href: "/nft-marketplace-pro", 
+          icon: Palette, 
+          description: "$1.85B all-time volume, 489K traders",
+          badge: "ELITE"
+        },
+        { 
+          name: "Enterprise DAO Suite", 
+          href: "/enterprise-dao-suite", 
+          icon: Crown, 
+          description: "Managing $15.8B treasury across enterprise DAOs",
+          badge: "ENTERPRISE"
         },
       ],
     },
