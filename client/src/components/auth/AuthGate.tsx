@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Lock, Crown, Zap } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Lock } from 'lucide-react';
+import { getUserTier } from '@/utils/getUserTier';
 
 // Note: Replace with actual Replit Auth when available
 // import { useAuth } from "@replit/extensions";
@@ -10,20 +9,17 @@ interface AuthGateProps {
   allowedRoles: string[];
   children: React.ReactNode;
   fallback?: React.ReactNode;
-  requiredRoute?: string;
 }
 
 export default function AuthGate({ 
   allowedRoles, 
   children, 
-  fallback,
-  requiredRoute 
+  fallback
 }: AuthGateProps) {
   // Mock implementation - replace with actual Replit Auth
   // const { user, isLoading } = useAuth();
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [role, setRole] = useState("guest");
 
   useEffect(() => {
     // Mock auth check - replace with actual Replit Auth integration
@@ -41,25 +37,26 @@ export default function AuthGate({
 
   useEffect(() => {
     if (!isLoading && user) {
-      const tier = user?.metadata?.tier || "guest";
-      setRole(tier);
+      const tier = getUserTier(user);
 
-      if (!allowedRoles.includes(tier) && requiredRoute) {
+      if (!allowedRoles.includes(tier)) {
         // Use setTimeout to avoid direct navigation in render
         setTimeout(() => {
           window.location.href = "/upgrade";
         }, 100);
       }
     }
-  }, [user, isLoading, allowedRoles, requiredRoute]);
+  }, [user, isLoading, allowedRoles]);
 
-  if (isLoading || role === "") {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
+
+  const role = getUserTier(user);
 
   if (!allowedRoles.includes(role)) {
     if (fallback) {

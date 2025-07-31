@@ -1,4 +1,5 @@
 import { checkAccess, getUserTierFromMetadata, getRedirectRouteForTier, type UserTier } from '@/utils/roleCheck';
+import { getUserTier } from '@/utils/getUserTier';
 
 export interface RouteGuardResult {
   allowed: boolean;
@@ -27,7 +28,7 @@ export function routeGuard(
     };
   }
   
-  const userTier: UserTier = getUserTierFromMetadata(user);
+  const userTier: UserTier = getUserTier(user) as UserTier;
   const hasAccess = checkAccess(route, userTier);
   
   if (!hasAccess) {
@@ -42,7 +43,7 @@ export function routeGuard(
 }
 
 export function handleLoginRedirect(user: any): string {
-  const userTier: UserTier = getUserTierFromMetadata(user);
+  const userTier: UserTier = getUserTier(user) as UserTier;
   return getRedirectRouteForTier(userTier);
 }
 

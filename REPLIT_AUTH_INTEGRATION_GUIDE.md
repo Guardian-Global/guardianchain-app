@@ -13,19 +13,32 @@ npm install @replit/extensions
 
 ### 2. Replace Mock Implementations
 
+#### In `utils/getUserTier.ts`:
+```typescript
+// Replace mock import with:
+import { useAuth } from "@replit/extensions";
+
+export function getUserTier(user: any): string {
+  if (!user) return "guest";
+  return user?.metadata?.tier || "guest";
+}
+
+export function useUserTier(): string {
+  const { user } = useAuth();
+  return getUserTier(user);
+}
+```
+
 #### In `hooks/useReplitAuth.ts`:
 ```typescript
-// Replace this mock import:
-// import { useState, useEffect } from 'react';
-
-// With actual Replit Auth:
+// Replace mock implementation with:
 import { useAuth } from '@replit/extensions';
+import { getUserTier } from '@/utils/getUserTier';
 
-// Replace the mock hook implementation with:
 export function useReplitAuth(): UseReplitAuthReturn {
   const { user, isLoading } = useAuth();
   
-  const tier: UserTier = user ? getUserTierFromMetadata(user) : 'guest';
+  const tier: UserTier = user ? (getUserTier(user) as UserTier) : 'guest';
   const isAuthenticated = !!user;
   
   // Keep existing signIn, signOut, and redirectToTierDashboard functions

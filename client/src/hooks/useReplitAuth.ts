@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getUserTierFromMetadata, getRedirectRouteForTier, type UserTier } from '@/utils/roleCheck';
+import { getRedirectRouteForTier, type UserTier } from '@/utils/roleCheck';
+import { getUserTier } from '@/utils/getUserTier';
 
 // This hook will integrate with actual Replit Auth when implemented
 // import { useAuth } from '@replit/extensions';
@@ -52,7 +53,7 @@ export function useReplitAuth(): UseReplitAuthReturn {
     initAuth();
   }, []);
 
-  const tier: UserTier = user ? getUserTierFromMetadata(user) : 'guest';
+  const tier: UserTier = user ? (getUserTier(user) as UserTier) : 'guest';
   const isAuthenticated = !!user;
 
   const signIn = async () => {
