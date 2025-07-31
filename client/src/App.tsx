@@ -73,6 +73,13 @@ import ReportingDashboard from "./pages/reporting";
 
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
+
+// Trading & Institutional Features
+const WhaleTracker = lazy(() => import("@/pages/whale-tracker"));
+const TradingBots = lazy(() => import("@/pages/trading-bots"));
+const DeFiIntegrations = lazy(() => import("@/pages/defi-integrations"));
+const InstitutionalDashboard = lazy(() => import("@/pages/institutional-dashboard"));
+const MarketMaker = lazy(() => import("@/pages/market-maker"));
 import Home from "./pages/home";
 
 // Memory Vault System Components
@@ -366,6 +373,13 @@ function Router() {
         <Route path="/whale-alerts" component={WhaleAlerts} />
         <Route path="/fomo-countdown" component={FOMOCountdown} />
         <Route path="/plans" component={PricingPage} />
+        
+        {/* Trading & Institutional Features */}
+        <Route path="/whale-tracker" component={WhaleTracker} />
+        <Route path="/trading-bots" component={TradingBots} />
+        <Route path="/defi-integrations" component={DeFiIntegrations} />
+        <Route path="/institutional-dashboard" component={InstitutionalDashboard} />
+        <Route path="/market-maker" component={MarketMaker} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />

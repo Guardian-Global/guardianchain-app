@@ -57,6 +57,8 @@ import {
   Building2,
   Sparkles,
   Timer,
+  Bot,
+  DollarSign,
 } from 'lucide-react';
 
 // Navigation section interface
@@ -183,6 +185,46 @@ export default function UnifiedNavigation() {
           href: "/earnings", 
           icon: TrendingUp, 
           tier: ["pro", "enterprise"]
+        },
+      ],
+    },
+    {
+      title: "Institutional Trading",
+      items: [
+        { 
+          name: "Whale Tracker", 
+          href: "/whale-tracker", 
+          icon: TrendingUp, 
+          description: "Track large GTT transactions and smart money",
+          badge: "ENTERPRISE"
+        },
+        { 
+          name: "Trading Bot API", 
+          href: "/trading-bots", 
+          icon: Bot, 
+          description: "Enterprise APIs for algorithmic trading",
+          badge: "PROFESSIONAL"
+        },
+        { 
+          name: "DeFi Integrations", 
+          href: "/defi-integrations", 
+          icon: Network, 
+          description: "Access deep liquidity pools and yield farming",
+          badge: "ENTERPRISE"
+        },
+        { 
+          name: "Institutional Dashboard", 
+          href: "/institutional-dashboard", 
+          icon: Building2, 
+          description: "Manage institutional clients and AUM",
+          badge: "ENTERPRISE"
+        },
+        { 
+          name: "Market Maker Hub", 
+          href: "/market-maker", 
+          icon: DollarSign, 
+          description: "Automated market making strategies",
+          badge: "PROFESSIONAL"
         },
       ],
     },
