@@ -38,7 +38,7 @@ import AirdropPage from "@/pages/airdrop";
 import GuardianPassPage from "@/pages/guardian-pass";
 import VaultDashboard from "@/components/VaultDashboard";
 import Govern from "@/pages/govern";
-import NotFound from "@/pages/not-found";
+import NotFound from "./pages/NotFound";
 
 import AuctionHousePage from "./pages/auction-house";
 import EmbedCapsulePage from "./pages/embed-capsule";
