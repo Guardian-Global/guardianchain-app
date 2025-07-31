@@ -38,6 +38,9 @@ import {
   Gift,
   Trophy,
   DollarSign,
+  Zap,
+  Fish,
+  Clock,
 } from "lucide-react";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
 import WalletConnect from "@/components/web3/wallet-connect";
@@ -155,6 +158,24 @@ export default function UnifiedNavigation() {
           href: "/revenue-dashboard", 
           icon: BarChart3, 
           description: "Real money tracking"
+        },
+        { 
+          name: "Flash Trading", 
+          href: "/flash-trading", 
+          icon: Zap, 
+          description: "1-hour multiplier windows"
+        },
+        { 
+          name: "Whale Alerts", 
+          href: "/whale-alerts", 
+          icon: Fish, 
+          description: "Follow smart money"
+        },
+        { 
+          name: "FOMO Timer", 
+          href: "/fomo-countdown", 
+          icon: Clock, 
+          description: "Price lock countdown"
         },
         { 
           name: "Wallet Connect", 

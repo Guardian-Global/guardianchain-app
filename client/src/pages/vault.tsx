@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import GuardianChainVideo from "@/components/video/GuardianChainVideo";
 import { 
   Shield, 
   Users, 
@@ -101,6 +102,15 @@ export default function VaultPage() {
               Join {liveData.activeUsers.toLocaleString()}+ users earning rewards for truth verification. 
               Create capsules, verify content, and earn up to {isPremium ? "500" : "10"} GTT tokens monthly.
             </p>
+            
+            {/* GUARDIANCHAIN Explainer Video */}
+            <div className="mb-8 max-w-4xl mx-auto">
+              <GuardianChainVideo 
+                autoplay={false}
+                showControls={true}
+                className="rounded-lg overflow-hidden"
+              />
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {isAuthenticated ? (
