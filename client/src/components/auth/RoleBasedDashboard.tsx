@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,22 @@ export function RoleBasedDashboard() {
   const { user, logout, hasRole, hasPermission } = useUnifiedAuth();
   const [, setLocation] = useLocation();
 
+  // Use useEffect to handle navigation side effects
+  useEffect(() => {
+    if (!user) {
+      setLocation("/unified-login");
+    }
+  }, [user, setLocation]);
+
   if (!user) {
-    setLocation("/unified-login");
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p>Redirecting to login...</p>
+        </div>
+      </div>
+    );
   }
 
   const handleLogout = async () => {
