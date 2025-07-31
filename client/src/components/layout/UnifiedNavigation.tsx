@@ -60,6 +60,10 @@ import {
   Bot,
   DollarSign,
   Brain,
+  TreePine,
+  Landmark,
+  Cpu,
+  Languages,
 } from 'lucide-react';
 
 // Navigation section interface
@@ -266,6 +270,46 @@ export default function UnifiedNavigation() {
           icon: Crown, 
           description: "Managing $15.8B treasury across enterprise DAOs",
           badge: "ENTERPRISE"
+        },
+      ],
+    },
+    {
+      title: "Premium Legacy Preservation",
+      items: [
+        { 
+          name: "Institutional Legacy", 
+          href: "/institutional-legacy", 
+          icon: Building2, 
+          description: "Fortune 500 & government institutional legacy preservation",
+          badge: "ENTERPRISE"
+        },
+        { 
+          name: "Earth Legacy", 
+          href: "/earth-legacy", 
+          icon: TreePine, 
+          description: "Environmental & climate legacy with 987% ROI",
+          badge: "MILLENNIUM"
+        },
+        { 
+          name: "Cultural Legacy", 
+          href: "/cultural-legacy", 
+          icon: Languages, 
+          description: "Cultural heritage & UNESCO site preservation",
+          badge: "HERITAGE"
+        },
+        { 
+          name: "Sovereign Legacy", 
+          href: "/sovereign-legacy", 
+          icon: Landmark, 
+          description: "National sovereignty & constitutional preservation",
+          badge: "SOVEREIGN"
+        },
+        { 
+          name: "Technological Legacy", 
+          href: "/technological-legacy", 
+          icon: Cpu, 
+          description: "AI, quantum & breakthrough tech preservation",
+          badge: "INNOVATION"
         },
       ],
     },

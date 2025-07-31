@@ -87,6 +87,13 @@ const CryptoHedgeFund = lazy(() => import("@/pages/crypto-hedge-fund"));
 const TokenLaunchpadPro = lazy(() => import("@/pages/token-launchpad-pro"));
 const NFTMarketplacePro = lazy(() => import("@/pages/nft-marketplace-pro"));
 const EnterpriseDAOSuite = lazy(() => import("@/pages/enterprise-dao-suite"));
+
+// Premium Legacy Capsules
+const InstitutionalLegacy = lazy(() => import("@/pages/institutional-legacy"));
+const EarthLegacy = lazy(() => import("@/pages/earth-legacy"));
+const CulturalLegacy = lazy(() => import("@/pages/cultural-legacy"));
+const SovereignLegacy = lazy(() => import("@/pages/sovereign-legacy"));
+const TechnologicalLegacy = lazy(() => import("@/pages/technological-legacy"));
 import Home from "./pages/home";
 
 // Memory Vault System Components
@@ -394,6 +401,13 @@ function Router() {
         <Route path="/token-launchpad-pro" component={TokenLaunchpadPro} />
         <Route path="/nft-marketplace-pro" component={NFTMarketplacePro} />
         <Route path="/enterprise-dao-suite" component={EnterpriseDAOSuite} />
+        
+        {/* Premium Legacy Capsules */}
+        <Route path="/institutional-legacy" component={InstitutionalLegacy} />
+        <Route path="/earth-legacy" component={EarthLegacy} />
+        <Route path="/cultural-legacy" component={CulturalLegacy} />
+        <Route path="/sovereign-legacy" component={SovereignLegacy} />
+        <Route path="/technological-legacy" component={TechnologicalLegacy} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
