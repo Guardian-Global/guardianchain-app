@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React, { lazy, Suspense, startTransition } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -126,15 +126,23 @@ function Router() {
     <div className="min-h-screen bg-slate-900 text-white">
       <UnifiedNavigation />
       <main className="pt-20 px-4 max-w-screen-xl mx-auto">
-        <Switch>
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <p>Loading...</p>
+            </div>
+          </div>
+        }>
+          <Switch>
           {/* Login page archived - using UnifiedAuthModal */}
         <Route path="/" component={ProfessionalHomepage} />
-        <Route path="/asset-showcase" component={lazy(() => import("./pages/simple-test"))} />
+        <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={ProfessionalHomepage} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
-        <Route path="/create-with-help" component={lazy(() => import("./pages/capsule-creation-with-help"))} />
+        <Route path="/create-with-help" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route
@@ -156,18 +164,18 @@ function Router() {
         />
         
         {/* Specialized Components */}
-        <Route path="/veritas-seal" component={lazy(() => import("./pages/veritas-seal"))} />
-        <Route path="/truth-bounty" component={lazy(() => import("./pages/truth-bounty"))} />
-        <Route path="/truth-auction" component={lazy(() => import("./pages/truth-auction"))} />
-        <Route path="/truth-redemption" component={lazy(() => import("./pages/truth-redemption"))} />
-        <Route path="/capsule/conspiracy" component={lazy(() => import("./pages/capsule/conspiracy"))} />
+        <Route path="/veritas-seal" component={CreateCapsule} />
+        <Route path="/truth-bounty" component={CreateCapsule} />
+        <Route path="/truth-auction" component={CreateCapsule} />
+        <Route path="/truth-redemption" component={CreateCapsule} />
+        <Route path="/capsule/conspiracy" component={CreateCapsule} />
         
         {/* Creator Capsule Types */}
-        <Route path="/capsule/podcaster" component={lazy(() => import("./pages/capsule/podcaster"))} />
-        <Route path="/capsule/artist" component={lazy(() => import("./pages/capsule/artist"))} />
-        <Route path="/capsule/scientist" component={lazy(() => import("./pages/capsule/scientist"))} />
-        <Route path="/capsule/media" component={lazy(() => import("./pages/capsule/media"))} />
-        <Route path="/capsule/musician" component={lazy(() => import("./pages/capsule/musician"))} />
+        <Route path="/capsule/podcaster" component={CreateCapsule} />
+        <Route path="/capsule/artist" component={CreateCapsule} />
+        <Route path="/capsule/scientist" component={CreateCapsule} />
+        <Route path="/capsule/media" component={CreateCapsule} />
+        <Route path="/capsule/musician" component={CreateCapsule} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/unified-onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
@@ -279,7 +287,7 @@ function Router() {
         <Route path="/admin/chain-audit" component={AdminDashboardPage} />
 
         {/* Asset Test Page */}
-        <Route path="/asset-test" component={lazy(() => import("./pages/asset-test"))} />
+        <Route path="/asset-test" component={ProfessionalHomepage} />
         
         {/* Legal Pages */}
         <Route path="/legal/privacy" component={PrivacyPolicy} />
@@ -288,6 +296,7 @@ function Router() {
 
           <Route component={NotFound} />
         </Switch>
+        </Suspense>
       </main>
       <Footer />
     </div>
