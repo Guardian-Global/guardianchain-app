@@ -6,6 +6,7 @@ import aiOnboardingRoutes from "./routes/ai-onboarding";
 import mediaUploadRoutes from "./routes/media-upload";
 import veritasRoutes from "./api/veritas";
 import truthBountyRoutes from "./api/truth-bounty";
+import tokenRoutes from "./routes/token";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -20,6 +21,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register specialized component routes
   app.use('/api/veritas', veritasRoutes);
   app.use('/api/truth-bounty', truthBountyRoutes);
+  app.use('/api/token', tokenRoutes);
   
   // Stripe upgrade route
   app.get('/api/upgrade-stripe', async (req, res) => {

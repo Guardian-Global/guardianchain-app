@@ -10,6 +10,7 @@ import { AssetProvider } from "@/components/assets/AssetProvider";
 // Removed duplicate UnifiedAuthProvider import
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import Footer from "@/components/layout/footer";
+import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/create-capsule";
@@ -162,6 +163,7 @@ function Router() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
+      <LiveTokenTracker position="top" />
       <UnifiedNavigation />
       <main className="pt-20 px-4 max-w-screen-xl mx-auto">
         <Suspense fallback={

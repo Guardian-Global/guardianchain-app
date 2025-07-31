@@ -78,7 +78,7 @@ contract GTTToken {
     string public name = "GUARDIANCHAIN Token";
     string public symbol = "GTT";
     uint8 public decimals = 18;
-    uint256 public totalSupply = 2500000000 * 10**18;
+    uint256 public totalSupply = 1000000000 * 10**18;
     
     // Advanced features
     mapping(address => uint256) public reputationScores;
@@ -102,14 +102,12 @@ contract GTTToken {
 
 ### 3.1 Token Distribution
 ```
-Total Supply: 2,500,000,000 GTT
+Total Supply: 1,000,000,000 GTT (Plan B Configuration)
 
-Public Sale (40%):           1,000,000,000 GTT
-Community Rewards (25%):       625,000,000 GTT
-Team & Advisors (15%):         375,000,000 GTT
-Development Fund (10%):        250,000,000 GTT
-Marketing & Partnerships (5%): 125,000,000 GTT
-Reserve Fund (5%):             125,000,000 GTT
+Community Rewards (40%):       400,000,000 GTT
+Development Fund (25%):        250,000,000 GTT
+Founder Allocation (20%):      200,000,000 GTT
+Enterprise Partnerships (15%): 150,000,000 GTT
 ```
 
 ### 3.2 Token Utility

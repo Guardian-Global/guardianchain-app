@@ -175,29 +175,29 @@ Supply Allocation Breakdown:
 ```
 
 #### Circulation Timeline
-**Year 1**: 1,200,000,000 GTT (48% of total supply)
-**Year 2**: 1,650,000,000 GTT (66% of total supply)
-**Year 3**: 2,000,000,000 GTT (80% of total supply)
-**Year 4**: 2,250,000,000 GTT (90% of total supply)
-**Year 5**: 2,500,000,000 GTT (100% of total supply)
+**Year 1**: 200,000,000 GTT (20% of total supply)
+**Year 2**: 400,000,000 GTT (40% of total supply)
+**Year 3**: 600,000,000 GTT (60% of total supply)
+**Year 4**: 800,000,000 GTT (80% of total supply)
+**Year 5**: 1,000,000,000 GTT (100% of total supply)
 
 ### 2.2 Emission Schedule
 
 #### Controlled Release Mechanism
 **Daily Emission Rate**: Variable based on platform activity
-- **Base Rate**: 685,000 GTT/day (0.027% of total supply)
+- **Base Rate**: 274,000 GTT/day (0.027% of total supply)
 - **Activity Multiplier**: 0.5x to 2.0x based on verification volume
 - **Performance Bonus**: Additional 10% for high-quality verifications
 - **Seasonal Adjustments**: Holiday and event-based modifications
 
 #### Emission Categories
 ```
-Daily GTT Distribution (685,000 GTT):
-├── Verification Rewards (40%): 274,000 GTT
-├── Content Creation (25%): 171,250 GTT
-├── Staking Rewards (20%): 137,000 GTT
-├── Community Incentives (10%): 68,500 GTT
-└── Platform Development (5%): 34,250 GTT
+Daily GTT Distribution (274,000 GTT):
+├── Verification Rewards (40%): 109,600 GTT
+├── Content Creation (25%): 68,500 GTT
+├── Staking Rewards (20%): 54,800 GTT
+├── Community Incentives (10%): 27,400 GTT
+└── Platform Development (5%): 13,700 GTT
 ```
 
 ### 2.3 Deflationary Mechanisms
@@ -210,9 +210,9 @@ Daily GTT Distribution (685,000 GTT):
 - **Milestone Burns**: Community achievement celebrations
 
 **Burn Rate Projections**:
-- **Year 1**: 50,000,000 GTT burned (2% of total supply)
-- **Year 2**: 75,000,000 GTT burned (3% of total supply)
-- **Year 3**: 100,000,000 GTT burned (4% of total supply)
+- **Year 1**: 20,000,000 GTT burned (2% of total supply)
+- **Year 2**: 30,000,000 GTT burned (3% of total supply)
+- **Year 3**: 40,000,000 GTT burned (4% of total supply)
 - **Year 5**: 250,000,000 GTT total burned (10% reduction)
 
 #### Economic Impact
@@ -723,22 +723,22 @@ GTT Demand Categories:
 └── Collector Value (5%): Early adopter status, NFT integration
 
 Demand Growth Projections:
-├── Q1 2025: 50M GTT monthly demand
-├── Q2 2025: 125M GTT monthly demand
-├── Q3 2025: 300M GTT monthly demand
-├── Q4 2025: 500M GTT monthly demand
-└── 2026: 1B+ GTT monthly demand
+├── Q1 2025: 25M GTT monthly demand
+├── Q2 2025: 50M GTT monthly demand
+├── Q3 2025: 100M GTT monthly demand
+├── Q4 2025: 200M GTT monthly demand
+└── 2026: 400M+ GTT monthly demand
 ```
 
 #### Supply Dynamics
 **Circulating Supply Evolution**:
 ```
 Effective Supply Analysis:
-├── Total Supply: 2.5B GTT (fixed)
-├── Team Locked: 250M GTT (vesting over 2 years)
-├── Staking Locked: 500M GTT (average 6-month locks)
+├── Total Supply: 1.0B GTT (fixed)
+├── Founder Locked: 200M GTT (vesting over 2 years)
+├── Staking Locked: 400M GTT (average 6-month locks)
 ├── Platform Reserves: 200M GTT (operational use)
-└── Active Circulation: 1.55B GTT
+└── Active Circulation: 200M GTT
 
 Monthly Supply Changes:
 ├── New Releases: +62.5M GTT (vesting schedule)

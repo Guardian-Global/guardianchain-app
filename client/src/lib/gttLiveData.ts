@@ -144,7 +144,7 @@ class GTTLiveDataService {
       // Use authentic data without blockchain calls
       const volume24h = 2450000; // Conservative volume estimate
       const estimatedPrice = 0.0075; // From user's authentic data
-      const totalSupply = 2500000000; // 2.5B authentic supply
+      const totalSupply = 1000000000; // 1.0B Plan B supply
       const marketCap = totalSupply * estimatedPrice;
 
       return {

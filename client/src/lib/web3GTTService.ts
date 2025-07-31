@@ -71,7 +71,7 @@ export class Web3GTTService {
       name: "GUARDIANCHAIN Truth Token",
       symbol: "GTT",
       decimals: 18,
-      totalSupply: "2500000000", // 2.5B tokens formatted
+      totalSupply: "1000000000", // 1.0B tokens formatted (Plan B)
       contractAddress: GTT_CONTRACT_ADDRESS,
     };
   }

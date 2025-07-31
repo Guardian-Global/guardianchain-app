@@ -20,7 +20,7 @@
     <p style="color: white; font-family: 'Arial', sans-serif; font-size: 16px; margin: 5px 0;">
       <strong>Contract Address:</strong> 0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C<br>
       <strong>Network:</strong> Polygon Mainnet | <strong>Chain ID:</strong> 137<br>
-      <strong>Symbol:</strong> GTT | <strong>Decimals:</strong> 18 | <strong>Total Supply:</strong> 2.5B
+      <strong>Symbol:</strong> GTT | <strong>Decimals:</strong> 18 | <strong>Total Supply:</strong> 1.0B
     </p>
   </div>
 </div>
