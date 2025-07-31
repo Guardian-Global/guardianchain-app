@@ -46,6 +46,11 @@ import TruthBountyPage from "./pages/truth-bounty";
 import TruthRedemptionPage from "./pages/truth-redemption";
 import ConspiracyCapsulePage from "./pages/conspiracy-capsule";
 
+// Specialized Portal Components
+import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
+import SpecializedIntake from "./pages/specialized-intake";
+import CategoryDiscoveryPage from "./pages/category-discovery";
+
 import AuctionHousePage from "./pages/auction-house";
 import EmbedCapsulePage from "./pages/embed-capsule";
 import YieldTrackerPage from "./pages/yield-tracker";
@@ -98,9 +103,6 @@ import EnhancedProfileDashboard from "@/components/profile/EnhancedProfileDashbo
 import AdminDashboardPage from "./pages/admin";
 
 import BlockchainPlayground from "./pages/blockchain-playground";
-import SpecializedIntake from "./pages/specialized-intake";
-import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
-import CategoryDiscovery from "./pages/category-discovery";
 import Whitepapers from "./pages/whitepapers";
 import MyListings from "./pages/my-listings";
 import TokenListings from "./pages/token-listings";
@@ -155,6 +157,11 @@ function Router() {
         <Route path="/truth-bounty" component={TruthBountyPage} />
         <Route path="/truth-redemption" component={TruthRedemptionPage} />
         <Route path="/conspiracy-capsule" component={ConspiracyCapsulePage} />
+        
+        {/* Specialized Portal Pages */}
+        <Route path="/whistleblower-sanctuary" component={WhistleblowerSanctuary} />
+        <Route path="/specialized-intake" component={SpecializedIntake} />
+        <Route path="/category-discovery" component={CategoryDiscoveryPage} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route
@@ -263,7 +270,7 @@ function Router() {
           path="/whistleblower-sanctuary"
           component={WhistleblowerSanctuary}
         />
-        <Route path="/category-discovery" component={CategoryDiscovery} />
+        <Route path="/category-discovery" component={CategoryDiscoveryPage} />
         <Route path="/whitepapers" component={Whitepapers} />
         <Route path="/asset-showcase" component={AssetShowcase} />
 
