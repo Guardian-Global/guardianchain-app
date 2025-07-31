@@ -32,6 +32,8 @@ import {
   BarChart3,
   Building,
   LogOut,
+  AlertTriangle,
+  Globe,
 } from "lucide-react";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
 import WalletConnect from "@/components/web3/wallet-connect";
@@ -101,18 +103,41 @@ export default function UnifiedNavigation() {
           description: "Crowdsource investigations"
         },
         { 
-          name: "Truth Auction", 
-          href: "/truth-auction", 
-          icon: Gavel, 
-          tier: ["CREATOR", "SOVEREIGN"],
-          description: "Bid for truth capsules"
-        },
-        { 
           name: "Truth Redemption", 
           href: "/truth-redemption", 
           icon: Heart, 
           tier: ["CREATOR", "SOVEREIGN"],
           description: "Public acknowledgments"
+        },
+        { 
+          name: "Conspiracy Capsule", 
+          href: "/conspiracy-capsule", 
+          icon: Eye, 
+          tier: ["CREATOR", "SOVEREIGN"],
+          description: "Secure conspiracy disclosure"
+        },
+      ],
+    },
+    {
+      title: "Specialized Portals",
+      items: [
+        { 
+          name: "Whistleblower Sanctuary", 
+          href: "/whistleblower-sanctuary", 
+          icon: AlertTriangle, 
+          description: "Secure truth disclosure portal"
+        },
+        { 
+          name: "Specialized Intake", 
+          href: "/specialized-intake", 
+          icon: Target, 
+          description: "11 specialized truth categories"
+        },
+        { 
+          name: "Category Discovery", 
+          href: "/category-discovery", 
+          icon: Globe, 
+          description: "Strategic truth verification analysis"
         },
       ],
     },
