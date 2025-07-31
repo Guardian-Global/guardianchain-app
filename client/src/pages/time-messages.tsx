@@ -43,7 +43,7 @@ export default function TimeMessages() {
       icon: Cake,
       description: 'Send birthday messages years into the future',
       cost: '$15-50',
-      potential: '$1.5K-50K',
+      potential: 'Variable*',
       examples: ['16th Birthday', '18th Birthday', '21st Birthday', '50th Birthday'],
       timeframes: ['16 years', '25 years', '50 years', '100 years']
     },
@@ -53,7 +53,7 @@ export default function TimeMessages() {
       icon: GraduationCap,
       description: 'Wisdom for future educational milestones',
       cost: '$25-75',
-      potential: '$2.5K-75K',
+      potential: 'Variable*',
       examples: ['High School Graduation', 'College Graduation', 'PhD Defense', 'Career Achievement'],
       timeframes: ['10 years', '18 years', '25 years', '30 years']
     },
@@ -63,7 +63,7 @@ export default function TimeMessages() {
       icon: CircleDot,
       description: 'Love messages for future wedding days',
       cost: '$50-150',
-      potential: '$5K-150K',
+      potential: 'Variable*',
       examples: ['Engagement Day', 'Wedding Day', 'Anniversary', 'Renewal Vows'],
       timeframes: ['20 years', '30 years', '50 years', '75 years']
     },
@@ -73,7 +73,7 @@ export default function TimeMessages() {
       icon: Baby,
       description: 'First messages to future children',
       cost: '$35-100',
-      potential: '$3.5K-100K',
+      potential: 'Variable*',
       examples: ['Birth Day', 'First Steps', 'First Words', 'First Day of School'],
       timeframes: ['1 year', '5 years', '18 years', '25 years']
     },
@@ -83,7 +83,7 @@ export default function TimeMessages() {
       icon: Star,
       description: 'Share life lessons for the future',
       cost: '$100-300',
-      potential: '$10K-300K',
+      potential: 'Variable*',
       examples: ['Life Advice', 'Family History', 'Business Wisdom', 'Spiritual Guidance'],
       timeframes: ['50 years', '100 years', '200 years', '500 years']
     },
@@ -93,45 +93,48 @@ export default function TimeMessages() {
       icon: Heart,
       description: 'Healing messages for future understanding',
       cost: '$20-60',
-      potential: '$2K-60K',
+      potential: 'Variable*',
       examples: ['Sorry Message', 'Explanation', 'Forgiveness', 'Understanding'],
       timeframes: ['5 years', '10 years', '25 years', '50 years']
     },
   ];
 
-  const viralExamples = [
+  const realisticExamples = [
     {
-      message: "Happy Sweet 16, my darling granddaughter! I'm writing this when you're just 1 year old. I invested $15 in this message. By the time you read this, it might be worth more than a car! Remember: compound love and compound interest both work miracles. ❤️",
+      message: "Happy Sweet 16, my darling granddaughter! I'm writing this when you're just 1 year old. I invested $15 in this message. Remember: the real value is in our family's love and memories. ❤️",
       deliveryYear: 2040,
-      currentValue: '$2,240',
-      futureValue: '$45,000',
+      currentValue: '$15',
+      estimatedValue: '$24',
       recipient: 'Granddaughter Emma',
       yearsLocked: 15,
       type: 'Birthday'
     },
     {
-      message: "Congratulations on your college graduation! I'm your great-grandfather, writing this in 2025. This $25 message capsule will help pay for your graduation party. Work hard, dream big, and remember that education is the only investment that pays dividends forever. Your family is proud of you!",
+      message: "Congratulations on your college graduation! I'm your great-grandfather, writing this in 2025. This $25 message capsule is a small token of our pride in you. Work hard, dream big, and remember that education is the most valuable investment. Your family is proud of you!",
       deliveryYear: 2047,
-      currentValue: '$3,750',
-      futureValue: '$125,000',
+      currentValue: '$25',
+      estimatedValue: '$50',
       recipient: 'Great-Grandson Alex',
       yearsLocked: 22,
       type: 'Graduation'
     },
     {
-      message: "My dearest future daughter-in-law, welcome to our family! I'm writing this before my son even knows you exist. This $50 wedding gift message will hopefully help with your honeymoon. May your love grow like this investment - steadily and beautifully over time. With all my love, Mom",
+      message: "My dearest future daughter-in-law, welcome to our family! I'm writing this before my son even knows you exist. This $50 message is a small contribution to your wedding day. May your love grow steadily and beautifully over time. With all my love, Mom",
       deliveryYear: 2055,
-      currentValue: '$8,900',
-      futureValue: '$267,500',
+      currentValue: '$50',
+      estimatedValue: '$135',
       recipient: 'Future Daughter-in-Law',
       yearsLocked: 30,
       type: 'Wedding'
     },
   ];
 
-  const calculateValue = (initial: number, years: number) => {
-    const rate = 0.08; // 8% annual growth
-    return initial * Math.pow(1 + rate, years);
+  // IMPORTANT: These are illustrative examples only, not financial advice or guarantees
+  const calculateEstimatedValue = (initial: number, years: number) => {
+    // Conservative estimation based on historical market averages (3-4%)
+    const conservativeRate = 0.035; // 3.5% annual growth
+    const estimated = initial * Math.pow(1 + conservativeRate, years);
+    return Math.min(estimated, initial * 10); // Cap at 10x to prevent unrealistic projections
   };
 
   const getYearsUntilDelivery = () => {
@@ -291,9 +294,9 @@ export default function TimeMessages() {
                       </div>
                       <div className="text-center">
                         <div className="text-xl font-bold text-green-400">
-                          ${Math.round(calculateValue(investment, getYearsUntilDelivery())).toLocaleString()}
+                          ${Math.round(calculateEstimatedValue(investment, getYearsUntilDelivery())).toLocaleString()}
                         </div>
-                        <p className="text-slate-400 text-sm">Delivery Value</p>
+                        <p className="text-slate-400 text-sm">Estimated Value*</p>
                       </div>
                     </div>
                     <Progress 
@@ -301,8 +304,11 @@ export default function TimeMessages() {
                       className="mt-3 h-2" 
                     />
                     <p className="text-center text-xs text-slate-400 mt-2">
-                      {((calculateValue(investment, getYearsUntilDelivery()) / investment) * 100 - 100).toFixed(0)}% 
-                      total return over {getYearsUntilDelivery()} years
+                      {((calculateEstimatedValue(investment, getYearsUntilDelivery()) / investment) * 100 - 100).toFixed(0)}% 
+                      estimated return over {getYearsUntilDelivery()} years*
+                    </p>
+                    <p className="text-center text-xs text-red-400 mt-2">
+                      *Projections are estimates only. Not financial advice or guarantees.
                     </p>
                   </div>
                 )}
@@ -352,7 +358,7 @@ export default function TimeMessages() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {viralExamples.map((example, index) => (
+                  {realisticExamples.map((example, index) => (
                     <div key={index} className="p-4 bg-slate-700/30 rounded-lg">
                       <div className="flex items-start justify-between mb-3">
                         <Badge className="bg-yellow-600/20 text-yellow-400">{example.type}</Badge>
@@ -369,8 +375,8 @@ export default function TimeMessages() {
                           <div className="text-green-400 font-bold">{example.currentValue}</div>
                         </div>
                         <div>
-                          <span className="text-slate-400">Future Value:</span>
-                          <div className="text-purple-400 font-bold">{example.futureValue}</div>
+                          <span className="text-slate-400">Estimated Value:</span>
+                          <div className="text-purple-400 font-bold">{example.estimatedValue}*</div>
                         </div>
                         <div>
                           <span className="text-slate-400">Recipient:</span>
@@ -410,6 +416,17 @@ export default function TimeMessages() {
                       </div>
                     );
                   })}
+                </div>
+                
+                {/* Legal Disclaimer */}
+                <div className="mt-6 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+                  <h4 className="text-red-400 font-semibold mb-2">Important Disclaimer</h4>
+                  <p className="text-red-300 text-xs leading-relaxed">
+                    *Value projections are hypothetical estimates based on conservative historical market averages. 
+                    These are NOT financial advice, investment recommendations, or guarantees of future performance. 
+                    Actual values may be higher or lower, including potential total loss. Platform is for entertainment 
+                    and educational purposes. Consult financial advisors before making investment decisions.
+                  </p>
                 </div>
               </CardContent>
             </Card>

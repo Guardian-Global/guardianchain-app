@@ -176,7 +176,7 @@ export default function FamilyLegacy() {
       name: 'Wisdom Keeper Program',
       description: 'Preserve elder wisdom for future generations',
       participants: 1456,
-      averageValue: '$75,000',
+      averageValue: '$450*',
       timeframe: '200 years',
       badge: 'HERITAGE'
     },
@@ -185,7 +185,7 @@ export default function FamilyLegacy() {
       name: 'Teen Time Capsule',
       description: 'Teenage memories for their adult selves',
       participants: 2103,
-      averageValue: '$25,000',
+      averageValue: '$185*',
       timeframe: '50 years',
       badge: 'FUTURE SELF'
     },
@@ -418,26 +418,30 @@ export default function FamilyLegacy() {
                       <div className="p-4 bg-slate-800/50 rounded-lg">
                         <div className="flex justify-between items-center">
                           <span className="text-slate-300">Today (2025)</span>
-                          <span className="text-white font-bold text-xl">$777,000</span>
+                          <span className="text-white font-bold text-xl">$2,500</span>
                         </div>
+                        <p className="text-slate-400 text-xs mt-1">Current family capsule investments</p>
                       </div>
                       <div className="p-4 bg-slate-700/50 rounded-lg">
                         <div className="flex justify-between items-center">
                           <span className="text-slate-300">2050 (25 years)</span>
-                          <span className="text-yellow-400 font-bold text-xl">$4.2M</span>
+                          <span className="text-yellow-400 font-bold text-xl">$6,000*</span>
                         </div>
+                        <p className="text-slate-400 text-xs mt-1">Conservative growth estimate</p>
                       </div>
                       <div className="p-4 bg-slate-600/50 rounded-lg">
                         <div className="flex justify-between items-center">
                           <span className="text-slate-300">2075 (50 years)</span>
-                          <span className="text-orange-400 font-bold text-xl">$15.8M</span>
+                          <span className="text-orange-400 font-bold text-xl">$12,500*</span>
                         </div>
+                        <p className="text-slate-400 text-xs mt-1">Based on 3.5% annual growth</p>
                       </div>
-                      <div className="p-4 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-lg border border-green-500/30">
+                      <div className="p-4 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-lg border border-blue-500/30">
                         <div className="flex justify-between items-center">
                           <span className="text-slate-300">2125 (100 years)</span>
-                          <span className="text-green-400 font-bold text-2xl">$131.2M</span>
+                          <span className="text-blue-400 font-bold text-2xl">$78,000*</span>
                         </div>
+                        <p className="text-slate-400 text-xs mt-1">Hypothetical long-term projection</p>
                       </div>
                     </div>
                   </div>
@@ -447,22 +451,32 @@ export default function FamilyLegacy() {
                     <div className="space-y-4 text-sm">
                       <div className="p-3 bg-slate-800/30 rounded border-l-4 border-blue-500">
                         <div className="font-medium text-blue-400">Children (2025-2050)</div>
-                        <p className="text-slate-300">Childhood memories become college funds</p>
+                        <p className="text-slate-300">Preserved memories with modest growth potential</p>
                       </div>
                       <div className="p-3 bg-slate-800/30 rounded border-l-4 border-green-500">
                         <div className="font-medium text-green-400">Grandchildren (2050-2075)</div>
-                        <p className="text-slate-300">Family stories fund dream homes</p>
+                        <p className="text-slate-300">Family stories preserved for future generations</p>
                       </div>
                       <div className="p-3 bg-slate-800/30 rounded border-l-4 border-purple-500">
                         <div className="font-medium text-purple-400">Great-Grandchildren (2075-2125)</div>
-                        <p className="text-slate-300">Legacy memories create generational wealth</p>
+                        <p className="text-slate-300">Multi-generational memory preservation</p>
                       </div>
                       <div className="p-3 bg-slate-800/30 rounded border-l-4 border-pink-500">
                         <div className="font-medium text-pink-400">Beyond (2125+)</div>
-                        <p className="text-slate-300">Family dynasty established forever</p>
+                        <p className="text-slate-300">Eternal family memory preservation</p>
                       </div>
                     </div>
                   </div>
+                </div>
+                {/* Legal Disclaimer */}
+                <div className="mt-8 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+                  <h4 className="text-red-400 font-semibold mb-2">Important Legal Disclaimer</h4>
+                  <p className="text-red-300 text-xs leading-relaxed">
+                    *All value projections are hypothetical estimates for illustrative purposes only. These projections are NOT financial advice, 
+                    investment recommendations, or guarantees of future performance. Actual results may vary significantly and could result in 
+                    loss of principal. Platform primarily provides memory preservation services. Past performance does not predict future results. 
+                    Consult qualified financial advisors before making investment decisions. This platform is for entertainment and educational purposes.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -477,9 +491,9 @@ export default function FamilyLegacy() {
                 Start Your Family Legacy Today
               </h2>
               <p className="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
-                Every family photo, every birthday video, every bedtime story can become a financial gift 
-                to your great-great-grandchildren. The best time to start was yesterday. 
-                The second best time is now.
+                Preserve your family's precious memories for future generations. Create digital time capsules 
+                that protect your stories, photos, and messages forever. Start building your family's 
+                digital legacy today.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
