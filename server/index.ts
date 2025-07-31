@@ -26,20 +26,18 @@ app.set('trust proxy', true);
 // app.use(complianceMiddleware);
 // app.use(assetMiddleware);
 
-// Session configuration for enterprise authentication
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "guardianchain-dev-secret-key",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: "strict",
-    },
-  })
-);
+// Session configuration for authentication
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'guardianchain-session-secret-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
+  }
+}));
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
@@ -59,24 +57,77 @@ app.use('/assets', express.static('public/assets', {
 import authRoutes from "./auth";
 app.use("/api/auth", authRoutes);
 
-// Add direct login route for Replit Auth
+// Replit Auth Integration
+const REPLIT_DOMAINS = process.env.REPLIT_DOMAINS || 'localhost:5000';
+const REPL_ID = process.env.REPL_ID || 'guardianchain-nft';
+
+// Login route with actual Replit Auth redirect
 app.get('/api/login', (req, res) => {
-  // In production, this would redirect to Replit Auth using passport.authenticate
-  // For development, we provide a structured response
-  res.status(200).json({ 
-    message: "Authentication endpoint ready",
-    environment: process.env.NODE_ENV || "development",
-    replit_auth_ready: true,
-    redirect_url: "Will redirect to Replit Auth in production",
-    next_step: "User will be redirected to login-success after authentication"
-  });
+  // Check if we're in development
+  if (process.env.NODE_ENV !== 'production') {
+    // In development, simulate authentication by setting session
+    const session = req.session as any;
+    session.user = {
+      id: 'dev-user-123',
+      username: 'Developer',
+      email: 'dev@guardianchain.org',
+      tier: 'CREATOR'
+    };
+    
+    console.log('Development: Simulating successful login');
+    return res.redirect('/login-success');
+  }
+  
+  // Production: Redirect to actual Replit Auth
+  const domain = req.hostname;
+  const protocol = req.secure ? 'https' : 'http';
+  const authUrl = `https://replit.com/auth/oauth2/authorize?response_type=code&client_id=${REPL_ID}&redirect_uri=${protocol}://${domain}/api/callback&scope=openid%20email%20profile`;
+  
+  console.log('Production: Redirecting to Replit Auth:', authUrl);
+  res.redirect(authUrl);
 });
 
+// Callback route for Replit Auth
+app.get('/api/callback', async (req, res) => {
+  const { code } = req.query;
+  
+  if (!code) {
+    return res.redirect('/login?error=no_code');
+  }
+
+  try {
+    console.log('Auth callback received with code:', code);
+    
+    // In production, exchange code for tokens with Replit
+    // For now, simulate successful authentication
+    const session = req.session as any;
+    session.user = {
+      id: `replit-user-${Date.now()}`,
+      username: 'Replit User',
+      email: 'user@replit.com',
+      tier: 'CREATOR'
+    };
+    
+    res.redirect('/login-success');
+  } catch (error) {
+    console.error('Auth callback error:', error);
+    res.redirect('/login?error=auth_failed');
+  }
+});
+
+// Logout route
 app.get('/api/logout', (req, res) => {
-  res.status(200).json({ 
-    message: "Logout endpoint active",
-    status: "ready"
-  });
+  // Clear session and redirect
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+      }
+      res.redirect('/');
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 
 // AI Routes for enhanced capsule experience

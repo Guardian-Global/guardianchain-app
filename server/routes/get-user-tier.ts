@@ -1,36 +1,51 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 
 const router = Router();
 
 // Production-ready Replit Auth tier endpoint
 router.get("/get-user-tier", async (req, res) => {
   try {
-    // For production deployment with Replit Auth
-    const replitUserId = req.headers['x-replit-user-id'] as string;
+    const session = req.session as any;
     
-    if (!replitUserId) {
-      return res.json({ tier: "guest", authenticated: false });
+    // Check for Replit Auth headers in production
+    const replitUserId = req.headers['x-replit-user-id'] as string;
+    const replitUserName = req.headers['x-replit-user-name'] as string;
+    
+    // Check session authentication or Replit headers
+    if (session?.user || replitUserId) {
+      const user = session?.user || {
+        id: replitUserId,
+        username: replitUserName || 'User',
+        tier: 'CREATOR'
+      };
+      
+      return res.status(200).json({
+        tier: user.tier || "CREATOR",
+        authenticated: true,
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        capabilities: {
+          createCapsules: true,
+          verifyContent: true,
+          earnGTT: true,
+          accessPremiumFeatures: user.tier !== 'EXPLORER'
+        }
+      });
     }
 
-    // In production, this would query Replit DB:
-    // const tier = await replitDb.get(`user_tier_${replitUserId}`) || "explorer";
-    
-    // For development, use localStorage simulation
-    const tier = "explorer"; // Default for authenticated users
-    
-    return res.json({
-      tier,
-      authenticated: true,
-      userId: replitUserId,
-      features: {
-        canCreateCapsules: true,
-        canVerify: true,
-        canEarnGTT: true,
-        maxCapsules: tier === "pro" ? 100 : 10,
-        gttMultiplier: tier === "pro" ? 2 : 1
+    // Unauthenticated: Return guest tier
+    return res.status(401).json({
+      tier: "guest",
+      authenticated: false,
+      message: "Authentication required",
+      capabilities: {
+        createCapsules: false,
+        verifyContent: false,
+        earnGTT: false,
+        accessPremiumFeatures: false
       }
     });
-    
   } catch (error) {
     console.error("Error fetching user tier:", error);
     return res.status(500).json({ 
