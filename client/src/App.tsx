@@ -172,6 +172,9 @@ function Router() {
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
         <Route path="/dashboard" component={RoleBasedDashboard} />
+        <Route path="/capsules" component={Explore} />
+        <Route path="/analytics" component={CapsuleAnalyticsPage} />
+        <Route path="/dao" component={Governance} />
         <Route path="/commander">
           <ProtectedRoute requiredRole="COMMANDER">
             <Commander />
@@ -269,6 +272,9 @@ function Router() {
         <Route path="/upgrade" component={() => <BillingDashboard />} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
+        <Route path="/admin/users" component={AdminDashboardPage} />
+        <Route path="/admin/treasury" component={FinancialDashboard} />
+        <Route path="/admin/chain-audit" component={AdminDashboardPage} />
 
         {/* Legal Pages */}
         <Route path="/legal/privacy" component={PrivacyPolicy} />
