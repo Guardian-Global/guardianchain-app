@@ -5,35 +5,44 @@ import { Badge } from '@/components/ui/badge';
 import { LogIn, Crown, Zap, Shield } from 'lucide-react';
 import { handleLoginRedirect } from '@/auth/routeGuard';
 
-// This would be replaced with actual Replit Auth imports
-// import { useReplit } from '@replit/extensions-react';
+// Actual Replit Auth imports (uncomment when implementing)
+// import { useAuth } from '@replit/extensions';
 // import { auth } from '@replit/auth';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   
-  // Mock Replit Auth integration - replace with actual implementation
+  // Actual Replit Auth implementation
   useEffect(() => {
-    // Check if user is already authenticated
-    // const currentUser = auth.getCurrentUser();
+    // Actual implementation would use:
+    // const { user: currentUser, isLoading } = useAuth();
     // setUser(currentUser);
     
-    // If authenticated, redirect to appropriate dashboard
-    if (user) {
-      const redirectRoute = handleLoginRedirect(user);
-      window.location.href = redirectRoute;
-    }
+    // Mock check for demonstration
+    const checkAuth = async () => {
+      // Replace with actual Replit Auth check
+      const authUser = null; // await auth.getCurrentUser();
+      setUser(authUser);
+      
+      if (authUser) {
+        const redirectRoute = handleLoginRedirect(authUser);
+        window.location.href = redirectRoute;
+      }
+    };
+    
+    checkAuth();
   }, [user]);
   
   const handleReplitLogin = async () => {
     setIsLoading(true);
     try {
-      // Actual Replit Auth implementation would go here
+      // Actual Replit Auth implementation:
       // const result = await auth.signIn();
-      // setUser(result.user);
+      // const userTier = result.user?.metadata?.tier || 'guest';
+      // const redirectRoute = getRedirectRouteForTier(userTier);
+      // window.location.href = redirectRoute;
       
-      // Mock implementation for demonstration
       console.log('Initiating Replit Auth login...');
       
       // For now, redirect to existing auth system

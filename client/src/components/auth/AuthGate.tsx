@@ -1,88 +1,79 @@
-import { ReactNode } from 'react';
+import { useEffect, useState } from "react";
+import { Lock, Crown, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Lock, Crown, Zap } from 'lucide-react';
-import { checkAccess, getUserTierFromMetadata, getUpgradeMessage, type UserTier } from '@/utils/roleCheck';
+
+// Note: Replace with actual Replit Auth when available
+// import { useAuth } from "@replit/extensions";
 
 interface AuthGateProps {
-  children: ReactNode;
-  requiredRoute: string;
-  user?: any;
-  fallbackComponent?: ReactNode;
+  allowedRoles: string[];
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+  requiredRoute?: string;
 }
 
 export default function AuthGate({ 
+  allowedRoles, 
   children, 
-  requiredRoute, 
-  user, 
-  fallbackComponent 
+  fallback,
+  requiredRoute 
 }: AuthGateProps) {
-  const userTier: UserTier = getUserTierFromMetadata(user);
-  const hasAccess = checkAccess(requiredRoute, userTier);
-  
-  if (hasAccess) {
-    return <>{children}</>;
+  // Mock implementation - replace with actual Replit Auth
+  // const { user, isLoading } = useAuth();
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [role, setRole] = useState("guest");
+
+  useEffect(() => {
+    // Mock auth check - replace with actual Replit Auth integration
+    setTimeout(() => {
+      // Simulate user data from Replit Auth
+      const mockUser = {
+        metadata: {
+          tier: "guest" // This would come from actual Replit user metadata
+        }
+      };
+      setUser(mockUser);
+      setIsLoading(false);
+    }, 100);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      const tier = user?.metadata?.tier || "guest";
+      setRole(tier);
+
+      if (!allowedRoles.includes(tier) && requiredRoute) {
+        // Use setTimeout to avoid direct navigation in render
+        setTimeout(() => {
+          window.location.href = "/upgrade";
+        }, 100);
+      }
+    }
+  }, [user, isLoading, allowedRoles, requiredRoute]);
+
+  if (isLoading || role === "") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
   }
-  
-  if (fallbackComponent) {
-    return <>{fallbackComponent}</>;
+
+  if (!allowedRoles.includes(role)) {
+    if (fallback) {
+      return <>{fallback}</>;
+    }
+    return (
+      <div className="text-center py-10">
+        <div className="flex items-center justify-center gap-2 text-slate-400">
+          <span>Access Denied</span>
+          <Lock className="w-4 h-4" />
+        </div>
+      </div>
+    );
   }
-  
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
-      <Card className="max-w-md w-full bg-slate-800 border-slate-700">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-4 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full">
-              <Lock className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold text-white">
-            Access Restricted
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-center space-y-4">
-          <p className="text-slate-300">
-            {getUpgradeMessage(userTier, 'veritas')}
-          </p>
-          
-          <div className="grid gap-3">
-            {userTier === 'guest' && (
-              <Button 
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                onClick={() => window.location.href = '/upgrade'}
-              >
-                <Zap className="w-4 h-4 mr-2" />
-                Upgrade to Pro
-              </Button>
-            )}
-            
-            {userTier === 'pro' && (
-              <Button 
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                onClick={() => window.location.href = '/admin-upgrade'}
-              >
-                <Crown className="w-4 h-4 mr-2" />
-                Request Admin Access
-              </Button>
-            )}
-            
-            <Button 
-              variant="outline" 
-              className="w-full border-slate-600 text-slate-300"
-              onClick={() => window.location.href = '/vault'}
-            >
-              Return to Vault
-            </Button>
-          </div>
-          
-          <div className="pt-4 border-t border-slate-700">
-            <p className="text-xs text-slate-500">
-              Current Tier: <span className="font-semibold text-slate-300 capitalize">{userTier}</span>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+
+  return <>{children}</>;
 }
