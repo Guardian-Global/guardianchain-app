@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Lock } from 'lucide-react';
-import { getUserTier } from '@/utils/getUserTier';
+import { getUserTierFromAuth } from '@/utils/getUserTier';
 
 // Note: Replace with actual Replit Auth when available
 // import { useAuth } from "@replit/extensions";
@@ -40,14 +40,18 @@ export default function AuthGate({
 
   useEffect(() => {
     if (!isLoading && user) {
-      const tier = getUserTier(user);
-
-      if (!allowedRoles.includes(tier)) {
-        // Use setTimeout to avoid direct navigation in render
-        setTimeout(() => {
-          window.location.href = "/upgrade";
-        }, 100);
-      }
+      const checkAccess = async () => {
+        const tier = await getUserTierFromAuth(user.id);
+        
+        if (!allowedRoles.includes(tier)) {
+          // Use setTimeout to avoid direct navigation in render
+          setTimeout(() => {
+            window.location.href = "/upgrade";
+          }, 100);
+        }
+      };
+      
+      checkAccess();
     }
   }, [user, isLoading, allowedRoles]);
 

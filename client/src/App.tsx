@@ -114,6 +114,7 @@ import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
 // Login page moved to archive - using UnifiedAuthModal
 import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
+import { TierProvider } from "./context/TierContext";
 import { OnboardingChecker } from "./components/onboarding/OnboardingChecker";
 import { MascotProvider } from "./components/mascot/MascotProvider";
 import { HelpProvider } from "@/components/help/HelpProvider";

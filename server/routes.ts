@@ -20,6 +20,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register specialized component routes
   app.use('/api/veritas', veritasRoutes);
   app.use('/api/truth-bounty', truthBountyRoutes);
+  
+  // Stripe upgrade route
+  app.get('/api/upgrade-stripe', async (req, res) => {
+    const { createUpgradeSession } = await import('./routes/api/upgrade-stripe');
+    return createUpgradeSession(req, res);
+  });
+  
+  // Stripe webhook
+  app.post('/api/stripe/webhook', async (req, res) => {
+    const { handleStripeWebhook } = await import('./routes/api/upgrade-stripe');
+    return handleStripeWebhook(req, res);
+  });
+  
+  // Get user tier endpoint
+  app.get('/api/get-user-tier', async (req, res) => {
+    try {
+      // Mock for development - in production would use Replit Auth
+      const userId = req.query.userId || 'demo-user';
+      const tier = 'explorer'; // Default tier for development
+      res.json({ tier, userId });
+    } catch (error) {
+      res.json({ tier: 'guest', error: 'Failed to get user tier' });
+    }
+  });
+  
+  // Subscription status endpoint
+  app.get('/api/subscription-status', async (req, res) => {
+    const { getSubscriptionStatus } = await import('./routes/api/upgrade-stripe');
+    return getSubscriptionStatus(req, res);
+  });
 
   // Health check endpoint
   app.get('/api/health', (req, res) => {
