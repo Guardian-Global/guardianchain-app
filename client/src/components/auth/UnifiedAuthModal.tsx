@@ -304,3 +304,5 @@ export default function UnifiedAuthModal({
     </Dialog>
   );
 }
+
+export { UnifiedAuthModal };

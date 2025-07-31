@@ -107,6 +107,7 @@ import ApiStatus from "./pages/api-status";
 import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
 import { OnboardingChecker } from "./components/onboarding/OnboardingChecker";
 import { MascotProvider } from "./components/mascot/MascotProvider";
+import { HelpProvider } from "@/components/help/HelpProvider";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 // Admin components temporarily using role-based dashboard
 // import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
@@ -131,6 +132,9 @@ function Router() {
         <Route path="/home" component={ProfessionalHomepage} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
+        <Route path="/create-with-help">
+          {React.lazy(() => import("./pages/capsule-creation-with-help"))}
+        </Route>
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route
@@ -276,7 +280,8 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <UnifiedAuthProvider>
         <OnboardingChecker>
-          <MascotProvider>
+          <HelpProvider>
+            <MascotProvider>
             <WalletProvider>
               <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <AssetProvider>
@@ -289,7 +294,8 @@ export default function App() {
                 </AssetProvider>
               </ThemeProvider>
             </WalletProvider>
-          </MascotProvider>
+            </MascotProvider>
+          </HelpProvider>
         </OnboardingChecker>
       </UnifiedAuthProvider>
     </QueryClientProvider>

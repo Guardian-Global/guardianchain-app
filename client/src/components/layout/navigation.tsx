@@ -9,6 +9,7 @@ import LanguageSelector from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/i18n";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
 import { MascotTrigger } from "@/components/mascot/OnboardingMascot";
+import { HelpToggle } from "@/components/help/HelpToggle";
 
 // Core navigation focused on enterprise features
 const navigation = [
@@ -122,6 +123,9 @@ export default function Navigation() {
 
             {/* Mascot Trigger */}
             <MascotTrigger className="hidden lg:flex" />
+
+            {/* Help Toggle */}
+            <HelpToggle />
 
             <LanguageSelector />
 
