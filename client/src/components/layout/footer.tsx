@@ -6,6 +6,17 @@ import { PROTOCOL_CONFIG } from "@/lib/constants";
 
 const footerSections = [
   {
+    title: "Memory Vault System",
+    links: [
+      { name: "Memory Capsule Creator", href: "/memory-vault", badge: "NEW" },
+      { name: "100-Year Staking", href: "/eternal-staking", badge: "YIELD" },
+      { name: "Family Legacy Hub", href: "/family-legacy" },
+      { name: "Time-Lock Messages", href: "/time-messages" },
+      { name: "Infinite Recovery", href: "/infinite-recovery" },
+      { name: "Cross-Trading", href: "/cross-trading", badge: "ZERO FEES" },
+    ],
+  },
+  {
     title: "Platform",
     links: [
       { name: "Create Capsule", href: "/create-capsule" },

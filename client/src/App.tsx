@@ -73,6 +73,13 @@ import ReportingDashboard from "./pages/reporting";
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
 import Home from "./pages/home";
+
+// Memory Vault System Components
+import MemoryVault from "./pages/memory-vault";
+import EternalStaking from "./pages/eternal-staking";
+import FamilyLegacy from "./pages/family-legacy";
+import TimeMessages from "./pages/time-messages";
+import InfiniteRecovery from "./pages/infinite-recovery";
 import Referrals from "./pages/referrals";
 import Earnings from "./pages/earnings";
 import GameifiedOnboardingPage from "./pages/gamified-onboarding";
@@ -168,6 +175,13 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/create-with-help" component={CreateCapsule} />
+        
+        {/* Memory Vault System Routes */}
+        <Route path="/memory-vault" component={MemoryVault} />
+        <Route path="/eternal-staking" component={EternalStaking} />
+        <Route path="/family-legacy" component={FamilyLegacy} />
+        <Route path="/time-messages" component={TimeMessages} />
+        <Route path="/infinite-recovery" component={InfiniteRecovery} />
         
         {/* Veritas Tools - Working Pages */}
         <Route path="/veritas-seal" component={VeritasSealPage} />
