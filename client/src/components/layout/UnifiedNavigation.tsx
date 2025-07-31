@@ -75,6 +75,7 @@ export default function UnifiedNavigation() {
         { name: "Create Capsule", href: "/create-capsule", icon: FileText },
         { name: "All Capsules", href: "/capsules", icon: Eye },
         { name: "Profile", href: "/profile", icon: User },
+        { name: "Onboarding Guide", href: "/gamified-onboarding", icon: Target, badge: "NEW" },
       ],
     },
     {
@@ -273,7 +274,7 @@ export default function UnifiedNavigation() {
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800" data-testid="main-navigation">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -292,12 +293,14 @@ export default function UnifiedNavigation() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            <WalletConnect />
+            <div data-testid="wallet-connect">
+              <WalletConnect />
+            </div>
             
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-slate-300 hover:text-white">
+                  <Button variant="ghost" className="text-slate-300 hover:text-white" data-testid="tier-badge">
                     <User className="w-4 h-4 mr-2" />
                     {user?.firstName || "User"}
                     <ChevronDown className="w-4 h-4 ml-1" />

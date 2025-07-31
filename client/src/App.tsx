@@ -75,6 +75,8 @@ import AssetShowcase from "./pages/asset-showcase";
 import Home from "./pages/home";
 import Referrals from "./pages/referrals";
 import Earnings from "./pages/earnings";
+import GameifiedOnboardingPage from "./pages/gamified-onboarding";
+import OnboardingProvider from "./components/onboarding/OnboardingProvider";
 import Vault from "./pages/vault";
 import ResponsiveDemo from "./pages/responsive-demo";
 import MintingTestPage from "./pages/minting-test";
@@ -232,6 +234,7 @@ function Router() {
         <Route path="/referral" component={ReferralPage} />
         <Route path="/referrals" component={Referrals} />
         <Route path="/earnings" component={Earnings} />
+        <Route path="/gamified-onboarding" component={GameifiedOnboardingPage} />
         <Route path="/airdrop" component={AirdropPage} />
         <Route path="/guardian-pass" component={GuardianPassPage} />
         <Route path="/vault" component={() => <VaultDashboard />} />
@@ -345,9 +348,10 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <UnifiedAuthProvider>
         <TierProvider>
-          <OnboardingChecker>
-            <HelpProvider>
-              <MascotProvider>
+          <OnboardingProvider>
+            <OnboardingChecker>
+              <HelpProvider>
+                <MascotProvider>
               <WalletProvider>
                 <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                   <AssetProvider>
@@ -360,9 +364,10 @@ export default function App() {
                   </AssetProvider>
                 </ThemeProvider>
               </WalletProvider>
-              </MascotProvider>
-            </HelpProvider>
-          </OnboardingChecker>
+                </MascotProvider>
+              </HelpProvider>
+            </OnboardingChecker>
+          </OnboardingProvider>
         </TierProvider>
       </UnifiedAuthProvider>
     </QueryClientProvider>
