@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/useAuth";
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import {
   User,
   Settings,
@@ -127,7 +127,7 @@ const FOUNDER_PROFILES = [
 ];
 
 export default function EnhancedProfileDashboard() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useUnifiedAuth();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedTab, setSelectedTab] = useState("overview");
@@ -165,7 +165,7 @@ export default function EnhancedProfileDashboard() {
 
   useEffect(() => {
     if (profile) {
-      setProfileData(profile);
+      setProfileData(profile as UserProfile);
     } else if (user) {
       // Initialize with basic user data
       setProfileData({

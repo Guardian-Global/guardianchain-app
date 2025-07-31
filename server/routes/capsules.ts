@@ -69,6 +69,9 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const capsuleId = parseInt(req.params.id);
+    if (isNaN(capsuleId)) {
+      return res.status(400).json({ message: "Invalid capsule ID" });
+    }
     
     const [capsule] = await db
       .select()
@@ -122,6 +125,9 @@ router.get("/user/:userId", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const capsuleId = parseInt(req.params.id);
+    if (isNaN(capsuleId)) {
+      return res.status(400).json({ message: "Invalid capsule ID" });
+    }
     const updateData = req.body;
 
     const [updatedCapsule] = await db
@@ -157,6 +163,9 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const capsuleId = parseInt(req.params.id);
+    if (isNaN(capsuleId)) {
+      return res.status(400).json({ message: "Invalid capsule ID" });
+    }
 
     const [deletedCapsule] = await db
       .delete(capsules)
