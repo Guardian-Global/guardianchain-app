@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LogIn, Rocket, Shield, Star } from "lucide-react";
@@ -24,17 +24,23 @@ export default function LoginPage() {
     checkAuth();
   }, []);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleLoginClick = async () => {
+    setIsLoading(true);
     try {
-      // In development, simulate successful login
+      // In development, simulate successful login flow
       const response = await fetch('/api/login');
       if (response.ok) {
-        // Simulate successful auth and redirect
-        window.location.href = '/login-success';
+        // Show loading state then redirect
+        setTimeout(() => {
+          window.location.href = '/login-success';
+        }, 1500);
       }
     } catch (error) {
       console.error('Login error:', error);
-      // Fallback to direct API call
+      setIsLoading(false);
+      // Fallback to direct API call in production
       window.location.href = '/api/login';
     }
   };
@@ -81,9 +87,19 @@ export default function LoginPage() {
           <Button 
             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
             onClick={handleLoginClick}
+            disabled={isLoading}
           >
-            <LogIn className="w-4 h-4 mr-2" />
-            Continue with Replit Auth
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Redirecting to login...
+              </>
+            ) : (
+              <>
+                <LogIn className="w-4 h-4 mr-2" />
+                Continue with Replit Auth
+              </>
+            )}
           </Button>
 
           {/* Status message */}

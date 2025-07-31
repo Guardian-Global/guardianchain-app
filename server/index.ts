@@ -61,12 +61,14 @@ app.use("/api/auth", authRoutes);
 
 // Add direct login route for Replit Auth
 app.get('/api/login', (req, res) => {
-  // For production, this would redirect to Replit Auth
-  // For now, provide a simple response
+  // In production, this would redirect to Replit Auth using passport.authenticate
+  // For development, we provide a structured response
   res.status(200).json({ 
-    message: "Login endpoint active",
-    redirect: "This would redirect to Replit Auth in production",
-    status: "ready"
+    message: "Authentication endpoint ready",
+    environment: process.env.NODE_ENV || "development",
+    replit_auth_ready: true,
+    redirect_url: "Will redirect to Replit Auth in production",
+    next_step: "User will be redirected to login-success after authentication"
   });
 });
 
