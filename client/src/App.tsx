@@ -73,6 +73,8 @@ import ReportingDashboard from "./pages/reporting";
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
 import Home from "./pages/home";
+import Referrals from "./pages/referrals";
+import Earnings from "./pages/earnings";
 import Vault from "./pages/vault";
 import ResponsiveDemo from "./pages/responsive-demo";
 import MintingTestPage from "./pages/minting-test";
@@ -228,6 +230,8 @@ function Router() {
         <Route path="/stake" component={StakePage} />
         <Route path="/launchpad" component={LaunchpadPage} />
         <Route path="/referral" component={ReferralPage} />
+        <Route path="/referrals" component={Referrals} />
+        <Route path="/earnings" component={Earnings} />
         <Route path="/airdrop" component={AirdropPage} />
         <Route path="/guardian-pass" component={GuardianPassPage} />
         <Route path="/vault" component={() => <VaultDashboard />} />

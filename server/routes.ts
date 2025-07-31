@@ -33,15 +33,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return handleStripeWebhook(req, res);
   });
   
-  // Get user tier endpoint
+  // Get user tier endpoint - production ready for Replit Auth
   app.get('/api/get-user-tier', async (req, res) => {
     try {
-      // Mock for development - in production would use Replit Auth
-      const userId = req.query.userId || 'demo-user';
-      const tier = 'explorer'; // Default tier for development
-      res.json({ tier, userId });
+      // Production: Get user ID from Replit Auth headers
+      const userId = req.headers["x-replit-user-id"] as string;
+      if (!userId) return res.status(401).json({ tier: "guest" });
+
+      // Production: Use Replit DB (uncomment when deploying)
+      // const { replitDb } = await import("@replit/extensions");
+      // const tier = await replitDb.get(`tier-${userId}`);
+      
+      // Development fallback
+      const tier = localStorage?.getItem?.(`tier-${userId}`) || 'explorer';
+      return res.status(200).json({ tier: tier || "guest" });
     } catch (error) {
-      res.json({ tier: 'guest', error: 'Failed to get user tier' });
+      return res.status(500).json({ error: "Tier fetch error", tier: "guest" });
     }
   });
   

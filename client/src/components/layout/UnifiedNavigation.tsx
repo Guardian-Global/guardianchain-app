@@ -89,67 +89,66 @@ export default function UnifiedNavigation() {
       ],
     },
     {
-      title: "Veritas Tools",
+      title: "Revenue Features",
       items: [
         { 
-          name: "Veritas Seal", 
-          href: "/veritas-seal", 
+          name: "Upgrade to Pro", 
+          href: "/upgrade", 
+          icon: Crown, 
+          description: "Unlock premium features"
+        },
+        { 
+          name: "GTT Staking", 
+          href: "/stake", 
+          icon: Target, 
+          tier: ["pro", "enterprise"],
+          description: "Earn rewards by staking GTT"
+        },
+        { 
+          name: "Premium Analytics", 
+          href: "/analytics", 
+          icon: BarChart3, 
+          tier: ["pro", "enterprise"],
+          description: "Advanced data insights"
+        },
+        { 
+          name: "Token Launch", 
+          href: "/token-launch", 
           icon: Shield, 
-          tier: ["CREATOR", "SOVEREIGN"],
-          description: "DocuSign legal verification"
-        },
-        { 
-          name: "Truth Bounty", 
-          href: "/truth-bounty", 
-          icon: Target, 
-          tier: ["CREATOR", "SOVEREIGN"],
-          description: "Crowdsource investigations"
-        },
-        { 
-          name: "Truth Redemption", 
-          href: "/truth-redemption", 
-          icon: Heart, 
-          tier: ["CREATOR", "SOVEREIGN"],
-          description: "Public acknowledgments"
-        },
-        { 
-          name: "Conspiracy Capsule", 
-          href: "/conspiracy-capsule", 
-          icon: Eye, 
-          tier: ["CREATOR", "SOVEREIGN"],
-          description: "Secure conspiracy disclosure"
+          description: "Live GTT token data"
         },
       ],
     },
     {
-      title: "Specialized Portals",
+      title: "Monetization Hub",
       items: [
         { 
-          name: "Whistleblower Sanctuary", 
-          href: "/whistleblower-sanctuary", 
-          icon: AlertTriangle, 
-          description: "Secure truth disclosure portal"
+          name: "Subscription Plans", 
+          href: "/pricing", 
+          icon: Crown, 
+          description: "Pro & Enterprise tiers"
         },
         { 
-          name: "Specialized Intake", 
-          href: "/specialized-intake", 
+          name: "Wallet Connect", 
+          href: "/wallet", 
+          icon: Shield, 
+          description: "Connect crypto wallet"
+        },
+        { 
+          name: "Earning Dashboard", 
+          href: "/earnings", 
           icon: Target, 
-          description: "11 specialized truth categories"
-        },
-        { 
-          name: "Category Discovery", 
-          href: "/category-discovery", 
-          icon: Globe, 
-          description: "Strategic truth verification analysis"
+          tier: ["pro", "enterprise"],
+          description: "Track GTT earnings"
         },
       ],
     },
     {
-      title: "Analytics & Data",
+      title: "Platform Growth",
       items: [
-        { name: "Analytics", href: "/analytics", icon: BarChart3, tier: ["CREATOR", "SOVEREIGN"] },
-        { name: "Token Launch", href: "/token-launch", icon: Crown },
-        { name: "Blockchain Playground", href: "/blockchain-playground", icon: Shield },
+        { name: "Leaderboard", href: "/leaderboard", icon: Crown },
+        { name: "Community", href: "/explorer", icon: Globe },
+        { name: "Referral Program", href: "/referrals", icon: Target, tier: ["pro", "enterprise"] },
       ],
     },
   ];
