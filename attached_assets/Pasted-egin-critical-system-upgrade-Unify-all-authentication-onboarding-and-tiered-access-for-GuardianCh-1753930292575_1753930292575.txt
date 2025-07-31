@@ -1,0 +1,62 @@
+egin critical system upgrade. Unify all authentication, onboarding, and tiered access for GuardianChain.
+
+Eliminate all redundant and legacy login, sign-up, master access, and tiered entry points.
+
+No more multiple or separate pages, buttons, or “Master/Admin” login screens.
+
+The entire platform—including admin, enterprise, and user tiers—must authenticate and access services through a single, unified entry point (a single “Login / Sign Up” modal or page).
+
+Implement ONE logical authentication/authorization flow for ALL users:
+
+User selects “Sign Up” or “Sign In.”
+
+After authentication, system determines user’s role/tier based on their subscription or admin status.
+
+Route user to the correct dashboard or onboarding flow based on their tier (Free, Pro, Enterprise, Admin, etc.).
+
+Subscription/Tiered Access:
+
+After login, dynamically display only the features and options the user’s subscription allows—no more mismatched access, upgrade nags, or feature confusion.
+
+Onboarding, dashboard, and feature visibility should be determined by the authenticated session, not by entry point.
+
+Upgrade/downgrade options should be clear but not invasive.
+
+Admin/Master Access:
+
+“Admin/Master” is a user tier, NOT a separate entry point or form.
+
+If user’s credentials have admin privileges, show admin dashboard/features after unified login, not through a separate “Master Access” screen.
+
+UI/UX Requirements:
+
+Replace all redundant links in header/footer/nav with a single “Login / Sign Up” button.
+
+No user (including founder/admin) should ever see more than one entry point to authentication.
+
+All future account, profile, or subscription flows must branch after the unified login/auth—never before.
+
+Onboarding:
+
+After first login, route users through onboarding tailored to their tier (Free: quick tour; Pro: feature highlights; Enterprise: KYC/compliance; Admin: platform overview, health stats).
+
+Security:
+
+Harden all authentication and session management logic; ensure no bypass or privilege escalation is possible.
+
+Log all auth and role transitions for admin/founder review.
+
+Testing and Deployment:
+
+Run full regression test on authentication, session handling, and feature gating for all roles.
+
+Report to founder with a summary of code changes and screenshots of the unified experience before going live.
+
+Goal:
+Achieve a world-class, unified authentication and tiered access system that matches the best in SaaS and web3—one gate in, branching out to the correct experience for every user, no exceptions.
+
+Addendum:
+All redundant UI elements, links, or modals for login/signup/admin/master access should be removed from the codebase and UI.
+
+All future upgrades to onboarding or feature access should hook into this unified system.
+

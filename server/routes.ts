@@ -1,11 +1,13 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import authRoutes from "./routes/auth-system";
+import unifiedAuthRoutes from "./unified-auth-routes";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register auth routes
   app.use('/api/auth', authRoutes);
+  app.use('/api/auth', unifiedAuthRoutes);
 
   // Health check endpoint
   app.get('/api/health', (req, res) => {

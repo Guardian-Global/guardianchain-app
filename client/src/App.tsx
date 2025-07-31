@@ -261,7 +261,7 @@ function Router() {
   );
 }
 
-function App() {
+export default function App() {
   // Initialize safe Web3 provider without auto-connecting
   import("./lib/web3/safeProvider").then(({ safeWeb3Provider }) => {
     safeWeb3Provider.safeInit().catch(console.warn);
@@ -286,5 +286,3 @@ function App() {
     </QueryClientProvider>
   );
 }
-
-export default App;

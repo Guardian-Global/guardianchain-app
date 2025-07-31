@@ -38,7 +38,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/components/web3/theme-provider";
-import { AuthButton } from "@/components/auth/AuthButton";
+import UnifiedAuthModal from "@/components/auth/UnifiedAuthModal";
 import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
 import { Badge } from "@/components/ui/badge";
@@ -171,7 +171,6 @@ const pageCategories = {
     icon: User,
     color: "text-blue-400",
     pages: [
-      { name: "Login / Sign Up", href: "/login", icon: User },
       { name: "Dashboard", href: "/dashboard", icon: BarChart3, authRequired: true },
       { name: "Profile", href: "/profile", icon: User, authRequired: true },
     ],
@@ -485,7 +484,14 @@ export default function EnhancedMegaNavigation() {
 
                   {/* Auth Controls in Mobile */}
                   <div className="mt-6 pt-6 border-t border-slate-800">
-                    <AuthButton />
+                    {!isAuthenticated ? (
+                      <UnifiedAuthModal />
+                    ) : (
+                      <div className="text-center">
+                        <div className="text-sm text-slate-400 mb-2">Welcome back!</div>
+                        <div className="text-white font-medium">{user?.username || user?.email}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </SheetContent>
@@ -493,7 +499,43 @@ export default function EnhancedMegaNavigation() {
 
             {/* Desktop Auth Button */}
             <div className="hidden lg:flex">
-              <AuthButton />
+              {!isAuthenticated ? (
+                <UnifiedAuthModal />
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white">
+                      <User className="w-4 h-4 mr-2" />
+                      {user?.username || "Account"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-slate-900 border-slate-700">
+                    <DropdownMenuLabel className="text-slate-300">
+                      {user?.email}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="bg-slate-700" />
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">
+                        <User className="w-4 h-4 mr-2" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-slate-700" />
+                    <DropdownMenuItem 
+                      onClick={() => window.location.href = "/api/logout"}
+                      className="text-red-400 focus:text-red-300"
+                    >
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           </div>
         </div>

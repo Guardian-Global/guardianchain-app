@@ -26,6 +26,7 @@ const masterLoginSchema = z.object({
 export interface UnifiedUser {
   id: string;
   email: string;
+  username?: string;
   firstName?: string;
   lastName?: string;
   tier: string;
