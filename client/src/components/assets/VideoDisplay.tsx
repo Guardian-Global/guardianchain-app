@@ -20,9 +20,9 @@ export function VideoDisplay({
   muted = true,
   controls = false
 }: VideoDisplayProps) {
-  // Local video assets from public/assets/ - no cache busting for now  
+  // Local video assets from public/assets/ - corrected filename
   const videoSrc = type === "guardianchain" 
-    ? "/assets/GAURDIANCHAIN_logo_video.mp4"
+    ? "/assets/GUARDIANCHAIN_logo_video.mp4"
     : "/assets/GTT_logo_video.mp4";
 
   // Responsive size classes for video display

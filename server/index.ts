@@ -44,6 +44,17 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
+// Serve static assets with proper MIME types
+app.use('/assets', express.static('public/assets', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.mp4')) {
+      res.setHeader('Content-Type', 'video/mp4');
+    } else if (path.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    }
+  }
+}));
+
 // Import and use authentication routes
 import authRoutes from "./auth";
 app.use("/api/auth", authRoutes);
