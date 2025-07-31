@@ -70,7 +70,9 @@ export default function Govern() {
     address: daoAddress as `0x${string}`,
     abi: CONTRACT_ABIS.TruthDAO,
     functionName: "proposalCount",
-    enabled: !!daoAddress,
+    query: {
+      enabled: !!daoAddress,
+    }
   });
 
   // Get user's GTT balance
@@ -79,7 +81,9 @@ export default function Govern() {
     abi: CONTRACT_ABIS.GTTToken,
     functionName: "balanceOf",
     args: [address],
-    enabled: !!gttAddress && !!address,
+    query: {
+      enabled: !!gttAddress && !!address,
+    }
   });
 
   // Create proposal transaction
@@ -434,11 +438,11 @@ export default function Govern() {
                 const totalVotes = proposal.votesFor + proposal.votesAgainst;
                 const forPercentage =
                   totalVotes > 0
-                    ? Number((proposal.votesFor * 100n) / totalVotes)
+                    ? Number((proposal.votesFor * BigInt(100)) / totalVotes)
                     : 0;
                 const againstPercentage =
                   totalVotes > 0
-                    ? Number((proposal.votesAgainst * 100n) / totalVotes)
+                    ? Number((proposal.votesAgainst * BigInt(100)) / totalVotes)
                     : 0;
 
                 return (

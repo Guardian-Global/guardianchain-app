@@ -28,6 +28,16 @@ export const GTT_TOKEN_ABI = [
 // Legacy ABI export for compatibility
 export const CAPSULE_FACTORY_V2_ABI = GTT_TOKEN_ABI;
 
+export const TRUTH_DAO_ABI = [
+  "function proposalCount() view returns (uint256)",
+  "function proposals(uint256) view returns (string, string, address, uint256, uint256, uint256, bool, uint256)",
+  "function createProposal(string memory title, string memory description)",
+  "function vote(uint256 proposalId, bool support)",
+  "function execute(uint256 proposalId)",
+  "event ProposalCreated(uint256 indexed proposalId, address indexed proposer, string title)",
+  "event Voted(uint256 indexed proposalId, address indexed voter, bool support, uint256 votes)"
+];
+
 export const TRUTH_VAULT_ABI = [
   "function gttToken() view returns (address)",
   "function createCapsule(bytes32 capsuleId, address creator, string memory contentHash, uint256 yieldAmount)",
@@ -62,10 +72,14 @@ export const SUPPORTED_NETWORKS = [
 
 export const DEFAULT_NETWORK = SUPPORTED_NETWORKS[0];
 
+
+
 // Get contract addresses for current chain
 export function getContractAddresses(chainId: number = DEFAULT_CHAIN_ID) {
   return CONTRACT_ADDRESSES[chainId] || CONTRACT_ADDRESSES.MUMBAI;
 }
+
+
 
 // Get contract instance
 export function getContract(
@@ -139,10 +153,10 @@ export function getChainName(chainId: number): string {
   return network?.chainName || `Unknown Chain (${chainId})`;
 }
 
-// Legacy export compatibility
+// Contract address helper
 export function getContractAddress(
-  contractName: string,
-  chainId: number = DEFAULT_CHAIN_ID
+  chainId: number,
+  contractName: string
 ): string {
   const addresses = getContractAddresses(chainId);
   return addresses[contractName as keyof typeof addresses] || "";
@@ -163,6 +177,7 @@ export const TRUTH_AUCTION_ABI = [
 export const CONTRACT_ABIS = {
   GTTToken: GTT_TOKEN_ABI,
   TruthVault: TRUTH_VAULT_ABI,
+  TruthDAO: TRUTH_DAO_ABI,
   CapsuleFactoryV2: CAPSULE_FACTORY_V2_ABI,
   TruthAuction: TRUTH_AUCTION_ABI,
 };
