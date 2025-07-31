@@ -25,6 +25,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api/truth-bounty', truthBountyRoutes);
   app.use('/api/token', tokenRoutes);
   
+  // Register capsule routes
+  const capsulesRouter = await import('./routes/capsules');
+  app.use('/api/capsules', capsulesRouter.default);
+  
   // Stripe upgrade route
   app.get('/api/upgrade-stripe', async (req, res) => {
     const { createUpgradeSession } = await import('./routes/api/upgrade-stripe');

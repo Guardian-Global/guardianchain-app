@@ -213,6 +213,7 @@ function Router() {
             <Route path="/jury" component={() => import("./pages/jury")} />
             <Route path="/explorer" component={() => import("./pages/explorer")} />
             <Route path="/capsule-explorer" component={() => import("./pages/explorer")} />
+            <Route path="/create-capsule" component={() => import("./pages/create-capsule")} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 

@@ -47,6 +47,8 @@ Preferred communication style: Simple, everyday language.
 - **Public Ledger Tools**: Comprehensive data export capabilities with compliance reporting and transparency features.
 - **Press Kit Generation**: Professional PDF documentation suite for media, investors, and technical audiences.
 - **Smart Contract Suite**: Production-ready ERC-721 implementation with yield mechanics and validation systems.
+- **Capsule Creation System**: Complete truth capsule authoring with grief scoring, yield calculation, and blockchain integration.
+- **Standardized Data Schema**: Comprehensive capsule data structures with IPFS metadata, validation tracking, and yield mechanics.
 
 ## External Dependencies
 
