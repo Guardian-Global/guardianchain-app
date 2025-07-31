@@ -59,6 +59,24 @@ app.use('/assets', express.static('public/assets', {
 import authRoutes from "./auth";
 app.use("/api/auth", authRoutes);
 
+// Add direct login route for Replit Auth
+app.get('/api/login', (req, res) => {
+  // For production, this would redirect to Replit Auth
+  // For now, provide a simple response
+  res.status(200).json({ 
+    message: "Login endpoint active",
+    redirect: "This would redirect to Replit Auth in production",
+    status: "ready"
+  });
+});
+
+app.get('/api/logout', (req, res) => {
+  res.status(200).json({ 
+    message: "Logout endpoint active",
+    status: "ready"
+  });
+});
+
 // AI Routes for enhanced capsule experience
 import aiRoutes from "./routes/ai.js";
 app.use("/api/ai", aiRoutes);
