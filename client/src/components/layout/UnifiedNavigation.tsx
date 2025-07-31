@@ -153,7 +153,7 @@ export default function UnifiedNavigation() {
         { 
           name: "Revenue Dashboard", 
           href: "/revenue-dashboard", 
-          icon: DollarSign, 
+          icon: BarChart3, 
           description: "Real money tracking"
         },
         { 
