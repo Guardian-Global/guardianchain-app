@@ -128,7 +128,7 @@ export default function PrivacyPolicy() {
                   <br />
                   Website: https://guardianchain.org/contact
                 </p>
-              </div>
+              </section>
             </div>
           </CardContent>
         </Card>

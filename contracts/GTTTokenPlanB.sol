@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title GTT Token - Plan B Optimized Configuration
@@ -56,7 +56,7 @@ contract GTTTokenPlanB is ERC20, ERC20Burnable, Ownable, ReentrancyGuard {
         address _founderWallet,
         address _communityPool,
         address _protocolTreasury
-    ) ERC20("GUARDIANCHAIN Token", "GTT") {
+    ) ERC20("GUARDIANCHAIN Token", "GTT") Ownable(_founderWallet) {
         require(_founderWallet != address(0), "Invalid founder wallet");
         require(_communityPool != address(0), "Invalid community pool");
         require(_protocolTreasury != address(0), "Invalid protocol treasury");

@@ -53,6 +53,8 @@ import {
   Clock,
   Infinity,
   Heart,
+  Rocket,
+  Building2,
   Timer,
 } from 'lucide-react';
 
@@ -195,6 +197,8 @@ export default function UnifiedNavigation() {
         { name: "Top Revenue Drivers", href: "/top-revenue-drivers", icon: TrendingUp, badge: "STRATEGIC" },
         { name: "Cross-Chain Trading", href: "/cross-trading", icon: Network, badge: "BETA" },
         { name: "Redemption System", href: "/redemption-capsule", icon: Shield, badge: "NEW" },
+        { name: "Launch Dashboard", href: "/launch-dashboard", icon: Rocket, badge: "LIVE" },
+        { name: "Exchange Listings", href: "/exchange-listings", icon: Building2, badge: "ACTIVE" },
       ],
     },
     {
