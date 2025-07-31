@@ -1,0 +1,78 @@
+// === ADDENDUM: PRESS KIT ONE-SHEET PDF STRUCTURE ===
+
+// utils/generatePressKit.ts
+import jsPDF from 'jspdf';
+
+export function generatePressKitPDF() {
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text('GuardianChain: Sovereign Memory Engine', 20, 20);
+
+  doc.setFontSize(12);
+  doc.text(`Veritas Sealed. Truth Tokenized.`, 20, 30);
+  doc.text(`
+GuardianChain has officially launched:
+The world’s first sovereign memory infrastructure for high-integrity capsule authorship, emotional yield, and validator witness protection.`, 20, 40);
+
+  doc.text('What We Offer:', 20, 60);
+  doc.text('- Truth Capsules: Immutable digital memory', 30, 68);
+  doc.text('- Veritas Certificates: On-chain authorship proofs', 30, 76);
+  doc.text('- GTT Token: Grief-weighted yield claims', 30, 84);
+  doc.text('- Jury Validation: Community-backed truth scoring', 30, 92);
+  doc.text('- Capsule Explorer: Memory access for all tiers', 30, 100);
+
+  doc.text('Contact:', 20, 120);
+  doc.text('founder@guardianchain.app', 30, 128);
+  doc.text('https://guardianchain.app', 30, 136);
+
+  doc.save('GuardianChain_Launch_PressKit.pdf');
+}
+
+
+// === ERC-721 SMART CONTRACT SNIPPET FOR CAPSULE CLAIM ===
+
+// contracts/GuardianCapsule.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract GuardianCapsule is ERC721URIStorage, Ownable {
+  uint256 public nextId;
+
+  struct Capsule {
+    string veritasId;
+    uint griefScore;
+    uint yieldAmount;
+    address creator;
+    bool claimed;
+  }
+
+  mapping(uint => Capsule) public capsules;
+
+  constructor() ERC721("GuardianCapsule", "GCAP") {}
+
+  function mintCapsule(string memory uri, string memory veritasId, uint griefScore, uint yieldAmount) external {
+    uint id = nextId++;
+    _mint(msg.sender, id);
+    _setTokenURI(id, uri);
+    capsules[id] = Capsule(veritasId, griefScore, yieldAmount, msg.sender, false);
+  }
+
+  function claimYield(uint capsuleId) external {
+    Capsule storage c = capsules[capsuleId];
+    require(ownerOf(capsuleId) == msg.sender, "Not owner");
+    require(!c.claimed, "Already claimed");
+    c.claimed = true;
+    payable(msg.sender).transfer(c.yieldAmount);
+  }
+
+  receive() external payable {}
+}
+
+// Deploy with initial funding to allow on-chain yield disbursement
+// Link to off-chain metadata via _setTokenURI using IPFS JSON file
+// Yield amount may be calculated in external logic using griefScore
+
+// ✅ GUARDIANCHAIN LAUNCH SUITE COMPLETE
