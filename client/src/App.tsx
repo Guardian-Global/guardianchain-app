@@ -126,6 +126,7 @@ import ReplitToolsPage from "./pages/replit-tools";
 import AdvancedFeaturesPage from "./pages/advanced-features";
 import AdminVisualsPage from "./pages/admin-visuals";
 import PricingPage from "./pages/pricing";
+import UpgradePage from "./pages/upgrade";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 // OnboardingChecker moved to different import location
@@ -305,7 +306,7 @@ function Router() {
         <Route path="/admin-visuals" component={AdminVisualsPage} />
         <Route path="/pricing" component={PricingPage} />
         <Route path="/plans" component={PricingPage} />
-        <Route path="/upgrade" component={() => <BillingDashboard />} />
+        <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
         <Route path="/admin/users" component={AdminDashboardPage} />
