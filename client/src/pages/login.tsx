@@ -26,23 +26,10 @@ export default function LoginPage() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoginClick = async () => {
+  const handleLoginClick = () => {
     setIsLoading(true);
-    try {
-      // In development, simulate successful login flow
-      const response = await fetch('/api/login');
-      if (response.ok) {
-        // Show loading state then redirect
-        setTimeout(() => {
-          window.location.href = '/login-success';
-        }, 1500);
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setIsLoading(false);
-      // Fallback to direct API call in production
-      window.location.href = '/api/login';
-    }
+    // Direct redirect to login endpoint which handles authentication
+    window.location.href = '/api/login';
   };
 
   return (
