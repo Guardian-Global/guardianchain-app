@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +18,7 @@ import {
   Crown,
   Building2
 } from "lucide-react";
+import { FloatingParticles, BouncyIcon, RippleButton, TypingAnimation } from '@/components/interactions/MicroInteractions';
 import { useUserTier } from "@/hooks/useUserTier";
 import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 
@@ -78,30 +80,47 @@ export default function VaultPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative">
+      {/* Floating Particles Background */}
+      <FloatingParticles count={30} color="rgba(59, 130, 246, 0.15)" />
       {/* Hero Section */}
-      <section className="pt-8 pb-16">
+      <section className="pt-8 pb-16 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-full px-4 py-2 mb-6">
-              <Award className="w-4 h-4 text-green-400" />
+            <motion.div 
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-full px-4 py-2 mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+            >
+              <BouncyIcon icon={Award} className="w-4 h-4 text-green-400" />
               <span className="text-sm text-green-300">
                 {liveData.verifiedToday} truth capsules verified today
               </span>
-            </div>
+            </motion.div>
             
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <motion.h1 
+              className="text-5xl md:text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               <span className="text-white">Truth Verification</span>
               <br />
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Earn GTT Rewards
+                <TypingAnimation text="Earn GTT Rewards" speed={100} />
               </span>
-            </h1>
+            </motion.h1>
             
-            <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
+            <motion.p 
+              className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               Join {liveData.activeUsers.toLocaleString()}+ users earning rewards for truth verification. 
               Create capsules, verify content, and earn up to {isPremium ? "500" : "10"} GTT tokens monthly.
-            </p>
+            </motion.p>
             
             {/* GUARDIANCHAIN Explainer Video */}
             <div className="mb-8 max-w-4xl mx-auto">

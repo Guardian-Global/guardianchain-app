@@ -55,6 +55,7 @@ import {
   Heart,
   Rocket,
   Building2,
+  Sparkles,
   Timer,
 } from 'lucide-react';
 
@@ -199,6 +200,7 @@ export default function UnifiedNavigation() {
         { name: "Redemption System", href: "/redemption-capsule", icon: Shield, badge: "NEW" },
         { name: "Launch Dashboard", href: "/launch-dashboard", icon: Rocket, badge: "LIVE" },
         { name: "Exchange Listings", href: "/exchange-listings", icon: Building2, badge: "ACTIVE" },
+        { name: "Micro-Interactions", href: "/micro-interactions", icon: Sparkles, badge: "FUN" },
       ],
     },
     {

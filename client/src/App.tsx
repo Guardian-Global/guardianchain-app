@@ -153,6 +153,7 @@ import CrossTradingPage from "./pages/cross-trading";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
+import MicroInteractionsShowcase from "./pages/micro-interactions-showcase";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 // OnboardingChecker moved to different import location
 
@@ -209,6 +210,7 @@ function Router() {
         <Route path="/redemption-capsule" component={RedemptionCapsulePage} />
         <Route path="/launch-dashboard" component={LaunchDashboard} />
         <Route path="/exchange-listings" component={ExchangeListings} />
+        <Route path="/micro-interactions" component={MicroInteractionsShowcase} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route
