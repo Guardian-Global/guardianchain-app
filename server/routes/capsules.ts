@@ -4,7 +4,7 @@ import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.DATABASE_URL!);
 const db = drizzle(sql);
-import { capsules, insertCapsuleSchema } from "../../shared/schema";
+import { capsules, insertCapsuleSchema, type Capsule } from "../../shared/schema";
 import { eq } from "drizzle-orm";
 
 const router = express.Router();
@@ -68,8 +68,8 @@ router.post("/", async (req, res) => {
 // Get capsule by ID
 router.get("/:id", async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
-    if (isNaN(capsuleId)) {
+    const capsuleId = req.params.id;
+    if (!capsuleId || capsuleId.trim() === '') {
       return res.status(400).json({ message: "Invalid capsule ID" });
     }
     
@@ -106,7 +106,7 @@ router.get("/user/:userId", async (req, res) => {
     const userCapsules = await db
       .select()
       .from(capsules)
-      .where(eq(capsules.creatorId, userId));
+      .where(eq(capsules.userId, userId));
 
     res.json({
       success: true,
@@ -124,8 +124,8 @@ router.get("/user/:userId", async (req, res) => {
 // Update capsule
 router.put("/:id", async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
-    if (isNaN(capsuleId)) {
+    const capsuleId = req.params.id;
+    if (!capsuleId || capsuleId.trim() === '') {
       return res.status(400).json({ message: "Invalid capsule ID" });
     }
     const updateData = req.body;
@@ -162,8 +162,8 @@ router.put("/:id", async (req, res) => {
 // Delete capsule
 router.delete("/:id", async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
-    if (isNaN(capsuleId)) {
+    const capsuleId = req.params.id;
+    if (!capsuleId || capsuleId.trim() === '') {
       return res.status(400).json({ message: "Invalid capsule ID" });
     }
 
