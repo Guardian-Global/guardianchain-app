@@ -134,6 +134,7 @@ import PricingPage from "./pages/pricing";
 import CapsulePricingPage from "./pages/capsule-pricing";
 import LaunchBonuses from "./pages/launch-bonuses";
 import TradeCompetition from "./pages/trade-competition";
+import RevenueDashboard from "./pages/revenue-dashboard";
 import UpgradePage from "./pages/upgrade";
 import AssetIntegration from "./pages/asset-integration";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
@@ -323,6 +324,7 @@ function Router() {
         <Route path="/capsule-pricing" component={CapsulePricingPage} />
         <Route path="/launch-bonuses" component={LaunchBonuses} />
         <Route path="/trade-competition" component={TradeCompetition} />
+        <Route path="/revenue-dashboard" component={RevenueDashboard} />
         <Route path="/plans" component={PricingPage} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}

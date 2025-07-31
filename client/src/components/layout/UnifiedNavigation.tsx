@@ -37,6 +37,7 @@ import {
   Globe,
   Gift,
   Trophy,
+  DollarSign,
 } from "lucide-react";
 import { LogoDisplay } from "@/components/assets/LogoDisplay";
 import WalletConnect from "@/components/web3/wallet-connect";
@@ -148,6 +149,12 @@ export default function UnifiedNavigation() {
           href: "/trade-competition", 
           icon: Trophy, 
           description: "$25K prize pool"
+        },
+        { 
+          name: "Revenue Dashboard", 
+          href: "/revenue-dashboard", 
+          icon: DollarSign, 
+          description: "Real money tracking"
         },
         { 
           name: "Wallet Connect", 
