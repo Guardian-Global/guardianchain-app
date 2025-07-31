@@ -103,8 +103,8 @@ export default function CreateCapsule() {
               </CardHeader>
               <CardContent>
                 <CapsuleTypeSelector
-                  selectedType="enhanced"
-                  onTypeChange={() => {}}
+                  selectedType={selectedType}
+                  onTypeSelect={setSelectedType}
                 />
               </CardContent>
             </Card>

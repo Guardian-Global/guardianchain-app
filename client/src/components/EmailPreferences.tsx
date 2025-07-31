@@ -96,8 +96,11 @@ export default function EmailPreferences() {
         `/api/email-preferences/${encodeURIComponent(userEmail)}`
       );
       if (response.ok) {
-        const data = await response.json();
-        setPreferences(data);
+        const text = await response.text();
+        if (text.trim()) {
+          const data = JSON.parse(text);
+          setPreferences(data);
+        }
       }
     } catch (error) {
       console.error("Failed to load preferences:", error);
