@@ -97,6 +97,7 @@ export default function UnifiedNavigation() {
         { name: "All Capsules", href: "/capsules", icon: Eye },
         { name: "Profile", href: "/profile", icon: User },
         { name: "Onboarding Guide", href: "/gamified-onboarding", icon: Target, badge: "NEW" },
+        { name: "System Validation", href: "/system-validation", icon: Shield, badge: "TEST" },
       ],
     },
     {
