@@ -1,5 +1,5 @@
 import React from "react";
-import { useCompleteAuth } from "@/hooks/useCompleteAuth";
+import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Crown, Shield, Zap, User, Settings, BarChart3, LogOut } from "lucide-re
 import LogoDisplay from "@/components/assets/LogoDisplay";
 
 export function RoleBasedDashboard() {
-  const { user, logout, hasRole, hasPermission } = useCompleteAuth();
+  const { user, logout, hasRole, hasPermission } = useUnifiedAuth();
   const [, setLocation] = useLocation();
 
   if (!user) {

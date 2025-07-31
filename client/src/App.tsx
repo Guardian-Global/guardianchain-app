@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 // Removed duplicate UnifiedAuthProvider import
-import EnhancedMegaNavigation from "@/components/layout/EnhancedMegaNavigation";
+import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import Footer from "@/components/layout/footer";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import MobileHome from "@/pages/MobileHome";
@@ -124,7 +124,7 @@ function Router() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
-      <EnhancedMegaNavigation />
+      <UnifiedNavigation />
       <Switch>
         {/* Login page archived - using UnifiedAuthModal */}
         <Route path="/" component={ProfessionalHomepage} />
@@ -152,6 +152,20 @@ function Router() {
           path="/auth-hub"
           component={() => <div>Use unified auth modal</div>}
         />
+        
+        {/* Specialized Components */}
+        <Route path="/veritas-seal" component={lazy(() => import("./pages/veritas-seal"))} />
+        <Route path="/truth-bounty" component={lazy(() => import("./pages/truth-bounty"))} />
+        <Route path="/truth-auction" component={lazy(() => import("./pages/truth-auction"))} />
+        <Route path="/truth-redemption" component={lazy(() => import("./pages/truth-redemption"))} />
+        <Route path="/capsule/conspiracy" component={lazy(() => import("./pages/capsule/conspiracy"))} />
+        
+        {/* Creator Capsule Types */}
+        <Route path="/capsule/podcaster" component={lazy(() => import("./pages/capsule/podcaster"))} />
+        <Route path="/capsule/artist" component={lazy(() => import("./pages/capsule/artist"))} />
+        <Route path="/capsule/scientist" component={lazy(() => import("./pages/capsule/scientist"))} />
+        <Route path="/capsule/media" component={lazy(() => import("./pages/capsule/media"))} />
+        <Route path="/capsule/musician" component={lazy(() => import("./pages/capsule/musician"))} />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/unified-onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />

@@ -4,6 +4,8 @@ import authRoutes from "./routes/auth-system";
 import unifiedAuthRoutes from "./unified-auth-routes";
 import aiOnboardingRoutes from "./routes/ai-onboarding";
 import mediaUploadRoutes from "./routes/media-upload";
+import veritasRoutes from "./api/veritas";
+import truthBountyRoutes from "./api/truth-bounty";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -14,6 +16,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register AI and onboarding routes
   app.use('/api/ai', aiOnboardingRoutes);
   app.use('/api/upload', mediaUploadRoutes);
+  
+  // Register specialized component routes
+  app.use('/api/veritas', veritasRoutes);
+  app.use('/api/truth-bounty', truthBountyRoutes);
 
   // Health check endpoint
   app.get('/api/health', (req, res) => {
