@@ -1,0 +1,44 @@
+MIT License
+
+Copyright (c) 2025 GUARDIANCHAIN
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+GUARDIANCHAIN SPECIFIC TERMS:
+
+1. TRUTH PRESERVATION: This software is designed for truth preservation and 
+   memory authentication. Users are responsible for the accuracy and legality 
+   of content stored in capsules.
+
+2. BLOCKCHAIN INTEGRATION: Smart contract interactions and token transactions 
+   are subject to blockchain network fees and confirmation times.
+
+3. DECENTRALIZED STORAGE: IPFS and decentralized storage components may have 
+   varying availability and performance characteristics.
+
+4. VALIDATOR RESPONSIBILITIES: Validators participating in consensus mechanisms 
+   are responsible for honest evaluation and proper verification procedures.
+
+5. DATA PRIVACY: While the platform preserves truth, users maintain ownership 
+   and control over their personal data and memory capsules.
+
+For enterprise licensing, professional support, or custom implementations, 
+contact: founder@guardianchain.app
