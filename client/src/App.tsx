@@ -125,8 +125,9 @@ function Router() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <UnifiedNavigation />
-      <Switch>
-        {/* Login page archived - using UnifiedAuthModal */}
+      <main className="pt-20 px-4 max-w-screen-xl mx-auto">
+        <Switch>
+          {/* Login page archived - using UnifiedAuthModal */}
         <Route path="/" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/home" component={ProfessionalHomepage} />
@@ -281,8 +282,9 @@ function Router() {
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
 
-        <Route component={NotFound} />
-      </Switch>
+          <Route component={NotFound} />
+        </Switch>
+      </main>
       <Footer />
     </div>
   );
