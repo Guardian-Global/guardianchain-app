@@ -1,5 +1,5 @@
 // Memory Vault Financial Calculations
-// Based on real compound interest, GTT token economics, and market growth
+// Based on real compound interest, GTT token economics, vendor costs, and market growth
 
 export interface MemoryVaultCalculation {
   initialInvestment: number;
@@ -10,6 +10,27 @@ export interface MemoryVaultCalculation {
   gttTokensEarned: number;
   gttTokenValue: number;
 }
+
+// Vendor cost structure and revenue analysis
+export const VENDOR_COSTS = {
+  ipfsStorage: 0.15, // $0.15 per GB per year
+  blockchainTransaction: 0.02, // $0.02 per transaction
+  videoProcessing: 0.08, // $0.08 per minute processed
+  aiValidation: 0.05, // $0.05 per capsule validation
+  securityAudit: 0.12, // $0.12 per capsule security check
+  legalCompliance: 0.25, // $0.25 per legal document verification
+  insuranceFee: 0.03, // $0.03 per $100 of value insured
+  platformMaintenance: 0.10, // $0.10 per capsule per year
+};
+
+// Revenue model with aggressive pricing that maintains profitability
+export const REVENUE_MODEL = {
+  minimumMargin: 0.35, // 35% minimum profit margin
+  scalingDiscount: 0.15, // 15% bulk discount at scale
+  institutionalMultiplier: 2.5, // 2.5x pricing for institutional clients
+  premiumFeatures: 0.40, // 40% premium for advanced features
+  yearlySubscriptionDiscount: 0.20, // 20% discount for yearly subscriptions
+};
 
 // Current GTT token price and economic model
 export const GTT_TOKEN_ECONOMICS = {
@@ -28,7 +49,69 @@ const BASE_GROWTH_RATES = {
   business_documents: 0.11, // 11% - professional archives
   creative_content: 0.13, // 13% - IP and creative works
   life_data: 0.08, // 8% - personal data archives
+  legal_documents: 0.14, // 14% - legal evidence and court records
+  institutional_records: 0.15, // 15% - schools, sports, official achievements
+  whistleblower_evidence: 0.16, // 16% - high-value truth verification
+  sports_achievements: 0.13, // 13% - athletic records and yearbooks
+  academic_records: 0.12, // 12% - school records and achievements
 };
+
+// Calculate total vendor costs for a capsule
+export function calculateVendorCosts(
+  capsuleSize: number, // in GB
+  processingMinutes: number = 5,
+  isLegal: boolean = false,
+  isInstitutional: boolean = false
+): number {
+  let totalCost = 0;
+  
+  // Base costs
+  totalCost += VENDOR_COSTS.ipfsStorage * capsuleSize; // Storage per year
+  totalCost += VENDOR_COSTS.blockchainTransaction; // Transaction fee
+  totalCost += VENDOR_COSTS.videoProcessing * processingMinutes; // Processing
+  totalCost += VENDOR_COSTS.aiValidation; // AI validation
+  totalCost += VENDOR_COSTS.securityAudit; // Security check
+  totalCost += VENDOR_COSTS.platformMaintenance; // Maintenance
+  
+  // Additional costs for legal documents
+  if (isLegal) {
+    totalCost += VENDOR_COSTS.legalCompliance;
+  }
+  
+  // Insurance cost based on value
+  const estimatedValue = capsuleSize * 100; // $100 per GB estimated value
+  totalCost += (estimatedValue / 100) * VENDOR_COSTS.insuranceFee;
+  
+  return totalCost;
+}
+
+// Calculate pricing with proper profit margins
+export function calculateOptimalPricing(
+  vendorCosts: number,
+  isInstitutional: boolean = false,
+  bulkDiscount: boolean = false
+): { basePrice: number; finalPrice: number; margin: number } {
+  let basePrice = vendorCosts / (1 - REVENUE_MODEL.minimumMargin);
+  
+  // Apply institutional multiplier
+  if (isInstitutional) {
+    basePrice *= REVENUE_MODEL.institutionalMultiplier;
+  }
+  
+  // Apply bulk discount if applicable
+  let finalPrice = basePrice;
+  if (bulkDiscount) {
+    finalPrice = basePrice * (1 - REVENUE_MODEL.scalingDiscount);
+  }
+  
+  const margin = ((finalPrice - vendorCosts) / finalPrice) * 100;
+  
+  return {
+    basePrice: Math.round(basePrice),
+    finalPrice: Math.round(finalPrice),
+    margin: Math.round(margin)
+  };
+}
 
 export function calculateMemoryVaultGrowth(
   initialInvestment: number,
@@ -45,7 +128,7 @@ export function calculateMemoryVaultGrowth(
   // Calculate compound growth
   const finalValue = initialInvestment * Math.pow(1 + totalAnnualRate, years);
   
-  // Calculate GTT token rewards
+  // Calculate GTT token rewards (users earn tokens based on capsule validation)
   const gttTokensEarned = (initialInvestment * GTT_TOKEN_ECONOMICS.capsuleRewardRate) / GTT_TOKEN_ECONOMICS.currentPrice;
   const gttFuturePrice = GTT_TOKEN_ECONOMICS.currentPrice * Math.pow(1 + GTT_TOKEN_ECONOMICS.expectedAnnualGrowth, years);
   const gttTokenValue = gttTokensEarned * gttFuturePrice;
@@ -152,4 +235,69 @@ export function calculatePlatformGrowth() {
   }
   
   return projections;
+}
+
+// Institutional market calculations
+interface InstitutionalMarket {
+  name: string;
+  averagePrice: number;
+  globalMarket: number;
+  adoptionRate: number;
+  growthRate: number;
+}
+
+export const INSTITUTIONAL_MARKETS: Record<string, InstitutionalMarket> = {
+  courts: {
+    name: "Courts & Legal Systems",
+    averagePrice: 2500, // $2,500 per legal case
+    globalMarket: 50000000, // 50M legal cases globally per year
+    adoptionRate: 0.05, // 5% adoption in 5 years
+    growthRate: 0.18, // 18% premium legal verification
+  },
+  schools: {
+    name: "Schools & Education",
+    averagePrice: 150, // $150 per student record/yearbook
+    globalMarket: 1500000000, // 1.5B students globally
+    adoptionRate: 0.10, // 10% adoption in 5 years
+    growthRate: 0.12, // 12% academic achievement preservation
+  },
+  sports: {
+    name: "Sports & Athletics",
+    averagePrice: 800, // $800 per sports event recording
+    globalMarket: 100000000, // 100M sports events globally per year
+    adoptionRate: 0.15, // 15% adoption in 5 years
+    growthRate: 0.13, // 13% athletic achievement value
+  },
+  legal: {
+    name: "Legal Firms & Evidence",
+    averagePrice: 1200, // $1,200 per legal document
+    globalMarket: 200000000, // 200M legal documents per year
+    adoptionRate: 0.08, // 8% adoption in 5 years
+    growthRate: 0.14, // 14% legal evidence appreciation
+  }
+};
+
+export function calculateInstitutionalMarketSize(): {
+  totalAddressableMarket: number;
+  fiveYearRevenue: number;
+  gttTokenDemand: number;
+} {
+  let totalMarket = 0;
+  let fiveYearRevenue = 0;
+  
+  Object.values(INSTITUTIONAL_MARKETS).forEach(market => {
+    const marketSize = market.averagePrice * market.globalMarket;
+    const adoptedMarket = marketSize * market.adoptionRate;
+    totalMarket += marketSize;
+    fiveYearRevenue += adoptedMarket;
+  });
+  
+  // GTT token demand based on 10% of revenue going to token rewards
+  const gttTokenDemand = fiveYearRevenue * 0.1;
+  
+  return {
+    totalAddressableMarket: Math.round(totalMarket),
+    fiveYearRevenue: Math.round(fiveYearRevenue),
+    gttTokenDemand: Math.round(gttTokenDemand)
+  };
 }

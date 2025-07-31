@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
+import { calculateMemoryVaultGrowth, calculateStakingReward, STAKING_POOLS, calculateInstitutionalMarketSize, INSTITUTIONAL_MARKETS, calculateVendorCosts, calculateOptimalPricing, VENDOR_COSTS } from '@/utils/memoryVaultCalculations';
 import {
   Vault,
   Clock,
@@ -40,7 +41,7 @@ export default function MemoryVault() {
       icon: Image,
       description: 'Professional portraits, family gatherings, special moments',
       cost: '$125-250',
-      potential: '$15K-75K (100 years)',
+      potential: `$${calculateMemoryVaultGrowth(200, 100, 'family_memories').finalValue.toLocaleString()} (100 years)`,
       badge: 'POPULAR'
     },
     {
@@ -49,7 +50,7 @@ export default function MemoryVault() {
       icon: Video,
       description: 'Birthdays, weddings, first steps, life milestones',
       cost: '$200-400',
-      potential: '$25K-150K (100 years)',
+      potential: `$${calculateMemoryVaultGrowth(300, 100, 'digital_collectibles').finalValue.toLocaleString()} (100 years)`,
       badge: 'HIGH VALUE'
     },
     {
@@ -58,7 +59,7 @@ export default function MemoryVault() {
       icon: Music,
       description: 'Family songs, lullabies, personal compositions',
       cost: '$75-150',
-      potential: '$10K-50K (100 years)',
+      potential: `$${calculateMemoryVaultGrowth(112, 100, 'creative_content').finalValue.toLocaleString()} (100 years)`,
       badge: 'CREATIVE'
     },
     {
@@ -67,7 +68,7 @@ export default function MemoryVault() {
       icon: FileText,
       description: 'Love letters, poems, personal stories, wisdom',
       cost: '$50-100',
-      potential: '$5K-25K (100 years)',
+      potential: `$${calculateMemoryVaultGrowth(75, 100, 'creative_content').finalValue.toLocaleString()} (100 years)`,
       badge: 'LITERARY'
     },
     {
@@ -76,7 +77,7 @@ export default function MemoryVault() {
       icon: MessageSquare,
       description: 'Birthday wishes, advice, future communications',
       cost: '$15-50',
-      potential: '$1.5K-15K (600 years)',
+      potential: `$${calculateMemoryVaultGrowth(32, 100, 'time_capsules').finalValue.toLocaleString()} (100 years)`,
       badge: 'LEGACY'
     },
     {
@@ -85,8 +86,45 @@ export default function MemoryVault() {
       icon: Globe,
       description: 'Digital footprint, achievements, memories, moments',
       cost: '$100-300',
-      potential: '$20K-100K (100 years)',
+      potential: `$${calculateMemoryVaultGrowth(200, 100, 'life_data').finalValue.toLocaleString()} (100 years)`,
       badge: 'COMPREHENSIVE'
+    },
+    // Institutional & Professional Markets
+    {
+      id: 'legal',
+      name: 'Legal Evidence & Court Records',
+      icon: Shield,
+      description: 'Court cases, depositions, legal evidence, witness testimonies',
+      cost: '$500-2000',
+      potential: `$${calculateMemoryVaultGrowth(1250, 100, 'legal_documents').finalValue.toLocaleString()} (100 years)`,
+      badge: 'INSTITUTIONAL'
+    },
+    {
+      id: 'sports',
+      name: 'Athletic Achievements & Records',
+      icon: Award,
+      description: 'Sports events, championships, records, athlete performances, yearbooks',
+      cost: '$200-800',
+      potential: `$${calculateMemoryVaultGrowth(500, 100, 'sports_achievements').finalValue.toLocaleString()} (100 years)`,
+      badge: 'ATHLETICS'
+    },
+    {
+      id: 'academic',
+      name: 'School Records & Achievements',
+      icon: Users,
+      description: 'Graduations, academic achievements, yearbooks, school history',
+      cost: '$150-600',
+      potential: `$${calculateMemoryVaultGrowth(375, 100, 'academic_records').finalValue.toLocaleString()} (100 years)`,
+      badge: 'EDUCATION'
+    },
+    {
+      id: 'whistleblower',
+      name: 'Truth Verification & Whistleblowing',
+      icon: Lock,
+      description: 'Protected disclosures, truth verification, anonymous evidence',
+      cost: '$300-1500',
+      potential: `$${calculateMemoryVaultGrowth(900, 100, 'whistleblower_evidence').finalValue.toLocaleString()} (100 years)`,
+      badge: 'TRUTH PROTECTION'
     },
   ];
 
@@ -195,12 +233,80 @@ export default function MemoryVault() {
           </CardContent>
         </Card>
 
+        {/* Veritas Tools Integration */}
+        <Card className="bg-gradient-to-r from-red-900/30 to-yellow-900/30 border-red-500/30 mb-12">
+          <CardContent className="p-8">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-white mb-4">🔴 TRUTH VERIFICATION ECOSYSTEM</h2>
+              <p className="text-slate-300 text-lg">Preventing AI & Power Alteration of Reality Through Validated Digital Memory Preservation</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Card className="bg-slate-800/50 border-slate-600 hover:border-red-500/50 transition-all cursor-pointer" 
+                onClick={() => window.location.href = '/veritas-seal'}>
+                <CardContent className="p-4 text-center">
+                  <Shield className="h-8 w-8 text-red-400 mx-auto mb-2" />
+                  <h3 className="text-white font-bold mb-2">Veritas Seal</h3>
+                  <p className="text-slate-300 text-sm">Legal verification for binding truth capsules</p>
+                  <Button className="mt-2 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1">ACCESS NOW</Button>
+                </CardContent>
+              </Card>
+              <Card className="bg-slate-800/50 border-slate-600 hover:border-yellow-500/50 transition-all cursor-pointer"
+                onClick={() => window.location.href = '/truth-bounty'}>
+                <CardContent className="p-4 text-center">
+                  <DollarSign className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
+                  <h3 className="text-white font-bold mb-2">Truth Bounty</h3>
+                  <p className="text-slate-300 text-sm">GTT rewards for community investigation</p>
+                  <Button className="mt-2 bg-yellow-600 hover:bg-yellow-700 text-white text-xs px-3 py-1">START BOUNTY</Button>
+                </CardContent>
+              </Card>
+              <Card className="bg-slate-800/50 border-slate-600 hover:border-green-500/50 transition-all cursor-pointer"
+                onClick={() => window.location.href = '/truth-redemption'}>
+                <CardContent className="p-4 text-center">
+                  <Heart className="h-8 w-8 text-green-400 mx-auto mb-2" />
+                  <h3 className="text-white font-bold mb-2">Truth Redemption</h3>
+                  <p className="text-slate-300 text-sm">Public accountability platform</p>
+                  <Button className="mt-2 bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1">REDEEM TRUTH</Button>
+                </CardContent>
+              </Card>
+              <Card className="bg-slate-800/50 border-slate-600 hover:border-purple-500/50 transition-all cursor-pointer"
+                onClick={() => window.location.href = '/conspiracy-capsule'}>
+                <CardContent className="p-4 text-center">
+                  <Lock className="h-8 w-8 text-purple-400 mx-auto mb-2" />
+                  <h3 className="text-white font-bold mb-2">Conspiracy Capsule</h3>
+                  <p className="text-slate-300 text-sm">Secure whistleblower disclosure portal</p>
+                  <Button className="mt-2 bg-purple-600 hover:bg-purple-700 text-white text-xs px-3 py-1">DISCLOSE SAFELY</Button>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="text-center mt-6">
+              <p className="text-red-400 font-semibold">Humans must validate and preserve actual reality before AI alters truth forever</p>
+              <div className="mt-4">
+                <Button 
+                  className="bg-red-600 hover:bg-red-700 text-white mx-2"
+                  onClick={() => window.location.href = '/whistleblower-sanctuary'}
+                >
+                  Enter Whistleblower Sanctuary
+                </Button>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700 text-white mx-2"
+                  onClick={() => window.location.href = '/specialized-intake'}
+                >
+                  Specialized Truth Intake
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Data Types Selection */}
         <div className="mb-12">
           <h2 className="text-3xl font-bold text-white mb-8 text-center">
-            What Data Will You Transform Into Wealth?
+            Transform ANY Data Into Eternal Digital Assets
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="text-center mb-8">
+            <p className="text-slate-300 text-lg">Personal & Family + Institutional Markets (Courts, Schools, Sports, Legal)</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {dataTypes.map((type) => {
               const Icon = type.icon;
               const isSelected = selectedDataType === type.id;
@@ -297,10 +403,13 @@ export default function MemoryVault() {
                   <div className="p-6 bg-gradient-to-r from-green-600/20 to-blue-600/20 rounded-lg border border-green-500/30">
                     <div className="text-center">
                       <div className="text-3xl font-bold text-green-400 mb-2">
-                        ${calculatePotentialValue(250, stakingYears).toLocaleString()}
+                        ${calculateMemoryVaultGrowth(250, stakingYears, 'family_memories').finalValue.toLocaleString()}
                       </div>
                       <p className="text-slate-300">
                         Final Value ({stakingYears} years)
+                      </p>
+                      <p className="text-slate-400 text-sm mt-2">
+                        Includes {calculateMemoryVaultGrowth(250, stakingYears, 'family_memories').gttTokensEarned} GTT tokens (${calculateMemoryVaultGrowth(250, stakingYears, 'family_memories').gttTokenValue.toLocaleString()} value)
                       </p>
                     </div>
                   </div>
@@ -312,7 +421,7 @@ export default function MemoryVault() {
                     </div>
                     <div className="text-center p-4 bg-slate-700/50 rounded-lg">
                       <div className="text-xl font-bold text-yellow-400">
-                        {Math.round((calculatePotentialValue(250, stakingYears) / 250) * 100) / 100}x
+                        {Math.round((calculateMemoryVaultGrowth(250, stakingYears, 'family_memories').finalValue / 250) * 100) / 100}x
                       </div>
                       <p className="text-slate-400 text-sm">Return Multiple</p>
                     </div>
@@ -348,7 +457,7 @@ export default function MemoryVault() {
                   <p className="text-slate-300 italic">
                     "Happy 16th birthday, my dear great-great-great-granddaughter! 
                     I'm writing this in 2025, hoping you'll read it in 2625. 
-                    I invested $15 in this message capsule. I wonder what it's worth now? 
+                    I invested ${calculateMemoryVaultGrowth(15, 600, 'time_capsules').initialInvestment} in this message capsule. I wonder what it's worth now? 
                     Remember: family love is the only currency that appreciates forever. ❤️"
                   </p>
                   <div className="mt-4 text-xs text-slate-400">
@@ -362,19 +471,181 @@ export default function MemoryVault() {
                 <div className="space-y-3">
                   <div className="flex justify-between p-3 bg-slate-800/30 rounded-lg">
                     <span className="text-slate-300">2025 (Today)</span>
-                    <span className="text-white font-bold">$15</span>
+                    <span className="text-white font-bold">${calculateMemoryVaultGrowth(15, 0, 'time_capsules').initialInvestment}</span>
                   </div>
                   <div className="flex justify-between p-3 bg-slate-700/50 rounded-lg">
                     <span className="text-slate-300">2125 (100 years)</span>
-                    <span className="text-yellow-400 font-bold">$2,520</span>
+                    <span className="text-yellow-400 font-bold">${calculateMemoryVaultGrowth(15, 100, 'time_capsules').finalValue.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between p-3 bg-slate-600/50 rounded-lg">
                     <span className="text-slate-300">2325 (300 years)</span>
-                    <span className="text-orange-400 font-bold">$250,000</span>
+                    <span className="text-orange-400 font-bold">${calculateMemoryVaultGrowth(15, 300, 'time_capsules').finalValue.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between p-3 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-lg border border-green-500/30">
                     <span className="text-slate-300">2625 (600 years)</span>
-                    <span className="text-green-400 font-bold text-xl">$1.5 MILLION</span>
+                    <span className="text-green-400 font-bold text-xl">${calculateMemoryVaultGrowth(15, 600, 'time_capsules').finalValue.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Institutional Markets Section */}
+        <Card className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-blue-500/30 mb-12">
+          <CardHeader>
+            <CardTitle className="text-white text-center text-2xl">
+              🏛️ INSTITUTIONAL MARKETS - MASSIVE SCALE OPPORTUNITY
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-blue-400 mb-2">
+                    ${calculateInstitutionalMarketSize().totalAddressableMarket.toLocaleString()}
+                  </div>
+                  <p className="text-slate-300">Total Addressable Market</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-green-400 mb-2">
+                    ${calculateInstitutionalMarketSize().fiveYearRevenue.toLocaleString()}
+                  </div>
+                  <p className="text-slate-300">5-Year Revenue Potential</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-yellow-400 mb-2">
+                    ${calculateInstitutionalMarketSize().gttTokenDemand.toLocaleString()}
+                  </div>
+                  <p className="text-slate-300">GTT Token Demand</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Object.entries(INSTITUTIONAL_MARKETS).map(([key, market]) => (
+                <Card key={key} className="bg-slate-800/50 border-slate-600">
+                  <CardContent className="p-6 text-center">
+                    <h3 className="text-white font-bold text-lg mb-2">{market.name}</h3>
+                    <div className="space-y-2">
+                      <div className="text-green-400 text-xl font-bold">
+                        ${market.averagePrice.toLocaleString()}
+                      </div>
+                      <p className="text-slate-400 text-sm">Average Price</p>
+                      <div className="text-blue-400 text-lg font-semibold">
+                        {(market.globalMarket / 1000000).toFixed(0)}M
+                      </div>
+                      <p className="text-slate-400 text-sm">Global Market Size</p>
+                      <div className="text-yellow-400 text-lg font-semibold">
+                        {(market.adoptionRate * 100).toFixed(0)}%
+                      </div>
+                      <p className="text-slate-400 text-sm">5-Year Adoption</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            <div className="text-center mt-8">
+              <p className="text-slate-300 text-lg mb-4">
+                Courts, Schools, Sports Events, Legal Firms - Preventing institutional memory loss forever
+              </p>
+              <p className="text-blue-400 font-semibold">
+                Global junior athletics, yearbooks, discoveries, awards - no achievement forgotten
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Vendor Cost Analysis & Profitability */}
+        <Card className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 border-green-500/30 mb-12">
+          <CardHeader>
+            <CardTitle className="text-white text-center text-2xl">
+              💰 VENDOR COST ANALYSIS & PROFITABILITY MODEL
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-white text-lg font-bold mb-4">Real Vendor Costs Per Capsule</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span className="text-slate-300">IPFS Storage (per GB/year)</span>
+                    <span className="text-red-400">${VENDOR_COSTS.ipfsStorage}</span>
+                  </div>
+                  <div className="flex justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span className="text-slate-300">Blockchain Transaction</span>
+                    <span className="text-red-400">${VENDOR_COSTS.blockchainTransaction}</span>
+                  </div>
+                  <div className="flex justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span className="text-slate-300">Video Processing (per min)</span>
+                    <span className="text-red-400">${VENDOR_COSTS.videoProcessing}</span>
+                  </div>
+                  <div className="flex justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span className="text-slate-300">AI Validation</span>
+                    <span className="text-red-400">${VENDOR_COSTS.aiValidation}</span>
+                  </div>
+                  <div className="flex justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span className="text-slate-300">Security Audit</span>
+                    <span className="text-red-400">${VENDOR_COSTS.securityAudit}</span>
+                  </div>
+                  <div className="flex justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span className="text-slate-300">Legal Compliance</span>
+                    <span className="text-red-400">${VENDOR_COSTS.legalCompliance}</span>
+                  </div>
+                  <div className="flex justify-between p-3 bg-green-600/20 rounded-lg border border-green-500/30">
+                    <span className="text-white font-bold">Total Base Cost (1GB capsule)</span>
+                    <span className="text-green-400 font-bold">${calculateVendorCosts(1, 5, false, false).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-white text-lg font-bold mb-4">Pricing Model & Margins</h3>
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-800/50 rounded-lg">
+                    <h4 className="text-green-400 font-semibold mb-2">Personal Family Capsule (1GB)</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Vendor Costs:</span>
+                        <span className="text-red-400">${calculateVendorCosts(1, 5, false, false).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Our Price:</span>
+                        <span className="text-green-400">${calculateOptimalPricing(calculateVendorCosts(1, 5, false, false), false, false).finalPrice}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white font-bold">Profit Margin:</span>
+                        <span className="text-green-400 font-bold">{calculateOptimalPricing(calculateVendorCosts(1, 5, false, false), false, false).margin}%</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-slate-800/50 rounded-lg">
+                    <h4 className="text-blue-400 font-semibold mb-2">Institutional Legal (10GB)</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Vendor Costs:</span>
+                        <span className="text-red-400">${calculateVendorCosts(10, 20, true, true).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-300">Our Price:</span>
+                        <span className="text-green-400">${calculateOptimalPricing(calculateVendorCosts(10, 20, true, true), true, false).finalPrice}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white font-bold">Profit Margin:</span>
+                        <span className="text-green-400 font-bold">{calculateOptimalPricing(calculateVendorCosts(10, 20, true, true), true, false).margin}%</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-lg border border-green-500/30">
+                    <p className="text-white text-center font-bold">
+                      ✅ AGGRESSIVE PRICING WITH 35%+ PROFIT MARGINS MAINTAINED
+                    </p>
+                    <p className="text-slate-300 text-center text-sm mt-2">
+                      Sustainable scaling with institutional 2.5x multiplier funding personal markets
+                    </p>
                   </div>
                 </div>
               </div>
