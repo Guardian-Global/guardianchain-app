@@ -12,6 +12,7 @@ import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import Footer from "@/components/layout/footer";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
+import WelcomeTour from "@/components/WelcomeTour";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/create-capsule";
 import Explore from "@/pages/explore";
@@ -98,7 +99,7 @@ const TechnologicalLegacy = lazy(() => import("@/pages/technological-legacy"));
 // Communication & Streaming
 const Messaging = lazy(() => import("@/pages/messaging"));
 const LiveStreaming = lazy(() => import("@/pages/live-streaming"));
-import Home from "./pages/home";
+import Home from "./pages/Home";
 
 // Memory Vault System Components
 import MemoryVault from "./pages/memory-vault";
@@ -188,6 +189,7 @@ function Router() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
+      <WelcomeTour />
       <LiveTokenTracker position="top" />
       <UnifiedNavigation />
       <main className="pt-20 px-4 max-w-screen-xl mx-auto">
@@ -200,9 +202,10 @@ function Router() {
           </div>
         }>
           <Switch>
-          {/* Login page archived - using UnifiedAuthModal */}
-        <Route path="/" component={Vault} />
-        <Route path="/home" component={Home} />
+            {/* Core Routes */}
+            <Route path="/" component={Vault} />
+            <Route path="/home" component={Home} />
+            <Route path="/unauthorized" component={() => import("./pages/unauthorized")} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 
