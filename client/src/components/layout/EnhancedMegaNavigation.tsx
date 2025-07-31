@@ -38,7 +38,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/components/web3/theme-provider";
-import UnifiedAuthModal from "@/components/auth/UnifiedAuthModal";
+import UnifiedAuthModal, { UnifiedAuthModal as UnifiedAuthModalComponent } from "@/components/auth/UnifiedAuthModal";
 import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
 import { Badge } from "@/components/ui/badge";

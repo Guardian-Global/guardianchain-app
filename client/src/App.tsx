@@ -1,5 +1,5 @@
+import React, { lazy } from "react";
 import { Switch, Route } from "wouter";
-import { lazy } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -132,9 +132,7 @@ function Router() {
         <Route path="/home" component={ProfessionalHomepage} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
-        <Route path="/create-with-help">
-          {React.lazy(() => import("./pages/capsule-creation-with-help"))}
-        </Route>
+        <Route path="/create-with-help" component={lazy(() => import("./pages/capsule-creation-with-help"))} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route
