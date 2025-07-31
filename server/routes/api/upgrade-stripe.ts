@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Stripe from 'stripe';
 
 // Stripe checkout session creation for Pro tier upgrade
 export async function createUpgradeSession(req: Request, res: Response) {
@@ -10,9 +11,8 @@ export async function createUpgradeSession(req: Request, res: Response) {
       });
     }
 
-    const Stripe = require('stripe');
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { 
-      apiVersion: "2023-08-16" 
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { 
+      apiVersion: "2024-06-20" 
     });
 
     // Get user information from session/auth

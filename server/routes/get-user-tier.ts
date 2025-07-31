@@ -7,6 +7,12 @@ router.get("/get-user-tier", async (req, res) => {
   try {
     const session = req.session as any;
     
+    console.log('Session check:', {
+      sessionExists: !!session,
+      sessionUser: session?.user,
+      sessionID: req.sessionID
+    });
+    
     // Check for Replit Auth headers in production
     const replitUserId = req.headers['x-replit-user-id'] as string;
     const replitUserName = req.headers['x-replit-user-name'] as string;
@@ -18,6 +24,8 @@ router.get("/get-user-tier", async (req, res) => {
         username: replitUserName || 'User',
         tier: 'CREATOR'
       };
+      
+      console.log('Authenticated user found:', user);
       
       return res.status(200).json({
         tier: user.tier || "CREATOR",

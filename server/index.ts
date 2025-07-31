@@ -30,12 +30,13 @@ app.set('trust proxy', true);
 app.use(session({
   secret: process.env.SESSION_SECRET || 'guardianchain-session-secret-change-in-production',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true, // Allow sessions to be created
+  rolling: true, // Reset expiry on activity
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Allow non-HTTPS in development
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
+    sameSite: 'lax' // Allow cross-site requests in development
   }
 }));
 
@@ -74,7 +75,7 @@ app.get('/api/login', (req, res) => {
       tier: 'CREATOR'
     };
     
-    console.log('Development: Simulating successful login');
+    console.log('Development: Session set, redirecting to login-success', session.user);
     return res.redirect('/login-success');
   }
   
