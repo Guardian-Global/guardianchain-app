@@ -293,6 +293,33 @@ export default function InfiniteRecovery() {
               </Card>
             </div>
 
+            {/* Recovery System Demo */}
+            <Card className="bg-gradient-to-r from-blue-900/30 to-cyan-900/30 border-blue-500/30">
+              <CardContent className="p-6">
+                <div className="text-center mb-4">
+                  <h3 className="text-white font-semibold text-lg mb-2">Infinite Recovery in Action</h3>
+                  <p className="text-slate-300 text-sm">See how capsules are sealed with ultimate security for infinite recovery</p>
+                </div>
+                <div className="relative rounded-lg overflow-hidden">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-auto"
+                    style={{ maxHeight: '200px' }}
+                  >
+                    <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <div className="text-white text-xs font-medium">Ultimate Security Protocol</div>
+                    <div className="text-slate-300 text-xs">47,000+ nodes ensuring infinite recoverability</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Your Protected Capsules */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>

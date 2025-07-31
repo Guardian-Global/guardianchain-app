@@ -139,6 +139,28 @@ export default function EternalStaking() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
+          {/* Staking Demo Video */}
+          <div className="relative mb-8 mx-auto max-w-3xl">
+            <div className="relative rounded-xl overflow-hidden bg-slate-800/50 border border-slate-700">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-auto"
+                style={{ maxHeight: '300px' }}
+              >
+                <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+              <div className="absolute bottom-3 left-3 right-3">
+                <div className="text-white text-sm font-medium">100-Year Staking Process</div>
+                <div className="text-slate-300 text-xs">See how capsules are sealed and staked for generational returns</div>
+              </div>
+            </div>
+          </div>
+          
           <div className="flex items-center justify-center mb-6">
             <div className="w-16 h-16 bg-gradient-to-br from-yellow-600 to-orange-600 rounded-2xl flex items-center justify-center">
               <Clock className="h-8 w-8 text-white" />

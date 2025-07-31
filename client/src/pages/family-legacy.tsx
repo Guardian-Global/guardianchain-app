@@ -246,6 +246,29 @@ export default function FamilyLegacy() {
 
           {/* Family Timeline */}
           <TabsContent value="timeline" className="space-y-6">
+            {/* Family Legacy Video */}
+            <Card className="bg-gradient-to-r from-pink-900/30 to-red-900/30 border-pink-500/30">
+              <CardContent className="p-6">
+                <div className="text-center mb-4">
+                  <h3 className="text-white font-semibold text-lg mb-2">Family Legacy in Action</h3>
+                  <p className="text-slate-300 text-sm">Watch how families preserve their memories forever</p>
+                </div>
+                <div className="relative rounded-lg overflow-hidden">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-auto"
+                    style={{ maxHeight: '250px' }}
+                  >
+                    <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+            
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-white flex items-center space-x-3">

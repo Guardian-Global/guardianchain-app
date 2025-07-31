@@ -109,6 +109,28 @@ export default function MemoryVault() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
+          {/* Hero Video */}
+          <div className="relative mb-8 mx-auto max-w-4xl">
+            <div className="relative rounded-2xl overflow-hidden bg-slate-800/50 border border-slate-700">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-auto"
+                style={{ maxHeight: '400px' }}
+              >
+                <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="text-white text-sm font-medium">Memory Vault Capsule Creation Process</div>
+                <div className="text-slate-300 text-xs">Watch your memories transform into eternal digital assets</div>
+              </div>
+            </div>
+          </div>
+          
           <div className="flex items-center justify-center mb-6">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-green-600 rounded-2xl flex items-center justify-center">
               <Vault className="h-8 w-8 text-white" />

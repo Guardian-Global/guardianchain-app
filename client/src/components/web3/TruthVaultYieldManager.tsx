@@ -162,6 +162,26 @@ export default function TruthVaultYieldManager() {
             <span>TruthVault Yield Manager</span>
             <Badge className="bg-green-600/20 text-green-400">LIVE CONTRACT</Badge>
           </CardTitle>
+          {/* TruthVault Demo Video */}
+          <div className="mt-4">
+            <div className="relative rounded-lg overflow-hidden bg-slate-800/50 border border-slate-600">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-auto"
+                style={{ maxHeight: '200px' }}
+              >
+                <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <div className="absolute bottom-2 left-2 right-2">
+                <div className="text-white text-xs font-medium">Smart Contract Integration</div>
+                <div className="text-slate-300 text-xs">Live yield tracking and reward distribution</div>
+              </div>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

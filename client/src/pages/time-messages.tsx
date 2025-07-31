@@ -320,6 +320,29 @@ export default function TimeMessages() {
 
           {/* Viral Examples */}
           <div className="space-y-6">
+            {/* Time-Lock Message Demo */}
+            <Card className="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 border-indigo-500/30">
+              <CardContent className="p-6">
+                <div className="text-center mb-4">
+                  <h3 className="text-white font-semibold text-lg mb-2">Time-Lock Message Creation</h3>
+                  <p className="text-slate-300 text-sm">See how messages are sealed for future delivery</p>
+                </div>
+                <div className="relative rounded-lg overflow-hidden">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-auto"
+                    style={{ maxHeight: '200px' }}
+                  >
+                    <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+            
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="text-white flex items-center space-x-3">
