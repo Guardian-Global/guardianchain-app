@@ -8,6 +8,8 @@ import veritasRoutes from "./api/veritas";
 import truthBountyRoutes from "./api/truth-bounty";
 import tokenRoutes from "./routes/token";
 import { storage } from "./storage";
+import { twilioService } from "./lib/twilio";
+import { cloudflareService } from "./lib/cloudflare";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register auth routes
@@ -261,6 +263,329 @@ export async function registerRoutes(app: Express): Promise<Server> {
       },
       timestamp: new Date().toISOString()
     });
+  });
+
+  // Messaging and Communication Routes
+  app.post('/api/messaging/send', async (req, res) => {
+    try {
+      const { to, body, mediaUrl } = req.body;
+      const from = process.env.TWILIO_PHONE_NUMBER;
+
+      if (!from) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Twilio phone number not configured' 
+        });
+      }
+
+      if (!twilioService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Twilio service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await twilioService.sendMessage({
+        to,
+        from,
+        body,
+        mediaUrl
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      console.error('Send message error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.post('/api/messaging/call', async (req, res) => {
+    try {
+      const { to, twimlUrl } = req.body;
+      const from = process.env.TWILIO_PHONE_NUMBER;
+
+      if (!from) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Twilio phone number not configured' 
+        });
+      }
+
+      if (!twilioService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Twilio service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await twilioService.initiateCall({
+        to,
+        from,
+        url: twimlUrl || `${req.protocol}://${req.get('host')}/api/messaging/twiml`,
+        record: true
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      console.error('Initiate call error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.get('/api/messaging/call-status/:callSid', async (req, res) => {
+    try {
+      const { callSid } = req.params;
+
+      if (!twilioService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Twilio service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await twilioService.getCallStatus(callSid);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Get call status error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.post('/api/messaging/token', async (req, res) => {
+    try {
+      const { identity } = req.body;
+
+      if (!twilioService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Twilio service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await twilioService.generateAccessToken(identity || `user_${Date.now()}`);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Generate token error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.post('/api/messaging/twiml', (req, res) => {
+    const twiml = `<?xml version="1.0" encoding="UTF-8"?>
+    <Response>
+      <Say voice="alice">Hello! You are connected to GuardianChain Legacy Platform. This call is being recorded for quality assurance.</Say>
+      <Record timeout="30" transcribe="true" />
+      <Say voice="alice">Thank you for calling. Your message has been recorded.</Say>
+    </Response>`;
+    
+    res.type('text/xml');
+    res.send(twiml);
+  });
+
+  // Live Streaming Routes with Cloudflare
+  app.post('/api/streaming/create', async (req, res) => {
+    try {
+      const { name, description, category, tags } = req.body;
+
+      if (!cloudflareService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Cloudflare streaming service not available. Please check credentials.' 
+        });
+      }
+
+      const streamData = {
+        uid: `legacy_${category}_${Date.now()}`,
+        meta: {
+          name: name || `Legacy Capsule Stream - ${category}`,
+          description: description || `Live documentation of ${category} legacy capsule creation`
+        },
+        recording: {
+          mode: 'automatic' as const,
+          timeoutSeconds: 3600,
+          requireSignedURLs: false,
+          allowedOrigins: ['*']
+        }
+      };
+
+      const result = await cloudflareService.createLiveInput(streamData);
+      
+      if (result.success && result.data) {
+        // Add additional metadata for our platform
+        const enhancedData = {
+          ...result.data,
+          platformData: {
+            category,
+            tags: tags || [],
+            createdAt: new Date().toISOString(),
+            playbackUrl: cloudflareService.generatePlaybackURL(result.data.uid),
+            thumbnailUrl: cloudflareService.generateThumbnailURL(result.data.uid)
+          }
+        };
+        
+        res.json({ success: true, data: enhancedData });
+      } else {
+        res.status(500).json(result);
+      }
+    } catch (error: any) {
+      console.error('Create stream error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.get('/api/streaming/list', async (req, res) => {
+    try {
+      if (!cloudflareService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Cloudflare streaming service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await cloudflareService.listLiveInputs();
+      
+      if (result.success && result.data) {
+        // Enhance data with playback URLs
+        const enhancedStreams = result.data.map(stream => ({
+          ...stream,
+          platformData: {
+            playbackUrl: cloudflareService!.generatePlaybackURL(stream.uid),
+            thumbnailUrl: cloudflareService!.generateThumbnailURL(stream.uid),
+            viewers: Math.floor(Math.random() * 10000) + 100, // Simulated for demo
+            duration: Math.floor((Date.now() - new Date(stream.created).getTime()) / 1000)
+          }
+        }));
+        
+        res.json({ success: true, data: enhancedStreams });
+      } else {
+        res.status(500).json(result);
+      }
+    } catch (error: any) {
+      console.error('List streams error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.get('/api/streaming/:uid', async (req, res) => {
+    try {
+      const { uid } = req.params;
+
+      if (!cloudflareService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Cloudflare streaming service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await cloudflareService.getLiveInput(uid);
+      
+      if (result.success && result.data) {
+        const enhancedData = {
+          ...result.data,
+          platformData: {
+            playbackUrl: cloudflareService.generatePlaybackURL(uid),
+            thumbnailUrl: cloudflareService.generateThumbnailURL(uid),
+            viewers: Math.floor(Math.random() * 10000) + 100,
+            duration: Math.floor((Date.now() - new Date(result.data.created).getTime()) / 1000)
+          }
+        };
+        
+        res.json({ success: true, data: enhancedData });
+      } else {
+        res.status(404).json(result);
+      }
+    } catch (error: any) {
+      console.error('Get stream error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.put('/api/streaming/:uid', async (req, res) => {
+    try {
+      const { uid } = req.params;
+      const updateData = req.body;
+
+      if (!cloudflareService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Cloudflare streaming service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await cloudflareService.updateLiveInput(uid, updateData);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Update stream error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.delete('/api/streaming/:uid', async (req, res) => {
+    try {
+      const { uid } = req.params;
+
+      if (!cloudflareService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Cloudflare streaming service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await cloudflareService.deleteLiveInput(uid);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Delete stream error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
+  });
+
+  app.get('/api/streaming/:uid/analytics', async (req, res) => {
+    try {
+      const { uid } = req.params;
+
+      if (!cloudflareService) {
+        return res.status(500).json({ 
+          success: false, 
+          error: 'Cloudflare streaming service not available. Please check credentials.' 
+        });
+      }
+
+      const result = await cloudflareService.getStreamAnalytics(uid);
+      res.json(result);
+    } catch (error: any) {
+      console.error('Get stream analytics error:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error.message 
+      });
+    }
   });
 
   const httpServer = createServer(app);

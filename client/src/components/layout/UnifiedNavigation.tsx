@@ -64,6 +64,7 @@ import {
   Landmark,
   Cpu,
   Languages,
+  Radio,
 } from 'lucide-react';
 
 // Navigation section interface
@@ -310,6 +311,25 @@ export default function UnifiedNavigation() {
           icon: Cpu, 
           description: "AI, quantum & breakthrough tech preservation",
           badge: "INNOVATION"
+        },
+      ],
+    },
+    {
+      title: "Communication & Streaming",
+      items: [
+        { 
+          name: "Messaging Center", 
+          href: "/messaging", 
+          icon: MessageSquare, 
+          description: "User messaging and voice/video calling with Twilio",
+          badge: "LIVE"
+        },
+        { 
+          name: "Live Streaming", 
+          href: "/live-streaming", 
+          icon: Radio, 
+          description: "Watch live capsule creation and documentation streams",
+          badge: "STREAMING"
         },
       ],
     },

@@ -94,6 +94,10 @@ const EarthLegacy = lazy(() => import("@/pages/earth-legacy"));
 const CulturalLegacy = lazy(() => import("@/pages/cultural-legacy"));
 const SovereignLegacy = lazy(() => import("@/pages/sovereign-legacy"));
 const TechnologicalLegacy = lazy(() => import("@/pages/technological-legacy"));
+
+// Communication & Streaming
+const Messaging = lazy(() => import("@/pages/messaging"));
+const LiveStreaming = lazy(() => import("@/pages/live-streaming"));
 import Home from "./pages/home";
 
 // Memory Vault System Components
@@ -408,6 +412,10 @@ function Router() {
         <Route path="/cultural-legacy" component={CulturalLegacy} />
         <Route path="/sovereign-legacy" component={SovereignLegacy} />
         <Route path="/technological-legacy" component={TechnologicalLegacy} />
+        
+        {/* Communication & Streaming */}
+        <Route path="/messaging" component={Messaging} />
+        <Route path="/live-streaming" component={LiveStreaming} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
