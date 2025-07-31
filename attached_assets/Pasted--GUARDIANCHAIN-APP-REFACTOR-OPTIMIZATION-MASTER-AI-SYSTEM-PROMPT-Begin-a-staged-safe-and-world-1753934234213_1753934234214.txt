@@ -1,0 +1,102 @@
+🚀 GUARDIANCHAIN APP REFACTOR & OPTIMIZATION—MASTER AI SYSTEM PROMPT
+Begin a staged, safe, and world-class codebase refactor and feature expansion of the GuardianChain app.
+Follow these steps strictly, with pause points for founder review.
+Do NOT merge or delete any file until the founder approves.
+The goals:
+
+Eliminate tech debt, clutter, and dead/duplicate code
+
+Expand all user and admin feature sets (restore any “squeezed out” flows/pages)
+
+Modularize by function and user role for rapid new feature development
+
+Maximize future scalability, valuation, and investor confidence
+
+Ensure zero downtime or regression in production
+
+STAGE 1: Full Audit and Tagging
+Inventory every file in /components/, /pages/, /client/src/components/, and /client/src/pages/.
+
+Mark each as:
+
+CORE: Actively used, essential for key flows
+
+FEATURE: Adds user or admin value, even if not used everywhere
+
+LEGACY/DEPRECATED: Old, redesign, or replaced versions
+
+DUPLICATE/REDUNDANT: Multiple login, admin, dashboard, capsule, onboarding, profile, etc.
+
+Prepare a spreadsheet or README log of all files with their tags.
+
+STAGE 2: Modularization and Cleanup
+Create folders in /components/ (or /client/src/components/) for each major module:
+
+/auth/ (all login/signup/onboarding/master/admin logic)
+
+/dashboard/ (role-based dashboards: user, admin, founder, enterprise)
+
+/capsule/ (all create, view, forge, certify, claim, timeline logic)
+
+/profile/ (user profile, settings, customization, dashboards)
+
+/notifications/, /analytics/, /onboarding/, /payments/, /dao/, /ui/ (buttons, modals, tabs, etc.)
+
+Move every file into its correct folder based on function and tag.
+
+Any file marked LEGACY, DUPLICATE, or not referenced in active flows moves to /archive/ (not deleted yet).
+
+Only ONE login/auth entry point/component should remain. All roles (user, admin, founder) authenticate through it; dashboards and features branch out based on role after login.
+
+STAGE 3: Restore and Expand Features
+Restore any features, pages, or modules that were “squeezed out” or hidden due to clutter.
+
+Split overloaded dashboards into multiple, clear feature pages
+
+Create dedicated onboarding for each role/tier
+
+Add or restore advanced analytics, notification center, profile customization, capsule analytics, DAO tools, referral/airdrop, etc.
+
+Update navigation and footer to link to every major feature or page (no “hidden” features).
+
+STAGE 4: Code Quality, Optimization, and Testing
+Remove all unused imports, commented code, console.logs, temp/test files, and dead assets.
+
+Optimize all images/videos in /public/assets/.
+
+Run npm run lint or equivalent, and resolve all warnings.
+
+Re-run all tests; regression test ALL user flows (auth, onboarding, capsule mint, dashboard, admin, DAO, etc.).
+
+Deploy to staging/preview environment for founder/lead user review.
+
+STAGE 5: Documentation and Onboarding
+Update the main README to reflect new file structure and developer guidelines.
+
+Document all major modules and features, with clear instructions for adding new pages/features.
+
+Prepare a summary of all files moved, features restored/expanded, and any open issues for founder signoff.
+
+STAGE 6: Approval, Merge, and Production
+Pause and notify founder for final review before merging to main/production.
+
+Only delete files from /archive/ after one week and with explicit founder approval.
+
+Provide before/after file tree snapshot and summary for valuation, M&A, or investor review.
+
+SPECIAL INSTRUCTIONS:
+Never delete files outright—move to /archive/.
+
+Never disable or hide working features unless replacing with a better, tested version.
+
+Always prioritize modularity, scalability, and maintainability.
+
+Pause for founder feedback at each stage; do not proceed without approval.
+
+BONUS—MAXIMIZE APP VALUATION
+Make every major feature/page discoverable and documented (no hidden gems).
+
+Structure code for instant dev onboarding (VCs and acquirers will check).
+
+Document admin/founder controls, emergency features, and revenue analytics as “unique selling points.”
+

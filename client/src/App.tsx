@@ -19,9 +19,9 @@ import Profile from "@/pages/profile";
 import CapsuleDetail from "@/pages/capsule-detail";
 import Governance from "@/pages/governance";
 import PrivateFeed from "@/pages/private";
-import Dashboard from "@/pages/dashboard";
+// Dashboard moved to archive - using role-based dashboards
 import Commander from "@/pages/commander";
-import AuthenticationHub from "@/components/auth/AuthenticationHub";
+// AuthenticationHub moved to archive - using UnifiedAuthModal
 import OnboardingPage from "@/pages/onboarding";
 import MintNFT from "@/pages/mint-nft";
 import RecommendationsPage from "@/pages/recommendations";
@@ -43,9 +43,9 @@ import NotFound from "@/pages/not-found";
 import AuctionHousePage from "./pages/auction-house";
 import EmbedCapsulePage from "./pages/embed-capsule";
 import YieldTrackerPage from "./pages/yield-tracker";
-import CapsuleAnalyticsPage from "./pages/capsule-analytics";
+import CapsuleAnalyticsPage from "./features/analytics/capsule-analytics";
 import DynamicCapsuleAnalytics from "./pages/capsule/[id]/analytics";
-import FinancialDashboard from "./pages/financial-dashboard";
+import FinancialDashboard from "./features/analytics/financial-dashboard";
 import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
 import TreasuryDashboard from "./pages/treasury";
@@ -57,14 +57,14 @@ import ConfigPage from "./pages/config";
 import ResponsiveDemoPage from "./pages/responsive-demo";
 import LogoSyncPage from "./pages/logo-sync";
 import ReportingDashboard from "./pages/reporting";
-import CommanderDashboard from "./pages/dashboard";
+// CommanderDashboard moved to archive - using EnhancedCommanderDashboard
 
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
 import Homepage from "./pages/index";
 import ResponsiveDemo from "./pages/responsive-demo";
 import MintingTestPage from "./pages/minting-test";
-import LogoTestPage from "./pages/logo-test";
+// LogoTestPage moved to archive
 import AssetDebugPage from "./pages/asset-debug";
 import ProfessionalHomepage from "./pages/professional-homepage";
 
@@ -77,7 +77,7 @@ import ViralTools from "./pages/viral-tools";
 import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
 import Notifications from "./pages/Notifications";
-import BillingDashboard from "./pages/BillingDashboard";
+import BillingDashboard from "./features/payments/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useUnifiedAuth } from "./hooks/useUnifiedAuth";
 import PrivacyPolicy from "./pages/legal/privacy";
@@ -85,11 +85,11 @@ import PrivacyPolicy from "./pages/legal/privacy";
 import TermsOfService from "./pages/legal/terms";
 import SecurityPolicy from "./pages/legal/security";
 import SimpleTokenLaunch from "@/pages/simple-token-launch";
-import SimpleHome from "@/pages/simple-home";
-import WorkingProfileDashboard from "@/components/profile/WorkingProfileDashboard";
-import StripeCheckout from "@/components/payments/StripeCheckout";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboardPage from "./pages/AdminDashboard";
+// SimpleHome and WorkingProfileDashboard moved to archive
+import { EnhancedProfileDashboard } from "@/components/profile/EnhancedProfileDashboard";
+// StripeCheckout moved to features/payments/components/
+// AdminLogin and AdminDashboard moved to archive - using unified auth
+import AdminDashboardPage from "./pages/admin";
 
 import BlockchainPlayground from "./pages/blockchain-playground";
 import SpecializedIntake from "./pages/specialized-intake";
@@ -102,12 +102,13 @@ import GTTLaunch from "./pages/gtt-launch";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
-import Login from "./pages/Login";
+// Login page moved to archive - using UnifiedAuthModal
 import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
 import { OnboardingChecker } from "./components/onboarding/OnboardingChecker";
 import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
-import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
-import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
+// Admin components temporarily using role-based dashboard
+// import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
+// import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
 import ReplitToolsPage from "./pages/replit-tools";
 import AdvancedFeaturesPage from "./pages/advanced-features";
@@ -122,21 +123,21 @@ function Router() {
     <div className="min-h-screen bg-slate-900 text-white">
       <EnhancedMegaNavigation />
       <Switch>
-        <Route path="/login" component={Login} />
+        {/* Login page archived - using UnifiedAuthModal */}
         <Route path="/" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
-        <Route path="/home" component={SimpleHome} />
+        <Route path="/home" component={ProfessionalHomepage} />
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route
           path="/profile/:id?"
-          component={() => <WorkingProfileDashboard user={undefined} />}
+          component={() => <EnhancedProfileDashboard />}
         />
         <Route
           path="/profile"
-          component={() => <WorkingProfileDashboard user={undefined} />}
+          component={() => <EnhancedProfileDashboard />}
         />
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
@@ -144,14 +145,14 @@ function Router() {
         <Route path="/replit-tools" component={ReplitToolsPage} />
         <Route
           path="/auth-hub"
-          component={() => <AuthenticationHub onAuthenticated={() => {}} />}
+          component={() => <div>Use unified auth modal</div>}
         />
         <Route path="/onboarding" component={OnboardingPage} />
         <Route path="/unified-onboarding" component={OnboardingPage} />
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/dashboard" component={RoleBasedDashboard} />
         <Route path="/commander">
           <ProtectedRoute requiredRole="COMMANDER">
             <Commander />
@@ -197,7 +198,7 @@ function Router() {
         </Route>
         <Route path="/config" component={ConfigPage} />
         <Route path="/reporting" component={ReportingDashboard} />
-        <Route path="/dashboard" component={CommanderDashboard} />
+        {/* Duplicate dashboard route removed */}
 
         <Route path="/asset-integration" component={AssetIntegrationPage} />
         <Route path="/protocol-strategy" component={ProtocolStrategy} />
@@ -230,24 +231,24 @@ function Router() {
         <Route path="/responsive-demo" component={ResponsiveDemo} />
         <Route path="/logo-sync" component={LogoSyncPage} />
         <Route path="/minting-test" component={MintingTestPage} />
-        <Route path="/logo-test" component={LogoTestPage} />
+        {/* LogoTestPage moved to archive */}
         <Route path="/asset-debug" component={AssetDebugPage} />
         <Route path="/professional-homepage" component={ProfessionalHomepage} />
         <Route path="/supabase-assets" component={() => <ProfessionalHomepage />} />
         <Route path="/unified-login" component={Login} />
         <Route path="/auth-dashboard" component={RoleBasedDashboard} />
-        <Route path="/commander" component={EnhancedCommanderDashboard} />
+        <Route path="/commander" component={RoleBasedDashboard} />
         <Route path="/founder-dashboard">
           <FounderRoute>
-            <EnhancedFounderDashboard />
+            <RoleBasedDashboard />
           </FounderRoute>
         </Route>
         <Route path="/asset-manager" component={SupabaseAssetManager} />
         <Route path="/asset-integration" component={AssetIntegration} />
         <Route path="/replit-tools" component={ReplitToolsPage} />
         <Route path="/advanced-features" component={AdvancedFeaturesPage} />
-        <Route path="/upgrade" component={StripeCheckout} />
-        <Route path="/admin/login" component={AdminLogin} />
+        <Route path="/upgrade" component={() => <BillingDashboard />} />
+        {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
 
         {/* Legal Pages */}

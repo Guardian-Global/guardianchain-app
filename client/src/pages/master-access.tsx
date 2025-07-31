@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { MasterLogin } from "@/components/MasterLogin";
+// MasterLogin moved to archive - using UnifiedAuthModal
+import { UnifiedAuthModal } from "@/components/auth/UnifiedAuthModal";
 import { useLocation } from "wouter";
 
 export default function MasterAccess() {
@@ -33,5 +34,5 @@ export default function MasterAccess() {
     }
   };
 
-  return <MasterLogin onLoginSuccess={handleLoginSuccess} />;
+  return <UnifiedAuthModal isOpen={true} onClose={() => setLocation("/")} />;
 }

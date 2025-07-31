@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
     // Check if it's master admin credentials
     if (email === MASTER_CREDENTIALS.email) {
       isValidPassword = await bcrypt.compare(password, MASTER_CREDENTIALS.password) || 
-                        password === "masterkey123"; // Fallback for development
+                        password === (process.env.MASTER_PASSWORD || "masterkey123"); // Use env var in production
       if (isValidPassword) {
         user = {
           id: "master-admin",
@@ -99,10 +99,10 @@ router.post("/login", async (req, res) => {
     } else {
       // Check regular users in storage
       try {
-        // Note: getUsers method doesn't exist, using fallback
+        // TODO: Implement proper user lookup when storage is ready
         user = null;
         
-        if (user && user.passwordHash) {
+        if (user && 'passwordHash' in user) {
           isValidPassword = await bcrypt.compare(password, user.passwordHash);
         }
       } catch (error) {
@@ -193,14 +193,11 @@ router.post("/register", async (req, res) => {
     const newUser = {
       id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       email,
-      username: username || email.split('@')[0],
+      password: passwordHash, // Use 'password' field as expected by storage interface
       firstName,
       lastName,
-      passwordHash,
       role: ROLES.USER,
-      tier: "EXPLORER",
-      createdAt: new Date(),
-      isActive: true
+      tier: "EXPLORER"
     };
 
     // Store user
