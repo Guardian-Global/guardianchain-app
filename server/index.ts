@@ -130,6 +130,14 @@ app.get('/api/logout', (req, res) => {
 import aiRoutes from "./routes/ai.js";
 app.use("/api/ai", aiRoutes);
 
+// Stripe checkout routes
+import checkoutRoutes from "./routes/checkout.js";
+app.use("/api/checkout", checkoutRoutes);
+
+// Secure upload routes
+import uploadRoutes from "./routes/upload.js";
+app.use("/api/upload", uploadRoutes);
+
 // Web3 testing routes
 import web3Routes from "./routes/web3.js";
 app.use("/api/web3", web3Routes);

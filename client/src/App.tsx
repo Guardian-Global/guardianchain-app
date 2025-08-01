@@ -224,6 +224,8 @@ function Router() {
             <Route path="/explorer" component={lazy(() => import("./pages/explorer"))} />
             <Route path="/capsule-explorer" component={lazy(() => import("./pages/explorer"))} />
             <Route path="/create-capsule" component={lazy(() => import("./pages/create-capsule"))} />
+            <Route path="/storage-capsules" component={lazy(() => import("./pages/storage-capsules"))} />
+            <Route path="/upload-capsule" component={lazy(() => import("./pages/upload-capsule"))} />
             <Route path="/system-validation" component={lazy(() => import("./pages/system-validation"))} />
             <Route path="/launch" component={lazy(() => import("./pages/launch-announcement"))} />
             <Route path="/launch-enhancements" component={lazy(() => import("./pages/launch-enhancements"))} />
