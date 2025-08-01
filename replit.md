@@ -17,7 +17,8 @@ Preferred communication style: Simple, everyday language.
 - **Runtime & Language**: Node.js with Express.js, TypeScript.
 - **API Design**: RESTful API with structured error handling.
 - **Middleware**: Custom logging, JSON parsing, and error handling.
-- **Authentication**: Replit Auth integration with unified authentication, tier-based access control (JWT/OPA standards, RBAC), and session management.
+- **Authentication**: Fully integrated Replit Auth with OpenID Connect, database session storage, object storage ACL controls, and tier-based access management.
+- **Object Storage**: Google Cloud Storage integration with protected file uploading, public asset serving, and ACL policy management.
 - **Data Flow**: Automated IPFS integration for content storage, community-driven verification, and GTT token reward distribution.
 
 ### Database & ORM
@@ -27,7 +28,7 @@ Preferred communication style: Simple, everyday language.
 - **Connection**: Neon serverless database adapter.
 
 ### Core Entities & Features
-- **Users**: Unified authentication, wallet integration, tier-based access (EXPLORER/SEEKER/CREATOR/SOVEREIGN).
+- **Users**: Complete Replit Auth integration with OpenID Connect, database user management, session storage, and tier-based access (EXPLORER/SEEKER/CREATOR/SOVEREIGN).
 - **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status.
 - **Verifications**: Community voting and professional-grade Veritas tools (Veritas Seal, Truth Bounty, Truth Redemption, Conspiracy Capsule).
 - **Transactions**: GTT token transfers and reward tracking.

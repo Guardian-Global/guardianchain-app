@@ -129,6 +129,7 @@ import ContactInfo from "./components/ContactInfo";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./features/payments/BillingDashboard";
 import Landing from "./pages/Landing";
+import { useAuth } from "./hooks/useAuth";
 import { useUnifiedAuth } from "./hooks/useUnifiedAuth";
 import SimpleLogin from "./components/auth/SimpleLogin";
 import PrivacyPolicy from "./pages/legal/privacy";
@@ -186,30 +187,35 @@ import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./co
 // OnboardingChecker moved to different import location
 
 function Router() {
-  // Simplified auth check - only use localStorage
-  const token = localStorage.getItem('auth_token');
-  const userStr = localStorage.getItem('auth_user');
-  const user = userStr ? JSON.parse(userStr) : null;
-  const isLoggedIn = Boolean(token && user);
+  const { isAuthenticated, isLoading } = useAuth();
 
-  // Store current path for redirect after login
-  React.useEffect(() => {
-    if (!isLoggedIn) {
-      localStorage.setItem('redirect_after_login', window.location.pathname);
-    }
-  }, [isLoggedIn]);
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
-  // Show login if not authenticated
-  if (!isLoggedIn) {
-    return <SimpleLogin />;
+  // Show landing page for unauthenticated users
+  if (!isAuthenticated) {
+    return (
+      <Switch>
+        <Route path="/" component={Landing} />
+        <Route path="/legal/privacy" component={PrivacyPolicy} />
+        <Route path="/legal/terms" component={TermsOfService} />
+        <Route path="/legal/security" component={SecurityPolicy} />
+        <Route component={Landing} />
+      </Switch>
+    );
   }
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <WelcomeTour />
       <LiveTokenTracker position="top" />
-      <UnifiedNavigation user={user} />
-      <main className="pt-20 px-4 max-w-screen-xl mx-auto">
+      <main className="px-4 max-w-screen-xl mx-auto">
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
@@ -220,8 +226,8 @@ function Router() {
         }>
           <Switch>
             {/* Core Routes */}
-            <Route path="/" component={Vault} />
-            <Route path="/home" component={Home} />
+            <Route path="/" component={Home} />
+            <Route path="/vault" component={Vault} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
