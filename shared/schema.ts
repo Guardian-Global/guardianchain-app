@@ -23,15 +23,16 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table with enhanced fields
+// User storage table.
+// (IMPORTANT) This table is mandatory for Replit Auth, don't drop it.
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: varchar("email").unique().notNull(),
-  password: varchar("password").notNull(),
-  username: varchar("username"),
+  email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  // Additional GuardianChain specific fields
+  username: varchar("username"),
   tier: varchar("tier").default("EXPLORER").notNull(),
   role: varchar("role").default("USER").notNull(),
   permissions: text("permissions").array().default([]),
