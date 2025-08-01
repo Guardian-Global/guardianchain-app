@@ -29,6 +29,7 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: NewUser): Promise<User>;
   updateUser(id: string, user: Partial<User>): Promise<User>;
+  updateUserTier(userId: string, tier: string): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   
   // Capsule operations

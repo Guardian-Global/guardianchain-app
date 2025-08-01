@@ -187,7 +187,7 @@ import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./co
 // OnboardingChecker moved to different import location
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -204,12 +204,21 @@ function Router() {
       <Switch>
         <Route path="/" component={Landing} />
         <Route path="/test-auth" component={lazy(() => import("./pages/TestAuth"))} />
+        <Route path="/simple-login" component={lazy(() => import("./pages/SimpleLogin"))} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
         <Route component={Landing} />
       </Switch>
     );
+  }
+
+  // Check if user should go to validator dashboard
+  const isValidator = user && (user.email === 'founder@guardianchain.app' || user.email === 'master@guardianchain.app');
+  
+  if (isValidator && window.location.pathname === '/') {
+    window.location.href = '/validator-dashboard';
+    return null;
   }
 
   return (

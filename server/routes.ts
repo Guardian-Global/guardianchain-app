@@ -24,12 +24,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware - Setup Replit Auth first
   await setupAuth(app);
 
+  // Add subscription management routes
+  app.get('/api/subscription/status', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub || req.user?.id;
+      const user = await storage.getUser(userId);
+      res.json({
+        tier: user?.tier || 'EXPLORER',
+        usage: {
+          capsulesCreated: 0,
+          capsulesLimit: user?.tier === 'EXPLORER' ? 5 : user?.tier === 'SEEKER' ? 25 : 999
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch subscription status" });
+    }
+  });
+
+  app.post('/api/subscription/upgrade', isAuthenticated, async (req: any, res) => {
+    try {
+      const { planId } = req.body;
+      const userId = req.user?.claims?.sub || req.user?.id;
+      
+      // For now, just simulate an upgrade
+      await storage.updateUserTier(userId, planId.toUpperCase());
+      
+      res.json({ success: true, message: "Subscription upgraded successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to upgrade subscription" });
+    }
+  });
+
   // Replit Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
+      const claims = req.user?.claims;
+      const userId = claims?.sub || req.user?.id;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "No user ID found" });
+      }
+      
+      let user = await storage.getUser(userId);
+      
+      // If user doesn't exist in DB, create from session
+      if (!user && claims) {
+        await storage.upsertUser({
+          id: claims.sub,
+          email: claims.email,
+          firstName: claims.first_name,
+          lastName: claims.last_name,
+          profileImageUrl: claims.profile_image_url,
+        });
+        user = await storage.getUser(userId);
+      }
+      
+      res.json(user || {
+        id: userId,
+        email: claims?.email,
+        firstName: claims?.first_name,
+        lastName: claims?.last_name,
+        tier: 'EXPLORER'
+      });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
