@@ -99,7 +99,7 @@ const TechnologicalLegacy = lazy(() => import("@/pages/technological-legacy"));
 // Communication & Streaming
 const Messaging = lazy(() => import("@/pages/messaging"));
 const LiveStreaming = lazy(() => import("@/pages/live-streaming"));
-import Home from "./pages/Home";
+import Dashboard from "./pages/auth/Dashboard";
 
 // Memory Vault System Components
 import MemoryVault from "./pages/memory-vault";
@@ -226,10 +226,9 @@ function Router() {
         }>
           <Switch>
             {/* Core Routes */}
-            <Route path="/" component={() => import("./pages/auth/Dashboard")} />
-            <Route path="/dashboard" component={() => import("./pages/auth/Dashboard")} />
+            <Route path="/" component={Dashboard} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/vault" component={Vault} />
-            <Route path="/home" component={Home} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />

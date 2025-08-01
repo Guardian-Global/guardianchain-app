@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, getQueryFn } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
 import { 
   Crown, 
   Shield, 
@@ -96,12 +95,12 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
 
 export function SubscriptionManager() {
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const { data: subscription, isLoading } = useQuery({
     queryKey: ["/api/subscription/status"],
+    queryFn: getQueryFn({ on401: "returnNull" }),
     enabled: !!user
   });
 
@@ -114,19 +113,12 @@ export function SubscriptionManager() {
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
       } else {
-        toast({
-          title: "Subscription Updated",
-          description: "Your subscription has been upgraded successfully!",
-        });
+        console.log("Subscription updated successfully");
         queryClient.invalidateQueries({ queryKey: ["/api/subscription/status"] });
       }
     },
     onError: (error: any) => {
-      toast({
-        title: "Upgrade Failed",
-        description: error.message || "Failed to upgrade subscription",
-        variant: "destructive",
-      });
+      console.error("Upgrade failed:", error.message || "Failed to upgrade subscription");
     }
   });
 
@@ -136,18 +128,11 @@ export function SubscriptionManager() {
       return response.json();
     },
     onSuccess: () => {
-      toast({
-        title: "Subscription Cancelled",
-        description: "Your subscription has been cancelled successfully.",
-      });
+      console.log("Subscription cancelled successfully");
       queryClient.invalidateQueries({ queryKey: ["/api/subscription/status"] });
     },
     onError: (error: any) => {
-      toast({
-        title: "Cancellation Failed",
-        description: error.message || "Failed to cancel subscription",
-        variant: "destructive",
-      });
+      console.error("Cancellation failed:", error.message || "Failed to cancel subscription");
     }
   });
 
