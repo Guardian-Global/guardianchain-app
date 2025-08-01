@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth-system";
 import unifiedAuthRoutes from "./unified-auth-routes";
 import newAuthRoutes from "./routes/auth";
 import simpleAuthRoutes from "./routes/simple-auth";
+import demoAuthRoutes from "./routes/demo-auth";
 import aiOnboardingRoutes from "./routes/ai-onboarding";
 import mediaUploadRoutes from "./routes/media-upload";
 import veritasRoutes from "./api/veritas";
@@ -14,7 +15,8 @@ import { twilioService } from "./lib/twilio";
 import { cloudflareService } from "./lib/cloudflare";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register auth routes (simple auth ONLY - remove conflicts)
+  // Register demo auth routes FIRST (before any middleware)
+  app.use('/api/auth', demoAuthRoutes);
   app.use('/api/auth', simpleAuthRoutes);
   
   // Register AI and onboarding routes

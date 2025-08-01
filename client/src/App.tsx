@@ -130,6 +130,7 @@ import Notifications from "./pages/Notifications";
 import BillingDashboard from "./features/payments/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useUnifiedAuth } from "./hooks/useUnifiedAuth";
+import SimpleLogin from "./components/auth/SimpleLogin";
 import PrivacyPolicy from "./pages/legal/privacy";
 // Removed duplicate AuthProvider import
 import TermsOfService from "./pages/legal/terms";
@@ -186,6 +187,14 @@ import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./co
 
 function Router() {
   const { isAuthenticated, isLoading } = useUnifiedAuth();
+
+  // Simple auth check using localStorage
+  const token = localStorage.getItem('auth_token');
+  const isLoggedIn = Boolean(token);
+
+  if (!isLoggedIn) {
+    return <SimpleLogin />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">

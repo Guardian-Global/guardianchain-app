@@ -9,6 +9,9 @@ const demoSessions: Map<string, any> = new Map();
 // Demo authentication - create account for any email/password combination
 router.post("/login", async (req, res) => {
   try {
+    console.log("Simple auth login attempt:", req.body);
+    
+    // Accept ANY credentials for demo
     const { email, password } = req.body;
     
     if (!email || !password) {
@@ -18,28 +21,32 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Find or create user
-    let user = demoUsers.find(u => u.email === email);
-    if (!user) {
-      user = {
-        id: `user-${Date.now()}`,
-        email,
-        firstName: email.split('@')[0],
-        lastName: "User",
-        tier: "EXPLORER",
-        role: "USER",
-        permissions: ["read:profile", "write:profile"],
-        gttStakeAmount: 0,
-        isActive: true,
-        emailVerified: true,
-        createdAt: new Date(),
-        lastLoginAt: new Date()
-      };
+    // Create user for any email/password combination
+    const user = {
+      id: `demo-user-${Date.now()}`,
+      email,
+      firstName: email.split('@')[0] || "Demo",
+      lastName: "User",
+      tier: "EXPLORER",
+      role: "USER",
+      permissions: ["read:profile", "write:profile"],
+      gttStakeAmount: 0,
+      isActive: true,
+      emailVerified: true,
+      createdAt: new Date(),
+      lastLoginAt: new Date()
+    };
+
+    // Always add/update user in storage
+    const existingIndex = demoUsers.findIndex(u => u.email === email);
+    if (existingIndex >= 0) {
+      demoUsers[existingIndex] = user;
+    } else {
       demoUsers.push(user);
     }
 
     // Create session
-    const token = `demo-token-${Date.now()}`;
+    const token = `demo-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const session = {
       user,
       token,
@@ -48,6 +55,7 @@ router.post("/login", async (req, res) => {
     
     demoSessions.set(token, session);
 
+    console.log("Demo login successful for:", email);
     res.json({
       success: true,
       message: "Login successful",

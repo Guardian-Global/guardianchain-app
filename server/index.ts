@@ -54,6 +54,42 @@ app.use('/assets', express.static('public/assets', {
   }
 }));
 
+// Demo authentication route (bypasses all other auth)
+app.post('/api/auth/demo-login', (req, res) => {
+  console.log("DEMO AUTH HIT:", req.body);
+  const { email, password } = req.body;
+  
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: "Email and password required"
+    });
+  }
+
+  const user = {
+    id: `demo-${Date.now()}`,
+    email,
+    firstName: email.split('@')[0] || "Demo",
+    lastName: "User",
+    tier: "EXPLORER",
+    role: "USER"
+  };
+
+  const token = `demo-token-${Date.now()}`;
+  const session = {
+    user,
+    token,
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+  };
+
+  console.log("DEMO LOGIN SUCCESS:", email);
+  res.json({
+    success: true,
+    message: "Demo login successful",
+    session
+  });
+});
+
 // Import and use authentication routes
 import authRoutes from "./auth";
 app.use("/api/auth", authRoutes);
