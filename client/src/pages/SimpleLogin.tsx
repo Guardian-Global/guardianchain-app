@@ -10,12 +10,12 @@ export default function SimpleLogin() {
   useEffect(() => {
     if (isLoading) {
       setAuthTest("Loading authentication...");
-    } else if (isAuthenticated) {
+    } else if (isAuthenticated && user) {
       setAuthTest("✓ Authentication successful!");
     } else {
       setAuthTest("❌ Not authenticated");
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, user]);
 
   const handleLogin = () => {
     window.location.href = "/api/login";

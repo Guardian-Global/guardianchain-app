@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Users, Coins, Award } from "lucide-react";
+import { SimpleAuthButton } from "@/components/SimpleAuthButton";
 
 export default function Landing() {
   return (
@@ -21,13 +22,10 @@ export default function Landing() {
           
           {/* Login Button */}
           <div className="pt-8 space-y-4">
-            <Button 
-              size="lg"
-              onClick={() => window.location.href = '/api/login'}
+            <SimpleAuthButton 
+              text="Sign in with Replit"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg"
-            >
-              Sign in with Replit
-            </Button>
+            />
             <div className="flex gap-2">
               <Button 
                 size="sm"
