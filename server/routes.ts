@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import authRoutes from "./routes/auth-system";
 import unifiedAuthRoutes from "./unified-auth-routes";
+import newAuthRoutes from "./routes/auth";
 import aiOnboardingRoutes from "./routes/ai-onboarding";
 import mediaUploadRoutes from "./routes/media-upload";
 import veritasRoutes from "./api/veritas";
@@ -15,6 +16,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register auth routes
   app.use('/api/auth', authRoutes);
   app.use('/api/auth', unifiedAuthRoutes);
+  app.use('/api/auth', newAuthRoutes);
   
   // Register AI and onboarding routes
   app.use('/api/ai', aiOnboardingRoutes);
