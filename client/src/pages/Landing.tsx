@@ -20,7 +20,7 @@ export default function Landing() {
           </p>
           
           {/* Login Button */}
-          <div className="pt-8">
+          <div className="pt-8 space-y-4">
             <Button 
               size="lg"
               onClick={() => window.location.href = '/api/login'}
@@ -28,6 +28,15 @@ export default function Landing() {
             >
               Sign in with Replit
             </Button>
+            <div>
+              <Button 
+                size="sm"
+                onClick={() => window.location.href = '/test-auth'}
+                className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2"
+              >
+                Test Authentication
+              </Button>
+            </div>
           </div>
         </div>
 
