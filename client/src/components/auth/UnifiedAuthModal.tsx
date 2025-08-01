@@ -40,7 +40,10 @@ export default function UnifiedAuthModal({
           description: "Successfully logged in to GUARDIANCHAIN.",
         });
         setOpen(false);
-        window.location.href = "/dashboard";
+        // Force a page reload to update authentication state
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         toast({
           title: "Login Failed",
@@ -72,7 +75,10 @@ export default function UnifiedAuthModal({
           description: "Welcome to GUARDIANCHAIN. You can now access your dashboard.",
         });
         setOpen(false);
-        window.location.href = "/onboarding";
+        // Force a page reload to update authentication state
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         toast({
           title: "Registration Failed",

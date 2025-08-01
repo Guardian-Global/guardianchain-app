@@ -14,11 +14,8 @@ import { twilioService } from "./lib/twilio";
 import { cloudflareService } from "./lib/cloudflare";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register auth routes (simple auth has priority)
+  // Register auth routes (simple auth ONLY - remove conflicts)
   app.use('/api/auth', simpleAuthRoutes);
-  app.use('/api/auth', authRoutes);
-  app.use('/api/auth', unifiedAuthRoutes);
-  app.use('/api/auth', newAuthRoutes);
   
   // Register AI and onboarding routes
   app.use('/api/ai', aiOnboardingRoutes);
