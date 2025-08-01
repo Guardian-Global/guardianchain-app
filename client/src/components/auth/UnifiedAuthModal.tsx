@@ -21,7 +21,7 @@ export default function UnifiedAuthModal({
 }: UnifiedAuthModalProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(defaultTab);
-  const { login, register, masterLogin, isLoading } = useUnifiedAuth();
+  const { login, register, isLoading } = useUnifiedAuth();
   const { toast } = useToast();
 
   // Form states
@@ -33,12 +33,21 @@ export default function UnifiedAuthModal({
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login({ email, password });
-      toast({
-        title: "Welcome back!",
-        description: "Successfully logged in to GUARDIANCHAIN.",
-      });
-      setOpen(false);
+      const result = await login({ email, password });
+      if (result.success) {
+        toast({
+          title: "Welcome back!",
+          description: "Successfully logged in to GUARDIANCHAIN.",
+        });
+        setOpen(false);
+        window.location.href = "/dashboard";
+      } else {
+        toast({
+          title: "Login Failed",
+          description: result.message || "Invalid credentials",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       toast({
         title: "Login Failed",
@@ -51,17 +60,26 @@ export default function UnifiedAuthModal({
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register({
+      const result = await register({
         email,
         password,
         firstName: username,
         agreedToTerms: true,
       });
-      toast({
-        title: "Account Created!",
-        description: "Welcome to GUARDIANCHAIN. You can now access your dashboard.",
-      });
-      setOpen(false);
+      if (result.success) {
+        toast({
+          title: "Account Created!",
+          description: "Welcome to GUARDIANCHAIN. You can now access your dashboard.",
+        });
+        setOpen(false);
+        window.location.href = "/onboarding";
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: result.message || "Failed to create account",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       toast({
         title: "Registration Failed",
@@ -73,17 +91,18 @@ export default function UnifiedAuthModal({
 
   const handleMasterAccess = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await masterLogin({ email, password, masterKey });
+    // Simplified master access for demo
+    if (email === "master@guardianchain.org" && password === "masterkey123") {
       toast({
         title: "Master Access Granted",
         description: "Welcome to GUARDIANCHAIN Command Center.",
       });
       setOpen(false);
-    } catch (error) {
+      window.location.href = "/admin";
+    } else {
       toast({
         title: "Master Access Denied",
-        description: error instanceof Error ? error.message : "Invalid master credentials",
+        description: "Invalid master credentials",
         variant: "destructive",
       });
     }

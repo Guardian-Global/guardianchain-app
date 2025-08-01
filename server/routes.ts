@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import authRoutes from "./routes/auth-system";
 import unifiedAuthRoutes from "./unified-auth-routes";
 import newAuthRoutes from "./routes/auth";
+import simpleAuthRoutes from "./routes/simple-auth";
 import aiOnboardingRoutes from "./routes/ai-onboarding";
 import mediaUploadRoutes from "./routes/media-upload";
 import veritasRoutes from "./api/veritas";
@@ -13,7 +14,8 @@ import { twilioService } from "./lib/twilio";
 import { cloudflareService } from "./lib/cloudflare";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register auth routes
+  // Register auth routes (simple auth has priority)
+  app.use('/api/auth', simpleAuthRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/auth', unifiedAuthRoutes);
   app.use('/api/auth', newAuthRoutes);

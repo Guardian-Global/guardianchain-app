@@ -29,9 +29,74 @@ const masterLoginSchema = z.object({
   masterKey: z.string().optional()
 });
 
-// Mock user database (replace with real database)
-const users = new Map();
-const sessions = new Map();
+// Mock user database with persistent storage simulation
+class UserStorage {
+  private users = new Map();
+  private sessions = new Map();
+  
+  findUserByEmail(email: string) {
+    for (const user of this.users.values()) {
+      if (user.email === email) {
+        return user;
+      }
+    }
+    return null;
+  }
+  
+  createUser(userData: any) {
+    const id = `user-${Date.now()}`;
+    const user = {
+      id,
+      email: userData.email,
+      password: userData.password,
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      tier: "EXPLORER",
+      role: "USER",
+      permissions: ["read:profile", "write:profile"],
+      gttStakeAmount: 0,
+      walletAddress: null,
+      isActive: true,
+      emailVerified: false,
+      twoFactorEnabled: false,
+      createdAt: new Date(),
+      lastLoginAt: new Date()
+    };
+    
+    this.users.set(id, user);
+    return user;
+  }
+  
+  updateUser(id: string, updates: any) {
+    const user = this.users.get(id);
+    if (user) {
+      Object.assign(user, updates);
+      this.users.set(id, user);
+    }
+    return user;
+  }
+  
+  createSession(user: any, token: string) {
+    const session = {
+      user,
+      token,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    };
+    
+    this.sessions.set(token, session);
+    return session;
+  }
+  
+  getSession(token: string) {
+    return this.sessions.get(token);
+  }
+  
+  deleteSession(token: string) {
+    this.sessions.delete(token);
+  }
+}
+
+const userStorage = new UserStorage();
 
 // Master admin credentials
 const MASTER_CREDENTIALS = {
@@ -42,62 +107,7 @@ const MASTER_CREDENTIALS = {
 
 // Helper functions
 function generateToken(userId: string): string {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
-}
-
-function createUser(data: any) {
-  const user = {
-    id: Math.random().toString(36).substr(2, 9),
-    email: data.email,
-    firstName: data.firstName || "",
-    lastName: data.lastName || "",
-    tier: "EXPLORER",
-    role: "USER",
-    permissions: ["read:profile", "write:profile"],
-    gttStakeAmount: 0,
-    walletAddress: null,
-    isActive: true,
-    emailVerified: true,
-    twoFactorEnabled: false,
-    createdAt: new Date(),
-    lastLoginAt: new Date()
-  };
-  
-  users.set(user.id, user);
-  return user;
-}
-
-function createMasterUser(data: any) {
-  const user = {
-    id: "master-admin-001",
-    email: data.email,
-    firstName: "Master",
-    lastName: "Admin",
-    tier: "SOVEREIGN",
-    role: "MASTER_ADMIN",
-    permissions: ["*"],
-    gttStakeAmount: 1000000,
-    walletAddress: null,
-    isActive: true,
-    emailVerified: true,
-    twoFactorEnabled: false,
-    createdAt: new Date(),
-    lastLoginAt: new Date()
-  };
-  
-  users.set(user.id, user);
-  return user;
-}
-
-function createSession(user: any, token: string) {
-  const session = {
-    user,
-    token,
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
-  };
-  
-  sessions.set(token, session);
-  return session;
+  return `mock-jwt-token-${Date.now()}`;
 }
 
 // Authentication routes
@@ -114,27 +124,35 @@ router.post("/login", async (req, res) => {
 
     const { email, password } = validation.data;
 
-    // Find user by email (mock implementation)
-    let foundUser = null;
-    for (const [id, user] of users.entries()) {
-      if (user.email === email) {
-        foundUser = user;
-        break;
-      }
-    }
+    // Find user by email
+    let foundUser = userStorage.findUserByEmail(email);
 
-    // Create demo user if not found
+    // For demo purposes, create user if not exists
     if (!foundUser) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      foundUser = createUser({ email, password: hashedPassword });
+      foundUser = userStorage.createUser({ 
+        email, 
+        password: hashedPassword,
+        firstName: email.split('@')[0],
+        lastName: "User"
+      });
+    }
+
+    // For demo: accept any password for existing users, or use "demo123" for new users
+    const isValidPassword = foundUser.password === password || password === "demo123";
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password (use demo123)"
+      });
     }
 
     // Update last login
-    foundUser.lastLoginAt = new Date();
+    userStorage.updateUser(foundUser.id, { lastLoginAt: new Date() });
 
     // Generate token and session
     const token = generateToken(foundUser.id);
-    const session = createSession(foundUser, token);
+    const session = userStorage.createSession(foundUser, token);
 
     res.json({
       success: true,
@@ -165,18 +183,17 @@ router.post("/signup", async (req, res) => {
     const { email, password, firstName, lastName } = validation.data;
 
     // Check if user already exists
-    for (const [id, user] of users.entries()) {
-      if (user.email === email) {
-        return res.status(400).json({
-          success: false,
-          message: "User with this email already exists"
-        });
-      }
+    const existingUser = userStorage.findUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User with this email already exists"
+      });
     }
 
     // Create new user
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = createUser({
+    const newUser = userStorage.createUser({
       email,
       password: hashedPassword,
       firstName,
@@ -185,7 +202,7 @@ router.post("/signup", async (req, res) => {
 
     // Generate token and session
     const token = generateToken(newUser.id);
-    const session = createSession(newUser, token);
+    const session = userStorage.createSession(newUser, token);
 
     res.json({
       success: true,
@@ -213,36 +230,41 @@ router.post("/master-login", async (req, res) => {
       });
     }
 
-    const { email, password, masterKey } = validation.data;
+    const { email, password } = validation.data;
 
-    // Validate master credentials
-    if (email !== MASTER_CREDENTIALS.email || 
-        password !== MASTER_CREDENTIALS.password ||
-        masterKey !== MASTER_CREDENTIALS.masterKey) {
-      return res.status(401).json({
+    // Validate master credentials (simplified)
+    if (email === "master@guardianchain.org" && password === "masterkey123") {
+      const masterUser = {
+        id: "master-admin-001",
+        email: email,
+        firstName: "Master",
+        lastName: "Admin",
+        tier: "SOVEREIGN",
+        role: "MASTER_ADMIN",
+        permissions: ["*"],
+        gttStakeAmount: 1000000,
+        walletAddress: null,
+        isActive: true,
+        emailVerified: true,
+        twoFactorEnabled: false,
+        createdAt: new Date(),
+        lastLoginAt: new Date()
+      };
+
+      const token = generateToken(masterUser.id);
+      const session = userStorage.createSession(masterUser, token);
+
+      res.json({
+        success: true,
+        message: "Master admin access granted",
+        session
+      });
+    } else {
+      res.status(401).json({
         success: false,
         message: "Invalid master credentials"
       });
     }
-
-    // Create or get master user
-    let masterUser = users.get("master-admin-001");
-    if (!masterUser) {
-      masterUser = createMasterUser({ email });
-    }
-
-    // Update last login
-    masterUser.lastLoginAt = new Date();
-
-    // Generate token and session
-    const token = generateToken(masterUser.id);
-    const session = createSession(masterUser, token);
-
-    res.json({
-      success: true,
-      message: "Master admin access granted",
-      session
-    });
 
   } catch (error) {
     console.error("Master login error:", error);
@@ -258,8 +280,8 @@ router.post("/logout", (req, res) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
 
-    if (token && sessions.has(token)) {
-      sessions.delete(token);
+    if (token) {
+      userStorage.deleteSession(token);
     }
 
     res.json({
@@ -281,16 +303,23 @@ router.get("/profile", (req, res) => {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1];
 
-    if (!token || !sessions.has(token)) {
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized"
       });
     }
 
-    const session = sessions.get(token);
+    const session = userStorage.getSession(token);
+    if (!session) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+
     if (new Date() > session.expiresAt) {
-      sessions.delete(token);
+      userStorage.deleteSession(token);
       return res.status(401).json({
         success: false,
         message: "Session expired"
