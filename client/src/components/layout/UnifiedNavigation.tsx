@@ -538,6 +538,13 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link href="/advanced-profile" className="flex items-center space-x-2">
+                      <Settings className="h-4 w-4" />
+                      <span>Advanced Profile</span>
+                      <Badge className="ml-auto bg-purple-600/20 text-purple-400 text-xs">AI</Badge>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/settings" className="flex items-center space-x-2">
                       <Settings className="h-4 w-4" />
                       <span>Settings</span>

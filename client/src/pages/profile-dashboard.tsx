@@ -17,7 +17,9 @@ import {
   FileText,
   TrendingUp,
   Clock,
-  Settings
+  Settings,
+  Bot,
+  Sparkles
 } from 'lucide-react';
 
 export default function ProfileDashboard() {
@@ -58,7 +60,7 @@ export default function ProfileDashboard() {
     setTimeout(() => window.location.reload(), 500);
   };
 
-  const tierColors = {
+  const tierColors: Record<string, string> = {
     EXPLORER: "bg-blue-600/20 text-blue-400",
     SEEKER: "bg-green-600/20 text-green-400", 
     CREATOR: "bg-purple-600/20 text-purple-400",
@@ -183,6 +185,30 @@ export default function ProfileDashboard() {
               <p className="text-white">
                 {new Date(user.createdAt || Date.now()).toLocaleDateString()}
               </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Advanced Profile Link */}
+        <Card className="bg-gradient-to-r from-purple-800 to-cyan-800 border-purple-500">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-3 bg-white/10 rounded-full">
+                  <Bot className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-white font-bold text-lg">AI-Enhanced Profile</h3>
+                  <p className="text-purple-200 text-sm">Unlock quantum features, AI personas, and advanced security</p>
+                </div>
+              </div>
+              <Button
+                onClick={() => window.location.href = '/advanced-profile'}
+                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Upgrade
+              </Button>
             </div>
           </CardContent>
         </Card>
