@@ -226,8 +226,10 @@ function Router() {
         }>
           <Switch>
             {/* Core Routes */}
-            <Route path="/" component={Home} />
+            <Route path="/" component={() => import("./pages/auth/Dashboard")} />
+            <Route path="/dashboard" component={() => import("./pages/auth/Dashboard")} />
             <Route path="/vault" component={Vault} />
+            <Route path="/home" component={Home} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />

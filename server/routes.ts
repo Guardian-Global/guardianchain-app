@@ -84,6 +84,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Subscription management routes
+  app.get("/api/subscription/status", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      // Mock subscription data - integrate with Stripe in production
+      const subscription = {
+        status: 'active',
+        tier: user?.tier || 'EXPLORER',
+        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        usage: {
+          capsules: 12,
+          capsulesLimit: user?.tier === 'EXPLORER' ? 5 : user?.tier === 'SEEKER' ? 25 : 999999
+        }
+      };
+      
+      res.json(subscription);
+    } catch (error) {
+      console.error("Error fetching subscription:", error);
+      res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  app.post("/api/subscription/upgrade", isAuthenticated, async (req: any, res) => {
+    try {
+      const { planId } = req.body;
+      const userId = req.user.claims.sub;
+      
+      // In production, create Stripe checkout session
+      const tierMap: Record<string, string> = {
+        'explorer': 'EXPLORER',
+        'seeker': 'SEEKER', 
+        'creator': 'CREATOR',
+        'sovereign': 'SOVEREIGN'
+      };
+      
+      const newTier = tierMap[planId] || 'EXPLORER';
+      
+      // Update user tier in database
+      await storage.updateUserTier(userId, newTier);
+      
+      res.json({ 
+        success: true,
+        message: `Upgraded to ${newTier} tier`,
+        // In production: checkoutUrl: stripeCheckoutSession.url
+      });
+    } catch (error) {
+      console.error("Error upgrading subscription:", error);
+      res.status(500).json({ message: "Failed to upgrade subscription" });
+    }
+  });
+
+  app.post("/api/subscription/cancel", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // In production, cancel Stripe subscription
+      await storage.updateUserTier(userId, 'EXPLORER');
+      
+      res.json({ 
+        success: true,
+        message: "Subscription cancelled successfully"
+      });
+    } catch (error) {
+      console.error("Error cancelling subscription:", error);
+      res.status(500).json({ message: "Failed to cancel subscription" });
+    }
+  });
+
   // Register demo auth routes FIRST (before any middleware)
   app.use('/api/auth', demoAuthRoutes);
   app.use('/api/auth', simpleAuthRoutes);

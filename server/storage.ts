@@ -90,6 +90,19 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  // Tier management operations
+  async updateUserTier(userId: string, tier: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({ 
+        tier: tier,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)

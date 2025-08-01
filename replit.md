@@ -28,7 +28,10 @@ Preferred communication style: Simple, everyday language.
 - **Connection**: Neon serverless database adapter.
 
 ### Core Entities & Features
-- **Users**: Complete Replit Auth integration with OpenID Connect, database user management, session storage, and tier-based access (EXPLORER/SEEKER/CREATOR/SOVEREIGN).
+- **Users**: Complete Replit Auth integration with OpenID Connect, database user management, session storage, and comprehensive tier-based access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN) with subscription management and billing integration.
+- **Authentication System**: Full-featured tiered access control with TierGate component for feature gating, SubscriptionManager for billing, and role-based Dashboard routing with master/founder email detection for validator dashboard access.
+- **Subscription Tiers**: Four-tier system (Explorer: Free, Seeker: $9.99/month, Creator: $29.99/month, Sovereign: $99.99/month) with progressive feature unlocking and usage limits.
+- **Dashboard Flows**: Comprehensive authenticated user experience with Overview, Subscription, Creator Tools, and Sovereign tabs, real-time usage tracking, and tier progress monitoring.
 - **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status.
 - **Verifications**: Community voting and professional-grade Veritas tools (Veritas Seal, Truth Bounty, Truth Redemption, Conspiracy Capsule).
 - **Transactions**: GTT token transfers and reward tracking.
