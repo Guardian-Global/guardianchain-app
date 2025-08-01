@@ -205,17 +205,18 @@ function Router() {
             {/* Core Routes */}
             <Route path="/" component={Vault} />
             <Route path="/home" component={Home} />
-            <Route path="/unauthorized" component={() => import("./pages/unauthorized")} />
-            <Route path="/dao" component={() => import("./pages/dao")} />
-            <Route path="/governance" component={() => import("./pages/dao")} />
-            <Route path="/validator" component={() => import("./pages/validator")} />
-            <Route path="/validator-dashboard" component={() => import("./pages/validator")} />
-            <Route path="/jury" component={() => import("./pages/jury")} />
-            <Route path="/explorer" component={() => import("./pages/explorer")} />
-            <Route path="/capsule-explorer" component={() => import("./pages/explorer")} />
-            <Route path="/create-capsule" component={() => import("./pages/create-capsule")} />
-            <Route path="/system-validation" component={() => import("./pages/system-validation")} />
-            <Route path="/launch" component={() => import("./pages/launch-announcement")} />
+            <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
+            <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
+            <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
+            <Route path="/validator" component={lazy(() => import("./pages/validator"))} />
+            <Route path="/validator-dashboard" component={lazy(() => import("./pages/validator"))} />
+            <Route path="/jury" component={lazy(() => import("./pages/jury"))} />
+            <Route path="/explorer" component={lazy(() => import("./pages/explorer"))} />
+            <Route path="/capsule-explorer" component={lazy(() => import("./pages/explorer"))} />
+            <Route path="/create-capsule" component={lazy(() => import("./pages/create-capsule"))} />
+            <Route path="/system-validation" component={lazy(() => import("./pages/system-validation"))} />
+            <Route path="/launch" component={lazy(() => import("./pages/launch-announcement"))} />
+            <Route path="/launch-enhancements" component={lazy(() => import("./pages/launch-enhancements"))} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 
