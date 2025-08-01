@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import LoginLoadingFix from './LoginLoadingFix';
 
 export default function SimpleLogin() {
   const [email, setEmail] = useState("");
@@ -35,12 +36,10 @@ export default function SimpleLogin() {
           description: "Welcome to GuardianChain!",
         });
         
-        // Check user tier and redirect appropriately
-        if (data.session.user.email.includes('master') || data.session.user.email.includes('founder')) {
-          window.location.href = "/validator-dashboard";
-        } else {
-          window.location.href = "/profile-dashboard";
-        }
+        // Simple redirect to force app refresh and show logged in state
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         toast({
           title: "Login Failed",
@@ -97,12 +96,10 @@ export default function SimpleLogin() {
           description: "Welcome to GuardianChain!",
         });
         
-        // Check user tier and redirect appropriately  
-        if (data.session.user.email.includes('master') || data.session.user.email.includes('founder')) {
-          window.location.href = "/validator-dashboard";
-        } else {
-          window.location.href = "/profile-dashboard";
-        }
+        // Simple redirect to force app refresh and show logged in state
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         toast({
           title: "Signup Failed",
@@ -123,6 +120,7 @@ export default function SimpleLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+      <LoginLoadingFix />
       <Card className="w-full max-w-md bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="text-center text-white">

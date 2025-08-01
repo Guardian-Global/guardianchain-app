@@ -186,14 +186,13 @@ import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./co
 // OnboardingChecker moved to different import location
 
 function Router() {
-  const { isAuthenticated, isLoading } = useUnifiedAuth();
-
-  // Simple auth check using localStorage
+  // Simplified auth check - only use localStorage
   const token = localStorage.getItem('auth_token');
   const userStr = localStorage.getItem('auth_user');
   const user = userStr ? JSON.parse(userStr) : null;
   const isLoggedIn = Boolean(token);
 
+  // Show login if not authenticated
   if (!isLoggedIn) {
     return <SimpleLogin />;
   }

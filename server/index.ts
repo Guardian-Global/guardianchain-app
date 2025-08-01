@@ -98,58 +98,17 @@ app.use("/api/auth", authRoutes);
 const REPLIT_DOMAINS = process.env.REPLIT_DOMAINS || 'localhost:5000';
 const REPL_ID = process.env.REPL_ID || 'guardianchain-nft';
 
-// Login route with actual Replit Auth redirect
+// Simplified login route - redirect to frontend
 app.get('/api/login', (req, res) => {
-  // Check if we're in development
-  if (process.env.NODE_ENV !== 'production') {
-    // In development, simulate authentication by setting session
-    const session = req.session as any;
-    session.user = {
-      id: 'dev-user-123',
-      username: 'Developer',
-      email: 'dev@guardianchain.org',
-      tier: 'CREATOR'
-    };
-    
-    console.log('Development: Session set, redirecting to login-success', session.user);
-    return res.redirect('/login-success');
-  }
-  
-  // Production: Redirect to actual Replit Auth
-  const domain = req.hostname;
-  const protocol = req.secure ? 'https' : 'http';
-  const authUrl = `https://replit.com/auth/oauth2/authorize?response_type=code&client_id=${REPL_ID}&redirect_uri=${protocol}://${domain}/api/callback&scope=openid%20email%20profile`;
-  
-  console.log('Production: Redirecting to Replit Auth:', authUrl);
-  res.redirect(authUrl);
+  // Always redirect to frontend login page
+  res.redirect('/');
 });
 
-// Callback route for Replit Auth
-app.get('/api/callback', async (req, res) => {
-  const { code } = req.query;
-  
-  if (!code) {
-    return res.redirect('/login?error=no_code');
-  }
 
-  try {
-    console.log('Auth callback received with code:', code);
-    
-    // In production, exchange code for tokens with Replit
-    // For now, simulate successful authentication
-    const session = req.session as any;
-    session.user = {
-      id: `replit-user-${Date.now()}`,
-      username: 'Replit User',
-      email: 'user@replit.com',
-      tier: 'CREATOR'
-    };
-    
-    res.redirect('/login-success');
-  } catch (error) {
-    console.error('Auth callback error:', error);
-    res.redirect('/login?error=auth_failed');
-  }
+// Callback route for Replit Auth (simplified)
+app.get('/api/callback', async (req, res) => {
+  // Always redirect to frontend
+  res.redirect('/');
 });
 
 // Logout route
