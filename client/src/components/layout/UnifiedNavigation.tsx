@@ -82,7 +82,11 @@ interface NavigationSection {
   items: NavigationItem[];
 }
 
-export default function UnifiedNavigation() {
+interface UnifiedNavigationProps {
+  user?: any;
+}
+
+export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
@@ -502,13 +506,65 @@ export default function UnifiedNavigation() {
               {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </Button>
 
-            {/* Profile/Login */}
-            <Link href="/login">
-              <Button className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700">
-                <User className="h-4 w-4 mr-2" />
-                Login
-              </Button>
-            </Link>
+            {/* User Profile/Login */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-slate-300 hover:text-white">
+                    <User className="h-4 w-4 mr-2" />
+                    {user.firstName || user.email.split('@')[0]}
+                    <Badge className="ml-2 bg-purple-600/20 text-purple-400 text-xs">
+                      {user.tier}
+                    </Badge>
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-slate-800 border-slate-700">
+                  <DropdownMenuLabel className="text-slate-300">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none text-white">
+                        {user.firstName || user.email.split('@')[0]} {user.lastName || ''}
+                      </p>
+                      <p className="text-xs leading-none text-slate-400">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-slate-700" />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile-dashboard" className="flex items-center space-x-2">
+                      <User className="h-4 w-4" />
+                      <span>Profile Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings" className="flex items-center space-x-2">
+                      <Settings className="h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-slate-700" />
+                  <DropdownMenuItem 
+                    onClick={() => {
+                      localStorage.removeItem('auth_token');
+                      localStorage.removeItem('auth_user');
+                      window.location.href = '/';
+                    }}
+                    className="flex items-center space-x-2 text-red-400"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login">
+                <Button className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700">
+                  <User className="h-4 w-4 mr-2" />
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu */}

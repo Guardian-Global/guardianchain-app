@@ -190,6 +190,8 @@ function Router() {
 
   // Simple auth check using localStorage
   const token = localStorage.getItem('auth_token');
+  const userStr = localStorage.getItem('auth_user');
+  const user = userStr ? JSON.parse(userStr) : null;
   const isLoggedIn = Boolean(token);
 
   if (!isLoggedIn) {
@@ -200,7 +202,7 @@ function Router() {
     <div className="min-h-screen bg-slate-900 text-white">
       <WelcomeTour />
       <LiveTokenTracker position="top" />
-      <UnifiedNavigation />
+      <UnifiedNavigation user={user} />
       <main className="pt-20 px-4 max-w-screen-xl mx-auto">
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-screen">
@@ -226,6 +228,7 @@ function Router() {
             <Route path="/system-validation" component={lazy(() => import("./pages/system-validation"))} />
             <Route path="/launch" component={lazy(() => import("./pages/launch-announcement"))} />
             <Route path="/launch-enhancements" component={lazy(() => import("./pages/launch-enhancements"))} />
+            <Route path="/profile-dashboard" component={lazy(() => import("./pages/profile-dashboard"))} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
 

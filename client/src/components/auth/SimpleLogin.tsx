@@ -35,8 +35,12 @@ export default function SimpleLogin() {
           description: "Welcome to GuardianChain!",
         });
         
-        // Force page reload to update auth state
-        window.location.href = "/";
+        // Check user tier and redirect appropriately
+        if (data.session.user.email.includes('master') || data.session.user.email.includes('founder')) {
+          window.location.href = "/validator-dashboard";
+        } else {
+          window.location.href = "/profile-dashboard";
+        }
       } else {
         toast({
           title: "Login Failed",
@@ -93,8 +97,12 @@ export default function SimpleLogin() {
           description: "Welcome to GuardianChain!",
         });
         
-        // Force page reload to update auth state
-        window.location.href = "/";
+        // Check user tier and redirect appropriately  
+        if (data.session.user.email.includes('master') || data.session.user.email.includes('founder')) {
+          window.location.href = "/validator-dashboard";
+        } else {
+          window.location.href = "/profile-dashboard";
+        }
       } else {
         toast({
           title: "Signup Failed",
