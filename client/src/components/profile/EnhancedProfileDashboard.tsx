@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
+// import { useUnifiedAuth } from "@/hooks/useUnifiedAuth"; // Disabled to prevent auth conflicts
 import {
   User,
   Settings,
@@ -127,7 +127,12 @@ const FOUNDER_PROFILES = [
 ];
 
 export default function EnhancedProfileDashboard() {
-  const { user, isAuthenticated } = useUnifiedAuth();
+  // Use localStorage auth instead of hook to prevent conflicts
+  const token = localStorage.getItem('auth_token');
+  const userStr = localStorage.getItem('auth_user');
+  const user = userStr ? JSON.parse(userStr) : null;
+  const isAuthenticated = Boolean(token && user);
+  
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedTab, setSelectedTab] = useState("overview");
@@ -223,14 +228,17 @@ export default function EnhancedProfileDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto p-6">
-        <Card className="p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Profile Access Required</h2>
-          <p className="text-muted-foreground mb-6">
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+        <Card className="bg-slate-800 border-slate-700 p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4 text-white">Profile Access Required</h2>
+          <p className="text-slate-400 mb-6">
             Please log in to view and customize your profile.
           </p>
-          <Button onClick={() => (window.location.href = "/api/login")}>
-            Log In to Continue
+          <Button 
+            onClick={() => (window.location.href = "/")}
+            className="bg-purple-600 hover:bg-purple-700"
+          >
+            Go to Login
           </Button>
         </Card>
       </div>
@@ -239,16 +247,17 @@ export default function EnhancedProfileDashboard() {
 
   if (isLoading || !profileData) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+          <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-slate-900 text-white">
+      <div className="container mx-auto p-6 space-y-6">
       {/* Profile Header */}
       <Card className="relative overflow-hidden">
         <div className="h-48 bg-gradient-to-r from-purple-600 via-blue-600 to-green-600" />
@@ -772,6 +781,7 @@ export default function EnhancedProfileDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

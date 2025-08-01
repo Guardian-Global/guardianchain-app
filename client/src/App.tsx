@@ -283,6 +283,10 @@ function Router() {
           path="/profile"
           component={() => <EnhancedProfileDashboard />}
         />
+        <Route
+          path="/profile-dashboard"
+          component={() => <EnhancedProfileDashboard />}
+        />
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
         <Route path="/mascot-settings" component={MascotSettingsPage} />
