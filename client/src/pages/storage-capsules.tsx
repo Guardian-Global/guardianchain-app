@@ -120,11 +120,12 @@ export default function StorageCapsules() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            Storage Capsules
+            📸 Secure Capsule Storage for Life
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Secure, encrypted storage for your precious memories and important documents. 
-            Choose the perfect size for your needs.
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Stop paying monthly fees for data you don't own. With GuardianChain Storage Capsules,
+            your most precious photos and videos are permanently encrypted and sealed on-chain.
+            <span className="block mt-2 text-purple-400 font-semibold">Private. Sovereign. Immutable.</span>
           </p>
         </div>
 
@@ -158,10 +159,11 @@ export default function StorageCapsules() {
                 <div className="flex justify-center mb-2">
                   {getStorageIcon(size)}
                 </div>
-                <CardTitle className="text-white text-2xl">{size}</CardTitle>
+                <CardTitle className="text-white text-2xl">{size} Capsule</CardTitle>
+                <div className="text-sm text-gray-400 mb-2">Permanent on-chain storage</div>
                 <div className="text-3xl font-bold text-purple-400">
-                  ${price}
-                  <span className="text-sm text-gray-400 font-normal">/once</span>
+                  ${price} USD
+                  <span className="text-sm text-gray-400 font-normal block">One-time payment</span>
                 </div>
               </CardHeader>
 
@@ -191,22 +193,38 @@ export default function StorageCapsules() {
           ))}
         </div>
 
-        {/* Features Section */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <div>
-            <Shield className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Military-Grade Encryption</h3>
-            <p className="text-gray-400">Your data is protected with AES-256 encryption</p>
-          </div>
-          <div>
-            <Database className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Immutable Storage</h3>
-            <p className="text-gray-400">Once sealed, your capsules cannot be altered</p>
-          </div>
-          <div>
-            <Clock className="w-12 h-12 text-green-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Long-Term Preservation</h3>
-            <p className="text-gray-400">Guaranteed storage for years to come</p>
+        {/* Why Choose Guardian Capsules */}
+        <div className="mt-16 bg-purple-900/30 rounded-xl p-8">
+          <h2 className="text-3xl font-bold mb-6 text-center">📦 Why Choose Guardian Capsules?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                <span className="text-gray-300">Permanent IPFS + blockchain-based storage</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                <span className="text-gray-300">No monthly or hidden fees — ever</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                <span className="text-gray-300">Private ownership, sovereign control</span>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                <span className="text-gray-300">Encrypted & immortalized for legacy</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                <span className="text-gray-300">Backed by Veritas Seal with time-stamped proof</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                <span className="text-gray-300">Stop paying forever for what you should own</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

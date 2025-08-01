@@ -11,14 +11,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-06-30.basil",
 });
 
-// Storage pricing tiers
+// Storage pricing tiers (base cost + 25% markup)
 const STORAGE_PRICING = {
-  '64GB': 5.00,
-  '128GB': 9.38,
-  '256GB': 16.25,
-  '512GB': 30.00,
-  '1TB': 57.50,
-  '2TB': 112.50
+  '64GB': 5.00,   // $4.00 base + 25% = $5.00
+  '128GB': 9.38,  // $7.50 base + 25% = $9.38
+  '256GB': 16.25, // $13.00 base + 25% = $16.25
+  '512GB': 30.00, // $24.00 base + 25% = $30.00
+  '1TB': 57.50,   // $46.00 base + 25% = $57.50
+  '2TB': 112.50   // $90.00 base + 25% = $112.50
 };
 
 // Create checkout session for storage capsules
@@ -45,8 +45,8 @@ router.post('/create-storage-session', async (req, res) => {
           price_data: {
             currency: 'usd',
             product_data: { 
-              name: `${size} Storage Capsule`,
-              description: `Secure encrypted storage capsule with ${size} capacity`
+              name: `${size} Permanent Storage Capsule`,
+              description: `Permanent on-chain storage with ${size} capacity - No monthly fees, sovereign control`
             },
             unit_amount: Math.round((STORAGE_PRICING as any)[size] * 100)
           },
@@ -112,12 +112,12 @@ router.get('/storage-pricing', (req, res) => {
     pricing: STORAGE_PRICING,
     currency: 'USD',
     features: {
-      '64GB': ['Basic encrypted storage', 'Image & video support', '1 year retention'],
-      '128GB': ['Enhanced storage', 'Advanced encryption', '2 year retention'],
-      '256GB': ['Premium storage', 'Multi-format support', '3 year retention'],
-      '512GB': ['Professional storage', 'Unlimited formats', '5 year retention'],
-      '1TB': ['Enterprise storage', 'Priority processing', '10 year retention'],
-      '2TB': ['Ultimate storage', 'White-glove service', 'Lifetime retention']
+      '64GB': ['Permanent IPFS + blockchain storage', 'No monthly fees - ever', 'Private ownership & control'],
+      '128GB': ['Permanent IPFS + blockchain storage', 'No monthly fees - ever', 'Advanced encryption', 'Private sovereignty'],
+      '256GB': ['Permanent IPFS + blockchain storage', 'No monthly fees - ever', 'Multi-format support', 'Veritas Seal backed'],
+      '512GB': ['Permanent IPFS + blockchain storage', 'No monthly fees - ever', 'Professional encryption', 'Time-stamped proof'],
+      '1TB': ['Permanent IPFS + blockchain storage', 'No monthly fees - ever', 'Enterprise-grade security', 'Legacy preservation'],
+      '2TB': ['Permanent IPFS + blockchain storage', 'No monthly fees - ever', 'Ultimate sovereignty', 'Immortalized forever']
     }
   });
 });
