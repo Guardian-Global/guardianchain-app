@@ -36,9 +36,11 @@ export default function SimpleLogin() {
           description: "Welcome to GuardianChain!",
         });
         
-        // Simple redirect to force app refresh and show logged in state
+        // Redirect to the page they were trying to access, or home
         setTimeout(() => {
-          window.location.reload();
+          const redirectPath = localStorage.getItem('redirect_after_login') || '/';
+          localStorage.removeItem('redirect_after_login');
+          window.location.href = redirectPath;
         }, 500);
       } else {
         toast({

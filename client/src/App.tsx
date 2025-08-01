@@ -190,7 +190,14 @@ function Router() {
   const token = localStorage.getItem('auth_token');
   const userStr = localStorage.getItem('auth_user');
   const user = userStr ? JSON.parse(userStr) : null;
-  const isLoggedIn = Boolean(token);
+  const isLoggedIn = Boolean(token && user);
+
+  // Store current path for redirect after login
+  React.useEffect(() => {
+    if (!isLoggedIn) {
+      localStorage.setItem('redirect_after_login', window.location.pathname);
+    }
+  }, [isLoggedIn]);
 
   // Show login if not authenticated
   if (!isLoggedIn) {

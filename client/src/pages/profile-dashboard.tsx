@@ -67,12 +67,16 @@ export default function ProfileDashboard() {
     SOVEREIGN: "bg-yellow-600/20 text-yellow-400"
   };
 
+  // Check if user is not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
         <div className="text-center">
-          <p className="text-slate-400">Please log in to view your profile.</p>
-          <Button onClick={() => window.location.href = '/'} className="mt-4">
+          <p className="text-slate-400 mb-4">You need to be logged in to view your profile.</p>
+          <Button 
+            onClick={() => window.location.href = '/'} 
+            className="bg-purple-600 hover:bg-purple-700"
+          >
             Go to Login
           </Button>
         </div>
