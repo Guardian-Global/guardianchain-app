@@ -5,6 +5,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import TopbarCommandMenu from "./TopbarCommandMenu";
 import MobileDrawer from "./MobileDrawer";
 import CommandPalette from "./CommandPalette";
+import PWAInstallButton from "../PWAInstallButton";
 import MobileNav from "./MobileNav";
 import CapsuleDrawer from "@/components/ui/CapsuleDrawer";
 import QuickActions from "./QuickActions";
@@ -63,6 +64,9 @@ const EnhancedLayout = ({
               <div className="flex-1">
                 <TopbarCommandMenu />
               </div>
+              <div className="ml-4">
+                <PWAInstallButton />
+              </div>
             </div>
             
             {/* Breadcrumbs */}
@@ -79,6 +83,9 @@ const EnhancedLayout = ({
         {showCapsuleDrawer && <CapsuleDrawer />}
         {showQuickActions && <QuickActions />}
         {showStatusIndicator && <StatusIndicator />}
+        
+        {/* PWA Install Prompt */}
+        <PWAInstallButton />
       </div>
     </>
   );

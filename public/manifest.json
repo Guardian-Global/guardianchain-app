@@ -1,21 +1,95 @@
 {
-  "name": "GUARDIANCHAIN - GTT Token",
-  "short_name": "GTT Token",
-  "description": "GUARDIANCHAIN Truth Token - Enterprise-grade blockchain verification platform",
+  "name": "GuardianChain - Truth Vault Platform",
+  "short_name": "GuardianChain",
+  "description": "Sovereign memory infrastructure for truth preservation and verification",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
-  "theme_color": "#8b5cf6",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "utilities", "business"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/",
   "icons": [
     {
-      "src": "/assets/logo.png",
-      "sizes": "200x200",
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["blockchain", "cryptocurrency", "verification", "security"],
-  "lang": "en",
-  "dir": "ltr",
-  "orientation": "portrait-primary"
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "GuardianChain Dashboard"
+    },
+    {
+      "src": "/screenshots/mobile-capsules.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Truth Capsules"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Capsule",
+      "short_name": "Create",
+      "description": "Create a new truth capsule",
+      "url": "/vault?action=create",
+      "icons": [
+        {
+          "src": "/icons/shortcut-create.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Replay Capsules",
+      "short_name": "Replay",
+      "description": "View and replay your capsules",
+      "url": "/replay",
+      "icons": [
+        {
+          "src": "/icons/shortcut-replay.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/vault?share=true",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*", "video/*", "audio/*", ".pdf", ".txt"]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/vault?import=true",
+      "accept": {
+        "application/json": [".json"],
+        "text/plain": [".txt", ".md"]
+      }
+    }
+  ]
 }
