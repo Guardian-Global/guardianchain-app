@@ -1,58 +1,50 @@
 import React from 'react';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-interface GlowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'accent' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
-  glow?: boolean;
-  children: React.ReactNode;
+interface GlowButtonProps extends ButtonProps {
+  glowColor?: 'blue' | 'purple' | 'cyan' | 'yellow' | 'green' | 'red';
+  intensity?: 'low' | 'medium' | 'high';
 }
 
-export default function GlowButton({ 
-  children, 
-  variant = 'primary', 
-  size = 'md', 
-  glow = true,
-  className,
+export function GlowButton({ 
+  className, 
+  glowColor = 'cyan', 
+  intensity = 'medium',
+  children,
   ...props 
 }: GlowButtonProps) {
-  const baseClasses = "relative font-semibold rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed";
-  
-  const variants = {
-    primary: "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white focus:ring-blue-300",
-    secondary: "bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white focus:ring-slate-300",
-    accent: "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white focus:ring-green-300",
-    danger: "bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white focus:ring-red-300"
+  const glowColors = {
+    blue: 'shadow-blue-500/50 hover:shadow-blue-500/75',
+    purple: 'shadow-purple-500/50 hover:shadow-purple-500/75',
+    cyan: 'shadow-cyan-500/50 hover:shadow-cyan-500/75',
+    yellow: 'shadow-yellow-500/50 hover:shadow-yellow-500/75',
+    green: 'shadow-green-500/50 hover:shadow-green-500/75',
+    red: 'shadow-red-500/50 hover:shadow-red-500/75'
   };
 
-  const sizes = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-6 py-3 text-base",
-    lg: "px-8 py-4 text-lg"
+  const intensities = {
+    low: 'shadow-lg',
+    medium: 'shadow-xl',
+    high: 'shadow-2xl'
   };
-
-  const glowStyles = glow ? {
-    primary: "hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]",
-    secondary: "hover:shadow-[0_0_30px_rgba(100,116,139,0.5)]",
-    accent: "hover:shadow-[0_0_30px_rgba(34,197,94,0.5)]",
-    danger: "hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]"
-  } : {};
 
   return (
-    <button
-      {...props}
+    <Button
       className={cn(
-        baseClasses,
-        variants[variant],
-        sizes[size],
-        glow && glowStyles[variant],
+        'relative overflow-hidden transform hover:scale-105 transition-all duration-300 font-web3',
+        'bg-gradient-to-r from-gray-900 to-black border border-white/20',
+        'hover:border-white/40 text-white',
+        intensities[intensity],
+        glowColors[glowColor],
         className
       )}
+      {...props}
     >
       <span className="relative z-10">{children}</span>
-      {glow && (
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
-      )}
-    </button>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-700" />
+    </Button>
   );
 }
+
+export default GlowButton;

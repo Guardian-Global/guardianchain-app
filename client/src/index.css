@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap");
 @import "./styles/animations.css";
 
 @tailwind base;
@@ -7,11 +7,117 @@
 
 @layer base {
   :root {
-    --border: hsl(214.3 31.8% 91.4%);
+    /* Premium Web3 Color Palette */
+    --background: hsl(240 10% 3.9%);
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(240 10% 3.9%);
+    --card-foreground: hsl(0 0% 98%);
+    --popover: hsl(240 10% 3.9%);
+    --popover-foreground: hsl(0 0% 98%);
+    --primary: hsl(51 100% 50%); /* Golden */
+    --primary-foreground: hsl(240 10% 3.9%);
+    --secondary: hsl(240 3.7% 15.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(240 3.7% 15.9%);
+    --muted-foreground: hsl(240 5% 64.9%);
+    --accent: hsl(240 3.7% 15.9%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(240 3.7% 15.9%);
+    --input: hsl(240 3.7% 15.9%);
+    --ring: hsl(51 100% 50%); /* Golden ring */
+    --radius: 0.75rem;
+    
+    /* Web3 Specific Colors */
+    --neon-cyan: hsl(180 100% 50%);
+    --neon-purple: hsl(270 100% 70%);
+    --neon-pink: hsl(330 100% 70%);
+    --blockchain-blue: hsl(220 100% 60%);
+    --ethereum-purple: hsl(260 100% 65%);
+    --polygon-purple: hsl(270 100% 50%);
+    --truth-gold: hsl(51 100% 50%);
+    --grief-red: hsl(0 85% 60%);
+    --capsule-green: hsl(120 60% 50%);
+    --quantum-gradient: linear-gradient(135deg, hsl(270 100% 70%) 0%, hsl(180 100% 50%) 50%, hsl(51 100% 50%) 100%);
+    
+    /* Glass Morphism Variables */
+    --glass-bg: hsla(240 10% 3.9% / 0.8);
+    --glass-border: hsla(0 0% 100% / 0.1);
+    --glass-shadow: 0 8px 32px hsla(0 0% 0% / 0.37);
+    --glass-backdrop: blur(8px);
   }
+  
   .dark {
-    --border: hsl(217.2 32.6% 17.5%);
+    --background: hsl(240 10% 3.9%);
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(240 10% 3.9%);
+    --card-foreground: hsl(0 0% 98%);
+    --popover: hsl(240 10% 3.9%);
+    --popover-foreground: hsl(0 0% 98%);
+    --primary: hsl(51 100% 50%);
+    --primary-foreground: hsl(240 10% 3.9%);
+    --secondary: hsl(240 3.7% 15.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(240 3.7% 15.9%);
+    --muted-foreground: hsl(240 5% 64.9%);
+    --accent: hsl(240 3.7% 15.9%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(240 3.7% 15.9%);
+    --input: hsl(240 3.7% 15.9%);
+    --ring: hsl(51 100% 50%);
   }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-variation-settings: "slnt" 0;
+  }
+  
+  /* Premium Typography Classes */
+  .font-quantum {
+    font-family: "Orbitron", "Space Grotesk", monospace;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+  }
+  
+  .font-cyber {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-weight: 500;
+  }
+  
+  .font-web3 {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-weight: 500;
+  }
+}
+
+/* Enhanced Utility Classes */
+.text-gradient-quantum {
+  background: linear-gradient(135deg, hsl(180 100% 50%), hsl(270 100% 70%), hsl(51 100% 50%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-neural {
+  background: linear-gradient(45deg, hsl(220 100% 60%), hsl(270 100% 70%), hsl(330 100% 70%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-truth {
+  background: linear-gradient(90deg, hsl(51 100% 50%), hsl(45 100% 60%), hsl(39 100% 50%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Tour highlight styles */
@@ -19,10 +125,23 @@
   position: relative;
   z-index: 99;
   box-shadow:
-    0 0 0 4px rgba(59, 130, 246, 0.5),
-    0 0 20px rgba(59, 130, 246, 0.3);
-  border-radius: 8px;
-  animation: tour-pulse 2s infinite;
+    0 0 0 4px rgba(0, 255, 255, 0.5),
+    0 0 20px rgba(0, 255, 255, 0.3);
+  border-radius: 12px;
+  animation: quantum-highlight 2s infinite;
+}
+
+@keyframes quantum-highlight {
+  0%, 100% {
+    box-shadow:
+      0 0 0 4px rgba(0, 255, 255, 0.5),
+      0 0 20px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(138, 43, 226, 0.5),
+      0 0 30px rgba(138, 43, 226, 0.4);
+  }
 }
 
 @keyframes tour-pulse {

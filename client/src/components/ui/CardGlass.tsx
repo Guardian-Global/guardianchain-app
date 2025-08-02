@@ -1,34 +1,36 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-interface CardGlassProps {
+interface CardGlassProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'quantum' | 'neural' | 'holographic';
   children: React.ReactNode;
-  className?: string;
-  hover?: boolean;
-  gradient?: boolean;
 }
 
-export default function CardGlass({ 
+export function CardGlass({ 
+  className, 
+  variant = 'default', 
   children, 
-  className,
-  hover = true,
-  gradient = false
+  ...props 
 }: CardGlassProps) {
+  const variants = {
+    default: 'glass-effect border-white/10',
+    quantum: 'quantum-field border-yellow-500/30 backdrop-blur-xl',
+    neural: 'bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20 border-cyan-500/30 neural-pulse backdrop-blur-xl',
+    holographic: 'holographic-glass border-white/20'
+  };
+
   return (
-    <div className={cn(
-      "backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transition-all duration-500",
-      gradient 
-        ? "bg-gradient-to-br from-white/10 to-white/5" 
-        : "bg-white/5",
-      hover && "hover:bg-white/10 hover:border-white/20 hover:shadow-[0_8px_32px_rgba(255,255,255,0.1)] hover:-translate-y-1",
-      className
-    )}>
-      <div className="relative z-10 p-6">
-        {children}
-      </div>
-      {gradient && (
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 rounded-2xl" />
+    <div
+      className={cn(
+        'rounded-2xl border p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl',
+        variants[variant],
+        className
       )}
+      {...props}
+    >
+      {children}
     </div>
   );
 }
+
+export default CardGlass;

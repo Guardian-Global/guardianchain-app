@@ -85,7 +85,7 @@ export default function Navigation() {
         </div>
       </motion.nav>
 
-      {/* Mobile Navigation */}
+      {/* Quantum Mobile Navigation */}
       <motion.div 
         className="lg:hidden fixed top-4 right-4 z-50"
         initial={{ opacity: 0 }}
@@ -96,7 +96,7 @@ export default function Navigation() {
           variant="outline"
           size="sm"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="bg-black/80 backdrop-blur-xl border-white/10 text-white"
+          className="holographic-glass border-cyan-500/30 text-cyan-300 hover:text-cyan-100 neural-pulse"
         >
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
@@ -105,7 +105,7 @@ export default function Navigation() {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <motion.div
-          className="lg:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-xl"
+          className="lg:hidden fixed inset-0 z-40 holographic-glass multidimensional-grid"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -130,8 +130,8 @@ export default function Navigation() {
                       className={`
                         px-8 py-4 rounded-xl text-lg transition-all duration-300
                         ${active 
-                          ? 'bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-black shadow-lg shadow-[#FFD700]/25' 
-                          : 'text-white/80 hover:text-white hover:bg-white/10'
+                          ? 'quantum-field text-black shadow-lg shadow-yellow-500/25 font-quantum' 
+                          : 'text-cyan-300 hover:text-cyan-100 holographic-glass border border-cyan-500/30'
                         }
                       `}
                     >

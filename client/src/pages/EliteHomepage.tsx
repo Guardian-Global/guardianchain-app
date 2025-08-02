@@ -35,6 +35,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import GlowButton from '@/components/ui/GlowButton';
 import CardGlass from '@/components/ui/CardGlass';
+import QuantumCard from '@/components/ui/QuantumCard';
+import Web3Button from '@/components/ui/Web3Button';
 
 // Platform Stats Component with Live Data
 function LivePlatformStats() {
@@ -169,57 +171,59 @@ function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-        {/* Logo with Enhanced Styling */}
-        <div className="mb-8">
+        {/* Quantum Logo with Enhanced Styling */}
+        <div className="mb-8 quantum-field rounded-full w-24 h-24 mx-auto flex items-center justify-center">
           <img 
             src="/assets/GUARDIANCHAIN_logo.png" 
             alt="GuardianChain" 
-            className="h-16 md:h-20 mx-auto mb-4 filter drop-shadow-2xl hover:scale-110 transition-transform duration-300"
+            className="h-16 md:h-20 mx-auto mb-4 filter drop-shadow-2xl hover:scale-110 transition-transform duration-300 neural-pulse"
             onError={(e) => {
-              // Fallback to text if logo fails to load
+              // Fallback to quantum text if logo fails to load
               const target = e.currentTarget;
               target.style.display = 'none';
               const textLogo = document.createElement('div');
-              textLogo.innerHTML = '<span class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">GuardianChain</span>';
-              textLogo.className = 'mb-4';
+              textLogo.innerHTML = '<span class="text-4xl md:text-5xl font-quantum bg-gradient-to-r from-cyan-400 via-purple-400 to-yellow-400 bg-clip-text text-transparent">GuardianChain</span>';
+              textLogo.className = 'mb-4 holographic-glass p-4 rounded-xl';
               target.parentNode?.insertBefore(textLogo, target);
             }}
           />
         </div>
 
-        {/* Enhanced Badge */}
-        <Badge className="mb-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border-blue-400/30 px-4 py-2 animate-pulse">
-          <Sparkles className="w-4 h-4 mr-2" />
-          Truth Network v2.0 • Live on Polygon
-        </Badge>
+        {/* Quantum Enhanced Badge */}
+        <div className="holographic-glass mb-6 inline-flex items-center px-6 py-3 rounded-full border border-cyan-500/30">
+          <Sparkles className="w-5 h-5 mr-3 text-cyan-400 neural-pulse" />
+          <span className="font-cyber text-sm bg-gradient-to-r from-cyan-400 via-purple-400 to-yellow-400 bg-clip-text text-transparent font-bold">
+            Truth Network v3.0 • Quantum Secured • Live on Polygon
+          </span>
+        </div>
 
-        {/* Ultra-Enhanced Hero Headline */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight transform hover:scale-105 transition-transform duration-500">
-          <span className="bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent drop-shadow-2xl animate-epic-glow">
+        {/* Quantum-Enhanced Hero Headline */}
+        <h1 className="text-5xl md:text-7xl lg:text-9xl font-quantum mb-8 leading-tight transform hover:scale-105 transition-transform duration-500">
+          <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-yellow-400 bg-clip-text text-transparent drop-shadow-2xl quantum-field animate-gradient-x">
             Preserve Truth
           </span>
           <br />
-          <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl animate-rainbow-glow">
-            Unlock Value
+          <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent drop-shadow-2xl holographic-glass p-2 rounded-xl inline-block mt-4">
+            Unlock Infinity
           </span>
         </h1>
 
-        {/* Enhanced Subtitle */}
-        <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-          The sovereign Web3 infrastructure for{" "}
-          <span className="text-blue-400 font-semibold bg-blue-400/10 px-2 py-1 rounded">
-            time-locked proof
-          </span>
-          ,{" "}
-          <span className="text-purple-400 font-semibold bg-purple-400/10 px-2 py-1 rounded">
-            grief-score yield
-          </span>
-          , and{" "}
-          <span className="text-cyan-400 font-semibold bg-cyan-400/10 px-2 py-1 rounded">
-            capsule monetization
-          </span>
-          . Seal your truth, earn GTT rewards.
-        </p>
+        {/* Quantum-Enhanced Subtitle */}
+        <div className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed font-web3">
+          <p className="mb-4">The sovereign Web3 infrastructure for quantum-secured truth preservation:</p>
+          <div className="flex flex-wrap justify-center gap-4 mb-6">
+            <span className="holographic-glass px-4 py-2 rounded-full text-cyan-400 font-cyber border border-cyan-500/30">
+              ⚡ Time-Locked Proof
+            </span>
+            <span className="holographic-glass px-4 py-2 rounded-full text-purple-400 font-cyber border border-purple-500/30">
+              🎯 Grief-Score Yield
+            </span>
+            <span className="holographic-glass px-4 py-2 rounded-full text-yellow-400 font-cyber border border-yellow-500/30">
+              💎 Capsule Monetization
+            </span>
+          </div>
+          <p className="font-quantum text-yellow-400">Seal your truth. Unlock infinite value.</p>
+        </div>
 
         {/* Hero Video Section */}
         <div className="max-w-4xl mx-auto mb-12 relative">
@@ -252,52 +256,70 @@ function HeroSection() {
           <LivePlatformStats />
         </div>
 
-        {/* Ultra-Enhanced CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8">
+        {/* Quantum-Enhanced CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-12">
           {isAuthenticated ? (
             <>
               <Link href="/create">
-                <GlowButton size="lg" className="px-10 py-5 text-xl font-bold shadow-2xl transform hover:scale-110 transition-all duration-300 animate-epic-glow relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-holographic"></div>
-                  <Shield className="w-6 h-6 mr-3 relative z-10" />
-                  <span className="relative z-10">Create Truth Capsule</span>
-                </GlowButton>
+                <Web3Button 
+                  web3Variant="quantum" 
+                  size="lg" 
+                  className="px-12 py-6 text-xl font-quantum shadow-2xl transform hover:scale-110 transition-all duration-300"
+                >
+                  <Shield className="w-6 h-6 mr-3" />
+                  Create Truth Capsule
+                </Web3Button>
               </Link>
               <Link href="/dashboard">
-                <Button size="lg" variant="outline" className="px-10 py-5 text-xl border-white/30 hover:border-white/60 backdrop-blur-md hover:backdrop-blur-lg transform hover:scale-105 transition-all duration-300 animate-rainbow-glow">
+                <Web3Button 
+                  web3Variant="holographic" 
+                  size="lg" 
+                  className="px-12 py-6 text-xl font-cyber transform hover:scale-105 transition-all duration-300"
+                >
                   <TrendingUp className="w-6 h-6 mr-3" />
-                  My Dashboard
-                </Button>
+                  Quantum Dashboard
+                </Web3Button>
               </Link>
             </>
           ) : (
             <>
               <Link href="/auth/login">
-                <GlowButton size="lg" className="px-10 py-5 text-xl font-bold shadow-2xl transform hover:scale-110 transition-all duration-300 animate-epic-glow relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 animate-holographic"></div>
-                  <Zap className="w-6 h-6 mr-3 relative z-10" />
-                  <span className="relative z-10">Enter GuardianChain</span>
-                </GlowButton>
+                <Web3Button 
+                  web3Variant="neural" 
+                  size="lg" 
+                  className="px-12 py-6 text-xl font-quantum shadow-2xl transform hover:scale-110 transition-all duration-300"
+                >
+                  <Zap className="w-6 h-6 mr-3" />
+                  Enter GuardianChain
+                </Web3Button>
               </Link>
               <Link href="/explore">
-                <Button size="lg" variant="outline" className="px-8 py-4 text-lg border-white/20 hover:border-white/40 backdrop-blur-sm">
+                <Web3Button 
+                  web3Variant="holographic" 
+                  size="lg" 
+                  className="px-10 py-5 text-lg font-cyber"
+                >
                   <Play className="w-5 h-5 mr-2" />
-                  Watch Demo
-                </Button>
+                  Quantum Demo
+                </Web3Button>
               </Link>
             </>
           )}
         </div>
 
-        {/* Enhanced Trust Indicators */}
-        <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-slate-400">
-          <div className="flex items-center gap-2 bg-green-400/10 px-3 py-2 rounded-full">
-            <Shield className="w-4 h-4 text-green-400" />
-            <span>Polygon Secured</span>
+        {/* Quantum Trust Indicators */}
+        <div className="flex flex-wrap justify-center items-center gap-6 text-sm">
+          <div className="holographic-glass flex items-center gap-2 px-4 py-3 rounded-full border border-green-500/30">
+            <Shield className="w-5 h-5 text-green-400 neural-pulse" />
+            <span className="font-cyber text-green-300">Quantum Secured</span>
           </div>
-          <div className="flex items-center gap-2 bg-blue-400/10 px-3 py-2 rounded-full">
-            <CheckCircle className="w-4 h-4 text-blue-400" />
-            <span>IPFS Verified</span>
+          <div className="holographic-glass flex items-center gap-2 px-4 py-3 rounded-full border border-blue-500/30">
+            <CheckCircle className="w-5 h-5 text-blue-400 neural-pulse" />
+            <span className="font-cyber text-blue-300">Blockchain Verified</span>
+          </div>
+          <div className="holographic-glass flex items-center gap-2 px-4 py-3 rounded-full border border-purple-500/30">
+            <Infinity className="w-5 h-5 text-purple-400 neural-pulse" />
+            <span className="font-cyber text-purple-300">Infinite Truth</span>
           </div>
           <div className="flex items-center gap-2 bg-purple-400/10 px-3 py-2 rounded-full">
             <Lock className="w-4 h-4 text-purple-400" />
