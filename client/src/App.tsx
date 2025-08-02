@@ -277,6 +277,8 @@ function Router() {
         <Route path="/lineage" component={lazy(() => import("./pages/LineageGraph"))} />
         <Route path="/reputation" component={lazy(() => import("./pages/ReputationIndex"))} />
         <Route path="/smri" component={lazy(() => import("./pages/ReputationIndex"))} />
+        <Route path="/smri-dashboard" component={lazy(() => import("./pages/SMRIDashboard"))} />
+        <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />

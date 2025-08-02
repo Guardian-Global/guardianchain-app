@@ -2126,6 +2126,149 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // SMRI Leaderboard API
+  app.get('/api/smri/leaderboard', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🏆 SMRI Leaderboard requested');
+    
+    try {
+      const { timeframe = 'all' } = req.query;
+      
+      // Mock leaderboard data
+      const mockLeaderboard = [
+        { wallet: 'veritas@guardianchain.app', truth_score: 245, reputation_tier: 'Veritas', rank: 1 },
+        { wallet: 'guardian@truth.eth', truth_score: 189, reputation_tier: 'Gold', rank: 2 },
+        { wallet: 'memory_keeper@chain.app', truth_score: 156, reputation_tier: 'Gold', rank: 3 },
+        { wallet: 'truth_seeker@web3.com', truth_score: 134, reputation_tier: 'Gold', rank: 4 },
+        { wallet: 'capsule_creator@defi.org', truth_score: 98, reputation_tier: 'Silver', rank: 5 },
+        { wallet: 'grief_guardian@nft.app', truth_score: 87, reputation_tier: 'Silver', rank: 6 },
+        { wallet: 'legacy_holder@dao.com', truth_score: 72, reputation_tier: 'Silver', rank: 7 },
+        { wallet: 'debug@guardianchain.app', truth_score: 33, reputation_tier: 'Bronze', rank: 8 },
+        { wallet: 'newbie@starter.eth', truth_score: 21, reputation_tier: 'Bronze', rank: 9 },
+        { wallet: 'explorer@begin.app', truth_score: 15, reputation_tier: 'Bronze', rank: 10 }
+      ];
+      
+      // Filter by timeframe if needed (mock implementation)
+      let filteredLeaderboard = mockLeaderboard;
+      if (timeframe === 'week') {
+        // Mock weekly filtering by slightly reducing scores
+        filteredLeaderboard = mockLeaderboard.map(entry => ({
+          ...entry,
+          truth_score: Math.floor(entry.truth_score * 0.3)
+        }));
+      } else if (timeframe === 'month') {
+        // Mock monthly filtering
+        filteredLeaderboard = mockLeaderboard.map(entry => ({
+          ...entry,
+          truth_score: Math.floor(entry.truth_score * 0.7)
+        }));
+      }
+      
+      console.log('✅ Leaderboard data generated for timeframe:', timeframe);
+      res.json(filteredLeaderboard);
+      
+    } catch (error) {
+      console.error('❌ Failed to get leaderboard:', error);
+      res.status(500).json({ error: 'Failed to get leaderboard data' });
+    }
+  });
+
+  // Guardian Map Network API
+  app.get('/api/guardian-map/network', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🗺️ Guardian map network requested');
+    
+    try {
+      const { region = 'global' } = req.query;
+      
+      // Mock guardian network data
+      const mockGuardians = [
+        {
+          id: 'guardian_1',
+          wallet: 'veritas@guardianchain.app',
+          location: { city: 'San Francisco', country: 'USA', coordinates: [-122.4194, 37.7749] },
+          smri: { truth_score: 245, reputation_tier: 'Veritas', capsule_count: 24, last_active: '2 hours ago' },
+          network: { connections: 12, lineage_depth: 5, influence_radius: 85 }
+        },
+        {
+          id: 'guardian_2',
+          wallet: 'guardian@truth.eth',
+          location: { city: 'London', country: 'UK', coordinates: [-0.1276, 51.5074] },
+          smri: { truth_score: 189, reputation_tier: 'Gold', capsule_count: 18, last_active: '1 hour ago' },
+          network: { connections: 8, lineage_depth: 4, influence_radius: 72 }
+        },
+        {
+          id: 'guardian_3',
+          wallet: 'memory_keeper@chain.app',
+          location: { city: 'Tokyo', country: 'Japan', coordinates: [139.6503, 35.6762] },
+          smri: { truth_score: 156, reputation_tier: 'Gold', capsule_count: 15, last_active: '3 hours ago' },
+          network: { connections: 6, lineage_depth: 3, influence_radius: 68 }
+        },
+        {
+          id: 'guardian_4',
+          wallet: 'debug@guardianchain.app',
+          location: { city: 'Berlin', country: 'Germany', coordinates: [13.4050, 52.5200] },
+          smri: { truth_score: 33, reputation_tier: 'Bronze', capsule_count: 3, last_active: '30 minutes ago' },
+          network: { connections: 2, lineage_depth: 1, influence_radius: 25 }
+        },
+        {
+          id: 'guardian_5',
+          wallet: 'truth_seeker@web3.com',
+          location: { city: 'Toronto', country: 'Canada', coordinates: [-79.3832, 43.6532] },
+          smri: { truth_score: 134, reputation_tier: 'Gold', capsule_count: 12, last_active: '5 hours ago' },
+          network: { connections: 7, lineage_depth: 3, influence_radius: 58 }
+        }
+      ];
+      
+      // Filter by region if needed
+      let filteredGuardians = mockGuardians;
+      if (region !== 'global') {
+        // Mock region filtering logic
+        filteredGuardians = mockGuardians.filter(guardian => {
+          if (region === 'americas') return ['USA', 'Canada'].includes(guardian.location.country);
+          if (region === 'europe') return ['UK', 'Germany'].includes(guardian.location.country);
+          if (region === 'asia') return ['Japan'].includes(guardian.location.country);
+          return true;
+        });
+      }
+      
+      console.log('✅ Guardian network data generated for region:', region);
+      res.json({
+        nodes: filteredGuardians,
+        connections: [
+          { from: 'guardian_1', to: 'guardian_2', strength: 0.8 },
+          { from: 'guardian_2', to: 'guardian_3', strength: 0.6 },
+          { from: 'guardian_1', to: 'guardian_4', strength: 0.4 },
+          { from: 'guardian_3', to: 'guardian_5', strength: 0.7 }
+        ]
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get guardian network:', error);
+      res.status(500).json({ error: 'Failed to get guardian network data' });
+    }
+  });
+
+  // Guardian Map Metrics API
+  app.get('/api/guardian-map/metrics', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 Guardian map metrics requested');
+    
+    try {
+      const mockMetrics = {
+        total_guardians: 1247,
+        active_guardians: 892,
+        global_truth_score: 186420,
+        countries_active: 67,
+        strongest_lineage: 8
+      };
+      
+      console.log('✅ Guardian map metrics generated');
+      res.json(mockMetrics);
+      
+    } catch (error) {
+      console.error('❌ Failed to get guardian metrics:', error);
+      res.status(500).json({ error: 'Failed to get guardian metrics' });
+    }
+  });
+
   // Get lineage tree data
   app.get('/api/lineage/tree/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
     console.log('🌳 Lineage tree requested for:', req.params.capsuleId);
