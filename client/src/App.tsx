@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, startTransition } from "react";
+import React, { lazy, Suspense, startTransition, useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import NavigationProvider from "@/components/navigation/NavigationProvider";
 import NavigationMenu from "@/components/NavigationMenu";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
+import { serviceWorkerManager } from "@/utils/serviceWorkerManager";
 import Footer from "@/components/layout/footer";
 import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
