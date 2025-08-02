@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import MintingTestSuite from "@/components/testing/MintingTestSuite";
+// Component moved to archive during cleanup
 import { TestTube2, Shield, Zap, Rocket } from "lucide-react";
 
 export default function MintingTestPage() {
@@ -89,7 +89,24 @@ export default function MintingTestPage() {
         </Card>
       </div>
 
-      <MintingTestSuite />
+      <Card className="border-gray-200 dark:border-gray-700">
+        <CardHeader>
+          <CardTitle className="text-gray-800 dark:text-gray-200">
+            Test Suite Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <Badge variant="secondary" className="mb-4">
+              Components Archived
+            </Badge>
+            <p className="text-gray-600 dark:text-gray-400">
+              Test components have been moved to archive for production cleanup.
+              Test suite functionality preserved in archive_cleanup/unlinked_components/.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
