@@ -164,10 +164,31 @@ export default function CapsuleDetailPage() {
       if (data.capsule) {
         let updatedCapsule = data.capsule;
         
-        // If the capsule was encrypted, the server has already decrypted it
-        // For client-side verification, we could add additional checks here
-        if (data.unlock_method === "lit_protocol_decrypt") {
-          console.log("Capsule was decrypted using Lit Protocol on server");
+        // If the capsule was encrypted and we have encrypted data, try client-side decryption
+        if (data.capsule.content?.encryptedContent && data.capsule.content?.encryptedSymmetricKey) {
+          try {
+            const { decryptCapsule } = await import("../utils/lit/decryptCapsule");
+            
+            const decryptedContent = await decryptCapsule({
+              encryptedContent: data.capsule.content.encryptedContent,
+              encryptedSymmetricKey: data.capsule.content.encryptedSymmetricKey,
+              accessControlConditions: data.capsule.content.accessControlConditions || [],
+              chain: "polygon",
+            });
+            
+            // Update capsule with decrypted content
+            updatedCapsule = {
+              ...updatedCapsule,
+              description: decryptedContent,
+              content: {
+                ...updatedCapsule.content,
+                unlocked: true
+              }
+            };
+          } catch (decryptError) {
+            console.error("Client-side decryption failed:", decryptError);
+            // Server has already provided decrypted content as fallback
+          }
         }
         
         setCapsule(updatedCapsule);
@@ -299,8 +320,13 @@ export default function CapsuleDetailPage() {
                     <div>
                       <p className="font-medium text-amber-800 dark:text-amber-200">Encrypted Content</p>
                       <p className="text-sm text-amber-600 dark:text-amber-400">
-                        This capsule is encrypted and time-locked. Unlock required to view content.
+                        🔒 Capsule is locked. Unlock required to view content.
                       </p>
+                      {capsule.content?.accessControlConditions && (
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                          Access controlled by blockchain conditions
+                        </p>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -473,7 +499,15 @@ export default function CapsuleDetailPage() {
                         <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
-                        Encrypted
+                        🔒 Encrypted
+                      </Badge>
+                    )}
+                    {capsule.isPrivate && (
+                      <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Private Vault
                       </Badge>
                     )}
                   </div>

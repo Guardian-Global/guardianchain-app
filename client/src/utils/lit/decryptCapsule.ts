@@ -49,9 +49,28 @@ export async function decryptCapsule({
       }
     }
 
-    // For development, return the content directly from server
-    // The server has already done the decryption
-    return encryptedContent;
+    // For development, perform simple client-side decryption
+    try {
+      const encryptionKey = atob(encryptedSymmetricKey);
+      const encryptedData = atob(encryptedContent);
+      
+      // Simple XOR decryption (matching the encryption method)
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+      const key = encoder.encode(encryptionKey);
+      const encrypted = encoder.encode(encryptedData);
+      const decrypted = new Uint8Array(encrypted.length);
+      
+      for (let i = 0; i < encrypted.length; i++) {
+        decrypted[i] = encrypted[i] ^ key[i % key.length];
+      }
+      
+      return decoder.decode(decrypted);
+    } catch (decryptError) {
+      // If decryption fails, return the server-provided content
+      console.warn("Client-side decryption failed, using server content");
+      return encryptedContent;
+    }
   } catch (error) {
     console.error("Client decryption error:", error);
     throw new Error(`Failed to decrypt capsule: ${error.message}`);
