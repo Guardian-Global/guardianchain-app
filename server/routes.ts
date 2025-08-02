@@ -1518,6 +1518,56 @@ This report demonstrates our commitment to transparency and accountability to al
     }
   });
 
+  // Get user stats for dashboard
+  app.get('/api/user/stats', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 User stats requested');
+    
+    const mockStats = {
+      truthScore: 87,
+      gttEarned: 12547,
+      capsulesCreated: 5,
+      verifiedCapsules: 3,
+      timeLockedValue: 45200,
+      nextUnlock: '2025-12-25',
+      tierProgress: 65,
+      activeStakes: 12,
+      pendingYields: 2400
+    };
+    
+    res.json(mockStats);
+  });
+
+  // Get recent capsules for dashboard
+  app.get('/api/capsules/recent', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📝 Recent capsules requested');
+    
+    const mockRecentCapsules = [
+      {
+        id: 'cap_recent_001',
+        title: 'Personal Journey #1001',
+        createdAt: new Date(Date.now() - 172800000).toISOString(),
+        status: 'verified',
+        griefTier: 3
+      },
+      {
+        id: 'cap_recent_002', 
+        title: 'Family Memory #1002',
+        createdAt: new Date(Date.now() - 259200000).toISOString(),
+        status: 'pending',
+        griefTier: 4
+      },
+      {
+        id: 'cap_recent_003',
+        title: 'Historical Event #1003', 
+        createdAt: new Date(Date.now() - 345600000).toISOString(),
+        status: 'verified',
+        griefTier: 5
+      }
+    ];
+    
+    res.json(mockRecentCapsules);
+  });
+
   // Get minted capsules for gallery
   app.get('/api/capsules/minted', isDebugAuthenticated, async (req: any, res) => {
     console.log('🎨 Minted capsules requested for gallery');
@@ -1657,6 +1707,164 @@ This report demonstrates our commitment to transparency and accountability to al
   // Health check endpoint
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
+  // --- LINEAGE TRACKING ENDPOINTS ---
+  
+  // Create lineage relationship between capsules
+  app.post('/api/lineage/create', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔗 Creating capsule lineage');
+    
+    try {
+      const { parentId, childId, griefFlow } = req.body;
+      const triggeredBy = req.user.id;
+      
+      if (!parentId || !childId) {
+        return res.status(400).json({ error: 'Parent and child capsule IDs required' });
+      }
+      
+      // Mock lineage creation for now
+      const lineage = {
+        id: `lineage_${Date.now()}`,
+        parentId,
+        childId,
+        triggeredBy,
+        timestamp: new Date().toISOString(),
+        griefFlow: griefFlow || 75,
+        influenceScore: 85
+      };
+      
+      console.log('✅ Lineage created:', lineage);
+      res.json(lineage);
+      
+    } catch (error) {
+      console.error('❌ Failed to create lineage:', error);
+      res.status(500).json({ error: 'Failed to create lineage' });
+    }
+  });
+  
+  // Get lineage tree for a capsule
+  app.get('/api/lineage/tree/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
+    console.log(`🌳 Getting lineage tree for: ${req.params.capsuleId}`);
+    
+    try {
+      const mockTree = {
+        capsuleId: req.params.capsuleId,
+        title: 'Original Truth Capsule',
+        griefTier: 5,
+        influence: 92,
+        depth: 0,
+        children: [
+          {
+            capsuleId: 'child_001',
+            title: 'Inspired Memory',
+            griefTier: 4,
+            influence: 78,
+            depth: 1,
+            children: [
+              {
+                capsuleId: 'grandchild_001',
+                title: 'Extended Reflection',
+                griefTier: 3,
+                influence: 65,
+                depth: 2,
+                children: []
+              }
+            ]
+          },
+          {
+            capsuleId: 'child_002',
+            title: 'Connected Story',
+            griefTier: 4,
+            influence: 82,
+            depth: 1,
+            children: []
+          }
+        ]
+      };
+      
+      res.json(mockTree);
+      
+    } catch (error) {
+      console.error('❌ Failed to get lineage tree:', error);
+      res.status(500).json({ error: 'Failed to get lineage tree' });
+    }
+  });
+  
+  // Get lineage analytics
+  app.get('/api/lineage/analytics', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 Getting lineage analytics');
+    
+    try {
+      const mockAnalytics = {
+        totalLineages: 847,
+        avgGriefFlow: 68.3,
+        topInfluencers: [
+          {
+            capsuleId: 'cap_influential_001',
+            title: 'The Foundation Truth',
+            influenceScore: 285,
+            descendantCount: 12
+          },
+          {
+            capsuleId: 'cap_influential_002', 
+            title: 'Historical Revelation',
+            influenceScore: 267,
+            descendantCount: 9
+          },
+          {
+            capsuleId: 'cap_influential_003',
+            title: 'Personal Legacy',
+            influenceScore: 234,
+            descendantCount: 8
+          }
+        ],
+        lineageDepth: {
+          maxDepth: 5,
+          avgDepth: 2.3
+        }
+      };
+      
+      res.json(mockAnalytics);
+      
+    } catch (error) {
+      console.error('❌ Failed to get analytics:', error);
+      res.status(500).json({ error: 'Failed to get analytics' });
+    }
+  });
+  
+  // Get related capsules based on lineage
+  app.get('/api/lineage/related/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
+    console.log(`🔍 Getting related capsules for: ${req.params.capsuleId}`);
+    
+    try {
+      const mockRelated = [
+        {
+          id: 'sibling_001',
+          title: 'Sister Memory',
+          griefTier: 4,
+          relationship: 'sibling'
+        },
+        {
+          id: 'descendant_001',
+          title: 'Inspired Legacy',
+          griefTier: 3,
+          relationship: 'descendant'
+        },
+        {
+          id: 'descendant_002',
+          title: 'Connected Truth',
+          griefTier: 4,
+          relationship: 'descendant'
+        }
+      ];
+      
+      res.json(mockRelated);
+      
+    } catch (error) {
+      console.error('❌ Failed to get related capsules:', error);
+      res.status(500).json({ error: 'Failed to get related capsules' });
+    }
   });
 
   const httpServer = createServer(app);

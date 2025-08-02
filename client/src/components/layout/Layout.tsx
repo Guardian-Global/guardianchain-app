@@ -19,6 +19,7 @@ export default function Layout({ children, title = "GuardianChain", tier = "gues
         <title>{title}</title>
         <meta name="theme-color" content="#3b82f6" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/assets/logo/GUARDIANCHAIN_logo.png" />
       </Helmet>
       <div className="flex">
         <Sidebar userTier={tier} />

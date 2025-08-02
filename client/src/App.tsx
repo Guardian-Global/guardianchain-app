@@ -205,16 +205,16 @@ function Router() {
     );
   }
 
-  // Show landing page for unauthenticated users
+  // Show enhanced landing page for unauthenticated users
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={Landing} />
+        <Route path="/" component={lazy(() => import("./pages/EnhancedHomepage"))} />
         <Route path="/test-auth" component={lazy(() => import("./pages/TestAuth"))} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
-        <Route component={Landing} />
+        <Route component={lazy(() => import("./pages/EnhancedHomepage"))} />
       </Switch>
     );
   }
@@ -242,8 +242,8 @@ function Router() {
         }>
           <Switch>
             {/* Core Routes */}
-            <Route path="/" component={lazy(() => import("./pages/dashboard"))} />
-            <Route path="/dashboard" component={lazy(() => import("./pages/dashboard"))} />
+            <Route path="/" component={lazy(() => import("./pages/EnhancedDashboard"))} />
+            <Route path="/dashboard" component={lazy(() => import("./pages/EnhancedDashboard"))} />
             <Route path="/vault" component={Vault} />
             <Route path="/capsule/:id" component={lazy(() => import("./components/CapsuleReplayView"))} />
           <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
