@@ -1,6 +1,8 @@
 import {
   users,
   capsules,
+  capsuleVaultEntries,
+  userSavedChanges,
   verifications,
   transactions,
   achievements,
@@ -10,6 +12,10 @@ import {
   type NewUser,
   type Capsule,
   type NewCapsule,
+  type CapsuleVaultEntry,
+  type NewCapsuleVaultEntry,
+  type UserSavedChanges,
+  type NewUserSavedChanges,
   type Verification,
   type NewVerification,
   type Transaction,
@@ -53,6 +59,19 @@ export interface IStorage {
   // Asset operations
   getAssetsByUser(userId: string): Promise<Asset[]>;
   createAsset(asset: NewAsset): Promise<Asset>;
+  
+  // Capsule Vault operations
+  getCapsuleVaultEntries(userId: string): Promise<CapsuleVaultEntry[]>;
+  createCapsuleVaultEntry(entry: NewCapsuleVaultEntry): Promise<CapsuleVaultEntry>;
+  updateCapsuleVaultEntry(id: string, entry: Partial<CapsuleVaultEntry>): Promise<CapsuleVaultEntry>;
+  deleteCapsuleVaultEntry(id: string): Promise<void>;
+  
+  // User saved changes operations
+  getUserSavedChanges(userId: string, sessionId?: string): Promise<UserSavedChanges[]>;
+  createUserSavedChanges(changes: NewUserSavedChanges): Promise<UserSavedChanges>;
+  updateUserSavedChanges(id: string, changes: Partial<UserSavedChanges>): Promise<UserSavedChanges>;
+  deleteUserSavedChanges(id: string): Promise<void>;
+  clearSavedChanges(userId: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -240,6 +259,95 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return asset;
+  }
+
+  // Capsule Vault operations
+  async getCapsuleVaultEntries(userId: string): Promise<CapsuleVaultEntry[]> {
+    return await db
+      .select()
+      .from(capsuleVaultEntries)
+      .where(eq(capsuleVaultEntries.userId, userId))
+      .orderBy(desc(capsuleVaultEntries.createdAt));
+  }
+
+  async createCapsuleVaultEntry(entryData: NewCapsuleVaultEntry): Promise<CapsuleVaultEntry> {
+    const [entry] = await db
+      .insert(capsuleVaultEntries)
+      .values({
+        ...entryData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return entry;
+  }
+
+  async updateCapsuleVaultEntry(id: string, entryData: Partial<CapsuleVaultEntry>): Promise<CapsuleVaultEntry> {
+    const [entry] = await db
+      .update(capsuleVaultEntries)
+      .set({
+        ...entryData,
+        updatedAt: new Date(),
+      })
+      .where(eq(capsuleVaultEntries.id, id))
+      .returning();
+    return entry;
+  }
+
+  async deleteCapsuleVaultEntry(id: string): Promise<void> {
+    await db
+      .delete(capsuleVaultEntries)
+      .where(eq(capsuleVaultEntries.id, id));
+  }
+
+  // User saved changes operations
+  async getUserSavedChanges(userId: string, sessionId?: string): Promise<UserSavedChanges[]> {
+    let query = db
+      .select()
+      .from(userSavedChanges)
+      .where(eq(userSavedChanges.userId, userId));
+    
+    if (sessionId) {
+      query = query.where(eq(userSavedChanges.sessionId, sessionId));
+    }
+    
+    return await query.orderBy(desc(userSavedChanges.createdAt));
+  }
+
+  async createUserSavedChanges(changesData: NewUserSavedChanges): Promise<UserSavedChanges> {
+    const [changes] = await db
+      .insert(userSavedChanges)
+      .values({
+        ...changesData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return changes;
+  }
+
+  async updateUserSavedChanges(id: string, changesData: Partial<UserSavedChanges>): Promise<UserSavedChanges> {
+    const [changes] = await db
+      .update(userSavedChanges)
+      .set({
+        ...changesData,
+        updatedAt: new Date(),
+      })
+      .where(eq(userSavedChanges.id, id))
+      .returning();
+    return changes;
+  }
+
+  async deleteUserSavedChanges(id: string): Promise<void> {
+    await db
+      .delete(userSavedChanges)
+      .where(eq(userSavedChanges.id, id));
+  }
+
+  async clearSavedChanges(userId: string): Promise<void> {
+    await db
+      .delete(userSavedChanges)
+      .where(eq(userSavedChanges.userId, userId));
   }
   // Profile operations
   async getUserStats(userId: string): Promise<any> {

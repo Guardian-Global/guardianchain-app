@@ -52,6 +52,10 @@ export const users = pgTable("users", {
   goals: text("goals"),
   experience: text("experience"),
   socialLinks: jsonb("social_links"),
+  // Enhanced profile media fields
+  profileVideoUrl: varchar("profile_video_url"),
+  backgroundImageUrl: varchar("background_image_url"),
+  mediaPreferences: jsonb("media_preferences"), // Auto-mint, quality settings, etc.
   lastLogin: timestamp("last_login"),
   lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
@@ -88,6 +92,17 @@ export const capsules = pgTable("capsules", {
   isPrivate: boolean("is_private").default(false),
   accessCost: integer("access_cost").default(0),
   viewCount: integer("view_count").default(0),
+  // Media and NFT fields
+  mediaType: varchar("media_type"), // image, video, document, audio
+  mediaUrl: varchar("media_url"),
+  thumbnailUrl: varchar("thumbnail_url"),
+  fileSize: integer("file_size"),
+  fileName: varchar("file_name"),
+  nftTokenId: varchar("nft_token_id"),
+  nftContractAddress: varchar("nft_contract_address"),
+  isNftMinted: boolean("is_nft_minted").default(false),
+  isTruthVaultSealed: boolean("is_truth_vault_sealed").default(false),
+  autoMintEnabled: boolean("auto_mint_enabled").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -305,10 +320,45 @@ export type SensitivityLevel = typeof SENSITIVITY_LEVELS[keyof typeof SENSITIVIT
 export type LegalImportance = typeof LEGAL_IMPORTANCE[keyof typeof LEGAL_IMPORTANCE];
 export type EvidenceType = typeof EVIDENCE_TYPES[keyof typeof EVIDENCE_TYPES];
 export type SubmissionMethod = typeof SUBMISSION_METHODS[keyof typeof SUBMISSION_METHODS];
+
+// New capsule vault entries table for timeline functionality
+export const capsuleVaultEntries = pgTable("capsule_vault_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  capsuleId: varchar("capsule_id").references(() => capsules.id).notNull(),
+  entryType: varchar("entry_type").notNull(), // post, media, story, etc.
+  caption: text("caption"),
+  visibility: varchar("visibility").default("public"), // public, private, friends
+  tags: varchar("tags").array(),
+  likesCount: integer("likes_count").default(0),
+  commentsCount: integer("comments_count").default(0),
+  sharesCount: integer("shares_count").default(0),
+  isPinned: boolean("is_pinned").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// User saved changes tracking
+export const userSavedChanges = pgTable("user_saved_changes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  changeType: varchar("change_type").notNull(), // profile, capsule, media
+  changeData: jsonb("change_data").notNull(),
+  hasUnsavedChanges: boolean("has_unsaved_changes").default(true),
+  sessionId: varchar("session_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type NewUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
 export type Capsule = typeof capsules.$inferSelect;
 export type NewCapsule = typeof capsules.$inferInsert;
+export type CapsuleVaultEntry = typeof capsuleVaultEntries.$inferSelect;
+export type NewCapsuleVaultEntry = typeof capsuleVaultEntries.$inferInsert;
+export type UserSavedChanges = typeof userSavedChanges.$inferSelect;
+export type NewUserSavedChanges = typeof userSavedChanges.$inferInsert;
 export type Verification = typeof verifications.$inferSelect;
 export type NewVerification = typeof verifications.$inferInsert;
 export type Transaction = typeof transactions.$inferSelect;
@@ -321,6 +371,8 @@ export type NewReplayLog = typeof replayLogs.$inferInsert;
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users);
 export const insertCapsuleSchema = createInsertSchema(capsules);
+export const insertCapsuleVaultEntrySchema = createInsertSchema(capsuleVaultEntries);
+export const insertUserSavedChangesSchema = createInsertSchema(userSavedChanges);
 export const insertVerificationSchema = createInsertSchema(verifications);
 export const insertTransactionSchema = createInsertSchema(transactions);
 export const insertAchievementSchema = createInsertSchema(achievements);

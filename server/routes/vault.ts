@@ -1,144 +1,146 @@
 import { Router } from "express";
 import { storage } from "../storage";
+import { isDebugAuthenticated } from "../debugAuth";
 
 const router = Router();
 
-// Get vault statistics
-router.get("/api/vault/stats", async (req, res) => {
+// Get timeline entries for a user's capsule vault
+router.get("/timeline/:userId", isDebugAuthenticated, async (req, res) => {
   try {
-    const stats = await storage.getVaultStats();
+    const { userId } = req.params;
+    
+    // For now, return mock data since we're setting up the infrastructure
+    const mockTimelineEntries = [
+      {
+        id: "entry-1",
+        userId,
+        capsuleId: "capsule-1",
+        entryType: "media",
+        caption: "Just uploaded my first truth capsule!",
+        visibility: "public",
+        likesCount: 12,
+        commentsCount: 3,
+        sharesCount: 1,
+        isPinned: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        capsule: {
+          id: "capsule-1",
+          title: "My First Truth",
+          content: "This is my first truth capsule on GuardianChain.",
+          mediaType: "image",
+          mediaUrl: "/placeholder-image.jpg",
+          thumbnailUrl: "/placeholder-thumb.jpg",
+          nftTokenId: null,
+          isNftMinted: false,
+          isTruthVaultSealed: false,
+        }
+      },
+      {
+        id: "entry-2", 
+        userId,
+        capsuleId: "capsule-2",
+        entryType: "post",
+        caption: "Sharing an important memory from my childhood.",
+        visibility: "public",
+        likesCount: 25,
+        commentsCount: 8,
+        sharesCount: 4,
+        isPinned: true,
+        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        updatedAt: new Date(Date.now() - 86400000).toISOString(),
+        capsule: {
+          id: "capsule-2",
+          title: "Childhood Memory",
+          content: "A precious memory from when I was seven years old, playing in my grandmother's garden.",
+          mediaType: null,
+          mediaUrl: null,
+          thumbnailUrl: null,
+          nftTokenId: "0x123...abc",
+          isNftMinted: true,
+          isTruthVaultSealed: true,
+        }
+      }
+    ];
 
-    res.json(stats);
+    res.json(mockTimelineEntries);
   } catch (error) {
-    console.error("Vault stats error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching timeline entries:", error);
+    res.status(500).json({ error: "Failed to fetch timeline entries" });
   }
 });
 
-// Get user's vault position
-router.get("/api/vault/position/:address", async (req, res) => {
+// Create a new timeline entry
+router.post("/timeline", isDebugAuthenticated, async (req, res) => {
   try {
-    const { address } = req.params;
+    const { capsuleId, entryType, caption, visibility } = req.body;
+    const userId = req.user?.id;
 
-    const position = await storage.getUserVaultPosition(address);
-
-    res.json(position);
-  } catch (error) {
-    console.error("Vault position error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Deposit to vault
-router.post("/api/vault/deposit", async (req, res) => {
-  try {
-    const { address, amount } = req.body;
-
-    if (!address || !amount) {
-      return res
-        .status(400)
-        .json({ message: "Address and amount are required" });
+    if (!capsuleId || !entryType) {
+      return res.status(400).json({ 
+        error: "Missing required fields: capsuleId, entryType" 
+      });
     }
 
-    // In production, this would interact with AutoCompoundVault contract
-    // const tx = await vaultContract.deposit(ethers.parseEther(amount));
+    const timelineEntry = {
+      id: `entry-${Date.now()}`,
+      userId,
+      capsuleId,
+      entryType,
+      caption: caption || "",
+      visibility: visibility || "public",
+      likesCount: 0,
+      commentsCount: 0,
+      sharesCount: 0,
+      isPinned: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Record deposit in database
-    const deposit = await storage.recordVaultDeposit({
-      userAddress: address,
-      amount,
-      txHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Mock tx hash
-      timestamp: new Date().toISOString(),
-    });
+    // In a real implementation, this would use storage.createCapsuleVaultEntry
+    // await storage.createCapsuleVaultEntry(timelineEntry);
 
-    res.json({
-      success: true,
-      message: "Deposit successful",
-      deposit,
-    });
+    res.status(201).json(timelineEntry);
   } catch (error) {
-    console.error("Vault deposit error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error creating timeline entry:", error);
+    res.status(500).json({ error: "Failed to create timeline entry" });
   }
 });
 
-// Withdraw from vault
-router.post("/api/vault/withdraw", async (req, res) => {
+// Update a timeline entry
+router.put("/timeline/:entryId", isDebugAuthenticated, async (req, res) => {
   try {
-    const { address, shares } = req.body;
+    const { entryId } = req.params;
+    const updateData = req.body;
 
-    if (!address || !shares) {
-      return res
-        .status(400)
-        .json({ message: "Address and shares are required" });
-    }
+    // In a real implementation, this would use storage.updateCapsuleVaultEntry
+    // const updatedEntry = await storage.updateCapsuleVaultEntry(entryId, updateData);
 
-    // In production, this would interact with AutoCompoundVault contract
-    // const tx = await vaultContract.withdraw(ethers.parseEther(shares));
+    const updatedEntry = {
+      id: entryId,
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Record withdrawal in database
-    const withdrawal = await storage.recordVaultWithdrawal({
-      userAddress: address,
-      shares,
-      txHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Mock tx hash
-      timestamp: new Date().toISOString(),
-    });
-
-    res.json({
-      success: true,
-      message: "Withdrawal successful",
-      withdrawal,
-    });
+    res.json(updatedEntry);
   } catch (error) {
-    console.error("Vault withdrawal error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error updating timeline entry:", error);
+    res.status(500).json({ error: "Failed to update timeline entry" });
   }
 });
 
-// Trigger manual compound
-router.post("/api/vault/compound", async (req, res) => {
+// Delete a timeline entry
+router.delete("/timeline/:entryId", isDebugAuthenticated, async (req, res) => {
   try {
-    // In production, this would call the compound() function on the vault contract
-    // const tx = await vaultContract.compound();
+    const { entryId } = req.params;
 
-    const compound = await storage.recordVaultCompound({
-      rewards: (Math.random() * 1000 + 500).toFixed(2), // Mock rewards
-      txHash: `0x${Math.random().toString(16).substr(2, 64)}`,
-      timestamp: new Date().toISOString(),
-    });
+    // In a real implementation, this would use storage.deleteCapsuleVaultEntry
+    // await storage.deleteCapsuleVaultEntry(entryId);
 
-    res.json({
-      success: true,
-      message: "Compound triggered successfully",
-      compound,
-    });
+    res.status(204).send();
   } catch (error) {
-    console.error("Vault compound error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Get vault APY with Guardian Pass bonuses
-router.get("/api/vault/apy/:address", async (req, res) => {
-  try {
-    const { address } = req.params;
-
-    const baseAPY = 25.0; // 25% base APY
-
-    // Check for Guardian Pass bonuses
-    const passBonus = await storage.getGuardianPassAPYBonus(address);
-
-    const totalAPY = baseAPY + passBonus / 100;
-
-    res.json({
-      baseAPY,
-      passBonus: passBonus / 100,
-      totalAPY,
-      hasGuardianPass: passBonus > 0,
-    });
-  } catch (error) {
-    console.error("Vault APY error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error deleting timeline entry:", error);
+    res.status(500).json({ error: "Failed to delete timeline entry" });
   }
 });
 

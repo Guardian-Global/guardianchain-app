@@ -434,6 +434,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const profileRoutes = await import('./routes/profile');
   app.use('/api/profile', profileRoutes.default);
   
+  // Media and Vault Routes
+  const mediaRoutes = await import('./routes/media');
+  app.use('/api/media', mediaRoutes.default);
+  
+  const userChangesRoutes = await import('./routes/userChanges');
+  app.use('/api/user', userChangesRoutes.default);
+  
   // Register engagement routes
   const { registerEngagementRoutes } = await import('./routes/engagement');
   registerEngagementRoutes(app);
