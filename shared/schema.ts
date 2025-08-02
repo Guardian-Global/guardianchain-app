@@ -56,7 +56,7 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Truth capsules table
+// Truth capsules table with comprehensive types and Veritas seal options
 export const capsules = pgTable("capsules", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   title: varchar("title").notNull(),
@@ -67,7 +67,22 @@ export const capsules = pgTable("capsules", {
   verificationCount: integer("verification_count").default(0),
   truthScore: integer("truth_score").default(0),
   category: varchar("category"),
+  // Comprehensive Capsule Type System
+  capsuleType: varchar("capsule_type").notNull(),
+  // Veritas Seal Options
+  veritasSealType: varchar("veritas_seal_type"),
+  urgencyLevel: varchar("urgency_level").default("normal"),
+  sensitivityLevel: varchar("sensitivity_level").default("public"),
+  jurisdictionRegion: varchar("jurisdiction_region"),
+  legalImportance: varchar("legal_importance").default("standard"),
+  evidenceType: varchar("evidence_type"),
+  submissionMethod: varchar("submission_method").default("standard"),
+  // Enhanced metadata
   tags: varchar("tags").array(),
+  attachments: jsonb("attachments"),
+  metadataHash: varchar("metadata_hash"),
+  emotionalResonance: varchar("emotional_resonance"),
+  therapeuticValue: integer("therapeutic_value").default(0),
   isPrivate: boolean("is_private").default(false),
   accessCost: integer("access_cost").default(0),
   viewCount: integer("view_count").default(0),
@@ -128,46 +143,171 @@ export const assets = pgTable("assets", {
 
 // Type definitions
 export type User = typeof users.$inferSelect;
+
+// Comprehensive Capsule Type System
+export const CAPSULE_TYPES = {
+  // Core Truth Categories
+  NEWS_VERIFICATION: "news_verification",
+  HISTORICAL_RECORD: "historical_record", 
+  PERSONAL_TESTIMONY: "personal_testimony",
+  SCIENTIFIC_DATA: "scientific_data",
+  LEGAL_DOCUMENT: "legal_document",
+  
+  // Professional Verification Types
+  VERITAS_SEAL: "veritas_seal",
+  TRUTH_BOUNTY: "truth_bounty", 
+  TRUTH_REDEMPTION: "truth_redemption",
+  CONSPIRACY_CAPSULE: "conspiracy_capsule",
+  
+  // Enterprise & Institutional
+  GOVERNMENT_RECORD: "government_record",
+  CORPORATE_FILING: "corporate_filing",
+  ACADEMIC_RESEARCH: "academic_research",
+  MEDICAL_RECORD: "medical_record",
+  
+  // Security & Whistleblowing
+  WHISTLEBLOWER_REPORT: "whistleblower_report",
+  LEAK_VERIFICATION: "leak_verification",
+  ANONYMOUS_TIP: "anonymous_tip",
+  
+  // Social & Community
+  SOCIAL_MEDIA_FACT: "social_media_fact",
+  COMMUNITY_WITNESS: "community_witness",
+  CITIZEN_JOURNALISM: "citizen_journalism",
+  
+  // Specialized Categories
+  FINANCIAL_DISCLOSURE: "financial_disclosure",
+  ENVIRONMENTAL_REPORT: "environmental_report",
+  ELECTION_INTEGRITY: "election_integrity",
+  TECHNOLOGY_AUDIT: "technology_audit",
+  SUPPLY_CHAIN_VERIFICATION: "supply_chain_verification"
+} as const;
+
+// Veritas Seal Types (Professional Truth Certification)
+export const VERITAS_SEAL_TYPES = {
+  // Legal & Court-Admissible
+  LEGAL_AFFIDAVIT: "legal_affidavit",
+  SWORN_TESTIMONY: "sworn_testimony", 
+  NOTARIZED_STATEMENT: "notarized_statement",
+  COURT_EVIDENCE: "court_evidence",
+  LEGAL_OPINION: "legal_opinion",
+  
+  // Professional Certifications
+  EXPERT_WITNESS: "expert_witness",
+  PROFESSIONAL_AUDIT: "professional_audit",
+  LICENSED_VERIFICATION: "licensed_verification",
+  CERTIFIED_ANALYSIS: "certified_analysis",
+  
+  // Investigative & Journalistic
+  INVESTIGATIVE_REPORT: "investigative_report",
+  SOURCE_PROTECTED: "source_protected",
+  FACT_CHECK_VERIFIED: "fact_check_verified",
+  EDITORIAL_VERIFIED: "editorial_verified",
+  
+  // Security & Intelligence
+  CLASSIFIED_DECLASSIFIED: "classified_declassified",
+  INTELLIGENCE_REPORT: "intelligence_report",
+  SECURITY_CLEARANCE: "security_clearance",
+  
+  // Academic & Scientific
+  PEER_REVIEWED: "peer_reviewed",
+  ACADEMIC_CERTIFIED: "academic_certified",
+  RESEARCH_VERIFIED: "research_verified",
+  LABORATORY_CERTIFIED: "laboratory_certified",
+  
+  // Financial & Corporate
+  AUDITOR_CERTIFIED: "auditor_certified",
+  FINANCIAL_VERIFIED: "financial_verified",
+  REGULATORY_APPROVED: "regulatory_approved",
+  COMPLIANCE_CERTIFIED: "compliance_certified",
+  
+  // Technology & Digital
+  CRYPTOGRAPHICALLY_SIGNED: "cryptographically_signed",
+  BLOCKCHAIN_VERIFIED: "blockchain_verified",
+  DIGITAL_FORENSICS: "digital_forensics",
+  TIMESTAMP_VERIFIED: "timestamp_verified"
+} as const;
+
+// Urgency Levels
+export const URGENCY_LEVELS = {
+  CRITICAL: "critical",      // Breaking news, emergency
+  HIGH: "high",             // Important, time-sensitive
+  NORMAL: "normal",         // Standard processing
+  LOW: "low",              // Archive, reference
+  SCHEDULED: "scheduled"    // Future release
+} as const;
+
+// Sensitivity Levels
+export const SENSITIVITY_LEVELS = {
+  PUBLIC: "public",           // Open to all
+  RESTRICTED: "restricted",   // Tier-based access
+  CONFIDENTIAL: "confidential", // Verified users only
+  SECRET: "secret",          // Special permission required
+  TOP_SECRET: "top_secret"   // Highest security clearance
+} as const;
+
+// Legal Importance Levels
+export const LEGAL_IMPORTANCE = {
+  STANDARD: "standard",
+  CONTRACTUAL: "contractual",
+  REGULATORY: "regulatory", 
+  CRIMINAL: "criminal",
+  CIVIL: "civil",
+  CONSTITUTIONAL: "constitutional",
+  INTERNATIONAL: "international"
+} as const;
+
+// Evidence Types
+export const EVIDENCE_TYPES = {
+  DOCUMENTARY: "documentary",
+  PHOTOGRAPHIC: "photographic", 
+  VIDEO: "video",
+  AUDIO: "audio",
+  DIGITAL: "digital",
+  WITNESS: "witness",
+  EXPERT: "expert",
+  PHYSICAL: "physical",
+  CIRCUMSTANTIAL: "circumstantial"
+} as const;
+
+// Submission Methods
+export const SUBMISSION_METHODS = {
+  STANDARD: "standard",
+  ENCRYPTED: "encrypted",
+  ANONYMOUS: "anonymous",
+  WHISTLEBLOWER: "whistleblower",
+  PROFESSIONAL: "professional",
+  EMERGENCY: "emergency",
+  SCHEDULED: "scheduled"
+} as const;
+
+export type CapsuleType = typeof CAPSULE_TYPES[keyof typeof CAPSULE_TYPES];
+export type VeritasSealType = typeof VERITAS_SEAL_TYPES[keyof typeof VERITAS_SEAL_TYPES];
+export type UrgencyLevel = typeof URGENCY_LEVELS[keyof typeof URGENCY_LEVELS];
+export type SensitivityLevel = typeof SENSITIVITY_LEVELS[keyof typeof SENSITIVITY_LEVELS];
+export type LegalImportance = typeof LEGAL_IMPORTANCE[keyof typeof LEGAL_IMPORTANCE];
+export type EvidenceType = typeof EVIDENCE_TYPES[keyof typeof EVIDENCE_TYPES];
+export type SubmissionMethod = typeof SUBMISSION_METHODS[keyof typeof SUBMISSION_METHODS];
 export type UpsertUser = typeof users.$inferInsert;
 export type NewUser = typeof users.$inferInsert;
-
 export type Capsule = typeof capsules.$inferSelect;
 export type NewCapsule = typeof capsules.$inferInsert;
-
 export type Verification = typeof verifications.$inferSelect;
 export type NewVerification = typeof verifications.$inferInsert;
-
 export type Transaction = typeof transactions.$inferSelect;
 export type NewTransaction = typeof transactions.$inferInsert;
-
 export type Achievement = typeof achievements.$inferSelect;
 export type NewAchievement = typeof achievements.$inferInsert;
 
+// Zod schemas for validation
+export const insertUserSchema = createInsertSchema(users);
+export const insertCapsuleSchema = createInsertSchema(capsules);
+export const insertVerificationSchema = createInsertSchema(verifications);
+export const insertTransactionSchema = createInsertSchema(transactions);
+export const insertAchievementSchema = createInsertSchema(achievements);
+
 export type Asset = typeof assets.$inferSelect;
 export type NewAsset = typeof assets.$inferInsert;
-
-// Zod schemas for validation
-export const insertUserSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertCapsuleSchema = createInsertSchema(capsules).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertVerificationSchema = createInsertSchema(verifications).omit({
-  id: true,
-  createdAt: true,
-});
-
-export const insertTransactionSchema = createInsertSchema(transactions).omit({
-  id: true,
-  createdAt: true,
-});
 
 export const insertAssetSchema = createInsertSchema(assets).omit({
   id: true,

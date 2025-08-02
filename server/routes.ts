@@ -72,6 +72,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.redirect('/');
   });
 
+  // Capsule creation endpoint
+  app.post('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔵 DEBUG: /api/capsules POST called');
+    const user = req.user;
+    const capsuleData = req.body;
+    
+    // Create a mock capsule with comprehensive data
+    const newCapsule = {
+      id: `capsule-${Date.now()}`,
+      title: capsuleData.title,
+      content: capsuleData.content,
+      capsuleType: capsuleData.capsuleType,
+      veritasSealType: capsuleData.veritasSealType,
+      urgencyLevel: capsuleData.urgencyLevel || 'normal',
+      sensitivityLevel: capsuleData.sensitivityLevel || 'public',
+      legalImportance: capsuleData.legalImportance || 'standard',
+      evidenceType: capsuleData.evidenceType,
+      submissionMethod: capsuleData.submissionMethod || 'standard',
+      tags: capsuleData.tags || [],
+      authorId: user.id,
+      status: 'pending',
+      verificationCount: 0,
+      truthScore: 0,
+      isPrivate: capsuleData.isPrivate || false,
+      accessCost: capsuleData.accessCost || 0,
+      viewCount: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    console.log('✅ DEBUG: Created capsule:', newCapsule);
+    res.status(201).json(newCapsule);
+  });
+
+  // Get user capsules
+  app.get('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔵 DEBUG: /api/capsules GET called');
+    const user = req.user;
+    
+    // Return mock capsules
+    const mockCapsules = [
+      {
+        id: 'sample-capsule-1',
+        title: 'Sample Truth Capsule',
+        content: 'This is a sample capsule for demonstration.',
+        capsuleType: 'news_verification',
+        authorId: user.id,
+        status: 'verified',
+        verificationCount: 3,
+        truthScore: 85,
+        createdAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+      }
+    ];
+    
+    res.json(mockCapsules);
+  });
+
   // Fix token data API with proper JSON response
   app.get('/api/token/live-data', (req, res) => {
     res.status(200).json({

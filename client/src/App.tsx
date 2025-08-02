@@ -14,6 +14,7 @@ import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/create-capsule";
+import CreateCapsuleNew from "@/pages/CreateCapsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
 import Profile from "@/pages/profile";
@@ -253,6 +254,7 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/create-with-help" component={CreateCapsule} />
+        <Route path="/create-truth-capsule" component={CreateCapsuleNew} />
         
         {/* Memory Vault System Routes */}
         <Route path="/memory-vault" component={MemoryVault} />
