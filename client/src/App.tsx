@@ -63,6 +63,7 @@ import CategoryDiscoveryPage from "./pages/category-discovery";
 import AuctionHousePage from "./pages/auction-house";
 import EmbedCapsulePage from "./pages/embed-capsule";
 import YieldTrackerPage from "./pages/yield-tracker";
+import ReelsViewer from "./pages/reels-viewer";
 import CapsuleAnalyticsPage from "./features/analytics/capsule-analytics";
 import DynamicCapsuleAnalytics from "./pages/capsule/[id]/analytics";
 import FinancialDashboard from "./features/analytics/financial-dashboard";
@@ -408,6 +409,7 @@ function Router() {
         <Route path="/auction-house" component={AuctionHousePage} />
         <Route path="/embed/capsule" component={EmbedCapsulePage} />
         <Route path="/yield-tracker" component={YieldTrackerPage} />
+        <Route path="/reels-viewer" component={ReelsViewer} />
         <Route path="/capsule-analytics" component={CapsuleAnalyticsPage} />
         <Route
           path="/capsule/:id/analytics"

@@ -1,160 +1,129 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Globe, Check } from "lucide-react";
-import { useTranslation, SUPPORTED_LANGUAGES } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
+import { detectUserLanguage } from "@/lib/rtlSupport";
 
-export default function LanguageSelector() {
-  const { currentLanguage, setLanguage, supportedLanguages } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
+const SUPPORTED_LANGUAGES = [
+  { code: 'en', name: 'English', nativeName: 'English' },
+  { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
+  { code: 'he', name: 'Hebrew', nativeName: 'עברית' },
+  { code: 'fa', name: 'Persian', nativeName: 'فارسی' },
+  { code: 'ur', name: 'Urdu', nativeName: 'اردو' },
+  { code: 'es', name: 'Spanish', nativeName: 'Español' },
+  { code: 'fr', name: 'French', nativeName: 'Français' },
+  { code: 'de', name: 'German', nativeName: 'Deutsch' },
+  { code: 'zh', name: 'Chinese', nativeName: '中文' },
+  { code: 'ja', name: 'Japanese', nativeName: '日本語' },
+  { code: 'ko', name: 'Korean', nativeName: '한국어' },
+  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'ru', name: 'Russian', nativeName: 'Русский' },
+  { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
+  { code: 'it', name: 'Italian', nativeName: 'Italiano' },
+  { code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
+  { code: 'pl', name: 'Polish', nativeName: 'Polski' },
+  { code: 'nl', name: 'Dutch', nativeName: 'Nederlands' },
+  { code: 'sv', name: 'Swedish', nativeName: 'Svenska' },
+  { code: 'da', name: 'Danish', nativeName: 'Dansk' },
+  { code: 'fi', name: 'Finnish', nativeName: 'Suomi' },
+  { code: 'no', name: 'Norwegian', nativeName: 'Norsk' }
+];
 
-  const currentLang = supportedLanguages.find(
-    (lang) => lang.code === currentLanguage
-  );
+interface LanguageSelectorProps {
+  className?: string;
+  variant?: "button" | "select";
+  onLanguageChange?: (language: string) => void;
+}
+
+export default function LanguageSelector({ 
+  className,
+  variant = "select",
+  onLanguageChange 
+}: LanguageSelectorProps) {
+  const [currentLanguage, setCurrentLanguage] = useState(detectUserLanguage());
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleLanguageChange = async (languageCode: string) => {
+    if (languageCode === currentLanguage) return;
+    
+    setIsUpdating(true);
+    
+    try {
+      // Store in localStorage for immediate use
+      localStorage.setItem('userLanguage', languageCode);
+      
+      // Call API to update user preference
+      const response = await fetch('/api/user/preferred-language', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ preferredLanguage: languageCode }),
+      });
+
+      if (response.ok) {
+        setCurrentLanguage(languageCode);
+        onLanguageChange?.(languageCode);
+        
+        // Reload the page to apply RTL/LTR changes
+        window.location.reload();
+      } else {
+        console.error('Failed to update language preference');
+      }
+    } catch (error) {
+      console.error('Error updating language preference:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const getCurrentLanguageName = () => {
+    const lang = SUPPORTED_LANGUAGES.find(l => l.code === currentLanguage);
+    return lang?.nativeName || lang?.name || 'English';
+  };
+
+  if (variant === "button") {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        className={cn(
+          "flex items-center gap-2 min-w-[120px]",
+          className
+        )}
+        disabled={isUpdating}
+      >
+        <Globe className="w-4 h-4" />
+        <span>{getCurrentLanguageName()}</span>
+      </Button>
+    );
+  }
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 transition-colors"
-        >
-          <Globe className="w-4 h-4 mr-2" />
-          <span className="hidden sm:inline mr-1">
-            {currentLang?.nativeName}
-          </span>
-          <span className="text-lg">{currentLang?.flag}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="w-64 bg-slate-800 border-slate-700 max-h-96 overflow-y-auto"
+    <div className={cn("flex items-center gap-2", className)}>
+      <Globe className="w-4 h-4 text-muted-foreground" />
+      <Select
+        value={currentLanguage}
+        onValueChange={handleLanguageChange}
+        disabled={isUpdating}
       >
-        <div className="p-2 border-b border-slate-700">
-          <div className="text-sm font-medium text-slate-300 mb-1">
-            Select Language
-          </div>
-          <div className="text-xs text-slate-400">
-            Available in {supportedLanguages.length} languages
-          </div>
-        </div>
-
-        {/* Primary Languages (Top Markets) */}
-        <div className="p-2">
-          <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">
-            Primary Markets
-          </div>
-          {SUPPORTED_LANGUAGES.filter((lang) =>
-            ["en", "zh", "ja", "ko", "es", "fr", "de", "ru"].includes(lang.code)
-          ).map((language) => (
-            <DropdownMenuItem
-              key={language.code}
-              onClick={() => {
-                setLanguage(language.code);
-                setIsOpen(false);
-              }}
-              className="flex items-center justify-between p-2 hover:bg-slate-700 cursor-pointer rounded"
-            >
-              <div className="flex items-center space-x-3">
-                <span className="text-lg">{language.flag}</span>
-                <div>
-                  <div className="font-medium text-slate-200">
-                    {language.nativeName}
-                  </div>
-                  <div className="text-xs text-slate-400">{language.name}</div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                {language.code === "zh" && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-green-600 text-green-400"
-                  >
-                    Major Market
-                  </Badge>
-                )}
-                {language.code === "ja" && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-purple-600 text-purple-400"
-                  >
-                    High Volume
-                  </Badge>
-                )}
-                {currentLanguage === language.code && (
-                  <Check className="w-4 h-4 text-green-400" />
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select Language" />
+        </SelectTrigger>
+        <SelectContent>
+          {SUPPORTED_LANGUAGES.map((language) => (
+            <SelectItem key={language.code} value={language.code}>
+              <div className="flex items-center justify-between w-full">
+                <span>{language.nativeName}</span>
+                {language.code === currentLanguage && (
+                  <Check className="w-4 h-4 ml-2" />
                 )}
               </div>
-            </DropdownMenuItem>
+            </SelectItem>
           ))}
-        </div>
-
-        {/* Secondary Languages */}
-        <div className="p-2 border-t border-slate-700">
-          <div className="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">
-            Additional Markets
-          </div>
-          {SUPPORTED_LANGUAGES.filter(
-            (lang) =>
-              !["en", "zh", "ja", "ko", "es", "fr", "de", "ru"].includes(
-                lang.code
-              )
-          ).map((language) => (
-            <DropdownMenuItem
-              key={language.code}
-              onClick={() => {
-                setLanguage(language.code);
-                setIsOpen(false);
-              }}
-              className="flex items-center justify-between p-2 hover:bg-slate-700 cursor-pointer rounded"
-            >
-              <div className="flex items-center space-x-3">
-                <span className="text-lg">{language.flag}</span>
-                <div>
-                  <div className="font-medium text-slate-200">
-                    {language.nativeName}
-                  </div>
-                  <div className="text-xs text-slate-400">{language.name}</div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                {language.code === "ar" && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-yellow-600 text-yellow-400"
-                  >
-                    RTL
-                  </Badge>
-                )}
-                {language.code === "hi" && (
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-blue-600 text-blue-400"
-                  >
-                    Emerging
-                  </Badge>
-                )}
-                {currentLanguage === language.code && (
-                  <Check className="w-4 h-4 text-green-400" />
-                )}
-              </div>
-            </DropdownMenuItem>
-          ))}
-        </div>
-
-        <div className="p-2 border-t border-slate-700">
-          <div className="text-xs text-slate-400 text-center">
-            GTT Token launching worldwide in Q1 2025
-          </div>
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

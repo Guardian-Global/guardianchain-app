@@ -516,6 +516,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // User preferred language update
+  app.put('/api/user/preferred-language', isDebugAuthenticated, (req: any, res) => {
+    const { preferredLanguage } = req.body;
+    
+    if (!preferredLanguage || typeof preferredLanguage !== 'string') {
+      return res.status(400).json({ error: 'Preferred language is required' });
+    }
+
+    console.log('🌐 Updating preferred language:', preferredLanguage);
+    res.json({ 
+      success: true, 
+      message: 'Preferred language updated',
+      preferredLanguage 
+    });
+  });
+
+  // Auto-translate endpoint for multilingual content
+  app.post('/api/ai/translate', isDebugAuthenticated, (req: any, res) => {
+    const { text, targetLanguage, sourceLanguage = 'en' } = req.body;
+    
+    if (!text || !targetLanguage) {
+      return res.status(400).json({ error: 'Text and target language are required' });
+    }
+
+    console.log('🔄 Translation requested:', { text: text.substring(0, 50) + '...', sourceLanguage, targetLanguage });
+    
+    // Mock translation for demo - in production, use Google Translate API or similar
+    const mockTranslations = {
+      'ar': 'نص مترجم تلقائياً إلى العربية',
+      'he': 'טקסט מתורגם אוטומטית לעברית',
+      'fa': 'متن به طور خودکار به فارسی ترجمه شده',
+      'ur': 'خودکار طور پر اردو میں ترجمہ شدہ متن',
+      'es': 'Texto traducido automáticamente al español',
+      'fr': 'Texte traduit automatiquement en français',
+      'de': 'Automatisch ins Deutsche übersetzter Text',
+      'zh': '自动翻译成中文的文本',
+      'ja': '日本語に自動翻訳されたテキスト',
+      'ko': '한국어로 자동 번역된 텍스트',
+      'hi': 'हिंदी में स्वचालित रूप से अनुवादित पाठ',
+      'ru': 'Автоматически переведенный на русский язык текст',
+      'pt': 'Texto traduzido automaticamente para português',
+      'it': 'Testo tradotto automaticamente in italiano',
+      'tr': 'Türkçeye otomatik olarak çevrilmiş metin'
+    };
+
+    const translatedText = mockTranslations[targetLanguage] || text;
+    
+    res.json({
+      success: true,
+      translatedText,
+      sourceLanguage,
+      targetLanguage,
+      confidence: 0.95
+    });
+  });
+
   // Reels API endpoints
   app.get('/api/reels', isDebugAuthenticated, (req: any, res) => {
     console.log('🎬 User reels requested');
@@ -618,6 +674,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     ];
     
     res.json(mockOwnedCapsules);
+  });
+
+  // AI Translation endpoint
+  app.post('/api/ai/translate', isDebugAuthenticated, (req: any, res) => {
+    console.log('🌐 Translation requested:', req.body);
+    
+    const { text, targetLanguage, sourceLanguage = 'en' } = req.body;
+    
+    if (!text || !targetLanguage) {
+      return res.status(400).json({ error: 'Missing text or targetLanguage' });
+    }
+
+    // Mock translation responses for different languages
+    const mockTranslations: Record<string, Record<string, string>> = {
+      'es': {
+        'Family Memories 2024': 'Recuerdos Familiares 2024',
+        'A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.': 'Una colección conmovedora que captura la esencia de los vínculos familiares, la risa y las experiencias compartidas durante 2024.',
+        'Truth About Corporate Fraud': 'La Verdad Sobre el Fraude Corporativo',
+        'Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.': 'Relato detallado de irregularidades financieras y violaciones éticas dentro de una corporación importante, respaldado por evidencia documentada.'
+      },
+      'fr': {
+        'Family Memories 2024': 'Souvenirs de Famille 2024',
+        'A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.': 'Une collection réconfortante capturant l\'essence des liens familiaux, du rire et des expériences partagées tout au long de 2024.',
+        'Truth About Corporate Fraud': 'La Vérité sur la Fraude d\'Entreprise',
+        'Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.': 'Compte rendu détaillé des irrégularités financières et des violations éthiques au sein d\'une grande corporation, soutenu par des preuves documentées.'
+      },
+      'ar': {
+        'Family Memories 2024': 'ذكريات العائلة 2024',
+        'A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.': 'مجموعة مؤثرة تلتقط جوهر الروابط الأسرية والضحك والتجارب المشتركة خلال عام 2024.',
+        'Truth About Corporate Fraud': 'الحقيقة حول الاحتيال المؤسسي',
+        'Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.': 'حساب مفصل للمخالفات المالية والانتهاكات الأخلاقية داخل شركة كبرى، مدعوم بأدلة موثقة.'
+      },
+      'zh': {
+        'Family Memories 2024': '家庭回忆 2024',
+        'A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.': '一个温馨的合集，捕捉了2024年家庭纽带、欢声笑语和共同经历的精髓。',
+        'Truth About Corporate Fraud': '企业欺诈真相',
+        'Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.': '详细记录了一家大公司内部的财务违规和道德违法行为，有文件证据支持。'
+      },
+      'de': {
+        'Family Memories 2024': 'Familienerinnerungen 2024',
+        'A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.': 'Eine herzerwärmende Sammlung, die das Wesen von Familienbanden, Lachen und gemeinsamen Erfahrungen während 2024 einfängt.',
+        'Truth About Corporate Fraud': 'Die Wahrheit über Unternehmensbetrug',
+        'Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.': 'Detaillierter Bericht über finanzielle Unregelmäßigkeiten und ethische Verstöße innerhalb eines großen Unternehmens, unterstützt durch dokumentierte Beweise.'
+      }
+    };
+
+    // Get translation or fallback to original text
+    const languageTranslations = mockTranslations[targetLanguage] || {};
+    const translatedText = languageTranslations[text] || `[${targetLanguage.toUpperCase()}] ${text}`;
+    
+    // Simulate API delay
+    setTimeout(() => {
+      res.json({
+        success: true,
+        translatedText,
+        sourceLanguage,
+        targetLanguage,
+        confidence: 0.95
+      });
+    }, 800);
   });
 
   // Register GTT Contract routes

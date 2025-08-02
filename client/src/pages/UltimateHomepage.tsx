@@ -33,6 +33,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
+import { detectUserLanguage, getRTLContainerProps } from "@/lib/rtlSupport";
+import { getLabel } from "@/lib/labels";
 
 // Platform Stats Component
 function LivePlatformStats() {
@@ -549,8 +551,14 @@ function FinalCTASection() {
 
 // Main Homepage Component
 export default function UltimateHomepage() {
+  const userLang = detectUserLanguage();
+  const containerProps = getRTLContainerProps(userLang);
+  
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div 
+      className="min-h-screen bg-black text-white overflow-x-hidden"
+      dir={containerProps.dir}
+    >
       <HeroSection />
       <CoreFeaturesSection />
       <UseCasesSection />

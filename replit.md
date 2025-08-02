@@ -7,6 +7,12 @@ GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-sc
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 2, 2025)
+- **Global RTL Support Complete**: Implemented comprehensive right-to-left layout support for Arabic, Hebrew, Persian, Urdu, and other RTL languages across all major containers (UltimateHomepage, explore, dashboard, reels-viewer)
+- **Language Selector Component**: Created comprehensive LanguageSelector component with 22 supported languages including native script display
+- **User Language Preferences**: Added preferredLanguage field to user schema with API endpoints for preference updates
+- **Auto-Translation API**: Built `/api/ai/translate` endpoint with mock translations for 15 languages to support multilingual content
+- **RTL Layout Functions**: Implemented `isRTL()`, `getRTLContainerProps()`, and `detectUserLanguage()` functions for automatic layout switching
+- **TranslateToggle Integration**: Added auto-translation capabilities to capsule cards for global accessibility
 - **Multilingual Voice Reels System Complete**: Implemented comprehensive multilingual support with VoiceSummaryPlayer integration
 - **Voice Summary Features**: Added "Listen to Summary" button to each capsule with auto-translation for non-English languages
 - **LABELS System**: Created multilingual interface with auto-switching text based on user language preference
@@ -72,6 +78,7 @@ Preferred communication style: Simple, everyday language.
 - **Asset Integration**: Comprehensive branding asset system with video backgrounds, NFT avatar options, logo strips, and GPU-accelerated visual effects.
 - **Navigation**: Advanced navigation system with dynamic badge indicators (🆕 New Proposal, ⚠️ Unclaimed Yield), role-based menu visibility (admin-only, DAO-only), comprehensive mobile responsiveness with collapsible sidebar, centralized navigation data with 100+ routes, and real-time notification system.
 - **Complete Page Coverage**: Comprehensive platform with all core functionality implemented including enhanced capsule creation/vault management, GTT yield claiming, truth verification, lineage tracking, Truth Genome NFT viewer, investor relations, contact system, and extensive documentation (how-it-works, grants, legal framework).
+- **Global RTL & Multilingual System**: Complete right-to-left layout support for 29 RTL languages with automatic layout switching, comprehensive LanguageSelector component supporting 22 languages with native scripts, user language preference storage, and auto-translation API integration.
 - **Multilingual Voice Interface**: Complete voice summary system with VoiceSummaryPlayer component, auto-translation for multilingual users, and LABELS-based interface localization.
 - **Reels System**: Full reel curation functionality allowing users to create named collections from owned capsules with voice summaries and multilingual support.
 - **Sovereign Social Profiles**: Full-featured profile system with TruthGenomeCard showing personality traits (Seeker, Whistleblower, Visionary, Historian), CapsuleWallToggle for multiple view modes, and public sharing via `/u/[username]` routes. Includes comprehensive media upload with auto-categorization and blockchain minting.

@@ -152,6 +152,28 @@ export const LABELS = {
     ru: "Запечатанный"
   },
   
+  // Translation and RTL support
+  translate: { en: "Translate", es: "Traducir", fr: "Traduire", de: "Übersetzen", zh: "翻译", ja: "翻訳", ar: "ترجم", pt: "Traduzir", ru: "Перевести", it: "Traduci", ko: "번역" },
+  translation: { en: "Translation", es: "Traducción", fr: "Traduction", de: "Übersetzung", zh: "翻译", ja: "翻訳", ar: "ترجمة", pt: "Tradução", ru: "Перевод", it: "Traduzione", ko: "번역" },
+  translating: { en: "Translating...", es: "Traduciendo...", fr: "Traduction...", de: "Übersetzen...", zh: "翻译中...", ja: "翻訳中...", ar: "جاري الترجمة...", pt: "Traduzindo...", ru: "Перевод...", it: "Traduzione...", ko: "번역 중..." },
+  translationComplete: { en: "Translation completed successfully", es: "Traducción completada exitosamente", fr: "Traduction terminée avec succès", de: "Übersetzung erfolgreich abgeschlossen", zh: "翻译成功完成", ja: "翻訳が正常に完了しました", ar: "تمت الترجمة بنجاح", pt: "Tradução concluída com sucesso", ru: "Перевод выполнен успешно", it: "Traduzione completata con successo", ko: "번역이 성공적으로 완료되었습니다" },
+  translationFailed: { en: "Translation failed. Please try again.", es: "La traducción falló. Inténtalo de nuevo.", fr: "La traduction a échoué. Veuillez réessayer.", de: "Übersetzung fehlgeschlagen. Bitte versuchen Sie es erneut.", zh: "翻译失败。请重试。", ja: "翻訳に失敗しました。もう一度お試しください。", ar: "فشلت الترجمة. يرجى المحاولة مرة أخرى.", pt: "A tradução falhou. Tente novamente.", ru: "Перевод не удался. Пожалуйста, попробуйте еще раз.", it: "Traduzione fallita. Riprova.", ko: "번역에 실패했습니다. 다시 시도해주세요." },
+  translatedFrom: { en: "Translated from", es: "Traducido de", fr: "Traduit de", de: "Übersetzt aus", zh: "翻译自", ja: "翻訳元", ar: "مترجم من", pt: "Traduzido de", ru: "Переведено с", it: "Tradotto da", ko: "번역 출처" },
+  original: { en: "Original", es: "Original", fr: "Original", de: "Original", zh: "原文", ja: "原文", ar: "الأصل", pt: "Original", ru: "Оригинал", it: "Originale", ko: "원본" },
+  
+  // Reels viewer
+  loading: { en: "Loading", es: "Cargando", fr: "Chargement", de: "Laden", zh: "加载中", ja: "読み込み中", ar: "تحميل", pt: "Carregando", ru: "Загрузка", it: "Caricamento", ko: "로딩" },
+  noReels: { en: "No reels available", es: "No hay reels disponibles", fr: "Aucun reel disponible", de: "Keine Reels verfügbar", zh: "没有可用的短片", ja: "利用可能なリールがありません", ar: "لا توجد مقاطع متاحة", pt: "Nenhum reel disponível", ru: "Нет доступных роликов", it: "Nessun reel disponibile", ko: "사용 가능한 릴이 없습니다" },
+  createReelsFirst: { en: "Create your first reel collection to start viewing", es: "Crea tu primera colección de reels para comenzar a ver", fr: "Créez votre première collection de reels pour commencer à regarder", de: "Erstellen Sie Ihre erste Reel-Sammlung, um mit dem Anschauen zu beginnen", zh: "创建您的第一个短片集合开始观看", ja: "視聴を開始するには最初のリールコレクションを作成してください", ar: "أنشئ مجموعة المقاطع الأولى لبدء المشاهدة", pt: "Crie sua primeira coleção de reels para começar a assistir", ru: "Создайте свою первую коллекцию роликов, чтобы начать просмотр", it: "Crea la tua prima collezione di reel per iniziare a guardare", ko: "시청을 시작하려면 첫 번째 릴 컬렉션을 만드세요" },
+  createReels: { en: "Create Reels", es: "Crear Reels", fr: "Créer des Reels", de: "Reels erstellen", zh: "创建短片", ja: "リールを作成", ar: "إنشاء مقاطع", pt: "Criar Reels", ru: "Создать ролики", it: "Crea Reel", ko: "릴 만들기" },
+  textCapsule: { en: "Text Capsule", es: "Cápsula de Texto", fr: "Capsule de Texte", de: "Text-Kapsel", zh: "文本胶囊", ja: "テキストカプセル", ar: "كبسولة نصية", pt: "Cápsula de Texto", ru: "Текстовая капсула", it: "Capsula di Testo", ko: "텍스트 캡슐" },
+  back: { en: "Back", es: "Atrás", fr: "Retour", de: "Zurück", zh: "返回", ja: "戻る", ar: "رجوع", pt: "Voltar", ru: "Назад", it: "Indietro", ko: "뒤로" },
+  reelInfo: { en: "Reel Information", es: "Información del Reel", fr: "Informations du Reel", de: "Reel-Informationen", zh: "短片信息", ja: "リール情報", ar: "معلومات المقطع", pt: "Informações do Reel", ru: "Информация о ролике", it: "Informazioni Reel", ko: "릴 정보" },
+  plays: { en: "Plays", es: "Reproducciones", fr: "Lectures", de: "Wiedergaben", zh: "播放次数", ja: "再生回数", ar: "مرات التشغيل", pt: "Reproduções", ru: "Воспроизведения", it: "Riproduzioni", ko: "재생" },
+  likes: { en: "Likes", es: "Me gusta", fr: "J'aime", de: "Gefällt mir", zh: "点赞", ja: "いいね", ar: "إعجابات", pt: "Curtidas", ru: "Лайки", it: "Mi piace", ko: "좋아요" },
+  preferredLanguage: { en: "Preferred Language", es: "Idioma Preferido", fr: "Langue Préférée", de: "Bevorzugte Sprache", zh: "首选语言", ja: "優先言語", ar: "اللغة المفضلة", pt: "Idioma Preferido", ru: "Предпочитаемый язык", it: "Lingua Preferita", ko: "선호 언어" },
+  error: { en: "Error", es: "Error", fr: "Erreur", de: "Fehler", zh: "错误", ja: "エラー", ar: "خطأ", pt: "Erro", ru: "Ошибка", it: "Errore", ko: "오류" },
+
   // Personality Traits
   seeker: {
     en: "Seeker",

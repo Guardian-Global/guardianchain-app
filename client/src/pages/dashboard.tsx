@@ -3,11 +3,19 @@ import { Badge } from '@/components/ui/badge';
 import { BarChart3, Shield, Zap, Crown, TrendingUp, Users, FileText, Settings } from 'lucide-react';
 import CapsuleDrawer from '@/components/CapsuleDrawer';
 import CapsuleList from '@/components/CapsuleList';
+import LanguageSelector from '@/components/LanguageSelector';
+import { detectUserLanguage, getRTLContainerProps } from "@/lib/rtlSupport";
 
 export default function DashboardPage() {
+  const userLang = detectUserLanguage();
+  const containerProps = getRTLContainerProps(userLang);
+  
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-8">
+      <div 
+        className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-8"
+        dir={containerProps.dir}
+      >
         <div className="max-w-6xl mx-auto p-6">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -18,10 +26,13 @@ export default function DashboardPage() {
                 Welcome to your GUARDIANCHAIN dashboard. Access advanced tools and insights.
               </p>
             </div>
-            <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2">
-              <Crown className="w-4 h-4 mr-2" />
-              Pro Access
-            </Badge>
+            <div className="flex items-center gap-4">
+              <LanguageSelector variant="button" />
+              <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2">
+                <Crown className="w-4 h-4 mr-2" />
+                Pro Access
+              </Badge>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
