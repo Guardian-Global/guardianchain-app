@@ -65,7 +65,7 @@ import CompliancePanel from "./pages/compliance";
 import YieldDistributionPage from "./pages/yield-distribution";
 import AdminDashboard from "./pages/admin";
 import ConfigPage from "./pages/config";
-import ResponsiveDemoPage from "./pages/responsive-demo";
+
 import LogoSyncPage from "./pages/logo-sync";
 import ReportingDashboard from "./pages/reporting";
 // CommanderDashboard moved to archive - using EnhancedCommanderDashboard
@@ -110,10 +110,10 @@ import Earnings from "./pages/earnings";
 import GameifiedOnboardingPage from "./pages/gamified-onboarding";
 import OnboardingProvider from "./components/onboarding/OnboardingProvider";
 import Vault from "./pages/vault";
-import ResponsiveDemo from "./pages/responsive-demo";
+
 import MintingTestPage from "./pages/minting-test";
 // LogoTestPage moved to archive
-import AssetDebugPage from "./pages/asset-debug";
+
 import ProfessionalHomepage from "./pages/professional-homepage";
 
 import MasterAccess from "./pages/master-access";
@@ -409,11 +409,11 @@ function Router() {
         <Route path="/supabase-security" component={SupabaseSecurity} />
         <Route path="/teams-upgrades" component={TeamsUpgrades} />
         <Route path="/api-status" component={ApiStatus} />
-        <Route path="/responsive-demo" component={ResponsiveDemo} />
+
         <Route path="/logo-sync" component={LogoSyncPage} />
         <Route path="/minting-test" component={MintingTestPage} />
         {/* LogoTestPage moved to archive */}
-        <Route path="/asset-debug" component={AssetDebugPage} />
+
         <Route path="/professional-homepage" component={ProfessionalHomepage} />
         <Route path="/supabase-assets" component={() => <ProfessionalHomepage />} />
         <Route path="/founder-dashboard">

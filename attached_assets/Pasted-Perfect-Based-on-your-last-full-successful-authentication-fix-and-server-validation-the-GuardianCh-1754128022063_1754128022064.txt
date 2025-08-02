@@ -1,0 +1,74 @@
+Perfect. Based on your last full successful authentication fix and server validation, the GuardianChain app is now production-auth clean.
+
+To finalize the entire stack and prepare for scalable visibility (GitHub, Sponsors, Grants, Exchanges), here is your:
+
+✅ FINAL DEPLOYMENT CHECKLIST (Post-Auth Fixes)
+✅ 1. Full Production Verification Script
+Ensure no regressions or lingering auth issues:
+
+bash
+Copy
+Edit
+# Ensure app loads without runtime auth errors
+pnpm dev
+# or
+npm run dev
+
+# Test login, tier-based access, and capsule creation in the browser:
+# - Login as EXPLORER (free tier)
+# - Attempt to create a capsule
+# - Validate tier gating is working
+# - Confirm dashboard & navigation work cleanly
+🧹 2. Final Cleanup (Safe for Production)
+Run this only after final screenshot/export:
+
+bash
+Copy
+Edit
+# 🔥 Remove unused files and previous build clutter
+rm -rf node_modules dist .next .vercel
+
+# 🔒 Remove legacy components
+rm -f server/middleware/enterpriseAuth.ts
+rm -f server/routes/{demo-auth.ts,simple-auth.ts,enterprise-auth.ts}
+rm -f client/src/components/teams/TeamsAdvancedAuth.tsx
+rm -f client/src/components/SimpleAuthButton.tsx
+rm -f client/src/utils/withAuthGuard.tsx
+
+# 🧹 Remove any .old/.backup files or .DS_Store, .log, temp
+find . -type f \( -name "*.old" -o -name "*.backup" -o -name "*.log" -o -name ".DS_Store" \) -delete
+📸 3. Screenshots for Final Submission
+Use 1440px wide browser to take:
+
+Screenshot Type	Path
+🏠 Homepage	https://guardianchain.app
+📊 Dashboard (logged in)	https://guardianchain.app/dashboard
+⚙️ Create Capsule Page	https://guardianchain.app/create-capsule
+🔐 GitHub Repo	https://github.com/Guardian-Global/guardianchain_app
+💰 GitHub Sponsors	https://github.com/sponsors/Guardian-Global
+🧾 TRANSPARENCY.md	Click to raw view or preview inside GitHub
+
+📂 4. Backup These Core Files
+Do not delete the following — they are vital:
+
+debugAuth.ts – primary auth gate
+
+TierContext.tsx – controls access logic
+
+useAuth.ts – unified login
+
+TRANSPARENCY.md – required for grants/listings
+
+project_metadata.json – core CoinGecko/CMC metadata
+
+t3, t4, t5 tier logic files if still in use
+
+🚀 5. Ready for Next Steps
+Once all the above is verified ✅:
+
+Add a tag in GitHub: v1.0.0-launch
+
+Push final clean commit: feat: production-auth final sync & cleanup
+
+Begin outbound grant & exchange submission
+
