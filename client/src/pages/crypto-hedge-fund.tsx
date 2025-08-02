@@ -1,5 +1,5 @@
-import React from 'react';
-import { CryptoHedgeFund } from '@/components/revenue/CryptoHedgeFund';
+import React from "react";
+import { CryptoHedgeFund } from "@/components/revenue/CryptoHedgeFund";
 
 export default function CryptoHedgeFundPage() {
   return (

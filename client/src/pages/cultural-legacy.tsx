@@ -1,5 +1,5 @@
-import React from 'react';
-import { CulturalLegacyCapsule } from '@/components/legacy/CulturalLegacyCapsule';
+import React from "react";
+import { CulturalLegacyCapsule } from "@/components/legacy/CulturalLegacyCapsule";
 
 export default function CulturalLegacyPage() {
   return (

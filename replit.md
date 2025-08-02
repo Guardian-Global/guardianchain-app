@@ -1,14 +1,17 @@
 # GuardianChain: Truth Vault Capsule dApp
 
 ## Overview
+
 GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization. The platform enables users to mint Veritas Capsules, earn $GTT yield based on GriefScore™, and submit legacy, trauma, or testimony capsules. Users can replay, verify, and unlock time-sealed capsules through an integrated Veritas Certificate Engine. The project aims to provide institutional-grade memory infrastructure for sealing truth and unlocking value through blockchain technology and AI-powered verification systems.
 
 ## User Preferences
+
 Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
 ### Frontend
+
 - **Frameworks & Libraries**: React with TypeScript, Wouter, Tailwind CSS (with custom design system, Radix UI, shadcn/ui), React Query, React Hook Form with Zod, Framer Motion.
 - **Build Tool**: Vite.
 - **UI/UX**: Supports dark/light mode, incorporates micro-interactions and gamification elements, professional branding, responsive design, and enterprise-grade UI/UX standards. Features a comprehensive design token system, premium visual identity, and PWA offline capabilities. Enhanced pages include homepage with video backgrounds and investor-grade presentation, and dashboard with NFT avatar customization and tier progress tracking.
@@ -17,6 +20,7 @@ Preferred communication style: Simple, everyday language.
 - **PWA Capabilities**: Full Progressive Web App functionality with service worker, offline support, install button, background sync, and enhanced manifest with GuardianChain branding.
 
 ### Backend
+
 - **Runtime & Language**: Node.js with Express.js, TypeScript.
 - **API Design**: RESTful API with structured error handling.
 - **Authentication**: Debug authentication system with OAuth integration (Google/GitHub via Passport.js) providing enterprise-grade user authentication and tier-based access control.
@@ -24,12 +28,14 @@ Preferred communication style: Simple, everyday language.
 - **Data Flow**: Automated IPFS integration for content storage, community-driven verification, and GTT token reward distribution.
 
 ### Database & ORM
+
 - **Database**: PostgreSQL (configured for Neon serverless).
 - **ORM**: Drizzle ORM.
 - **Schema Management**: Drizzle Kit.
 - **Lineage Infrastructure**: Complete capsule inheritance tracking with lineage table, grief flow, and influence scoring system.
 
 ### Core Entities & Features
+
 - **Users**: Streamlined debug authentication with comprehensive tier-based access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN), subscription management, and optimized API endpoints.
 - **Authentication System**: Full-featured tiered access control with TierGate component and SubscriptionManager.
 - **Subscription Tiers**: Four-tier system with progressive feature unlocking.
@@ -54,6 +60,7 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### Blockchain & Web3
+
 - **Ethereum Integration**: ethers.js.
 - **Multi-chain Support**: Ethereum mainnet, Polygon, and testnets.
 - **Wallet Providers**: MetaMask.
@@ -61,6 +68,7 @@ Preferred communication style: Simple, everyday language.
 - **Web3 Integration**: Wagmi/Viem.
 
 ### Third-party Services
+
 - **Payment Processing**: Stripe.
 - **Decentralized Storage**: IPFS.
 - **Document Verification**: DocuSign.

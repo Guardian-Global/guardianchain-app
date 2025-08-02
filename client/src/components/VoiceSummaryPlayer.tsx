@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Volume2, VolumeX, Play, Pause } from "lucide-react";
 
 interface VoiceSummaryPlayerProps {
   content: string;
@@ -8,10 +8,10 @@ interface VoiceSummaryPlayerProps {
   className?: string;
 }
 
-export default function VoiceSummaryPlayer({ 
-  content, 
-  language = 'en', 
-  className = '' 
+export default function VoiceSummaryPlayer({
+  content,
+  language = "en",
+  className = "",
 }: VoiceSummaryPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -19,7 +19,7 @@ export default function VoiceSummaryPlayer({
   const handlePlay = () => {
     // Mock voice synthesis - replace with actual implementation
     setIsPlaying(!isPlaying);
-    console.log('Playing voice summary:', content.slice(0, 50) + '...');
+    console.log("Playing voice summary:", content.slice(0, 50) + "...");
   };
 
   return (

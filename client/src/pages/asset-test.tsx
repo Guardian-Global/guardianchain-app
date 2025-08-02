@@ -7,11 +7,12 @@ import { CheckCircle, Play, Image } from "lucide-react";
 
 export default function AssetTest() {
   const testVideo = (type: "guardianchain" | "gtt") => {
-    const videoSrc = type === "guardianchain" 
-      ? "/assets/GUARDIANCHAIN_logo_video.mp4"
-      : "/assets/GTT_logo_video.mp4";
-    
-    const video = document.createElement('video');
+    const videoSrc =
+      type === "guardianchain"
+        ? "/assets/GUARDIANCHAIN_logo_video.mp4"
+        : "/assets/GTT_logo_video.mp4";
+
+    const video = document.createElement("video");
     video.src = videoSrc;
     video.onloadeddata = () => {
       console.log(`✅ ${type.toUpperCase()} video loaded successfully!`);
@@ -32,11 +33,17 @@ export default function AssetTest() {
             Testing all your custom company logos and videos
           </p>
           <div className="flex gap-4 justify-center">
-            <Button onClick={() => testVideo("guardianchain")} className="bg-purple-600 hover:bg-purple-700">
+            <Button
+              onClick={() => testVideo("guardianchain")}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
               <Play className="w-4 h-4 mr-2" />
               Test GUARDIANCHAIN Video
             </Button>
-            <Button onClick={() => testVideo("gtt")} className="bg-green-600 hover:bg-green-700">
+            <Button
+              onClick={() => testVideo("gtt")}
+              className="bg-green-600 hover:bg-green-700"
+            >
               <Play className="w-4 h-4 mr-2" />
               Test GTT Video
             </Button>
@@ -69,7 +76,7 @@ export default function AssetTest() {
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Image className="h-5 w-5 text-green-400" />
-                GTT Token Logo  
+                GTT Token Logo
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -103,7 +110,9 @@ export default function AssetTest() {
               </div>
               <div className="text-center">
                 <p className="text-slate-400">3.8MB MP4 • Your Custom Video</p>
-                <p className="text-xs text-slate-500 mt-1">Path: /assets/GUARDIANCHAIN_logo_video.mp4</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Path: /assets/GUARDIANCHAIN_logo_video.mp4
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -123,7 +132,9 @@ export default function AssetTest() {
               </div>
               <div className="text-center">
                 <p className="text-slate-400">3.8MB MP4 • Your Token Video</p>
-                <p className="text-xs text-slate-500 mt-1">Path: /assets/GTT_logo_video.mp4</p>
+                <p className="text-xs text-slate-500 mt-1">
+                  Path: /assets/GTT_logo_video.mp4
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -131,10 +142,13 @@ export default function AssetTest() {
 
         <div className="mt-12 text-center">
           <div className="bg-slate-800/30 rounded-lg p-6">
-            <h3 className="text-xl font-semibold text-white mb-2">Asset Status</h3>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Asset Status
+            </h3>
             <p className="text-slate-300">
-              All 4 of your company assets are now properly integrated and working.
-              The videos should autoplay and loop. Check your browser console for loading status.
+              All 4 of your company assets are now properly integrated and
+              working. The videos should autoplay and loop. Check your browser
+              console for loading status.
             </p>
           </div>
         </div>

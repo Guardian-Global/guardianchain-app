@@ -7,7 +7,10 @@ export function useProfileQuery(projectId: string) {
     queryKey: ["/api/profile", projectId],
     queryFn: async () => {
       try {
-        const response = await apiRequest("GET", `/api/profile?project=${projectId}`);
+        const response = await apiRequest(
+          "GET",
+          `/api/profile?project=${projectId}`,
+        );
         return await response.json();
       } catch (error) {
         console.warn("Profile fetch failed:", error);
@@ -16,6 +19,6 @@ export function useProfileQuery(projectId: string) {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 }

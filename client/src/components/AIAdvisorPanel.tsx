@@ -11,7 +11,7 @@ interface AIAdvisorPanelProps {
 
 export function AIAdvisorPanel({ treasury, market }: AIAdvisorPanelProps) {
   const [advice, setAdvice] = useState<string>(
-    "Click 'Generate Insights' to get AI analysis"
+    "Click 'Generate Insights' to get AI analysis",
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");

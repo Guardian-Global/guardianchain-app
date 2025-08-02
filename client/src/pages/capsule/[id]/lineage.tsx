@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'wouter';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  GitBranch, 
-  Eye, 
-  Heart, 
-  Share2, 
-  ArrowUp, 
+import React, { useState, useEffect } from "react";
+import { useParams } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  GitBranch,
+  Eye,
+  Heart,
+  Share2,
+  ArrowUp,
   ArrowDown,
   ArrowLeft,
   ArrowRight,
   Maximize2,
   Search,
-  Filter
-} from 'lucide-react';
+  Filter,
+} from "lucide-react";
 
 interface LineageNode {
   id: string;
@@ -24,7 +24,7 @@ interface LineageNode {
   author: string;
   createdAt: string;
   griefScore: number;
-  type: 'original' | 'inspired' | 'response' | 'evolution';
+  type: "original" | "inspired" | "response" | "evolution";
   connections: {
     parents: string[];
     children: string[];
@@ -44,7 +44,7 @@ interface LineageGraph {
   edges: {
     from: string;
     to: string;
-    type: 'inspired_by' | 'responds_to' | 'evolves_from' | 'influences';
+    type: "inspired_by" | "responds_to" | "evolves_from" | "influences";
     strength: number;
   }[];
   stats: {
@@ -59,12 +59,14 @@ export default function CapsuleLineage() {
   const params = useParams();
   const capsuleId = params.id;
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'tree' | 'network' | 'timeline'>('tree');
+  const [viewMode, setViewMode] = useState<"tree" | "network" | "timeline">(
+    "tree",
+  );
   const [zoomLevel, setZoomLevel] = useState(100);
 
   const { data: lineageData, isLoading } = useQuery<LineageGraph>({
-    queryKey: ['/api/capsules', capsuleId, 'lineage'],
-    enabled: !!capsuleId
+    queryKey: ["/api/capsules", capsuleId, "lineage"],
+    enabled: !!capsuleId,
   });
 
   if (isLoading) {
@@ -96,21 +98,31 @@ export default function CapsuleLineage() {
 
   const getNodeTypeColor = (type: string) => {
     switch (type) {
-      case 'original': return 'bg-blue-500';
-      case 'inspired': return 'bg-green-500';
-      case 'response': return 'bg-yellow-500';
-      case 'evolution': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      case "original":
+        return "bg-blue-500";
+      case "inspired":
+        return "bg-green-500";
+      case "response":
+        return "bg-yellow-500";
+      case "evolution":
+        return "bg-purple-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const getNodeTypeLabel = (type: string) => {
     switch (type) {
-      case 'original': return 'Original';
-      case 'inspired': return 'Inspired';
-      case 'response': return 'Response';
-      case 'evolution': return 'Evolution';
-      default: return 'Unknown';
+      case "original":
+        return "Original";
+      case "inspired":
+        return "Inspired";
+      case "response":
+        return "Response";
+      case "evolution":
+        return "Evolution";
+      default:
+        return "Unknown";
     }
   };
 
@@ -119,18 +131,26 @@ export default function CapsuleLineage() {
       <div className="flex flex-col items-center space-y-8">
         {/* Root Node */}
         <div className="relative">
-          <Card 
+          <Card
             className={`cursor-pointer transition-all transform hover:scale-105 ${
-              selectedNode === lineageData.rootCapsule.id ? 'ring-2 ring-blue-500' : ''
+              selectedNode === lineageData.rootCapsule.id
+                ? "ring-2 ring-blue-500"
+                : ""
             }`}
             onClick={() => setSelectedNode(lineageData.rootCapsule.id)}
           >
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className={`w-4 h-4 rounded-full ${getNodeTypeColor(lineageData.rootCapsule.type)}`} />
+                <div
+                  className={`w-4 h-4 rounded-full ${getNodeTypeColor(lineageData.rootCapsule.type)}`}
+                />
                 <div>
-                  <h4 className="font-semibold">{lineageData.rootCapsule.title}</h4>
-                  <p className="text-sm text-gray-500">{lineageData.rootCapsule.author}</p>
+                  <h4 className="font-semibold">
+                    {lineageData.rootCapsule.title}
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    {lineageData.rootCapsule.author}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -138,28 +158,38 @@ export default function CapsuleLineage() {
         </div>
 
         {/* Connection Lines and Child Nodes */}
-        {lineageData.nodes.filter(node => 
-          lineageData.rootCapsule.connections.children.includes(node.id)
+        {lineageData.nodes.filter((node) =>
+          lineageData.rootCapsule.connections.children.includes(node.id),
         ).length > 0 && (
           <>
             <div className="w-px h-8 bg-gray-300 dark:bg-gray-600" />
             <div className="flex space-x-8">
               {lineageData.nodes
-                .filter(node => lineageData.rootCapsule.connections.children.includes(node.id))
+                .filter((node) =>
+                  lineageData.rootCapsule.connections.children.includes(
+                    node.id,
+                  ),
+                )
                 .map((node) => (
                   <div key={node.id} className="flex flex-col items-center">
-                    <Card 
+                    <Card
                       className={`cursor-pointer transition-all transform hover:scale-105 ${
-                        selectedNode === node.id ? 'ring-2 ring-blue-500' : ''
+                        selectedNode === node.id ? "ring-2 ring-blue-500" : ""
                       }`}
                       onClick={() => setSelectedNode(node.id)}
                     >
                       <CardContent className="p-3">
                         <div className="flex items-center space-x-2">
-                          <div className={`w-3 h-3 rounded-full ${getNodeTypeColor(node.type)}`} />
+                          <div
+                            className={`w-3 h-3 rounded-full ${getNodeTypeColor(node.type)}`}
+                          />
                           <div>
-                            <h5 className="font-medium text-sm">{node.title}</h5>
-                            <p className="text-xs text-gray-500">{node.author}</p>
+                            <h5 className="font-medium text-sm">
+                              {node.title}
+                            </h5>
+                            <p className="text-xs text-gray-500">
+                              {node.author}
+                            </p>
                           </div>
                         </div>
                       </CardContent>
@@ -178,7 +208,9 @@ export default function CapsuleLineage() {
       <div className="text-center text-gray-500 mt-20">
         <GitBranch className="w-16 h-16 mx-auto mb-4" />
         <p>Network visualization coming soon</p>
-        <p className="text-sm">This will show the full network graph of influences and connections</p>
+        <p className="text-sm">
+          This will show the full network graph of influences and connections
+        </p>
       </div>
     </div>
   );
@@ -187,18 +219,23 @@ export default function CapsuleLineage() {
     <div className="relative bg-white dark:bg-gray-800 rounded-lg p-6 min-h-96">
       <div className="space-y-6">
         {lineageData.nodes
-          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+          .sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          )
           .map((node, index) => (
             <div key={node.id} className="flex items-center space-x-4">
               <div className="flex flex-col items-center">
-                <div className={`w-4 h-4 rounded-full ${getNodeTypeColor(node.type)}`} />
+                <div
+                  className={`w-4 h-4 rounded-full ${getNodeTypeColor(node.type)}`}
+                />
                 {index < lineageData.nodes.length - 1 && (
                   <div className="w-px h-12 bg-gray-300 dark:bg-gray-600 mt-2" />
                 )}
               </div>
-              <Card 
+              <Card
                 className={`flex-1 cursor-pointer transition-all hover:shadow-md ${
-                  selectedNode === node.id ? 'ring-2 ring-blue-500' : ''
+                  selectedNode === node.id ? "ring-2 ring-blue-500" : ""
                 }`}
                 onClick={() => setSelectedNode(node.id)}
               >
@@ -224,8 +261,9 @@ export default function CapsuleLineage() {
     </div>
   );
 
-  const selectedNodeData = selectedNode 
-    ? lineageData.nodes.find(n => n.id === selectedNode) || lineageData.rootCapsule
+  const selectedNodeData = selectedNode
+    ? lineageData.nodes.find((n) => n.id === selectedNode) ||
+      lineageData.rootCapsule
     : lineageData.rootCapsule;
 
   return (
@@ -249,8 +287,12 @@ export default function CapsuleLineage() {
           <Card>
             <CardContent className="p-4">
               <div className="text-center">
-                <p className="text-2xl font-bold">{lineageData.stats.totalNodes}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Connected Capsules</p>
+                <p className="text-2xl font-bold">
+                  {lineageData.stats.totalNodes}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Connected Capsules
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -258,8 +300,12 @@ export default function CapsuleLineage() {
           <Card>
             <CardContent className="p-4">
               <div className="text-center">
-                <p className="text-2xl font-bold">{lineageData.stats.maxDepth}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Max Depth</p>
+                <p className="text-2xl font-bold">
+                  {lineageData.stats.maxDepth}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Max Depth
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -267,8 +313,12 @@ export default function CapsuleLineage() {
           <Card>
             <CardContent className="p-4">
               <div className="text-center">
-                <p className="text-2xl font-bold">{lineageData.stats.totalInfluence}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Influence</p>
+                <p className="text-2xl font-bold">
+                  {lineageData.stats.totalInfluence}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Total Influence
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -276,8 +326,12 @@ export default function CapsuleLineage() {
           <Card>
             <CardContent className="p-4">
               <div className="text-center">
-                <p className="text-2xl font-bold">{lineageData.stats.lineageScore}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Lineage Score</p>
+                <p className="text-2xl font-bold">
+                  {lineageData.stats.lineageScore}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Lineage Score
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -295,23 +349,23 @@ export default function CapsuleLineage() {
                   </CardTitle>
                   <div className="flex space-x-2">
                     <Button
-                      variant={viewMode === 'tree' ? 'default' : 'outline'}
+                      variant={viewMode === "tree" ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setViewMode('tree')}
+                      onClick={() => setViewMode("tree")}
                     >
                       Tree
                     </Button>
                     <Button
-                      variant={viewMode === 'network' ? 'default' : 'outline'}
+                      variant={viewMode === "network" ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setViewMode('network')}
+                      onClick={() => setViewMode("network")}
                     >
                       Network
                     </Button>
                     <Button
-                      variant={viewMode === 'timeline' ? 'default' : 'outline'}
+                      variant={viewMode === "timeline" ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setViewMode('timeline')}
+                      onClick={() => setViewMode("timeline")}
                     >
                       Timeline
                     </Button>
@@ -319,9 +373,9 @@ export default function CapsuleLineage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {viewMode === 'tree' && renderTreeView()}
-                {viewMode === 'network' && renderNetworkView()}
-                {viewMode === 'timeline' && renderTimelineView()}
+                {viewMode === "tree" && renderTreeView()}
+                {viewMode === "network" && renderNetworkView()}
+                {viewMode === "timeline" && renderTimelineView()}
               </CardContent>
             </Card>
           </div>
@@ -336,14 +390,18 @@ export default function CapsuleLineage() {
                 {selectedNodeData && (
                   <div className="space-y-4">
                     <div>
-                      <h3 className="font-semibold text-lg">{selectedNodeData.title}</h3>
+                      <h3 className="font-semibold text-lg">
+                        {selectedNodeData.title}
+                      </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         by {selectedNodeData.author}
                       </p>
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <div className={`w-3 h-3 rounded-full ${getNodeTypeColor(selectedNodeData.type)}`} />
+                      <div
+                        className={`w-3 h-3 rounded-full ${getNodeTypeColor(selectedNodeData.type)}`}
+                      />
                       <Badge variant="outline">
                         {getNodeTypeLabel(selectedNodeData.type)}
                       </Badge>
@@ -351,16 +409,28 @@ export default function CapsuleLineage() {
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Created:</span>
-                        <span>{new Date(selectedNodeData.createdAt).toLocaleDateString()}</span>
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Created:
+                        </span>
+                        <span>
+                          {new Date(
+                            selectedNodeData.createdAt,
+                          ).toLocaleDateString()}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Grief Score:</span>
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Grief Score:
+                        </span>
                         <span>{selectedNodeData.griefScore}</span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Verification:</span>
-                        <span>{selectedNodeData.metadata.verificationLevel}</span>
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Verification:
+                        </span>
+                        <span>
+                          {selectedNodeData.metadata.verificationLevel}
+                        </span>
                       </div>
                     </div>
 
@@ -393,15 +463,21 @@ export default function CapsuleLineage() {
                       <div className="text-xs space-y-1">
                         <div className="flex justify-between">
                           <span>Parents:</span>
-                          <span>{selectedNodeData.connections.parents.length}</span>
+                          <span>
+                            {selectedNodeData.connections.parents.length}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Children:</span>
-                          <span>{selectedNodeData.connections.children.length}</span>
+                          <span>
+                            {selectedNodeData.connections.children.length}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Influences:</span>
-                          <span>{selectedNodeData.connections.influences.length}</span>
+                          <span>
+                            {selectedNodeData.connections.influences.length}
+                          </span>
                         </div>
                       </div>
                     </div>

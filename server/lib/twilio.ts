@@ -1,4 +1,4 @@
-import twilio from 'twilio';
+import twilio from "twilio";
 
 // Initialize Twilio client when credentials are available
 let twilioClient: twilio.Twilio | null = null;
@@ -6,7 +6,7 @@ let twilioClient: twilio.Twilio | null = null;
 if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
   twilioClient = twilio(
     process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
+    process.env.TWILIO_AUTH_TOKEN,
   );
 }
 
@@ -29,7 +29,9 @@ export class TwilioService {
 
   constructor() {
     if (!twilioClient) {
-      throw new Error('Twilio client not initialized. Please check your credentials.');
+      throw new Error(
+        "Twilio client not initialized. Please check your credentials.",
+      );
     }
     this.client = twilioClient;
   }
@@ -40,19 +42,19 @@ export class TwilioService {
         body: messageData.body,
         to: messageData.to,
         from: messageData.from,
-        mediaUrl: messageData.mediaUrl
+        mediaUrl: messageData.mediaUrl,
       });
-      
+
       return {
         success: true,
         messageId: message.sid,
-        status: message.status
+        status: message.status,
       };
     } catch (error: any) {
-      console.error('Twilio send message error:', error);
+      console.error("Twilio send message error:", error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -63,19 +65,19 @@ export class TwilioService {
         to: callData.to,
         from: callData.from,
         url: callData.url,
-        record: callData.record || false
+        record: callData.record || false,
       });
-      
+
       return {
         success: true,
         callId: call.sid,
-        status: call.status
+        status: call.status,
       };
     } catch (error: any) {
-      console.error('Twilio initiate call error:', error);
+      console.error("Twilio initiate call error:", error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -83,43 +85,43 @@ export class TwilioService {
   async getCallStatus(callSid: string) {
     try {
       const call = await this.client.calls(callSid).fetch();
-      
+
       return {
         success: true,
         status: call.status,
         duration: call.duration,
         startTime: call.startTime,
-        endTime: call.endTime
+        endTime: call.endTime,
       };
     } catch (error: any) {
-      console.error('Twilio get call status error:', error);
+      console.error("Twilio get call status error:", error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
 
   async generateAccessToken(identity: string) {
     try {
-      const { AccessToken } = require('twilio').jwt;
+      const { AccessToken } = require("twilio").jwt;
       const { VoiceGrant, VideoGrant } = AccessToken;
 
       const accessToken = new AccessToken(
         process.env.TWILIO_ACCOUNT_SID!,
         process.env.TWILIO_API_KEY || process.env.TWILIO_ACCOUNT_SID!,
         process.env.TWILIO_API_SECRET || process.env.TWILIO_AUTH_TOKEN!,
-        { identity }
+        { identity },
       );
 
       // Grant voice and video permissions
       const voiceGrant = new VoiceGrant({
         outgoingApplicationSid: process.env.TWILIO_TWIML_APP_SID,
-        incomingAllow: true
+        incomingAllow: true,
       });
 
       const videoGrant = new VideoGrant({
-        room: 'legacy-capsule-room'
+        room: "legacy-capsule-room",
       });
 
       accessToken.addGrant(voiceGrant);
@@ -128,13 +130,13 @@ export class TwilioService {
       return {
         success: true,
         token: accessToken.toJwt(),
-        identity
+        identity,
       };
     } catch (error: any) {
-      console.error('Twilio generate access token error:', error);
+      console.error("Twilio generate access token error:", error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }

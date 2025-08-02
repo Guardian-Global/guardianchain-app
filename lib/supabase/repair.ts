@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 export class SupabaseRepair {
@@ -44,7 +44,7 @@ export class SupabaseRepair {
           if (insertError) {
             console.warn(
               `Failed to create profile for ${user.email}:`,
-              insertError
+              insertError,
             );
           } else {
             console.log(`✅ Created profile for ${user.email}`);
@@ -65,7 +65,7 @@ export class SupabaseRepair {
     try {
       // Clean capsules without valid users
       const { error: capsuleCleanError } = await supabase.rpc(
-        "clean_orphaned_capsules"
+        "clean_orphaned_capsules",
       );
       if (
         capsuleCleanError &&
@@ -76,7 +76,7 @@ export class SupabaseRepair {
 
       // Clean transaction history without valid users
       const { error: txCleanError } = await supabase.rpc(
-        "clean_orphaned_transactions"
+        "clean_orphaned_transactions",
       );
       if (txCleanError && !txCleanError.message.includes("function")) {
         console.warn("Transaction cleanup warning:", txCleanError);
@@ -108,7 +108,7 @@ export class SupabaseRepair {
             public: true,
             fileSizeLimit: 10485760, // 10MB
             allowedMimeTypes: ["image/*", "video/*"],
-          }
+          },
         );
 
         if (createError) {
@@ -174,7 +174,7 @@ export class SupabaseRepair {
     const totalCount = results.length;
 
     console.log(
-      `\n✅ Supabase repair complete: ${successCount}/${totalCount} operations successful`
+      `\n✅ Supabase repair complete: ${successCount}/${totalCount} operations successful`,
     );
 
     return {

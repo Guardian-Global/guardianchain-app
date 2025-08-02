@@ -12,7 +12,7 @@ import {
   TrendingUp,
   Star,
   ArrowRight,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 
 export default function HomepageRedesign() {
@@ -24,9 +24,9 @@ export default function HomepageRedesign() {
         <div className="relative max-w-7xl mx-auto text-center">
           {/* Main Logo Display */}
           <div className="flex items-center justify-center space-x-8 mb-8">
-            <VideoDisplay 
-              type="gtt" 
-              size="xl" 
+            <VideoDisplay
+              type="gtt"
+              size="xl"
               className="hover:scale-105 transition-transform duration-300"
             />
             <div className="text-center">
@@ -38,12 +38,13 @@ export default function HomepageRedesign() {
                 Truth Verification Protocol
               </p>
               <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                The world's first decentralized truth verification platform powered by community consensus and blockchain immutability
+                The world's first decentralized truth verification platform
+                powered by community consensus and blockchain immutability
               </p>
             </div>
-            <LogoDisplay 
-              size="xl" 
-              variant="full" 
+            <LogoDisplay
+              size="xl"
+              variant="full"
               type="gtt"
               className="hover:scale-105 transition-transform duration-300"
             />
@@ -54,7 +55,9 @@ export default function HomepageRedesign() {
             <div className="flex items-center justify-center space-x-6">
               <LogoDisplay size="lg" variant="icon" type="gtt" />
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-white mb-2">GTT Token</h2>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  GTT Token
+                </h2>
                 <p className="text-lg text-slate-300">Ready for Deployment</p>
                 <div className="flex items-center justify-center space-x-4 mt-4 text-sm text-slate-400">
                   <span>✅ Smart Contract: Ready</span>
@@ -70,8 +73,8 @@ export default function HomepageRedesign() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
             <Link href="/token-launch">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white px-8 py-3 text-lg"
               >
                 Launch GTT Token
@@ -79,8 +82,8 @@ export default function HomepageRedesign() {
               </Button>
             </Link>
             <Link href="/logo-test">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="lg"
                 className="border-purple-400 text-purple-400 hover:bg-purple-400/10 px-8 py-3 text-lg"
               >
@@ -100,7 +103,8 @@ export default function HomepageRedesign() {
               Professional Brand Assets
             </h2>
             <p className="text-lg text-slate-300">
-              Complete logo and video asset integration for maximum professional impact
+              Complete logo and video asset integration for maximum professional
+              impact
             </p>
           </div>
 
@@ -108,7 +112,9 @@ export default function HomepageRedesign() {
             {/* Static Logo Showcase */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white text-center">Static Logos</CardTitle>
+                <CardTitle className="text-white text-center">
+                  Static Logos
+                </CardTitle>
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <LogoDisplay size="lg" variant="full" type="gtt" />
@@ -121,7 +127,9 @@ export default function HomepageRedesign() {
             {/* Video Logo Showcase */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white text-center">Video Logos</CardTitle>
+                <CardTitle className="text-white text-center">
+                  Video Logos
+                </CardTitle>
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <VideoDisplay type="gtt" size="lg" />
@@ -134,7 +142,9 @@ export default function HomepageRedesign() {
             {/* Brand Colors */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white text-center">Brand Colors</CardTitle>
+                <CardTitle className="text-white text-center">
+                  Brand Colors
+                </CardTitle>
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <div className="flex justify-center space-x-2">
@@ -151,7 +161,9 @@ export default function HomepageRedesign() {
             {/* Typography */}
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white text-center">Typography</CardTitle>
+                <CardTitle className="text-white text-center">
+                  Typography
+                </CardTitle>
               </CardHeader>
               <CardContent className="text-center space-y-4">
                 <div className="text-lg font-bold">
@@ -184,38 +196,49 @@ export default function HomepageRedesign() {
               {
                 icon: Shield,
                 title: "Truth Verification",
-                description: "Immutable blockchain-based truth verification with community consensus"
+                description:
+                  "Immutable blockchain-based truth verification with community consensus",
               },
               {
                 icon: Zap,
                 title: "GTT Token Economy",
-                description: "Optimized tokenomics with 8% transaction fees for maximum revenue"
+                description:
+                  "Optimized tokenomics with 8% transaction fees for maximum revenue",
               },
               {
                 icon: Globe,
                 title: "Global Network",
-                description: "Polygon mainnet deployment with worldwide accessibility"
+                description:
+                  "Polygon mainnet deployment with worldwide accessibility",
               },
               {
                 icon: Users,
                 title: "Community Governance",
-                description: "Decentralized decision making with reputation-based voting"
+                description:
+                  "Decentralized decision making with reputation-based voting",
               },
               {
                 icon: TrendingUp,
                 title: "Revenue Generation",
-                description: "Multiple revenue streams targeting $1.8M-36M+ annually"
+                description:
+                  "Multiple revenue streams targeting $1.8M-36M+ annually",
               },
               {
                 icon: Star,
                 title: "Professional Branding",
-                description: "Complete logo and video asset integration for maximum impact"
-              }
+                description:
+                  "Complete logo and video asset integration for maximum impact",
+              },
             ].map((feature, index) => (
-              <Card key={index} className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors">
+              <Card
+                key={index}
+                className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors"
+              >
                 <CardContent className="p-6 text-center">
                   <feature.icon className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {feature.title}
+                  </h3>
                   <p className="text-slate-300">{feature.description}</p>
                 </CardContent>
               </Card>
@@ -236,16 +259,51 @@ export default function HomepageRedesign() {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
-                  { item: "Smart Contract", status: "Ready", color: "text-green-400" },
-                  { item: "Logo Assets", status: "Deployed", color: "text-green-400" },
-                  { item: "Video Assets", status: "Working", color: "text-green-400" },
-                  { item: "Wallet Funding", status: "Complete", color: "text-green-400" },
-                  { item: "Tokenomics", status: "Optimized", color: "text-green-400" },
-                  { item: "Platform", status: "Operational", color: "text-green-400" },
-                  { item: "Branding", status: "Professional", color: "text-green-400" },
-                  { item: "Revenue Model", status: "Configured", color: "text-green-400" }
+                  {
+                    item: "Smart Contract",
+                    status: "Ready",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Logo Assets",
+                    status: "Deployed",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Video Assets",
+                    status: "Working",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Wallet Funding",
+                    status: "Complete",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Tokenomics",
+                    status: "Optimized",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Platform",
+                    status: "Operational",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Branding",
+                    status: "Professional",
+                    color: "text-green-400",
+                  },
+                  {
+                    item: "Revenue Model",
+                    status: "Configured",
+                    color: "text-green-400",
+                  },
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
                     <span className="text-slate-300">{item.item}:</span>
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-400" />
@@ -254,13 +312,14 @@ export default function HomepageRedesign() {
                   </div>
                 ))}
               </div>
-              
+
               <div className="text-center pt-6 border-t border-slate-700">
                 <p className="text-lg font-bold text-white mb-2">
                   100% READY FOR IMMEDIATE GTT TOKEN DEPLOYMENT
                 </p>
                 <p className="text-slate-300">
-                  All systems operational, professional branding deployed, revenue streams configured
+                  All systems operational, professional branding deployed,
+                  revenue streams configured
                 </p>
               </div>
             </CardContent>

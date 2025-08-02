@@ -11,10 +11,10 @@ interface GTTBalanceWidgetProps {
   refreshInterval?: number;
 }
 
-export function GTTBalanceWidget({ 
+export function GTTBalanceWidget({
   walletAddress = "0x1234567890123456789012345678901234567890",
   autoRefresh = true,
-  refreshInterval = 30000 // 30 seconds
+  refreshInterval = 30000, // 30 seconds
 }: GTTBalanceWidgetProps) {
   const [balance, setBalance] = useState<string>("0");
   const [contractInfo, setContractInfo] = useState<any>(null);
@@ -26,14 +26,14 @@ export function GTTBalanceWidget({
     try {
       const [balanceResult, contractResult] = await Promise.all([
         getGTTBalance(walletAddress),
-        getGTTContractInfo()
+        getGTTContractInfo(),
       ]);
-      
+
       setBalance(balanceResult);
       setContractInfo(contractResult);
       setLastUpdate(new Date());
     } catch (error) {
-      console.error('❌ Failed to fetch GTT data:', error);
+      console.error("❌ Failed to fetch GTT data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +41,7 @@ export function GTTBalanceWidget({
 
   useEffect(() => {
     fetchData();
-    
+
     if (autoRefresh) {
       const interval = setInterval(fetchData, refreshInterval);
       return () => clearInterval(interval);
@@ -70,11 +70,13 @@ export function GTTBalanceWidget({
             disabled={isLoading}
             className="text-slate-400 hover:text-white"
           >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+            />
           </Button>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Balance Display */}
         <div className="text-center">
@@ -91,17 +93,24 @@ export function GTTBalanceWidget({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <div className="text-slate-400">Network</div>
-              <Badge variant="outline" className="text-purple-400 border-purple-400">
-                {contractInfo.network || 'Polygon'}
+              <Badge
+                variant="outline"
+                className="text-purple-400 border-purple-400"
+              >
+                {contractInfo.network || "Polygon"}
               </Badge>
             </div>
             <div>
               <div className="text-slate-400">Status</div>
-              <Badge 
-                variant="outline" 
-                className={contractInfo.status === 'connected' ? 'text-green-400 border-green-400' : 'text-yellow-400 border-yellow-400'}
+              <Badge
+                variant="outline"
+                className={
+                  contractInfo.status === "connected"
+                    ? "text-green-400 border-green-400"
+                    : "text-yellow-400 border-yellow-400"
+                }
               >
-                {contractInfo.status || 'Development'}
+                {contractInfo.status || "Development"}
               </Badge>
             </div>
           </div>

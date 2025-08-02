@@ -114,7 +114,7 @@ export function canDonate(user: User): boolean {
 
 export function getTierUpgradeBenefits(
   currentTier: string,
-  targetTier: string
+  targetTier: string,
 ) {
   const current = TIERS.find((t) => t.name === currentTier);
   const target = TIERS.find((t) => t.name === targetTier);

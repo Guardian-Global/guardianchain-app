@@ -50,7 +50,9 @@ interface CapsuleSearchResult {
 }
 
 export default function FeaturedCapsulesManager() {
-  const [featuredCapsules, setFeaturedCapsules] = useState<FeaturedCapsule[]>([]);
+  const [featuredCapsules, setFeaturedCapsules] = useState<FeaturedCapsule[]>(
+    [],
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<CapsuleSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -58,7 +60,7 @@ export default function FeaturedCapsulesManager() {
 
   // Fetch featured capsules
   const { data: featured, isLoading: featuredLoading } = useQuery({
-    queryKey: ['/api/profile/featured-capsules'],
+    queryKey: ["/api/profile/featured-capsules"],
     enabled: true,
   });
 
@@ -71,7 +73,9 @@ export default function FeaturedCapsulesManager() {
 
     setIsSearching(true);
     try {
-      const response = await apiRequest(`/api/capsules/search?q=${encodeURIComponent(query)}`);
+      const response = await apiRequest(
+        `/api/capsules/search?q=${encodeURIComponent(query)}`,
+      );
       setSearchResults(response.capsules || []);
     } catch (error) {
       toast({
@@ -87,13 +91,15 @@ export default function FeaturedCapsulesManager() {
   // Add capsule to featured
   const addToFeatured = useMutation({
     mutationFn: async (capsuleId: string) => {
-      return apiRequest('/api/profile/featured-capsules', {
-        method: 'POST',
+      return apiRequest("/api/profile/featured-capsules", {
+        method: "POST",
         body: JSON.stringify({ capsuleId }),
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/profile/featured-capsules'] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/profile/featured-capsules"],
+      });
       toast({
         title: "Capsule Featured",
         description: "Capsule added to featured collection.",
@@ -112,11 +118,13 @@ export default function FeaturedCapsulesManager() {
   const removeFromFeatured = useMutation({
     mutationFn: async (capsuleId: string) => {
       return apiRequest(`/api/profile/featured-capsules/${capsuleId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/profile/featured-capsules'] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/profile/featured-capsules"],
+      });
       toast({
         title: "Capsule Unfeatured",
         description: "Capsule removed from featured collection.",
@@ -127,13 +135,15 @@ export default function FeaturedCapsulesManager() {
   // Reorder featured capsules
   const reorderFeatured = useMutation({
     mutationFn: async (reorderedIds: string[]) => {
-      return apiRequest('/api/profile/featured-capsules/reorder', {
-        method: 'PUT',
+      return apiRequest("/api/profile/featured-capsules/reorder", {
+        method: "PUT",
         body: JSON.stringify({ orderedIds: reorderedIds }),
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/profile/featured-capsules'] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/profile/featured-capsules"],
+      });
       toast({
         title: "Order Updated",
         description: "Featured capsules reordered successfully.",
@@ -155,15 +165,18 @@ export default function FeaturedCapsulesManager() {
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
-  const renderCapsuleCard = (capsule: CapsuleSearchResult | FeaturedCapsule, isFeatured = false) => (
+  const renderCapsuleCard = (
+    capsule: CapsuleSearchResult | FeaturedCapsule,
+    isFeatured = false,
+  ) => (
     <Card key={capsule.id} className="relative group">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           {/* Media Preview */}
           <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
             {capsule.mediaUrl ? (
-              <img 
-                src={capsule.mediaUrl} 
+              <img
+                src={capsule.mediaUrl}
                 alt={capsule.title}
                 className="w-full h-full object-cover rounded-lg"
               />
@@ -176,7 +189,9 @@ export default function FeaturedCapsulesManager() {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-sm truncate">{capsule.title}</h3>
+                <h3 className="font-medium text-sm truncate">
+                  {capsule.title}
+                </h3>
                 {capsule.description && (
                   <p className="text-xs text-gray-600 line-clamp-2 mt-1">
                     {capsule.description}
@@ -215,13 +230,13 @@ export default function FeaturedCapsulesManager() {
                 <Star className="w-3 h-3" />
                 {capsule.truthScore}
               </span>
-              {'views' in capsule && (
+              {"views" in capsule && (
                 <span className="flex items-center gap-1">
                   <Eye className="w-3 h-3" />
                   {capsule.views}
                 </span>
               )}
-              {'likes' in capsule && (
+              {"likes" in capsule && (
                 <span className="flex items-center gap-1">
                   <Heart className="w-3 h-3" />
                   {capsule.likes}
@@ -271,11 +286,15 @@ export default function FeaturedCapsulesManager() {
             <div className="text-center py-8 text-gray-500">
               <Pin className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>No featured capsules yet.</p>
-              <p className="text-sm">Search and pin your best capsules below.</p>
+              <p className="text-sm">
+                Search and pin your best capsules below.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {featuredCapsules.map((capsule) => renderCapsuleCard(capsule, true))}
+              {featuredCapsules.map((capsule) =>
+                renderCapsuleCard(capsule, true),
+              )}
             </div>
           )}
         </CardContent>
@@ -316,7 +335,10 @@ export default function FeaturedCapsulesManager() {
               ) : (
                 <div className="grid grid-cols-1 gap-2 max-h-64 overflow-y-auto">
                   {searchResults
-                    .filter(capsule => !featuredCapsules.find(f => f.id === capsule.id))
+                    .filter(
+                      (capsule) =>
+                        !featuredCapsules.find((f) => f.id === capsule.id),
+                    )
                     .map((capsule) => renderCapsuleCard(capsule, false))}
                 </div>
               )}

@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { X, ArrowRight, ArrowLeft, Sparkles, Shield, Coins, Users, Search } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  X,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Shield,
+  Coins,
+  Users,
+  Search,
+} from "lucide-react";
 
 interface TourStep {
   id: string;
@@ -15,44 +24,49 @@ interface TourStep {
 
 const tourSteps: TourStep[] = [
   {
-    id: 'welcome',
-    title: 'Welcome to GUARDIANCHAIN',
-    description: 'Your sovereign memory infrastructure where truth is sealed and tokenized. Let\'s explore the key features that make your memories immortal.',
+    id: "welcome",
+    title: "Welcome to GUARDIANCHAIN",
+    description:
+      "Your sovereign memory infrastructure where truth is sealed and tokenized. Let's explore the key features that make your memories immortal.",
     icon: Sparkles,
-    position: { top: '50%', left: '50%' }
+    position: { top: "50%", left: "50%" },
   },
   {
-    id: 'create-capsule',
-    title: 'Create Truth Capsules',
-    description: 'Seal your most important memories with cryptographic proof. Each capsule becomes an immutable piece of your legacy.',
+    id: "create-capsule",
+    title: "Create Truth Capsules",
+    description:
+      "Seal your most important memories with cryptographic proof. Each capsule becomes an immutable piece of your legacy.",
     icon: Shield,
-    position: { top: '20%', left: '20%' },
-    highlight: '[data-tour="create-capsule"]'
+    position: { top: "20%", left: "20%" },
+    highlight: '[data-tour="create-capsule"]',
   },
   {
-    id: 'earn-rewards',
-    title: 'Earn GTT Tokens',
-    description: 'Your emotional resonance generates yield. The more grief or joy your capsule carries, the more tokens you earn.',
+    id: "earn-rewards",
+    title: "Earn GTT Tokens",
+    description:
+      "Your emotional resonance generates yield. The more grief or joy your capsule carries, the more tokens you earn.",
     icon: Coins,
-    position: { top: '20%', right: '20%' },
-    highlight: '[data-tour="token-rewards"]'
+    position: { top: "20%", right: "20%" },
+    highlight: '[data-tour="token-rewards"]',
   },
   {
-    id: 'jury-validation',
-    title: 'Join the Jury',
-    description: 'Validate other capsules and earn rewards. Your judgment helps maintain the integrity of our truth network.',
+    id: "jury-validation",
+    title: "Join the Jury",
+    description:
+      "Validate other capsules and earn rewards. Your judgment helps maintain the integrity of our truth network.",
     icon: Users,
-    position: { bottom: '20%', left: '20%' },
-    highlight: '[data-tour="jury-panel"]'
+    position: { bottom: "20%", left: "20%" },
+    highlight: '[data-tour="jury-panel"]',
   },
   {
-    id: 'explore-capsules',
-    title: 'Explore & Discover',
-    description: 'Browse the collective memory of humanity. Filter by emotion, time period, or search for specific truths.',
+    id: "explore-capsules",
+    title: "Explore & Discover",
+    description:
+      "Browse the collective memory of humanity. Filter by emotion, time period, or search for specific truths.",
     icon: Search,
-    position: { bottom: '20%', right: '20%' },
-    highlight: '[data-tour="capsule-explorer"]'
-  }
+    position: { bottom: "20%", right: "20%" },
+    highlight: '[data-tour="capsule-explorer"]',
+  },
 ];
 
 interface OnboardingTourProps {
@@ -61,7 +75,11 @@ interface OnboardingTourProps {
   onSkip: () => void;
 }
 
-export default function OnboardingTour({ isOpen, onComplete, onSkip }: OnboardingTourProps) {
+export default function OnboardingTour({
+  isOpen,
+  onComplete,
+  onSkip,
+}: OnboardingTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -80,13 +98,13 @@ export default function OnboardingTour({ isOpen, onComplete, onSkip }: Onboardin
     if (isLastStep) {
       handleComplete();
     } else {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
     if (!isFirstStep) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
@@ -105,8 +123,8 @@ export default function OnboardingTour({ isOpen, onComplete, onSkip }: Onboardin
     if (currentTourStep.highlight) {
       const element = document.querySelector(currentTourStep.highlight);
       if (element) {
-        element.classList.add('tour-highlight');
-        return () => element.classList.remove('tour-highlight');
+        element.classList.add("tour-highlight");
+        return () => element.classList.remove("tour-highlight");
       }
     }
   }, [currentTourStep]);
@@ -138,12 +156,15 @@ export default function OnboardingTour({ isOpen, onComplete, onSkip }: Onboardin
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed z-[101]"
             style={{
-              top: currentTourStep.position.top || 'auto',
-              left: currentTourStep.position.left || 'auto',
-              right: currentTourStep.position.right || 'auto',
-              bottom: currentTourStep.position.bottom || 'auto',
-              transform: currentTourStep.position.top === '50%' && currentTourStep.position.left === '50%' 
-                ? 'translate(-50%, -50%)' : 'none'
+              top: currentTourStep.position.top || "auto",
+              left: currentTourStep.position.left || "auto",
+              right: currentTourStep.position.right || "auto",
+              bottom: currentTourStep.position.bottom || "auto",
+              transform:
+                currentTourStep.position.top === "50%" &&
+                currentTourStep.position.left === "50%"
+                  ? "translate(-50%, -50%)"
+                  : "none",
             }}
           >
             <Card className="w-80 bg-slate-900/95 border-blue-500/30 shadow-2xl backdrop-blur-md">
@@ -183,7 +204,9 @@ export default function OnboardingTour({ isOpen, onComplete, onSkip }: Onboardin
                   <motion.div
                     className="h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
                     initial={{ width: 0 }}
-                    animate={{ width: `${((currentStep + 1) / tourSteps.length) * 100}%` }}
+                    animate={{
+                      width: `${((currentStep + 1) / tourSteps.length) * 100}%`,
+                    }}
                     transition={{ duration: 0.3 }}
                   />
                 </div>
@@ -206,7 +229,7 @@ export default function OnboardingTour({ isOpen, onComplete, onSkip }: Onboardin
                       <div
                         key={index}
                         className={`w-2 h-2 rounded-full transition-colors ${
-                          index === currentStep ? 'bg-blue-500' : 'bg-slate-600'
+                          index === currentStep ? "bg-blue-500" : "bg-slate-600"
                         }`}
                       />
                     ))}

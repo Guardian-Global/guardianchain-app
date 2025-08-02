@@ -43,7 +43,7 @@ export function useSupabaseAssets() {
     data: assetsData,
     isLoading,
     error,
-    refetch
+    refetch,
   } = useQuery<AssetsDiscoveryResponse>({
     queryKey: ["supabase-assets"],
     queryFn: async () => {
@@ -59,11 +59,13 @@ export function useSupabaseAssets() {
 
   // Helper functions for easy asset access
   const getAssetsByCategory = (category: string): SupabaseAsset[] => {
-    return assetsData?.assets.filter(asset => asset.category === category) || [];
+    return (
+      assetsData?.assets.filter((asset) => asset.category === category) || []
+    );
   };
 
   const getAssetsByType = (type: string): SupabaseAsset[] => {
-    return assetsData?.assets.filter(asset => asset.type === type) || [];
+    return assetsData?.assets.filter((asset) => asset.type === type) || [];
   };
 
   const getHighestValueAssets = (count: number = 10): SupabaseAsset[] => {
@@ -71,47 +73,50 @@ export function useSupabaseAssets() {
   };
 
   const getAssetForUsage = (usage: string): SupabaseAsset | null => {
-    const asset = assetsData?.assets.find(asset => 
-      asset.recommendedUsage.includes(usage)
+    const asset = assetsData?.assets.find((asset) =>
+      asset.recommendedUsage.includes(usage),
     );
     return asset || null;
   };
 
   const getBrandingAssets = (): SupabaseAsset[] => {
-    return getAssetsByCategory('branding');
+    return getAssetsByCategory("branding");
   };
 
   const getHeroAssets = (): SupabaseAsset[] => {
-    return getAssetsByCategory('hero');
+    return getAssetsByCategory("hero");
   };
 
   const getBackgroundAssets = (): SupabaseAsset[] => {
-    return getAssetsByCategory('background');
+    return getAssetsByCategory("background");
   };
 
-  const getOptimizedUrl = async (asset: SupabaseAsset, options?: {
-    width?: number;
-    height?: number;
-    quality?: number;
-    format?: string;
-  }): Promise<string> => {
+  const getOptimizedUrl = async (
+    asset: SupabaseAsset,
+    options?: {
+      width?: number;
+      height?: number;
+      quality?: number;
+      format?: string;
+    },
+  ): Promise<string> => {
     if (!options) return asset.url;
 
     const params = new URLSearchParams();
-    if (options.width) params.set('width', options.width.toString());
-    if (options.height) params.set('height', options.height.toString());
-    if (options.quality) params.set('quality', options.quality.toString());
-    if (options.format) params.set('format', options.format);
+    if (options.width) params.set("width", options.width.toString());
+    if (options.height) params.set("height", options.height.toString());
+    if (options.quality) params.set("quality", options.quality.toString());
+    if (options.format) params.set("format", options.format);
 
     const response = await fetch(
-      `/api/supabase/assets/optimized/${asset.bucket}/${asset.name}?${params.toString()}`
+      `/api/supabase/assets/optimized/${asset.bucket}/${asset.name}?${params.toString()}`,
     );
-    
+
     if (response.ok) {
       const data = await response.json();
       return data.url || asset.url;
     }
-    
+
     return asset.url;
   };
 
@@ -121,12 +126,12 @@ export function useSupabaseAssets() {
     recommendations: assetsData?.recommendations,
     totalAssets: assetsData?.totalAssets || 0,
     buckets: assetsData?.buckets || 0,
-    
+
     // Status
     isLoading,
     error,
     isSuccess: !!assetsData?.success,
-    
+
     // Helper functions
     getAssetsByCategory,
     getAssetsByType,
@@ -146,7 +151,7 @@ export function useBrandingAssets() {
   return {
     brandingAssets: getBrandingAssets(),
     isLoading,
-    error
+    error,
   };
 }
 
@@ -155,7 +160,7 @@ export function useHeroAssets() {
   return {
     heroAssets: getHeroAssets(),
     isLoading,
-    error
+    error,
   };
 }
 
@@ -164,6 +169,6 @@ export function useBackgroundAssets() {
   return {
     backgroundAssets: getBackgroundAssets(),
     isLoading,
-    error
+    error,
   };
 }

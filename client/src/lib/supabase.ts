@@ -25,7 +25,7 @@ export const supabase = isConfigured
 export async function getAllAssets() {
   if (!supabase) {
     throw new Error(
-      "Supabase not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY"
+      "Supabase not configured. Please add VITE_SUPABASE_URL and VITE_SUPABASE_SERVICE_ROLE_KEY",
     );
   }
 
@@ -73,7 +73,7 @@ export async function getAllAssets() {
                 type: getFileType(cleanFileName),
                 url: urlData.publicUrl.replace(
                   encodeURIComponent(file.name),
-                  encodeURIComponent(cleanFileName)
+                  encodeURIComponent(cleanFileName),
                 ),
                 lastModified: file.updated_at || file.created_at,
                 metadata: file.metadata,
@@ -102,7 +102,7 @@ export async function searchAssets(query: string) {
   return assets.filter(
     (asset) =>
       asset.name.toLowerCase().includes(query.toLowerCase()) ||
-      asset.bucket.toLowerCase().includes(query.toLowerCase())
+      asset.bucket.toLowerCase().includes(query.toLowerCase()),
   );
 }
 
@@ -128,7 +128,7 @@ function getFileType(filename: string): string {
 
 export async function createCapsuleFromAsset(
   asset: any,
-  additionalData: any = {}
+  additionalData: any = {},
 ) {
   if (!supabase) {
     throw new Error("Supabase not configured");

@@ -33,7 +33,7 @@ export function setupSecurityMiddleware(app: Express) {
         },
       },
       crossOriginEmbedderPolicy: false,
-    })
+    }),
   );
 
   // Rate limiting by tier
@@ -63,7 +63,7 @@ export function setupSecurityMiddleware(app: Express) {
 
   // Skip authentication middleware that was causing issues
   console.log(
-    "Security middleware setup complete - authentication disabled for development"
+    "Security middleware setup complete - authentication disabled for development",
   );
 }
 

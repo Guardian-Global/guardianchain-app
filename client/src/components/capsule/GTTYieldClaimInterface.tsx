@@ -6,15 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Coins, 
-  Clock, 
-  TrendingUp, 
-  Wallet, 
+import {
+  Coins,
+  Clock,
+  TrendingUp,
+  Wallet,
   CheckCircle,
   AlertCircle,
   Calculator,
-  Zap
+  Zap,
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -37,38 +37,40 @@ interface ClaimHistory {
 export default function GTTYieldClaimInterface() {
   const [selectedTier, setSelectedTier] = useState<number>(1);
   const [walletConnected, setWalletConnected] = useState(false);
-  const [userAddress, setUserAddress] = useState<string>('');
+  const [userAddress, setUserAddress] = useState<string>("");
   const { toast } = useToast();
 
   // Get claim status for all tiers
   const { data: claimStatuses, isLoading } = useQuery<ClaimStatus[]>({
-    queryKey: ['/api/gtt/claim-status'],
-    refetchInterval: 30000 // Refresh every 30 seconds
+    queryKey: ["/api/gtt/claim-status"],
+    refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   // Get user's claim history
   const { data: claimHistory } = useQuery<ClaimHistory[]>({
-    queryKey: ['/api/gtt/claim-history'],
-    enabled: walletConnected
+    queryKey: ["/api/gtt/claim-history"],
+    enabled: walletConnected,
   });
 
   // Get current GTT balance
   const { data: balance } = useQuery<{ balance: number; formatted: string }>({
-    queryKey: ['/api/gtt/balance'],
+    queryKey: ["/api/gtt/balance"],
     enabled: walletConnected,
-    refetchInterval: 10000
+    refetchInterval: 10000,
   });
 
   // Claim yield mutation
   const claimYieldMutation = useMutation({
     mutationFn: async (griefTier: number) => {
-      const response = await apiRequest('POST', '/api/gtt/claim-yield', { griefTier });
+      const response = await apiRequest("POST", "/api/gtt/claim-yield", {
+        griefTier,
+      });
       return response.json();
     },
     onSuccess: (result) => {
       toast({
         title: "Yield Claimed Successfully!",
-        description: `${result.amount} GTT tokens have been transferred to your wallet.`
+        description: `${result.amount} GTT tokens have been transferred to your wallet.`,
       });
       // Refresh data
       window.location.reload();
@@ -76,35 +78,38 @@ export default function GTTYieldClaimInterface() {
     onError: (error) => {
       toast({
         title: "Claim Failed",
-        description: error.message || "Failed to claim yield. Please try again.",
-        variant: "destructive"
+        description:
+          error.message || "Failed to claim yield. Please try again.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   // Connect wallet
   const connectWallet = async () => {
     try {
-      if (typeof window !== 'undefined' && window.ethereum) {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (typeof window !== "undefined" && window.ethereum) {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
         setUserAddress(accounts[0]);
         setWalletConnected(true);
         toast({
           title: "Wallet Connected",
-          description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`
+          description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`,
         });
       } else {
         toast({
           title: "MetaMask Not Found",
           description: "Please install MetaMask to claim GTT yields.",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (error) {
       toast({
         title: "Connection Failed",
         description: "Failed to connect wallet.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -119,23 +124,35 @@ export default function GTTYieldClaimInterface() {
 
   const getGriefTierColor = (tier: number) => {
     switch (tier) {
-      case 1: return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 2: return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 3: return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 4: return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
-      case 5: return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-brand-surface text-brand-light border-brand-surface';
+      case 1:
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case 2:
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case 3:
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case 4:
+        return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+      case 5:
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      default:
+        return "bg-brand-surface text-brand-light border-brand-surface";
     }
   };
 
   const getGriefTierDescription = (tier: number) => {
     switch (tier) {
-      case 1: return 'Light reflection and personal memories';
-      case 2: return 'Moderate emotional significance';
-      case 3: return 'Substantial personal or community impact';
-      case 4: return 'Deep emotional trauma or major revelations';
-      case 5: return 'Profound grief, major truth, or historical significance';
-      default: return 'Unknown tier';
+      case 1:
+        return "Light reflection and personal memories";
+      case 2:
+        return "Moderate emotional significance";
+      case 3:
+        return "Substantial personal or community impact";
+      case 4:
+        return "Deep emotional trauma or major revelations";
+      case 5:
+        return "Profound grief, major truth, or historical significance";
+      default:
+        return "Unknown tier";
     }
   };
 
@@ -143,12 +160,12 @@ export default function GTTYieldClaimInterface() {
     const now = new Date();
     const claimTime = new Date(timestamp);
     const diff = claimTime.getTime() - now.getTime();
-    
-    if (diff <= 0) return 'Available now';
-    
+
+    if (diff <= 0) return "Available now";
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     return `${hours}h ${minutes}m remaining`;
   };
 
@@ -167,7 +184,8 @@ export default function GTTYieldClaimInterface() {
             GTT Yield Claiming Interface
           </CardTitle>
           <p className="text-brand-light/60">
-            Claim GTT token yields based on your grief tier contributions to the GuardianChain ecosystem.
+            Claim GTT token yields based on your grief tier contributions to the
+            GuardianChain ecosystem.
           </p>
         </CardHeader>
       </Card>
@@ -180,7 +198,9 @@ export default function GTTYieldClaimInterface() {
               <Wallet className="w-5 h-5 text-brand-light/60" />
               <div>
                 <p className="text-sm text-brand-light">
-                  {walletConnected ? `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}` : 'Wallet Not Connected'}
+                  {walletConnected
+                    ? `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`
+                    : "Wallet Not Connected"}
                 </p>
                 {balance && (
                   <p className="text-xs text-brand-light/60">
@@ -190,7 +210,10 @@ export default function GTTYieldClaimInterface() {
               </div>
             </div>
             {!walletConnected && (
-              <Button onClick={connectWallet} className="bg-brand-primary hover:bg-brand-primary/90">
+              <Button
+                onClick={connectWallet}
+                className="bg-brand-primary hover:bg-brand-primary/90"
+              >
                 Connect Wallet
               </Button>
             )}
@@ -204,14 +227,18 @@ export default function GTTYieldClaimInterface() {
           <Card className="bg-brand-secondary border-brand-surface">
             <CardContent className="p-6 text-center">
               <TrendingUp className="w-8 h-8 text-brand-accent mx-auto mb-2" />
-              <div className="text-2xl font-bold text-brand-light">{calculateTotalEarnings()}</div>
+              <div className="text-2xl font-bold text-brand-light">
+                {calculateTotalEarnings()}
+              </div>
               <p className="text-sm text-brand-light/60">Total GTT Earned</p>
             </CardContent>
           </Card>
           <Card className="bg-brand-secondary border-brand-surface">
             <CardContent className="p-6 text-center">
               <Zap className="w-8 h-8 text-brand-primary mx-auto mb-2" />
-              <div className="text-2xl font-bold text-brand-light">{claimHistory.length}</div>
+              <div className="text-2xl font-bold text-brand-light">
+                {claimHistory.length}
+              </div>
               <p className="text-sm text-brand-light/60">Total Claims</p>
             </CardContent>
           </Card>
@@ -219,7 +246,9 @@ export default function GTTYieldClaimInterface() {
             <CardContent className="p-6 text-center">
               <Calculator className="w-8 h-8 text-brand-warning mx-auto mb-2" />
               <div className="text-2xl font-bold text-brand-light">
-                {claimHistory.length > 0 ? Math.round(calculateTotalEarnings() / claimHistory.length) : 0}
+                {claimHistory.length > 0
+                  ? Math.round(calculateTotalEarnings() / claimHistory.length)
+                  : 0}
               </div>
               <p className="text-sm text-brand-light/60">Avg GTT Per Claim</p>
             </CardContent>
@@ -230,23 +259,30 @@ export default function GTTYieldClaimInterface() {
       {/* Grief Tier Claims */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5].map((tier) => {
-          const tierStatus = claimStatuses?.find(s => s.griefTier === tier);
+          const tierStatus = claimStatuses?.find((s) => s.griefTier === tier);
           const yieldAmount = tier * 10; // 10 GTT per tier
-          
+
           return (
-            <Card key={tier} className="bg-brand-secondary border-brand-surface">
+            <Card
+              key={tier}
+              className="bg-brand-secondary border-brand-surface"
+            >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <Badge className={getGriefTierColor(tier)}>
                     Grief Tier {tier}
                   </Badge>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-brand-warning">{yieldAmount} GTT</div>
-                    <div className="text-xs text-brand-light/60">Yield Amount</div>
+                    <div className="text-lg font-bold text-brand-warning">
+                      {yieldAmount} GTT
+                    </div>
+                    <div className="text-xs text-brand-light/60">
+                      Yield Amount
+                    </div>
                   </div>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-4">
                 <p className="text-sm text-brand-light/80">
                   {getGriefTierDescription(tier)}
@@ -273,7 +309,8 @@ export default function GTTYieldClaimInterface() {
 
                     {!tierStatus.canClaim && tierStatus.nextClaimTime && (
                       <div className="text-xs text-brand-light/60">
-                        Next claim: {formatTimeRemaining(tierStatus.nextClaimTime)}
+                        Next claim:{" "}
+                        {formatTimeRemaining(tierStatus.nextClaimTime)}
                       </div>
                     )}
                   </div>
@@ -281,18 +318,20 @@ export default function GTTYieldClaimInterface() {
 
                 <Button
                   onClick={() => handleClaim(tier)}
-                  disabled={!walletConnected || (tierStatus && !tierStatus.canClaim) || claimYieldMutation.isPending}
+                  disabled={
+                    !walletConnected ||
+                    (tierStatus && !tierStatus.canClaim) ||
+                    claimYieldMutation.isPending
+                  }
                   className="w-full bg-brand-accent hover:bg-brand-accent/90 disabled:opacity-50"
                 >
-                  {claimYieldMutation.isPending ? (
-                    'Claiming...'
-                  ) : !walletConnected ? (
-                    'Connect Wallet'
-                  ) : tierStatus && !tierStatus.canClaim ? (
-                    'On Cooldown'
-                  ) : (
-                    `Claim ${yieldAmount} GTT`
-                  )}
+                  {claimYieldMutation.isPending
+                    ? "Claiming..."
+                    : !walletConnected
+                      ? "Connect Wallet"
+                      : tierStatus && !tierStatus.canClaim
+                        ? "On Cooldown"
+                        : `Claim ${yieldAmount} GTT`}
                 </Button>
               </CardContent>
             </Card>
@@ -304,18 +343,25 @@ export default function GTTYieldClaimInterface() {
       {walletConnected && claimHistory && claimHistory.length > 0 && (
         <Card className="bg-brand-secondary border-brand-surface">
           <CardHeader>
-            <CardTitle className="text-brand-light font-brand">Recent Claims</CardTitle>
+            <CardTitle className="text-brand-light font-brand">
+              Recent Claims
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {claimHistory.slice(0, 5).map((claim) => (
-                <div key={claim.id} className="flex items-center justify-between p-3 bg-brand-surface rounded-vault">
+                <div
+                  key={claim.id}
+                  className="flex items-center justify-between p-3 bg-brand-surface rounded-vault"
+                >
                   <div className="flex items-center gap-3">
                     <Badge className={getGriefTierColor(claim.griefTier)}>
                       Tier {claim.griefTier}
                     </Badge>
                     <div>
-                      <p className="text-sm text-brand-light font-medium">{claim.amount} GTT</p>
+                      <p className="text-sm text-brand-light font-medium">
+                        {claim.amount} GTT
+                      </p>
                       <p className="text-xs text-brand-light/60">
                         {new Date(claim.timestamp).toLocaleDateString()}
                       </p>
@@ -323,7 +369,8 @@ export default function GTTYieldClaimInterface() {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-brand-light/60 font-mono">
-                      {claim.transactionHash.slice(0, 8)}...{claim.transactionHash.slice(-6)}
+                      {claim.transactionHash.slice(0, 8)}...
+                      {claim.transactionHash.slice(-6)}
                     </p>
                   </div>
                 </div>
@@ -336,12 +383,16 @@ export default function GTTYieldClaimInterface() {
       {/* Instructions */}
       <Card className="bg-brand-secondary border-brand-surface">
         <CardHeader>
-          <CardTitle className="text-brand-light font-brand">How It Works</CardTitle>
+          <CardTitle className="text-brand-light font-brand">
+            How It Works
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-brand-light/80">
             <div>
-              <h4 className="font-medium text-brand-light mb-2">Grief Tier System</h4>
+              <h4 className="font-medium text-brand-light mb-2">
+                Grief Tier System
+              </h4>
               <ul className="space-y-1">
                 <li>• Tier 1-5 based on emotional weight</li>
                 <li>• Higher tiers = more GTT yield</li>
@@ -350,7 +401,9 @@ export default function GTTYieldClaimInterface() {
               </ul>
             </div>
             <div>
-              <h4 className="font-medium text-brand-light mb-2">Claiming Process</h4>
+              <h4 className="font-medium text-brand-light mb-2">
+                Claiming Process
+              </h4>
               <ul className="space-y-1">
                 <li>• Connect your Web3 wallet</li>
                 <li>• Select desired grief tier</li>

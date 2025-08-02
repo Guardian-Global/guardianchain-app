@@ -122,7 +122,7 @@ export function calculateCompoundYield({
     principal *
     Math.pow(
       1 + rate / compoundingFrequency,
-      compoundingFrequency * timeInYears
+      compoundingFrequency * timeInYears,
     )
   );
 }
@@ -133,7 +133,7 @@ export function calculateCompoundYield({
 export function calculateProjectedEarnings(
   stakedAmount: number,
   tier: string,
-  timeHorizon: "1month" | "3months" | "6months" | "1year"
+  timeHorizon: "1month" | "3months" | "6months" | "1year",
 ): {
   period: string;
   yieldEarnings: number;
@@ -211,9 +211,9 @@ export function getTierInfo(tier: string) {
       tierKey === "sovereign"
         ? 10000
         : tierKey === "creator"
-        ? 1000
-        : tierKey === "seeker"
-        ? 100
-        : 0,
+          ? 1000
+          : tierKey === "seeker"
+            ? 100
+            : 0,
   };
 }

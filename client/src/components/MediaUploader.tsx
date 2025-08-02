@@ -27,14 +27,21 @@ export function MediaUploader({
   uploadType,
   maxNumberOfFiles = 1,
   maxFileSize = 50 * 1024 * 1024, // 50MB default
-  acceptedFileTypes = ["image/*", "video/*", "audio/*", ".pdf", ".doc", ".docx"],
+  acceptedFileTypes = [
+    "image/*",
+    "video/*",
+    "audio/*",
+    ".pdf",
+    ".doc",
+    ".docx",
+  ],
   onUploadComplete,
   buttonClassName = "",
   children,
 }: MediaUploaderProps) {
   const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
-  
+
   const [uppy] = useState(() =>
     new Uppy({
       restrictions: {
@@ -50,10 +57,10 @@ export function MediaUploader({
         getUploadParameters: async (file) => {
           try {
             // Get upload URL from our backend
-            const response = await fetch('/api/media/upload-url', {
-              method: 'POST',
+            const response = await fetch("/api/media/upload-url", {
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
                 fileName: file.name,
@@ -64,20 +71,20 @@ export function MediaUploader({
             });
 
             if (!response.ok) {
-              throw new Error('Failed to get upload URL');
+              throw new Error("Failed to get upload URL");
             }
 
             const { uploadURL } = await response.json();
-            
+
             return {
-              method: 'PUT',
+              method: "PUT",
               url: uploadURL,
               headers: {
-                'Content-Type': file.type,
+                "Content-Type": file.type,
               },
             };
           } catch (error) {
-            console.error('Error getting upload parameters:', error);
+            console.error("Error getting upload parameters:", error);
             toast({
               title: "Upload Error",
               description: "Failed to prepare file upload. Please try again.",
@@ -87,13 +94,13 @@ export function MediaUploader({
           }
         },
       })
-      .on('upload-success', async (file, response) => {
+      .on("upload-success", async (file, response) => {
         try {
           // Notify backend that upload is complete
-          const completeResponse = await fetch('/api/media/upload-complete', {
-            method: 'POST',
+          const completeResponse = await fetch("/api/media/upload-complete", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               mediaUrl: response.uploadURL,
@@ -105,30 +112,31 @@ export function MediaUploader({
           });
 
           if (!completeResponse.ok) {
-            throw new Error('Failed to complete upload process');
+            throw new Error("Failed to complete upload process");
           }
 
           const result = await completeResponse.json();
-          
+
           // Store normalized URL for the file
           file.uploadURL = result.mediaUrl;
-          
+
           toast({
             title: "Upload Successful",
             description: `${file.name} has been uploaded successfully.`,
           });
         } catch (error) {
-          console.error('Error completing upload:', error);
+          console.error("Error completing upload:", error);
           toast({
-            title: "Upload Warning", 
-            description: "File uploaded but processing failed. Please refresh and try again.",
+            title: "Upload Warning",
+            description:
+              "File uploaded but processing failed. Please refresh and try again.",
             variant: "destructive",
           });
         }
       })
-      .on('complete', (result) => {
+      .on("complete", (result) => {
         if (result.successful.length > 0) {
-          const uploadedFiles = result.successful.map(file => ({
+          const uploadedFiles = result.successful.map((file) => ({
             id: file.id,
             name: file.name,
             type: file.type,
@@ -139,7 +147,7 @@ export function MediaUploader({
 
           onUploadComplete?.(uploadedFiles);
           setShowModal(false);
-          
+
           toast({
             title: "All Files Uploaded",
             description: `Successfully uploaded ${result.successful.length} file(s).`,
@@ -154,50 +162,50 @@ export function MediaUploader({
           });
         }
       })
-      .on('error', (error) => {
-        console.error('Uppy error:', error);
+      .on("error", (error) => {
+        console.error("Uppy error:", error);
         toast({
           title: "Upload Error",
           description: "An error occurred during upload. Please try again.",
           variant: "destructive",
         });
-      })
+      }),
   );
 
   const getUploadTypeLabel = () => {
     switch (uploadType) {
-      case 'profile_image':
-        return 'Profile Image';
-      case 'profile_video':
-        return 'Profile Video';
-      case 'background':
-        return 'Background Image';
-      case 'general':
-        return 'Media Files';
+      case "profile_image":
+        return "Profile Image";
+      case "profile_video":
+        return "Profile Video";
+      case "background":
+        return "Background Image";
+      case "general":
+        return "Media Files";
       default:
-        return 'Files';
+        return "Files";
     }
   };
 
   const getUploadTypeDescription = () => {
     switch (uploadType) {
-      case 'profile_image':
-        return 'Upload a profile photo that represents you';
-      case 'profile_video':
-        return 'Upload a short video loop for your profile';
-      case 'background':
-        return 'Upload a background image for your profile';
-      case 'general':
-        return 'Upload any media files - they will be automatically organized as capsules';
+      case "profile_image":
+        return "Upload a profile photo that represents you";
+      case "profile_video":
+        return "Upload a short video loop for your profile";
+      case "background":
+        return "Upload a background image for your profile";
+      case "general":
+        return "Upload any media files - they will be automatically organized as capsules";
       default:
-        return 'Upload files to your vault';
+        return "Upload files to your vault";
     }
   };
 
   return (
     <div>
-      <Button 
-        onClick={() => setShowModal(true)} 
+      <Button
+        onClick={() => setShowModal(true)}
         className={buttonClassName}
         variant="outline"
       >
@@ -209,7 +217,7 @@ export function MediaUploader({
         open={showModal}
         onRequestClose={() => setShowModal(false)}
         proudlyDisplayPoweredByUppy={false}
-        plugins={['Dashboard']}
+        plugins={["Dashboard"]}
         metaFields={[]}
         showProgressDetails={true}
         hideUploadButton={false}
@@ -226,7 +234,7 @@ export function MediaUploader({
             browseFilesTitle: `Select ${getUploadTypeLabel()}`,
             browseFiles: `Browse ${getUploadTypeLabel()}`,
             dropFilesHere: `Drop ${getUploadTypeLabel().toLowerCase()} here`,
-          }
+          },
         }}
       />
     </div>

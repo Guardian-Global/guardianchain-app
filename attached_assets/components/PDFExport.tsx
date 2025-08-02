@@ -1,10 +1,16 @@
 // PDFExport.tsx — Export search results as PDF using @react-pdf/renderer
-import { PDFDownloadLink, Document, Page, Text, StyleSheet } from "@react-pdf/renderer";
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  Text,
+  StyleSheet,
+} from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: { padding: 30 },
   item: { marginBottom: 10 },
-  title: { fontSize: 18, marginBottom: 10 }
+  title: { fontSize: 18, marginBottom: 10 },
 });
 
 const CapsulePDF = ({ data }) => (
@@ -13,7 +19,8 @@ const CapsulePDF = ({ data }) => (
       <Text style={styles.title}>GuardianMap Search Results</Text>
       {data.map((r, i) => (
         <Text key={i} style={styles.item}>
-          ID: {r.id} | Grief Tier: {r.grief_tier} | Tags: {(r.tags || []).join(", ")}
+          ID: {r.id} | Grief Tier: {r.grief_tier} | Tags:{" "}
+          {(r.tags || []).join(", ")}
         </Text>
       ))}
     </Page>

@@ -26,7 +26,7 @@ future_enhancements:
   cta={[
     { label: "OpenAPI Explorer", url: "#openapi", style: "primary" },
     { label: "Smart Contract Docs", url: "#contracts", style: "secondary" },
-    { label: "Get Developer Support", url: "#support", style: "holo" }
+    { label: "Get Developer Support", url: "#support", style: "holo" },
   ]}
 />
 
@@ -34,11 +34,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/developer-api" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -46,65 +50,82 @@ future_enhancements:
 ---
 
 ## <span id="openapi">Live OpenAPI & Playground <ApiIcon /></span>
-<OpenAPIExplorer url="https://api.guardian-global.com/v1/openapi.json" />
-- Try endpoints, see live results, and auto-generate code snippets
-- Supports REST, GraphQL, and WebSocket streaming
+
+<OpenAPIExplorer url="https://api.guardian-global.com/v1/openapi.json" />- Try
+endpoints, see live results, and auto-generate code snippets - Supports REST,
+GraphQL, and WebSocket streaming
 
 ---
 
 ## <span id="contracts">Smart Contract Docs & Explorer <ContractIcon /></span>
+
 <ContractDocs
   contracts={[
     { name: "GTT Token (ERC-20)", address: "0x...", api: "/api/contracts/gtt" },
-    { name: "Capsule Minting", address: "0x...", api: "/api/contracts/capsule" },
+    {
+      name: "Capsule Minting",
+      address: "0x...",
+      api: "/api/contracts/capsule",
+    },
     { name: "DAO Governance", address: "0x...", api: "/api/contracts/dao" },
     // Add more as deployed
   ]}
 />
-- View source, ABI, events, and upgrade/proxy history
-- Download verified bytecode and audit reports
+- View source, ABI, events, and upgrade/proxy history - Download verified
+bytecode and audit reports
 
 ---
 
 ## <span id="sdk">SDKs & Code Samples <CodeIcon /></span>
+
 <SDKShowcase
   sdks={[
     { lang: "JavaScript", url: "/sdks/guardian-js.zip" },
     { lang: "Python", url: "/sdks/guardian-py.zip" },
     { lang: "Solidity", url: "/sdks/guardian-sol.zip" },
-    { lang: "Rust", url: "/sdks/guardian-rs.zip" }
+    { lang: "Rust", url: "/sdks/guardian-rs.zip" },
   ]}
 />
-- Multi-language “copy to clipboard” for every endpoint
-- AI code explainer for all samples
+- Multi-language “copy to clipboard” for every endpoint - AI code explainer for
+all samples
 
 ---
 
 ## <span id="playground">Live Contract/API Playground <PlayIcon /></span>
+
 <CodePlayground />
 
 ---
 
 ## <span id="app-registry">App & Integration Showcase <AppIcon /></span>
-<AppShowcase />
-- Submit your dApp/integration for official registry and DAO upvoting
-- “Official” badge for DAO-verified partners
+
+<AppShowcase />- Submit your dApp/integration for official registry and DAO
+upvoting - “Official” badge for DAO-verified partners
 
 ---
 
 ## <span id="support">Developer Support, Bounty & Leaderboard <SupportIcon /></span>
-<BountyBoard />
-- Submit issues, claim bounties, see leaderboard for top contributors
-- Live Discord, Telegram, and AI Dev Chat
+
+<BountyBoard />- Submit issues, claim bounties, see leaderboard for top
+contributors - Live Discord, Telegram, and AI Dev Chat
 
 ---
 
 ## <span id="faq">Developer FAQ <HelpIcon /></span>
+
 <FAQ>
-  <Question q="How do I get an API key?">Sign up via the dev portal or connect wallet for on-chain API access.</Question>
-  <Question q="Where can I test contracts?">Use the live playground or testnet contracts listed above.</Question>
-  <Question q="How do I get help?">Ask in chat, open an issue, or use the AI code assistant.</Question>
-  <Question q="Can I contribute to core contracts?">Yes—open-source, DAO proposals welcome, with bounties for critical upgrades.</Question>
+  <Question q="How do I get an API key?">
+    Sign up via the dev portal or connect wallet for on-chain API access.
+  </Question>
+  <Question q="Where can I test contracts?">
+    Use the live playground or testnet contracts listed above.
+  </Question>
+  <Question q="How do I get help?">
+    Ask in chat, open an issue, or use the AI code assistant.
+  </Question>
+  <Question q="Can I contribute to core contracts?">
+    Yes—open-source, DAO proposals welcome, with bounties for critical upgrades.
+  </Question>
 </FAQ>
 
 ---

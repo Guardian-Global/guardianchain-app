@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Languages, Globe } from "lucide-react";
@@ -11,28 +17,33 @@ import { isRTL } from "@/utils/rtlSupport";
 import { LABELS } from "@/utils/labels";
 
 const SUPPORTED_LANGUAGES = [
-  { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪' },
-  { code: 'it', name: 'Italian', nativeName: 'Italiano', flag: '🇮🇹' },
-  { code: 'pt', name: 'Portuguese', nativeName: 'Português', flag: '🇵🇹' },
-  { code: 'ru', name: 'Russian', nativeName: 'Русский', flag: '🇷🇺' },
-  { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳' },
-  { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷' },
-  { code: 'ar', name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦' },
-  { code: 'he', name: 'Hebrew', nativeName: 'עברית', flag: '🇮🇱' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'th', name: 'Thai', nativeName: 'ไทย', flag: '🇹🇭' },
-  { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt', flag: '🇻🇳' },
-  { code: 'id', name: 'Indonesian', nativeName: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu', flag: '🇲🇾' },
-  { code: 'tl', name: 'Filipino', nativeName: 'Filipino', flag: '🇵🇭' },
-  { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili', flag: '🇹🇿' },
-  { code: 'tr', name: 'Turkish', nativeName: 'Türkçe', flag: '🇹🇷' },
-  { code: 'pl', name: 'Polish', nativeName: 'Polski', flag: '🇵🇱' },
-  { code: 'nl', name: 'Dutch', nativeName: 'Nederlands', flag: '🇳🇱' }
+  { code: "en", name: "English", nativeName: "English", flag: "🇺🇸" },
+  { code: "es", name: "Spanish", nativeName: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "French", nativeName: "Français", flag: "🇫🇷" },
+  { code: "de", name: "German", nativeName: "Deutsch", flag: "🇩🇪" },
+  { code: "it", name: "Italian", nativeName: "Italiano", flag: "🇮🇹" },
+  { code: "pt", name: "Portuguese", nativeName: "Português", flag: "🇵🇹" },
+  { code: "ru", name: "Russian", nativeName: "Русский", flag: "🇷🇺" },
+  { code: "zh", name: "Chinese", nativeName: "中文", flag: "🇨🇳" },
+  { code: "ja", name: "Japanese", nativeName: "日本語", flag: "🇯🇵" },
+  { code: "ko", name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
+  { code: "ar", name: "Arabic", nativeName: "العربية", flag: "🇸🇦" },
+  { code: "he", name: "Hebrew", nativeName: "עברית", flag: "🇮🇱" },
+  { code: "hi", name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳" },
+  { code: "th", name: "Thai", nativeName: "ไทย", flag: "🇹🇭" },
+  { code: "vi", name: "Vietnamese", nativeName: "Tiếng Việt", flag: "🇻🇳" },
+  {
+    code: "id",
+    name: "Indonesian",
+    nativeName: "Bahasa Indonesia",
+    flag: "🇮🇩",
+  },
+  { code: "ms", name: "Malay", nativeName: "Bahasa Melayu", flag: "🇲🇾" },
+  { code: "tl", name: "Filipino", nativeName: "Filipino", flag: "🇵🇭" },
+  { code: "sw", name: "Swahili", nativeName: "Kiswahili", flag: "🇹🇿" },
+  { code: "tr", name: "Turkish", nativeName: "Türkçe", flag: "🇹🇷" },
+  { code: "pl", name: "Polish", nativeName: "Polski", flag: "🇵🇱" },
+  { code: "nl", name: "Dutch", nativeName: "Nederlands", flag: "🇳🇱" },
 ];
 
 interface LanguageSelectorProps {
@@ -41,15 +52,21 @@ interface LanguageSelectorProps {
   className?: string;
 }
 
-export default function LanguageSelector({ compact = false, showFlag = true, className = "" }: LanguageSelectorProps) {
+export default function LanguageSelector({
+  compact = false,
+  showFlag = true,
+  className = "",
+}: LanguageSelectorProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
-  const currentLanguage = user?.language || 'en';
-  const selectedLang = SUPPORTED_LANGUAGES.find(lang => lang.code === currentLanguage) || SUPPORTED_LANGUAGES[0];
+
+  const currentLanguage = user?.language || "en";
+  const selectedLang =
+    SUPPORTED_LANGUAGES.find((lang) => lang.code === currentLanguage) ||
+    SUPPORTED_LANGUAGES[0];
   const isRTLLayout = isRTL(currentLanguage);
-  const labels = LABELS[currentLanguage] || LABELS['en'];
+  const labels = LABELS[currentLanguage] || LABELS["en"];
 
   const updateLanguageMutation = useMutation({
     mutationFn: async (language: string) => {
@@ -58,11 +75,12 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
     onSuccess: (data, language) => {
       toast({
         title: labels.success || "Success",
-        description: labels.languageUpdated || "Language preference updated successfully",
+        description:
+          labels.languageUpdated || "Language preference updated successfully",
       });
       // Invalidate user data to refresh language
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      
+
       // Force page reload to apply RTL changes
       setTimeout(() => {
         window.location.reload();
@@ -101,7 +119,9 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
                 {showFlag && <span>{lang.flag}</span>}
                 <span>{lang.nativeName}</span>
                 {isRTL(lang.code) && (
-                  <Badge variant="secondary" className="text-xs">RTL</Badge>
+                  <Badge variant="secondary" className="text-xs">
+                    RTL
+                  </Badge>
                 )}
               </div>
             </SelectItem>
@@ -112,7 +132,7 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
   }
 
   return (
-    <div className={`space-y-4 ${className}`} dir={isRTLLayout ? 'rtl' : 'ltr'}>
+    <div className={`space-y-4 ${className}`} dir={isRTLLayout ? "rtl" : "ltr"}>
       <div className="flex items-center gap-2">
         <Globe className="w-5 h-5" />
         <h3 className="text-lg font-semibold">
@@ -125,8 +145,8 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
           <label className="text-sm font-medium mb-2 block">
             {labels.preferredLanguage || "Preferred Language"}
           </label>
-          <Select 
-            value={currentLanguage} 
+          <Select
+            value={currentLanguage}
             onValueChange={handleLanguageChange}
             disabled={updateLanguageMutation.isPending}
           >
@@ -135,11 +155,17 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
                 <div className="flex items-center gap-3">
                   <span className="text-lg">{selectedLang.flag}</span>
                   <div className="flex flex-col items-start">
-                    <span className="font-medium">{selectedLang.nativeName}</span>
-                    <span className="text-xs text-muted-foreground">{selectedLang.name}</span>
+                    <span className="font-medium">
+                      {selectedLang.nativeName}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {selectedLang.name}
+                    </span>
                   </div>
                   {isRTL(selectedLang.code) && (
-                    <Badge variant="outline" className="text-xs">RTL</Badge>
+                    <Badge variant="outline" className="text-xs">
+                      RTL
+                    </Badge>
                   )}
                 </div>
               </SelectValue>
@@ -151,10 +177,14 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
                     <span className="text-lg">{lang.flag}</span>
                     <div className="flex flex-col items-start">
                       <span className="font-medium">{lang.nativeName}</span>
-                      <span className="text-xs text-muted-foreground">{lang.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {lang.name}
+                      </span>
                     </div>
                     {isRTL(lang.code) && (
-                      <Badge variant="outline" className="text-xs ml-auto">RTL</Badge>
+                      <Badge variant="outline" className="text-xs ml-auto">
+                        RTL
+                      </Badge>
                     )}
                   </div>
                 </SelectItem>
@@ -167,10 +197,14 @@ export default function LanguageSelector({ compact = false, showFlag = true, cla
           <div className="flex items-start gap-2">
             <Languages className="w-4 h-4 mt-0.5 text-muted-foreground" />
             <div className="text-sm text-muted-foreground">
-              <p>{labels.languageNote || "Changing your language will update the interface and enable auto-translation for content."}</p>
+              <p>
+                {labels.languageNote ||
+                  "Changing your language will update the interface and enable auto-translation for content."}
+              </p>
               {isRTL(currentLanguage) && (
                 <p className="mt-1 font-medium">
-                  {labels.rtlNote || "Right-to-left layout is active for this language."}
+                  {labels.rtlNote ||
+                    "Right-to-left layout is active for this language."}
                 </p>
               )}
             </div>

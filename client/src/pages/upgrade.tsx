@@ -3,18 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { 
-  Lock, 
-  Check, 
-  Crown, 
-  Zap, 
+import {
+  Lock,
+  Check,
+  Crown,
+  Zap,
   Star,
   ArrowRight,
   Building2,
   Sparkles,
   Shield,
   FileText,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 
 export default function UpgradePage() {
@@ -30,15 +30,15 @@ export default function UpgradePage() {
       explorer: false,
       pro: true,
       enterprise: true,
-      icon: Shield
+      icon: Shield,
     },
     {
-      name: "Truth Bounty Access", 
+      name: "Truth Bounty Access",
       description: "Crowdsourced investigation rewards",
       explorer: false,
       pro: true,
       enterprise: true,
-      icon: TrendingUp
+      icon: TrendingUp,
     },
     {
       name: "Unlimited Truth Capsules",
@@ -46,7 +46,7 @@ export default function UpgradePage() {
       explorer: false,
       pro: true,
       enterprise: true,
-      icon: FileText
+      icon: FileText,
     },
     {
       name: "Advanced Analytics",
@@ -54,7 +54,7 @@ export default function UpgradePage() {
       explorer: false,
       pro: true,
       enterprise: true,
-      icon: TrendingUp
+      icon: TrendingUp,
     },
     {
       name: "Priority Verification",
@@ -62,7 +62,7 @@ export default function UpgradePage() {
       explorer: false,
       pro: true,
       enterprise: true,
-      icon: Zap
+      icon: Zap,
     },
     {
       name: "GTT Earning Boost",
@@ -70,8 +70,8 @@ export default function UpgradePage() {
       explorer: false,
       pro: true,
       enterprise: true,
-      icon: Star
-    }
+      icon: Star,
+    },
   ];
 
   const tiers = [
@@ -80,23 +80,37 @@ export default function UpgradePage() {
       price: { monthly: 0, annual: 0 },
       description: "Your current plan",
       maxGTT: "10 GTT/month",
-      features: ["Basic verification", "Public capsule viewing", "Community access"]
+      features: [
+        "Basic verification",
+        "Public capsule viewing",
+        "Community access",
+      ],
     },
     {
       name: "Pro",
       price: { monthly: 29, annual: 290 },
       description: "Recommended upgrade",
       maxGTT: "500 GTT/month",
-      features: ["Everything in Explorer", "Unlimited capsules", "Veritas tools", "Advanced analytics"],
-      popular: true
+      features: [
+        "Everything in Explorer",
+        "Unlimited capsules",
+        "Veritas tools",
+        "Advanced analytics",
+      ],
+      popular: true,
     },
     {
       name: "Enterprise",
       price: { monthly: "Custom", annual: "Custom" },
       description: "For organizations",
       maxGTT: "Unlimited GTT potential",
-      features: ["Everything in Pro", "White-label solution", "API access", "Dedicated support"]
-    }
+      features: [
+        "Everything in Pro",
+        "White-label solution",
+        "API access",
+        "Dedicated support",
+      ],
+    },
   ];
 
   return (
@@ -106,9 +120,11 @@ export default function UpgradePage() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-full px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-sm text-blue-300">Unlock your earning potential</span>
+            <span className="text-sm text-blue-300">
+              Unlock your earning potential
+            </span>
           </div>
-          
+
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="text-white">Upgrade to</span>
             <br />
@@ -116,9 +132,10 @@ export default function UpgradePage() {
               Unlock Premium Features
             </span>
           </h1>
-          
+
           <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-            Get access to Veritas Seals, Truth Bounty rewards, unlimited capsule creation, and earn up to 50x more GTT tokens.
+            Get access to Veritas Seals, Truth Bounty rewards, unlimited capsule
+            creation, and earn up to 50x more GTT tokens.
           </p>
         </div>
 
@@ -193,9 +210,9 @@ export default function UpgradePage() {
                   <span className="text-3xl font-bold text-white">$29</span>
                   <span className="text-slate-400">/month</span>
                 </div>
-                <Button 
+                <Button
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                  onClick={() => window.location.href = '/api/upgrade-stripe'}
+                  onClick={() => (window.location.href = "/api/upgrade-stripe")}
                 >
                   Upgrade Now
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -217,21 +234,30 @@ export default function UpgradePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {features.filter(f => !f.explorer).map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <div key={index} className="flex items-center gap-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-white" />
+              {features
+                .filter((f) => !f.explorer)
+                .map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600"
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white">
+                          {feature.name}
+                        </h3>
+                        <p className="text-sm text-slate-400">
+                          {feature.description}
+                        </p>
+                      </div>
+                      <Lock className="w-5 h-5 text-red-400" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-white">{feature.name}</h3>
-                      <p className="text-sm text-slate-400">{feature.description}</p>
-                    </div>
-                    <Lock className="w-5 h-5 text-red-400" />
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </CardContent>
         </Card>
@@ -239,7 +265,9 @@ export default function UpgradePage() {
         {/* Billing Toggle */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-4 bg-slate-800 border border-slate-700 rounded-lg p-2">
-            <span className={`text-sm px-3 py-1 rounded ${!annual ? 'bg-blue-600 text-white' : 'text-slate-400'}`}>
+            <span
+              className={`text-sm px-3 py-1 rounded ${!annual ? "bg-blue-600 text-white" : "text-slate-400"}`}
+            >
               Monthly
             </span>
             <Switch
@@ -247,13 +275,13 @@ export default function UpgradePage() {
               onCheckedChange={setAnnual}
               className="data-[state=checked]:bg-blue-600"
             />
-            <span className={`text-sm px-3 py-1 rounded ${annual ? 'bg-blue-600 text-white' : 'text-slate-400'}`}>
+            <span
+              className={`text-sm px-3 py-1 rounded ${annual ? "bg-blue-600 text-white" : "text-slate-400"}`}
+            >
               Annual
             </span>
             {annual && (
-              <Badge className="bg-green-600 text-white">
-                Save 17%
-              </Badge>
+              <Badge className="bg-green-600 text-white">Save 17%</Badge>
             )}
           </div>
         </div>
@@ -261,19 +289,19 @@ export default function UpgradePage() {
         {/* All Plans Comparison */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {tiers.map((tier, index) => {
-            const price = tier.price[annual ? 'annual' : 'monthly'];
+            const price = tier.price[annual ? "annual" : "monthly"];
             const isCurrent = tier.name === currentTier;
             const isRecommended = tier.name === recommendedTier;
-            
+
             return (
-              <Card 
+              <Card
                 key={tier.name}
                 className={`relative ${
-                  isRecommended 
-                    ? 'bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-500 scale-105' 
+                  isRecommended
+                    ? "bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-500 scale-105"
                     : isCurrent
-                    ? 'bg-slate-800 border-yellow-500'
-                    : 'bg-slate-800 border-slate-700'
+                      ? "bg-slate-800 border-yellow-500"
+                      : "bg-slate-800 border-slate-700"
                 }`}
               >
                 {isRecommended && (
@@ -290,22 +318,20 @@ export default function UpgradePage() {
                     </Badge>
                   </div>
                 )}
-                
+
                 <CardHeader className="text-center">
                   <CardTitle className="text-xl font-bold text-white">
                     {tier.name}
                   </CardTitle>
-                  <p className="text-slate-400 text-sm">
-                    {tier.description}
-                  </p>
+                  <p className="text-slate-400 text-sm">{tier.description}</p>
                   <div className="mt-4">
-                    {typeof price === 'number' ? (
+                    {typeof price === "number" ? (
                       <div>
                         <span className="text-3xl font-bold text-white">
                           ${price}
                         </span>
                         <span className="text-slate-400">
-                          /{annual ? 'year' : 'month'}
+                          /{annual ? "year" : "month"}
                         </span>
                       </div>
                     ) : (
@@ -318,34 +344,38 @@ export default function UpgradePage() {
                     {tier.maxGTT}
                   </div>
                 </CardHeader>
-                
+
                 <CardContent>
                   <div className="space-y-2 mb-6">
                     {tier.features.map((feature, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
-                        <span className="text-slate-300 text-sm">{feature}</span>
+                        <span className="text-slate-300 text-sm">
+                          {feature}
+                        </span>
                       </div>
                     ))}
                   </div>
-                  
+
                   {!isCurrent && (
                     <Button
                       className={`w-full ${
                         isRecommended
-                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
-                          : 'border-slate-600 hover:bg-slate-700'
+                          ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                          : "border-slate-600 hover:bg-slate-700"
                       }`}
-                      variant={isRecommended ? 'default' : 'outline'}
+                      variant={isRecommended ? "default" : "outline"}
                       onClick={() => {
-                        if (tier.name === 'Enterprise') {
-                          window.location.href = '/contact';
+                        if (tier.name === "Enterprise") {
+                          window.location.href = "/contact";
                         } else {
-                          window.location.href = '/api/upgrade-stripe';
+                          window.location.href = "/api/upgrade-stripe";
                         }
                       }}
                     >
-                      {tier.name === 'Enterprise' ? 'Contact Sales' : 'Upgrade Now'}
+                      {tier.name === "Enterprise"
+                        ? "Contact Sales"
+                        : "Upgrade Now"}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   )}
@@ -398,12 +428,13 @@ export default function UpgradePage() {
             Ready to Unlock Your Potential?
           </h2>
           <p className="text-slate-300 mb-8">
-            Join thousands of Pro users earning more GTT tokens and accessing premium features.
+            Join thousands of Pro users earning more GTT tokens and accessing
+            premium features.
           </p>
-          <Button 
+          <Button
             size="lg"
             className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-4"
-            onClick={() => window.location.href = '/api/upgrade-stripe'}
+            onClick={() => (window.location.href = "/api/upgrade-stripe")}
           >
             Upgrade to Pro - $29/month
             <ArrowRight className="w-5 h-5 ml-2" />

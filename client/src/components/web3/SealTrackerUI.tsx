@@ -204,7 +204,7 @@ export default function SealTrackerUI({
                       <span className="text-slate-400">Sealed At:</span>
                       <p className="text-white">
                         {new Date(
-                          Number(sealInfo.timestamp) * 1000
+                          Number(sealInfo.timestamp) * 1000,
                         ).toLocaleString()}
                       </p>
                     </div>

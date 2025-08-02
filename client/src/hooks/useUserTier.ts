@@ -1,6 +1,11 @@
-import { useState, useEffect } from 'react';
-import { onboardUser, getUserTier, updateUserTier, getUserOnboardingStatus } from '@/utils/onboardUser';
-import { useAuth } from './useAuth';
+import { useState, useEffect } from "react";
+import {
+  onboardUser,
+  getUserTier,
+  updateUserTier,
+  getUserOnboardingStatus,
+} from "@/utils/onboardUser";
+import { useAuth } from "./useAuth";
 
 export function useUserTier() {
   const { user, isAuthenticated } = useAuth();
@@ -13,7 +18,7 @@ export function useUserTier() {
   }>({
     isOnboarded: false,
     onboardDate: null,
-    tier: "guest"
+    tier: "guest",
   });
 
   useEffect(() => {
@@ -26,8 +31,8 @@ export function useUserTier() {
 
       try {
         setIsLoading(true);
-        
-        // Get user ID from auth context  
+
+        // Get user ID from auth context
         const userId = user?.id || (user as any)?.sub || user?.email;
         if (!userId) {
           // User ID validation removed for production
@@ -36,11 +41,11 @@ export function useUserTier() {
         }
 
         // Onboard user if new
-        const onboardResult = await onboardUser(userId, user?.email || '');
-        
+        const onboardResult = await onboardUser(userId, user?.email || "");
+
         if (onboardResult.success) {
           setTier(onboardResult.tier || "guest");
-          
+
           // Get full onboarding status
           const status = await getUserOnboardingStatus(userId);
           setOnboardingStatus(status);
@@ -59,7 +64,9 @@ export function useUserTier() {
     initializeUserTier();
   }, [isAuthenticated, user]);
 
-  const upgradeTier = async (newTier: "guest" | "explorer" | "pro" | "enterprise") => {
+  const upgradeTier = async (
+    newTier: "guest" | "explorer" | "pro" | "enterprise",
+  ) => {
     if (!user) return { success: false, error: "No authenticated user" };
 
     const userId = user?.id || (user as any)?.sub || user?.email;
@@ -69,7 +76,7 @@ export function useUserTier() {
       const result = await updateUserTier(userId, newTier);
       if (result.success) {
         setTier(newTier);
-        
+
         // Update onboarding status
         const status = await getUserOnboardingStatus(userId);
         setOnboardingStatus(status);
@@ -77,7 +84,10 @@ export function useUserTier() {
       return result;
     } catch (error) {
       console.error("Error upgrading tier:", error);
-      return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   };
 
@@ -90,7 +100,7 @@ export function useUserTier() {
     try {
       const currentTier = await getUserTier(userId);
       setTier(currentTier);
-      
+
       const status = await getUserOnboardingStatus(userId);
       setOnboardingStatus(status);
     } catch (error) {
@@ -104,21 +114,25 @@ export function useUserTier() {
   const isPro = tier === "pro";
   const isEnterprise = tier === "enterprise";
   const isPremium = tier === "pro" || tier === "enterprise";
-  
+
   // Feature access helpers
   const canCreateCapsules = !isGuest;
   const canAccessVeritasTools = isPremium;
   const canAccessAdvancedAnalytics = isPremium;
   const hasUnlimitedCapsules = isPremium;
   const canEarnGTT = !isGuest;
-  
+
   // GTT earning limits based on tier
   const getGTTLimit = () => {
     switch (tier) {
-      case "explorer": return 10;
-      case "pro": return 500;
-      case "enterprise": return 99999; // Effectively unlimited
-      default: return 0;
+      case "explorer":
+        return 10;
+      case "pro":
+        return 500;
+      case "enterprise":
+        return 99999; // Effectively unlimited
+      default:
+        return 0;
     }
   };
 
@@ -128,14 +142,14 @@ export function useUserTier() {
     onboardingStatus,
     upgradeTier,
     refreshTier,
-    
+
     // Tier checks
     isGuest,
     isExplorer,
     isPro,
     isEnterprise,
     isPremium,
-    
+
     // Feature access
     canCreateCapsules,
     canAccessVeritasTools,
@@ -143,9 +157,16 @@ export function useUserTier() {
     hasUnlimitedCapsules,
     canEarnGTT,
     gttLimit: getGTTLimit(),
-    
+
     // Tier display helpers
     tierDisplayName: tier.charAt(0).toUpperCase() + tier.slice(1),
-    tierColor: tier === "pro" ? "blue" : tier === "enterprise" ? "purple" : tier === "explorer" ? "green" : "gray"
+    tierColor:
+      tier === "pro"
+        ? "blue"
+        : tier === "enterprise"
+          ? "purple"
+          : tier === "explorer"
+            ? "green"
+            : "gray",
   };
 }

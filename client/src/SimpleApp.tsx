@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import CapsuleStats from "./pages/CapsuleStats";
 import Timeline from "./pages/Timeline";
 import ValidatorBids from "./pages/ValidatorBids";
-import SearchResults from "./pages/SearchResults";
+import Search from "./pages/Search";
 import NewCapsule from "./pages/NewCapsule";
 import CapsuleDetail from "./pages/CapsuleDetail";
 
@@ -13,12 +13,13 @@ import CapsuleDetail from "./pages/CapsuleDetail";
 function Button({ children, size, variant, className, type, ...props }: any) {
   const baseClasses = "px-4 py-2 rounded-lg font-medium transition-colors";
   const sizeClasses = size === "lg" ? "px-6 py-3 text-lg" : "";
-  const variantClasses = variant === "outline" 
-    ? "border border-white text-white hover:bg-white hover:text-black" 
-    : "bg-white text-black hover:bg-gray-100";
-  
+  const variantClasses =
+    variant === "outline"
+      ? "border border-white text-white hover:bg-white hover:text-black"
+      : "bg-white text-black hover:bg-gray-100";
+
   return (
-    <button 
+    <button
       type={type}
       className={`${baseClasses} ${sizeClasses} ${variantClasses} ${className || ""}`}
       {...props}
@@ -28,7 +29,15 @@ function Button({ children, size, variant, className, type, ...props }: any) {
   );
 }
 
-function Input({ placeholder, value, onChange, className, type = "text", name, ...props }: any) {
+function Input({
+  placeholder,
+  value,
+  onChange,
+  className,
+  type = "text",
+  name,
+  ...props
+}: any) {
   return (
     <input
       type={type}
@@ -45,49 +54,56 @@ function Input({ placeholder, value, onChange, className, type = "text", name, .
 const translations = {
   en: {
     title: "GuardianChain",
-    subtitle: "The world's first sovereign memory infrastructure. Own your truth. Seal your story. Yield from your lived experiences.",
+    subtitle:
+      "The world's first sovereign memory infrastructure. Own your truth. Seal your story. Yield from your lived experiences.",
     explore: "Explore Capsules",
     launch: "Launch App",
     subscribe: "Subscribe",
     search_placeholder: "Search by title, tags, author...",
     search: "Search",
     cta_title: "Ready to Take Ownership of Your Truth?",
-    cta_sub: "Join thousands of users minting, sealing, and sharing their sovereign truth capsules. Your legacy is your power.",
+    cta_sub:
+      "Join thousands of users minting, sealing, and sharing their sovereign truth capsules. Your legacy is your power.",
     start: "Get Started",
     whitepaper: "View Whitepaper",
     search_title: "Search Truth Capsules",
   },
   es: {
     title: "GuardianChain",
-    subtitle: "La primera infraestructura de memoria soberana del mundo. Posee tu verdad. Sella tu historia. Gana con tus experiencias vividas.",
+    subtitle:
+      "La primera infraestructura de memoria soberana del mundo. Posee tu verdad. Sella tu historia. Gana con tus experiencias vividas.",
     explore: "Explorar Cápsulas",
     launch: "Lanzar App",
     subscribe: "Suscribirse",
     search_placeholder: "Buscar por título, etiquetas, autor...",
     search: "Buscar",
     cta_title: "¿Listo para ser dueño de tu verdad?",
-    cta_sub: "Únete a miles de usuarios que están sellando y compartiendo cápsulas de verdad soberana. Tu legado es tu poder.",
+    cta_sub:
+      "Únete a miles de usuarios que están sellando y compartiendo cápsulas de verdad soberana. Tu legado es tu poder.",
     start: "Comenzar",
     whitepaper: "Ver Documento",
     search_title: "Buscar Cápsulas de Verdad",
   },
   ar: {
     title: "غارديان تشين",
-    subtitle: "أول بنية تحتية للذاكرة السيادية في العالم. امتلك حقيقتك. احفظ قصتك. اربح من تجاربك المعيشية.",
+    subtitle:
+      "أول بنية تحتية للذاكرة السيادية في العالم. امتلك حقيقتك. احفظ قصتك. اربح من تجاربك المعيشية.",
     explore: "استكشاف الكبسولات",
     launch: "تشغيل التطبيق",
     subscribe: "اشترك",
     search_placeholder: "ابحث بالعنوان أو العلامات أو المؤلف...",
     search: "ابحث",
     cta_title: "هل أنت مستعد لامتلاك حقيقتك؟",
-    cta_sub: "انضم إلى الآلاف من المستخدمين الذين يقومون بسك وتوثيق كبسولات الحقيقة. إرثك هو قوتك.",
+    cta_sub:
+      "انضم إلى الآلاف من المستخدمين الذين يقومون بسك وتوثيق كبسولات الحقيقة. إرثك هو قوتك.",
     start: "ابدأ الآن",
     whitepaper: "عرض المستند",
     search_title: "ابحث عن كبسولات الحقيقة",
   },
   zh: {
     title: "守护链",
-    subtitle: "世界上第一个主权记忆基础设施。拥有你的真相。封存你的故事。从经历中获益。",
+    subtitle:
+      "世界上第一个主权记忆基础设施。拥有你的真相。封存你的故事。从经历中获益。",
     explore: "探索胶囊",
     launch: "启动应用",
     subscribe: "订阅",
@@ -132,7 +148,10 @@ function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-900 text-white" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <main
+      className="min-h-screen bg-slate-900 text-white"
+      dir={lang === "ar" ? "rtl" : "ltr"}
+    >
       {/* Language Switch */}
       <div className="absolute top-4 right-4 z-20">
         <select
@@ -167,12 +186,12 @@ function HomePage() {
           <h1 className="text-5xl md:text-7xl font-extrabold drop-shadow-xl tracking-tight">
             {t.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-slate-200">
-            {t.subtitle}
-          </p>
+          <p className="mt-4 max-w-2xl text-lg text-slate-200">{t.subtitle}</p>
           <div className="mt-6 flex flex-col md:flex-row gap-4">
             <Button size="lg">{t.explore}</Button>
-            <Button size="lg" variant="outline">{t.launch}</Button>
+            <Button size="lg" variant="outline">
+              {t.launch}
+            </Button>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -197,11 +216,11 @@ function HomePage() {
       {/* Search Bar */}
       <section className="bg-slate-800 py-12 px-6 text-center">
         <h2 className="text-3xl font-bold mb-6">{t.search_title}</h2>
-        <form 
+        <form
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target as HTMLFormElement);
-            const searchQuery = formData.get('q') as string;
+            const searchQuery = formData.get("q") as string;
             if (searchQuery) {
               window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
             }
@@ -215,7 +234,9 @@ function HomePage() {
             className="w-full bg-white text-black"
             required
           />
-          <Button type="submit" className="bg-indigo-600">{t.search}</Button>
+          <Button type="submit" className="bg-indigo-600">
+            {t.search}
+          </Button>
         </form>
       </section>
 
@@ -227,9 +248,13 @@ function HomePage() {
             className="w-full rounded-xl shadow-lg"
             controls
           />
-          <h2 className="text-3xl font-bold mt-6">Guardian Truth Token (GTT)</h2>
+          <h2 className="text-3xl font-bold mt-6">
+            Guardian Truth Token (GTT)
+          </h2>
           <p className="text-slate-300 mt-3">
-            GTT is more than a token — it's a reward for verified memory. Users mint capsules, contribute to truth audits, and earn GTT for their participation in the sovereign memory economy.
+            GTT is more than a token — it's a reward for verified memory. Users
+            mint capsules, contribute to truth audits, and earn GTT for their
+            participation in the sovereign memory economy.
           </p>
         </div>
 
@@ -241,7 +266,9 @@ function HomePage() {
           />
           <h2 className="text-3xl font-bold mt-6">What is GuardianChain?</h2>
           <p className="text-slate-300 mt-3">
-            GuardianChain is a memory blockchain that verifies human-authored truth capsules, locks authorship through cryptographic proofs, and monetizes emotional legacy via yield generation.
+            GuardianChain is a memory blockchain that verifies human-authored
+            truth capsules, locks authorship through cryptographic proofs, and
+            monetizes emotional legacy via yield generation.
           </p>
         </div>
       </section>
@@ -252,15 +279,24 @@ function HomePage() {
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           <div className="bg-slate-700 rounded-lg p-6 shadow-xl">
             <h3 className="text-2xl font-semibold mb-2">🧠 Capture</h3>
-            <p className="text-slate-300">Upload moments, media, and messages into secure capsules — with optional griefScore or truth tags.</p>
+            <p className="text-slate-300">
+              Upload moments, media, and messages into secure capsules — with
+              optional griefScore or truth tags.
+            </p>
           </div>
           <div className="bg-slate-700 rounded-lg p-6 shadow-xl">
             <h3 className="text-2xl font-semibold mb-2">🔐 Seal & Mint</h3>
-            <p className="text-slate-300">Mint your capsule on-chain, seal it with a Veritas Certificate, and lock your authorship forever.</p>
+            <p className="text-slate-300">
+              Mint your capsule on-chain, seal it with a Veritas Certificate,
+              and lock your authorship forever.
+            </p>
           </div>
           <div className="bg-slate-700 rounded-lg p-6 shadow-xl">
             <h3 className="text-2xl font-semibold mb-2">💸 Unlock & Earn</h3>
-            <p className="text-slate-300">Receive GTT yield when others verify, unlock, or vote on your capsule. The truth has value — literally.</p>
+            <p className="text-slate-300">
+              Receive GTT yield when others verify, unlock, or vote on your
+              capsule. The truth has value — literally.
+            </p>
           </div>
         </div>
       </section>
@@ -268,12 +304,17 @@ function HomePage() {
       {/* Engagement CTA */}
       <section className="bg-indigo-700 py-20 px-8 text-center text-white">
         <h2 className="text-4xl font-bold">{t.cta_title}</h2>
-        <p className="mt-4 max-w-2xl mx-auto text-lg">
-          {t.cta_sub}
-        </p>
+        <p className="mt-4 max-w-2xl mx-auto text-lg">{t.cta_sub}</p>
         <div className="mt-6 flex justify-center gap-4">
-          <Button size="lg" className="bg-white text-indigo-700 hover:bg-slate-100">{t.start}</Button>
-          <Button size="lg" variant="outline">{t.whitepaper}</Button>
+          <Button
+            size="lg"
+            className="bg-white text-indigo-700 hover:bg-slate-100"
+          >
+            {t.start}
+          </Button>
+          <Button size="lg" variant="outline">
+            {t.whitepaper}
+          </Button>
         </div>
       </section>
 
@@ -302,23 +343,35 @@ function Navigation() {
     <nav className="bg-slate-800 border-b border-slate-700 px-6 py-4">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <Link href="/">
-          <span className="text-xl font-bold text-white cursor-pointer">GuardianChain</span>
+          <span className="text-xl font-bold text-white cursor-pointer">
+            GuardianChain
+          </span>
         </Link>
         <div className="flex space-x-6">
           <Link href="/capsule-stats">
-            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Capsule Stats</span>
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">
+              Capsule Stats
+            </span>
           </Link>
           <Link href="/timeline">
-            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Timeline</span>
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">
+              Timeline
+            </span>
           </Link>
           <Link href="/validator-bids">
-            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Validator Bids</span>
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">
+              Validator Bids
+            </span>
           </Link>
           <Link href="/search">
-            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Search</span>
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">
+              Search
+            </span>
           </Link>
           <Link href="/capsules/new">
-            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Create Capsule</span>
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">
+              Create Capsule
+            </span>
           </Link>
         </div>
       </div>
@@ -345,7 +398,7 @@ export default function App() {
         </Route>
         <Route path="/search">
           <Navigation />
-          <SearchResults />
+          <Search />
         </Route>
         <Route path="/capsules/new">
           <Navigation />

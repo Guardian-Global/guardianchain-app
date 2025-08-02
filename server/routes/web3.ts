@@ -7,7 +7,7 @@ const router = Router();
 router.get("/balance/:address", async (req, res) => {
   try {
     const { address } = req.params;
-    
+
     if (!address || !address.match(/^0x[a-fA-F0-9]{40}$/)) {
       return res.status(400).json({ error: "Invalid Ethereum address" });
     }
@@ -31,10 +31,12 @@ router.get("/balance/:address", async (req, res) => {
 router.post("/contract/call", async (req, res) => {
   try {
     const { contractAddress, method, args, chainId } = req.body;
-    
+
     // Validate inputs
     if (!contractAddress || !method) {
-      return res.status(400).json({ error: "Contract address and method required" });
+      return res
+        .status(400)
+        .json({ error: "Contract address and method required" });
     }
 
     // Mock contract call response
@@ -60,7 +62,7 @@ router.get("/network/:chainId", async (req, res) => {
   try {
     const { chainId } = req.params;
     const chainIdNum = parseInt(chainId);
-    
+
     const networkInfo = {
       chainId: chainIdNum,
       name: getNetworkName(chainIdNum),
@@ -82,7 +84,7 @@ router.get("/network/:chainId", async (req, res) => {
 router.post("/simulate", async (req, res) => {
   try {
     const { to, data, value, from } = req.body;
-    
+
     // Mock transaction simulation
     const simulation = {
       success: true,
@@ -117,9 +119,11 @@ router.post("/simulate", async (req, res) => {
 router.post("/test-mint", async (req, res) => {
   try {
     const { capsuleData, walletAddress, testMode } = req.body;
-    
+
     if (!capsuleData || !walletAddress) {
-      return res.status(400).json({ error: "Capsule data and wallet address required" });
+      return res
+        .status(400)
+        .json({ error: "Capsule data and wallet address required" });
     }
 
     // Simulate minting process

@@ -1,40 +1,44 @@
 import { Request, Response } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { decryptCapsule } from "../utils/lit/decryptCapsule";
-import { 
-  createTimeBasedCondition, 
+import {
+  createTimeBasedCondition,
   createNFTOwnershipCondition,
-  createTokenBalanceCondition 
+  createTokenBalanceCondition,
 } from "../utils/lit/accessConditions";
 
 // Initialize Supabase client for server-side operations
 const createSupabaseClient = () => {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.SUPABASE_SERVICE_ROLE_KEY
+  ) {
     return null; // Return null instead of throwing to allow fallback
   }
-  
+
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
   );
 };
 
 export async function unlockCapsule(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    
+
     if (!id || typeof id !== "string") {
       return res.status(400).json({ error: "Missing capsule ID" });
     }
 
     const supabase = createSupabaseClient();
-    
+
     if (!supabase) {
       // Development fallback when Supabase not configured
       const mockCapsule = {
         id: id,
         title: "Unlocked Sample Capsule",
-        description: "This is the revealed content of the capsule. Hidden secrets and memories are now visible.",
+        description:
+          "This is the revealed content of the capsule. Hidden secrets and memories are now visible.",
         author: "SampleUser",
         category: "Personal Truth",
         tags: ["unlocked", "revealed", "truth"],
@@ -50,18 +54,18 @@ export async function unlockCapsule(req: Request, res: Response) {
           data: "Hidden capsule content revealed after unlock",
           unlocked: true,
           unlocked_at: new Date().toISOString(),
-          metadata: { 
+          metadata: {
             created_via: "development",
-            unlock_method: "development_mode"
-          }
-        }
+            unlock_method: "development_mode",
+          },
+        },
       };
-      
+
       return res.json({
         success: true,
         capsule: mockCapsule,
         message: "Capsule unlocked successfully (development mode)",
-        note: "Development mode - Supabase not configured"
+        note: "Development mode - Supabase not configured",
       });
     }
 
@@ -82,7 +86,7 @@ export async function unlockCapsule(req: Request, res: Response) {
         return res.json({
           success: true,
           capsule: capsule,
-          message: "Capsule was already unlocked"
+          message: "Capsule was already unlocked",
         });
       }
 
@@ -90,34 +94,41 @@ export async function unlockCapsule(req: Request, res: Response) {
       let unlockMethod = "basic_unlock";
 
       // Check if capsule has Lit Protocol encryption
-      if (capsule.content?.encrypted && capsule.content?.encryptedSymmetricKey) {
+      if (
+        capsule.content?.encrypted &&
+        capsule.content?.encryptedSymmetricKey
+      ) {
         try {
           // Attempt to decrypt using Lit Protocol
-          const { 
-            encryptedContent, 
-            encryptedSymmetricKey, 
-            accessControlConditions 
+          const {
+            encryptedContent,
+            encryptedSymmetricKey,
+            accessControlConditions,
           } = capsule.content;
 
           decryptedContent = await decryptCapsule({
             encryptedContent,
             encryptedSymmetricKey,
-            accessControlConditions: accessControlConditions || createTimeBasedCondition(Date.now())
+            accessControlConditions:
+              accessControlConditions || createTimeBasedCondition(Date.now()),
           });
 
           unlockMethod = "lit_protocol_decrypt";
         } catch (decryptError) {
           console.error("Lit Protocol decryption failed:", decryptError);
-          return res.status(403).json({ 
+          return res.status(403).json({
             error: "Access conditions not met. Cannot decrypt capsule content.",
-            details: "You may need to wait for time conditions or meet token/NFT requirements."
+            details:
+              "You may need to wait for time conditions or meet token/NFT requirements.",
           });
         }
       }
 
       // Prepare unlocked content
-      const revealedDescription = decryptedContent || 
-        capsule.description + " [UNLOCKED CONTENT: Additional hidden details and memories are now visible]";
+      const revealedDescription =
+        decryptedContent ||
+        capsule.description +
+          " [UNLOCKED CONTENT: Additional hidden details and memories are now visible]";
 
       const unlockedContent = {
         ...capsule.content,
@@ -128,14 +139,14 @@ export async function unlockCapsule(req: Request, res: Response) {
         // Clear encryption data after successful unlock
         encrypted: false,
         encryptedContent: null,
-        encryptedSymmetricKey: null
+        encryptedSymmetricKey: null,
       };
 
       const { data: updatedCapsule, error: updateError } = await supabase
         .from("capsules")
         .update({
           content: unlockedContent,
-          description: revealedDescription
+          description: revealedDescription,
         })
         .eq("id", id)
         .select()
@@ -150,11 +161,11 @@ export async function unlockCapsule(req: Request, res: Response) {
         capsule: updatedCapsule,
         message: "Capsule unlocked successfully",
         unlocked_at: unlockedContent.unlocked_at,
-        unlock_method: unlockMethod
+        unlock_method: unlockMethod,
       });
     } catch (supabaseError) {
       console.error("Supabase unlock error:", supabaseError);
-      
+
       // Fallback mock unlock for development
       const mockCapsule = {
         id: id,
@@ -175,18 +186,18 @@ export async function unlockCapsule(req: Request, res: Response) {
           data: "Hidden content revealed after successful unlock",
           unlocked: true,
           unlocked_at: new Date().toISOString(),
-          metadata: { 
+          metadata: {
             created_via: "development",
-            unlock_method: "fallback_mode"
-          }
-        }
+            unlock_method: "fallback_mode",
+          },
+        },
       };
-      
+
       res.json({
         success: true,
         capsule: mockCapsule,
         message: "Capsule unlocked successfully (development fallback)",
-        note: "Development mode - Supabase operation failed"
+        note: "Development mode - Supabase operation failed",
       });
     }
   } catch (error) {

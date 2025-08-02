@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface TierContextType {
@@ -10,7 +16,7 @@ interface TierContextType {
 const TierContext = createContext<TierContextType>({
   userRole: "guest",
   isLoading: true,
-  refreshRole: async () => {}
+  refreshRole: async () => {},
 });
 
 export const useTierContext = () => useContext(TierContext);
@@ -27,7 +33,7 @@ export function TierProvider({ children }: TierProviderProps) {
   const fetchRole = async () => {
     try {
       setIsLoading(true);
-      
+
       if (!isAuthenticated || !user) {
         setUserRole("guest");
         return;
@@ -37,7 +43,6 @@ export function TierProvider({ children }: TierProviderProps) {
       const res = await fetch("/api/get-user-tier");
       const data = await res.json();
       setUserRole(data.tier || "guest");
-      
     } catch (error) {
       console.error("Failed to fetch user role:", error);
       setUserRole("guest");

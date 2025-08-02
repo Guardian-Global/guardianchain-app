@@ -1,15 +1,23 @@
-import { Request, Response } from 'express';
-import { apiRequest } from '../lib/queryClient';
+import { Request, Response } from "express";
+import { apiRequest } from "../lib/queryClient";
 
 // Create new capsule with GTT integration
 export async function createCapsule(req: Request, res: Response) {
   try {
-    const { title, content, capsuleType, accessCost, tags, isSealed, authorId } = req.body;
+    const {
+      title,
+      content,
+      capsuleType,
+      accessCost,
+      tags,
+      isSealed,
+      authorId,
+    } = req.body;
 
     // Validate required fields
     if (!title || !content || !authorId) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: title, content, authorId' 
+      return res.status(400).json({
+        error: "Missing required fields: title, content, authorId",
       });
     }
 
@@ -19,33 +27,32 @@ export async function createCapsule(req: Request, res: Response) {
       title,
       content,
       author: authorId,
-      capsuleType: capsuleType || 'personal_memory',
+      capsuleType: capsuleType || "personal_memory",
       accessCost: accessCost || 0,
       tags: Array.isArray(tags) ? tags : [],
       isSealed: isSealed || false,
-      verificationStatus: 'pending',
+      verificationStatus: "pending",
       truthScore: 0,
       views: 0,
       likes: 0,
       comments: 0,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     // Store capsule (in a real app, this would be saved to database)
-    console.log('🔵 DEBUG: Creating capsule:', capsule);
+    console.log("🔵 DEBUG: Creating capsule:", capsule);
 
     res.status(201).json({
       success: true,
       capsule,
-      message: 'Capsule created successfully'
+      message: "Capsule created successfully",
     });
-
   } catch (error) {
-    console.error('Error creating capsule:', error);
-    res.status(500).json({ 
-      error: 'Failed to create capsule',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Error creating capsule:", error);
+    res.status(500).json({
+      error: "Failed to create capsule",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -55,7 +62,12 @@ export async function triggerStripePayment(req: Request, res: Response) {
   try {
     const { capsuleId, amount } = req.body;
 
-    console.log('🔵 DEBUG: Triggering Stripe payment for capsule:', capsuleId, 'Amount:', amount);
+    console.log(
+      "🔵 DEBUG: Triggering Stripe payment for capsule:",
+      capsuleId,
+      "Amount:",
+      amount,
+    );
 
     // In a real implementation, you would:
     // 1. Create Stripe payment session
@@ -65,26 +77,25 @@ export async function triggerStripePayment(req: Request, res: Response) {
 
     const paymentResult = {
       sessionId: `stripe_${Date.now()}`,
-      amount: amount || 2.50,
-      currency: 'GTT',
-      status: 'completed',
+      amount: amount || 2.5,
+      currency: "GTT",
+      status: "completed",
       capsuleId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
-    console.log('✅ DEBUG: Stripe payment processed:', paymentResult);
+    console.log("✅ DEBUG: Stripe payment processed:", paymentResult);
 
     res.json({
       success: true,
       payment: paymentResult,
-      message: 'Payment processed and GTT rewards distributed'
+      message: "Payment processed and GTT rewards distributed",
     });
-
   } catch (error) {
-    console.error('Error processing Stripe payment:', error);
-    res.status(500).json({ 
-      error: 'Payment processing failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Error processing Stripe payment:", error);
+    res.status(500).json({
+      error: "Payment processing failed",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -95,10 +106,15 @@ export async function replayCapsule(req: Request, res: Response) {
     const { capsuleId, authorId, yieldAmount } = req.body;
 
     if (!capsuleId) {
-      return res.status(400).json({ error: 'Missing capsuleId' });
+      return res.status(400).json({ error: "Missing capsuleId" });
     }
 
-    console.log('🔵 DEBUG: Replaying capsule:', capsuleId, 'Yield:', yieldAmount);
+    console.log(
+      "🔵 DEBUG: Replaying capsule:",
+      capsuleId,
+      "Yield:",
+      yieldAmount,
+    );
 
     // In a real implementation:
     // 1. Verify capsule exists and is accessible
@@ -109,25 +125,24 @@ export async function replayCapsule(req: Request, res: Response) {
     const replayResult = {
       capsuleId,
       authorId,
-      yieldAmount: yieldAmount || 2.50,
+      yieldAmount: yieldAmount || 2.5,
       replayCount: 1,
       timestamp: new Date().toISOString(),
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`
+      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
     };
 
-    console.log('✅ DEBUG: Capsule replay completed:', replayResult);
+    console.log("✅ DEBUG: Capsule replay completed:", replayResult);
 
     res.json({
       success: true,
       replay: replayResult,
-      message: 'Capsule replayed and yield distributed successfully'
+      message: "Capsule replayed and yield distributed successfully",
     });
-
   } catch (error) {
-    console.error('Error replaying capsule:', error);
-    res.status(500).json({ 
-      error: 'Capsule replay failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Error replaying capsule:", error);
+    res.status(500).json({
+      error: "Capsule replay failed",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -137,7 +152,12 @@ export async function purchaseCapsuleAccess(req: Request, res: Response) {
   try {
     const { capsuleId, amount } = req.body;
 
-    console.log('🔵 DEBUG: Processing capsule access purchase:', capsuleId, 'Amount:', amount);
+    console.log(
+      "🔵 DEBUG: Processing capsule access purchase:",
+      capsuleId,
+      "Amount:",
+      amount,
+    );
 
     // In a real implementation:
     // 1. Create Stripe checkout session
@@ -152,14 +172,13 @@ export async function purchaseCapsuleAccess(req: Request, res: Response) {
       sessionUrl,
       amount,
       capsuleId,
-      message: 'Payment session created'
+      message: "Payment session created",
     });
-
   } catch (error) {
-    console.error('Error creating payment session:', error);
-    res.status(500).json({ 
-      error: 'Failed to create payment session',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Error creating payment session:", error);
+    res.status(500).json({
+      error: "Failed to create payment session",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -169,11 +188,11 @@ export async function distributeGttYield(req: Request, res: Response) {
   try {
     const { recipientId, amount, reason, capsuleId } = req.body;
 
-    console.log('🔵 DEBUG: Distributing GTT yield:', {
+    console.log("🔵 DEBUG: Distributing GTT yield:", {
       recipientId,
       amount,
       reason,
-      capsuleId
+      capsuleId,
     });
 
     // In a real implementation:
@@ -189,22 +208,21 @@ export async function distributeGttYield(req: Request, res: Response) {
       reason,
       capsuleId,
       timestamp: new Date().toISOString(),
-      status: 'completed'
+      status: "completed",
     };
 
-    console.log('✅ DEBUG: GTT yield distributed:', distribution);
+    console.log("✅ DEBUG: GTT yield distributed:", distribution);
 
     res.json({
       success: true,
       distribution,
-      message: 'GTT yield distributed successfully'
+      message: "GTT yield distributed successfully",
     });
-
   } catch (error) {
-    console.error('Error distributing GTT yield:', error);
-    res.status(500).json({ 
-      error: 'GTT distribution failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Error distributing GTT yield:", error);
+    res.status(500).json({
+      error: "GTT distribution failed",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }

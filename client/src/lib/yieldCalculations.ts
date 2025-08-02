@@ -90,7 +90,7 @@ export const USER_TIERS: Record<string, UserTier> = {
  */
 export function calculateUserTier(
   stakedAmount: number,
-  paidTier?: string
+  paidTier?: string,
 ): UserTier {
   // If user has paid tier, honor it if they meet minimum stake
   if (paidTier && USER_TIERS[paidTier.toUpperCase()]) {
@@ -102,7 +102,7 @@ export function calculateUserTier(
 
   // Otherwise, calculate based on stake amount
   const sortedTiers = Object.values(USER_TIERS).sort(
-    (a, b) => b.minStake - a.minStake
+    (a, b) => b.minStake - a.minStake,
   );
 
   for (const tier of sortedTiers) {
@@ -136,7 +136,7 @@ export function calculateCapsuleBonus(capsule: CapsuleMetrics): number {
   // Normalize engagement (log scale to prevent extreme values)
   const normalizedEngagement = Math.min(
     100,
-    Math.log10(capsule.socialEngagement + 1) * 20
+    Math.log10(capsule.socialEngagement + 1) * 20,
   );
 
   const qualityScore =
@@ -155,7 +155,7 @@ export function calculateYield(
   stakedAmount: number,
   userTier: UserTier,
   capsules: CapsuleMetrics[] = [],
-  lockPeriodDays: number = 0
+  lockPeriodDays: number = 0,
 ): YieldCalculation {
   if (stakedAmount <= 0) {
     return {
@@ -215,7 +215,7 @@ export function calculateYield(
 export function validateYieldParameters(
   stakedAmount: number,
   lockPeriod: number,
-  capsules: CapsuleMetrics[]
+  capsules: CapsuleMetrics[],
 ): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
 
@@ -270,12 +270,12 @@ export function calculateBreakEvenTime(
   currentStake: number,
   currentTier: UserTier,
   targetTier: UserTier,
-  additionalStakeRequired: number
+  additionalStakeRequired: number,
 ): number {
   const currentYield = calculateYield(currentStake, currentTier);
   const targetYield = calculateYield(
     currentStake + additionalStakeRequired,
-    targetTier
+    targetTier,
   );
 
   const additionalYieldPerMonth =

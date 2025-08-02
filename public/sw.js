@@ -1,61 +1,61 @@
-const CACHE_NAME = 'guardianchain-v1.0.0';
+const CACHE_NAME = "guardianchain-v1.0.0";
 const STATIC_ASSETS = [
-  '/',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
+  "/",
+  "/manifest.json",
+  "/icons/icon-192x192.png",
+  "/icons/icon-512x512.png",
   // Core CSS and JS will be added dynamically
 ];
 
 const API_CACHE_PATTERNS = [
-  '/api/auth/user',
-  '/api/get-user-tier',
-  '/api/smri/',
-  '/api/guardian-map/metrics'
+  "/api/auth/user",
+  "/api/get-user-tier",
+  "/api/smri/",
+  "/api/guardian-map/metrics",
 ];
 
 // Install event - cache static assets
-self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker installing...');
+self.addEventListener("install", (event) => {
+  console.log("🔧 Service Worker installing...");
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 Caching static assets');
+      console.log("📦 Caching static assets");
       return cache.addAll(STATIC_ASSETS);
-    })
+    }),
   );
   self.skipWaiting();
 });
 
 // Activate event - clean up old caches
-self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker activated');
+self.addEventListener("activate", (event) => {
+  console.log("✅ Service Worker activated");
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            console.log('🗑️ Deleting old cache:', cacheName);
+            console.log("🗑️ Deleting old cache:", cacheName);
             return caches.delete(cacheName);
           }
-        })
+        }),
       );
-    })
+    }),
   );
   self.clients.claim();
 });
 
 // Fetch event - implement caching strategies
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
   // Skip non-GET requests
-  if (request.method !== 'GET') {
+  if (request.method !== "GET") {
     return;
   }
 
   // Handle API requests with network-first strategy
-  if (url.pathname.startsWith('/api/')) {
+  if (url.pathname.startsWith("/api/")) {
     event.respondWith(networkFirstWithFallback(request));
     return;
   }
@@ -67,7 +67,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Handle navigation requests with network-first strategy
-  if (request.mode === 'navigate') {
+  if (request.mode === "navigate") {
     event.respondWith(networkFirstWithFallback(request));
     return;
   }
@@ -79,44 +79,46 @@ self.addEventListener('fetch', (event) => {
 // Network-first strategy with cache fallback
 async function networkFirstWithFallback(request) {
   const cache = await caches.open(CACHE_NAME);
-  
+
   try {
     const networkResponse = await fetch(request);
-    
+
     // Cache successful responses
     if (networkResponse.ok) {
       // Only cache certain API endpoints to avoid storage bloat
       const url = new URL(request.url);
-      const shouldCache = API_CACHE_PATTERNS.some(pattern => 
-        url.pathname.startsWith(pattern)
-      ) || request.mode === 'navigate' || 
-        request.destination === 'document';
-      
+      const shouldCache =
+        API_CACHE_PATTERNS.some((pattern) =>
+          url.pathname.startsWith(pattern),
+        ) ||
+        request.mode === "navigate" ||
+        request.destination === "document";
+
       if (shouldCache) {
         cache.put(request, networkResponse.clone());
       }
     }
-    
+
     return networkResponse;
   } catch (error) {
-    console.log('🔄 Network failed, trying cache for:', request.url);
+    console.log("🔄 Network failed, trying cache for:", request.url);
     const cachedResponse = await cache.match(request);
-    
+
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Return offline page for navigation requests
-    if (request.mode === 'navigate') {
-      return cache.match('/') || new Response(
-        createOfflinePage(),
-        { 
-          headers: { 'Content-Type': 'text/html' },
-          status: 200
-        }
+    if (request.mode === "navigate") {
+      return (
+        cache.match("/") ||
+        new Response(createOfflinePage(), {
+          headers: { "Content-Type": "text/html" },
+          status: 200,
+        })
       );
     }
-    
+
     throw error;
   }
 }
@@ -125,11 +127,11 @@ async function networkFirstWithFallback(request) {
 async function cacheFirstWithFallback(request) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
-  
+
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
@@ -137,7 +139,7 @@ async function cacheFirstWithFallback(request) {
     }
     return networkResponse;
   } catch (error) {
-    console.log('📦 Cache and network both failed for:', request.url);
+    console.log("📦 Cache and network both failed for:", request.url);
     throw error;
   }
 }
@@ -227,14 +229,14 @@ function createOfflinePage() {
 }
 
 // Handle background sync for offline actions
-self.addEventListener('sync', (event) => {
-  console.log('🔄 Background sync triggered:', event.tag);
-  
-  if (event.tag === 'capsule-upload') {
+self.addEventListener("sync", (event) => {
+  console.log("🔄 Background sync triggered:", event.tag);
+
+  if (event.tag === "capsule-upload") {
     event.waitUntil(syncPendingCapsules());
   }
-  
-  if (event.tag === 'smri-update') {
+
+  if (event.tag === "smri-update") {
     event.waitUntil(syncSMRIData());
   }
 });
@@ -244,54 +246,54 @@ async function syncPendingCapsules() {
   try {
     const db = await openDB();
     const pendingCapsules = await getAllPendingCapsules(db);
-    
+
     for (const capsule of pendingCapsules) {
       try {
-        await fetch('/api/capsules', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(capsule.data)
+        await fetch("/api/capsules", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(capsule.data),
         });
-        
+
         // Remove from pending after successful upload
         await deletePendingCapsule(db, capsule.id);
-        console.log('✅ Synced pending capsule:', capsule.id);
+        console.log("✅ Synced pending capsule:", capsule.id);
       } catch (error) {
-        console.log('❌ Failed to sync capsule:', capsule.id, error);
+        console.log("❌ Failed to sync capsule:", capsule.id, error);
       }
     }
   } catch (error) {
-    console.log('❌ Background sync failed:', error);
+    console.log("❌ Background sync failed:", error);
   }
 }
 
 // Sync SMRI data when back online
 async function syncSMRIData() {
   try {
-    console.log('🔄 Syncing SMRI data...');
+    console.log("🔄 Syncing SMRI data...");
     // This would sync any pending SMRI updates
   } catch (error) {
-    console.log('❌ SMRI sync failed:', error);
+    console.log("❌ SMRI sync failed:", error);
   }
 }
 
 // Simple IndexedDB helpers for offline storage
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('GuardianChainDB', 1);
-    
+    const request = indexedDB.open("GuardianChainDB", 1);
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
-    
+
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      
-      if (!db.objectStoreNames.contains('pendingCapsules')) {
-        db.createObjectStore('pendingCapsules', { keyPath: 'id' });
+
+      if (!db.objectStoreNames.contains("pendingCapsules")) {
+        db.createObjectStore("pendingCapsules", { keyPath: "id" });
       }
-      
-      if (!db.objectStoreNames.contains('cachedData')) {
-        db.createObjectStore('cachedData', { keyPath: 'key' });
+
+      if (!db.objectStoreNames.contains("cachedData")) {
+        db.createObjectStore("cachedData", { keyPath: "key" });
       }
     };
   });
@@ -299,10 +301,10 @@ function openDB() {
 
 async function getAllPendingCapsules(db) {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['pendingCapsules'], 'readonly');
-    const store = transaction.objectStore('pendingCapsules');
+    const transaction = db.transaction(["pendingCapsules"], "readonly");
+    const store = transaction.objectStore("pendingCapsules");
     const request = store.getAll();
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
   });
@@ -310,10 +312,10 @@ async function getAllPendingCapsules(db) {
 
 async function deletePendingCapsule(db, id) {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['pendingCapsules'], 'readwrite');
-    const store = transaction.objectStore('pendingCapsules');
+    const transaction = db.transaction(["pendingCapsules"], "readwrite");
+    const store = transaction.objectStore("pendingCapsules");
     const request = store.delete(id);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
   });

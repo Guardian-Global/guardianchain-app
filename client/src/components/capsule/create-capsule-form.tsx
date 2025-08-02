@@ -57,7 +57,7 @@ const createCapsuleFormSchema = z.object({
         type: z.enum(["link", "document", "image", "video", "other"]),
         url: z.string().url("Must be a valid URL"),
         description: z.string().min(1, "Description is required"),
-      })
+      }),
     )
     .optional(),
 });

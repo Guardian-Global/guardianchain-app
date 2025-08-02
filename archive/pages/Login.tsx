@@ -11,7 +11,7 @@ import { z } from "zod";
 // Simple login schemas
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6)
+  password: z.string().min(6),
 });
 
 const registerSchema = z.object({
@@ -19,26 +19,33 @@ const registerSchema = z.object({
   password: z.string().min(6),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  tier: z.string().default("EXPLORER")
+  tier: z.string().default("EXPLORER"),
 });
 
 const masterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
-  masterKey: z.string().min(1)
+  masterKey: z.string().min(1),
 });
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
+
   // Form states
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
-  const [registerForm, setRegisterForm] = useState({ 
-    email: "", password: "", firstName: "", lastName: "", agreedToTerms: false 
+  const [registerForm, setRegisterForm] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    agreedToTerms: false,
   });
-  const [masterForm, setMasterForm] = useState({ 
-    email: "master@guardianchain.org", password: "masterkey123", masterKey: "GUARDIAN_MASTER_2025", role: "MASTER_ADMIN" 
+  const [masterForm, setMasterForm] = useState({
+    email: "master@guardianchain.org",
+    password: "masterkey123",
+    masterKey: "GUARDIAN_MASTER_2025",
+    role: "MASTER_ADMIN",
   });
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -46,13 +53,24 @@ export default function Login() {
     try {
       const result = await login(loginForm);
       if (result.success) {
-        toast({ title: "Login successful!", description: "Welcome to GUARDIANCHAIN" });
+        toast({
+          title: "Login successful!",
+          description: "Welcome to GUARDIANCHAIN",
+        });
         setLocation(result.redirectTo || "/dashboard");
       } else {
-        toast({ title: "Login failed", description: result.message, variant: "destructive" });
+        toast({
+          title: "Login failed",
+          description: result.message,
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      toast({ title: "Error", description: "Login failed", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Login failed",
+        variant: "destructive",
+      });
     }
   };
 
@@ -61,13 +79,24 @@ export default function Login() {
     try {
       const result = await register(registerForm);
       if (result.success) {
-        toast({ title: "Registration successful!", description: "Account created successfully" });
+        toast({
+          title: "Registration successful!",
+          description: "Account created successfully",
+        });
         setLocation(result.redirectTo || "/dashboard");
       } else {
-        toast({ title: "Registration failed", description: result.message, variant: "destructive" });
+        toast({
+          title: "Registration failed",
+          description: result.message,
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      toast({ title: "Error", description: "Registration failed", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Registration failed",
+        variant: "destructive",
+      });
     }
   };
 
@@ -76,13 +105,24 @@ export default function Login() {
     try {
       const result = await masterLogin(masterForm);
       if (result.success) {
-        toast({ title: "Master login successful!", description: "Welcome, Master Admin" });
+        toast({
+          title: "Master login successful!",
+          description: "Welcome, Master Admin",
+        });
         setLocation(result.redirectTo || "/master-admin");
       } else {
-        toast({ title: "Master login failed", description: result.message, variant: "destructive" });
+        toast({
+          title: "Master login failed",
+          description: result.message,
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      toast({ title: "Error", description: "Master login failed", variant: "destructive" });
+      toast({
+        title: "Error",
+        description: "Master login failed",
+        variant: "destructive",
+      });
     }
   };
 
@@ -93,7 +133,9 @@ export default function Login() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
             GUARDIANCHAIN
           </h1>
-          <p className="text-muted-foreground mt-2">Secure Authentication Portal</p>
+          <p className="text-muted-foreground mt-2">
+            Secure Authentication Portal
+          </p>
         </div>
 
         <Card className="border-purple-500/20">
@@ -116,7 +158,12 @@ export default function Login() {
                       id="login-email"
                       type="email"
                       value={loginForm.email}
-                      onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) =>
+                        setLoginForm((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -126,7 +173,12 @@ export default function Login() {
                       id="login-password"
                       type="password"
                       value={loginForm.password}
-                      onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                      onChange={(e) =>
+                        setLoginForm((prev) => ({
+                          ...prev,
+                          password: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -144,7 +196,12 @@ export default function Login() {
                       <Input
                         id="register-firstName"
                         value={registerForm.firstName}
-                        onChange={(e) => setRegisterForm(prev => ({ ...prev, firstName: e.target.value }))}
+                        onChange={(e) =>
+                          setRegisterForm((prev) => ({
+                            ...prev,
+                            firstName: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
@@ -153,7 +210,12 @@ export default function Login() {
                       <Input
                         id="register-lastName"
                         value={registerForm.lastName}
-                        onChange={(e) => setRegisterForm(prev => ({ ...prev, lastName: e.target.value }))}
+                        onChange={(e) =>
+                          setRegisterForm((prev) => ({
+                            ...prev,
+                            lastName: e.target.value,
+                          }))
+                        }
                         required
                       />
                     </div>
@@ -164,7 +226,12 @@ export default function Login() {
                       id="register-email"
                       type="email"
                       value={registerForm.email}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) =>
+                        setRegisterForm((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -174,7 +241,12 @@ export default function Login() {
                       id="register-password"
                       type="password"
                       value={registerForm.password}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+                      onChange={(e) =>
+                        setRegisterForm((prev) => ({
+                          ...prev,
+                          password: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -183,7 +255,12 @@ export default function Login() {
                       type="checkbox"
                       id="register-terms"
                       checked={registerForm.agreedToTerms}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, agreedToTerms: e.target.checked }))}
+                      onChange={(e) =>
+                        setRegisterForm((prev) => ({
+                          ...prev,
+                          agreedToTerms: e.target.checked,
+                        }))
+                      }
                       required
                       className="rounded border-input"
                     />
@@ -208,7 +285,12 @@ export default function Login() {
                       id="master-email"
                       type="email"
                       value={masterForm.email}
-                      onChange={(e) => setMasterForm(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) =>
+                        setMasterForm((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -218,7 +300,12 @@ export default function Login() {
                       id="master-password"
                       type="password"
                       value={masterForm.password}
-                      onChange={(e) => setMasterForm(prev => ({ ...prev, password: e.target.value }))}
+                      onChange={(e) =>
+                        setMasterForm((prev) => ({
+                          ...prev,
+                          password: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
@@ -228,11 +315,20 @@ export default function Login() {
                       id="master-key"
                       type="password"
                       value={masterForm.masterKey}
-                      onChange={(e) => setMasterForm(prev => ({ ...prev, masterKey: e.target.value }))}
+                      onChange={(e) =>
+                        setMasterForm((prev) => ({
+                          ...prev,
+                          masterKey: e.target.value,
+                        }))
+                      }
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-red-600 hover:bg-red-700" disabled={isLoading}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-red-600 hover:bg-red-700"
+                    disabled={isLoading}
+                  >
                     {isLoading ? "Authenticating..." : "Master Access"}
                   </Button>
                 </form>

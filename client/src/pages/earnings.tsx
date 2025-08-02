@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Coins, TrendingUp, Award, Calendar } from "lucide-react";
@@ -6,7 +12,7 @@ import { useTierContext } from "@/context/TierContext";
 
 export default function EarningsPage() {
   const { userRole } = useTierContext();
-  
+
   const isPro = userRole === "pro" || userRole === "enterprise";
 
   if (!isPro) {
@@ -16,18 +22,25 @@ export default function EarningsPage() {
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="text-center">
               <Coins className="w-16 h-16 mx-auto text-purple-400 mb-4" />
-              <CardTitle className="text-2xl text-white">Earnings Dashboard</CardTitle>
+              <CardTitle className="text-2xl text-white">
+                Earnings Dashboard
+              </CardTitle>
               <CardDescription className="text-slate-300">
                 Track your GTT token earnings and rewards
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center space-y-6">
               <div className="p-6 bg-slate-700/30 rounded-lg border border-purple-500/20">
-                <h3 className="text-lg font-semibold text-white mb-2">Pro Feature Required</h3>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Pro Feature Required
+                </h3>
                 <p className="text-slate-300 mb-4">
                   Access detailed earnings analytics with Pro membership.
                 </p>
-                <a href="/upgrade" className="inline-block px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700">
+                <a
+                  href="/upgrade"
+                  className="inline-block px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700"
+                >
                   Upgrade to Pro
                 </a>
               </div>
@@ -49,7 +62,8 @@ export default function EarningsPage() {
               Earnings Dashboard
             </CardTitle>
             <CardDescription className="text-slate-300">
-              Track your GTT token earnings, staking rewards, and achievement bonuses
+              Track your GTT token earnings, staking rewards, and achievement
+              bonuses
             </CardDescription>
           </CardHeader>
         </Card>
@@ -65,7 +79,10 @@ export default function EarningsPage() {
                 </div>
                 <Coins className="w-8 h-8 text-purple-400" />
               </div>
-              <Badge variant="outline" className="mt-2 text-green-400 border-green-400">
+              <Badge
+                variant="outline"
+                className="mt-2 text-green-400 border-green-400"
+              >
                 +12.5% this month
               </Badge>
             </CardContent>
@@ -80,7 +97,10 @@ export default function EarningsPage() {
                 </div>
                 <TrendingUp className="w-8 h-8 text-blue-400" />
               </div>
-              <Badge variant="outline" className="mt-2 text-blue-400 border-blue-400">
+              <Badge
+                variant="outline"
+                className="mt-2 text-blue-400 border-blue-400"
+              >
                 8.5% APY
               </Badge>
             </CardContent>
@@ -95,7 +115,10 @@ export default function EarningsPage() {
                 </div>
                 <Award className="w-8 h-8 text-green-400" />
               </div>
-              <Badge variant="outline" className="mt-2 text-purple-400 border-purple-400">
+              <Badge
+                variant="outline"
+                className="mt-2 text-purple-400 border-purple-400"
+              >
                 12 referrals
               </Badge>
             </CardContent>
@@ -110,7 +133,10 @@ export default function EarningsPage() {
                 </div>
                 <Calendar className="w-8 h-8 text-orange-400" />
               </div>
-              <Badge variant="outline" className="mt-2 text-orange-400 border-orange-400">
+              <Badge
+                variant="outline"
+                className="mt-2 text-orange-400 border-orange-400"
+              >
                 +24 from last month
               </Badge>
             </CardContent>
@@ -134,7 +160,7 @@ export default function EarningsPage() {
                 </div>
                 <Progress value={62} className="h-2" />
               </div>
-              
+
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-300">Referral Target</span>
@@ -142,7 +168,7 @@ export default function EarningsPage() {
                 </div>
                 <Progress value={60} className="h-2" />
               </div>
-              
+
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-300">Staking Rewards</span>
@@ -167,37 +193,49 @@ export default function EarningsPage() {
                     <p className="text-white text-sm">Referral Bonus</p>
                     <p className="text-slate-400 text-xs">2 hours ago</p>
                   </div>
-                  <Badge variant="outline" className="text-green-400 border-green-400">
+                  <Badge
+                    variant="outline"
+                    className="text-green-400 border-green-400"
+                  >
                     +50 GTT
                   </Badge>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-white text-sm">Staking Reward</p>
                     <p className="text-slate-400 text-xs">1 day ago</p>
                   </div>
-                  <Badge variant="outline" className="text-blue-400 border-blue-400">
+                  <Badge
+                    variant="outline"
+                    className="text-blue-400 border-blue-400"
+                  >
                     +12 GTT
                   </Badge>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-white text-sm">Truth Capsule Reward</p>
                     <p className="text-slate-400 text-xs">3 days ago</p>
                   </div>
-                  <Badge variant="outline" className="text-purple-400 border-purple-400">
+                  <Badge
+                    variant="outline"
+                    className="text-purple-400 border-purple-400"
+                  >
                     +25 GTT
                   </Badge>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-white text-sm">Achievement Bonus</p>
                     <p className="text-slate-400 text-xs">1 week ago</p>
                   </div>
-                  <Badge variant="outline" className="text-orange-400 border-orange-400">
+                  <Badge
+                    variant="outline"
+                    className="text-orange-400 border-orange-400"
+                  >
                     +100 GTT
                   </Badge>
                 </div>

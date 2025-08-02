@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Music, FileText, Users, Calendar, Play, Upload, Loader2 } from "lucide-react";
+import {
+  Music,
+  FileText,
+  Users,
+  Calendar,
+  Play,
+  Upload,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -24,8 +32,21 @@ export default function MusicianCapsulePage() {
   const [message, setMessage] = useState("");
 
   const musicGenres = [
-    "Rock", "Pop", "Hip Hop", "Electronic", "Jazz", "Classical", "Country", 
-    "Folk", "Blues", "R&B", "Reggae", "Metal", "Punk", "Indie", "Other"
+    "Rock",
+    "Pop",
+    "Hip Hop",
+    "Electronic",
+    "Jazz",
+    "Classical",
+    "Country",
+    "Folk",
+    "Blues",
+    "R&B",
+    "Reggae",
+    "Metal",
+    "Punk",
+    "Indie",
+    "Other",
   ];
 
   const createMusicCapsuleMutation = useMutation({
@@ -35,7 +56,8 @@ export default function MusicianCapsulePage() {
     onSuccess: (data) => {
       toast({
         title: "Music Capsule Created",
-        description: "Your music has been documented as a verified truth capsule.",
+        description:
+          "Your music has been documented as a verified truth capsule.",
       });
       // Reset form
       setSongTitle("");
@@ -84,7 +106,7 @@ export default function MusicianCapsulePage() {
     formData.append("collaborators", collaborators.trim());
     formData.append("message", message.trim());
     formData.append("capsuleType", "MUSICIAN");
-    
+
     audioFiles.forEach((file, index) => {
       formData.append(`audio_${index}`, file);
     });
@@ -98,7 +120,8 @@ export default function MusicianCapsulePage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-white">Musician Capsule</h1>
           <p className="text-slate-400">
-            Document and verify musical works with authentic lyrics and creative truth
+            Document and verify musical works with authentic lyrics and creative
+            truth
           </p>
         </div>
 
@@ -108,14 +131,19 @@ export default function MusicianCapsulePage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Music className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Music
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Music Documentation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Song Title *</label>
+                    <label className="text-sm font-medium text-white">
+                      Song Title *
+                    </label>
                     <Input
                       value={songTitle}
                       onChange={(e) => setSongTitle(e.target.value)}
@@ -123,9 +151,11 @@ export default function MusicianCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Artist Name *</label>
+                    <label className="text-sm font-medium text-white">
+                      Artist Name *
+                    </label>
                     <Input
                       value={artistName}
                       onChange={(e) => setArtistName(e.target.value)}
@@ -137,7 +167,9 @@ export default function MusicianCapsulePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Album/EP Name</label>
+                    <label className="text-sm font-medium text-white">
+                      Album/EP Name
+                    </label>
                     <Input
                       value={albumName}
                       onChange={(e) => setAlbumName(e.target.value)}
@@ -145,9 +177,11 @@ export default function MusicianCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Genre</label>
+                    <label className="text-sm font-medium text-white">
+                      Genre
+                    </label>
                     <select
                       value={genre}
                       onChange={(e) => setGenre(e.target.value)}
@@ -161,9 +195,11 @@ export default function MusicianCapsulePage() {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Release Date</label>
+                    <label className="text-sm font-medium text-white">
+                      Release Date
+                    </label>
                     <Input
                       type="date"
                       value={releaseDate}
@@ -174,7 +210,9 @@ export default function MusicianCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Lyrics</label>
+                  <label className="text-sm font-medium text-white">
+                    Lyrics
+                  </label>
                   <Textarea
                     value={lyrics}
                     onChange={(e) => setLyrics(e.target.value)}
@@ -184,7 +222,9 @@ export default function MusicianCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Inspiration & Story</label>
+                  <label className="text-sm font-medium text-white">
+                    Inspiration & Story
+                  </label>
                   <Textarea
                     value={inspiration}
                     onChange={(e) => setInspiration(e.target.value)}
@@ -194,7 +234,9 @@ export default function MusicianCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Message & Meaning</label>
+                  <label className="text-sm font-medium text-white">
+                    Message & Meaning
+                  </label>
                   <Textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -204,7 +246,9 @@ export default function MusicianCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Collaborators & Credits</label>
+                  <label className="text-sm font-medium text-white">
+                    Collaborators & Credits
+                  </label>
                   <Textarea
                     value={collaborators}
                     onChange={(e) => setCollaborators(e.target.value)}
@@ -214,7 +258,9 @@ export default function MusicianCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Audio Files</label>
+                  <label className="text-sm font-medium text-white">
+                    Audio Files
+                  </label>
                   <div className="flex items-center space-x-2">
                     <Input
                       type="file"
@@ -259,7 +305,10 @@ export default function MusicianCapsulePage() {
             <Card className="bg-slate-800/30 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <FileText className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <FileText
+                    className="w-4 h-4"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Music Features
                 </CardTitle>
               </CardHeader>
@@ -267,25 +316,31 @@ export default function MusicianCapsulePage() {
                 <div className="flex items-start gap-2">
                   <Music className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Lyric Verification:</strong> Immutable lyric records
+                    <strong className="text-white">Lyric Verification:</strong>{" "}
+                    Immutable lyric records
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Play className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Audio Archive:</strong> Permanent music storage
+                    <strong className="text-white">Audio Archive:</strong>{" "}
+                    Permanent music storage
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Users className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Collaboration Credit:</strong> Proper attribution
+                    <strong className="text-white">
+                      Collaboration Credit:
+                    </strong>{" "}
+                    Proper attribution
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Calendar className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Release Proof:</strong> Verified creation date
+                    <strong className="text-white">Release Proof:</strong>{" "}
+                    Verified creation date
                   </div>
                 </div>
               </CardContent>
@@ -319,14 +374,21 @@ export default function MusicianCapsulePage() {
                 ].map((song, index) => (
                   <div key={index} className="p-3 bg-slate-700/30 rounded-lg">
                     <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-white text-sm">{song.title}</h4>
-                      <Badge variant="outline" className="text-purple-400 border-purple-600 text-xs">
+                      <h4 className="font-medium text-white text-sm">
+                        {song.title}
+                      </h4>
+                      <Badge
+                        variant="outline"
+                        className="text-purple-400 border-purple-600 text-xs"
+                      >
                         {song.genre}
                       </Badge>
                     </div>
                     <div className="text-xs text-slate-400">
                       <div>By: {song.artist}</div>
-                      <div>Released: {new Date(song.date).toLocaleDateString()}</div>
+                      <div>
+                        Released: {new Date(song.date).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -338,7 +400,9 @@ export default function MusicianCapsulePage() {
         {/* How It Works */}
         <Card className="bg-slate-800/30 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">How Music Capsules Work</CardTitle>
+            <CardTitle className="text-white">
+              How Music Capsules Work
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center space-y-2">
@@ -346,7 +410,9 @@ export default function MusicianCapsulePage() {
                 <Music className="w-6 h-6 text-purple-400" />
               </div>
               <h3 className="font-semibold text-white">1. Create</h3>
-              <p className="text-sm text-slate-400">Compose music with meaningful truth and message</p>
+              <p className="text-sm text-slate-400">
+                Compose music with meaningful truth and message
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -354,7 +420,9 @@ export default function MusicianCapsulePage() {
                 <FileText className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="font-semibold text-white">2. Document</h3>
-              <p className="text-sm text-slate-400">Record lyrics, audio, and creative story</p>
+              <p className="text-sm text-slate-400">
+                Record lyrics, audio, and creative story
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -362,7 +430,9 @@ export default function MusicianCapsulePage() {
                 <Users className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="font-semibold text-white">3. Verify</h3>
-              <p className="text-sm text-slate-400">Immutable timestamp and authenticity proof</p>
+              <p className="text-sm text-slate-400">
+                Immutable timestamp and authenticity proof
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -370,7 +440,9 @@ export default function MusicianCapsulePage() {
                 <Play className="w-6 h-6 text-yellow-400" />
               </div>
               <h3 className="font-semibold text-white">4. Preserve</h3>
-              <p className="text-sm text-slate-400">Permanent musical truth archive</p>
+              <p className="text-sm text-slate-400">
+                Permanent musical truth archive
+              </p>
             </div>
           </CardContent>
         </Card>

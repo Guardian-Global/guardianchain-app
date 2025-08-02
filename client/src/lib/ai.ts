@@ -31,7 +31,7 @@ export async function generateFinancialInsights() {
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error(
-      "Financial insights not configured: OpenAI API key required"
+      "Financial insights not configured: OpenAI API key required",
     );
   }
 
@@ -51,7 +51,7 @@ export async function generateFinancialInsights() {
     return data.insights;
   } catch (error) {
     throw new Error(
-      "Financial insights unavailable: " + (error as Error).message
+      "Financial insights unavailable: " + (error as Error).message,
     );
   }
 }
@@ -69,14 +69,14 @@ export async function getAIAdvisorInsights({
   const prompt = `
     You are the financial advisor for GuardianChain.
     Current GTT price: $${market?.price || 0}, 24h change: ${
-    market?.change24h || 0
-  }%
+      market?.change24h || 0
+    }%
     Treasury balance: ${treasury?.balance || 0} GTT, Monthly Revenue: $${
-    treasury?.monthlyRevenue || 0
-  }
+      treasury?.monthlyRevenue || 0
+    }
     Yield Paid: ${treasury?.yieldPaid || 0} GTT, Active Capsules: ${
-    treasury?.activeCapsules || 0
-  }
+      treasury?.activeCapsules || 0
+    }
     Provide a summary of financial health and one actionable insight.
   `;
 

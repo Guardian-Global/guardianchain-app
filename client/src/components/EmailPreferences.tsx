@@ -93,7 +93,7 @@ export default function EmailPreferences() {
   const loadPreferences = async () => {
     try {
       const response = await fetch(
-        `/api/email-preferences/${encodeURIComponent(userEmail)}`
+        `/api/email-preferences/${encodeURIComponent(userEmail)}`,
       );
       if (response.ok) {
         const text = await response.text();
@@ -108,7 +108,7 @@ export default function EmailPreferences() {
   };
 
   const updatePreferences = async (
-    newPreferences: Partial<EmailPreferences>
+    newPreferences: Partial<EmailPreferences>,
   ) => {
     setLoading(true);
     try {
@@ -120,7 +120,7 @@ export default function EmailPreferences() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedPrefs),
-        }
+        },
       );
 
       if (response.ok) {

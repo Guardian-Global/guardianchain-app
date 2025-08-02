@@ -137,7 +137,7 @@ export function registerAdminAuthRoutes(app: Express) {
         console.error("Create admin user error:", error);
         res.status(500).json({ error: "Internal server error" });
       }
-    }
+    },
   );
 
   // Update user roles (Admin+ only)
@@ -171,7 +171,7 @@ export function registerAdminAuthRoutes(app: Express) {
         console.error("Update user roles error:", error);
         res.status(500).json({ error: "Internal server error" });
       }
-    }
+    },
   );
 
   // Admin dashboard stats (Moderator+ only)
@@ -196,6 +196,6 @@ export function registerAdminAuthRoutes(app: Express) {
         console.error("Get admin stats error:", error);
         res.status(500).json({ error: "Internal server error" });
       }
-    }
+    },
   );
 }

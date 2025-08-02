@@ -60,7 +60,7 @@ export function WalletConnect() {
       });
 
       const balanceInEth = (parseInt(balance, 16) / Math.pow(10, 18)).toFixed(
-        4
+        4,
       );
 
       setWallet({
@@ -108,7 +108,7 @@ export function WalletConnect() {
           title: "Wallet Connected",
           description: `Connected to ${accounts[0].slice(
             0,
-            6
+            6,
           )}...${accounts[0].slice(-4)}`,
         });
       }

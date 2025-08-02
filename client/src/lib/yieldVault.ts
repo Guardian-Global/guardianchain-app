@@ -34,7 +34,7 @@ export interface VaultStats {
 
 export async function getUserYieldInfo(
   contract: ethers.Contract,
-  userAddress: string
+  userAddress: string,
 ): Promise<YieldInfo> {
   try {
     const [totalEarned, totalWithdrawn, claimable, lastDistributionTime] =
@@ -53,7 +53,7 @@ export async function getUserYieldInfo(
 }
 
 export async function getVaultStats(
-  contract: ethers.Contract
+  contract: ethers.Contract,
 ): Promise<VaultStats> {
   try {
     const [
@@ -78,7 +78,7 @@ export async function getVaultStats(
 }
 
 export async function claimYield(
-  contract: ethers.Contract
+  contract: ethers.Contract,
 ): Promise<ethers.TransactionResponse> {
   try {
     const tx = await contract.claimYield();
@@ -92,7 +92,7 @@ export async function claimYield(
 export async function depositYield(
   contract: ethers.Contract,
   capsuleOwner: string,
-  amount: string
+  amount: string,
 ): Promise<ethers.TransactionResponse> {
   try {
     const amountWei = ethers.parseEther(amount);
@@ -107,7 +107,7 @@ export async function depositYield(
 export async function bulkDepositYield(
   contract: ethers.Contract,
   capsuleOwners: string[],
-  amounts: string[]
+  amounts: string[],
 ): Promise<ethers.TransactionResponse> {
   try {
     const amountsWei = amounts.map((amount) => ethers.parseEther(amount));

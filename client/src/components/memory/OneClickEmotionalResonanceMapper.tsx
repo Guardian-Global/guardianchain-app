@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Heart, 
-  Smile, 
-  Zap, 
-  Star, 
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Heart,
+  Smile,
+  Zap,
+  Star,
   Brain,
   TrendingUp,
   Target,
@@ -17,8 +17,8 @@ import {
   BarChart3,
   Eye,
   ArrowRight,
-  Download
-} from 'lucide-react';
+  Download,
+} from "lucide-react";
 
 interface EmotionalData {
   emotion: string;
@@ -39,12 +39,48 @@ interface ResonanceMap {
 }
 
 const EMOTION_TYPES: EmotionalData[] = [
-  { emotion: 'Joy', intensity: 0, color: '#FFD700', icon: Smile, description: 'Happiness and contentment' },
-  { emotion: 'Love', intensity: 0, color: '#FF69B4', icon: Heart, description: 'Affection and connection' },
-  { emotion: 'Excitement', intensity: 0, color: '#FF4500', icon: Zap, description: 'Enthusiasm and energy' },
-  { emotion: 'Pride', intensity: 0, color: '#9370DB', icon: Star, description: 'Achievement and satisfaction' },
-  { emotion: 'Gratitude', intensity: 0, color: '#32CD32', icon: Sparkles, description: 'Appreciation and thankfulness' },
-  { emotion: 'Wonder', intensity: 0, color: '#00CED1', icon: Eye, description: 'Curiosity and amazement' }
+  {
+    emotion: "Joy",
+    intensity: 0,
+    color: "#FFD700",
+    icon: Smile,
+    description: "Happiness and contentment",
+  },
+  {
+    emotion: "Love",
+    intensity: 0,
+    color: "#FF69B4",
+    icon: Heart,
+    description: "Affection and connection",
+  },
+  {
+    emotion: "Excitement",
+    intensity: 0,
+    color: "#FF4500",
+    icon: Zap,
+    description: "Enthusiasm and energy",
+  },
+  {
+    emotion: "Pride",
+    intensity: 0,
+    color: "#9370DB",
+    icon: Star,
+    description: "Achievement and satisfaction",
+  },
+  {
+    emotion: "Gratitude",
+    intensity: 0,
+    color: "#32CD32",
+    icon: Sparkles,
+    description: "Appreciation and thankfulness",
+  },
+  {
+    emotion: "Wonder",
+    intensity: 0,
+    color: "#00CED1",
+    icon: Eye,
+    description: "Curiosity and amazement",
+  },
 ];
 
 const SAMPLE_CONTENT = `
@@ -69,11 +105,11 @@ export default function OneClickEmotionalResonanceMapper() {
 
     // Simulate AI analysis with realistic timing
     const analysisSteps = [
-      { delay: 500, step: 1, message: 'Parsing emotional markers...' },
-      { delay: 1000, step: 2, message: 'Analyzing sentiment patterns...' },
-      { delay: 1500, step: 3, message: 'Mapping resonance frequencies...' },
-      { delay: 2000, step: 4, message: 'Generating insights...' },
-      { delay: 2500, step: 5, message: 'Complete!' }
+      { delay: 500, step: 1, message: "Parsing emotional markers..." },
+      { delay: 1000, step: 2, message: "Analyzing sentiment patterns..." },
+      { delay: 1500, step: 3, message: "Mapping resonance frequencies..." },
+      { delay: 2000, step: 4, message: "Generating insights..." },
+      { delay: 2500, step: 5, message: "Complete!" },
     ];
 
     analysisSteps.forEach(({ delay, step, message }) => {
@@ -88,29 +124,29 @@ export default function OneClickEmotionalResonanceMapper() {
 
   const generateResonanceMap = () => {
     // Simulate AI-generated emotional analysis
-    const emotions = EMOTION_TYPES.map(emotion => ({
+    const emotions = EMOTION_TYPES.map((emotion) => ({
       ...emotion,
-      intensity: Math.floor(Math.random() * 40) + 60 // High emotional content
+      intensity: Math.floor(Math.random() * 40) + 60, // High emotional content
     }));
 
     const newMap: ResonanceMap = {
       id: Date.now().toString(),
-      title: 'Conference Presentation Memory',
+      title: "Conference Presentation Memory",
       timestamp: new Date(),
       overallScore: 87,
       emotions,
       insights: [
-        'Strong achievement-oriented emotional signature detected',
-        'High levels of social connection and validation present',
-        'Professional growth milestone with lasting positive impact',
-        'Balanced emotional complexity suggests authentic experience'
+        "Strong achievement-oriented emotional signature detected",
+        "High levels of social connection and validation present",
+        "Professional growth milestone with lasting positive impact",
+        "Balanced emotional complexity suggests authentic experience",
       ],
       suggestedActions: [
-        'Create milestone celebration capsule',
-        'Document lessons learned for mentoring others',
-        'Archive supporting materials (photos, notes, feedback)',
-        'Schedule follow-up reflection in 6 months'
-      ]
+        "Create milestone celebration capsule",
+        "Document lessons learned for mentoring others",
+        "Archive supporting materials (photos, notes, feedback)",
+        "Schedule follow-up reflection in 6 months",
+      ],
     };
 
     setCurrentMap(newMap);
@@ -136,14 +172,16 @@ export default function OneClickEmotionalResonanceMapper() {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <Progress 
-                  value={emotion.intensity} 
+                <Progress
+                  value={emotion.intensity}
                   className="flex-1 h-3"
                   style={{
-                    background: `linear-gradient(to right, ${emotion.color}22, ${emotion.color})`
+                    background: `linear-gradient(to right, ${emotion.color}22, ${emotion.color})`,
                   }}
                 />
-                <span className="text-sm text-gray-300 w-12">{emotion.intensity}%</span>
+                <span className="text-sm text-gray-300 w-12">
+                  {emotion.intensity}%
+                </span>
               </div>
             </div>
           </motion.div>
@@ -156,7 +194,7 @@ export default function OneClickEmotionalResonanceMapper() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,7 +205,8 @@ export default function OneClickEmotionalResonanceMapper() {
             <Heart className="text-pink-400" />
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Instantly analyze and visualize the emotional depth of your memories with AI-powered sentiment mapping
+            Instantly analyze and visualize the emotional depth of your memories
+            with AI-powered sentiment mapping
           </p>
         </motion.div>
 
@@ -192,12 +231,13 @@ export default function OneClickEmotionalResonanceMapper() {
                   className="w-full h-64 p-4 bg-slate-700/50 text-white rounded-lg border border-slate-600 focus:border-purple-500 focus:outline-none resize-none"
                   placeholder="Paste your memory content here for emotional analysis..."
                 />
-                
+
                 <div className="mt-4 flex justify-between items-center">
                   <div className="text-sm text-gray-400">
-                    {inputText.length} characters • {inputText.split(' ').length} words
+                    {inputText.length} characters •{" "}
+                    {inputText.split(" ").length} words
                   </div>
-                  
+
                   <Button
                     onClick={analyzeEmotionalResonance}
                     disabled={isAnalyzing || !inputText.trim()}
@@ -207,7 +247,11 @@ export default function OneClickEmotionalResonanceMapper() {
                       <>
                         <motion.div
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                         >
                           <Brain size={16} className="mr-2" />
                         </motion.div>
@@ -238,33 +282,52 @@ export default function OneClickEmotionalResonanceMapper() {
                         <div className="flex items-center gap-3">
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
                           >
                             <Brain className="text-blue-400" size={24} />
                           </motion.div>
                           <div>
-                            <h3 className="text-white font-semibold">AI Analysis in Progress</h3>
+                            <h3 className="text-white font-semibold">
+                              AI Analysis in Progress
+                            </h3>
                             <p className="text-gray-400 text-sm">
-                              {animationStep === 0 && 'Initializing emotional parser...'}
-                              {animationStep === 1 && 'Parsing emotional markers...'}
-                              {animationStep === 2 && 'Analyzing sentiment patterns...'}
-                              {animationStep === 3 && 'Mapping resonance frequencies...'}
-                              {animationStep === 4 && 'Generating insights...'}
-                              {animationStep === 5 && 'Analysis complete!'}
+                              {animationStep === 0 &&
+                                "Initializing emotional parser..."}
+                              {animationStep === 1 &&
+                                "Parsing emotional markers..."}
+                              {animationStep === 2 &&
+                                "Analyzing sentiment patterns..."}
+                              {animationStep === 3 &&
+                                "Mapping resonance frequencies..."}
+                              {animationStep === 4 && "Generating insights..."}
+                              {animationStep === 5 && "Analysis complete!"}
                             </p>
                           </div>
                         </div>
-                        
-                        <Progress value={(animationStep / 5) * 100} className="h-2" />
-                        
+
+                        <Progress
+                          value={(animationStep / 5) * 100}
+                          className="h-2"
+                        />
+
                         <div className="grid grid-cols-3 gap-2">
                           {[1, 2, 3, 4, 5].map((step) => (
                             <motion.div
                               key={step}
                               className={`h-2 rounded-full ${
-                                animationStep >= step ? 'bg-blue-500' : 'bg-gray-600'
+                                animationStep >= step
+                                  ? "bg-blue-500"
+                                  : "bg-gray-600"
                               }`}
-                              animate={animationStep >= step ? { opacity: [0.5, 1, 0.5] } : {}}
+                              animate={
+                                animationStep >= step
+                                  ? { opacity: [0.5, 1, 0.5] }
+                                  : {}
+                              }
                               transition={{ duration: 1, repeat: Infinity }}
                             />
                           ))}
@@ -298,7 +361,11 @@ export default function OneClickEmotionalResonanceMapper() {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 10,
+                        }}
                         className="text-6xl font-bold text-green-400 mb-2"
                       >
                         {currentMap.overallScore}
@@ -342,7 +409,10 @@ export default function OneClickEmotionalResonanceMapper() {
                           transition={{ delay: index * 0.1 }}
                           className="flex items-start gap-3 p-3 bg-yellow-500/10 rounded-lg"
                         >
-                          <Sparkles className="text-yellow-400 mt-0.5" size={16} />
+                          <Sparkles
+                            className="text-yellow-400 mt-0.5"
+                            size={16}
+                          />
                           <p className="text-gray-300 text-sm">{insight}</p>
                         </motion.div>
                       ))}
@@ -373,7 +443,7 @@ export default function OneClickEmotionalResonanceMapper() {
                         </motion.div>
                       ))}
                     </div>
-                    
+
                     <div className="mt-4 pt-4 border-t border-slate-600">
                       <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                         <Download size={16} className="mr-2" />
@@ -387,9 +457,12 @@ export default function OneClickEmotionalResonanceMapper() {
               <Card className="bg-slate-800/80 backdrop-blur-sm border-gray-500/30">
                 <CardContent className="pt-12 pb-12 text-center">
                   <Brain className="text-gray-400 mx-auto mb-4" size={48} />
-                  <h3 className="text-white text-lg font-semibold mb-2">Ready to Analyze</h3>
+                  <h3 className="text-white text-lg font-semibold mb-2">
+                    Ready to Analyze
+                  </h3>
                   <p className="text-gray-400">
-                    Enter your memory content and click "Map Emotions" to generate an emotional resonance analysis
+                    Enter your memory content and click "Map Emotions" to
+                    generate an emotional resonance analysis
                   </p>
                 </CardContent>
               </Card>

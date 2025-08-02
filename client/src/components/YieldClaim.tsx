@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  DollarSign, 
-  TrendingUp, 
-  Clock, 
-  CheckCircle, 
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  DollarSign,
+  TrendingUp,
+  Clock,
+  CheckCircle,
   AlertCircle,
   Coins,
-  Zap
-} from 'lucide-react';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+  Zap,
+} from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface YieldClaimProps {
   availableYield: number;
@@ -27,29 +27,29 @@ interface YieldClaimProps {
   }>;
 }
 
-export default function YieldClaim({ 
-  availableYield, 
+export default function YieldClaim({
+  availableYield,
   totalEarned = 0,
   nextClaimTime,
-  claimHistory = []
+  claimHistory = [],
 }: YieldClaimProps) {
   const [message, setMessage] = useState<string | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const claimMutation = useMutation({
-    mutationFn: () => apiRequest('POST', '/api/yield/claim'),
+    mutationFn: () => apiRequest("POST", "/api/yield/claim"),
     onSuccess: (data) => {
       setMessage(`Successfully claimed ${availableYield} GTT tokens!`);
       toast({
         title: "Yield Claimed Successfully",
         description: `${availableYield} GTT tokens have been added to your wallet`,
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/yield'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/balance'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/yield"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/balance"] });
     },
     onError: (error: any) => {
-      setMessage('Failed to claim yield. Please try again.');
+      setMessage("Failed to claim yield. Please try again.");
       toast({
         title: "Claim Failed",
         description: error.message || "Unable to process yield claim",
@@ -66,12 +66,12 @@ export default function YieldClaim({
     const now = new Date();
     const target = new Date(timeString);
     const diff = target.getTime() - now.getTime();
-    
+
     if (diff <= 0) return null;
-    
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     return `${hours}h ${minutes}m`;
   };
 
@@ -88,7 +88,7 @@ export default function YieldClaim({
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Main Claim Section */}
         <div className="bg-slate-700/50 rounded-lg p-4">
@@ -102,7 +102,7 @@ export default function YieldClaim({
                 {availableYield.toFixed(6)} GTT
               </p>
             </div>
-            
+
             <div className="text-right">
               <p className="text-sm text-slate-400">Total Earned</p>
               <p className="text-lg font-semibold text-green-400">
@@ -111,12 +111,13 @@ export default function YieldClaim({
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={() => claimMutation.mutate()}
             disabled={!canClaim}
-            className={`w-full ${canClaim 
-              ? 'bg-green-600 hover:bg-green-700' 
-              : 'bg-slate-600 cursor-not-allowed'
+            className={`w-full ${
+              canClaim
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-slate-600 cursor-not-allowed"
             }`}
           >
             {claimMutation.isPending ? (
@@ -143,13 +144,15 @@ export default function YieldClaim({
           </Button>
 
           {message && (
-            <div className={`mt-3 p-3 rounded-lg ${
-              message.includes('Successfully') 
-                ? 'bg-green-600/20 border border-green-600/30 text-green-400' 
-                : 'bg-red-600/20 border border-red-600/30 text-red-400'
-            }`}>
+            <div
+              className={`mt-3 p-3 rounded-lg ${
+                message.includes("Successfully")
+                  ? "bg-green-600/20 border border-green-600/30 text-green-400"
+                  : "bg-red-600/20 border border-red-600/30 text-red-400"
+              }`}
+            >
               <div className="flex items-center">
-                {message.includes('Successfully') ? (
+                {message.includes("Successfully") ? (
                   <CheckCircle className="w-4 h-4 mr-2" />
                 ) : (
                   <AlertCircle className="w-4 h-4 mr-2" />
@@ -164,10 +167,12 @@ export default function YieldClaim({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-slate-400">Yield Progress</span>
-            <span className="text-slate-300">{((availableYield / 10) * 100).toFixed(1)}%</span>
+            <span className="text-slate-300">
+              {((availableYield / 10) * 100).toFixed(1)}%
+            </span>
           </div>
-          <Progress 
-            value={(availableYield / 10) * 100} 
+          <Progress
+            value={(availableYield / 10) * 100}
             className="bg-slate-700"
           />
           <p className="text-xs text-slate-500">
@@ -184,8 +189,13 @@ export default function YieldClaim({
             </h4>
             <div className="space-y-1 max-h-32 overflow-y-auto">
               {claimHistory.slice(0, 5).map((claim, i) => (
-                <div key={i} className="flex justify-between items-center text-xs bg-slate-700/30 rounded p-2">
-                  <span className="text-green-400">+{claim.amount.toFixed(4)} GTT</span>
+                <div
+                  key={i}
+                  className="flex justify-between items-center text-xs bg-slate-700/30 rounded p-2"
+                >
+                  <span className="text-green-400">
+                    +{claim.amount.toFixed(4)} GTT
+                  </span>
                   <span className="text-slate-500">
                     {new Date(claim.timestamp).toLocaleDateString()}
                   </span>

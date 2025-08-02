@@ -1,9 +1,9 @@
-import { create } from 'ipfs-http-client';
-import { randomUUID } from 'crypto';
+import { create } from "ipfs-http-client";
+import { randomUUID } from "crypto";
 
 // IPFS Configuration
-const IPFS_API_URL = process.env.IPFS_API_URL || 'https://ipfs.infura.io:5001';
-const IPFS_GATEWAY = process.env.IPFS_GATEWAY || 'https://ipfs.io/ipfs/';
+const IPFS_API_URL = process.env.IPFS_API_URL || "https://ipfs.infura.io:5001";
+const IPFS_GATEWAY = process.env.IPFS_GATEWAY || "https://ipfs.io/ipfs/";
 
 export interface IPFSMetadata {
   id: string;
@@ -37,13 +37,16 @@ export class IPFSService {
       this.client = create({
         url: IPFS_API_URL,
         headers: {
-          authorization: process.env.IPFS_PROJECT_SECRET 
-            ? `Basic ${Buffer.from(`${process.env.IPFS_PROJECT_ID}:${process.env.IPFS_PROJECT_SECRET}`).toString('base64')}`
-            : undefined
-        }
+          authorization: process.env.IPFS_PROJECT_SECRET
+            ? `Basic ${Buffer.from(`${process.env.IPFS_PROJECT_ID}:${process.env.IPFS_PROJECT_SECRET}`).toString("base64")}`
+            : undefined,
+        },
       });
     } catch (error) {
-      console.warn('⚠️ IPFS client initialization failed, using mock mode:', error.message);
+      console.warn(
+        "⚠️ IPFS client initialization failed, using mock mode:",
+        error.message,
+      );
       this.client = null;
     }
   }
@@ -60,19 +63,19 @@ export class IPFSService {
 
       const result = await this.client.add(buffer, {
         pin: true,
-        cidVersion: 1
+        cidVersion: 1,
       });
 
-      console.log('📦 IPFS Upload successful:', result.cid.toString());
-      
+      console.log("📦 IPFS Upload successful:", result.cid.toString());
+
       return {
         hash: result.cid.toString(),
         url: `${IPFS_GATEWAY}${result.cid.toString()}`,
         size: result.size,
-        pinned: true
+        pinned: true,
       };
     } catch (error) {
-      console.error('❌ IPFS upload failed:', error);
+      console.error("❌ IPFS upload failed:", error);
       throw new Error(`IPFS upload failed: ${error.message}`);
     }
   }
@@ -88,14 +91,14 @@ export class IPFSService {
       for await (const chunk of this.client.cat(hash)) {
         chunks.push(chunk);
       }
-      
+
       const content = Buffer.concat(chunks).toString();
       const metadata = JSON.parse(content);
-      
-      console.log('📦 IPFS Retrieval successful for hash:', hash);
+
+      console.log("📦 IPFS Retrieval successful for hash:", hash);
       return metadata;
     } catch (error) {
-      console.error('❌ IPFS retrieval failed:', error);
+      console.error("❌ IPFS retrieval failed:", error);
       return null;
     }
   }
@@ -104,7 +107,10 @@ export class IPFSService {
   async sealCapsule(metadata: IPFSMetadata): Promise<IPFSMetadata> {
     const sealTimestamp = new Date().toISOString();
     const contentHash = this.generateContentHash(metadata.content);
-    const verificationHash = this.generateVerificationHash(metadata, sealTimestamp);
+    const verificationHash = this.generateVerificationHash(
+      metadata,
+      sealTimestamp,
+    );
 
     const sealedMetadata: IPFSMetadata = {
       ...metadata,
@@ -112,27 +118,30 @@ export class IPFSService {
       sealData: {
         sealHash: contentHash,
         sealTimestamp,
-        verificationHash
-      }
+        verificationHash,
+      },
     };
 
-    console.log('🔒 Capsule sealed with verification hash:', verificationHash.slice(0, 16) + '...');
+    console.log(
+      "🔒 Capsule sealed with verification hash:",
+      verificationHash.slice(0, 16) + "...",
+    );
     return sealedMetadata;
   }
 
   // Pin content to IPFS for long-term storage
   async pinContent(hash: string): Promise<boolean> {
     if (!this.client) {
-      console.log('📌 Mock pinning hash:', hash);
+      console.log("📌 Mock pinning hash:", hash);
       return true;
     }
 
     try {
       await this.client.pin.add(hash);
-      console.log('📌 Content pinned successfully:', hash);
+      console.log("📌 Content pinned successfully:", hash);
       return true;
     } catch (error) {
-      console.error('❌ Pinning failed:', error);
+      console.error("❌ Pinning failed:", error);
       return false;
     }
   }
@@ -140,46 +149,52 @@ export class IPFSService {
   // Generate content verification hashes
   private generateContentHash(content: string): string {
     // In production, use actual cryptographic hashing
-    return 'sha256:' + Buffer.from(content).toString('base64').slice(0, 32);
+    return "sha256:" + Buffer.from(content).toString("base64").slice(0, 32);
   }
 
-  private generateVerificationHash(metadata: IPFSMetadata, timestamp: string): string {
+  private generateVerificationHash(
+    metadata: IPFSMetadata,
+    timestamp: string,
+  ): string {
     const verificationString = `${metadata.id}:${metadata.author}:${timestamp}:${metadata.content}`;
-    return 'verify:' + Buffer.from(verificationString).toString('base64').slice(0, 32);
+    return (
+      "verify:" +
+      Buffer.from(verificationString).toString("base64").slice(0, 32)
+    );
   }
 
   // Mock implementations for development
   private async mockUpload(metadata: IPFSMetadata): Promise<IPFSUploadResult> {
-    const mockHash = `Qm${randomUUID().replace(/-/g, '').slice(0, 44)}`;
-    console.log('🔧 Mock IPFS upload:', mockHash);
-    
+    const mockHash = `Qm${randomUUID().replace(/-/g, "").slice(0, 44)}`;
+    console.log("🔧 Mock IPFS upload:", mockHash);
+
     return {
       hash: mockHash,
       url: `${IPFS_GATEWAY}${mockHash}`,
       size: JSON.stringify(metadata).length,
-      pinned: true
+      pinned: true,
     };
   }
 
   private async mockRetrieve(hash: string): Promise<IPFSMetadata | null> {
-    console.log('🔧 Mock IPFS retrieval for:', hash);
-    
+    console.log("🔧 Mock IPFS retrieval for:", hash);
+
     // Return mock data for testing
     return {
-      id: 'mock_capsule_' + hash.slice(-8),
-      title: 'Mock Capsule from IPFS',
-      content: 'This is mock content retrieved from IPFS hash: ' + hash,
-      contentType: 'text/plain',
+      id: "mock_capsule_" + hash.slice(-8),
+      title: "Mock Capsule from IPFS",
+      content: "This is mock content retrieved from IPFS hash: " + hash,
+      contentType: "text/plain",
       griefTier: 3,
-      author: '0x1234567890abcdef1234567890abcdef12345678',
+      author: "0x1234567890abcdef1234567890abcdef12345678",
       timestamp: new Date().toISOString(),
-      tags: ['mock', 'ipfs', 'test'],
+      tags: ["mock", "ipfs", "test"],
       sealed: true,
       sealData: {
-        sealHash: 'sha256:' + hash.slice(0, 32),
+        sealHash: "sha256:" + hash.slice(0, 32),
         sealTimestamp: new Date().toISOString(),
-        verificationHash: 'verify:' + hash.slice(-32)
-      }
+        verificationHash: "verify:" + hash.slice(-32),
+      },
     };
   }
 
@@ -191,15 +206,19 @@ export class IPFSService {
 
     const currentHash = this.generateContentHash(metadata.content);
     const expectedHash = metadata.sealData.sealHash;
-    
+
     const isValid = currentHash === expectedHash;
-    console.log('🔍 Capsule validation:', isValid ? 'PASSED' : 'FAILED');
-    
+    console.log("🔍 Capsule validation:", isValid ? "PASSED" : "FAILED");
+
     return isValid;
   }
 
   // Get IPFS node status
-  async getNodeStatus(): Promise<{ online: boolean; peers: number; version?: string }> {
+  async getNodeStatus(): Promise<{
+    online: boolean;
+    peers: number;
+    version?: string;
+  }> {
     if (!this.client) {
       return { online: false, peers: 0 };
     }
@@ -207,11 +226,11 @@ export class IPFSService {
     try {
       const version = await this.client.version();
       const swarm = await this.client.swarm.peers();
-      
+
       return {
         online: true,
         peers: swarm.length,
-        version: version.version
+        version: version.version,
       };
     } catch (error) {
       return { online: false, peers: 0 };

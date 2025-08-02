@@ -1,5 +1,5 @@
-import React from 'react';
-import { TechnologicalLegacyCapsule } from '@/components/legacy/TechnologicalLegacyCapsule';
+import React from "react";
+import { TechnologicalLegacyCapsule } from "@/components/legacy/TechnologicalLegacyCapsule";
 
 export default function TechnologicalLegacyPage() {
   return (

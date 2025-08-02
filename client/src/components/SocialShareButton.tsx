@@ -16,11 +16,11 @@ interface SocialShareButtonProps {
   hashtags?: string[];
 }
 
-export function SocialShareButton({ 
-  url, 
-  title, 
+export function SocialShareButton({
+  url,
+  title,
   description = "Verified truth on GUARDIANCHAIN - the future of information integrity",
-  hashtags = ["GUARDIANCHAIN", "TruthVerification", "Web3"]
+  hashtags = ["GUARDIANCHAIN", "TruthVerification", "Web3"],
 }: SocialShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
@@ -28,7 +28,7 @@ export function SocialShareButton({
     url: encodeURIComponent(url),
     title: encodeURIComponent(title),
     description: encodeURIComponent(description),
-    hashtags: hashtags.join(',')
+    hashtags: hashtags.join(","),
   };
 
   const shareLinks = {
@@ -43,12 +43,12 @@ export function SocialShareButton({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
+      console.error("Failed to copy: ", err);
     }
   };
 
   const openShare = (platform: keyof typeof shareLinks) => {
-    window.open(shareLinks[platform], '_blank', 'width=600,height=400');
+    window.open(shareLinks[platform], "_blank", "width=600,height=400");
   };
 
   return (
@@ -60,15 +60,24 @@ export function SocialShareButton({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={() => openShare('twitter')} className="cursor-pointer">
+        <DropdownMenuItem
+          onClick={() => openShare("twitter")}
+          className="cursor-pointer"
+        >
           <Twitter className="mr-2 h-4 w-4 text-blue-400" />
           <span>Share on Twitter</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => openShare('facebook')} className="cursor-pointer">
+        <DropdownMenuItem
+          onClick={() => openShare("facebook")}
+          className="cursor-pointer"
+        >
           <Facebook className="mr-2 h-4 w-4 text-blue-600" />
           <span>Share on Facebook</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => openShare('linkedin')} className="cursor-pointer">
+        <DropdownMenuItem
+          onClick={() => openShare("linkedin")}
+          className="cursor-pointer"
+        >
           <Linkedin className="mr-2 h-4 w-4 text-blue-700" />
           <span>Share on LinkedIn</span>
         </DropdownMenuItem>
@@ -84,7 +93,7 @@ export function SocialShareButton({
               <Copy className="mr-2 h-4 w-4" />
             )}
           </motion.div>
-          <span>{copied ? 'Copied!' : 'Copy Link'}</span>
+          <span>{copied ? "Copied!" : "Copy Link"}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

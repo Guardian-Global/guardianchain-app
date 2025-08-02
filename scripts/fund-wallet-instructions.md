@@ -4,22 +4,25 @@
 
 **Deployer Wallet**: `0x8c7C0A644Cc4C72EBD55b24b43c1290e90fF0a73`  
 **Required Amount**: 0.02 MATIC (~$0.02 USD)  
-**Current Balance**: 0.0 MATIC  
+**Current Balance**: 0.0 MATIC
 
 ## FASTEST FUNDING OPTIONS
 
 ### Option 1: Direct MATIC Transfer (RECOMMENDED)
+
 1. **From Another Wallet**: Send 0.1 MATIC directly to deployer wallet
 2. **Time**: 1-2 minutes
 3. **Cost**: ~$0.10 USD (includes buffer for multiple deployments)
 
 ### Option 2: Polygon Bridge
+
 1. **Go to**: https://wallet.polygon.technology/bridge
 2. **Bridge**: ETH/USDC from Ethereum to Polygon
 3. **Swap**: Convert to MATIC on Polygon
 4. **Time**: 10-20 minutes
 
 ### Option 3: CEX Purchase & Withdrawal
+
 1. **Buy MATIC** on Coinbase/Binance/KuCoin
 2. **Withdraw** to deployer wallet address
 3. **Time**: 5-30 minutes (depends on exchange)
@@ -42,7 +45,7 @@ npx hardhat run scripts/deploy-simple.cjs --network polygon
 ## POST-DEPLOYMENT TASKS
 
 1. **Contract Verification**: Submit to PolygonScan
-2. **Liquidity Pool**: Create initial DEX liquidity  
+2. **Liquidity Pool**: Create initial DEX liquidity
 3. **Token Listings**: Submit to CoinGecko/CoinMarketCap
 4. **Marketing Launch**: Announce mainnet deployment
 

@@ -41,7 +41,7 @@ router.get("/api/compliance/score", async (req: Request, res: Response) => {
   const categoryScores = Object.values(complianceMetrics).map(
     (category) =>
       Object.values(category).reduce((sum, score) => sum + score, 0) /
-      Object.values(category).length
+      Object.values(category).length,
   );
 
   const overallScore =
@@ -105,12 +105,12 @@ router.get("/api/compliance/readiness", async (req: Request, res: Response) => {
 
   const totalChecks = Object.values(checks).reduce(
     (sum, category) => sum + Object.keys(category).length,
-    0
+    0,
   );
 
   const passedChecks = Object.values(checks).reduce(
     (sum, category) => sum + Object.values(category).filter(Boolean).length,
-    0
+    0,
   );
 
   const completionPercentage = Math.round((passedChecks / totalChecks) * 100);

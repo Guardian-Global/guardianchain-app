@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Bot, Code, Zap, Shield, Globe, TrendingUp, Copy, Check } from 'lucide-react';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Bot,
+  Code,
+  Zap,
+  Shield,
+  Globe,
+  TrendingUp,
+  Copy,
+  Check,
+} from "lucide-react";
 
 export function TradingBotAPI() {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState("");
 
   const copyToClipboard = (code: string, id: string) => {
     navigator.clipboard.writeText(code);
@@ -147,41 +156,41 @@ class GTTTradingBot:
 
   const apiEndpoints = [
     {
-      method: 'GET',
-      endpoint: '/market/gtt',
-      description: 'Real-time GTT price, volume, and market data',
-      rateLimit: '10/second'
+      method: "GET",
+      endpoint: "/market/gtt",
+      description: "Real-time GTT price, volume, and market data",
+      rateLimit: "10/second",
     },
     {
-      method: 'GET',
-      endpoint: '/orderbook/gtt',
-      description: 'Order book depth with bid/ask levels',
-      rateLimit: '5/second'
+      method: "GET",
+      endpoint: "/orderbook/gtt",
+      description: "Order book depth with bid/ask levels",
+      rateLimit: "5/second",
     },
     {
-      method: 'POST',
-      endpoint: '/orders',
-      description: 'Place buy/sell orders',
-      rateLimit: '100/minute'
+      method: "POST",
+      endpoint: "/orders",
+      description: "Place buy/sell orders",
+      rateLimit: "100/minute",
     },
     {
-      method: 'GET',
-      endpoint: '/orders/history',
-      description: 'Order history and trade execution data',
-      rateLimit: '10/minute'
+      method: "GET",
+      endpoint: "/orders/history",
+      description: "Order history and trade execution data",
+      rateLimit: "10/minute",
     },
     {
-      method: 'GET',
-      endpoint: '/whale/alerts',
-      description: 'Large transaction alerts and whale activity',
-      rateLimit: '20/minute'
+      method: "GET",
+      endpoint: "/whale/alerts",
+      description: "Large transaction alerts and whale activity",
+      rateLimit: "20/minute",
     },
     {
-      method: 'GET',
-      endpoint: '/analytics/momentum',
-      description: 'Market momentum and sentiment indicators',
-      rateLimit: '5/minute'
-    }
+      method: "GET",
+      endpoint: "/analytics/momentum",
+      description: "Market momentum and sentiment indicators",
+      rateLimit: "5/minute",
+    },
   ];
 
   return (
@@ -191,12 +200,16 @@ class GTTTradingBot:
           <CardTitle className="flex items-center gap-2 text-white">
             <Bot className="h-5 w-5 text-blue-400" />
             Trading Bot API Integration
-            <Badge variant="outline" className="text-green-400 border-green-400">
+            <Badge
+              variant="outline"
+              className="text-green-400 border-green-400"
+            >
               ENTERPRISE
             </Badge>
           </CardTitle>
           <p className="text-slate-400">
-            High-performance APIs for algorithmic trading, market making, and automated strategies
+            High-performance APIs for algorithmic trading, market making, and
+            automated strategies
           </p>
         </CardHeader>
         <CardContent>
@@ -229,14 +242,20 @@ class GTTTradingBot:
             <TabsContent value="rest" className="mt-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-white">REST API Integration</h3>
+                  <h3 className="text-lg font-medium text-white">
+                    REST API Integration
+                  </h3>
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyToClipboard(restAPIExample, 'rest')}
+                    onClick={() => copyToClipboard(restAPIExample, "rest")}
                     className="flex items-center gap-2"
                   >
-                    {copiedCode === 'rest' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copiedCode === "rest" ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
                     Copy Code
                   </Button>
                 </div>
@@ -249,14 +268,22 @@ class GTTTradingBot:
             <TabsContent value="websocket" className="mt-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-white">Real-time WebSocket Feed</h3>
+                  <h3 className="text-lg font-medium text-white">
+                    Real-time WebSocket Feed
+                  </h3>
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyToClipboard(websocketExample, 'websocket')}
+                    onClick={() =>
+                      copyToClipboard(websocketExample, "websocket")
+                    }
                     className="flex items-center gap-2"
                   >
-                    {copiedCode === 'websocket' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copiedCode === "websocket" ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
                     Copy Code
                   </Button>
                 </div>
@@ -269,14 +296,20 @@ class GTTTradingBot:
             <TabsContent value="python" className="mt-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-white">Python Trading Bot</h3>
+                  <h3 className="text-lg font-medium text-white">
+                    Python Trading Bot
+                  </h3>
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => copyToClipboard(pythonExample, 'python')}
+                    onClick={() => copyToClipboard(pythonExample, "python")}
                     className="flex items-center gap-2"
                   >
-                    {copiedCode === 'python' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    {copiedCode === "python" ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
                     Copy Code
                   </Button>
                 </div>
@@ -288,21 +321,31 @@ class GTTTradingBot:
 
             <TabsContent value="endpoints" className="mt-4">
               <div className="space-y-3">
-                <h3 className="text-lg font-medium text-white mb-4">Available API Endpoints</h3>
+                <h3 className="text-lg font-medium text-white mb-4">
+                  Available API Endpoints
+                </h3>
                 {apiEndpoints.map((endpoint, index) => (
                   <div key={index} className="p-4 bg-slate-800 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-3">
-                        <Badge variant={endpoint.method === 'GET' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            endpoint.method === "GET" ? "default" : "secondary"
+                          }
+                        >
                           {endpoint.method}
                         </Badge>
-                        <code className="text-blue-400 font-mono">{endpoint.endpoint}</code>
+                        <code className="text-blue-400 font-mono">
+                          {endpoint.endpoint}
+                        </code>
                       </div>
                       <Badge variant="outline" className="text-xs">
                         {endpoint.rateLimit}
                       </Badge>
                     </div>
-                    <p className="text-slate-400 text-sm">{endpoint.description}</p>
+                    <p className="text-slate-400 text-sm">
+                      {endpoint.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -315,8 +358,9 @@ class GTTTradingBot:
               <span className="text-blue-400 font-medium">Get API Access</span>
             </div>
             <p className="text-sm text-slate-300 mb-3">
-              Enterprise API access includes advanced features like smart order routing, 
-              cross-exchange arbitrage, and institutional-grade market data.
+              Enterprise API access includes advanced features like smart order
+              routing, cross-exchange arbitrage, and institutional-grade market
+              data.
             </p>
             <div className="flex items-center gap-3">
               <Input

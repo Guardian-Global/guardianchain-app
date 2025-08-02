@@ -2,17 +2,17 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Plus, 
-  Zap, 
-  TrendingUp, 
-  Shield, 
+import {
+  Plus,
+  Zap,
+  TrendingUp,
+  Shield,
   Users,
   Bell,
   Settings,
   Search,
   Bookmark,
-  Upload
+  Upload,
 } from "lucide-react";
 
 interface QuickAction {
@@ -26,11 +26,11 @@ interface QuickAction {
 }
 
 const tierHierarchy = {
-  'guest': 0,
-  'member': 1,
-  'moderator': 2,
-  'admin': 3,
-  'dao-owner': 4
+  guest: 0,
+  member: 1,
+  moderator: 2,
+  admin: 3,
+  "dao-owner": 4,
 };
 
 const quickActions: QuickAction[] = [
@@ -38,56 +38,57 @@ const quickActions: QuickAction[] = [
     id: "create-capsule",
     label: "Create Capsule",
     icon: Plus,
-    action: () => window.location.href = "/create",
+    action: () => (window.location.href = "/create"),
     roles: ["member", "moderator", "admin", "dao-owner"],
-    color: "bg-blue-600 hover:bg-blue-700"
+    color: "bg-blue-600 hover:bg-blue-700",
   },
   {
     id: "ai-boost",
     label: "AI Boost",
     icon: Zap,
-    action: () => window.location.href = "/ai-advisor",
+    action: () => (window.location.href = "/ai-advisor"),
     roles: ["member", "moderator", "admin", "dao-owner"],
     badge: "NEW",
-    color: "bg-purple-600 hover:bg-purple-700"
+    color: "bg-purple-600 hover:bg-purple-700",
   },
   {
     id: "stake-gtt",
     label: "Stake GTT",
     icon: TrendingUp,
-    action: () => window.location.href = "/staking",
+    action: () => (window.location.href = "/staking"),
     roles: ["member", "moderator", "admin", "dao-owner"],
-    color: "bg-green-600 hover:bg-green-700"
+    color: "bg-green-600 hover:bg-green-700",
   },
   {
     id: "validator-tools",
     label: "Validator",
     icon: Shield,
-    action: () => window.location.href = "/validator",
+    action: () => (window.location.href = "/validator"),
     roles: ["moderator", "admin", "dao-owner"],
     badge: "MOD+",
-    color: "bg-red-600 hover:bg-red-700"
+    color: "bg-red-600 hover:bg-red-700",
   },
   {
     id: "governance",
     label: "DAO Vote",
     icon: Users,
-    action: () => window.location.href = "/dao",
+    action: () => (window.location.href = "/dao"),
     roles: ["dao-owner"],
     badge: "DAO",
-    color: "bg-yellow-600 hover:bg-yellow-700"
-  }
+    color: "bg-yellow-600 hover:bg-yellow-700",
+  },
 ];
 
 const QuickActions = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuth();
-  
-  const currentTier = (user as any)?.tier?.toLowerCase() || 'guest';
-  const currentTierLevel = tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
 
-  const availableActions = quickActions.filter(action => {
-    return action.roles.some(role => {
+  const currentTier = (user as any)?.tier?.toLowerCase() || "guest";
+  const currentTierLevel =
+    tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
+
+  const availableActions = quickActions.filter((action) => {
+    return action.roles.some((role) => {
       const roleLevel = tierHierarchy[role as keyof typeof tierHierarchy] ?? 0;
       return currentTierLevel >= roleLevel;
     });
@@ -113,8 +114,8 @@ const QuickActions = () => {
                   <Icon className="h-4 w-4 mr-2" />
                   {action.label}
                   {action.badge && (
-                    <Badge 
-                      variant="secondary" 
+                    <Badge
+                      variant="secondary"
                       className="ml-2 text-xs bg-white text-black"
                     >
                       {action.badge}
@@ -133,9 +134,9 @@ const QuickActions = () => {
         <Button
           onClick={() => setIsExpanded(!isExpanded)}
           className={`w-14 h-14 rounded-full shadow-lg transition-all duration-300 ${
-            isExpanded 
-              ? 'bg-red-600 hover:bg-red-700 rotate-45' 
-              : 'bg-blue-600 hover:bg-blue-700'
+            isExpanded
+              ? "bg-red-600 hover:bg-red-700 rotate-45"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
           <Plus className="h-6 w-6" />

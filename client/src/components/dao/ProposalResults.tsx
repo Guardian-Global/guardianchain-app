@@ -2,7 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle, XCircle, MinusCircle, TrendingUp, Users, Award } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  MinusCircle,
+  TrendingUp,
+  Users,
+  Award,
+} from "lucide-react";
 
 interface VoteResults {
   title: string;
@@ -22,7 +29,11 @@ interface ProposalResultsProps {
 }
 
 export default function ProposalResults({ proposalId }: ProposalResultsProps) {
-  const { data: results, isLoading, error } = useQuery<VoteResults>({
+  const {
+    data: results,
+    isLoading,
+    error,
+  } = useQuery<VoteResults>({
     queryKey: [`/api/dao/results/${proposalId}`],
   });
 
@@ -49,7 +60,9 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
       <Card className="bg-brand-secondary border-brand-surface">
         <CardContent className="p-8 text-center">
           <XCircle className="w-12 h-12 text-brand-danger mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-brand-light mb-2">Failed to Load Results</h3>
+          <h3 className="text-lg font-medium text-brand-light mb-2">
+            Failed to Load Results
+          </h3>
           <p className="text-brand-light/60">
             Unable to fetch voting results for this proposal.
           </p>
@@ -63,7 +76,9 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
       <Card className="bg-brand-secondary border-brand-surface">
         <CardContent className="p-8 text-center">
           <MinusCircle className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-brand-light mb-2">No Results Available</h3>
+          <h3 className="text-lg font-medium text-brand-light mb-2">
+            No Results Available
+          </h3>
           <p className="text-brand-light/60">
             Voting results are not yet available for this proposal.
           </p>
@@ -74,11 +89,11 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Passed':
+      case "Passed":
         return <CheckCircle className="w-6 h-6 text-brand-accent" />;
-      case 'Accepted':
+      case "Accepted":
         return <CheckCircle className="w-6 h-6 text-brand-primary" />;
-      case 'Rejected':
+      case "Rejected":
         return <XCircle className="w-6 h-6 text-brand-danger" />;
       default:
         return <MinusCircle className="w-6 h-6 text-brand-light/60" />;
@@ -87,14 +102,14 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Passed':
-        return 'bg-brand-accent text-white';
-      case 'Accepted':
-        return 'bg-brand-primary text-white';
-      case 'Rejected':
-        return 'bg-brand-danger text-white';
+      case "Passed":
+        return "bg-brand-accent text-white";
+      case "Accepted":
+        return "bg-brand-primary text-white";
+      case "Rejected":
+        return "bg-brand-danger text-white";
       default:
-        return 'bg-brand-surface text-brand-light';
+        return "bg-brand-surface text-brand-light";
     }
   };
 
@@ -128,27 +143,43 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
         <Card className="bg-brand-secondary border-brand-surface shadow-card">
           <CardContent className="p-6 text-center">
             <CheckCircle className="w-8 h-8 text-brand-accent mx-auto mb-3" />
-            <div className="text-2xl font-bold text-brand-light mb-1">{results.support}</div>
-            <div className="text-sm text-brand-light/60 mb-2">Support Votes</div>
-            <div className="text-lg font-semibold text-brand-accent">{results.supportPct}%</div>
+            <div className="text-2xl font-bold text-brand-light mb-1">
+              {results.support}
+            </div>
+            <div className="text-sm text-brand-light/60 mb-2">
+              Support Votes
+            </div>
+            <div className="text-lg font-semibold text-brand-accent">
+              {results.supportPct}%
+            </div>
           </CardContent>
         </Card>
 
         <Card className="bg-brand-secondary border-brand-surface shadow-card">
           <CardContent className="p-6 text-center">
             <XCircle className="w-8 h-8 text-brand-danger mx-auto mb-3" />
-            <div className="text-2xl font-bold text-brand-light mb-1">{results.reject}</div>
+            <div className="text-2xl font-bold text-brand-light mb-1">
+              {results.reject}
+            </div>
             <div className="text-sm text-brand-light/60 mb-2">Reject Votes</div>
-            <div className="text-lg font-semibold text-brand-danger">{results.rejectPct}%</div>
+            <div className="text-lg font-semibold text-brand-danger">
+              {results.rejectPct}%
+            </div>
           </CardContent>
         </Card>
 
         <Card className="bg-brand-secondary border-brand-surface shadow-card">
           <CardContent className="p-6 text-center">
             <MinusCircle className="w-8 h-8 text-brand-light/60 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-brand-light mb-1">{results.abstain}</div>
-            <div className="text-sm text-brand-light/60 mb-2">Abstain Votes</div>
-            <div className="text-lg font-semibold text-brand-light/60">{results.abstainPct}%</div>
+            <div className="text-2xl font-bold text-brand-light mb-1">
+              {results.abstain}
+            </div>
+            <div className="text-sm text-brand-light/60 mb-2">
+              Abstain Votes
+            </div>
+            <div className="text-lg font-semibold text-brand-light/60">
+              {results.abstainPct}%
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -171,8 +202,11 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
               </div>
               <span className="text-brand-light/60">{results.supportPct}%</span>
             </div>
-            <Progress value={parseFloat(results.supportPct)} className="h-3 bg-brand-surface">
-              <div 
+            <Progress
+              value={parseFloat(results.supportPct)}
+              className="h-3 bg-brand-surface"
+            >
+              <div
                 className="h-full bg-brand-accent rounded-full transition-all"
                 style={{ width: `${results.supportPct}%` }}
               />
@@ -188,8 +222,11 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
               </div>
               <span className="text-brand-light/60">{results.rejectPct}%</span>
             </div>
-            <Progress value={parseFloat(results.rejectPct)} className="h-3 bg-brand-surface">
-              <div 
+            <Progress
+              value={parseFloat(results.rejectPct)}
+              className="h-3 bg-brand-surface"
+            >
+              <div
                 className="h-full bg-brand-danger rounded-full transition-all"
                 style={{ width: `${results.rejectPct}%` }}
               />
@@ -205,8 +242,11 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
               </div>
               <span className="text-brand-light/60">{results.abstainPct}%</span>
             </div>
-            <Progress value={parseFloat(results.abstainPct)} className="h-3 bg-brand-surface">
-              <div 
+            <Progress
+              value={parseFloat(results.abstainPct)}
+              className="h-3 bg-brand-surface"
+            >
+              <div
                 className="h-full bg-brand-light/40 rounded-full transition-all"
                 style={{ width: `${results.abstainPct}%` }}
               />
@@ -218,9 +258,14 @@ export default function ProposalResults({ proposalId }: ProposalResultsProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Award className="w-5 h-5 text-brand-warning" />
-                <span className="text-brand-light font-medium">Final Result:</span>
+                <span className="text-brand-light font-medium">
+                  Final Result:
+                </span>
               </div>
-              <Badge className={getStatusColor(results.status)} variant="secondary">
+              <Badge
+                className={getStatusColor(results.status)}
+                variant="secondary"
+              >
                 {results.result}
               </Badge>
             </div>

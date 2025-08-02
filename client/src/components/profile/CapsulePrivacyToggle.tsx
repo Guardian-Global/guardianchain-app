@@ -5,23 +5,23 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
-import { 
-  Shield, 
-  Eye, 
-  Lock, 
-  Users, 
+import {
+  Shield,
+  Eye,
+  Lock,
+  Users,
   Clock,
   Globe,
   Calendar,
   Key,
   AlertTriangle,
-  Info
+  Info,
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-export type PrivacyLevel = 'public' | 'family' | 'private' | 'sealed';
+export type PrivacyLevel = "public" | "family" | "private" | "sealed";
 
 interface CapsulePrivacyToggleProps {
   capsuleId?: string;
@@ -42,24 +42,24 @@ export default function CapsulePrivacyToggle({
   capsuleId,
   currentPrivacy,
   onPrivacyChange,
-  className = ""
+  className = "",
 }: CapsulePrivacyToggleProps) {
   const { toast } = useToast();
   const [privacy, setPrivacy] = useState<PrivacyLevel>(currentPrivacy);
-  const [unlockDate, setUnlockDate] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [allowedEmails, setAllowedEmails] = useState<string>('');
+  const [unlockDate, setUnlockDate] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [allowedEmails, setAllowedEmails] = useState<string>("");
 
   const updatePrivacyMutation = useMutation({
     mutationFn: async (settings: PrivacySettings) => {
-      if (!capsuleId) throw new Error('Capsule ID required');
-      
+      if (!capsuleId) throw new Error("Capsule ID required");
+
       return await apiRequest("PATCH", `/api/capsules/${capsuleId}/privacy`, {
         privacyLevel: settings.level,
         unlockDate: settings.unlockDate,
         allowedUsers: settings.allowedUsers,
         requiresPassword: settings.requiresPassword,
-        password: settings.password
+        password: settings.password,
       });
     },
     onSuccess: (data) => {
@@ -80,62 +80,67 @@ export default function CapsulePrivacyToggle({
 
   const privacyOptions = [
     {
-      value: 'public' as const,
-      label: 'Public',
+      value: "public" as const,
+      label: "Public",
       icon: Globe,
-      description: 'Anyone can view this capsule',
-      details: 'Visible on your public profile and searchable by others',
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-200'
+      description: "Anyone can view this capsule",
+      details: "Visible on your public profile and searchable by others",
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200",
     },
     {
-      value: 'family' as const,
-      label: 'Family & Friends',
+      value: "family" as const,
+      label: "Family & Friends",
       icon: Users,
-      description: 'Only people you specify can view',
-      details: 'Share with specific email addresses or trusted contacts',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200'
+      description: "Only people you specify can view",
+      details: "Share with specific email addresses or trusted contacts",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
     },
     {
-      value: 'private' as const,
-      label: 'Private',
+      value: "private" as const,
+      label: "Private",
       icon: Lock,
-      description: 'Only you can view this capsule',
-      details: 'Completely private, not visible to anyone else',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-      borderColor: 'border-purple-200'
+      description: "Only you can view this capsule",
+      details: "Completely private, not visible to anyone else",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
     },
     {
-      value: 'sealed' as const,
-      label: 'Time-Sealed',
+      value: "sealed" as const,
+      label: "Time-Sealed",
       icon: Clock,
-      description: 'Locked until a specific date',
-      details: 'Permanently sealed on blockchain until unlock date',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
-      borderColor: 'border-orange-200'
-    }
+      description: "Locked until a specific date",
+      details: "Permanently sealed on blockchain until unlock date",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200",
+    },
   ];
 
-  const selectedOption = privacyOptions.find(option => option.value === privacy);
+  const selectedOption = privacyOptions.find(
+    (option) => option.value === privacy,
+  );
 
   const handleSaveSettings = () => {
     const settings: PrivacySettings = {
       level: privacy,
       unlockDate: unlockDate ? new Date(unlockDate) : undefined,
-      allowedUsers: allowedEmails ? allowedEmails.split(',').map(email => email.trim()) : undefined,
+      allowedUsers: allowedEmails
+        ? allowedEmails.split(",").map((email) => email.trim())
+        : undefined,
       requiresPassword: !!password,
-      password: password || undefined
+      password: password || undefined,
     };
 
     updatePrivacyMutation.mutate(settings);
   };
 
-  const hasChanges = privacy !== currentPrivacy || unlockDate || password || allowedEmails;
+  const hasChanges =
+    privacy !== currentPrivacy || unlockDate || password || allowedEmails;
 
   return (
     <Card className={className}>
@@ -144,8 +149,8 @@ export default function CapsulePrivacyToggle({
           <Shield className="w-5 h-5" />
           Privacy & Access Control
           {selectedOption && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className={`${selectedOption.color} ${selectedOption.bgColor}`}
             >
               {selectedOption.label}
@@ -153,7 +158,7 @@ export default function CapsulePrivacyToggle({
           )}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Privacy Level Selection */}
         <div className="space-y-4">
@@ -164,19 +169,23 @@ export default function CapsulePrivacyToggle({
             className="space-y-3"
           >
             {privacyOptions.map((option) => (
-              <div 
+              <div
                 key={option.value}
                 className={`border rounded-lg p-4 ${
-                  privacy === option.value 
-                    ? `${option.borderColor} ${option.bgColor}` 
-                    : 'border-gray-200'
+                  privacy === option.value
+                    ? `${option.borderColor} ${option.bgColor}`
+                    : "border-gray-200"
                 }`}
               >
                 <div className="flex items-start space-x-3">
-                  <RadioGroupItem value={option.value} id={option.value} className="mt-1" />
+                  <RadioGroupItem
+                    value={option.value}
+                    id={option.value}
+                    className="mt-1"
+                  />
                   <div className="flex-1">
-                    <Label 
-                      htmlFor={option.value} 
+                    <Label
+                      htmlFor={option.value}
                       className="flex items-center gap-2 cursor-pointer"
                     >
                       <option.icon className={`w-4 h-4 ${option.color}`} />
@@ -196,7 +205,7 @@ export default function CapsulePrivacyToggle({
         </div>
 
         {/* Additional Settings Based on Privacy Level */}
-        {privacy === 'family' && (
+        {privacy === "family" && (
           <div className="space-y-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-blue-600" />
@@ -214,7 +223,7 @@ export default function CapsulePrivacyToggle({
           </div>
         )}
 
-        {privacy === 'sealed' && (
+        {privacy === "sealed" && (
           <div className="space-y-3 p-4 bg-orange-50 rounded-lg border border-orange-200">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-orange-600" />
@@ -230,18 +239,20 @@ export default function CapsulePrivacyToggle({
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5" />
               <div className="text-xs text-orange-600">
-                Once sealed, this capsule cannot be accessed until the unlock date. 
-                This action is permanent and recorded on the blockchain.
+                Once sealed, this capsule cannot be accessed until the unlock
+                date. This action is permanent and recorded on the blockchain.
               </div>
             </div>
           </div>
         )}
 
-        {(privacy === 'private' || privacy === 'sealed') && (
+        {(privacy === "private" || privacy === "sealed") && (
           <div className="space-y-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
             <div className="flex items-center gap-2">
               <Key className="w-4 h-4 text-purple-600" />
-              <Label className="text-sm font-medium">Additional Password (Optional)</Label>
+              <Label className="text-sm font-medium">
+                Additional Password (Optional)
+              </Label>
             </div>
             <Input
               type="password"
@@ -263,7 +274,7 @@ export default function CapsulePrivacyToggle({
             <span className="text-sm font-medium">Privacy Impact</span>
           </div>
           <div className="text-xs space-y-1">
-            {privacy === 'public' && (
+            {privacy === "public" && (
               <>
                 <div>• Appears on your public profile at /u/[username]</div>
                 <div>• Searchable by other users</div>
@@ -271,7 +282,7 @@ export default function CapsulePrivacyToggle({
                 <div>• Contributes to your Truth Genome score</div>
               </>
             )}
-            {privacy === 'family' && (
+            {privacy === "family" && (
               <>
                 <div>• Only visible to specified email addresses</div>
                 <div>• Not searchable by public</div>
@@ -279,7 +290,7 @@ export default function CapsulePrivacyToggle({
                 <div>• Limited Truth Genome contribution</div>
               </>
             )}
-            {privacy === 'private' && (
+            {privacy === "private" && (
               <>
                 <div>• Only you can view this capsule</div>
                 <div>• Not searchable or visible to anyone</div>
@@ -287,7 +298,7 @@ export default function CapsulePrivacyToggle({
                 <div>• No Truth Genome contribution</div>
               </>
             )}
-            {privacy === 'sealed' && (
+            {privacy === "sealed" && (
               <>
                 <div>• Completely locked until unlock date</div>
                 <div>• Recorded permanently on blockchain</div>
@@ -300,12 +311,14 @@ export default function CapsulePrivacyToggle({
 
         {/* Save Button */}
         {hasChanges && (
-          <Button 
+          <Button
             onClick={handleSaveSettings}
             disabled={updatePrivacyMutation.isPending}
             className="w-full"
           >
-            {updatePrivacyMutation.isPending ? 'Updating...' : 'Save Privacy Settings'}
+            {updatePrivacyMutation.isPending
+              ? "Updating..."
+              : "Save Privacy Settings"}
           </Button>
         )}
 

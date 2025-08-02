@@ -6,25 +6,31 @@ import { apiRequest } from "@/lib/queryClient";
  * @param griefTier - Grief tier level (1-5, higher = more yield)
  * @returns Transaction hash of the yield distribution
  */
-export async function triggerGTTYield(authorAddress: string, griefTier: number): Promise<string> {
+export async function triggerGTTYield(
+  authorAddress: string,
+  griefTier: number,
+): Promise<string> {
   try {
-    console.log('🔗 Triggering GTT yield distribution:', { authorAddress, griefTier });
-    
+    console.log("🔗 Triggering GTT yield distribution:", {
+      authorAddress,
+      griefTier,
+    });
+
     const response = await apiRequest("POST", "/api/gtt/distribute-yield", {
       authorAddress,
       griefTier,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     if (response.ok) {
       const result = await response.json();
-      console.log('✅ GTT yield distribution successful:', result);
+      console.log("✅ GTT yield distribution successful:", result);
       return result.transactionHash;
     } else {
-      throw new Error('Failed to distribute GTT yield');
+      throw new Error("Failed to distribute GTT yield");
     }
   } catch (error) {
-    console.error('❌ GTT yield distribution failed:', error);
+    console.error("❌ GTT yield distribution failed:", error);
     throw error;
   }
 }
@@ -37,25 +43,25 @@ export async function triggerGTTYield(authorAddress: string, griefTier: number):
  * @returns Calculated yield details
  */
 export async function calculateGriefYield(
-  truthScore: number, 
-  verificationCount: number, 
-  capsuleAge: number
+  truthScore: number,
+  verificationCount: number,
+  capsuleAge: number,
 ) {
   try {
     const response = await apiRequest("POST", "/api/gtt/calculate-yield", {
       truthScore,
       verificationCount,
-      capsuleAge
+      capsuleAge,
     });
 
     if (response.ok) {
       const result = await response.json();
       return result.yieldCalculation;
     } else {
-      throw new Error('Failed to calculate grief yield');
+      throw new Error("Failed to calculate grief yield");
     }
   } catch (error) {
-    console.error('❌ Grief yield calculation failed:', error);
+    console.error("❌ Grief yield calculation failed:", error);
     throw error;
   }
 }
@@ -68,15 +74,15 @@ export async function calculateGriefYield(
 export async function getGTTBalance(address: string): Promise<string> {
   try {
     const response = await apiRequest("GET", `/api/gtt/balance/${address}`);
-    
+
     if (response.ok) {
       const result = await response.json();
       return result.balance;
     } else {
-      throw new Error('Failed to get GTT balance');
+      throw new Error("Failed to get GTT balance");
     }
   } catch (error) {
-    console.error('❌ Failed to get GTT balance:', error);
+    console.error("❌ Failed to get GTT balance:", error);
     return "0";
   }
 }
@@ -88,15 +94,15 @@ export async function getGTTBalance(address: string): Promise<string> {
 export async function getGTTContractInfo() {
   try {
     const response = await apiRequest("GET", "/api/gtt/contract-info");
-    
+
     if (response.ok) {
       const result = await response.json();
       return result.contract;
     } else {
-      throw new Error('Failed to get contract info');
+      throw new Error("Failed to get contract info");
     }
   } catch (error) {
-    console.error('❌ Failed to get contract info:', error);
+    console.error("❌ Failed to get contract info:", error);
     return null;
   }
 }
@@ -113,27 +119,32 @@ export async function distributeReplayYield(
   capsuleId: string,
   authorAddress: string,
   viewerAddress: string,
-  yieldAmount: number
+  yieldAmount: number,
 ) {
   try {
-    console.log('🔗 Distributing replay yield:', { capsuleId, authorAddress, viewerAddress, yieldAmount });
-    
+    console.log("🔗 Distributing replay yield:", {
+      capsuleId,
+      authorAddress,
+      viewerAddress,
+      yieldAmount,
+    });
+
     const response = await apiRequest("POST", "/api/replay-capsule", {
       capsuleId,
       authorWalletAddress: authorAddress,
       viewerWalletAddress: viewerAddress,
-      yieldAmount
+      yieldAmount,
     });
 
     if (response.ok) {
       const result = await response.json();
-      console.log('✅ Replay yield distribution successful:', result);
+      console.log("✅ Replay yield distribution successful:", result);
       return result.replay.web3Distribution;
     } else {
-      throw new Error('Failed to distribute replay yield');
+      throw new Error("Failed to distribute replay yield");
     }
   } catch (error) {
-    console.error('❌ Replay yield distribution failed:', error);
+    console.error("❌ Replay yield distribution failed:", error);
     throw error;
   }
 }

@@ -15,7 +15,7 @@ export interface SMRIData {
 
 export function useSMRI(wallet: string) {
   return useQuery({
-    queryKey: ['/api/smri', wallet],
+    queryKey: ["/api/smri", wallet],
     queryFn: () => api.smri.getByWallet(wallet),
     enabled: !!wallet,
     staleTime: 2 * 60 * 1000, // 2 minutes
@@ -25,7 +25,7 @@ export function useSMRI(wallet: string) {
 
 export function useSMRILeaderboard() {
   return useQuery({
-    queryKey: ['/api/smri/leaderboard'],
+    queryKey: ["/api/smri/leaderboard"],
     queryFn: () => api.smri.getLeaderboard(),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 15 * 60 * 1000, // 15 minutes

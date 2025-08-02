@@ -24,7 +24,7 @@ const TokenomicsEngine: React.FC = () => {
   const tokenomicsData = {
     totalSupply: "1,000,000,000", // PLAN B: 1B optimized supply
     circulatingSupply: "250,000,000",
-    marketCap: "$10,500,000,000", 
+    marketCap: "$10,500,000,000",
     protocolRevenue: "$125,000,000", // 8% fee structure revenue
     burnRate: "2.5%", // Strategic burn mechanism
     stakingAPY: "15.2%",

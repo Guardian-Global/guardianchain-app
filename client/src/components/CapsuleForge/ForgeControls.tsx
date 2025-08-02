@@ -46,7 +46,7 @@ export default function ForgeControls({ capsuleData }: ForgeControlsProps) {
 
     // Premium features
     const hasMultimedia = capsuleData.blocks.some(
-      (block) => block.type === "image" || block.type === "video"
+      (block) => block.type === "image" || block.type === "video",
     );
     if (hasMultimedia) total += fees.premium;
 
@@ -108,7 +108,7 @@ export default function ForgeControls({ capsuleData }: ForgeControlsProps) {
         title: "Capsule Minted Successfully!",
         description: `NFT #${tokenId} minted for ${getTotalFee()} GTT. Transaction: ${hash.slice(
           0,
-          10
+          10,
         )}...`,
       });
     } catch (error) {
@@ -189,7 +189,7 @@ export default function ForgeControls({ capsuleData }: ForgeControlsProps) {
             )}
 
             {capsuleData.blocks.some(
-              (block) => block.type === "image" || block.type === "video"
+              (block) => block.type === "image" || block.type === "video",
             ) && (
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-400">Multimedia Content</span>

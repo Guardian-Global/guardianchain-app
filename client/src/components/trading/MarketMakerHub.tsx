@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { 
-  Bot, 
-  TrendingUp, 
-  DollarSign, 
-  Zap, 
-  Target, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import {
+  Bot,
+  TrendingUp,
+  DollarSign,
+  Zap,
+  Target,
   BarChart3,
   Settings,
   Play,
   Pause,
   AlertCircle,
   CheckCircle,
-  Activity
-} from 'lucide-react';
+  Activity,
+} from "lucide-react";
 
 interface MarketMakingStrategy {
   name: string;
@@ -27,7 +27,7 @@ interface MarketMakingStrategy {
   maxSpread: number;
   orderSize: number;
   profitability: number;
-  riskLevel: 'low' | 'medium' | 'high';
+  riskLevel: "low" | "medium" | "high";
   isActive: boolean;
 }
 
@@ -43,35 +43,35 @@ interface MarketMakerMetrics {
 export function MarketMakerHub() {
   const [strategies, setStrategies] = useState<MarketMakingStrategy[]>([
     {
-      name: 'Conservative Grid',
-      description: 'Low-risk market making with tight spreads',
+      name: "Conservative Grid",
+      description: "Low-risk market making with tight spreads",
       minSpread: 0.1,
       maxSpread: 0.3,
       orderSize: 10000,
       profitability: 23.7,
-      riskLevel: 'low',
-      isActive: true
+      riskLevel: "low",
+      isActive: true,
     },
     {
-      name: 'Aggressive Scalping',
-      description: 'High-frequency trading with dynamic spreads',
+      name: "Aggressive Scalping",
+      description: "High-frequency trading with dynamic spreads",
       minSpread: 0.05,
       maxSpread: 0.8,
       orderSize: 50000,
       profitability: 67.3,
-      riskLevel: 'high',
-      isActive: true
+      riskLevel: "high",
+      isActive: true,
     },
     {
-      name: 'Balanced Arbitrage',
-      description: 'Cross-exchange arbitrage opportunities',
+      name: "Balanced Arbitrage",
+      description: "Cross-exchange arbitrage opportunities",
       minSpread: 0.15,
       maxSpread: 0.5,
       orderSize: 25000,
       profitability: 45.2,
-      riskLevel: 'medium',
-      isActive: false
-    }
+      riskLevel: "medium",
+      isActive: false,
+    },
   ]);
 
   const [metrics] = useState<MarketMakerMetrics>({
@@ -80,7 +80,7 @@ export function MarketMakerHub() {
     spreadCapture: 0.23,
     uptime: 99.7,
     successRate: 87.3,
-    riskScore: 2.8
+    riskScore: 2.8,
   });
 
   const [autoRebalance, setAutoRebalance] = useState(true);
@@ -95,17 +95,23 @@ export function MarketMakerHub() {
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'low': return 'text-green-400';
-      case 'medium': return 'text-yellow-400';
-      case 'high': return 'text-red-400';
-      default: return 'text-slate-400';
+      case "low":
+        return "text-green-400";
+      case "medium":
+        return "text-yellow-400";
+      case "high":
+        return "text-red-400";
+      default:
+        return "text-slate-400";
     }
   };
 
   const toggleStrategy = (index: number) => {
-    setStrategies(prev => prev.map((strategy, i) => 
-      i === index ? { ...strategy, isActive: !strategy.isActive } : strategy
-    ));
+    setStrategies((prev) =>
+      prev.map((strategy, i) =>
+        i === index ? { ...strategy, isActive: !strategy.isActive } : strategy,
+      ),
+    );
   };
 
   return (
@@ -115,12 +121,16 @@ export function MarketMakerHub() {
           <CardTitle className="flex items-center gap-2 text-white">
             <Bot className="h-5 w-5 text-blue-400" />
             Market Maker Hub
-            <Badge variant="outline" className="text-green-400 border-green-400">
+            <Badge
+              variant="outline"
+              className="text-green-400 border-green-400"
+            >
               PROFESSIONAL
             </Badge>
           </CardTitle>
           <p className="text-slate-400">
-            Automated market making strategies for consistent GTT liquidity provision
+            Automated market making strategies for consistent GTT liquidity
+            provision
           </p>
         </CardHeader>
         <CardContent>
@@ -144,7 +154,9 @@ export function MarketMakerHub() {
               <div className="text-2xl font-bold text-green-400">
                 +{formatCurrency(metrics.dailyProfit)}
               </div>
-              <div className="text-sm text-green-400">+{metrics.profitability}% ROI</div>
+              <div className="text-sm text-green-400">
+                +{metrics.profitability}% ROI
+              </div>
             </div>
             <div className="p-4 bg-slate-800 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
@@ -172,7 +184,9 @@ export function MarketMakerHub() {
                   <div key={index} className="p-4 bg-slate-800 rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded ${strategy.isActive ? 'bg-green-500/20' : 'bg-slate-700'}`}>
+                        <div
+                          className={`p-2 rounded ${strategy.isActive ? "bg-green-500/20" : "bg-slate-700"}`}
+                        >
                           {strategy.isActive ? (
                             <Play className="h-4 w-4 text-green-400" />
                           ) : (
@@ -180,8 +194,12 @@ export function MarketMakerHub() {
                           )}
                         </div>
                         <div>
-                          <div className="text-white font-medium text-lg">{strategy.name}</div>
-                          <div className="text-sm text-slate-400">{strategy.description}</div>
+                          <div className="text-white font-medium text-lg">
+                            {strategy.name}
+                          </div>
+                          <div className="text-sm text-slate-400">
+                            {strategy.description}
+                          </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -189,7 +207,9 @@ export function MarketMakerHub() {
                           <div className="text-green-400 font-medium">
                             +{strategy.profitability.toFixed(1)}%
                           </div>
-                          <div className="text-sm text-slate-400">24h Return</div>
+                          <div className="text-sm text-slate-400">
+                            24h Return
+                          </div>
                         </div>
                         <Switch
                           checked={strategy.isActive}
@@ -203,7 +223,9 @@ export function MarketMakerHub() {
                         <div className="text-white font-medium">
                           {strategy.minSpread}% - {strategy.maxSpread}%
                         </div>
-                        <div className="text-xs text-slate-400">Spread Range</div>
+                        <div className="text-xs text-slate-400">
+                          Spread Range
+                        </div>
                       </div>
                       <div>
                         <div className="text-purple-400 font-medium">
@@ -212,7 +234,9 @@ export function MarketMakerHub() {
                         <div className="text-xs text-slate-400">Order Size</div>
                       </div>
                       <div>
-                        <div className={`font-medium ${getRiskColor(strategy.riskLevel)}`}>
+                        <div
+                          className={`font-medium ${getRiskColor(strategy.riskLevel)}`}
+                        >
                           {strategy.riskLevel.toUpperCase()}
                         </div>
                         <div className="text-xs text-slate-400">Risk Level</div>
@@ -225,7 +249,7 @@ export function MarketMakerHub() {
                             <AlertCircle className="h-4 w-4 text-yellow-400" />
                           )}
                           <span className="text-sm text-white">
-                            {strategy.isActive ? 'Active' : 'Paused'}
+                            {strategy.isActive ? "Active" : "Paused"}
                           </span>
                         </div>
                         <div className="text-xs text-slate-400">Status</div>
@@ -246,7 +270,9 @@ export function MarketMakerHub() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Card className="bg-slate-800 border-slate-700">
                     <CardHeader>
-                      <CardTitle className="text-white">Performance Metrics</CardTitle>
+                      <CardTitle className="text-white">
+                        Performance Metrics
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
@@ -270,7 +296,9 @@ export function MarketMakerHub() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-slate-300">Sharpe Ratio</span>
-                          <span className="text-purple-400 font-medium">2.34</span>
+                          <span className="text-purple-400 font-medium">
+                            2.34
+                          </span>
                         </div>
                       </div>
                     </CardContent>
@@ -278,21 +306,35 @@ export function MarketMakerHub() {
 
                   <Card className="bg-slate-800 border-slate-700">
                     <CardHeader>
-                      <CardTitle className="text-white">Strategy Performance</CardTitle>
+                      <CardTitle className="text-white">
+                        Strategy Performance
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-300">Conservative Grid</span>
-                          <span className="text-green-400 font-medium">+23.7%</span>
+                          <span className="text-slate-300">
+                            Conservative Grid
+                          </span>
+                          <span className="text-green-400 font-medium">
+                            +23.7%
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-300">Aggressive Scalping</span>
-                          <span className="text-green-400 font-medium">+67.3%</span>
+                          <span className="text-slate-300">
+                            Aggressive Scalping
+                          </span>
+                          <span className="text-green-400 font-medium">
+                            +67.3%
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-300">Balanced Arbitrage</span>
-                          <span className="text-slate-400 font-medium">Paused</span>
+                          <span className="text-slate-300">
+                            Balanced Arbitrage
+                          </span>
+                          <span className="text-slate-400 font-medium">
+                            Paused
+                          </span>
                         </div>
                       </div>
                     </CardContent>
@@ -328,15 +370,20 @@ export function MarketMakerHub() {
               <div className="space-y-6">
                 <Card className="bg-slate-800 border-slate-700">
                   <CardHeader>
-                    <CardTitle className="text-white">Risk Management</CardTitle>
+                    <CardTitle className="text-white">
+                      Risk Management
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-white font-medium">Auto Rebalancing</div>
+                          <div className="text-white font-medium">
+                            Auto Rebalancing
+                          </div>
                           <div className="text-sm text-slate-400">
-                            Automatically rebalance positions when risk exceeds limits
+                            Automatically rebalance positions when risk exceeds
+                            limits
                           </div>
                         </div>
                         <Switch
@@ -346,7 +393,9 @@ export function MarketMakerHub() {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-white font-medium">Daily Risk Limit</label>
+                        <label className="text-white font-medium">
+                          Daily Risk Limit
+                        </label>
                         <Input
                           type="number"
                           value={riskLimit}
@@ -360,11 +409,15 @@ export function MarketMakerHub() {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-white font-medium">Max Position Size</label>
+                        <label className="text-white font-medium">
+                          Max Position Size
+                        </label>
                         <Input
                           type="number"
                           value={maxPosition}
-                          onChange={(e) => setMaxPosition(Number(e.target.value))}
+                          onChange={(e) =>
+                            setMaxPosition(Number(e.target.value))
+                          }
                           className="bg-slate-700 border-slate-600"
                           placeholder="1000000"
                         />
@@ -378,7 +431,9 @@ export function MarketMakerHub() {
 
                 <Card className="bg-slate-800 border-slate-700">
                   <CardHeader>
-                    <CardTitle className="text-white">Exchange Connections</CardTitle>
+                    <CardTitle className="text-white">
+                      Exchange Connections
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
@@ -387,21 +442,27 @@ export function MarketMakerHub() {
                           <div className="w-2 h-2 bg-green-400 rounded-full" />
                           <span className="text-white">Binance</span>
                         </div>
-                        <Badge className="bg-green-500/20 text-green-400">Connected</Badge>
+                        <Badge className="bg-green-500/20 text-green-400">
+                          Connected
+                        </Badge>
                       </div>
                       <div className="flex items-center justify-between p-3 bg-slate-700 rounded">
                         <div className="flex items-center gap-3">
                           <div className="w-2 h-2 bg-green-400 rounded-full" />
                           <span className="text-white">Coinbase Pro</span>
                         </div>
-                        <Badge className="bg-green-500/20 text-green-400">Connected</Badge>
+                        <Badge className="bg-green-500/20 text-green-400">
+                          Connected
+                        </Badge>
                       </div>
                       <div className="flex items-center justify-between p-3 bg-slate-700 rounded">
                         <div className="flex items-center gap-3">
                           <div className="w-2 h-2 bg-yellow-400 rounded-full" />
                           <span className="text-white">OKX</span>
                         </div>
-                        <Badge className="bg-yellow-500/20 text-yellow-400">Connecting</Badge>
+                        <Badge className="bg-yellow-500/20 text-yellow-400">
+                          Connecting
+                        </Badge>
                       </div>
                     </div>
                   </CardContent>
@@ -412,13 +473,13 @@ export function MarketMakerHub() {
             <TabsContent value="analytics" className="mt-4">
               <div className="text-center py-12">
                 <BarChart3 className="h-16 w-16 text-slate-600 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-white mb-2">Advanced Analytics</h3>
+                <h3 className="text-xl font-medium text-white mb-2">
+                  Advanced Analytics
+                </h3>
                 <p className="text-slate-400 mb-4">
                   Detailed performance charts and market analysis coming soon
                 </p>
-                <Button variant="outline">
-                  Request Beta Access
-                </Button>
+                <Button variant="outline">Request Beta Access</Button>
               </div>
             </TabsContent>
           </Tabs>
@@ -426,11 +487,14 @@ export function MarketMakerHub() {
           <div className="mt-6 p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
             <div className="flex items-center gap-2 mb-2">
               <Bot className="h-5 w-5 text-blue-400" />
-              <span className="text-blue-400 font-medium">Professional Market Making</span>
+              <span className="text-blue-400 font-medium">
+                Professional Market Making
+              </span>
             </div>
             <p className="text-sm text-slate-300 mb-3">
-              Institutional-grade market making infrastructure with sub-millisecond execution, 
-              cross-exchange arbitrage, and professional risk management tools.
+              Institutional-grade market making infrastructure with
+              sub-millisecond execution, cross-exchange arbitrage, and
+              professional risk management tools.
             </p>
             <Button className="bg-blue-600 hover:bg-blue-700">
               Upgrade to Professional

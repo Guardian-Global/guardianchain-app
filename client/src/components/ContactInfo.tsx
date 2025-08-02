@@ -103,7 +103,7 @@ export default function ContactInfo() {
                   onClick={() =>
                     handleContactClick(
                       contact.email,
-                      `GUARDIANCHAIN: ${contact.title} Inquiry`
+                      `GUARDIANCHAIN: ${contact.title} Inquiry`,
                     )
                   }
                   className="w-full"
@@ -171,7 +171,7 @@ export default function ContactInfo() {
               onClick={() =>
                 handleContactClick(
                   "commander.guardian@protonmail.com",
-                  "URGENT: Security Emergency"
+                  "URGENT: Security Emergency",
                 )
               }
               className="flex-1 bg-red-600 hover:bg-red-700"
@@ -184,7 +184,7 @@ export default function ContactInfo() {
               onClick={() =>
                 handleContactClick(
                   "commander.guardian@protonmail.com",
-                  "GUARDIANCHAIN: Business Inquiry"
+                  "GUARDIANCHAIN: Business Inquiry",
                 )
               }
               className="flex-1 bg-purple-600 hover:bg-purple-700"

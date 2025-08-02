@@ -1,22 +1,25 @@
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 
 interface CapsuleSearchProps {
   onSearch: (query: string) => void;
   placeholder?: string;
 }
 
-export default function CapsuleSearch({ onSearch, placeholder = "Search capsules by title, author, or content..." }: CapsuleSearchProps) {
-  const [query, setQuery] = useState('');
+export default function CapsuleSearch({
+  onSearch,
+  placeholder = "Search capsules by title, author, or content...",
+}: CapsuleSearchProps) {
+  const [query, setQuery] = useState("");
 
   const handleSearch = () => {
     onSearch(query);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };

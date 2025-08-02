@@ -1,5 +1,5 @@
-import React from 'react';
-import { AITradingOracle } from '@/components/revenue/AITradingOracle';
+import React from "react";
+import { AITradingOracle } from "@/components/revenue/AITradingOracle";
 
 export default function AITradingOraclePage() {
   return (

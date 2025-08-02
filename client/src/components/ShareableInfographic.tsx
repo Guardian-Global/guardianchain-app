@@ -1,10 +1,18 @@
-import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, Share2, Copy, Twitter, Facebook, Linkedin, FileImage } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import html2canvas from 'html2canvas';
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Download,
+  Share2,
+  Copy,
+  Twitter,
+  Facebook,
+  Linkedin,
+  FileImage,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import html2canvas from "html2canvas";
 
 interface InfographicData {
   totalCapsules: number;
@@ -20,7 +28,10 @@ interface ShareableInfographicProps {
   userHandle?: string;
 }
 
-export default function ShareableInfographic({ data, userHandle = 'Anonymous' }: ShareableInfographicProps) {
+export default function ShareableInfographic({
+  data,
+  userHandle = "Anonymous",
+}: ShareableInfographicProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const infographicRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -31,16 +42,16 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
     gttEarned: 1247.89,
     emotionalResonance: 94.2,
     topEmotions: [
-      { emotion: 'Joy', percentage: 35, color: '#f59e0b' },
-      { emotion: 'Nostalgia', percentage: 28, color: '#3b82f6' },
-      { emotion: 'Gratitude', percentage: 22, color: '#10b981' },
-      { emotion: 'Hope', percentage: 15, color: '#8b5cf6' }
+      { emotion: "Joy", percentage: 35, color: "#f59e0b" },
+      { emotion: "Nostalgia", percentage: 28, color: "#3b82f6" },
+      { emotion: "Gratitude", percentage: 22, color: "#10b981" },
+      { emotion: "Hope", percentage: 15, color: "#8b5cf6" },
     ],
     recentAchievements: [
-      'Truth Seeker - First 10 capsules verified',
-      'Emotional Depth - 90+ resonance score',
-      'Community Builder - 25+ jury validations'
-    ]
+      "Truth Seeker - First 10 capsules verified",
+      "Emotional Depth - 90+ resonance score",
+      "Community Builder - 25+ jury validations",
+    ],
   };
 
   const infographicData = { ...defaultData, ...data };
@@ -51,19 +62,19 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
     setIsGenerating(true);
     try {
       const canvas = await html2canvas(infographicRef.current, {
-        backgroundColor: '#0f172a',
+        backgroundColor: "#0f172a",
         scale: 2,
         width: 800,
-        height: 1000
+        height: 1000,
       });
-      
-      const blob = await new Promise<Blob>(resolve => 
-        canvas.toBlob(resolve as BlobCallback, 'image/png', 0.9)
+
+      const blob = await new Promise<Blob>((resolve) =>
+        canvas.toBlob(resolve as BlobCallback, "image/png", 0.9),
       );
-      
+
       return blob;
     } catch (error) {
-      console.error('Failed to generate image:', error);
+      console.error("Failed to generate image:", error);
       return null;
     } finally {
       setIsGenerating(false);
@@ -74,14 +85,14 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
     const blob = await generateImage();
     if (blob) {
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = `guardianchain-legacy-${userHandle.toLowerCase()}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       toast({
         title: "Infographic Downloaded",
         description: "Your legacy highlights are ready to share",
@@ -91,19 +102,23 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
 
   const handleShare = async (platform: string) => {
     const shareText = `My GUARDIANCHAIN legacy: ${infographicData.totalCapsules} capsules sealed, ${infographicData.gttEarned.toFixed(0)} GTT earned. Truth preserved, memories immortalized. #GuardianChain #VeritasSealed`;
-    
+
     const shareUrls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=https://guardianchain.app`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=https://guardianchain.app&quote=${encodeURIComponent(shareText)}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=https://guardianchain.app&summary=${encodeURIComponent(shareText)}`
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=https://guardianchain.app&summary=${encodeURIComponent(shareText)}`,
     };
 
-    window.open(shareUrls[platform as keyof typeof shareUrls], '_blank', 'width=600,height=400');
+    window.open(
+      shareUrls[platform as keyof typeof shareUrls],
+      "_blank",
+      "width=600,height=400",
+    );
   };
 
   const copyToClipboard = async () => {
     const shareText = `My GUARDIANCHAIN legacy: ${infographicData.totalCapsules} capsules sealed, ${infographicData.gttEarned.toFixed(0)} GTT earned. Check out https://guardianchain.app`;
-    
+
     try {
       await navigator.clipboard.writeText(shareText);
       toast({
@@ -139,7 +154,9 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
               GUARDIANCHAIN LEGACY
             </h1>
             <p className="text-lg text-blue-400 font-medium">@{userHandle}</p>
-            <p className="text-sm text-slate-400 mt-2">Veritas Sealed. Truth Tokenized.</p>
+            <p className="text-sm text-slate-400 mt-2">
+              Veritas Sealed. Truth Tokenized.
+            </p>
           </div>
 
           {/* Stats Grid */}
@@ -195,7 +212,9 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
 
           {/* Emotion Breakdown */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-white text-center">Emotional Spectrum</h3>
+            <h3 className="text-xl font-semibold text-white text-center">
+              Emotional Spectrum
+            </h3>
             <div className="space-y-3">
               {infographicData.topEmotions.map((emotion, index) => (
                 <motion.div
@@ -227,7 +246,9 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
 
           {/* Recent Achievements */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-white text-center">Recent Achievements</h3>
+            <h3 className="text-lg font-semibold text-white text-center">
+              Recent Achievements
+            </h3>
             <div className="space-y-2">
               {infographicData.recentAchievements.map((achievement, index) => (
                 <motion.div
@@ -269,27 +290,27 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Download className="w-4 h-4 mr-2" />
-              {isGenerating ? 'Generating...' : 'Download'}
+              {isGenerating ? "Generating..." : "Download"}
             </Button>
-            
+
             <Button
-              onClick={() => handleShare('twitter')}
+              onClick={() => handleShare("twitter")}
               variant="outline"
               className="border-slate-600 text-slate-300 hover:bg-slate-700"
             >
               <Twitter className="w-4 h-4 mr-2" />
               Twitter
             </Button>
-            
+
             <Button
-              onClick={() => handleShare('facebook')}
+              onClick={() => handleShare("facebook")}
               variant="outline"
               className="border-slate-600 text-slate-300 hover:bg-slate-700"
             >
               <Facebook className="w-4 h-4 mr-2" />
               Facebook
             </Button>
-            
+
             <Button
               onClick={copyToClipboard}
               variant="outline"
@@ -299,7 +320,7 @@ export default function ShareableInfographic({ data, userHandle = 'Anonymous' }:
               Copy
             </Button>
           </div>
-          
+
           <p className="text-sm text-slate-400 text-center">
             Share your truth preservation journey with the world
           </p>

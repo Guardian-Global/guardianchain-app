@@ -44,7 +44,7 @@ export class Web3GTTService {
         this.contract = new ethers.Contract(
           GTT_CONTRACT_ADDRESS,
           ERC20_ABI,
-          this.provider
+          this.provider,
         );
 
         break;

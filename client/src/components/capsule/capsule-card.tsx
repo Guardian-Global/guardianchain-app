@@ -111,7 +111,7 @@ export default function CapsuleCard({
   const timeAgo = (date: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
+      (now.getTime() - date.getTime()) / (1000 * 60),
     );
 
     if (diffInMinutes < 60) {
@@ -318,7 +318,7 @@ export default function CapsuleCard({
               onClick={() =>
                 window.open(
                   `https://opensea.io/assets/matic/0x1234567890abcdef1234567890abcdef12345678/${capsule.nftTokenId}`,
-                  "_blank"
+                  "_blank",
                 )
               }
             >

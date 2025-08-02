@@ -70,7 +70,7 @@ This proposal locks in our brand identity at the protocol level and ensures prof
 
 export async function voteOnProposal(
   proposalId: number,
-  support: boolean
+  support: boolean,
 ): Promise<string> {
   try {
     const { hash } = await writeContract({

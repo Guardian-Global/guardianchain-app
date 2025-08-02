@@ -61,8 +61,8 @@ export default function TokenListings() {
       listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       listing.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       listing.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+        tag.toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
   );
 
   return (

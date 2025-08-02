@@ -52,7 +52,7 @@ router.post("/ai-assistant", async (req, res) => {
         (msg) =>
           `${msg.sender === "user" ? "User" : context.personality.name}: ${
             msg.content
-          }`
+          }`,
       )
       .join("\n");
 

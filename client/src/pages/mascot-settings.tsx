@@ -1,7 +1,13 @@
 import React from "react";
 import MascotSettings from "@/components/mascot/MascotSettings";
 import { MascotTrigger } from "@/components/mascot/OnboardingMascot";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -98,7 +104,7 @@ export default function MascotSettingsPage() {
                 <Sparkles className="h-4 w-4 mr-2" />
                 Start Guided Tour
               </MascotTrigger>
-              
+
               <Button
                 variant="outline"
                 className="w-full justify-start"
@@ -138,7 +144,9 @@ export default function MascotSettingsPage() {
               <div className="space-y-3">
                 {TOUR_HIGHLIGHTS.map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className={`${item.color} rounded-full p-1.5 text-white`}>
+                    <div
+                      className={`${item.color} rounded-full p-1.5 text-white`}
+                    >
                       {item.icon}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -180,9 +188,9 @@ export default function MascotSettingsPage() {
                   Covers all platform features
                 </p>
               </div>
-              
+
               <Separator />
-              
+
               <div className="text-xs text-center text-muted-foreground">
                 <p>Guardian makes onboarding fun and easy!</p>
                 <div className="flex items-center justify-center gap-1 mt-1">

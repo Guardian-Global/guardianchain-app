@@ -42,7 +42,7 @@ export const connectWallet = async (): Promise<WalletConnection> => {
     // Check if we're on the correct network
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     const currentNetwork = SUPPORTED_NETWORKS.find(
-      (network: any) => network.chainId === chainId
+      (network: any) => network.chainId === chainId,
     );
 
     if (!currentNetwork) {
@@ -142,7 +142,7 @@ export const getNetwork = async (): Promise<string> => {
   try {
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     const network = SUPPORTED_NETWORKS.find(
-      (net: any) => net.chainId === chainId
+      (net: any) => net.chainId === chainId,
     );
     return network?.chainName || "Unknown Network";
   } catch (error) {
@@ -166,7 +166,7 @@ export const switchNetwork = async (chainId: string): Promise<boolean> => {
     if (error.code === 4902) {
       // Network not added, try to add it
       const network = SUPPORTED_NETWORKS.find(
-        (net: any) => net.chainId === chainId
+        (net: any) => net.chainId === chainId,
       );
       if (network) {
         try {
@@ -191,7 +191,7 @@ export const setupWalletEventListeners = (
   onAccountChange: (accounts: string[]) => void,
   onChainChange: (chainId: string) => void,
   onConnect: (connectInfo: { chainId: string }) => void,
-  onDisconnect: (error: { code: number; message: string }) => void
+  onDisconnect: (error: { code: number; message: string }) => void,
 ) => {
   if (!isMetaMaskInstalled()) {
     return;

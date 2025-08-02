@@ -51,7 +51,9 @@ import { SaveNotificationProvider } from "@/components/SaveNotificationProvider"
 import FeaturedCapsulesManager from "@/components/profile/FeaturedCapsulesManager";
 import NFTAutoMinter from "@/components/profile/NFTAutoMinter";
 import TruthGenomeCard from "@/components/profile/TruthGenomeCard";
-import CapsuleWallToggle, { type ViewMode } from "@/components/profile/CapsuleWallToggle";
+import CapsuleWallToggle, {
+  type ViewMode,
+} from "@/components/profile/CapsuleWallToggle";
 import EnhancedCapsuleUploader from "@/components/profile/EnhancedCapsuleUploader";
 
 interface SovereignProfile {
@@ -125,15 +127,15 @@ export default function SovereignSocialProfile() {
 
   const [activeTab, setActiveTab] = useState("timeline");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
+  const [viewMode, setViewMode] = useState<ViewMode>("timeline");
   const { toast } = useToast();
 
   // Media upload handlers
   const handleProfileImageUpload = (uploadedFiles: MediaFile[]) => {
     if (uploadedFiles.length > 0) {
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
-        profileImageUrl: uploadedFiles[0].url
+        profileImageUrl: uploadedFiles[0].url,
       }));
       setHasUnsavedChanges(true);
       toast({
@@ -145,23 +147,24 @@ export default function SovereignSocialProfile() {
 
   const handleProfileVideoUpload = (uploadedFiles: MediaFile[]) => {
     if (uploadedFiles.length > 0) {
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
-        profileVideoUrl: uploadedFiles[0].url
+        profileVideoUrl: uploadedFiles[0].url,
       }));
       setHasUnsavedChanges(true);
       toast({
         title: "Profile Video Updated",
-        description: "Your profile video will be minted as an NFT and automatically sealed.",
+        description:
+          "Your profile video will be minted as an NFT and automatically sealed.",
       });
     }
   };
 
   const handleBackgroundUpload = (uploadedFiles: MediaFile[]) => {
     if (uploadedFiles.length > 0) {
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
-        backgroundImageUrl: uploadedFiles[0].url
+        backgroundImageUrl: uploadedFiles[0].url,
       }));
       setHasUnsavedChanges(true);
       toast({
@@ -175,10 +178,10 @@ export default function SovereignSocialProfile() {
     for (const file of uploadedFiles) {
       // Auto-categorize and create capsule
       const capsuleType = getCapsuleTypeFromFile(file);
-      
+
       try {
-        const response = await apiRequest('/api/capsules', {
-          method: 'POST',
+        const response = await apiRequest("/api/capsules", {
+          method: "POST",
           body: JSON.stringify({
             title: `Auto-Generated: ${file.name}`,
             content: `Automatically created from uploaded ${file.type}`,
@@ -205,27 +208,29 @@ export default function SovereignSocialProfile() {
   };
 
   const getCapsuleTypeFromFile = (file: MediaFile): string => {
-    if (file.type.startsWith('image/')) return 'visual_memory';
-    if (file.type.startsWith('video/')) return 'video_testimony';
-    if (file.type.startsWith('audio/')) return 'audio_memory';
-    if (file.type.includes('pdf') || file.type.includes('document')) return 'document_legacy';
-    return 'general_capsule';
+    if (file.type.startsWith("image/")) return "visual_memory";
+    if (file.type.startsWith("video/")) return "video_testimony";
+    if (file.type.startsWith("audio/")) return "audio_memory";
+    if (file.type.includes("pdf") || file.type.includes("document"))
+      return "document_legacy";
+    return "general_capsule";
   };
 
   const saveProfile = async () => {
     try {
       // Save profile changes
-      await apiRequest('/api/user/profile', {
-        method: 'PUT',
+      await apiRequest("/api/user/profile", {
+        method: "PUT",
         body: JSON.stringify(profile),
       });
 
       setHasUnsavedChanges(false);
       setIsEditing(false);
-      
+
       toast({
         title: "Profile Saved",
-        description: "Your sovereign profile has been permanently recorded on-chain.",
+        description:
+          "Your sovereign profile has been permanently recorded on-chain.",
       });
     } catch (error) {
       toast({
@@ -239,31 +244,37 @@ export default function SovereignSocialProfile() {
   const renderProfileHeader = () => (
     <div className="relative">
       {/* Background Image */}
-      <div 
+      <div
         className="h-64 w-full bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 rounded-t-lg relative overflow-hidden"
         style={{
-          backgroundImage: profile.backgroundImageUrl ? `url(${profile.backgroundImageUrl})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundImage: profile.backgroundImageUrl
+            ? `url(${profile.backgroundImageUrl})`
+            : undefined,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         {isEditing && (
           <div className="absolute top-4 right-4">
             <ObjectUploader
               onGetUploadParameters={async () => {
-                const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-                return { method: 'PUT' as const, url: response.uploadURL };
+                const response = await apiRequest("/api/objects/upload", {
+                  method: "POST",
+                });
+                return { method: "PUT" as const, url: response.uploadURL };
               }}
               onComplete={(result) => {
                 if (result.successful?.[0]?.uploadURL) {
-                  handleBackgroundUpload([{
-                    id: 'bg-' + Date.now(),
-                    name: 'background.jpg',
-                    type: 'image/jpeg',
-                    size: 0,
-                    url: result.successful[0].uploadURL,
-                    uploadType: 'background'
-                  }]);
+                  handleBackgroundUpload([
+                    {
+                      id: "bg-" + Date.now(),
+                      name: "background.jpg",
+                      type: "image/jpeg",
+                      size: 0,
+                      url: result.successful[0].uploadURL,
+                      uploadType: "background",
+                    },
+                  ]);
                 }
               }}
               buttonClassName="bg-black/50 hover:bg-black/70"
@@ -273,10 +284,10 @@ export default function SovereignSocialProfile() {
             </ObjectUploader>
           </div>
         )}
-        
+
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/30" />
-        
+
         {/* Verification badges */}
         <div className="absolute top-4 left-4 flex gap-2">
           {profile.isVerified && (
@@ -301,10 +312,10 @@ export default function SovereignSocialProfile() {
           <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
             <AvatarImage src={profile.profileImageUrl} />
             <AvatarFallback className="text-2xl bg-gradient-to-br from-purple-500 to-blue-500 text-white">
-              {profile.displayName?.charAt(0) || 'G'}
+              {profile.displayName?.charAt(0) || "G"}
             </AvatarFallback>
           </Avatar>
-          
+
           {/* Profile Video Play Button */}
           {profile.profileVideoUrl && (
             <Button
@@ -314,24 +325,28 @@ export default function SovereignSocialProfile() {
               <Play className="w-4 h-4" />
             </Button>
           )}
-          
+
           {isEditing && (
             <div className="absolute -bottom-2 -right-2 flex gap-1">
               <ObjectUploader
                 onGetUploadParameters={async () => {
-                  const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-                  return { method: 'PUT' as const, url: response.uploadURL };
+                  const response = await apiRequest("/api/objects/upload", {
+                    method: "POST",
+                  });
+                  return { method: "PUT" as const, url: response.uploadURL };
                 }}
                 onComplete={(result) => {
                   if (result.successful?.[0]?.uploadURL) {
-                    handleProfileImageUpload([{
-                      id: 'img-' + Date.now(),
-                      name: 'profile.jpg',
-                      type: 'image/jpeg',
-                      size: 0,
-                      url: result.successful[0].uploadURL,
-                      uploadType: 'profile_image'
-                    }]);
+                    handleProfileImageUpload([
+                      {
+                        id: "img-" + Date.now(),
+                        name: "profile.jpg",
+                        type: "image/jpeg",
+                        size: 0,
+                        url: result.successful[0].uploadURL,
+                        uploadType: "profile_image",
+                      },
+                    ]);
                   }
                 }}
                 buttonClassName="w-8 h-8 rounded-full p-0"
@@ -340,19 +355,23 @@ export default function SovereignSocialProfile() {
               </ObjectUploader>
               <ObjectUploader
                 onGetUploadParameters={async () => {
-                  const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-                  return { method: 'PUT' as const, url: response.uploadURL };
+                  const response = await apiRequest("/api/objects/upload", {
+                    method: "POST",
+                  });
+                  return { method: "PUT" as const, url: response.uploadURL };
                 }}
                 onComplete={(result) => {
                   if (result.successful?.[0]?.uploadURL) {
-                    handleProfileVideoUpload([{
-                      id: 'vid-' + Date.now(),
-                      name: 'profile.mp4',
-                      type: 'video/mp4',
-                      size: 0,
-                      url: result.successful[0].uploadURL,
-                      uploadType: 'profile_video'
-                    }]);
+                    handleProfileVideoUpload([
+                      {
+                        id: "vid-" + Date.now(),
+                        name: "profile.mp4",
+                        type: "video/mp4",
+                        size: 0,
+                        url: result.successful[0].uploadURL,
+                        uploadType: "profile_video",
+                      },
+                    ]);
                   }
                 }}
                 buttonClassName="w-8 h-8 rounded-full p-0"
@@ -370,7 +389,10 @@ export default function SovereignSocialProfile() {
               <Input
                 value={profile.displayName || ""}
                 onChange={(e) => {
-                  setProfile(prev => ({ ...prev, displayName: e.target.value }));
+                  setProfile((prev) => ({
+                    ...prev,
+                    displayName: e.target.value,
+                  }));
                   setHasUnsavedChanges(true);
                 }}
                 className="text-2xl font-bold bg-black/50 border-white/30 text-white"
@@ -379,17 +401,20 @@ export default function SovereignSocialProfile() {
             ) : (
               <h1 className="text-3xl font-bold">{profile.displayName}</h1>
             )}
-            
-            <Badge variant="outline" className="border-yellow-400 text-yellow-400">
+
+            <Badge
+              variant="outline"
+              className="border-yellow-400 text-yellow-400"
+            >
               {profile.tier}
             </Badge>
           </div>
-          
+
           {isEditing ? (
             <Textarea
               value={profile.bio || ""}
               onChange={(e) => {
-                setProfile(prev => ({ ...prev, bio: e.target.value }));
+                setProfile((prev) => ({ ...prev, bio: e.target.value }));
                 setHasUnsavedChanges(true);
               }}
               className="bg-black/50 border-white/30 text-white resize-none"
@@ -399,7 +424,7 @@ export default function SovereignSocialProfile() {
           ) : (
             <p className="text-lg text-gray-200 max-w-md">{profile.bio}</p>
           )}
-          
+
           <div className="flex items-center gap-6 mt-3 text-sm">
             <span>Member since {profile.memberSince}</span>
             <span className="flex items-center gap-1">
@@ -418,16 +443,20 @@ export default function SovereignSocialProfile() {
       <div className="absolute top-4 right-4 flex gap-2">
         {isEditing ? (
           <>
-            <Button onClick={saveProfile} size="sm" className="bg-green-600 hover:bg-green-700">
+            <Button
+              onClick={saveProfile}
+              size="sm"
+              className="bg-green-600 hover:bg-green-700"
+            >
               <Save className="w-4 h-4 mr-2" />
               Save
             </Button>
-            <Button 
+            <Button
               onClick={() => {
                 setIsEditing(false);
                 setHasUnsavedChanges(false);
-              }} 
-              size="sm" 
+              }}
+              size="sm"
               variant="outline"
             >
               <X className="w-4 h-4 mr-2" />
@@ -435,7 +464,11 @@ export default function SovereignSocialProfile() {
             </Button>
           </>
         ) : (
-          <Button onClick={() => setIsEditing(true)} size="sm" variant="outline">
+          <Button
+            onClick={() => setIsEditing(true)}
+            size="sm"
+            variant="outline"
+          >
             <Edit3 className="w-4 h-4 mr-2" />
             Edit Profile
           </Button>
@@ -449,33 +482,41 @@ export default function SovereignSocialProfile() {
       <div className="grid grid-cols-2 col-span-2 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-500">{profile.capsuleCount}</div>
+            <div className="text-2xl font-bold text-blue-500">
+              {profile.capsuleCount}
+            </div>
             <div className="text-sm text-gray-600">Capsules</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-purple-500">{profile.nftCount}</div>
+            <div className="text-2xl font-bold text-purple-500">
+              {profile.nftCount}
+            </div>
             <div className="text-sm text-gray-600">NFTs</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-500">{profile.veritasSealCount}</div>
+            <div className="text-2xl font-bold text-green-500">
+              {profile.veritasSealCount}
+            </div>
             <div className="text-sm text-gray-600">Veritas Seals</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-orange-500">{profile.griefScore}</div>
+            <div className="text-2xl font-bold text-orange-500">
+              {profile.griefScore}
+            </div>
             <div className="text-sm text-gray-600">Grief Score</div>
           </CardContent>
         </Card>
       </div>
-      
+
       {/* Truth Genome Card */}
       <div className="row-span-1">
-        <TruthGenomeCard 
+        <TruthGenomeCard
           userId={profile.id}
           overallScore={Math.round((profile.truthScore || 0) / 10)}
           className="h-full"
@@ -497,18 +538,21 @@ export default function SovereignSocialProfile() {
           <ObjectUploader
             maxNumberOfFiles={5}
             onGetUploadParameters={async () => {
-              const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-              return { method: 'PUT' as const, url: response.uploadURL };
+              const response = await apiRequest("/api/objects/upload", {
+                method: "POST",
+              });
+              return { method: "PUT" as const, url: response.uploadURL };
             }}
             onComplete={(result) => {
-              const files = result.successful?.map((file, idx) => ({
-                id: 'img-' + Date.now() + '-' + idx,
-                name: file.name || 'image.jpg',
-                type: 'image/jpeg',
-                size: file.size || 0,
-                url: file.uploadURL || '',
-                uploadType: 'general'
-              })) || [];
+              const files =
+                result.successful?.map((file, idx) => ({
+                  id: "img-" + Date.now() + "-" + idx,
+                  name: file.name || "image.jpg",
+                  type: "image/jpeg",
+                  size: file.size || 0,
+                  url: file.uploadURL || "",
+                  uploadType: "general",
+                })) || [];
               handleGeneralMediaUpload(files);
             }}
             buttonClassName="h-20 flex-col gap-2"
@@ -517,22 +561,25 @@ export default function SovereignSocialProfile() {
             <span>Upload Images</span>
             <span className="text-xs text-gray-500">Auto-mint as NFTs</span>
           </ObjectUploader>
-          
+
           <ObjectUploader
             maxNumberOfFiles={3}
             onGetUploadParameters={async () => {
-              const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-              return { method: 'PUT' as const, url: response.uploadURL };
+              const response = await apiRequest("/api/objects/upload", {
+                method: "POST",
+              });
+              return { method: "PUT" as const, url: response.uploadURL };
             }}
             onComplete={(result) => {
-              const files = result.successful?.map((file, idx) => ({
-                id: 'vid-' + Date.now() + '-' + idx,
-                name: file.name || 'video.mp4',
-                type: 'video/mp4',
-                size: file.size || 0,
-                url: file.uploadURL || '',
-                uploadType: 'general'
-              })) || [];
+              const files =
+                result.successful?.map((file, idx) => ({
+                  id: "vid-" + Date.now() + "-" + idx,
+                  name: file.name || "video.mp4",
+                  type: "video/mp4",
+                  size: file.size || 0,
+                  url: file.uploadURL || "",
+                  uploadType: "general",
+                })) || [];
               handleGeneralMediaUpload(files);
             }}
             buttonClassName="h-20 flex-col gap-2"
@@ -541,22 +588,25 @@ export default function SovereignSocialProfile() {
             <span>Upload Videos</span>
             <span className="text-xs text-gray-500">Auto-seal & verify</span>
           </ObjectUploader>
-          
+
           <ObjectUploader
             maxNumberOfFiles={3}
             onGetUploadParameters={async () => {
-              const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-              return { method: 'PUT' as const, url: response.uploadURL };
+              const response = await apiRequest("/api/objects/upload", {
+                method: "POST",
+              });
+              return { method: "PUT" as const, url: response.uploadURL };
             }}
             onComplete={(result) => {
-              const files = result.successful?.map((file, idx) => ({
-                id: 'aud-' + Date.now() + '-' + idx,
-                name: file.name || 'audio.mp3',
-                type: 'audio/mp3',
-                size: file.size || 0,
-                url: file.uploadURL || '',
-                uploadType: 'general'
-              })) || [];
+              const files =
+                result.successful?.map((file, idx) => ({
+                  id: "aud-" + Date.now() + "-" + idx,
+                  name: file.name || "audio.mp3",
+                  type: "audio/mp3",
+                  size: file.size || 0,
+                  url: file.uploadURL || "",
+                  uploadType: "general",
+                })) || [];
               handleGeneralMediaUpload(files);
             }}
             buttonClassName="h-20 flex-col gap-2"
@@ -565,22 +615,25 @@ export default function SovereignSocialProfile() {
             <span>Upload Audio</span>
             <span className="text-xs text-gray-500">Truth testimonies</span>
           </ObjectUploader>
-          
+
           <ObjectUploader
             maxNumberOfFiles={5}
             onGetUploadParameters={async () => {
-              const response = await apiRequest('/api/objects/upload', { method: 'POST' });
-              return { method: 'PUT' as const, url: response.uploadURL };
+              const response = await apiRequest("/api/objects/upload", {
+                method: "POST",
+              });
+              return { method: "PUT" as const, url: response.uploadURL };
             }}
             onComplete={(result) => {
-              const files = result.successful?.map((file, idx) => ({
-                id: 'doc-' + Date.now() + '-' + idx,
-                name: file.name || 'document.pdf',
-                type: 'application/pdf',
-                size: file.size || 0,
-                url: file.uploadURL || '',
-                uploadType: 'general'
-              })) || [];
+              const files =
+                result.successful?.map((file, idx) => ({
+                  id: "doc-" + Date.now() + "-" + idx,
+                  name: file.name || "document.pdf",
+                  type: "application/pdf",
+                  size: file.size || 0,
+                  url: file.uploadURL || "",
+                  uploadType: "general",
+                })) || [];
               handleGeneralMediaUpload(files);
             }}
             buttonClassName="h-20 flex-col gap-2"
@@ -590,11 +643,12 @@ export default function SovereignSocialProfile() {
             <span className="text-xs text-gray-500">Legacy preservation</span>
           </ObjectUploader>
         </div>
-        
+
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <p className="text-sm text-blue-800">
             <Sparkles className="w-4 h-4 inline mr-1" />
-            All uploads are automatically categorized, minted as NFTs, and added to your capsule vault timeline.
+            All uploads are automatically categorized, minted as NFTs, and added
+            to your capsule vault timeline.
           </p>
         </div>
       </CardContent>
@@ -608,9 +662,7 @@ export default function SovereignSocialProfile() {
           {/* Profile Header */}
           <Card className="mb-6 overflow-hidden">
             {renderProfileHeader()}
-            <div className="pt-20 pb-6 px-8">
-              {renderStatsPanel()}
-            </div>
+            <div className="pt-20 pb-6 px-8">{renderStatsPanel()}</div>
           </Card>
 
           {/* Main Content Tabs */}
@@ -661,7 +713,10 @@ export default function SovereignSocialProfile() {
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <div key={i} className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
+                      <div
+                        key={i}
+                        className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center"
+                      >
                         <Gem className="w-8 h-8 text-gray-400" />
                       </div>
                     ))}
@@ -676,7 +731,8 @@ export default function SovereignSocialProfile() {
                   onCapsuleCreated={(capsule) => {
                     toast({
                       title: "Capsule Added to Timeline",
-                      description: "Your new capsule is now live on your sovereign profile",
+                      description:
+                        "Your new capsule is now live on your sovereign profile",
                     });
                   }}
                 />
@@ -690,7 +746,9 @@ export default function SovereignSocialProfile() {
                   <CardTitle>Veritas Seals</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Your truth verification achievements and sealed testimonies.</p>
+                  <p className="text-gray-600">
+                    Your truth verification achievements and sealed testimonies.
+                  </p>
                   <div className="flex items-center gap-2 mt-4">
                     <Badge variant="outline" className="bg-green-50">
                       <Seal className="w-3 h-3 mr-1" />

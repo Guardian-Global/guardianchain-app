@@ -229,7 +229,7 @@ const healthRecord = await guardianchain.createPrivateCapsule({
                       variant="ghost"
                       onClick={() =>
                         copyToClipboard(
-                          "npm install @guardianchain/enterprise-sdk"
+                          "npm install @guardianchain/enterprise-sdk",
                         )
                       }
                     >

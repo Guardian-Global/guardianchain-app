@@ -31,14 +31,14 @@ class SystemAuditor {
   constructor() {
     this.supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
     );
   }
 
   private log(
     service: string,
     status: "healthy" | "degraded" | "failed",
-    details: string
+    details: string,
   ) {
     const result: AuditResult = {
       service,
@@ -71,13 +71,13 @@ class SystemAuditor {
       this.log(
         "Environment",
         "healthy",
-        "All required environment variables present"
+        "All required environment variables present",
       );
     } else {
       this.log(
         "Environment",
         "failed",
-        `${missingVars} environment variables missing`
+        `${missingVars} environment variables missing`,
       );
     }
   }
@@ -107,13 +107,13 @@ class SystemAuditor {
         this.log(
           "Supabase Auth",
           "failed",
-          `Users query failed: ${usersError.message}`
+          `Users query failed: ${usersError.message}`,
         );
       } else {
         this.log(
           "Supabase Auth",
           "healthy",
-          `${users.users.length} users found`
+          `${users.users.length} users found`,
         );
       }
 
@@ -124,13 +124,13 @@ class SystemAuditor {
         this.log(
           "Supabase Storage",
           "failed",
-          `Storage check failed: ${bucketsError.message}`
+          `Storage check failed: ${bucketsError.message}`,
         );
       } else {
         this.log(
           "Supabase Storage",
           "healthy",
-          `${buckets.length} buckets available`
+          `${buckets.length} buckets available`,
         );
 
         // Check app-assets bucket specifically
@@ -142,13 +142,13 @@ class SystemAuditor {
           this.log(
             "Supabase Storage",
             "degraded",
-            `app-assets bucket issues: ${assetsError.message}`
+            `app-assets bucket issues: ${assetsError.message}`,
           );
         } else {
           this.log(
             "Supabase Storage",
             "healthy",
-            `app-assets bucket has ${assets.length} files`
+            `app-assets bucket has ${assets.length} files`,
           );
         }
       }
@@ -174,7 +174,7 @@ class SystemAuditor {
     // Test Polygon RPC
     try {
       const polygonProvider = new ethers.JsonRpcProvider(
-        process.env.POLYGON_RPC_URL!
+        process.env.POLYGON_RPC_URL!,
       );
       const blockNumber = await polygonProvider.getBlockNumber();
       this.log("Polygon RPC", "healthy", `Latest block: ${blockNumber}`);
@@ -193,7 +193,7 @@ class SystemAuditor {
         this.log(
           "GTT Contract",
           "failed",
-          "No contract code at address (not deployed or wrong network)"
+          "No contract code at address (not deployed or wrong network)",
         );
         return;
       }
@@ -204,14 +204,14 @@ class SystemAuditor {
         "GTT Contract",
         "degraded",
         `Address exists with ${ethers.formatEther(
-          balance
-        )} ETH, but decode errors suggest non-standard interface`
+          balance,
+        )} ETH, but decode errors suggest non-standard interface`,
       );
     } catch (error: any) {
       this.log(
         "GTT Contract",
         "failed",
-        `Contract check failed: ${error.message}`
+        `Contract check failed: ${error.message}`,
       );
     }
   }
@@ -235,7 +235,7 @@ class SystemAuditor {
         this.log(
           "OpenAI API",
           "failed",
-          `HTTP ${response.status}: ${response.statusText}`
+          `HTTP ${response.status}: ${response.statusText}`,
         );
       }
     } catch (error: any) {
@@ -264,7 +264,7 @@ class SystemAuditor {
         this.log(
           "Anthropic API",
           "failed",
-          `HTTP ${response.status}: ${response.statusText}`
+          `HTTP ${response.status}: ${response.statusText}`,
         );
       }
     } catch (error: any) {
@@ -280,7 +280,7 @@ class SystemAuditor {
             Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        }
+        },
       );
 
       if (response.ok) {
@@ -289,7 +289,7 @@ class SystemAuditor {
         this.log(
           "Stripe API",
           "failed",
-          `HTTP ${response.status}: ${response.statusText}`
+          `HTTP ${response.status}: ${response.statusText}`,
         );
       }
     } catch (error: any) {
@@ -302,13 +302,13 @@ class SystemAuditor {
     console.log("=====================================");
 
     const healthyCount = this.results.filter(
-      (r) => r.status === "healthy"
+      (r) => r.status === "healthy",
     ).length;
     const degradedCount = this.results.filter(
-      (r) => r.status === "degraded"
+      (r) => r.status === "degraded",
     ).length;
     const failedCount = this.results.filter(
-      (r) => r.status === "failed"
+      (r) => r.status === "failed",
     ).length;
     const totalCount = this.results.length;
 
@@ -317,7 +317,7 @@ class SystemAuditor {
     console.log(`⚠️ Degraded: ${degradedCount}`);
     console.log(`❌ Failed: ${failedCount}`);
     console.log(
-      `📊 Health Score: ${Math.round((healthyCount / totalCount) * 100)}%`
+      `📊 Health Score: ${Math.round((healthyCount / totalCount) * 100)}%`,
     );
 
     if (failedCount > 0) {

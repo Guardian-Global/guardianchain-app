@@ -73,7 +73,7 @@ export default function ClaimAllYieldPanel() {
         const contract = new (await import("ethers")).Contract(
           YIELD_VAULT_ADDRESS,
           YIELD_VAULT_ABI,
-          provider
+          provider,
         );
         const yieldOwed = await contract.yieldOwed(address);
         pendingYield = (await import("ethers")).formatEther(yieldOwed);
@@ -115,7 +115,7 @@ export default function ClaimAllYieldPanel() {
       const contract = new (await import("ethers")).Contract(
         YIELD_VAULT_ADDRESS,
         YIELD_VAULT_ABI,
-        signer
+        signer,
       );
 
       const tx = await contract.claimYield();
@@ -124,7 +124,7 @@ export default function ClaimAllYieldPanel() {
       toast({
         title: "Transaction Submitted",
         description: `Claiming ${formatGTTAmount(
-          yieldData.claimableAmount
+          yieldData.claimableAmount,
         )} GTT...`,
       });
 
@@ -134,7 +134,7 @@ export default function ClaimAllYieldPanel() {
         toast({
           title: "Yield Claimed Successfully!",
           description: `${formatGTTAmount(
-            yieldData.claimableAmount
+            yieldData.claimableAmount,
           )} GTT has been added to your wallet`,
         });
 

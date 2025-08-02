@@ -36,7 +36,11 @@ future_enhancements:
 <HeroBanner
   title={
     <>
-      <img src="/media/logo.png" alt="GuardianChain Logo" style={{ height: "36px", marginBottom: "10px" }} />
+      <img
+        src="/media/logo.png"
+        alt="GuardianChain Logo"
+        style={{ height: "36px", marginBottom: "10px" }}
+      />
       Capsule API Reference & Explorer
     </>
   }
@@ -47,7 +51,7 @@ future_enhancements:
   cta={[
     { label: "OpenAPI Explorer", url: "#reference", style: "primary" },
     { label: "Try API Live", url: "#playground", style: "secondary" },
-    { label: "Get SDK", url: "#sdks", style: "holo" }
+    { label: "Get SDK", url: "#sdks", style: "holo" },
   ]}
 />
 
@@ -55,11 +59,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/capsule-api" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -67,17 +75,19 @@ future_enhancements:
 ---
 
 ## <span id="reference">API Reference <ApiIcon /></span>
+
 <OpenAPIExplorer url="https://api.guardian-global.com/v1/capsule/openapi.json" />
 - Full schema, required params, and live try-it-now interface
 
 ---
 
 ## <span id="playground">API Playground <PlayIcon /></span>
+
 <CodePlayground
   samples={[
     { lang: "JavaScript", code: "// mint a capsule..." },
     { lang: "Python", code: "# mint a capsule..." },
-    { lang: "Curl", code: "curl -X POST ..." }
+    { lang: "Curl", code: "curl -X POST ..." },
   ]}
 />
 - Supports REST, GraphQL, and WebSocket
@@ -85,20 +95,29 @@ future_enhancements:
 ---
 
 ## <span id="sdks">SDKs & Helpers <CodeIcon /></span>
+
 <SDKShowcase
   sdks={[
     { lang: "JavaScript", url: "/sdks/capsule-js.zip" },
-    { lang: "Python", url: "/sdks/capsule-py.zip" }
+    { lang: "Python", url: "/sdks/capsule-py.zip" },
   ]}
 />
 
 ---
 
 ## <span id="faq">FAQ <HelpIcon /></span>
+
 <FAQ>
-  <Question q="What is a capsule?">A cryptographically sealed memory or data proof, authored and verified on GuardianChain.</Question>
-  <Question q="How do I verify capsule authorship?">Use the `/verify` endpoint or click the NFT in your dashboard.</Question>
-  <Question q="Is the API open to all?">Yes—rate limits apply by wallet or key. Heavy use may require staking.</Question>
+  <Question q="What is a capsule?">
+    A cryptographically sealed memory or data proof, authored and verified on
+    GuardianChain.
+  </Question>
+  <Question q="How do I verify capsule authorship?">
+    Use the `/verify` endpoint or click the NFT in your dashboard.
+  </Question>
+  <Question q="Is the API open to all?">
+    Yes—rate limits apply by wallet or key. Heavy use may require staking.
+  </Question>
 </FAQ>
 
 ---

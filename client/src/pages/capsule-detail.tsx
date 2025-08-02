@@ -51,7 +51,7 @@ export default function CapsuleDetail() {
   useEffect(() => {
     if (capsule?.id) {
       apiRequest("POST", `/api/analytics/${capsule.id}/view`).catch((error) =>
-        console.log("View tracking failed:", error)
+        console.log("View tracking failed:", error),
       );
     }
   }, [capsule?.id]);
@@ -94,7 +94,7 @@ export default function CapsuleDetail() {
 
       // Remove existing structured data
       const existingScript = document.querySelector(
-        'script[type="application/ld+json"]'
+        'script[type="application/ld+json"]',
       );
       if (existingScript) {
         existingScript.remove();
@@ -108,7 +108,7 @@ export default function CapsuleDetail() {
 
       return () => {
         const scriptToRemove = document.querySelector(
-          'script[type="application/ld+json"]'
+          'script[type="application/ld+json"]',
         );
         if (scriptToRemove) {
           scriptToRemove.remove();
@@ -280,7 +280,7 @@ export default function CapsuleDetail() {
                     <div className="text-xs text-slate-400">
                       Created{" "}
                       {new Date(
-                        capsule.createdAt || Date.now()
+                        capsule.createdAt || Date.now(),
                       ).toLocaleDateString()}
                     </div>
                   </div>
@@ -387,7 +387,7 @@ export default function CapsuleDetail() {
                     onClick={() =>
                       window.open(
                         `https://opensea.io/assets/matic/0x1234567890abcdef1234567890abcdef12345678/${capsule.nftTokenId}`,
-                        "_blank"
+                        "_blank",
                       )
                     }
                   >

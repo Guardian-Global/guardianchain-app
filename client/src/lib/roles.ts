@@ -149,7 +149,7 @@ export function getTierComparison() {
  */
 export function canAccessFeature(
   userTierId: string,
-  requiredTierId: string
+  requiredTierId: string,
 ): boolean {
   const userTierIndex = TIERS.findIndex((t) => t.id === userTierId);
   const requiredTierIndex = TIERS.findIndex((t) => t.id === requiredTierId);

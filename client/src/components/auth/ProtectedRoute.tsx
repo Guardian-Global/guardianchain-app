@@ -19,7 +19,7 @@ export default function ProtectedRoute({
   requiredTier,
   requiredPermission,
   fallbackPath = "/login",
-  showUpgradeOption = true
+  showUpgradeOption = true,
 }: ProtectedRouteProps) {
   const [, setLocation] = useLocation();
 
@@ -34,7 +34,7 @@ export default function ProtectedRoute({
             <p className="text-slate-400 mb-6">
               Please sign in to access GUARDIANCHAIN services
             </p>
-            <Button 
+            <Button
               onClick={() => setLocation(fallbackPath)}
               className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
             >
@@ -52,9 +52,10 @@ export default function ProtectedRoute({
       ADMIN: Shield,
       COMMANDER: Crown,
       FOUNDER: Crown,
-      MASTER_ADMIN: Crown
+      MASTER_ADMIN: Crown,
     };
-    const IconComponent = roleIcons[requiredRole as keyof typeof roleIcons] || Shield;
+    const IconComponent =
+      roleIcons[requiredRole as keyof typeof roleIcons] || Shield;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center p-6">
@@ -63,12 +64,14 @@ export default function ProtectedRoute({
             <IconComponent className="mx-auto h-12 w-12 text-red-400 mb-4" />
             <h3 className="text-xl font-bold mb-2">Access Denied</h3>
             <p className="text-slate-400 mb-4">
-              Required role: <span className="text-red-400 font-semibold">{requiredRole}</span>
+              Required role:{" "}
+              <span className="text-red-400 font-semibold">{requiredRole}</span>
             </p>
             <p className="text-slate-400 mb-6">
-              Your current role: <span className="text-blue-400 font-semibold">{user?.role}</span>
+              Your current role:{" "}
+              <span className="text-blue-400 font-semibold">{user?.role}</span>
             </p>
-            <Button 
+            <Button
               onClick={() => setLocation("/dashboard")}
               variant="outline"
               className="w-full"
@@ -90,20 +93,24 @@ export default function ProtectedRoute({
             <Zap className="mx-auto h-12 w-12 text-yellow-400 mb-4" />
             <h3 className="text-xl font-bold mb-2">Upgrade Required</h3>
             <p className="text-slate-400 mb-4">
-              Required tier: <span className="text-yellow-400 font-semibold">{requiredTier}</span>
+              Required tier:{" "}
+              <span className="text-yellow-400 font-semibold">
+                {requiredTier}
+              </span>
             </p>
             <p className="text-slate-400 mb-6">
-              Your current tier: <span className="text-blue-400 font-semibold">{user?.tier}</span>
+              Your current tier:{" "}
+              <span className="text-blue-400 font-semibold">{user?.tier}</span>
             </p>
             {showUpgradeOption && (
               <div className="space-y-3">
-                <Button 
+                <Button
                   onClick={() => setLocation("/upgrade")}
                   className="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700"
                 >
                   Upgrade Now
                 </Button>
-                <Button 
+                <Button
                   onClick={() => setLocation("/dashboard")}
                   variant="outline"
                   className="w-full"
@@ -127,12 +134,15 @@ export default function ProtectedRoute({
             <Lock className="mx-auto h-12 w-12 text-red-400 mb-4" />
             <h3 className="text-xl font-bold mb-2">Permission Denied</h3>
             <p className="text-slate-400 mb-4">
-              Required permission: <span className="text-red-400 font-semibold">{requiredPermission}</span>
+              Required permission:{" "}
+              <span className="text-red-400 font-semibold">
+                {requiredPermission}
+              </span>
             </p>
             <p className="text-slate-400 mb-6">
               Contact your administrator for access
             </p>
-            <Button 
+            <Button
               onClick={() => setLocation("/dashboard")}
               variant="outline"
               className="w-full"
@@ -151,49 +161,31 @@ export default function ProtectedRoute({
 
 // Convenience components for specific access levels
 export function AdminRoute({ children }: { children: React.ReactNode }) {
-  return (
-    <ProtectedRoute requiredRole="ADMIN">
-      {children}
-    </ProtectedRoute>
-  );
+  return <ProtectedRoute requiredRole="ADMIN">{children}</ProtectedRoute>;
 }
 
 export function CommanderRoute({ children }: { children: React.ReactNode }) {
-  return (
-    <ProtectedRoute requiredRole="COMMANDER">
-      {children}
-    </ProtectedRoute>
-  );
+  return <ProtectedRoute requiredRole="COMMANDER">{children}</ProtectedRoute>;
 }
 
 export function FounderRoute({ children }: { children: React.ReactNode }) {
-  return (
-    <ProtectedRoute requiredRole="FOUNDER">
-      {children}
-    </ProtectedRoute>
-  );
+  return <ProtectedRoute requiredRole="FOUNDER">{children}</ProtectedRoute>;
 }
 
 export function MasterAdminRoute({ children }: { children: React.ReactNode }) {
   return (
-    <ProtectedRoute requiredRole="MASTER_ADMIN">
-      {children}
-    </ProtectedRoute>
+    <ProtectedRoute requiredRole="MASTER_ADMIN">{children}</ProtectedRoute>
   );
 }
 
 export function CreatorTierRoute({ children }: { children: React.ReactNode }) {
-  return (
-    <ProtectedRoute requiredTier="CREATOR">
-      {children}
-    </ProtectedRoute>
-  );
+  return <ProtectedRoute requiredTier="CREATOR">{children}</ProtectedRoute>;
 }
 
-export function SovereignTierRoute({ children }: { children: React.ReactNode }) {
-  return (
-    <ProtectedRoute requiredTier="SOVEREIGN">
-      {children}
-    </ProtectedRoute>
-  );
+export function SovereignTierRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <ProtectedRoute requiredTier="SOVEREIGN">{children}</ProtectedRoute>;
 }

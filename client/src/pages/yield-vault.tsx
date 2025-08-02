@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Vault, 
-  TrendingUp, 
-  Coins, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Vault,
+  TrendingUp,
+  Coins,
   Shield,
   Clock,
   Zap,
@@ -18,12 +18,12 @@ import {
   ArrowDownRight,
   Calculator,
   BarChart3,
-  DollarSign
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+  DollarSign,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface YieldVault {
   id: string;
@@ -32,7 +32,7 @@ interface YieldVault {
   apy: number;
   userStaked: number;
   userRewards: number;
-  riskLevel: 'low' | 'medium' | 'high';
+  riskLevel: "low" | "medium" | "high";
   strategy: string;
   lockPeriod: number; // in days
   minDeposit: number;
@@ -53,35 +53,47 @@ interface UserYieldData {
 export default function YieldVaultPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<'overview' | 'vaults' | 'strategies'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "vaults" | "strategies"
+  >("overview");
   const [selectedVault, setSelectedVault] = useState<string | null>(null);
-  const [stakeAmount, setStakeAmount] = useState('');
+  const [stakeAmount, setStakeAmount] = useState("");
 
-  const { data: yieldData, isLoading, refetch } = useQuery<UserYieldData>({
-    queryKey: ['/api/yield-vault/user-data', user?.id],
+  const {
+    data: yieldData,
+    isLoading,
+    refetch,
+  } = useQuery<UserYieldData>({
+    queryKey: ["/api/yield-vault/user-data", user?.id],
     enabled: !!user?.id,
   });
 
   const stakeMutation = useMutation({
-    mutationFn: async ({ vaultId, amount }: { vaultId: string; amount: number }) => {
-      return apiRequest('POST', '/api/yield-vault/stake', { vaultId, amount });
+    mutationFn: async ({
+      vaultId,
+      amount,
+    }: {
+      vaultId: string;
+      amount: number;
+    }) => {
+      return apiRequest("POST", "/api/yield-vault/stake", { vaultId, amount });
     },
     onSuccess: () => {
       toast({
-        title: 'Stake Successful',
-        description: 'Your GTT tokens have been staked in the yield vault.',
+        title: "Stake Successful",
+        description: "Your GTT tokens have been staked in the yield vault.",
       });
-      setStakeAmount('');
+      setStakeAmount("");
       setSelectedVault(null);
       refetch();
     },
     onError: (error) => {
       toast({
-        title: 'Staking Failed',
-        description: 'There was an error staking your tokens.',
-        variant: 'destructive',
+        title: "Staking Failed",
+        description: "There was an error staking your tokens.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   const defaultYieldData: UserYieldData = {
@@ -90,77 +102,85 @@ export default function YieldVaultPage() {
     totalClaimed: 2500,
     currentAPY: 12.3,
     griefScoreMultiplier: 1.25,
-    nextClaimDate: '2025-08-15T00:00:00Z',
+    nextClaimDate: "2025-08-15T00:00:00Z",
     vaults: [
       {
-        id: 'gtt-core',
-        name: 'GTT Core Vault',
+        id: "gtt-core",
+        name: "GTT Core Vault",
         totalValueLocked: 2400000,
         apy: 12.3,
         userStaked: 25000,
         userRewards: 3075,
-        riskLevel: 'low',
-        strategy: 'Core staking with grief score multiplier',
+        riskLevel: "low",
+        strategy: "Core staking with grief score multiplier",
         lockPeriod: 30,
         minDeposit: 1000,
         maxCapacity: 10000000,
-        currentCapacity: 2400000
+        currentCapacity: 2400000,
       },
       {
-        id: 'gtt-premium',
-        name: 'GTT Premium Vault',
+        id: "gtt-premium",
+        name: "GTT Premium Vault",
         totalValueLocked: 890000,
         apy: 18.5,
         userStaked: 15000,
         userRewards: 2775,
-        riskLevel: 'medium',
-        strategy: 'Enhanced yield with DeFi integrations',
+        riskLevel: "medium",
+        strategy: "Enhanced yield with DeFi integrations",
         lockPeriod: 90,
         minDeposit: 10000,
         maxCapacity: 2000000,
-        currentCapacity: 890000
+        currentCapacity: 890000,
       },
       {
-        id: 'gtt-sovereign',
-        name: 'GTT Sovereign Vault',
+        id: "gtt-sovereign",
+        name: "GTT Sovereign Vault",
         totalValueLocked: 450000,
         apy: 25.0,
         userStaked: 10000,
         userRewards: 300,
-        riskLevel: 'high',
-        strategy: 'Advanced strategies with governance rewards',
+        riskLevel: "high",
+        strategy: "Advanced strategies with governance rewards",
         lockPeriod: 365,
         minDeposit: 50000,
         maxCapacity: 1000000,
-        currentCapacity: 450000
-      }
-    ]
+        currentCapacity: 450000,
+      },
+    ],
   };
 
   const data = yieldData || defaultYieldData;
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'low': return 'text-green-600 bg-green-50 border-green-200';
-      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'high': return 'text-red-600 bg-red-50 border-red-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case "low":
+        return "text-green-600 bg-green-50 border-green-200";
+      case "medium":
+        return "text-yellow-600 bg-yellow-50 border-yellow-200";
+      case "high":
+        return "text-red-600 bg-red-50 border-red-200";
+      default:
+        return "text-gray-600 bg-gray-50 border-gray-200";
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
     }).format(amount);
   };
 
   const formatTokens = (amount: number) => {
-    return new Intl.NumberFormat('en-US').format(amount) + ' GTT';
+    return new Intl.NumberFormat("en-US").format(amount) + " GTT";
   };
 
-  const calculateProjectedRewards = (amount: number, apy: number, days: number) => {
-    return (amount * (apy / 100) * (days / 365));
+  const calculateProjectedRewards = (
+    amount: number,
+    apy: number,
+    days: number,
+  ) => {
+    return amount * (apy / 100) * (days / 365);
   };
 
   if (isLoading) {
@@ -171,7 +191,10 @@ export default function YieldVaultPage() {
             <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div
+                  key={i}
+                  className="h-32 bg-gray-200 dark:bg-gray-700 rounded"
+                ></div>
               ))}
             </div>
           </div>
@@ -192,31 +215,32 @@ export default function YieldVaultPage() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto">
-            Maximize your GTT yield through sophisticated staking strategies. 
-            Earn rewards based on grief score, platform usage, and vault performance.
+            Maximize your GTT yield through sophisticated staking strategies.
+            Earn rewards based on grief score, platform usage, and vault
+            performance.
           </p>
         </div>
 
         {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm">
-            {['overview', 'vaults', 'strategies'].map((tab) => (
+            {["overview", "vaults", "strategies"].map((tab) => (
               <Button
                 key={tab}
-                variant={activeTab === tab ? 'default' : 'ghost'}
+                variant={activeTab === tab ? "default" : "ghost"}
                 onClick={() => setActiveTab(tab as any)}
                 className="mx-1"
               >
-                {tab === 'overview' && <BarChart3 className="w-4 h-4 mr-2" />}
-                {tab === 'vaults' && <Vault className="w-4 h-4 mr-2" />}
-                {tab === 'strategies' && <Target className="w-4 h-4 mr-2" />}
+                {tab === "overview" && <BarChart3 className="w-4 h-4 mr-2" />}
+                {tab === "vaults" && <Vault className="w-4 h-4 mr-2" />}
+                {tab === "strategies" && <Target className="w-4 h-4 mr-2" />}
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </Button>
             ))}
           </div>
         </div>
 
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <div className="space-y-8">
             {/* Portfolio Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -224,9 +248,15 @@ export default function YieldVaultPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Staked</p>
-                      <p className="text-2xl font-bold">{formatTokens(data.totalStaked)}</p>
-                      <p className="text-sm text-blue-600">≈ {formatCurrency(data.totalStaked * 0.0075)}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Staked
+                      </p>
+                      <p className="text-2xl font-bold">
+                        {formatTokens(data.totalStaked)}
+                      </p>
+                      <p className="text-sm text-blue-600">
+                        ≈ {formatCurrency(data.totalStaked * 0.0075)}
+                      </p>
                     </div>
                     <Lock className="w-8 h-8 text-blue-500" />
                   </div>
@@ -237,9 +267,19 @@ export default function YieldVaultPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Rewards</p>
-                      <p className="text-2xl font-bold">{formatTokens(data.totalRewards)}</p>
-                      <p className="text-sm text-green-600">+{((data.totalRewards / data.totalStaked) * 100).toFixed(1)}%</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Rewards
+                      </p>
+                      <p className="text-2xl font-bold">
+                        {formatTokens(data.totalRewards)}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        +
+                        {((data.totalRewards / data.totalStaked) * 100).toFixed(
+                          1,
+                        )}
+                        %
+                      </p>
                     </div>
                     <TrendingUp className="w-8 h-8 text-green-500" />
                   </div>
@@ -250,9 +290,15 @@ export default function YieldVaultPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Current APY</p>
-                      <p className="text-2xl font-bold">{data.currentAPY.toFixed(1)}%</p>
-                      <p className="text-sm text-purple-600">×{data.griefScoreMultiplier} grief bonus</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Current APY
+                      </p>
+                      <p className="text-2xl font-bold">
+                        {data.currentAPY.toFixed(1)}%
+                      </p>
+                      <p className="text-sm text-purple-600">
+                        ×{data.griefScoreMultiplier} grief bonus
+                      </p>
                     </div>
                     <Zap className="w-8 h-8 text-purple-500" />
                   </div>
@@ -263,9 +309,15 @@ export default function YieldVaultPage() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Claimed</p>
-                      <p className="text-2xl font-bold">{formatTokens(data.totalClaimed)}</p>
-                      <p className="text-sm text-orange-600">Lifetime earnings</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Claimed
+                      </p>
+                      <p className="text-2xl font-bold">
+                        {formatTokens(data.totalClaimed)}
+                      </p>
+                      <p className="text-sm text-orange-600">
+                        Lifetime earnings
+                      </p>
                     </div>
                     <Award className="w-8 h-8 text-orange-500" />
                   </div>
@@ -283,33 +335,46 @@ export default function YieldVaultPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {data.vaults.filter(v => v.userStaked > 0).map((vault) => (
-                    <div key={vault.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <div className={`p-2 rounded-lg ${getRiskColor(vault.riskLevel)}`}>
-                          <Vault className="w-5 h-5" />
+                  {data.vaults
+                    .filter((v) => v.userStaked > 0)
+                    .map((vault) => (
+                      <div
+                        key={vault.id}
+                        className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div
+                            className={`p-2 rounded-lg ${getRiskColor(vault.riskLevel)}`}
+                          >
+                            <Vault className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold">{vault.name}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {vault.strategy}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-semibold">{vault.name}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{vault.strategy}</p>
+
+                        <div className="text-right">
+                          <div className="text-lg font-bold">
+                            {formatTokens(vault.userStaked)}
+                          </div>
+                          <div className="text-sm text-green-600">
+                            Rewards: {formatTokens(vault.userRewards)}
+                          </div>
+                        </div>
+
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-purple-600">
+                            {vault.apy}% APY
+                          </div>
+                          <Badge className={getRiskColor(vault.riskLevel)}>
+                            {vault.riskLevel.toUpperCase()} RISK
+                          </Badge>
                         </div>
                       </div>
-                      
-                      <div className="text-right">
-                        <div className="text-lg font-bold">{formatTokens(vault.userStaked)}</div>
-                        <div className="text-sm text-green-600">
-                          Rewards: {formatTokens(vault.userRewards)}
-                        </div>
-                      </div>
-                      
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-purple-600">{vault.apy}% APY</div>
-                        <Badge className={getRiskColor(vault.riskLevel)}>
-                          {vault.riskLevel.toUpperCase()} RISK
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -323,7 +388,9 @@ export default function YieldVaultPage() {
                 <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="text-center">
                     <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                    <p className="text-gray-500">Performance chart coming soon</p>
+                    <p className="text-gray-500">
+                      Performance chart coming soon
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -331,11 +398,14 @@ export default function YieldVaultPage() {
           </div>
         )}
 
-        {activeTab === 'vaults' && (
+        {activeTab === "vaults" && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {data.vaults.map((vault) => (
-                <Card key={vault.id} className="hover:shadow-lg transition-shadow">
+                <Card
+                  key={vault.id}
+                  className="hover:shadow-lg transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">{vault.name}</CardTitle>
@@ -349,13 +419,17 @@ export default function YieldVaultPage() {
                       <div className="text-3xl font-bold text-purple-600 mb-1">
                         {vault.apy}%
                       </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">APY</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        APY
+                      </div>
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>TVL:</span>
-                        <span className="font-semibold">{formatCurrency(vault.totalValueLocked)}</span>
+                        <span className="font-semibold">
+                          {formatCurrency(vault.totalValueLocked)}
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Min Deposit:</span>
@@ -367,23 +441,38 @@ export default function YieldVaultPage() {
                       </div>
                       <div className="flex justify-between text-sm">
                         <span>Your Stake:</span>
-                        <span className="font-semibold">{formatTokens(vault.userStaked)}</span>
+                        <span className="font-semibold">
+                          {formatTokens(vault.userStaked)}
+                        </span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs">
                         <span>Capacity</span>
-                        <span>{((vault.currentCapacity / vault.maxCapacity) * 100).toFixed(1)}%</span>
+                        <span>
+                          {(
+                            (vault.currentCapacity / vault.maxCapacity) *
+                            100
+                          ).toFixed(1)}
+                          %
+                        </span>
                       </div>
-                      <Progress value={(vault.currentCapacity / vault.maxCapacity) * 100} className="h-2" />
+                      <Progress
+                        value={
+                          (vault.currentCapacity / vault.maxCapacity) * 100
+                        }
+                        className="h-2"
+                      />
                     </div>
 
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{vault.strategy}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      {vault.strategy}
+                    </p>
 
                     <div className="flex space-x-2">
-                      <Button 
-                        className="flex-1" 
+                      <Button
+                        className="flex-1"
                         onClick={() => setSelectedVault(vault.id)}
                         disabled={vault.currentCapacity >= vault.maxCapacity}
                       >
@@ -407,7 +496,8 @@ export default function YieldVaultPage() {
               <Card className="max-w-md mx-auto">
                 <CardHeader>
                   <CardTitle>
-                    Stake in {data.vaults.find(v => v.id === selectedVault)?.name}
+                    Stake in{" "}
+                    {data.vaults.find((v) => v.id === selectedVault)?.name}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -429,30 +519,59 @@ export default function YieldVaultPage() {
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
                           <span>Daily:</span>
-                          <span>{calculateProjectedRewards(Number(stakeAmount), data.vaults.find(v => v.id === selectedVault)?.apy || 0, 1).toFixed(2)} GTT</span>
+                          <span>
+                            {calculateProjectedRewards(
+                              Number(stakeAmount),
+                              data.vaults.find((v) => v.id === selectedVault)
+                                ?.apy || 0,
+                              1,
+                            ).toFixed(2)}{" "}
+                            GTT
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Monthly:</span>
-                          <span>{calculateProjectedRewards(Number(stakeAmount), data.vaults.find(v => v.id === selectedVault)?.apy || 0, 30).toFixed(2)} GTT</span>
+                          <span>
+                            {calculateProjectedRewards(
+                              Number(stakeAmount),
+                              data.vaults.find((v) => v.id === selectedVault)
+                                ?.apy || 0,
+                              30,
+                            ).toFixed(2)}{" "}
+                            GTT
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span>Annually:</span>
-                          <span>{calculateProjectedRewards(Number(stakeAmount), data.vaults.find(v => v.id === selectedVault)?.apy || 0, 365).toFixed(2)} GTT</span>
+                          <span>
+                            {calculateProjectedRewards(
+                              Number(stakeAmount),
+                              data.vaults.find((v) => v.id === selectedVault)
+                                ?.apy || 0,
+                              365,
+                            ).toFixed(2)}{" "}
+                            GTT
+                          </span>
                         </div>
                       </div>
                     </div>
                   )}
 
                   <div className="flex space-x-2">
-                    <Button 
-                      onClick={() => stakeMutation.mutate({ vaultId: selectedVault, amount: Number(stakeAmount) })}
+                    <Button
+                      onClick={() =>
+                        stakeMutation.mutate({
+                          vaultId: selectedVault,
+                          amount: Number(stakeAmount),
+                        })
+                      }
                       disabled={!stakeAmount || stakeMutation.isPending}
                       className="flex-1"
                     >
-                      {stakeMutation.isPending ? 'Staking...' : 'Confirm Stake'}
+                      {stakeMutation.isPending ? "Staking..." : "Confirm Stake"}
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => setSelectedVault(null)}
                       className="flex-1"
                     >
@@ -465,7 +584,7 @@ export default function YieldVaultPage() {
           </div>
         )}
 
-        {activeTab === 'strategies' && (
+        {activeTab === "strategies" && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
@@ -487,7 +606,9 @@ export default function YieldVaultPage() {
                       <li>• Low risk, consistent returns</li>
                     </ul>
                     <div className="mt-4">
-                      <Badge className="bg-green-100 text-green-800">Recommended for beginners</Badge>
+                      <Badge className="bg-green-100 text-green-800">
+                        Recommended for beginners
+                      </Badge>
                     </div>
                   </div>
 
@@ -502,7 +623,9 @@ export default function YieldVaultPage() {
                       <li>• Medium risk, balanced approach</li>
                     </ul>
                     <div className="mt-4">
-                      <Badge className="bg-yellow-100 text-yellow-800">Most popular</Badge>
+                      <Badge className="bg-yellow-100 text-yellow-800">
+                        Most popular
+                      </Badge>
                     </div>
                   </div>
 
@@ -517,7 +640,9 @@ export default function YieldVaultPage() {
                       <li>• High risk, maximum returns</li>
                     </ul>
                     <div className="mt-4">
-                      <Badge className="bg-red-100 text-red-800">For experienced users</Badge>
+                      <Badge className="bg-red-100 text-red-800">
+                        For experienced users
+                      </Badge>
                     </div>
                   </div>
                 </div>
@@ -532,7 +657,9 @@ export default function YieldVaultPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Boost Your Multiplier</h3>
+                    <h3 className="text-lg font-semibold mb-4">
+                      Boost Your Multiplier
+                    </h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded">
                         <span>Create Quality Capsules</span>
@@ -552,9 +679,11 @@ export default function YieldVaultPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                    <h4 className="font-semibold mb-3">Your Current Multiplier</h4>
+                    <h4 className="font-semibold mb-3">
+                      Your Current Multiplier
+                    </h4>
                     <div className="text-center">
                       <div className="text-4xl font-bold text-purple-600 mb-2">
                         {data.griefScoreMultiplier}x

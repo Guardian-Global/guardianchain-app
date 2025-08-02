@@ -62,8 +62,10 @@ export default function ValidatorBids() {
   const formatTimeAgo = (timestamp: string) => {
     const now = new Date();
     const bidTime = new Date(timestamp);
-    const diffInHours = Math.floor((now.getTime() - bidTime.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - bidTime.getTime()) / (1000 * 60 * 60),
+    );
+
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     return `${Math.floor(diffInHours / 24)}d ago`;
@@ -71,11 +73,16 @@ export default function ValidatorBids() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "accepted": return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "completed": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "rejected": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      case "accepted":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      case "completed":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "rejected":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   };
 
@@ -86,7 +93,10 @@ export default function ValidatorBids() {
           <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div
+                key={i}
+                className="h-32 bg-gray-200 dark:bg-gray-700 rounded"
+              ></div>
             ))}
           </div>
         </div>
@@ -97,8 +107,10 @@ export default function ValidatorBids() {
   return (
     <div className="container mx-auto p-4 md:p-6 space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Validator Marketplace</h1>
-        
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Validator Marketplace
+        </h1>
+
         <div className="flex items-center gap-2">
           <Button
             variant={filterStatus === "all" ? "default" : "outline"}
@@ -189,8 +201,10 @@ export default function ValidatorBids() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Active Bids */}
         <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Active Validation Bids</h2>
-          
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Active Validation Bids
+          </h2>
+
           {bidsData?.activeBids.map((bid) => (
             <Card key={bid.id} className="bg-white dark:bg-gray-800">
               <CardContent className="p-6">
@@ -207,7 +221,9 @@ export default function ValidatorBids() {
                         <Star className="w-4 h-4 fill-current text-yellow-400" />
                         <span>{bid.validator.reputation}/100</span>
                         <span>•</span>
-                        <span>{bid.validator.totalValidations} validations</span>
+                        <span>
+                          {bid.validator.totalValidations} validations
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -229,13 +245,17 @@ export default function ValidatorBids() {
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Bid Amount</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      Bid Amount
+                    </span>
                     <div className="font-semibold text-gray-900 dark:text-white">
                       {bid.bidAmount} GTT
                     </div>
                   </div>
                   <div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Confidence</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      Confidence
+                    </span>
                     <div className="font-semibold text-gray-900 dark:text-white">
                       {bid.confidence}%
                     </div>
@@ -244,8 +264,12 @@ export default function ValidatorBids() {
 
                 <div className="mb-4">
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="text-gray-500 dark:text-gray-400">Success Rate</span>
-                    <span className="text-gray-900 dark:text-white">{bid.validator.successRate}%</span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      Success Rate
+                    </span>
+                    <span className="text-gray-900 dark:text-white">
+                      {bid.validator.successRate}%
+                    </span>
                   </div>
                   <Progress value={bid.validator.successRate} className="h-2" />
                 </div>
@@ -278,7 +302,10 @@ export default function ValidatorBids() {
             </CardHeader>
             <CardContent className="space-y-4">
               {bidsData?.topValidators.map((validator, index) => (
-                <div key={validator.id} className="flex items-center justify-between">
+                <div
+                  key={validator.id}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-sm font-medium text-blue-600 dark:text-blue-400">
                       #{index + 1}
@@ -307,17 +334,23 @@ export default function ValidatorBids() {
 
           <Card className="bg-white dark:bg-gray-800">
             <CardHeader>
-              <CardTitle className="text-gray-900 dark:text-white">Market Overview</CardTitle>
+              <CardTitle className="text-gray-900 dark:text-white">
+                Market Overview
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Total Bids</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Total Bids
+                </span>
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                   {bidsData?.totalBids}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Average Bid</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Average Bid
+                </span>
                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                   {bidsData?.averageBidAmount} GTT
                 </span>

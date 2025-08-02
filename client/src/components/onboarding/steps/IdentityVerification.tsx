@@ -3,15 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Shield, 
-  Camera, 
-  FileText, 
-  CheckCircle, 
-  AlertTriangle, 
+import {
+  Shield,
+  Camera,
+  FileText,
+  CheckCircle,
+  AlertTriangle,
   Clock,
   User,
-  Lock
+  Lock,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,25 +22,30 @@ interface IdentityVerificationProps {
 type VerificationMethod = "document" | "biometric" | "social";
 type VerificationStatus = "pending" | "in_progress" | "completed" | "failed";
 
-export default function IdentityVerification({ onComplete }: IdentityVerificationProps) {
+export default function IdentityVerification({
+  onComplete,
+}: IdentityVerificationProps) {
   const { toast } = useToast();
-  const [selectedMethod, setSelectedMethod] = useState<VerificationMethod | null>(null);
-  const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>("pending");
+  const [selectedMethod, setSelectedMethod] =
+    useState<VerificationMethod | null>(null);
+  const [verificationStatus, setVerificationStatus] =
+    useState<VerificationStatus>("pending");
   const [isLoading, setIsLoading] = useState(false);
 
   const verificationMethods = [
     {
       id: "document" as VerificationMethod,
       title: "Government ID Verification",
-      description: "Upload a government-issued ID (passport, driver's license, national ID)",
+      description:
+        "Upload a government-issued ID (passport, driver's license, national ID)",
       icon: <FileText className="h-6 w-6" />,
       recommended: true,
       features: [
         "Industry-standard KYC compliance",
         "AI-powered document verification",
         "Real-time fraud detection",
-        "Secure encrypted storage"
-      ]
+        "Secure encrypted storage",
+      ],
     },
     {
       id: "biometric" as VerificationMethod,
@@ -52,8 +57,8 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
         "Advanced liveness detection",
         "Face matching technology",
         "Anti-spoofing protection",
-        "Quick 30-second process"
-      ]
+        "Quick 30-second process",
+      ],
     },
     {
       id: "social" as VerificationMethod,
@@ -65,9 +70,9 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
         "LinkedIn profile verification",
         "GitHub account linking",
         "Twitter/X verification",
-        "Cross-platform identity matching"
-      ]
-    }
+        "Cross-platform identity matching",
+      ],
+    },
   ];
 
   const startVerification = async (method: VerificationMethod) => {
@@ -77,18 +82,18 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
 
     try {
       // Simulate verification process
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       // For demo purposes, simulate successful verification
       const success = Math.random() > 0.1; // 90% success rate
-      
+
       if (success) {
         setVerificationStatus("completed");
         toast({
           title: "Verification Successful!",
           description: "Your identity has been verified successfully.",
         });
-        
+
         // Complete the step after a short delay
         setTimeout(() => {
           onComplete();
@@ -125,9 +130,12 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
           <CheckCircle className="h-10 w-10 text-green-400" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-white mb-2">Identity Verified!</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">
+            Identity Verified!
+          </h3>
           <p className="text-slate-400">
-            Your identity has been successfully verified. You now have full access to all platform features.
+            Your identity has been successfully verified. You now have full
+            access to all platform features.
           </p>
         </div>
         <Badge className="bg-green-500/20 text-green-400 border-green-500">
@@ -145,13 +153,19 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
           <Clock className="h-10 w-10 text-purple-400 animate-pulse" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-white mb-2">Verification in Progress</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">
+            Verification in Progress
+          </h3>
           <p className="text-slate-400">
-            Please wait while we verify your identity. This usually takes 1-3 minutes.
+            Please wait while we verify your identity. This usually takes 1-3
+            minutes.
           </p>
         </div>
         <div className="w-full bg-slate-700 rounded-full h-2">
-          <div className="bg-purple-500 h-2 rounded-full animate-pulse" style={{ width: "70%" }}></div>
+          <div
+            className="bg-purple-500 h-2 rounded-full animate-pulse"
+            style={{ width: "70%" }}
+          ></div>
         </div>
         <Button
           variant="outline"
@@ -171,10 +185,12 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
         <div className="mx-auto w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-4">
           <Shield className="h-8 w-8 text-purple-400" />
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">Verify Your Identity</h3>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          Verify Your Identity
+        </h3>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          Identity verification helps us prevent bots, imposters, and fraudulent accounts. 
-          Choose your preferred verification method below.
+          Identity verification helps us prevent bots, imposters, and fraudulent
+          accounts. Choose your preferred verification method below.
         </p>
       </div>
 
@@ -182,15 +198,16 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
       <Alert className="bg-blue-500/10 border-blue-500/20">
         <Lock className="h-4 w-4 text-blue-400" />
         <AlertDescription className="text-blue-200">
-          <strong>Your privacy is protected:</strong> All verification data is encrypted and stored securely. 
-          We never share your personal information with third parties.
+          <strong>Your privacy is protected:</strong> All verification data is
+          encrypted and stored securely. We never share your personal
+          information with third parties.
         </AlertDescription>
       </Alert>
 
       {/* Verification Methods */}
       <div className="grid gap-4">
         {verificationMethods.map((method) => (
-          <Card 
+          <Card
             key={method.id}
             className={`bg-slate-700/50 border-slate-600 cursor-pointer transition-all hover:bg-slate-700/70 ${
               selectedMethod === method.id ? "ring-2 ring-purple-500" : ""
@@ -214,7 +231,10 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
               <p className="text-slate-400 mb-4">{method.description}</p>
               <ul className="space-y-2">
                 {method.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-sm text-slate-300">
+                  <li
+                    key={index}
+                    className="flex items-center gap-2 text-sm text-slate-300"
+                  >
                     <CheckCircle className="h-3 w-3 text-green-400" />
                     {feature}
                   </li>
@@ -241,7 +261,8 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
         <Alert className="bg-red-500/10 border-red-500/20">
           <AlertTriangle className="h-4 w-4 text-red-400" />
           <AlertDescription className="text-red-200">
-            Verification failed. Please try again with a different method or contact support if the issue persists.
+            Verification failed. Please try again with a different method or
+            contact support if the issue persists.
           </AlertDescription>
         </Alert>
       )}
@@ -251,7 +272,10 @@ export default function IdentityVerification({ onComplete }: IdentityVerificatio
         <p className="text-slate-400 text-sm mb-2">
           Need help with verification?
         </p>
-        <Button variant="link" className="text-purple-400 hover:text-purple-300 p-0">
+        <Button
+          variant="link"
+          className="text-purple-400 hover:text-purple-300 p-0"
+        >
           Contact Support Team
         </Button>
       </div>

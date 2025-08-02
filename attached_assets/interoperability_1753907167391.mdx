@@ -23,7 +23,7 @@ future_enhancements:
   cta={[
     { label: "View Live Map", url: "#bridge-map", style: "primary" },
     { label: "Propose New Bridge", url: "#proposals", style: "secondary" },
-    { label: "Interop Partners", url: "#partners", style: "holo" }
+    { label: "Interop Partners", url: "#partners", style: "holo" },
   ]}
 />
 
@@ -31,11 +31,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/interoperability" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -43,22 +47,23 @@ future_enhancements:
 ---
 
 ## <span id="bridge-map">Live Cross-Chain Bridge Map <BridgeIcon /></span>
-<BridgeMap interactive />
-- See active, planned, and proposed bridges
-- Click any bridge for audit, partner, and DAO vote status
+
+<BridgeMap interactive />- See active, planned, and proposed bridges - Click any
+bridge for audit, partner, and DAO vote status
 
 ---
 
 ## <span id="proposals">DAO Proposals & Interop Upgrades <DAOBadge /></span>
-<LiveVote proposal="interoperability" />
-- Propose or upvote new bridges and protocol integrations
-- All upgrades are AI- and DAO-governed
+
+<LiveVote proposal="interoperability" />- Propose or upvote new bridges and
+protocol integrations - All upgrades are AI- and DAO-governed
 
 ---
 
 ## <span id="partners">Partner Chains & Status <PartnerIcon /></span>
-<InteropPartnerTable />
-- Audit and compliance status, rewards, and joint announcements
+
+<InteropPartnerTable />- Audit and compliance status, rewards, and joint
+announcements
 
 ---
 

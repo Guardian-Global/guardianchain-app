@@ -29,22 +29,30 @@ export default function LogoTest() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-white">Static Logo Files</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  Static Logo Files
+                </h3>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <img 
-                      src="/assets/GUARDIANCHAIN_logo.png" 
+                    <img
+                      src="/assets/GUARDIANCHAIN_logo.png"
                       alt="GUARDIANCHAIN Logo Test"
                       className="w-8 h-8 object-contain"
-                      onLoad={() => console.log("✅ GUARDIANCHAIN_logo.png loaded")}
-                      onError={() => console.log("❌ GUARDIANCHAIN_logo.png failed")}
+                      onLoad={() =>
+                        console.log("✅ GUARDIANCHAIN_logo.png loaded")
+                      }
+                      onError={() =>
+                        console.log("❌ GUARDIANCHAIN_logo.png failed")
+                      }
                     />
-                    <span className="text-slate-300">/assets/GUARDIANCHAIN_logo.png</span>
+                    <span className="text-slate-300">
+                      /assets/GUARDIANCHAIN_logo.png
+                    </span>
                     <CheckCircle className="h-4 w-4 text-green-400" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <img 
-                      src="/assets/GTT_logo.png" 
+                    <img
+                      src="/assets/GTT_logo.png"
                       alt="GTT Logo Test"
                       className="w-8 h-8 object-contain"
                       onLoad={() => console.log("✅ GTT_logo.png loaded")}
@@ -55,34 +63,48 @@ export default function LogoTest() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-white">Video Logo Files</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  Video Logo Files
+                </h3>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <video 
-                      src="/assets/GAURDIANCHAIN_logo_video.mp4" 
+                    <video
+                      src="/assets/GAURDIANCHAIN_logo_video.mp4"
                       className="w-8 h-8 object-contain"
                       muted
                       autoPlay
                       loop
-                      onLoadStart={() => console.log("✅ GAURDIANCHAIN_logo_video.mp4 loading")}
-                      onError={() => console.log("❌ GAURDIANCHAIN_logo_video.mp4 failed")}
+                      onLoadStart={() =>
+                        console.log("✅ GAURDIANCHAIN_logo_video.mp4 loading")
+                      }
+                      onError={() =>
+                        console.log("❌ GAURDIANCHAIN_logo_video.mp4 failed")
+                      }
                     />
-                    <span className="text-slate-300">/assets/GAURDIANCHAIN_logo_video.mp4</span>
+                    <span className="text-slate-300">
+                      /assets/GAURDIANCHAIN_logo_video.mp4
+                    </span>
                     <CheckCircle className="h-4 w-4 text-green-400" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <video 
-                      src="/assets/GTT_logo_video.mp4" 
+                    <video
+                      src="/assets/GTT_logo_video.mp4"
                       className="w-8 h-8 object-contain"
                       muted
                       autoPlay
                       loop
-                      onLoadStart={() => console.log("✅ GTT_logo_video.mp4 loading")}
-                      onError={() => console.log("❌ GTT_logo_video.mp4 failed")}
+                      onLoadStart={() =>
+                        console.log("✅ GTT_logo_video.mp4 loading")
+                      }
+                      onError={() =>
+                        console.log("❌ GTT_logo_video.mp4 failed")
+                      }
                     />
-                    <span className="text-slate-300">/assets/GTT_logo_video.mp4</span>
+                    <span className="text-slate-300">
+                      /assets/GTT_logo_video.mp4
+                    </span>
                     <CheckCircle className="h-4 w-4 text-green-400" />
                   </div>
                 </div>
@@ -102,27 +124,45 @@ export default function LogoTest() {
           <CardContent className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-white">GUARDIANCHAIN Logos</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  GUARDIANCHAIN Logos
+                </h3>
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-slate-400 w-16">Small:</span>
-                    <LogoDisplay size="sm" variant="full" type="guardianchain" />
+                    <LogoDisplay
+                      size="sm"
+                      variant="full"
+                      type="guardianchain"
+                    />
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-slate-400 w-16">Medium:</span>
-                    <LogoDisplay size="md" variant="full" type="guardianchain" />
+                    <LogoDisplay
+                      size="md"
+                      variant="full"
+                      type="guardianchain"
+                    />
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-slate-400 w-16">Large:</span>
-                    <LogoDisplay size="lg" variant="full" type="guardianchain" />
+                    <LogoDisplay
+                      size="lg"
+                      variant="full"
+                      type="guardianchain"
+                    />
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm text-slate-400 w-16">XL:</span>
-                    <LogoDisplay size="xl" variant="full" type="guardianchain" />
+                    <LogoDisplay
+                      size="xl"
+                      variant="full"
+                      type="guardianchain"
+                    />
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold text-white">GTT Logos</h3>
                 <div className="space-y-4">
@@ -159,14 +199,16 @@ export default function LogoTest() {
           <CardContent className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-6 text-center">
-                <h3 className="text-lg font-semibold text-white">GUARDIANCHAIN Video</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  GUARDIANCHAIN Video
+                </h3>
                 <div className="space-y-4">
                   <VideoDisplay type="guardianchain" size="sm" />
                   <VideoDisplay type="guardianchain" size="md" />
                   <VideoDisplay type="guardianchain" size="lg" />
                 </div>
               </div>
-              
+
               <div className="space-y-6 text-center">
                 <h3 className="text-lg font-semibold text-white">GTT Video</h3>
                 <div className="space-y-4">
@@ -196,11 +238,13 @@ export default function LogoTest() {
                     <span style={{ color: "#7F5AF0" }}>GUARDIAN</span>
                     <span style={{ color: "#2CB67D" }}>CHAIN</span>
                   </h1>
-                  <p className="text-xl text-slate-300">Truth Verification Protocol</p>
+                  <p className="text-xl text-slate-300">
+                    Truth Verification Protocol
+                  </p>
                 </div>
                 <VideoDisplay type="gtt" size="lg" />
               </div>
-              
+
               <div className="border-t border-slate-700 pt-6">
                 <p className="text-lg text-slate-300 mb-4">
                   🚀 READY FOR TOKEN DEPLOYMENT WITH PROFESSIONAL BRANDING

@@ -19,14 +19,14 @@ export interface NotificationPreferences {
 const userPreferences: Map<string, NotificationPreferences> = new Map();
 
 export function getUserPreferences(
-  userId: string
+  userId: string,
 ): NotificationPreferences | null {
   return userPreferences.get(userId) || null;
 }
 
 export function updateUserPreferences(
   userId: string,
-  prefs: Partial<NotificationPreferences["preferences"]>
+  prefs: Partial<NotificationPreferences["preferences"]>,
 ): NotificationPreferences {
   const existing = userPreferences.get(userId);
   const updated: NotificationPreferences = {
@@ -112,7 +112,7 @@ export async function sendPreferencesUpdateConfirmation(userId: string) {
 // Utility function to check if user wants specific notification type
 export function shouldSendNotification(
   userId: string,
-  notificationType: keyof NotificationPreferences["preferences"]
+  notificationType: keyof NotificationPreferences["preferences"],
 ): boolean {
   const prefs = getUserPreferences(userId);
   return prefs?.preferences[notificationType] ?? true; // Default to true if no preferences set

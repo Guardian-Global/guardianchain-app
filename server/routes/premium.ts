@@ -107,7 +107,7 @@ router.post("/calculate-gtt-rewards", async (req, res) => {
     const bonusRewards = Math.floor(
       usageMultiplier.api_calls * 0.1 +
         usageMultiplier.verifications * 1.0 +
-        usageMultiplier.enterprise_integrations * 100
+        usageMultiplier.enterprise_integrations * 100,
     );
 
     const totalRewards = baseRewards[tier] + bonusRewards;
@@ -162,7 +162,7 @@ router.post("/ai-value-assessment", async (req, res) => {
     });
 
     const assessment = JSON.parse(
-      completion.choices[0].message.content || "{}"
+      completion.choices[0].message.content || "{}",
     );
 
     res.json({
@@ -224,7 +224,7 @@ router.post("/enterprise-roi", async (req, res) => {
         net_annual_savings: netAnnualSavings,
         roi_percentage: `${roiPercentage}%`,
         payback_period_months: Math.ceil(
-          annualGuardianChainCost / totalMonthlySavings
+          annualGuardianChainCost / totalMonthlySavings,
         ),
       },
       recommendations: [

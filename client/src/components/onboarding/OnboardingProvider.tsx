@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useTierContext } from "@/context/TierContext";
 import { useAuth } from "@/hooks/useAuth";
 import InteractiveTooltip, { useTooltipTour } from "./InteractiveTooltip";
@@ -33,7 +39,9 @@ interface OnboardingProviderProps {
   children: ReactNode;
 }
 
-export default function OnboardingProvider({ children }: OnboardingProviderProps) {
+export default function OnboardingProvider({
+  children,
+}: OnboardingProviderProps) {
   const { user, isAuthenticated } = useAuth();
   const { userRole } = useTierContext();
   const { toast } = useToast();
@@ -47,7 +55,8 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
     {
       id: "welcome",
       title: "Welcome to GUARDIANCHAIN! 🎉",
-      content: "You're about to discover the future of truth verification. Let's start with a quick tour to get you oriented.",
+      content:
+        "You're about to discover the future of truth verification. Let's start with a quick tour to get you oriented.",
       target: "nav",
       position: "bottom" as const,
       reward: 5,
@@ -55,7 +64,8 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
     {
       id: "navigation",
       title: "Navigate the Platform",
-      content: "Use this navigation bar to access all platform features. The dropdown menus organize features by category.",
+      content:
+        "Use this navigation bar to access all platform features. The dropdown menus organize features by category.",
       target: "nav",
       position: "bottom" as const,
       reward: 5,
@@ -63,19 +73,21 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
     {
       id: "create-capsule",
       title: "Create Truth Capsules",
-      content: "This is where you'll share your truth with the world. Click here to create your first verified content.",
+      content:
+        "This is where you'll share your truth with the world. Click here to create your first verified content.",
       target: "a[href='/create-capsule']",
       position: "bottom" as const,
       action: {
         text: "Create Your First Capsule",
-        onClick: () => window.location.href = "/create-capsule"
+        onClick: () => (window.location.href = "/create-capsule"),
       },
       reward: 10,
     },
     {
       id: "profile",
       title: "Your Profile Dashboard",
-      content: "Access your profile, earnings, and personal settings. Track your reputation and GTT token balance here.",
+      content:
+        "Access your profile, earnings, and personal settings. Track your reputation and GTT token balance here.",
       target: "a[href='/profile']",
       position: "bottom" as const,
       reward: 5,
@@ -83,7 +95,8 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
     {
       id: "tier-display",
       title: "Your Current Tier",
-      content: "This shows your current membership tier. Upgrade to Pro to unlock premium features and earn more GTT tokens.",
+      content:
+        "This shows your current membership tier. Upgrade to Pro to unlock premium features and earn more GTT tokens.",
       target: "[data-testid='tier-badge']",
       position: "bottom" as const,
       reward: 5,
@@ -91,16 +104,19 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
     {
       id: "wallet-connect",
       title: "Connect Your Wallet",
-      content: "Connect your crypto wallet to receive GTT token rewards and participate in governance decisions.",
+      content:
+        "Connect your crypto wallet to receive GTT token rewards and participate in governance decisions.",
       target: "[data-testid='wallet-connect']",
       position: "bottom" as const,
       action: {
         text: "Connect Wallet",
         onClick: () => {
           // Trigger wallet connection
-          const walletButton = document.querySelector("[data-testid='wallet-connect']") as HTMLElement;
+          const walletButton = document.querySelector(
+            "[data-testid='wallet-connect']",
+          ) as HTMLElement;
           walletButton?.click();
-        }
+        },
       },
       reward: 15,
     },
@@ -112,21 +128,24 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
       {
         id: "capsule-title",
         title: "Truth Capsule Title",
-        content: "Give your truth capsule a compelling title that accurately represents your content.",
+        content:
+          "Give your truth capsule a compelling title that accurately represents your content.",
         target: "input[placeholder*='title']",
         position: "top" as const,
       },
       {
         id: "capsule-content",
         title: "Share Your Truth",
-        content: "This is where you'll add your verified content. Be detailed and provide evidence to support your claims.",
+        content:
+          "This is where you'll add your verified content. Be detailed and provide evidence to support your claims.",
         target: "textarea",
         position: "top" as const,
       },
       {
         id: "privacy-settings",
         title: "Privacy Controls",
-        content: "Choose who can see your content and set viewing costs if desired. Public content gets more visibility.",
+        content:
+          "Choose who can see your content and set viewing costs if desired. Public content gets more visibility.",
         target: "[data-testid='privacy-controls']",
         position: "left" as const,
       },
@@ -135,14 +154,16 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
       {
         id: "analytics-overview",
         title: "Analytics Dashboard",
-        content: "Track your truth capsules' performance, engagement metrics, and earnings from verification rewards.",
+        content:
+          "Track your truth capsules' performance, engagement metrics, and earnings from verification rewards.",
         target: "[data-testid='analytics-overview']",
         position: "center" as const,
       },
       {
         id: "performance-metrics",
         title: "Performance Metrics",
-        content: "See how your content is performing with views, verifications, and truth scores.",
+        content:
+          "See how your content is performing with views, verifications, and truth scores.",
         target: "[data-testid='performance-metrics']",
         position: "top" as const,
       },
@@ -153,9 +174,11 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const hasSeenOnboarding = localStorage.getItem(`onboarding-completed-${user?.id || 'guest'}`);
+    const hasSeenOnboarding = localStorage.getItem(
+      `onboarding-completed-${user?.id || "guest"}`,
+    );
     const shouldShowOnboarding = !hasSeenOnboarding && userRole === "guest";
-    
+
     setIsOnboardingCompleted(!!hasSeenOnboarding);
     setShowOnboarding(shouldShowOnboarding);
 
@@ -170,7 +193,7 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
   const startOnboarding = () => {
     setShowOnboarding(true);
     startTour(mainOnboardingSteps);
-    
+
     toast({
       title: "🚀 Welcome aboard!",
       description: "Let's take a quick tour to get you started.",
@@ -181,25 +204,27 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
     setShowOnboarding(false);
     setIsOnboardingCompleted(true);
     setOnboardingProgress(100);
-    
-    localStorage.setItem(`onboarding-completed-${user?.id || 'guest'}`, "true");
-    
+
+    localStorage.setItem(`onboarding-completed-${user?.id || "guest"}`, "true");
+
     toast({
       title: "🎉 Onboarding Complete!",
-      description: "You're ready to start verifying truth on GUARDIANCHAIN. Welcome to the community!",
+      description:
+        "You're ready to start verifying truth on GUARDIANCHAIN. Welcome to the community!",
     });
-    
+
     endTour();
   };
 
   const skipOnboarding = () => {
     setShowOnboarding(false);
-    localStorage.setItem(`onboarding-completed-${user?.id || 'guest'}`, "true");
+    localStorage.setItem(`onboarding-completed-${user?.id || "guest"}`, "true");
     endTour();
-    
+
     toast({
       title: "Onboarding Skipped",
-      description: "You can restart the tour anytime from your profile settings.",
+      description:
+        "You can restart the tour anytime from your profile settings.",
     });
   };
 
@@ -212,10 +237,14 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
 
   // Update progress based on completed steps
   useEffect(() => {
-    const completedSteps = localStorage.getItem(`onboarding-progress-${user?.id || 'guest'}`);
+    const completedSteps = localStorage.getItem(
+      `onboarding-progress-${user?.id || "guest"}`,
+    );
     if (completedSteps) {
       const progress = JSON.parse(completedSteps);
-      setOnboardingProgress((progress.length / mainOnboardingSteps.length) * 100);
+      setOnboardingProgress(
+        (progress.length / mainOnboardingSteps.length) * 100,
+      );
     }
   }, [user, mainOnboardingSteps.length]);
 
@@ -232,7 +261,7 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
   return (
     <OnboardingContext.Provider value={contextValue}>
       {children}
-      
+
       {/* Interactive Tooltip Component */}
       <InteractiveTooltip
         steps={currentTour}
@@ -240,7 +269,7 @@ export default function OnboardingProvider({ children }: OnboardingProviderProps
         onComplete={completeOnboarding}
         onClose={skipOnboarding}
       />
-      
+
       {/* Onboarding Trigger for new users */}
       <OnboardingTrigger />
     </OnboardingContext.Provider>

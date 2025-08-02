@@ -1,5 +1,5 @@
-import React from 'react';
-import { SovereignLegacyCapsule } from '@/components/legacy/SovereignLegacyCapsule';
+import React from "react";
+import { SovereignLegacyCapsule } from "@/components/legacy/SovereignLegacyCapsule";
 
 export default function SovereignLegacyPage() {
   return (

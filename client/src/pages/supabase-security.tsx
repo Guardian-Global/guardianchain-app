@@ -30,7 +30,7 @@ interface SecurityStatus {
 
 export default function SupabaseSecurity() {
   const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(false);
   const [hardening, setHardening] = useState(false);
@@ -173,7 +173,7 @@ export default function SupabaseSecurity() {
                 <div className="text-center">
                   <div
                     className={`text-6xl font-bold ${getScoreColor(
-                      securityStatus.security_score
+                      securityStatus.security_score,
                     )}`}
                   >
                     {securityStatus.security_score}%
@@ -202,7 +202,7 @@ export default function SupabaseSecurity() {
                           <AlertTriangle className="h-5 w-5 text-red-400" />
                         )}
                       </div>
-                    )
+                    ),
                   )}
                 </div>
 

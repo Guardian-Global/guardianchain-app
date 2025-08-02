@@ -86,7 +86,7 @@ export default function VaultDashboard() {
         pendingRewards: "1,247.50",
         sharePrice: "1.0847",
         nextCompoundTime: new Date(
-          Date.now() + 6 * 60 * 60 * 1000
+          Date.now() + 6 * 60 * 60 * 1000,
         ).toISOString(), // 6 hours from now
         totalUsers: 1247,
         performanceFee: "2%",
@@ -98,7 +98,7 @@ export default function VaultDashboard() {
         totalRewardsEarned: "3,247.89",
         autoCompoundedAmount: "1,847.32",
         lastDepositTime: new Date(
-          Date.now() - 15 * 24 * 60 * 60 * 1000
+          Date.now() - 15 * 24 * 60 * 60 * 1000,
         ).toISOString(), // 15 days ago
       };
 

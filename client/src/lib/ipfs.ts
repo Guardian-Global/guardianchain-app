@@ -25,7 +25,7 @@ class IPFSManager {
 
   async uploadFile(
     file: File | Buffer,
-    filename?: string
+    filename?: string,
   ): Promise<IPFSUploadResponse> {
     try {
       // Try Infura IPFS first
@@ -40,14 +40,14 @@ class IPFSManager {
       throw new Error(
         `IPFS upload failed: ${
           error instanceof Error ? error.message : "Unknown error"
-        }`
+        }`,
       );
     }
   }
 
   private async uploadToInfura(
     file: File | Buffer,
-    filename?: string
+    filename?: string,
   ): Promise<IPFSUploadResponse> {
     const formData = new FormData();
 
@@ -81,7 +81,7 @@ class IPFSManager {
 
   private async uploadToPublicGateway(
     file: File | Buffer,
-    filename?: string
+    filename?: string,
   ): Promise<IPFSUploadResponse> {
     // Fallback implementation using server endpoint
     const formData = new FormData();
@@ -153,7 +153,7 @@ class IPFSManager {
 
   getGatewayUrl(
     hash: string,
-    gateway: "ipfs" | "cloudflare" | "pinata" = "ipfs"
+    gateway: "ipfs" | "cloudflare" | "pinata" = "ipfs",
   ): string {
     switch (gateway) {
       case "cloudflare":

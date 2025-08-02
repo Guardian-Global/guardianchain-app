@@ -115,7 +115,7 @@ export async function fetchRecentTransfers(limit: number = 10) {
     const events = await gttContract.queryFilter(
       filter,
       fromBlock,
-      currentBlock
+      currentBlock,
     );
 
     return events.slice(-limit).map((event: any) => ({

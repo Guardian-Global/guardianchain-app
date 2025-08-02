@@ -7,10 +7,13 @@ const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.warn("⚠️ Supabase configuration missing - asset routes will be limited");
+  console.warn(
+    "⚠️ Supabase configuration missing - asset routes will be limited",
+  );
 }
 
-const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+const supabase =
+  supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 // Get all assets from all buckets
 router.get("/discover", async (req, res) => {
@@ -19,13 +22,14 @@ router.get("/discover", async (req, res) => {
       return res.status(500).json({
         success: false,
         message: "Supabase not configured",
-        assets: []
+        assets: [],
       });
     }
 
     // Get list of all storage buckets
-    const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
-    
+    const { data: buckets, error: bucketsError } =
+      await supabase.storage.listBuckets();
+
     if (bucketsError) {
       throw bucketsError;
     }
@@ -37,18 +41,21 @@ router.get("/discover", async (req, res) => {
       try {
         const { data: files, error: filesError } = await supabase.storage
           .from(bucket.name)
-          .list('', {
+          .list("", {
             limit: 1000,
-            sortBy: { column: 'name', order: 'asc' }
+            sortBy: { column: "name", order: "asc" },
           });
 
         if (filesError) {
-          console.warn(`Error listing files in bucket ${bucket.name}:`, filesError);
+          console.warn(
+            `Error listing files in bucket ${bucket.name}:`,
+            filesError,
+          );
           continue;
         }
 
         for (const file of files || []) {
-          if (file.name && !file.name.endsWith('/')) {
+          if (file.name && !file.name.endsWith("/")) {
             // Get public URL
             const { data: urlData } = supabase.storage
               .from(bucket.name)
@@ -56,7 +63,7 @@ router.get("/discover", async (req, res) => {
 
             // Determine asset type and value
             const assetInfo = categorizeAsset(file.name, file.metadata);
-            
+
             allAssets.push({
               id: `${bucket.name}/${file.name}`,
               name: file.name,
@@ -68,7 +75,7 @@ router.get("/discover", async (req, res) => {
               category: assetInfo.category,
               value: assetInfo.value,
               recommendedUsage: assetInfo.recommendedUsage,
-              metadata: file.metadata
+              metadata: file.metadata,
             });
           }
         }
@@ -85,15 +92,14 @@ router.get("/discover", async (req, res) => {
       totalAssets: allAssets.length,
       buckets: buckets?.length || 0,
       assets: allAssets,
-      recommendations: generateRecommendations(allAssets)
+      recommendations: generateRecommendations(allAssets),
     });
-
   } catch (error) {
     console.error("Asset discovery error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to discover assets",
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -104,7 +110,7 @@ router.get("/optimized/:bucket/:filename", async (req, res) => {
     if (!supabase) {
       return res.status(500).json({
         success: false,
-        message: "Supabase not configured"
+        message: "Supabase not configured",
       });
     }
 
@@ -121,92 +127,94 @@ router.get("/optimized/:bucket/:filename", async (req, res) => {
     // Add transformation parameters if supported
     if (width || height || format) {
       const params = new URLSearchParams();
-      if (width) params.set('width', width.toString());
-      if (height) params.set('height', height.toString());
-      if (quality) params.set('quality', quality.toString());
-      if (format) params.set('format', format.toString());
-      
+      if (width) params.set("width", width.toString());
+      if (height) params.set("height", height.toString());
+      if (quality) params.set("quality", quality.toString());
+      if (format) params.set("format", format.toString());
+
       optimizedUrl += `?${params.toString()}`;
     }
 
     res.json({
       success: true,
       url: optimizedUrl,
-      original: urlData.publicUrl
+      original: urlData.publicUrl,
     });
-
   } catch (error) {
     console.error("Asset optimization error:", error);
     res.status(500).json({
       success: false,
       message: "Failed to optimize asset",
-      error: error.message
+      error: error.message,
     });
   }
 });
 
 // Asset categorization and value assessment
-function categorizeAsset(filename: string, metadata: any): {
+function categorizeAsset(
+  filename: string,
+  metadata: any,
+): {
   type: string;
   category: string;
   value: number;
   recommendedUsage: string[];
 } {
-  const ext = filename.toLowerCase().split('.').pop() || '';
+  const ext = filename.toLowerCase().split(".").pop() || "";
   const name = filename.toLowerCase();
-  
-  let type = 'unknown';
-  let category = 'misc';
+
+  let type = "unknown";
+  let category = "misc";
   let value = 1;
   let recommendedUsage: string[] = [];
 
   // Determine file type
-  if (['jpg', 'jpeg', 'png', 'webp', 'svg'].includes(ext)) {
-    type = 'image';
-  } else if (['mp4', 'webm', 'mov', 'avi'].includes(ext)) {
-    type = 'video';
-  } else if (['pdf', 'doc', 'docx'].includes(ext)) {
-    type = 'document';
-  } else if (['mp3', 'wav', 'ogg'].includes(ext)) {
-    type = 'audio';
+  if (["jpg", "jpeg", "png", "webp", "svg"].includes(ext)) {
+    type = "image";
+  } else if (["mp4", "webm", "mov", "avi"].includes(ext)) {
+    type = "video";
+  } else if (["pdf", "doc", "docx"].includes(ext)) {
+    type = "document";
+  } else if (["mp3", "wav", "ogg"].includes(ext)) {
+    type = "audio";
   }
 
   // Categorize and assign value based on content
-  if (name.includes('logo') || name.includes('brand')) {
-    category = 'branding';
+  if (name.includes("logo") || name.includes("brand")) {
+    category = "branding";
     value = 10;
-    recommendedUsage = ['header', 'footer', 'navigation', 'auth-pages'];
-  } else if (name.includes('hero') || name.includes('banner')) {
-    category = 'hero';
+    recommendedUsage = ["header", "footer", "navigation", "auth-pages"];
+  } else if (name.includes("hero") || name.includes("banner")) {
+    category = "hero";
     value = 9;
-    recommendedUsage = ['homepage', 'landing-pages', 'hero-sections'];
-  } else if (name.includes('guardian') || name.includes('gtt')) {
-    category = 'product';
+    recommendedUsage = ["homepage", "landing-pages", "hero-sections"];
+  } else if (name.includes("guardian") || name.includes("gtt")) {
+    category = "product";
     value = 8;
-    recommendedUsage = ['product-pages', 'token-pages', 'dashboards'];
-  } else if (name.includes('background') || name.includes('bg')) {
-    category = 'background';
+    recommendedUsage = ["product-pages", "token-pages", "dashboards"];
+  } else if (name.includes("background") || name.includes("bg")) {
+    category = "background";
     value = 7;
-    recommendedUsage = ['page-backgrounds', 'section-backgrounds'];
-  } else if (name.includes('icon') || name.includes('symbol')) {
-    category = 'icons';
+    recommendedUsage = ["page-backgrounds", "section-backgrounds"];
+  } else if (name.includes("icon") || name.includes("symbol")) {
+    category = "icons";
     value = 6;
-    recommendedUsage = ['navigation', 'features', 'ui-elements'];
-  } else if (name.includes('team') || name.includes('founder')) {
-    category = 'team';
+    recommendedUsage = ["navigation", "features", "ui-elements"];
+  } else if (name.includes("team") || name.includes("founder")) {
+    category = "team";
     value = 5;
-    recommendedUsage = ['about-page', 'team-section', 'founder-dashboard'];
-  } else if (name.includes('demo') || name.includes('screenshot')) {
-    category = 'showcase';
+    recommendedUsage = ["about-page", "team-section", "founder-dashboard"];
+  } else if (name.includes("demo") || name.includes("screenshot")) {
+    category = "showcase";
     value = 4;
-    recommendedUsage = ['feature-showcase', 'demo-pages'];
+    recommendedUsage = ["feature-showcase", "demo-pages"];
   }
 
   // Boost value for high-quality assets
   const size = metadata?.size || 0;
   if (size > 100000) value += 1; // Large files likely higher quality
-  if (ext === 'svg') value += 2; // Vector graphics are versatile
-  if (ext === 'webp') value += 1; // Modern format
+  if (ext === "svg") value += 2; // Vector graphics are versatile
+  if (ext === "webp") value += 1; // Modern format
 
   return { type, category, value, recommendedUsage };
 }
@@ -214,32 +222,32 @@ function categorizeAsset(filename: string, metadata: any): {
 // Generate placement recommendations
 function generateRecommendations(assets: any[]) {
   const recommendations = {
-    branding: assets.filter(a => a.category === 'branding').slice(0, 3),
-    hero: assets.filter(a => a.category === 'hero').slice(0, 2),
-    backgrounds: assets.filter(a => a.category === 'background').slice(0, 5),
-    icons: assets.filter(a => a.category === 'icons').slice(0, 10),
-    showcase: assets.filter(a => a.category === 'showcase').slice(0, 8)
+    branding: assets.filter((a) => a.category === "branding").slice(0, 3),
+    hero: assets.filter((a) => a.category === "hero").slice(0, 2),
+    backgrounds: assets.filter((a) => a.category === "background").slice(0, 5),
+    icons: assets.filter((a) => a.category === "icons").slice(0, 10),
+    showcase: assets.filter((a) => a.category === "showcase").slice(0, 8),
   };
 
   return {
     immediate: [
       {
-        location: 'Navigation Header',
+        location: "Navigation Header",
         asset: recommendations.branding[0],
-        priority: 'high'
+        priority: "high",
       },
       {
-        location: 'Homepage Hero',
+        location: "Homepage Hero",
         asset: recommendations.hero[0],
-        priority: 'high'
+        priority: "high",
       },
       {
-        location: 'Login Page Background',
+        location: "Login Page Background",
         asset: recommendations.backgrounds[0],
-        priority: 'medium'
-      }
+        priority: "medium",
+      },
     ],
-    categories: recommendations
+    categories: recommendations,
   };
 }
 

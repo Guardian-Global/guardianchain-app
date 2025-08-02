@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { 
-  Clock, 
-  Calendar, 
-  Send, 
-  Lock, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import {
+  Clock,
+  Calendar,
+  Send,
+  Lock,
   Heart,
   Gift,
   Timer,
   Mail,
   Star,
-  AlertCircle
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+  AlertCircle,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface TimeMessage {
   id: string;
@@ -27,67 +27,74 @@ interface TimeMessage {
   message: string;
   unlockDate: Date;
   recipient: string;
-  messageType: 'personal' | 'birthday' | 'anniversary' | 'future_self' | 'memorial';
-  status: 'sealed' | 'delivered' | 'read';
+  messageType:
+    | "personal"
+    | "birthday"
+    | "anniversary"
+    | "future_self"
+    | "memorial";
+  status: "sealed" | "delivered" | "read";
   createdAt: Date;
 }
 
 export default function TimeMessages() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<'create' | 'sent' | 'received'>('create');
+  const [activeTab, setActiveTab] = useState<"create" | "sent" | "received">(
+    "create",
+  );
   const [message, setMessage] = useState({
-    title: '',
-    content: '',
-    recipient: '',
-    unlockDate: '',
-    messageType: 'personal',
-    recurring: false
+    title: "",
+    content: "",
+    recipient: "",
+    unlockDate: "",
+    messageType: "personal",
+    recurring: false,
   });
 
   const { data: sentMessages } = useQuery({
-    queryKey: ['/api/time-messages/sent'],
-    enabled: activeTab === 'sent'
+    queryKey: ["/api/time-messages/sent"],
+    enabled: activeTab === "sent",
   });
 
   const { data: receivedMessages } = useQuery({
-    queryKey: ['/api/time-messages/received'],
-    enabled: activeTab === 'received'
+    queryKey: ["/api/time-messages/received"],
+    enabled: activeTab === "received",
   });
 
   const createMessageMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('POST', '/api/time-messages/create', data);
+      return apiRequest("POST", "/api/time-messages/create", data);
     },
     onSuccess: () => {
       toast({
-        title: 'Time Message Sealed',
-        description: 'Your message has been locked until the specified date.',
+        title: "Time Message Sealed",
+        description: "Your message has been locked until the specified date.",
       });
       setMessage({
-        title: '',
-        content: '',
-        recipient: '',
-        unlockDate: '',
-        messageType: 'personal',
-        recurring: false
+        title: "",
+        content: "",
+        recipient: "",
+        unlockDate: "",
+        messageType: "personal",
+        recurring: false,
       });
     },
     onError: (error) => {
       toast({
-        title: 'Failed to Send',
-        description: 'There was an error creating your time message.',
-        variant: 'destructive',
+        title: "Failed to Send",
+        description: "There was an error creating your time message.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   const handleCreateMessage = () => {
     if (!message.title || !message.content || !message.unlockDate) {
       toast({
-        title: 'Incomplete Message',
-        description: 'Please fill in all required fields.',
-        variant: 'destructive',
+        title: "Incomplete Message",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
       });
       return;
     }
@@ -95,9 +102,9 @@ export default function TimeMessages() {
     const unlockDate = new Date(message.unlockDate);
     if (unlockDate <= new Date()) {
       toast({
-        title: 'Invalid Date',
-        description: 'Unlock date must be in the future.',
-        variant: 'destructive',
+        title: "Invalid Date",
+        description: "Unlock date must be in the future.",
+        variant: "destructive",
       });
       return;
     }
@@ -105,61 +112,61 @@ export default function TimeMessages() {
     createMessageMutation.mutate({
       ...message,
       senderId: user?.id,
-      unlockDate: unlockDate.toISOString()
+      unlockDate: unlockDate.toISOString(),
     });
   };
 
   const messageTypes = [
     {
-      type: 'personal',
-      title: 'Personal Message',
-      description: 'Send a message to someone in the future',
+      type: "personal",
+      title: "Personal Message",
+      description: "Send a message to someone in the future",
       icon: Mail,
-      color: 'blue'
+      color: "blue",
     },
     {
-      type: 'birthday',
-      title: 'Birthday Surprise',
-      description: 'Automatic birthday messages',
+      type: "birthday",
+      title: "Birthday Surprise",
+      description: "Automatic birthday messages",
       icon: Gift,
-      color: 'pink'
+      color: "pink",
     },
     {
-      type: 'anniversary',
-      title: 'Anniversary Note',
-      description: 'Commemorate special dates',
+      type: "anniversary",
+      title: "Anniversary Note",
+      description: "Commemorate special dates",
       icon: Heart,
-      color: 'red'
+      color: "red",
     },
     {
-      type: 'future_self',
-      title: 'Future Self',
-      description: 'Write to your future self',
+      type: "future_self",
+      title: "Future Self",
+      description: "Write to your future self",
       icon: Star,
-      color: 'purple'
+      color: "purple",
     },
     {
-      type: 'memorial',
-      title: 'Memorial Message',
-      description: 'Messages for after you\'re gone',
+      type: "memorial",
+      title: "Memorial Message",
+      description: "Messages for after you're gone",
       icon: Clock,
-      color: 'gray'
-    }
+      color: "gray",
+    },
   ];
 
   const quickDates = [
-    { label: '1 Year', months: 12 },
-    { label: '5 Years', months: 60 },
-    { label: '10 Years', months: 120 },
-    { label: '25 Years', months: 300 }
+    { label: "1 Year", months: 12 },
+    { label: "5 Years", months: 60 },
+    { label: "10 Years", months: 120 },
+    { label: "25 Years", months: 300 },
   ];
 
   const setQuickDate = (months: number) => {
     const futureDate = new Date();
     futureDate.setMonth(futureDate.getMonth() + months);
-    setMessage(prev => ({ 
-      ...prev, 
-      unlockDate: futureDate.toISOString().slice(0, 16) 
+    setMessage((prev) => ({
+      ...prev,
+      unlockDate: futureDate.toISOString().slice(0, 16),
     }));
   };
 
@@ -168,13 +175,13 @@ export default function TimeMessages() {
     const diff = date.getTime() - now.getTime();
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const years = Math.floor(days / 365);
-    
+
     if (years > 0) {
-      return `${years} year${years !== 1 ? 's' : ''} from now`;
+      return `${years} year${years !== 1 ? "s" : ""} from now`;
     } else if (days > 0) {
-      return `${days} day${days !== 1 ? 's' : ''} from now`;
+      return `${days} day${days !== 1 ? "s" : ""} from now`;
     } else {
-      return 'Soon';
+      return "Soon";
     }
   };
 
@@ -190,30 +197,31 @@ export default function TimeMessages() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Send messages to the future. Lock communications until the perfect moment.
+            Send messages to the future. Lock communications until the perfect
+            moment.
           </p>
         </div>
 
         {/* Tabs */}
         <div className="flex justify-center mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm">
-            {['create', 'sent', 'received'].map((tab) => (
+            {["create", "sent", "received"].map((tab) => (
               <Button
                 key={tab}
-                variant={activeTab === tab ? 'default' : 'ghost'}
+                variant={activeTab === tab ? "default" : "ghost"}
                 onClick={() => setActiveTab(tab as any)}
                 className="mx-1"
               >
-                {tab === 'create' && <Send className="w-4 h-4 mr-2" />}
-                {tab === 'sent' && <Mail className="w-4 h-4 mr-2" />}
-                {tab === 'received' && <Gift className="w-4 h-4 mr-2" />}
+                {tab === "create" && <Send className="w-4 h-4 mr-2" />}
+                {tab === "sent" && <Mail className="w-4 h-4 mr-2" />}
+                {tab === "received" && <Gift className="w-4 h-4 mr-2" />}
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </Button>
             ))}
           </div>
         </div>
 
-        {activeTab === 'create' && (
+        {activeTab === "create" && (
           <div className="space-y-6">
             {/* Message Type Selection */}
             <Card>
@@ -227,13 +235,20 @@ export default function TimeMessages() {
                       key={type.type}
                       className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                         message.messageType === type.type
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                          : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
                       }`}
-                      onClick={() => setMessage(prev => ({ ...prev, messageType: type.type }))}
+                      onClick={() =>
+                        setMessage((prev) => ({
+                          ...prev,
+                          messageType: type.type,
+                        }))
+                      }
                     >
                       <div className="flex items-center mb-2">
-                        <type.icon className={`w-6 h-6 mr-2 text-${type.color}-500`} />
+                        <type.icon
+                          className={`w-6 h-6 mr-2 text-${type.color}-500`}
+                        />
                         <h3 className="font-semibold">{type.title}</h3>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -258,7 +273,9 @@ export default function TimeMessages() {
                   </label>
                   <Input
                     value={message.title}
-                    onChange={(e) => setMessage(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) =>
+                      setMessage((prev) => ({ ...prev, title: e.target.value }))
+                    }
                     placeholder="Give your message a memorable title"
                   />
                 </div>
@@ -270,7 +287,12 @@ export default function TimeMessages() {
                   </label>
                   <Input
                     value={message.recipient}
-                    onChange={(e) => setMessage(prev => ({ ...prev, recipient: e.target.value }))}
+                    onChange={(e) =>
+                      setMessage((prev) => ({
+                        ...prev,
+                        recipient: e.target.value,
+                      }))
+                    }
                     placeholder="Email or ENS name (leave blank for yourself)"
                   />
                 </div>
@@ -295,11 +317,17 @@ export default function TimeMessages() {
                   <Input
                     type="datetime-local"
                     value={message.unlockDate}
-                    onChange={(e) => setMessage(prev => ({ ...prev, unlockDate: e.target.value }))}
+                    onChange={(e) =>
+                      setMessage((prev) => ({
+                        ...prev,
+                        unlockDate: e.target.value,
+                      }))
+                    }
                   />
                   {message.unlockDate && (
                     <p className="text-sm text-gray-500 mt-1">
-                      This message will unlock {formatTimeUntil(new Date(message.unlockDate))}
+                      This message will unlock{" "}
+                      {formatTimeUntil(new Date(message.unlockDate))}
                     </p>
                   )}
                 </div>
@@ -311,12 +339,18 @@ export default function TimeMessages() {
                   </label>
                   <Textarea
                     value={message.content}
-                    onChange={(e) => setMessage(prev => ({ ...prev, content: e.target.value }))}
+                    onChange={(e) =>
+                      setMessage((prev) => ({
+                        ...prev,
+                        content: e.target.value,
+                      }))
+                    }
                     placeholder="Write your message to the future..."
                     rows={8}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    This message will be encrypted and locked until the unlock date
+                    This message will be encrypted and locked until the unlock
+                    date
                   </p>
                 </div>
 
@@ -344,7 +378,7 @@ export default function TimeMessages() {
           </div>
         )}
 
-        {activeTab === 'sent' && (
+        {activeTab === "sent" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -359,12 +393,16 @@ export default function TimeMessages() {
                     <div key={msg.id} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="font-semibold">{msg.title}</h3>
-                        <Badge variant={msg.status === 'delivered' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            msg.status === "delivered" ? "default" : "secondary"
+                          }
+                        >
                           {msg.status}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                        To: {msg.recipient || 'Yourself'}
+                        To: {msg.recipient || "Yourself"}
                       </p>
                       <div className="flex items-center text-sm text-gray-500">
                         <Calendar className="w-4 h-4 mr-1" />
@@ -383,7 +421,7 @@ export default function TimeMessages() {
           </Card>
         )}
 
-        {activeTab === 'received' && (
+        {activeTab === "received" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -398,8 +436,12 @@ export default function TimeMessages() {
                     <div key={msg.id} className="p-4 border rounded-lg">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="font-semibold">{msg.title}</h3>
-                        <Badge variant={msg.status === 'read' ? 'default' : 'destructive'}>
-                          {msg.status === 'read' ? 'Read' : 'New'}
+                        <Badge
+                          variant={
+                            msg.status === "read" ? "default" : "destructive"
+                          }
+                        >
+                          {msg.status === "read" ? "Read" : "New"}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
@@ -409,7 +451,7 @@ export default function TimeMessages() {
                         <Clock className="w-4 h-4 mr-1" />
                         Unlocked {formatTimeUntil(msg.unlockDate)}
                       </div>
-                      {msg.status === 'delivered' && (
+                      {msg.status === "delivered" && (
                         <Button variant="outline" size="sm" className="mt-2">
                           Read Message
                         </Button>

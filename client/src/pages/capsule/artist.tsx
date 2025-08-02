@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Palette, Image, Brush, Camera, FileText, Upload, Loader2 } from "lucide-react";
+import {
+  Palette,
+  Image,
+  Brush,
+  Camera,
+  FileText,
+  Upload,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -23,8 +31,17 @@ export default function ArtistCapsulePage() {
   const [statement, setStatement] = useState("");
 
   const artMediums = [
-    "Digital Art", "Oil Painting", "Acrylic", "Watercolor", "Photography", 
-    "Sculpture", "Mixed Media", "Collage", "Street Art", "NFT Art", "Other"
+    "Digital Art",
+    "Oil Painting",
+    "Acrylic",
+    "Watercolor",
+    "Photography",
+    "Sculpture",
+    "Mixed Media",
+    "Collage",
+    "Street Art",
+    "NFT Art",
+    "Other",
   ];
 
   const createArtCapsuleMutation = useMutation({
@@ -34,7 +51,8 @@ export default function ArtistCapsulePage() {
     onSuccess: (data) => {
       toast({
         title: "Artist Capsule Created",
-        description: "Your artwork has been documented as a verified truth capsule.",
+        description:
+          "Your artwork has been documented as a verified truth capsule.",
       });
       // Reset form
       setArtworkTitle("");
@@ -81,7 +99,7 @@ export default function ArtistCapsulePage() {
     formData.append("inspiration", inspiration.trim());
     formData.append("statement", statement.trim());
     formData.append("capsuleType", "ARTIST");
-    
+
     artworkFiles.forEach((file, index) => {
       formData.append(`artwork_${index}`, file);
     });
@@ -95,7 +113,8 @@ export default function ArtistCapsulePage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-white">Artist Capsule</h1>
           <p className="text-slate-400">
-            Document and verify artistic works with immutable provenance and truth
+            Document and verify artistic works with immutable provenance and
+            truth
           </p>
         </div>
 
@@ -105,14 +124,19 @@ export default function ArtistCapsulePage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Palette className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Palette
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Artwork Documentation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Artwork Title *</label>
+                    <label className="text-sm font-medium text-white">
+                      Artwork Title *
+                    </label>
                     <Input
                       value={artworkTitle}
                       onChange={(e) => setArtworkTitle(e.target.value)}
@@ -120,9 +144,11 @@ export default function ArtistCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Artist Name *</label>
+                    <label className="text-sm font-medium text-white">
+                      Artist Name *
+                    </label>
                     <Input
                       value={artistName}
                       onChange={(e) => setArtistName(e.target.value)}
@@ -133,7 +159,9 @@ export default function ArtistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Artwork Description</label>
+                  <label className="text-sm font-medium text-white">
+                    Artwork Description
+                  </label>
                   <Textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -144,7 +172,9 @@ export default function ArtistCapsulePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Medium</label>
+                    <label className="text-sm font-medium text-white">
+                      Medium
+                    </label>
                     <select
                       value={medium}
                       onChange={(e) => setMedium(e.target.value)}
@@ -158,9 +188,11 @@ export default function ArtistCapsulePage() {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Dimensions</label>
+                    <label className="text-sm font-medium text-white">
+                      Dimensions
+                    </label>
                     <Input
                       value={dimensions}
                       onChange={(e) => setDimensions(e.target.value)}
@@ -168,9 +200,11 @@ export default function ArtistCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Creation Date</label>
+                    <label className="text-sm font-medium text-white">
+                      Creation Date
+                    </label>
                     <Input
                       type="date"
                       value={creationDate}
@@ -181,7 +215,9 @@ export default function ArtistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Artwork Files</label>
+                  <label className="text-sm font-medium text-white">
+                    Artwork Files
+                  </label>
                   <div className="flex items-center space-x-2">
                     <Input
                       type="file"
@@ -200,7 +236,9 @@ export default function ArtistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Inspiration & Context</label>
+                  <label className="text-sm font-medium text-white">
+                    Inspiration & Context
+                  </label>
                   <Textarea
                     value={inspiration}
                     onChange={(e) => setInspiration(e.target.value)}
@@ -210,7 +248,9 @@ export default function ArtistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Artist Statement</label>
+                  <label className="text-sm font-medium text-white">
+                    Artist Statement
+                  </label>
                   <Textarea
                     value={statement}
                     onChange={(e) => setStatement(e.target.value)}
@@ -246,7 +286,10 @@ export default function ArtistCapsulePage() {
             <Card className="bg-slate-800/30 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <FileText className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <FileText
+                    className="w-4 h-4"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Artist Features
                 </CardTitle>
               </CardHeader>
@@ -254,25 +297,29 @@ export default function ArtistCapsulePage() {
                 <div className="flex items-start gap-2">
                   <Image className="w-4 h-4 text-pink-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Provenance Tracking:</strong> Immutable creation records
+                    <strong className="text-white">Provenance Tracking:</strong>{" "}
+                    Immutable creation records
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Camera className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">High-Res Storage:</strong> Permanent artwork archival
+                    <strong className="text-white">High-Res Storage:</strong>{" "}
+                    Permanent artwork archival
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Brush className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Attribution Rights:</strong> Protect your creative work
+                    <strong className="text-white">Attribution Rights:</strong>{" "}
+                    Protect your creative work
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <FileText className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Truth Documentation:</strong> Artistic truth verification
+                    <strong className="text-white">Truth Documentation:</strong>{" "}
+                    Artistic truth verification
                   </div>
                 </div>
               </CardContent>
@@ -306,14 +353,21 @@ export default function ArtistCapsulePage() {
                 ].map((artwork, index) => (
                   <div key={index} className="p-3 bg-slate-700/30 rounded-lg">
                     <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-white text-sm">{artwork.title}</h4>
-                      <Badge variant="outline" className="text-pink-400 border-pink-600 text-xs">
+                      <h4 className="font-medium text-white text-sm">
+                        {artwork.title}
+                      </h4>
+                      <Badge
+                        variant="outline"
+                        className="text-pink-400 border-pink-600 text-xs"
+                      >
                         {artwork.medium}
                       </Badge>
                     </div>
                     <div className="text-xs text-slate-400">
                       <div>By: {artwork.artist}</div>
-                      <div>Created: {new Date(artwork.date).toLocaleDateString()}</div>
+                      <div>
+                        Created: {new Date(artwork.date).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -325,7 +379,9 @@ export default function ArtistCapsulePage() {
         {/* How It Works */}
         <Card className="bg-slate-800/30 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">How Artist Capsules Work</CardTitle>
+            <CardTitle className="text-white">
+              How Artist Capsules Work
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center space-y-2">
@@ -333,7 +389,9 @@ export default function ArtistCapsulePage() {
                 <Brush className="w-6 h-6 text-pink-400" />
               </div>
               <h3 className="font-semibold text-white">1. Create</h3>
-              <p className="text-sm text-slate-400">Create your artistic work with truth and meaning</p>
+              <p className="text-sm text-slate-400">
+                Create your artistic work with truth and meaning
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -341,7 +399,9 @@ export default function ArtistCapsulePage() {
                 <Camera className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="font-semibold text-white">2. Document</h3>
-              <p className="text-sm text-slate-400">Upload high-quality images and metadata</p>
+              <p className="text-sm text-slate-400">
+                Upload high-quality images and metadata
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -349,7 +409,9 @@ export default function ArtistCapsulePage() {
                 <FileText className="w-6 h-6 text-purple-400" />
               </div>
               <h3 className="font-semibold text-white">3. Verify</h3>
-              <p className="text-sm text-slate-400">Immutable timestamp and authenticity proof</p>
+              <p className="text-sm text-slate-400">
+                Immutable timestamp and authenticity proof
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -357,7 +419,9 @@ export default function ArtistCapsulePage() {
                 <Image className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="font-semibold text-white">4. Preserve</h3>
-              <p className="text-sm text-slate-400">Permanent artistic truth preservation</p>
+              <p className="text-sm text-slate-400">
+                Permanent artistic truth preservation
+              </p>
             </div>
           </CardContent>
         </Card>

@@ -2,30 +2,30 @@
 // Handles right-to-left layout detection and configuration
 
 const RTL_LANGUAGES = new Set([
-  'ar', // Arabic
-  'he', // Hebrew
-  'fa', // Persian/Farsi
-  'ur', // Urdu
-  'ps', // Pashto
-  'sd', // Sindhi
-  'ug', // Uyghur
-  'yi', // Yiddish
-  'ji', // Yiddish (alternate)
-  'iw', // Hebrew (legacy)
-  'ku', // Kurdish
-  'dv', // Divehi
-  'arc', // Aramaic
-  'bcc', // Balochi
-  'bqi', // Bakhtiari
-  'ckb', // Central Kurdish
-  'glk', // Gilaki
-  'lrc', // Northern Luri
-  'mzn', // Mazanderani
-  'pnb', // Western Punjabi
-  'prs', // Dari
-  'sd-arab', // Sindhi (Arabic script)
-  'ug-arab', // Uyghur (Arabic script)
-  'uz-arab'  // Uzbek (Arabic script)
+  "ar", // Arabic
+  "he", // Hebrew
+  "fa", // Persian/Farsi
+  "ur", // Urdu
+  "ps", // Pashto
+  "sd", // Sindhi
+  "ug", // Uyghur
+  "yi", // Yiddish
+  "ji", // Yiddish (alternate)
+  "iw", // Hebrew (legacy)
+  "ku", // Kurdish
+  "dv", // Divehi
+  "arc", // Aramaic
+  "bcc", // Balochi
+  "bqi", // Bakhtiari
+  "ckb", // Central Kurdish
+  "glk", // Gilaki
+  "lrc", // Northern Luri
+  "mzn", // Mazanderani
+  "pnb", // Western Punjabi
+  "prs", // Dari
+  "sd-arab", // Sindhi (Arabic script)
+  "ug-arab", // Uyghur (Arabic script)
+  "uz-arab", // Uzbek (Arabic script)
 ]);
 
 /**
@@ -35,19 +35,19 @@ const RTL_LANGUAGES = new Set([
  */
 export function detectUserLanguage(): string {
   // Check localStorage first
-  const savedLang = localStorage.getItem('userLanguage');
+  const savedLang = localStorage.getItem("userLanguage");
   if (savedLang) return savedLang;
-  
+
   // Fall back to browser language
-  return navigator.language.split('-')[0] || 'en';
+  return navigator.language.split("-")[0] || "en";
 }
 
 export function isRTL(lang: string): boolean {
   if (!lang) return false;
-  
+
   // Normalize language code (remove region/script suffixes for basic check)
-  const baseLang = lang.toLowerCase().split('-')[0];
-  
+  const baseLang = lang.toLowerCase().split("-")[0];
+
   return RTL_LANGUAGES.has(lang.toLowerCase()) || RTL_LANGUAGES.has(baseLang);
 }
 
@@ -56,8 +56,8 @@ export function isRTL(lang: string): boolean {
  * @param lang - Language code
  * @returns 'rtl' or 'ltr'
  */
-export function getTextDirection(lang: string): 'rtl' | 'ltr' {
-  return isRTL(lang) ? 'rtl' : 'ltr';
+export function getTextDirection(lang: string): "rtl" | "ltr" {
+  return isRTL(lang) ? "rtl" : "ltr";
 }
 
 /**
@@ -65,8 +65,8 @@ export function getTextDirection(lang: string): 'rtl' | 'ltr' {
  * @param lang - Language code
  * @returns CSS text-align value
  */
-export function getTextAlign(lang: string): 'left' | 'right' | 'start' | 'end' {
-  return isRTL(lang) ? 'right' : 'left';
+export function getTextAlign(lang: string): "left" | "right" | "start" | "end" {
+  return isRTL(lang) ? "right" : "left";
 }
 
 /**
@@ -75,7 +75,7 @@ export function getTextAlign(lang: string): 'left' | 'right' | 'start' | 'end' {
  * @returns Tailwind CSS classes for proper flex direction
  */
 export function getFlexDirection(lang: string): string {
-  return isRTL(lang) ? 'flex-row-reverse' : 'flex-row';
+  return isRTL(lang) ? "flex-row-reverse" : "flex-row";
 }
 
 /**
@@ -102,14 +102,14 @@ export function getDirectionalSpacing(lang: string, spacing: string) {
 export function getRTLContainerProps(lang: string) {
   const direction = getTextDirection(lang);
   const textAlign = getTextAlign(lang);
-  
+
   return {
     dir: direction,
     className: `text-${textAlign}`,
     style: {
       direction,
-      textAlign
-    }
+      textAlign,
+    },
   };
 }
 
@@ -120,13 +120,13 @@ export function getRTLContainerProps(lang: string) {
  */
 export function getLanguageFont(lang: string): string {
   const fontMap: Record<string, string> = {
-    'ar': 'Noto Sans Arabic, Arial, sans-serif',
-    'he': 'Noto Sans Hebrew, Arial, sans-serif',
-    'fa': 'Noto Sans Persian, Arial, sans-serif',
-    'ur': 'Noto Sans Urdu, Arial, sans-serif',
-    'default': 'Inter, system-ui, sans-serif'
+    ar: "Noto Sans Arabic, Arial, sans-serif",
+    he: "Noto Sans Hebrew, Arial, sans-serif",
+    fa: "Noto Sans Persian, Arial, sans-serif",
+    ur: "Noto Sans Urdu, Arial, sans-serif",
+    default: "Inter, system-ui, sans-serif",
   };
-  
+
   return fontMap[lang] || fontMap.default;
 }
 
@@ -136,5 +136,5 @@ export function getLanguageFont(lang: string): string {
  * @returns CSS transform for icons
  */
 export function getIconTransform(lang: string): string {
-  return isRTL(lang) ? 'scaleX(-1)' : 'none';
+  return isRTL(lang) ? "scaleX(-1)" : "none";
 }

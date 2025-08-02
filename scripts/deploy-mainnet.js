@@ -17,7 +17,7 @@ async function main() {
 
   if (parseFloat(balanceInMatic) < 0.1) {
     console.log(
-      "⚠️  WARNING: Low MATIC balance. Need at least 0.1 MATIC for deployment."
+      "⚠️  WARNING: Low MATIC balance. Need at least 0.1 MATIC for deployment.",
     );
   }
 
@@ -27,12 +27,12 @@ async function main() {
     "Network:",
     network.name,
     "Chain ID:",
-    network.chainId.toString()
+    network.chainId.toString(),
   );
 
   if (network.chainId !== 137n) {
     throw new Error(
-      "❌ Not connected to Polygon Mainnet! Expected Chain ID: 137"
+      "❌ Not connected to Polygon Mainnet! Expected Chain ID: 137",
     );
   }
 
@@ -51,7 +51,7 @@ async function main() {
   console.log(
     "Initial Supply:",
     hre.ethers.formatUnits(initialSupply, 18),
-    "GTT"
+    "GTT",
   );
   console.log("Token Name:", tokenName);
   console.log("Token Symbol:", tokenSymbol);
@@ -100,7 +100,7 @@ async function main() {
   console.log("Deployer GTT Balance:", hre.ethers.formatUnits(gttBalance, 18));
   console.log(
     "TruthVault GTT Balance:",
-    hre.ethers.formatUnits(vaultBalance, 18)
+    hre.ethers.formatUnits(vaultBalance, 18),
   );
 
   // Save deployment addresses
@@ -122,7 +122,7 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    "polygon-mainnet.json"
+    "polygon-mainnet.json",
   );
 
   // Create deployments directory if it doesn't exist
@@ -150,7 +150,7 @@ async function main() {
   console.log(`GTT Token: https://polygonscan.com/address/${gttAddress}`);
   console.log(`TruthVault: https://polygonscan.com/address/${vaultAddress}`);
   console.log(
-    `CapsuleFactory: https://polygonscan.com/address/${factoryAddress}`
+    `CapsuleFactory: https://polygonscan.com/address/${factoryAddress}`,
   );
 }
 

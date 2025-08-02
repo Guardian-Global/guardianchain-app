@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Star, Heart, Zap, Trophy, Gift } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, Star, Heart, Zap, Trophy, Gift } from "lucide-react";
 
 // Floating Particles Component
-export const FloatingParticles: React.FC<{ count?: number; color?: string }> = ({ 
-  count = 20, 
-  color = 'rgba(59, 130, 246, 0.3)' 
-}) => {
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
+export const FloatingParticles: React.FC<{
+  count?: number;
+  color?: string;
+}> = ({ count = 20, color = "rgba(59, 130, 246, 0.3)" }) => {
+  const [particles, setParticles] = useState<
+    Array<{ id: number; x: number; y: number; delay: number }>
+  >([]);
 
   useEffect(() => {
     const newParticles = Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      delay: Math.random() * 2
+      delay: Math.random() * 2,
     }));
     setParticles(newParticles);
   }, [count]);
@@ -25,17 +27,21 @@ export const FloatingParticles: React.FC<{ count?: number; color?: string }> = (
         <motion.div
           key={particle.id}
           className="absolute w-1 h-1 rounded-full"
-          style={{ backgroundColor: color, left: `${particle.x}%`, top: `${particle.y}%` }}
+          style={{
+            backgroundColor: color,
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
           animate={{
             y: [0, -20, 0],
             opacity: [0.3, 1, 0.3],
-            scale: [1, 1.5, 1]
+            scale: [1, 1.5, 1],
           }}
           transition={{
             duration: 3 + Math.random() * 2,
             repeat: Infinity,
             delay: particle.delay,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
         />
       ))}
@@ -49,8 +55,15 @@ export const RippleButton: React.FC<{
   onClick?: () => void;
   className?: string;
   rippleColor?: string;
-}> = ({ children, onClick, className = '', rippleColor = 'rgba(255, 255, 255, 0.6)' }) => {
-  const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
+}> = ({
+  children,
+  onClick,
+  className = "",
+  rippleColor = "rgba(255, 255, 255, 0.6)",
+}) => {
+  const [ripples, setRipples] = useState<
+    Array<{ id: number; x: number; y: number }>
+  >([]);
 
   const createRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
     const button = event.currentTarget;
@@ -58,19 +71,19 @@ export const RippleButton: React.FC<{
     const size = Math.max(button.clientWidth, button.clientHeight);
     const x = event.clientX - rect.left - size / 2;
     const y = event.clientY - rect.top - size / 2;
-    
+
     const newRipple = { id: Date.now(), x, y };
     setRipples((prev) => [...prev, newRipple]);
-    
+
     setTimeout(() => {
-      setRipples((prev) => prev.filter(ripple => ripple.id !== newRipple.id));
+      setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
     }, 600);
-    
+
     onClick?.();
   };
 
   return (
-    <button 
+    <button
       className={`relative overflow-hidden ${className}`}
       onClick={createRipple}
     >
@@ -88,7 +101,7 @@ export const RippleButton: React.FC<{
             initial={{ width: 0, height: 0, opacity: 1 }}
             animate={{ width: 200, height: 200, opacity: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           />
         ))}
       </AnimatePresence>
@@ -101,7 +114,7 @@ export const BouncyIcon: React.FC<{
   icon: React.ComponentType<{ className?: string }>;
   className?: string;
   bounce?: boolean;
-}> = ({ icon: Icon, className = '', bounce = true }) => {
+}> = ({ icon: Icon, className = "", bounce = true }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -109,15 +122,19 @@ export const BouncyIcon: React.FC<{
       className={`inline-block cursor-pointer ${className}`}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      animate={bounce && isHovered ? {
-        scale: [1, 1.2, 1],
-        rotate: [0, -10, 10, 0]
-      } : {}}
-      transition={{ 
+      animate={
+        bounce && isHovered
+          ? {
+              scale: [1, 1.2, 1],
+              rotate: [0, -10, 10, 0],
+            }
+          : {}
+      }
+      transition={{
         duration: 0.5,
         type: "spring",
         stiffness: 400,
-        damping: 10
+        damping: 10,
       }}
     >
       <Icon className={className} />
@@ -131,7 +148,7 @@ export const CelebrationProgress: React.FC<{
   max: number;
   label?: string;
   showCelebration?: boolean;
-}> = ({ value, max, label = '', showCelebration = true }) => {
+}> = ({ value, max, label = "", showCelebration = true }) => {
   const percentage = (value / max) * 100;
   const [showParty, setShowParty] = useState(false);
 
@@ -146,15 +163,17 @@ export const CelebrationProgress: React.FC<{
     <div className="relative">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm text-slate-300">{label}</span>
-        <span className="text-sm text-blue-400">{value}/{max}</span>
+        <span className="text-sm text-blue-400">
+          {value}/{max}
+        </span>
       </div>
-      
+
       <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full relative"
           initial={{ width: 0 }}
           animate={{ width: `${Math.min(percentage, 100)}%` }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
           {percentage >= 100 && (
             <motion.div
@@ -165,7 +184,7 @@ export const CelebrationProgress: React.FC<{
           )}
         </motion.div>
       </div>
-      
+
       <AnimatePresence>
         {showParty && (
           <motion.div
@@ -179,12 +198,12 @@ export const CelebrationProgress: React.FC<{
                 key={index}
                 animate={{
                   y: [0, -10, 0],
-                  rotate: [0, 360, 0]
+                  rotate: [0, 360, 0],
                 }}
                 transition={{
                   duration: 1,
                   delay: index * 0.2,
-                  repeat: 2
+                  repeat: 2,
                 }}
               >
                 <Icon className="h-6 w-6 text-yellow-400" />
@@ -201,19 +220,19 @@ export const CelebrationProgress: React.FC<{
 export const FloatingTooltip: React.FC<{
   children: React.ReactNode;
   content: string;
-  position?: 'top' | 'bottom' | 'left' | 'right';
-}> = ({ children, content, position = 'top' }) => {
+  position?: "top" | "bottom" | "left" | "right";
+}> = ({ children, content, position = "top" }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const positionClasses = {
-    top: '-top-12 left-1/2 transform -translate-x-1/2',
-    bottom: '-bottom-12 left-1/2 transform -translate-x-1/2',
-    left: 'top-1/2 -left-32 transform -translate-y-1/2',
-    right: 'top-1/2 -right-32 transform -translate-y-1/2'
+    top: "-top-12 left-1/2 transform -translate-x-1/2",
+    bottom: "-bottom-12 left-1/2 transform -translate-x-1/2",
+    left: "top-1/2 -left-32 transform -translate-y-1/2",
+    right: "top-1/2 -right-32 transform -translate-y-1/2",
   };
 
   return (
-    <div 
+    <div
       className="relative inline-block"
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
@@ -229,12 +248,17 @@ export const FloatingTooltip: React.FC<{
             transition={{ duration: 0.2 }}
           >
             {content}
-            <div className={`absolute w-2 h-2 bg-slate-800 transform rotate-45 border-r border-b border-slate-600 ${
-              position === 'top' ? 'bottom-0 left-1/2 translate-x-[-50%] translate-y-[50%]' :
-              position === 'bottom' ? 'top-0 left-1/2 translate-x-[-50%] translate-y-[-50%]' :
-              position === 'left' ? 'right-0 top-1/2 translate-x-[50%] translate-y-[-50%]' :
-              'left-0 top-1/2 translate-x-[-50%] translate-y-[-50%]'
-            }`} />
+            <div
+              className={`absolute w-2 h-2 bg-slate-800 transform rotate-45 border-r border-b border-slate-600 ${
+                position === "top"
+                  ? "bottom-0 left-1/2 translate-x-[-50%] translate-y-[50%]"
+                  : position === "bottom"
+                    ? "top-0 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+                    : position === "left"
+                      ? "right-0 top-1/2 translate-x-[50%] translate-y-[-50%]"
+                      : "left-0 top-1/2 translate-x-[-50%] translate-y-[-50%]"
+              }`}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -248,23 +272,27 @@ export const LikeAnimation: React.FC<{
   onToggle: () => void;
   size?: number;
 }> = ({ isLiked, onToggle, size = 24 }) => {
-  const [hearts, setHearts] = useState<Array<{ id: number; x: number; y: number }>>([]);
+  const [hearts, setHearts] = useState<
+    Array<{ id: number; x: number; y: number }>
+  >([]);
 
   const handleLike = () => {
     onToggle();
-    
+
     if (!isLiked) {
       // Create floating hearts
       const newHearts = Array.from({ length: 5 }, (_, i) => ({
         id: Date.now() + i,
         x: (Math.random() - 0.5) * 60,
-        y: 0
+        y: 0,
       }));
-      
-      setHearts(prev => [...prev, ...newHearts]);
-      
+
+      setHearts((prev) => [...prev, ...newHearts]);
+
       setTimeout(() => {
-        setHearts(prev => prev.filter(heart => !newHearts.find(h => h.id === heart.id)));
+        setHearts((prev) =>
+          prev.filter((heart) => !newHearts.find((h) => h.id === heart.id)),
+        );
       }, 2000);
     }
   };
@@ -278,21 +306,25 @@ export const LikeAnimation: React.FC<{
         whileHover={{ scale: 1.1 }}
       >
         <motion.div
-          animate={isLiked ? {
-            scale: [1, 1.3, 1],
-            rotate: [0, -10, 10, 0]
-          } : {}}
+          animate={
+            isLiked
+              ? {
+                  scale: [1, 1.3, 1],
+                  rotate: [0, -10, 10, 0],
+                }
+              : {}
+          }
           transition={{ duration: 0.6, type: "spring" }}
         >
-          <Heart 
-            className={`h-${size/4} w-${size/4} transition-colors duration-300 ${
-              isLiked ? 'text-red-500 fill-red-500' : 'text-slate-400'
+          <Heart
+            className={`h-${size / 4} w-${size / 4} transition-colors duration-300 ${
+              isLiked ? "text-red-500 fill-red-500" : "text-slate-400"
             }`}
             style={{ width: size, height: size }}
           />
         </motion.div>
       </motion.button>
-      
+
       <AnimatePresence>
         {hearts.map((heart) => (
           <motion.div
@@ -300,14 +332,14 @@ export const LikeAnimation: React.FC<{
             className="absolute pointer-events-none"
             style={{ left: heart.x, bottom: 0 }}
             initial={{ opacity: 1, y: 0, scale: 0.5 }}
-            animate={{ 
-              opacity: 0, 
-              y: -50, 
+            animate={{
+              opacity: 0,
+              y: -50,
               scale: 1.2,
-              x: heart.x + (Math.random() - 0.5) * 20
+              x: heart.x + (Math.random() - 0.5) * 20,
             }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
+            transition={{ duration: 2, ease: "easeOut" }}
           >
             <Heart className="h-4 w-4 text-red-500 fill-red-500" />
           </motion.div>
@@ -322,14 +354,18 @@ export const ShakeOnError: React.FC<{
   children: React.ReactNode;
   trigger: boolean;
   className?: string;
-}> = ({ children, trigger, className = '' }) => {
+}> = ({ children, trigger, className = "" }) => {
   return (
     <motion.div
       className={className}
-      animate={trigger ? {
-        x: [-10, 10, -10, 10, 0],
-        transition: { duration: 0.4 }
-      } : {}}
+      animate={
+        trigger
+          ? {
+              x: [-10, 10, -10, 10, 0],
+              transition: { duration: 0.4 },
+            }
+          : {}
+      }
     >
       {children}
     </motion.div>
@@ -341,17 +377,17 @@ export const TypingAnimation: React.FC<{
   text: string;
   speed?: number;
   className?: string;
-}> = ({ text, speed = 50, className = '' }) => {
-  const [displayText, setDisplayText] = useState('');
+}> = ({ text, speed = 50, className = "" }) => {
+  const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
-        setDisplayText(prev => prev + text[currentIndex]);
-        setCurrentIndex(prev => prev + 1);
+        setDisplayText((prev) => prev + text[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
       }, speed);
-      
+
       return () => clearTimeout(timeout);
     }
   }, [currentIndex, text, speed]);
@@ -427,5 +463,5 @@ export default {
   LikeAnimation,
   ShakeOnError,
   TypingAnimation,
-  SuccessCheckmark
+  SuccessCheckmark,
 };

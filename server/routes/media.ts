@@ -8,16 +8,16 @@ const router = Router();
 router.post("/upload-url", isDebugAuthenticated, async (req, res) => {
   try {
     const { fileName, fileType, uploadType } = req.body;
-    
+
     if (!fileName || !fileType || !uploadType) {
-      return res.status(400).json({ 
-        error: "Missing required fields: fileName, fileType, uploadType" 
+      return res.status(400).json({
+        error: "Missing required fields: fileName, fileType, uploadType",
       });
     }
 
     const objectStorageService = new ObjectStorageService();
     const uploadURL = await objectStorageService.getObjectEntityUploadURL();
-    
+
     res.json({ uploadURL });
   } catch (error) {
     console.error("Error generating upload URL:", error);
@@ -32,13 +32,13 @@ router.post("/upload-complete", isDebugAuthenticated, async (req, res) => {
     const userId = req.user?.id;
 
     if (!mediaUrl || !fileName || !fileType) {
-      return res.status(400).json({ 
-        error: "Missing required fields: mediaUrl, fileName, fileType" 
+      return res.status(400).json({
+        error: "Missing required fields: mediaUrl, fileName, fileType",
       });
     }
 
     const objectStorageService = new ObjectStorageService();
-    
+
     // Set ACL policy for the uploaded file
     const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
       mediaUrl,
@@ -46,16 +46,16 @@ router.post("/upload-complete", isDebugAuthenticated, async (req, res) => {
         owner: userId,
         visibility: "public", // Default to public for profile media
         aclRules: [],
-      }
+      },
     );
 
     // Store metadata in database if needed
     // This would integrate with your capsule creation logic
 
-    res.json({ 
+    res.json({
       success: true,
       objectPath,
-      mediaUrl: objectPath
+      mediaUrl: objectPath,
     });
   } catch (error) {
     console.error("Error completing upload:", error);

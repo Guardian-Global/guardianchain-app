@@ -151,7 +151,7 @@ export class AutomationService {
               jobName: job.name,
               error: error.message,
               timestamp: now,
-            }
+            },
           );
         }
       }
@@ -175,7 +175,7 @@ export class AutomationService {
     if (scanResults.vulnerabilities > 0 || scanResults.threatLevel !== "low") {
       await notificationService.sendSecurityAlert(
         "Security Scan Alert",
-        scanResults
+        scanResults,
       );
     }
 
@@ -325,7 +325,7 @@ export class AutomationService {
     if (backupResult.status !== "successful") {
       await notificationService.sendSecurityAlert(
         "Backup Failure",
-        backupResult
+        backupResult,
       );
     }
 

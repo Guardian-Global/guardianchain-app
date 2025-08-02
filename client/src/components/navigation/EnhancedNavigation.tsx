@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  Home, 
-  Shield, 
-  Package, 
-  Crown, 
-  Map, 
-  TrendingUp, 
-  Settings, 
-  User, 
-  HelpCircle, 
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  ChevronDown,
+  ChevronRight,
+  Home,
+  Shield,
+  Package,
+  Crown,
+  Map,
+  TrendingUp,
+  Settings,
+  User,
+  HelpCircle,
   Search,
   Globe,
   Zap,
@@ -36,12 +36,12 @@ import {
   PlayCircle,
   CheckCircle2,
   Bell,
-  Brain
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import SmartNotifications from './SmartNotifications';
-import PersonalizationEngine from './PersonalizationEngine';
-import EngagementTracker from './EngagementTracker';
+  Brain,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import SmartNotifications from "./SmartNotifications";
+import PersonalizationEngine from "./PersonalizationEngine";
+import EngagementTracker from "./EngagementTracker";
 import { DynamicBadge } from "./DynamicBadgeSystem";
 import { RoleBasedAccess } from "./RoleBasedAccess";
 import { MobileHeader } from "./MobileNavigation";
@@ -72,213 +72,223 @@ interface WalkthroughStep {
 
 const navigationData: NavigationItem[] = [
   {
-    id: 'home',
-    title: 'Dashboard',
-    path: '/',
+    id: "home",
+    title: "Dashboard",
+    path: "/",
     icon: Home,
-    description: 'Your personalized overview and quick actions',
-    category: 'main',
-    hasWalkthrough: true
+    description: "Your personalized overview and quick actions",
+    category: "main",
+    hasWalkthrough: true,
   },
   {
-    id: 'capsules',
-    title: 'Capsule Hub',
-    path: '/capsules',
+    id: "capsules",
+    title: "Capsule Hub",
+    path: "/capsules",
     icon: Package,
-    description: 'Create, manage, and explore truth capsules',
-    category: 'core',
+    description: "Create, manage, and explore truth capsules",
+    category: "core",
     isPopular: true,
     hasWalkthrough: true,
     children: [
       {
-        id: 'create-capsule',
-        title: 'Create Capsule',
-        path: '/create',
+        id: "create-capsule",
+        title: "Create Capsule",
+        path: "/create",
         icon: Zap,
-        description: 'Start your truth preservation journey',
-        category: 'creation',
+        description: "Start your truth preservation journey",
+        category: "creation",
         hasWalkthrough: true,
-        badge: 'Start Here'
+        badge: "Start Here",
       },
       {
-        id: 'capsule-gallery',
-        title: 'NFT Gallery',
-        path: '/capsules/gallery',
+        id: "capsule-gallery",
+        title: "NFT Gallery",
+        path: "/capsules/gallery",
         icon: Trophy,
-        description: 'Browse and discover verified capsules',
-        category: 'discovery'
+        description: "Browse and discover verified capsules",
+        category: "discovery",
       },
       {
-        id: 'my-capsules',
-        title: 'My Capsules',
-        path: '/capsules/mine',
+        id: "my-capsules",
+        title: "My Capsules",
+        path: "/capsules/mine",
         icon: Bookmark,
-        description: 'Manage your capsule collection',
-        category: 'management'
-      }
-    ]
+        description: "Manage your capsule collection",
+        category: "management",
+      },
+    ],
   },
   {
-    id: 'eternal-contracts',
-    title: 'Eternal Contracts',
-    path: '/eternal-contracts',
+    id: "eternal-contracts",
+    title: "Eternal Contracts",
+    path: "/eternal-contracts",
     icon: Lock,
-    description: 'Immutable declarations and digital wills',
-    category: 'advanced',
-    tier: ['CREATOR', 'SOVEREIGN'],
+    description: "Immutable declarations and digital wills",
+    category: "advanced",
+    tier: ["CREATOR", "SOVEREIGN"],
     hasWalkthrough: true,
-    isNew: true
+    isNew: true,
   },
   {
-    id: 'yield-vault',
-    title: 'Yield Vault',
-    path: '/dashboard/yield',
+    id: "yield-vault",
+    title: "Yield Vault",
+    path: "/dashboard/yield",
     icon: TrendingUp,
-    description: 'Earn GTT rewards through truth preservation',
-    category: 'financial',
+    description: "Earn GTT rewards through truth preservation",
+    category: "financial",
     hasWalkthrough: true,
-    isPopular: true
+    isPopular: true,
   },
   {
-    id: 'guardian-map',
-    title: 'Guardian Network',
-    path: '/guardian-map',
+    id: "guardian-map",
+    title: "Guardian Network",
+    path: "/guardian-map",
     icon: Map,
-    description: 'Explore the global truth guardian network',
-    category: 'network',
-    isPopular: true
+    description: "Explore the global truth guardian network",
+    category: "network",
+    isPopular: true,
   },
   {
-    id: 'lineage',
-    title: 'Truth Lineage',
-    path: '/lineage',
+    id: "lineage",
+    title: "Truth Lineage",
+    path: "/lineage",
     icon: Target,
-    description: 'Track truth inheritance and influence',
-    category: 'analytics',
-    tier: ['SEEKER', 'CREATOR', 'SOVEREIGN']
+    description: "Track truth inheritance and influence",
+    category: "analytics",
+    tier: ["SEEKER", "CREATOR", "SOVEREIGN"],
   },
   {
-    id: 'reputation',
-    title: 'SMRI Leaderboard',
-    path: '/reputation',
+    id: "reputation",
+    title: "SMRI Leaderboard",
+    path: "/reputation",
     icon: Crown,
-    description: 'Sovereign Memory Reputation Index rankings',
-    category: 'social'
+    description: "Sovereign Memory Reputation Index rankings",
+    category: "social",
   },
   {
-    id: 'dao',
-    title: 'DAO Governance',
-    path: '/dao',
+    id: "dao",
+    title: "DAO Governance",
+    path: "/dao",
     icon: Users,
-    description: 'Participate in protocol governance',
-    category: 'governance',
-    tier: ['CREATOR', 'SOVEREIGN']
+    description: "Participate in protocol governance",
+    category: "governance",
+    tier: ["CREATOR", "SOVEREIGN"],
   },
   {
-    id: 'analytics',
-    title: 'Analytics Hub',
-    path: '/analytics',
+    id: "analytics",
+    title: "Analytics Hub",
+    path: "/analytics",
     icon: BarChart3,
-    description: 'Advanced insights and metrics',
-    category: 'analytics',
-    tier: ['SOVEREIGN'],
+    description: "Advanced insights and metrics",
+    category: "analytics",
+    tier: ["SOVEREIGN"],
     children: [
       {
-        id: 'capsule-analytics',
-        title: 'Capsule Analytics',
-        path: '/analytics/capsules',
+        id: "capsule-analytics",
+        title: "Capsule Analytics",
+        path: "/analytics/capsules",
         icon: Package,
-        description: 'Deep dive into capsule performance',
-        category: 'analytics'
+        description: "Deep dive into capsule performance",
+        category: "analytics",
       },
       {
-        id: 'network-analytics',
-        title: 'Network Analytics',
-        path: '/analytics/network',
+        id: "network-analytics",
+        title: "Network Analytics",
+        path: "/analytics/network",
         icon: Globe,
-        description: 'Guardian network insights',
-        category: 'analytics'
-      }
-    ]
+        description: "Guardian network insights",
+        category: "analytics",
+      },
+    ],
   },
   {
-    id: 'marketplace',
-    title: 'Truth Marketplace',
-    path: '/marketplace',
+    id: "marketplace",
+    title: "Truth Marketplace",
+    path: "/marketplace",
     icon: Coins,
-    description: 'Trade and monetize truth capsules',
-    category: 'financial',
-    comingSoon: true
-  }
+    description: "Trade and monetize truth capsules",
+    category: "financial",
+    comingSoon: true,
+  },
 ];
 
 const walkthroughSteps: Record<string, WalkthroughStep[]> = {
-  '/create': [
+  "/create": [
     {
-      target: 'capsule-type-selector',
-      title: 'Choose Your Capsule Type',
-      description: 'Select the type of truth you want to preserve. Each type has unique properties and yield potential.',
-      action: 'Select a capsule type to continue'
+      target: "capsule-type-selector",
+      title: "Choose Your Capsule Type",
+      description:
+        "Select the type of truth you want to preserve. Each type has unique properties and yield potential.",
+      action: "Select a capsule type to continue",
     },
     {
-      target: 'content-editor',
-      title: 'Share Your Truth',
-      description: 'Write your story, testimony, or memory. Our AI will help optimize it for maximum impact.',
-      action: 'Add your content'
+      target: "content-editor",
+      title: "Share Your Truth",
+      description:
+        "Write your story, testimony, or memory. Our AI will help optimize it for maximum impact.",
+      action: "Add your content",
     },
     {
-      target: 'ai-analysis',
-      title: 'AI Enhancement',
-      description: 'Let our AI analyze your content for emotional resonance and truth verification.',
-      action: 'Run AI analysis'
+      target: "ai-analysis",
+      title: "AI Enhancement",
+      description:
+        "Let our AI analyze your content for emotional resonance and truth verification.",
+      action: "Run AI analysis",
     },
     {
-      target: 'mint-options',
-      title: 'Mint Your NFT',
-      description: 'Transform your truth into a valuable NFT with yield-generating capabilities.',
-      action: 'Complete minting'
-    }
+      target: "mint-options",
+      title: "Mint Your NFT",
+      description:
+        "Transform your truth into a valuable NFT with yield-generating capabilities.",
+      action: "Complete minting",
+    },
   ],
-  '/eternal-contracts': [
+  "/eternal-contracts": [
     {
-      target: 'contract-builder',
-      title: 'Create Eternal Declaration',
-      description: 'Build an immutable contract that will exist forever on the blockchain.',
-      action: 'Start building'
+      target: "contract-builder",
+      title: "Create Eternal Declaration",
+      description:
+        "Build an immutable contract that will exist forever on the blockchain.",
+      action: "Start building",
     },
     {
-      target: 'beneficiary-settings',
-      title: 'Set Beneficiaries',
-      description: 'Choose who can access your contract and when it should be unlocked.',
-      action: 'Configure access'
+      target: "beneficiary-settings",
+      title: "Set Beneficiaries",
+      description:
+        "Choose who can access your contract and when it should be unlocked.",
+      action: "Configure access",
     },
     {
-      target: 'verification-tools',
-      title: 'Verify & Seal',
-      description: 'Use our verification tools to ensure your contract meets eternal standards.',
-      action: 'Verify and seal'
-    }
+      target: "verification-tools",
+      title: "Verify & Seal",
+      description:
+        "Use our verification tools to ensure your contract meets eternal standards.",
+      action: "Verify and seal",
+    },
   ],
-  '/dashboard/yield': [
+  "/dashboard/yield": [
     {
-      target: 'yield-overview',
-      title: 'Your Earning Dashboard',
-      description: 'Track your GTT earnings from all truth preservation activities.',
-      action: 'Explore earnings'
+      target: "yield-overview",
+      title: "Your Earning Dashboard",
+      description:
+        "Track your GTT earnings from all truth preservation activities.",
+      action: "Explore earnings",
     },
     {
-      target: 'staking-options',
-      title: 'Maximize Your Yield',
-      description: 'Stake your GTT tokens for enhanced returns and voting power.',
-      action: 'Start staking'
+      target: "staking-options",
+      title: "Maximize Your Yield",
+      description:
+        "Stake your GTT tokens for enhanced returns and voting power.",
+      action: "Start staking",
     },
     {
-      target: 'performance-metrics',
-      title: 'Performance Insights',
-      description: 'Understand which capsules generate the most value and engagement.',
-      action: 'Analyze performance'
-    }
-  ]
+      target: "performance-metrics",
+      title: "Performance Insights",
+      description:
+        "Understand which capsules generate the most value and engagement.",
+      action: "Analyze performance",
+    },
+  ],
 };
 
 interface EnhancedNavigationProps {
@@ -288,26 +298,28 @@ interface EnhancedNavigationProps {
   onStartWalkthrough?: (path: string) => void;
 }
 
-export default function EnhancedNavigation({ 
-  isCollapsed = false, 
+export default function EnhancedNavigation({
+  isCollapsed = false,
   onToggleCollapse,
   showWalkthrough = true,
-  onStartWalkthrough 
+  onStartWalkthrough,
 }: EnhancedNavigationProps) {
   const [location] = useLocation();
   const { user, isAuthenticated } = useAuth();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['capsules']);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeWalkthrough, setActiveWalkthrough] = useState<string | null>(null);
-  const [language, setLanguage] = useState('en');
+  const [expandedItems, setExpandedItems] = useState<string[]>(["capsules"]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeWalkthrough, setActiveWalkthrough] = useState<string | null>(
+    null,
+  );
+  const [language, setLanguage] = useState("en");
 
-  const userTier = user?.tier || 'EXPLORER';
+  const userTier = user?.tier || "EXPLORER";
 
   const toggleExpanded = (itemId: string) => {
-    setExpandedItems(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
+    setExpandedItems((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId],
     );
   };
 
@@ -316,10 +328,12 @@ export default function EnhancedNavigation({
     return item.tier.includes(userTier);
   };
 
-  const filteredNavigation = navigationData.filter(item => {
+  const filteredNavigation = navigationData.filter((item) => {
     if (!searchQuery) return true;
-    return item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return (
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
   const startWalkthrough = (path: string) => {
@@ -336,9 +350,11 @@ export default function EnhancedNavigation({
       fr: `Description en français pour ${item.title}`,
       de: `Deutsche Beschreibung für ${item.title}`,
       zh: `${item.title}的中文描述`,
-      ja: `${item.title}の日本語説明`
+      ja: `${item.title}の日本語説明`,
     };
-    return translations[language as keyof typeof translations] || item.description;
+    return (
+      translations[language as keyof typeof translations] || item.description
+    );
   };
 
   const renderNavigationItem = (item: NavigationItem, level = 0) => {
@@ -352,15 +368,18 @@ export default function EnhancedNavigation({
 
     return (
       <div key={item.id} className="mb-1">
-        <div className={`
+        <div
+          className={`
           group relative flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all duration-200
-          ${isActive 
-            ? 'bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-l-4 border-indigo-500' 
-            : 'hover:bg-white/5'
+          ${
+            isActive
+              ? "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-l-4 border-indigo-500"
+              : "hover:bg-white/5"
           }
-          ${level > 0 ? 'ml-4 border-l border-gray-700' : ''}
-          ${!canAccess ? 'opacity-50' : ''}
-        `}>
+          ${level > 0 ? "ml-4 border-l border-gray-700" : ""}
+          ${!canAccess ? "opacity-50" : ""}
+        `}
+        >
           <div className="flex items-center flex-1">
             {hasChildren && (
               <button
@@ -374,20 +393,27 @@ export default function EnhancedNavigation({
                 )}
               </button>
             )}
-            
-            <item.icon className={`w-5 h-5 mr-3 ${isActive ? 'text-indigo-400' : 'text-gray-400'}`} />
-            
+
+            <item.icon
+              className={`w-5 h-5 mr-3 ${isActive ? "text-indigo-400" : "text-gray-400"}`}
+            />
+
             {!isCollapsed && (
               <div className="flex-1">
-                <Link href={canAccess ? item.path : '#'}>
+                <Link href={canAccess ? item.path : "#"}>
                   <div className="flex items-center justify-between group-hover:text-white transition-colors">
                     <div>
                       <div className="flex items-center">
-                        <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-300'}`}>
+                        <span
+                          className={`font-medium ${isActive ? "text-white" : "text-gray-300"}`}
+                        >
                           {item.title}
                         </span>
                         {item.isNew && (
-                          <Badge variant="outline" className="ml-2 text-xs border-green-500 text-green-400">
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs border-green-500 text-green-400"
+                          >
                             New
                           </Badge>
                         )}
@@ -400,7 +426,10 @@ export default function EnhancedNavigation({
                           </Badge>
                         )}
                         {item.comingSoon && (
-                          <Badge variant="outline" className="ml-2 text-xs border-yellow-500 text-yellow-400">
+                          <Badge
+                            variant="outline"
+                            className="ml-2 text-xs border-yellow-500 text-yellow-400"
+                          >
                             Soon
                           </Badge>
                         )}
@@ -416,25 +445,33 @@ export default function EnhancedNavigation({
           </div>
 
           {/* Walkthrough Button */}
-          {!isCollapsed && item.hasWalkthrough && hasSteps && showWalkthrough && canAccess && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => startWalkthrough(item.path)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 h-6 w-6"
-              title="Start guided walkthrough"
-            >
-              <PlayCircle className="w-4 h-4 text-indigo-400" />
-            </Button>
-          )}
+          {!isCollapsed &&
+            item.hasWalkthrough &&
+            hasSteps &&
+            showWalkthrough &&
+            canAccess && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => startWalkthrough(item.path)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 p-1 h-6 w-6"
+                title="Start guided walkthrough"
+              >
+                <PlayCircle className="w-4 h-4 text-indigo-400" />
+              </Button>
+            )}
 
           {/* Tooltip for collapsed mode */}
           {isCollapsed && (
             <div className="absolute left-full ml-2 px-3 py-2 bg-black/90 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap">
               <div className="font-medium">{item.title}</div>
-              <div className="text-xs text-gray-300 mt-1">{getTooltipText(item)}</div>
+              <div className="text-xs text-gray-300 mt-1">
+                {getTooltipText(item)}
+              </div>
               {item.hasWalkthrough && (
-                <div className="text-xs text-indigo-400 mt-1">📖 Walkthrough available</div>
+                <div className="text-xs text-indigo-400 mt-1">
+                  📖 Walkthrough available
+                </div>
               )}
             </div>
           )}
@@ -443,7 +480,9 @@ export default function EnhancedNavigation({
         {/* Children */}
         {hasChildren && isExpanded && !isCollapsed && (
           <div className="mt-1">
-            {item.children?.map(child => renderNavigationItem(child, level + 1))}
+            {item.children?.map((child) =>
+              renderNavigationItem(child, level + 1),
+            )}
           </div>
         )}
       </div>
@@ -451,12 +490,13 @@ export default function EnhancedNavigation({
   };
 
   return (
-    <div className={`
+    <div
+      className={`
       h-full bg-black/20 backdrop-blur-xl border-r border-gray-800/50 flex flex-col
-      ${isCollapsed ? 'w-16' : 'w-80'}
+      ${isCollapsed ? "w-16" : "w-80"}
       transition-all duration-300 ease-in-out
-    `}>
-      
+    `}
+    >
       {/* Header */}
       <div className="p-4 border-b border-gray-800/50">
         {!isCollapsed && (
@@ -465,7 +505,9 @@ export default function EnhancedNavigation({
               <div className="flex items-center">
                 <Shield className="w-8 h-8 text-indigo-400 mr-2" />
                 <div>
-                  <h1 className="text-xl font-bold text-white">GuardianChain</h1>
+                  <h1 className="text-xl font-bold text-white">
+                    GuardianChain
+                  </h1>
                   <p className="text-xs text-gray-400">Truth Vault Protocol</p>
                 </div>
               </div>
@@ -503,7 +545,10 @@ export default function EnhancedNavigation({
                         <p className="text-xs text-gray-400">{userTier} Tier</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="border-indigo-400 text-indigo-300">
+                    <Badge
+                      variant="outline"
+                      className="border-indigo-400 text-indigo-300"
+                    >
                       {userTier}
                     </Badge>
                   </div>
@@ -544,7 +589,7 @@ export default function EnhancedNavigation({
 
       {/* Navigation Items */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
-        {filteredNavigation.map(item => renderNavigationItem(item))}
+        {filteredNavigation.map((item) => renderNavigationItem(item))}
       </div>
 
       {/* Quick Actions */}
@@ -559,13 +604,21 @@ export default function EnhancedNavigation({
             </Link>
             <div className="grid grid-cols-2 gap-2">
               <Link href="/help">
-                <Button variant="outline" size="sm" className="w-full border-gray-600">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-gray-600"
+                >
                   <HelpCircle className="w-4 h-4 mr-1" />
                   Help
                 </Button>
               </Link>
               <Link href="/settings">
-                <Button variant="outline" size="sm" className="w-full border-gray-600">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-gray-600"
+                >
                   <Settings className="w-4 h-4 mr-1" />
                   Settings
                 </Button>

@@ -74,8 +74,8 @@ export class ProtocolBillingFeedPublisher {
           data.complianceScore >= 90
             ? "LOW"
             : data.complianceScore >= 80
-            ? "MEDIUM"
-            : "HIGH",
+              ? "MEDIUM"
+              : "HIGH",
         factors: data.flags,
         recommendations: this.generateRecommendations(data),
       },
@@ -118,7 +118,7 @@ export class ProtocolBillingFeedPublisher {
    * Archive historical billing feeds for regulatory compliance
    */
   private static async archiveHistoricalFeed(
-    feed: ProtocolFeed
+    feed: ProtocolFeed,
   ): Promise<void> {
     const archiveDir = path.join(process.cwd(), "public", "feeds", "archive");
 
@@ -143,7 +143,7 @@ export class ProtocolBillingFeedPublisher {
       total_vendors: feed.vendor_payouts.length,
       total_payout_amount: feed.vendor_payouts.reduce(
         (sum, payout) => sum + payout.amount,
-        0
+        0,
       ),
       compliance_trend: feed.compliance_score >= 90 ? "improving" : "stable",
       risk_trending: feed.risk_assessment.level,
@@ -158,7 +158,7 @@ export class ProtocolBillingFeedPublisher {
       process.cwd(),
       "public",
       "feeds",
-      "billing_summary.json"
+      "billing_summary.json",
     );
     fs.writeFileSync(statsPath, JSON.stringify(stats, null, 2));
   }
@@ -171,29 +171,29 @@ export class ProtocolBillingFeedPublisher {
 
     if (data.complianceScore < 90) {
       recommendations.push(
-        "Review and address compliance gaps to maintain regulatory standing"
+        "Review and address compliance gaps to maintain regulatory standing",
       );
     }
 
     if (data.flags.includes("High vendor payout concentration")) {
       recommendations.push(
-        "Diversify vendor relationships to reduce concentration risk"
+        "Diversify vendor relationships to reduce concentration risk",
       );
     }
 
     if (data.payouts.length > 20) {
       recommendations.push(
-        "Consider implementing automated payment processing for efficiency"
+        "Consider implementing automated payment processing for efficiency",
       );
     }
 
     const totalPayouts = data.payouts.reduce(
       (sum, payout) => sum + payout.amount,
-      0
+      0,
     );
     if (totalPayouts > data.totalYield * 0.3) {
       recommendations.push(
-        "Monitor vendor costs relative to protocol yield generation"
+        "Monitor vendor costs relative to protocol yield generation",
       );
     }
 
@@ -226,7 +226,7 @@ export class ProtocolBillingFeedPublisher {
       process.cwd(),
       "public",
       "feeds",
-      "protocol_billing.xbrl"
+      "protocol_billing.xbrl",
     );
     fs.writeFileSync(xbrlPath, JSON.stringify(xbrlData, null, 2));
 

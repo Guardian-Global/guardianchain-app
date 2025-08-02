@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Users, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  TrendingUp,
+  DollarSign,
+  Users,
   Globe,
   Shield,
   Zap,
@@ -19,125 +19,160 @@ import {
   Download,
   ExternalLink,
   Lock,
-  Crown
-} from 'lucide-react';
+  Crown,
+} from "lucide-react";
 
 interface InvestmentMetric {
   label: string;
   value: string;
   change: string;
-  trend: 'up' | 'down' | 'stable';
+  trend: "up" | "down" | "stable";
 }
 
 export default function InvestorsPage() {
   const [contactForm, setContactForm] = useState({
-    name: '',
-    organization: '',
-    email: '',
-    investmentRange: '',
-    message: ''
+    name: "",
+    organization: "",
+    email: "",
+    investmentRange: "",
+    message: "",
   });
 
   const metrics: InvestmentMetric[] = [
-    { label: 'Total Value Locked', value: '$2.4M', change: '+15%', trend: 'up' },
-    { label: 'Active Users', value: '12,847', change: '+23%', trend: 'up' },
-    { label: 'GTT Market Cap', value: '$890K', change: '+8%', trend: 'up' },
-    { label: 'Platform Revenue', value: '$156K', change: '+31%', trend: 'up' },
-    { label: 'Verified Capsules', value: '45,231', change: '+12%', trend: 'up' },
-    { label: 'Global Reach', value: '67 Countries', change: '+5%', trend: 'up' }
+    {
+      label: "Total Value Locked",
+      value: "$2.4M",
+      change: "+15%",
+      trend: "up",
+    },
+    { label: "Active Users", value: "12,847", change: "+23%", trend: "up" },
+    { label: "GTT Market Cap", value: "$890K", change: "+8%", trend: "up" },
+    { label: "Platform Revenue", value: "$156K", change: "+31%", trend: "up" },
+    {
+      label: "Verified Capsules",
+      value: "45,231",
+      change: "+12%",
+      trend: "up",
+    },
+    {
+      label: "Global Reach",
+      value: "67 Countries",
+      change: "+5%",
+      trend: "up",
+    },
   ];
 
   const investmentTiers = [
     {
-      name: 'Seed Round',
-      amount: '$500K - $2M',
-      equity: '5-15%',
-      status: 'Active',
-      perks: ['Board Observer Rights', 'Quarterly Reports', 'Platform Beta Access'],
-      badge: 'seed'
+      name: "Seed Round",
+      amount: "$500K - $2M",
+      equity: "5-15%",
+      status: "Active",
+      perks: [
+        "Board Observer Rights",
+        "Quarterly Reports",
+        "Platform Beta Access",
+      ],
+      badge: "seed",
     },
     {
-      name: 'Series A',
-      amount: '$2M - $10M',
-      equity: '10-25%',
-      status: 'Planning',
-      perks: ['Board Seat', 'Monthly Reports', 'Strategic Partnerships', 'Token Allocation'],
-      badge: 'series-a'
+      name: "Series A",
+      amount: "$2M - $10M",
+      equity: "10-25%",
+      status: "Planning",
+      perks: [
+        "Board Seat",
+        "Monthly Reports",
+        "Strategic Partnerships",
+        "Token Allocation",
+      ],
+      badge: "series-a",
     },
     {
-      name: 'Strategic',
-      amount: '$1M+',
-      equity: 'Negotiable',
-      status: 'Open',
-      perks: ['Custom Terms', 'Technology Partnership', 'Integration Opportunities'],
-      badge: 'strategic'
-    }
+      name: "Strategic",
+      amount: "$1M+",
+      equity: "Negotiable",
+      status: "Open",
+      perks: [
+        "Custom Terms",
+        "Technology Partnership",
+        "Integration Opportunities",
+      ],
+      badge: "strategic",
+    },
   ];
 
   const teamMembers = [
     {
-      name: 'Alex Chen',
-      role: 'Founder & CEO',
-      background: 'Former Meta AI, Stanford CS',
-      expertise: 'Blockchain, AI, Product Strategy'
+      name: "Alex Chen",
+      role: "Founder & CEO",
+      background: "Former Meta AI, Stanford CS",
+      expertise: "Blockchain, AI, Product Strategy",
     },
     {
-      name: 'Sarah Martinez',
-      role: 'CTO',
-      background: 'Ex-Google, MIT PhD',
-      expertise: 'Distributed Systems, Cryptography'
+      name: "Sarah Martinez",
+      role: "CTO",
+      background: "Ex-Google, MIT PhD",
+      expertise: "Distributed Systems, Cryptography",
     },
     {
-      name: 'David Kim',
-      role: 'Head of Growth',
-      background: 'Former Coinbase, Harvard MBA',
-      expertise: 'Product Growth, Community Building'
-    }
+      name: "David Kim",
+      role: "Head of Growth",
+      background: "Former Coinbase, Harvard MBA",
+      expertise: "Product Growth, Community Building",
+    },
   ];
 
   const useCase = [
     {
-      title: 'Digital Memory Preservation',
-      description: 'Immutable storage of personal and institutional memories',
-      market: '$45B+ Digital Archiving Market'
+      title: "Digital Memory Preservation",
+      description: "Immutable storage of personal and institutional memories",
+      market: "$45B+ Digital Archiving Market",
     },
     {
-      title: 'Truth Verification',
-      description: 'AI-powered content authenticity and fact-checking',
-      market: '$12B+ Content Verification Market'
+      title: "Truth Verification",
+      description: "AI-powered content authenticity and fact-checking",
+      market: "$12B+ Content Verification Market",
     },
     {
-      title: 'Decentralized Governance',
-      description: 'Community-driven decision making and reputation systems',
-      market: '$8B+ DAO and Governance Market'
+      title: "Decentralized Governance",
+      description: "Community-driven decision making and reputation systems",
+      market: "$8B+ DAO and Governance Market",
     },
     {
-      title: 'NFT & Digital Collectibles',
-      description: 'Unique truth capsules as verifiable digital assets',
-      market: '$35B+ NFT Market'
-    }
+      title: "NFT & Digital Collectibles",
+      description: "Unique truth capsules as verifiable digital assets",
+      market: "$35B+ NFT Market",
+    },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle contact form submission
-    console.log('Investor contact form submitted:', contactForm);
+    console.log("Investor contact form submitted:", contactForm);
   };
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="w-4 h-4 text-green-500" />;
-      case 'down': return <TrendingUp className="w-4 h-4 text-red-500 rotate-180" />;
-      default: return <TrendingUp className="w-4 h-4 text-gray-500" />;
+      case "up":
+        return <TrendingUp className="w-4 h-4 text-green-500" />;
+      case "down":
+        return <TrendingUp className="w-4 h-4 text-red-500 rotate-180" />;
+      default:
+        return <TrendingUp className="w-4 h-4 text-gray-500" />;
     }
   };
 
   const getBadgeColor = (badge: string) => {
     switch (badge) {
-      case 'seed': return 'bg-green-100 text-green-800';
-      case 'series-a': return 'bg-blue-100 text-blue-800';
-      case 'strategic': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "seed":
+        return "bg-green-100 text-green-800";
+      case "series-a":
+        return "bg-blue-100 text-blue-800";
+      case "strategic":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -155,16 +190,23 @@ export default function InvestorsPage() {
               Revolutionizing Truth Preservation & Digital Memory
             </h2>
             <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
-              Join us in building the world's first sovereign memory infrastructure. 
-              Combining blockchain technology, AI verification, and community governance 
-              to preserve truth for future generations.
+              Join us in building the world's first sovereign memory
+              infrastructure. Combining blockchain technology, AI verification,
+              and community governance to preserve truth for future generations.
             </p>
             <div className="flex justify-center space-x-4">
-              <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black">
+              <Button
+                size="lg"
+                className="bg-yellow-500 hover:bg-yellow-600 text-black"
+              >
                 <Download className="w-5 h-5 mr-2" />
                 Download Pitch Deck
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-black"
+              >
                 <Mail className="w-5 h-5 mr-2" />
                 Contact Team
               </Button>
@@ -176,21 +218,30 @@ export default function InvestorsPage() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Key Metrics */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Platform Performance</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Platform Performance
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {metrics.map((metric, index) => (
               <Card key={index}>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{metric.label}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {metric.label}
+                      </p>
                       <p className="text-2xl font-bold">{metric.value}</p>
                       <div className="flex items-center mt-1">
                         {getTrendIcon(metric.trend)}
-                        <span className={`text-sm ml-1 ${
-                          metric.trend === 'up' ? 'text-green-600' : 
-                          metric.trend === 'down' ? 'text-red-600' : 'text-gray-600'
-                        }`}>
+                        <span
+                          className={`text-sm ml-1 ${
+                            metric.trend === "up"
+                              ? "text-green-600"
+                              : metric.trend === "down"
+                                ? "text-red-600"
+                                : "text-gray-600"
+                          }`}
+                        >
                           {metric.change}
                         </span>
                       </div>
@@ -205,7 +256,9 @@ export default function InvestorsPage() {
 
         {/* Market Opportunity */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Market Opportunity</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Market Opportunity
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card>
               <CardHeader>
@@ -216,9 +269,12 @@ export default function InvestorsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600 mb-2">$100B+</div>
+                  <div className="text-4xl font-bold text-blue-600 mb-2">
+                    $100B+
+                  </div>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Combined digital archiving, content verification, and blockchain markets
+                    Combined digital archiving, content verification, and
+                    blockchain markets
                   </p>
                 </div>
               </CardContent>
@@ -259,8 +315,13 @@ export default function InvestorsPage() {
               <Card key={index}>
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">{item.description}</p>
-                  <Badge variant="outline" className="text-green-600 border-green-600">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    {item.description}
+                  </p>
+                  <Badge
+                    variant="outline"
+                    className="text-green-600 border-green-600"
+                  >
                     {item.market}
                   </Badge>
                 </CardContent>
@@ -271,7 +332,9 @@ export default function InvestorsPage() {
 
         {/* Investment Tiers */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Investment Opportunities</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Investment Opportunities
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {investmentTiers.map((tier, index) => (
               <Card key={index} className="relative">
@@ -286,18 +349,27 @@ export default function InvestorsPage() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Investment Range</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Investment Range
+                      </p>
                       <p className="text-2xl font-bold">{tier.amount}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Equity Range</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Equity Range
+                      </p>
                       <p className="text-lg font-semibold">{tier.equity}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Investor Perks</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        Investor Perks
+                      </p>
                       <ul className="space-y-1">
                         {tier.perks.map((perk, perkIndex) => (
-                          <li key={perkIndex} className="flex items-center text-sm">
+                          <li
+                            key={perkIndex}
+                            className="flex items-center text-sm"
+                          >
                             <Shield className="w-3 h-3 mr-2 text-green-500" />
                             {perk}
                           </li>
@@ -313,7 +385,9 @@ export default function InvestorsPage() {
 
         {/* Team */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Leadership Team</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Leadership Team
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {teamMembers.map((member, index) => (
               <Card key={index}>
@@ -322,8 +396,12 @@ export default function InvestorsPage() {
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-                  <p className="text-blue-600 font-medium mb-2">{member.role}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{member.background}</p>
+                  <p className="text-blue-600 font-medium mb-2">
+                    {member.role}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    {member.background}
+                  </p>
                   <p className="text-xs text-gray-500">{member.expertise}</p>
                 </CardContent>
               </Card>
@@ -333,7 +411,9 @@ export default function InvestorsPage() {
 
         {/* Technology Stack */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Technology Advantages</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Technology Advantages
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
               <CardContent className="p-6 text-center">
@@ -390,19 +470,33 @@ export default function InvestorsPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Name *</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Name *
+                    </label>
                     <Input
                       value={contactForm.name}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
+                      onChange={(e) =>
+                        setContactForm((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
                       placeholder="Your full name"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Organization *</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Organization *
+                    </label>
                     <Input
                       value={contactForm.organization}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, organization: e.target.value }))}
+                      onChange={(e) =>
+                        setContactForm((prev) => ({
+                          ...prev,
+                          organization: e.target.value,
+                        }))
+                      }
                       placeholder="Investment firm / Fund name"
                       required
                     />
@@ -410,21 +504,35 @@ export default function InvestorsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email *</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Email *
+                  </label>
                   <Input
                     type="email"
                     value={contactForm.email}
-                    onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setContactForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     placeholder="your.email@example.com"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Investment Range</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Investment Range
+                  </label>
                   <select
                     value={contactForm.investmentRange}
-                    onChange={(e) => setContactForm(prev => ({ ...prev, investmentRange: e.target.value }))}
+                    onChange={(e) =>
+                      setContactForm((prev) => ({
+                        ...prev,
+                        investmentRange: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                   >
                     <option value="">Select range...</option>
@@ -436,10 +544,17 @@ export default function InvestorsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Message</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Message
+                  </label>
                   <Textarea
                     value={contactForm.message}
-                    onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
+                    onChange={(e) =>
+                      setContactForm((prev) => ({
+                        ...prev,
+                        message: e.target.value,
+                      }))
+                    }
                     placeholder="Tell us about your investment thesis and interests..."
                     rows={4}
                   />
@@ -460,7 +575,9 @@ export default function InvestorsPage() {
 
         {/* Additional Resources */}
         <section>
-          <h2 className="text-3xl font-bold text-center mb-8">Additional Resources</h2>
+          <h2 className="text-3xl font-bold text-center mb-8">
+            Additional Resources
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardContent className="p-6 text-center">

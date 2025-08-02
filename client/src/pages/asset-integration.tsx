@@ -13,7 +13,7 @@ import {
   CheckCircle,
   ArrowRight,
   Download,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import SupabaseImageGallery from "@/components/assets/SupabaseImageGallery";
@@ -31,7 +31,7 @@ export default function AssetIntegration() {
     getBrandingAssets,
     getHeroAssets,
     getBackgroundAssets,
-    getAssetsByType
+    getAssetsByType,
   } = useSupabaseAssets();
 
   const { toast } = useToast();
@@ -42,36 +42,40 @@ export default function AssetIntegration() {
       description: "Replace default logo with highest value branding asset",
       assets: getBrandingAssets().slice(0, 3),
       priority: "high",
-      implementation: "Update EnhancedMegaNavigation.tsx to use EnhancedLogoDisplay component"
+      implementation:
+        "Update EnhancedMegaNavigation.tsx to use EnhancedLogoDisplay component",
     },
     {
       component: "Homepage Hero",
-      description: "Use hero or background assets for immersive landing experience",
+      description:
+        "Use hero or background assets for immersive landing experience",
       assets: [...getHeroAssets(), ...getBackgroundAssets()].slice(0, 3),
       priority: "high",
-      implementation: "Wrap homepage sections with SupabaseHeroBackground component"
+      implementation:
+        "Wrap homepage sections with SupabaseHeroBackground component",
     },
     {
       component: "Dashboard Backgrounds",
       description: "Enhanced visual appeal for admin and user dashboards",
       assets: getBackgroundAssets().slice(0, 2),
       priority: "medium",
-      implementation: "Add background assets to commander and founder dashboards"
+      implementation:
+        "Add background assets to commander and founder dashboards",
     },
     {
-      component: "Content Galleries", 
+      component: "Content Galleries",
       description: "Showcase all images throughout the application",
       assets: getAssetsByType("image").slice(0, 4),
       priority: "medium",
-      implementation: "Use SupabaseImageGallery component on relevant pages"
+      implementation: "Use SupabaseImageGallery component on relevant pages",
     },
     {
       component: "Video Integration",
       description: "Integrate video assets for enhanced user experience",
       assets: getAssetsByType("video"),
       priority: "low",
-      implementation: "Create video components for product demonstrations"
-    }
+      implementation: "Create video components for product demonstrations",
+    },
   ];
 
   const copyImplementationCode = (component: string) => {
@@ -97,11 +101,12 @@ export default function AssetIntegration() {
   category="showcase" 
   maxImages={8}
   gridCols={3}
-/>`
+/>`,
     };
 
-    const code = codeSnippets[component] || "// Implementation code not available";
-    
+    const code =
+      codeSnippets[component] || "// Implementation code not available";
+
     navigator.clipboard.writeText(code).then(() => {
       toast({
         title: "Code Copied",
@@ -116,8 +121,12 @@ export default function AssetIntegration() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-400 border-t-transparent mx-auto"></div>
-            <h1 className="text-3xl font-bold text-white">Discovering Assets...</h1>
-            <p className="text-slate-300">Scanning your Supabase storage for integration opportunities</p>
+            <h1 className="text-3xl font-bold text-white">
+              Discovering Assets...
+            </h1>
+            <p className="text-slate-300">
+              Scanning your Supabase storage for integration opportunities
+            </p>
           </div>
         </div>
       </div>
@@ -134,7 +143,8 @@ export default function AssetIntegration() {
               SUPABASE ASSET INTEGRATION
             </h1>
             <p className="text-xl text-slate-300">
-              Maximize value from your {totalAssets} stored assets across {buckets} buckets
+              Maximize value from your {totalAssets} stored assets across{" "}
+              {buckets} buckets
             </p>
           </div>
 
@@ -143,7 +153,9 @@ export default function AssetIntegration() {
             <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
                 <Database className="h-8 w-8 mx-auto mb-2 text-blue-400" />
-                <div className="text-2xl font-bold text-white">{totalAssets}</div>
+                <div className="text-2xl font-bold text-white">
+                  {totalAssets}
+                </div>
                 <div className="text-sm text-slate-400">Total Assets</div>
               </CardContent>
             </Card>
@@ -151,7 +163,9 @@ export default function AssetIntegration() {
             <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
                 <Image className="h-8 w-8 mx-auto mb-2 text-green-400" />
-                <div className="text-2xl font-bold text-white">{getAssetsByType("image").length}</div>
+                <div className="text-2xl font-bold text-white">
+                  {getAssetsByType("image").length}
+                </div>
                 <div className="text-sm text-slate-400">Images</div>
               </CardContent>
             </Card>
@@ -159,7 +173,9 @@ export default function AssetIntegration() {
             <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
                 <Video className="h-8 w-8 mx-auto mb-2 text-purple-400" />
-                <div className="text-2xl font-bold text-white">{getAssetsByType("video").length}</div>
+                <div className="text-2xl font-bold text-white">
+                  {getAssetsByType("video").length}
+                </div>
                 <div className="text-sm text-slate-400">Videos</div>
               </CardContent>
             </Card>
@@ -167,7 +183,9 @@ export default function AssetIntegration() {
             <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
               <CardContent className="p-4 text-center">
                 <FileText className="h-8 w-8 mx-auto mb-2 text-yellow-400" />
-                <div className="text-2xl font-bold text-white">{getBrandingAssets().length}</div>
+                <div className="text-2xl font-bold text-white">
+                  {getBrandingAssets().length}
+                </div>
                 <div className="text-sm text-slate-400">Branding Assets</div>
               </CardContent>
             </Card>
@@ -184,14 +202,24 @@ export default function AssetIntegration() {
             <CardContent>
               <div className="space-y-6">
                 {implementationSuggestions.map((suggestion, index) => (
-                  <div key={index} className="p-4 rounded-lg bg-slate-700/50 space-y-4">
+                  <div
+                    key={index}
+                    className="p-4 rounded-lg bg-slate-700/50 space-y-4"
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <h3 className="font-semibold text-white">{suggestion.component}</h3>
-                        <Badge variant={
-                          suggestion.priority === "high" ? "default" :
-                          suggestion.priority === "medium" ? "secondary" : "outline"
-                        }>
+                        <h3 className="font-semibold text-white">
+                          {suggestion.component}
+                        </h3>
+                        <Badge
+                          variant={
+                            suggestion.priority === "high"
+                              ? "default"
+                              : suggestion.priority === "medium"
+                                ? "secondary"
+                                : "outline"
+                          }
+                        >
                           {suggestion.priority} priority
                         </Badge>
                       </div>
@@ -206,11 +234,18 @@ export default function AssetIntegration() {
                     {suggestion.assets.length > 0 && (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {suggestion.assets.map((asset: any) => (
-                          <div key={asset.id} className="flex items-center space-x-3 p-2 rounded bg-slate-600/50">
+                          <div
+                            key={asset.id}
+                            className="flex items-center space-x-3 p-2 rounded bg-slate-600/50"
+                          >
                             <Image className="h-4 w-4 text-blue-400" />
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium text-white truncate">{asset.name}</div>
-                              <div className="text-xs text-slate-400">Value: {asset.value}</div>
+                              <div className="text-sm font-medium text-white truncate">
+                                {asset.name}
+                              </div>
+                              <div className="text-xs text-slate-400">
+                                Value: {asset.value}
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -225,7 +260,9 @@ export default function AssetIntegration() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => copyImplementationCode(suggestion.component)}
+                          onClick={() =>
+                            copyImplementationCode(suggestion.component)
+                          }
                         >
                           Copy Code
                         </Button>
@@ -244,19 +281,29 @@ export default function AssetIntegration() {
           {/* Asset Browser Tabs */}
           <Tabs defaultValue="galleries" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4 bg-slate-800/70 backdrop-blur-sm">
-              <TabsTrigger value="galleries" className="text-white">Image Galleries</TabsTrigger>
-              <TabsTrigger value="branding" className="text-white">Branding Assets</TabsTrigger>
-              <TabsTrigger value="backgrounds" className="text-white">Backgrounds</TabsTrigger>
-              <TabsTrigger value="integration" className="text-white">Live Integration</TabsTrigger>
+              <TabsTrigger value="galleries" className="text-white">
+                Image Galleries
+              </TabsTrigger>
+              <TabsTrigger value="branding" className="text-white">
+                Branding Assets
+              </TabsTrigger>
+              <TabsTrigger value="backgrounds" className="text-white">
+                Backgrounds
+              </TabsTrigger>
+              <TabsTrigger value="integration" className="text-white">
+                Live Integration
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="galleries">
               <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white">Showcase Image Galleries</CardTitle>
+                  <CardTitle className="text-white">
+                    Showcase Image Galleries
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SupabaseImageGallery 
+                  <SupabaseImageGallery
                     maxImages={12}
                     showControls={true}
                     gridCols={3}
@@ -269,10 +316,12 @@ export default function AssetIntegration() {
             <TabsContent value="branding">
               <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white">Branding Assets Collection</CardTitle>
+                  <CardTitle className="text-white">
+                    Branding Assets Collection
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SupabaseImageGallery 
+                  <SupabaseImageGallery
                     category="branding"
                     maxImages={8}
                     showControls={true}
@@ -285,19 +334,24 @@ export default function AssetIntegration() {
             <TabsContent value="backgrounds">
               <Card className="bg-slate-800/70 border-slate-700 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-white">Background Assets</CardTitle>
+                  <CardTitle className="text-white">
+                    Background Assets
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <SupabaseImageGallery 
+                  <SupabaseImageGallery
                     category="background"
                     maxImages={6}
                     showControls={true}
                     gridCols={3}
                   />
                   <div className="mt-6 p-4 bg-slate-700/50 rounded-lg">
-                    <h3 className="text-white font-semibold mb-2">Usage Example</h3>
+                    <h3 className="text-white font-semibold mb-2">
+                      Usage Example
+                    </h3>
                     <p className="text-slate-300 text-sm mb-3">
-                      These background assets are perfect for hero sections, dashboard backgrounds, and immersive page layouts.
+                      These background assets are perfect for hero sections,
+                      dashboard backgrounds, and immersive page layouts.
                     </p>
                     <Button
                       size="sm"

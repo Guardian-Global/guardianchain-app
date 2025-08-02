@@ -102,7 +102,7 @@ export interface YieldData {
 }
 
 export async function getCapsuleYield(
-  capsuleId: string
+  capsuleId: string,
 ): Promise<YieldData | null> {
   // For now, return mock data. In production, this would query the smart contract
   const data = mockYieldData[capsuleId as keyof typeof mockYieldData];
@@ -119,7 +119,7 @@ export function formatYieldAmount(amount: bigint): string {
 }
 
 export function calculateYieldGrowth(
-  history: Array<{ timestamp: bigint; amount: bigint }>
+  history: Array<{ timestamp: bigint; amount: bigint }>,
 ): number {
   if (history.length < 2) return 0;
 

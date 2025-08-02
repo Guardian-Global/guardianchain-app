@@ -87,7 +87,7 @@
   "technicalValidation": {
     "endpoints": {
       "/api/gtt/distribute-yield": "PASS",
-      "/api/gtt/balance/:address": "PASS", 
+      "/api/gtt/balance/:address": "PASS",
       "/api/gtt/calculate-yield": "PASS",
       "/api/replay-capsule": "PASS",
       "/api/auth/user": "PASS"
@@ -107,7 +107,7 @@
   "businessLogic": {
     "griefTierSystem": {
       "tier1": "10 GTT",
-      "tier2": "20 GTT", 
+      "tier2": "20 GTT",
       "tier3": "30 GTT",
       "tier4": "40 GTT",
       "tier5": "50 GTT"

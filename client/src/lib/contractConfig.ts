@@ -1,7 +1,7 @@
 // GTT Token Contract Configuration - PRODUCTION READY
 // This file contains the verified contract address and ABI for the GTT token
 
-// CRITICAL: Plan B GTT contract address on Polygon mainnet  
+// CRITICAL: Plan B GTT contract address on Polygon mainnet
 // This is the OPTIMIZED Plan B tokenomics configuration
 export const GTT_CONTRACT_ADDRESS =
   "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C";
@@ -88,7 +88,7 @@ export function validateContractAddress(address: string): boolean {
 
 // Get the appropriate RPC URL for the network
 export function getRpcUrl(
-  networkName: keyof typeof SUPPORTED_NETWORKS
+  networkName: keyof typeof SUPPORTED_NETWORKS,
 ): string {
   const network = SUPPORTED_NETWORKS[networkName];
   if (!network || !network.rpcUrls.length) {

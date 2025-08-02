@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Link } from 'wouter';
-import { Shield, ArrowLeft, Crown } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
+import { Shield, ArrowLeft, Crown } from "lucide-react";
 
 export default function Unauthorized() {
   return (
@@ -11,12 +11,15 @@ export default function Unauthorized() {
           <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-red-400" />
           </div>
-          <CardTitle className="text-xl text-white">Access Restricted</CardTitle>
+          <CardTitle className="text-xl text-white">
+            Access Restricted
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="text-center">
           <p className="text-slate-300 mb-6">
-            You need higher tier access to view this content. Upgrade your account to unlock premium GUARDIANCHAIN features.
+            You need higher tier access to view this content. Upgrade your
+            account to unlock premium GUARDIANCHAIN features.
           </p>
 
           <div className="space-y-3 mb-6">
@@ -35,7 +38,10 @@ export default function Unauthorized() {
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/">
-              <Button variant="outline" className="flex-1 border-slate-600 text-slate-300">
+              <Button
+                variant="outline"
+                className="flex-1 border-slate-600 text-slate-300"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Go Home
               </Button>

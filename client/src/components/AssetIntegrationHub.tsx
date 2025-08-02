@@ -123,7 +123,7 @@ const AssetIntegrationHub: React.FC = () => {
       filtered = filtered.filter(
         (asset) =>
           asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          asset.bucket.toLowerCase().includes(searchQuery.toLowerCase())
+          asset.bucket.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -210,7 +210,7 @@ const AssetIntegrationHub: React.FC = () => {
           } asset from Supabase storage.\n\nBucket: ${
             asset.bucket
           }\nSize: ${formatFileSize(asset.size)}\nLast Modified: ${new Date(
-            asset.lastModified
+            asset.lastModified,
           ).toLocaleDateString()}`,
           metadata: {
             auto_imported: true,
@@ -405,7 +405,7 @@ const AssetIntegrationHub: React.FC = () => {
                             <div className="flex items-center space-x-2">
                               <div
                                 className={`p-2 rounded ${getAssetTypeColor(
-                                  asset.type
+                                  asset.type,
                                 )}`}
                               >
                                 {getAssetIcon(asset.type)}

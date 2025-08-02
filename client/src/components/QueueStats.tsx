@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { 
-  BarChart3, 
-  Clock, 
-  CheckCircle, 
-  AlertTriangle, 
-  TrendingUp, 
-  Activity 
-} from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import {
+  BarChart3,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  TrendingUp,
+  Activity,
+} from "lucide-react";
 
 interface QueueStatsData {
   total: number;
@@ -24,28 +24,26 @@ interface QueueStatsData {
 
 export default function QueueStats() {
   const { data: stats, isLoading } = useQuery({
-    queryKey: ['/api/queue/stats'],
+    queryKey: ["/api/queue/stats"],
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   // Fallback data for demo
-  const queueStats: QueueStatsData = stats as QueueStatsData || {
+  const queueStats: QueueStatsData = (stats as QueueStatsData) || {
     total: 1247,
     verified: 943,
     pending: 156,
     underReview: 89,
     disputed: 59,
     avgProcessingTime: 2.3,
-    weeklyThroughput: 234
+    weeklyThroughput: 234,
   };
 
-  const verificationRate = queueStats.total > 0 
-    ? (queueStats.verified / queueStats.total) * 100 
-    : 0;
+  const verificationRate =
+    queueStats.total > 0 ? (queueStats.verified / queueStats.total) * 100 : 0;
 
-  const pendingRate = queueStats.total > 0 
-    ? (queueStats.pending / queueStats.total) * 100 
-    : 0;
+  const pendingRate =
+    queueStats.total > 0 ? (queueStats.pending / queueStats.total) * 100 : 0;
 
   if (isLoading) {
     return (
@@ -71,7 +69,7 @@ export default function QueueStats() {
           Queue Performance
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Main Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
@@ -80,31 +78,39 @@ export default function QueueStats() {
               <span className="text-slate-400 text-xs">Total Capsules</span>
               <Activity className="w-3 h-3 text-blue-400" />
             </div>
-            <div className="text-white font-bold text-lg">{queueStats.total.toLocaleString()}</div>
+            <div className="text-white font-bold text-lg">
+              {queueStats.total.toLocaleString()}
+            </div>
           </div>
-          
+
           <div className="bg-slate-700/50 rounded-lg p-3">
             <div className="flex items-center justify-between mb-1">
               <span className="text-slate-400 text-xs">Verified</span>
               <CheckCircle className="w-3 h-3 text-green-400" />
             </div>
-            <div className="text-white font-bold text-lg">{queueStats.verified.toLocaleString()}</div>
+            <div className="text-white font-bold text-lg">
+              {queueStats.verified.toLocaleString()}
+            </div>
           </div>
-          
+
           <div className="bg-slate-700/50 rounded-lg p-3">
             <div className="flex items-center justify-between mb-1">
               <span className="text-slate-400 text-xs">Pending</span>
               <Clock className="w-3 h-3 text-yellow-400" />
             </div>
-            <div className="text-white font-bold text-lg">{queueStats.pending}</div>
+            <div className="text-white font-bold text-lg">
+              {queueStats.pending}
+            </div>
           </div>
-          
+
           <div className="bg-slate-700/50 rounded-lg p-3">
             <div className="flex items-center justify-between mb-1">
               <span className="text-slate-400 text-xs">Disputed</span>
               <AlertTriangle className="w-3 h-3 text-red-400" />
             </div>
-            <div className="text-white font-bold text-lg">{queueStats.disputed}</div>
+            <div className="text-white font-bold text-lg">
+              {queueStats.disputed}
+            </div>
           </div>
         </div>
 
@@ -113,11 +119,13 @@ export default function QueueStats() {
           <div>
             <div className="flex justify-between text-sm mb-2">
               <span className="text-slate-400">Verification Rate</span>
-              <span className="text-green-400">{verificationRate.toFixed(1)}%</span>
+              <span className="text-green-400">
+                {verificationRate.toFixed(1)}%
+              </span>
             </div>
             <Progress value={verificationRate} className="bg-slate-700" />
           </div>
-          
+
           <div>
             <div className="flex justify-between text-sm mb-2">
               <span className="text-slate-400">Pending Rate</span>
@@ -134,9 +142,11 @@ export default function QueueStats() {
               <TrendingUp className="w-4 h-4 text-blue-400 mr-2" />
               <span className="text-slate-400 text-sm">Avg Processing</span>
             </div>
-            <span className="text-white font-medium">{queueStats.avgProcessingTime}h</span>
+            <span className="text-white font-medium">
+              {queueStats.avgProcessingTime}h
+            </span>
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <BarChart3 className="w-4 h-4 text-purple-400 mr-2" />
@@ -152,15 +162,23 @@ export default function QueueStats() {
         <div className="border-t border-slate-700 pt-4">
           <div className="flex items-center justify-between">
             <span className="text-slate-400 text-sm">Queue Health</span>
-            <Badge className={`${
-              pendingRate < 15 ? 'bg-green-600' : 
-              pendingRate < 25 ? 'bg-yellow-600' : 'bg-red-600'
-            }`}>
-              {pendingRate < 15 ? 'Healthy' : 
-               pendingRate < 25 ? 'Moderate' : 'High Load'}
+            <Badge
+              className={`${
+                pendingRate < 15
+                  ? "bg-green-600"
+                  : pendingRate < 25
+                    ? "bg-yellow-600"
+                    : "bg-red-600"
+              }`}
+            >
+              {pendingRate < 15
+                ? "Healthy"
+                : pendingRate < 25
+                  ? "Moderate"
+                  : "High Load"}
             </Badge>
           </div>
-          
+
           <div className="flex items-center justify-between mt-2">
             <span className="text-slate-400 text-sm">System Status</span>
             <div className="flex items-center">

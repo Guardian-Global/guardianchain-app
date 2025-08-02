@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Target, DollarSign, Users, Clock, TrendingUp, Award, Eye } from "lucide-react";
+import {
+  Target,
+  DollarSign,
+  Users,
+  Clock,
+  TrendingUp,
+  Award,
+  Eye,
+} from "lucide-react";
 
 export default function TruthBountyPage() {
   const [bountyData, setBountyData] = useState({
@@ -13,7 +21,7 @@ export default function TruthBountyPage() {
     description: "",
     reward: 100,
     deadline: "7",
-    category: "investigation"
+    category: "investigation",
   });
   const { toast } = useToast();
 
@@ -35,8 +43,9 @@ export default function TruthBountyPage() {
             </h1>
           </div>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Crowdsource truth investigations. Post GTT token rewards for community researchers 
-            to uncover evidence and verify claims through collaborative investigation.
+            Crowdsource truth investigations. Post GTT token rewards for
+            community researchers to uncover evidence and verify claims through
+            collaborative investigation.
           </p>
         </div>
 
@@ -53,32 +62,53 @@ export default function TruthBountyPage() {
                 <Input
                   placeholder="Investigation Title"
                   value={bountyData.title}
-                  onChange={(e) => setBountyData({...bountyData, title: e.target.value})}
+                  onChange={(e) =>
+                    setBountyData({ ...bountyData, title: e.target.value })
+                  }
                   className="bg-slate-700 border-slate-600"
                 />
                 <Textarea
                   placeholder="Describe what needs to be investigated, evidence required, and success criteria..."
                   value={bountyData.description}
-                  onChange={(e) => setBountyData({...bountyData, description: e.target.value})}
+                  onChange={(e) =>
+                    setBountyData({
+                      ...bountyData,
+                      description: e.target.value,
+                    })
+                  }
                   className="bg-slate-700 border-slate-600 min-h-[150px]"
                 />
                 <div className="grid md:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Reward (GTT)</label>
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Reward (GTT)
+                    </label>
                     <Input
                       type="number"
                       min="10"
                       value={bountyData.reward}
-                      onChange={(e) => setBountyData({...bountyData, reward: parseInt(e.target.value)})}
+                      onChange={(e) =>
+                        setBountyData({
+                          ...bountyData,
+                          reward: parseInt(e.target.value),
+                        })
+                      }
                       className="bg-slate-700 border-slate-600"
                     />
                   </div>
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Deadline (Days)</label>
-                    <select 
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Deadline (Days)
+                    </label>
+                    <select
                       className="w-full p-2 bg-slate-700 border border-slate-600 rounded"
                       value={bountyData.deadline}
-                      onChange={(e) => setBountyData({...bountyData, deadline: e.target.value})}
+                      onChange={(e) =>
+                        setBountyData({
+                          ...bountyData,
+                          deadline: e.target.value,
+                        })
+                      }
                     >
                       <option value="3">3 Days</option>
                       <option value="7">1 Week</option>
@@ -87,11 +117,18 @@ export default function TruthBountyPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Category</label>
-                    <select 
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Category
+                    </label>
+                    <select
                       className="w-full p-2 bg-slate-700 border border-slate-600 rounded"
                       value={bountyData.category}
-                      onChange={(e) => setBountyData({...bountyData, category: e.target.value})}
+                      onChange={(e) =>
+                        setBountyData({
+                          ...bountyData,
+                          category: e.target.value,
+                        })
+                      }
                     >
                       <option value="investigation">Investigation</option>
                       <option value="verification">Verification</option>
@@ -100,7 +137,7 @@ export default function TruthBountyPage() {
                     </select>
                   </div>
                 </div>
-                <Button 
+                <Button
                   onClick={handleSubmit}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
                 >
@@ -123,10 +160,14 @@ export default function TruthBountyPage() {
                 <div className="space-y-3">
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">Corporate Whistleblower Investigation</h4>
+                      <h4 className="font-semibold text-sm">
+                        Corporate Whistleblower Investigation
+                      </h4>
                       <Badge className="bg-green-600">500 GTT</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Verify claims about financial irregularities...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Verify claims about financial irregularities...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Users className="w-3 h-3" />
                       <span>5 investigators</span>
@@ -134,13 +175,17 @@ export default function TruthBountyPage() {
                       <span>3 days left</span>
                     </div>
                   </div>
-                  
+
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">Scientific Data Verification</h4>
+                      <h4 className="font-semibold text-sm">
+                        Scientific Data Verification
+                      </h4>
                       <Badge className="bg-blue-600">250 GTT</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Cross-reference research methodology...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Cross-reference research methodology...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Users className="w-3 h-3" />
                       <span>2 investigators</span>

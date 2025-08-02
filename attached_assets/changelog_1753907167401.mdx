@@ -22,7 +22,7 @@ future_enhancements:
   cta={[
     { label: "View Timeline", url: "#timeline", style: "primary" },
     { label: "Search Upgrades", url: "#search", style: "secondary" },
-    { label: "Download Archive", url: "#download", style: "holo" }
+    { label: "Download Archive", url: "#download", style: "holo" },
   ]}
 />
 
@@ -30,11 +30,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/changelog" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -42,15 +46,16 @@ future_enhancements:
 ---
 
 ## <span id="timeline">Upgrade Timeline <TimelineIcon /></span>
-<UpgradeTimeline />
-- All protocol, legal, and DAO upgrades, with instant replay and audit
+
+<UpgradeTimeline />- All protocol, legal, and DAO upgrades, with instant replay
+and audit
 
 ---
 
 ## <span id="search">Search, Filter, and Download <SearchIcon /></span>
-<ChangelogSearch />
-- Search by date, type, DAO proposal, or affected contract/section
-- Download any version as PDF, CSV, or NFT certificate
+
+<ChangelogSearch />- Search by date, type, DAO proposal, or affected
+contract/section - Download any version as PDF, CSV, or NFT certificate
 
 ---
 

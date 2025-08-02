@@ -170,7 +170,7 @@ const CapsuleTimeline = () => {
                     {/* Timeline Icon */}
                     <div
                       className={`flex-shrink-0 w-12 h-12 rounded-full ${getStatusColor(
-                        event.status
+                        event.status,
                       )} flex items-center justify-center z-10 border-4 border-slate-900`}
                     >
                       <IconComponent
@@ -192,14 +192,14 @@ const CapsuleTimeline = () => {
                           </div>
                           <Badge
                             className={`${getStatusColor(
-                              event.status
+                              event.status,
                             )} text-white text-xs`}
                           >
                             {event.status === "completed"
                               ? "✓"
                               : event.status === "in-progress"
-                              ? "⏳"
-                              : "⏸"}
+                                ? "⏳"
+                                : "⏸"}
                           </Badge>
                         </div>
 

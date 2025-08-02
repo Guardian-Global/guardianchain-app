@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Gift, 
-  Users, 
-  Copy, 
-  Share2, 
+import {
+  Gift,
+  Users,
+  Copy,
+  Share2,
   Award,
   TrendingUp,
   Target,
-  Zap
+  Zap,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
@@ -30,7 +36,9 @@ export default function Referral() {
           <CardHeader className="text-center">
             <Gift className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
             <CardTitle>Authentication Required</CardTitle>
-            <CardDescription>Please log in to access referral features.</CardDescription>
+            <CardDescription>
+              Please log in to access referral features.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
@@ -70,9 +78,9 @@ export default function Referral() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img 
-                src="/assets/logo/GUARDIANCHAIN_logo.png" 
-                alt="GuardianChain" 
+              <img
+                src="/assets/logo/GUARDIANCHAIN_logo.png"
+                alt="GuardianChain"
                 className="h-8 w-auto"
               />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
@@ -93,7 +101,8 @@ export default function Referral() {
             Share Truth, Earn Rewards
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Invite friends to join GuardianChain and earn GTT rewards for every successful referral.
+            Invite friends to join GuardianChain and earn GTT rewards for every
+            successful referral.
           </p>
         </div>
 
@@ -192,7 +201,9 @@ export default function Referral() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Full Referral Link</label>
+                    <label className="text-sm font-medium">
+                      Full Referral Link
+                    </label>
                     <div className="flex gap-2">
                       <Input
                         value={`https://guardianchain.app/join?ref=${referralCode}`}
@@ -210,15 +221,15 @@ export default function Referral() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 pt-4">
-                    <Button 
+                    <Button
                       onClick={shareReferral}
                       className="bg-gradient-to-r from-yellow-600 to-orange-600"
                     >
                       <Share2 className="h-4 w-4 mr-2" />
                       Share Link
                     </Button>
-                    
-                    <Button 
+
+                    <Button
                       variant="outline"
                       className="border-blue-500/30 text-blue-400 hover:bg-blue-600/20"
                     >
@@ -241,7 +252,9 @@ export default function Referral() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 rounded-xl p-4 border border-green-500/30">
-                    <h4 className="font-semibold text-green-400 mb-2">You Earn</h4>
+                    <h4 className="font-semibold text-green-400 mb-2">
+                      You Earn
+                    </h4>
                     <ul className="text-sm text-gray-300 space-y-1">
                       <li>• 40 GTT per successful referral</li>
                       <li>• 5% of their staking rewards</li>
@@ -251,7 +264,9 @@ export default function Referral() {
                   </div>
 
                   <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl p-4 border border-purple-500/30">
-                    <h4 className="font-semibold text-purple-400 mb-2">They Earn</h4>
+                    <h4 className="font-semibold text-purple-400 mb-2">
+                      They Earn
+                    </h4>
                     <ul className="text-sm text-gray-300 space-y-1">
                       <li>• 20 GTT welcome bonus</li>
                       <li>• 10% staking boost (30 days)</li>
@@ -285,37 +300,76 @@ export default function Referral() {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { milestone: 5, reward: "100 GTT Bonus", badge: "Truth Spreader", unlocked: true },
-                    { milestone: 10, reward: "250 GTT + NFT Avatar", badge: "Network Builder", unlocked: true },
-                    { milestone: 15, reward: "500 GTT + Tier Boost", badge: "Community Leader", unlocked: false },
-                    { milestone: 25, reward: "1000 GTT + Exclusive Access", badge: "Guardian Master", unlocked: false },
-                    { milestone: 50, reward: "2500 GTT + Revenue Share", badge: "Truth Ambassador", unlocked: false },
+                    {
+                      milestone: 5,
+                      reward: "100 GTT Bonus",
+                      badge: "Truth Spreader",
+                      unlocked: true,
+                    },
+                    {
+                      milestone: 10,
+                      reward: "250 GTT + NFT Avatar",
+                      badge: "Network Builder",
+                      unlocked: true,
+                    },
+                    {
+                      milestone: 15,
+                      reward: "500 GTT + Tier Boost",
+                      badge: "Community Leader",
+                      unlocked: false,
+                    },
+                    {
+                      milestone: 25,
+                      reward: "1000 GTT + Exclusive Access",
+                      badge: "Guardian Master",
+                      unlocked: false,
+                    },
+                    {
+                      milestone: 50,
+                      reward: "2500 GTT + Revenue Share",
+                      badge: "Truth Ambassador",
+                      unlocked: false,
+                    },
                   ].map((item, index) => (
-                    <div key={index} className={`p-4 rounded-xl border ${
-                      item.unlocked 
-                        ? 'bg-green-600/10 border-green-500/30' 
-                        : 'bg-slate-700/30 border-slate-600/50'
-                    }`}>
+                    <div
+                      key={index}
+                      className={`p-4 rounded-xl border ${
+                        item.unlocked
+                          ? "bg-green-600/10 border-green-500/30"
+                          : "bg-slate-700/30 border-slate-600/50"
+                      }`}
+                    >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                            item.unlocked 
-                              ? 'bg-green-600 text-white' 
-                              : 'bg-slate-600 text-gray-300'
-                          }`}>
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                              item.unlocked
+                                ? "bg-green-600 text-white"
+                                : "bg-slate-600 text-gray-300"
+                            }`}
+                          >
                             {item.milestone}
                           </div>
                           <div>
-                            <p className="font-medium text-white">{item.reward}</p>
-                            <p className="text-sm text-gray-400">{item.badge} Badge</p>
+                            <p className="font-medium text-white">
+                              {item.reward}
+                            </p>
+                            <p className="text-sm text-gray-400">
+                              {item.badge} Badge
+                            </p>
                           </div>
                         </div>
-                        
+
                         <div className="text-right">
                           {item.unlocked ? (
-                            <Badge className="bg-green-600/20 text-green-400">Unlocked</Badge>
+                            <Badge className="bg-green-600/20 text-green-400">
+                              Unlocked
+                            </Badge>
                           ) : (
-                            <Badge variant="outline" className="border-gray-500/30 text-gray-400">
+                            <Badge
+                              variant="outline"
+                              className="border-gray-500/30 text-gray-400"
+                            >
                               {item.milestone - 12} more
                             </Badge>
                           )}
@@ -343,50 +397,65 @@ export default function Referral() {
               <CardContent>
                 <div className="space-y-3">
                   {[
-                    { 
-                      date: '2025-08-01', 
-                      user: 'alice.eth', 
-                      status: 'Active', 
-                      earned: '40 GTT',
-                      bonus: 'Staking: +2.1 GTT'
+                    {
+                      date: "2025-08-01",
+                      user: "alice.eth",
+                      status: "Active",
+                      earned: "40 GTT",
+                      bonus: "Staking: +2.1 GTT",
                     },
-                    { 
-                      date: '2025-07-28', 
-                      user: 'bob_crypto', 
-                      status: 'Active', 
-                      earned: '40 GTT',
-                      bonus: 'Staking: +1.8 GTT'
+                    {
+                      date: "2025-07-28",
+                      user: "bob_crypto",
+                      status: "Active",
+                      earned: "40 GTT",
+                      bonus: "Staking: +1.8 GTT",
                     },
-                    { 
-                      date: '2025-07-25', 
-                      user: 'charlie99', 
-                      status: 'Pending', 
-                      earned: '0 GTT',
-                      bonus: 'Verification pending'
+                    {
+                      date: "2025-07-25",
+                      user: "charlie99",
+                      status: "Pending",
+                      earned: "0 GTT",
+                      bonus: "Verification pending",
                     },
-                    { 
-                      date: '2025-07-20', 
-                      user: 'diana_dev', 
-                      status: 'Active', 
-                      earned: '40 GTT',
-                      bonus: 'Staking: +3.2 GTT'
+                    {
+                      date: "2025-07-20",
+                      user: "diana_dev",
+                      status: "Active",
+                      earned: "40 GTT",
+                      bonus: "Staking: +3.2 GTT",
                     },
                   ].map((referral, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg"
+                    >
                       <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${
-                          referral.status === 'Active' ? 'bg-green-500' : 'bg-yellow-500'
-                        }`}></div>
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            referral.status === "Active"
+                              ? "bg-green-500"
+                              : "bg-yellow-500"
+                          }`}
+                        ></div>
                         <div>
-                          <p className="font-medium text-white">{referral.user}</p>
-                          <p className="text-sm text-gray-400">{referral.bonus}</p>
+                          <p className="font-medium text-white">
+                            {referral.user}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {referral.bonus}
+                          </p>
                         </div>
                       </div>
-                      
+
                       <div className="text-right">
-                        <p className={`font-semibold ${
-                          referral.status === 'Active' ? 'text-green-400' : 'text-yellow-400'
-                        }`}>
+                        <p
+                          className={`font-semibold ${
+                            referral.status === "Active"
+                              ? "text-green-400"
+                              : "text-yellow-400"
+                          }`}
+                        >
                           {referral.earned}
                         </p>
                         <p className="text-xs text-gray-400">{referral.date}</p>

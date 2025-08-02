@@ -176,7 +176,7 @@ export default function Leaderboard() {
                         <div className="flex items-center space-x-4">
                           <Badge
                             className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${getRankBadge(
-                              index + 1
+                              index + 1,
                             )}`}
                           >
                             {index + 1}
@@ -232,8 +232,8 @@ export default function Leaderboard() {
                       achievement.color === "emerald"
                         ? "bg-emerald-900/30 border-emerald-700"
                         : achievement.color === "purple"
-                        ? "bg-purple-900/30 border-purple-700"
-                        : "bg-cyan-900/30 border-cyan-700"
+                          ? "bg-purple-900/30 border-purple-700"
+                          : "bg-cyan-900/30 border-cyan-700"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -242,8 +242,8 @@ export default function Leaderboard() {
                           achievement.color === "emerald"
                             ? "text-emerald-400"
                             : achievement.color === "purple"
-                            ? "text-purple-400"
-                            : "text-cyan-400"
+                              ? "text-purple-400"
+                              : "text-cyan-400"
                         }`}
                       >
                         {achievement.title}

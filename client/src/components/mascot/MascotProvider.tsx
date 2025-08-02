@@ -30,7 +30,8 @@ export function MascotProvider({ children }: MascotProviderProps) {
   const [showMascot, setShowMascot] = useState(false);
   const [mascotEnabled, setMascotEnabled] = useState(true);
 
-  const isOnboardingComplete = localStorage.getItem("onboarding_completed") === "true";
+  const isOnboardingComplete =
+    localStorage.getItem("onboarding_completed") === "true";
 
   // Auto-start onboarding for new authenticated users
   useEffect(() => {

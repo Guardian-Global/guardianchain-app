@@ -74,7 +74,7 @@ export default function MintCapsuleNFTWrapper() {
     const hash =
       "0x" +
       Array.from({ length: 64 }, () =>
-        Math.floor(Math.random() * 16).toString(16)
+        Math.floor(Math.random() * 16).toString(16),
       ).join("");
     setContentHash(hash);
     toast({
@@ -217,8 +217,8 @@ export default function MintCapsuleNFTWrapper() {
                 {content.length > 500
                   ? "High"
                   : content.length > 200
-                  ? "Medium"
-                  : "Basic"}
+                    ? "Medium"
+                    : "Basic"}
               </span>
             </div>
             <div>

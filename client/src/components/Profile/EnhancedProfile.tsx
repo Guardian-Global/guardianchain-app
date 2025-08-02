@@ -351,7 +351,7 @@ export default function EnhancedProfile({
                           {type.toLowerCase()}
                         </div>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </CardContent>
@@ -398,7 +398,7 @@ export default function EnhancedProfile({
                             <div className="flex items-center gap-1 text-slate-500 text-xs">
                               <Calendar className="w-3 h-3" />
                               {new Date(
-                                achievement.unlockedAt
+                                achievement.unlockedAt,
                               ).toLocaleDateString()}
                             </div>
                           </div>

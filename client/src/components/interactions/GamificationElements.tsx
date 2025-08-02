@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Trophy, 
-  Star, 
-  Zap, 
-  Target, 
-  Award, 
-  Crown, 
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  Trophy,
+  Star,
+  Zap,
+  Target,
+  Award,
+  Crown,
   Flame,
   Gift,
   Coins,
   TrendingUp,
   Users,
-  Heart
-} from 'lucide-react';
-import { CelebrationProgress, SuccessCheckmark, FloatingTooltip } from './MicroInteractions';
+  Heart,
+} from "lucide-react";
+import {
+  CelebrationProgress,
+  SuccessCheckmark,
+  FloatingTooltip,
+} from "./MicroInteractions";
 
 // Achievement Unlock Animation
 export const AchievementUnlock: React.FC<{
@@ -26,24 +30,24 @@ export const AchievementUnlock: React.FC<{
     title: string;
     description: string;
     icon: React.ComponentType<{ className?: string }>;
-    rarity: 'common' | 'rare' | 'epic' | 'legendary';
+    rarity: "common" | "rare" | "epic" | "legendary";
     points: number;
   };
   isVisible: boolean;
   onClose: () => void;
 }> = ({ achievement, isVisible, onClose }) => {
   const rarityColors = {
-    common: 'from-gray-600 to-gray-800 border-gray-500',
-    rare: 'from-blue-600 to-blue-800 border-blue-500',
-    epic: 'from-purple-600 to-purple-800 border-purple-500',
-    legendary: 'from-yellow-600 to-yellow-800 border-yellow-500'
+    common: "from-gray-600 to-gray-800 border-gray-500",
+    rare: "from-blue-600 to-blue-800 border-blue-500",
+    epic: "from-purple-600 to-purple-800 border-purple-500",
+    legendary: "from-yellow-600 to-yellow-800 border-yellow-500",
   };
 
   const rarityText = {
-    common: 'text-gray-300',
-    rare: 'text-blue-300',
-    epic: 'text-purple-300',
-    legendary: 'text-yellow-300'
+    common: "text-gray-300",
+    rare: "text-blue-300",
+    epic: "text-purple-300",
+    legendary: "text-yellow-300",
   };
 
   useEffect(() => {
@@ -65,26 +69,34 @@ export const AchievementUnlock: React.FC<{
           exit={{ opacity: 0, x: 300, scale: 0.5 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
-          <Card className={`bg-gradient-to-br ${rarityColors[achievement.rarity]} border-2 max-w-sm`}>
+          <Card
+            className={`bg-gradient-to-br ${rarityColors[achievement.rarity]} border-2 max-w-sm`}
+          >
             <CardHeader className="pb-3">
               <div className="flex items-center space-x-3">
                 <motion.div
-                  animate={{ 
-                    rotate: [0, 360], 
-                    scale: [1, 1.2, 1] 
+                  animate={{
+                    rotate: [0, 360],
+                    scale: [1, 1.2, 1],
                   }}
-                  transition={{ 
-                    duration: 2, 
+                  transition={{
+                    duration: 2,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   }}
                   className={`p-2 rounded-full bg-white/20`}
                 >
-                  <achievement.icon className={`h-8 w-8 ${rarityText[achievement.rarity]}`} />
+                  <achievement.icon
+                    className={`h-8 w-8 ${rarityText[achievement.rarity]}`}
+                  />
                 </motion.div>
                 <div>
-                  <CardTitle className="text-white text-lg">Achievement Unlocked!</CardTitle>
-                  <Badge className={`${rarityColors[achievement.rarity]} capitalize`}>
+                  <CardTitle className="text-white text-lg">
+                    Achievement Unlocked!
+                  </CardTitle>
+                  <Badge
+                    className={`${rarityColors[achievement.rarity]} capitalize`}
+                  >
                     {achievement.rarity}
                   </Badge>
                 </div>
@@ -92,15 +104,19 @@ export const AchievementUnlock: React.FC<{
             </CardHeader>
             <CardContent>
               <h3 className="text-white font-bold mb-2">{achievement.title}</h3>
-              <p className="text-slate-200 text-sm mb-3">{achievement.description}</p>
+              <p className="text-slate-200 text-sm mb-3">
+                {achievement.description}
+              </p>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
                   <Coins className="h-4 w-4 text-yellow-400" />
-                  <span className="text-yellow-400 font-semibold">+{achievement.points} GTT</span>
+                  <span className="text-yellow-400 font-semibold">
+                    +{achievement.points} GTT
+                  </span>
                 </div>
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
+                <Button
+                  size="sm"
+                  variant="ghost"
                   onClick={onClose}
                   className="text-white hover:bg-white/20"
                 >
@@ -153,26 +169,28 @@ export const XPBar: React.FC<{
             )}
           </AnimatePresence>
         </div>
-        <span className="text-slate-400 text-sm">{currentXP} / {maxXP} XP</span>
+        <span className="text-slate-400 text-sm">
+          {currentXP} / {maxXP} XP
+        </span>
       </div>
-      
+
       <div className="relative w-full bg-slate-700 rounded-full h-4 overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 relative"
           initial={{ width: 0 }}
           animate={{ width: `${Math.min(percentage, 100)}%` }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
           {/* Sparkle Effect */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
             animate={{
-              x: ['-100%', '100%']
+              x: ["-100%", "100%"],
             }}
             transition={{
               duration: 2,
               repeat: Infinity,
-              ease: 'linear'
+              ease: "linear",
             }}
           />
         </motion.div>
@@ -200,7 +218,7 @@ export const StreakCounter: React.FC<{
   maxStreak: number;
   daysCompleted: boolean[];
 }> = ({ currentStreak, maxStreak, daysCompleted }) => {
-  const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const days = ["M", "T", "W", "T", "F", "S", "S"];
 
   return (
     <Card className="bg-slate-800/50 border-slate-700">
@@ -225,14 +243,18 @@ export const StreakCounter: React.FC<{
               <div className="text-slate-400 text-xs mb-1">{day}</div>
               <motion.div
                 className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
-                  daysCompleted[index] 
-                    ? 'bg-orange-500 border-orange-500' 
-                    : 'border-slate-600'
+                  daysCompleted[index]
+                    ? "bg-orange-500 border-orange-500"
+                    : "border-slate-600"
                 }`}
                 whileHover={{ scale: 1.1 }}
-                animate={daysCompleted[index] ? {
-                  scale: [1, 1.2, 1],
-                } : {}}
+                animate={
+                  daysCompleted[index]
+                    ? {
+                        scale: [1, 1.2, 1],
+                      }
+                    : {}
+                }
                 transition={{ duration: 0.3 }}
               >
                 {daysCompleted[index] && (
@@ -251,7 +273,9 @@ export const StreakCounter: React.FC<{
 
         <div className="text-center">
           <span className="text-slate-400 text-sm">
-            {currentStreak > 0 ? `Keep it up! ${7 - currentStreak} days to weekly bonus` : 'Start your streak today!'}
+            {currentStreak > 0
+              ? `Keep it up! ${7 - currentStreak} days to weekly bonus`
+              : "Start your streak today!"}
           </span>
         </div>
       </CardContent>
@@ -284,9 +308,14 @@ export const MiniLeaderboard: React.FC<{
             <motion.div
               key={user.id}
               className={`flex items-center space-x-3 p-2 rounded-lg ${
-                user.id === currentUserId ? 'bg-blue-500/20 border border-blue-500/30' : ''
+                user.id === currentUserId
+                  ? "bg-blue-500/20 border border-blue-500/30"
+                  : ""
               }`}
-              whileHover={{ scale: 1.02, backgroundColor: 'rgba(71, 85, 105, 0.3)' }}
+              whileHover={{
+                scale: 1.02,
+                backgroundColor: "rgba(71, 85, 105, 0.3)",
+              }}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -294,16 +323,22 @@ export const MiniLeaderboard: React.FC<{
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-700">
                 {index < 3 ? (
                   <span className="text-lg">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                    {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                   </span>
                 ) : (
-                  <span className="text-slate-400 text-sm font-bold">#{index + 1}</span>
+                  <span className="text-slate-400 text-sm font-bold">
+                    #{index + 1}
+                  </span>
                 )}
               </div>
-              
+
               <div className="flex-1">
-                <div className="text-white font-semibold text-sm">{user.name}</div>
-                <div className="text-slate-400 text-xs">{user.points.toLocaleString()} GTT</div>
+                <div className="text-white font-semibold text-sm">
+                  {user.name}
+                </div>
+                <div className="text-slate-400 text-xs">
+                  {user.points.toLocaleString()} GTT
+                </div>
               </div>
 
               {user.id === currentUserId && (
@@ -326,18 +361,20 @@ export const QuestCard: React.FC<{
     progress: number;
     maxProgress: number;
     reward: number;
-    difficulty: 'easy' | 'medium' | 'hard';
+    difficulty: "easy" | "medium" | "hard";
     timeLeft?: string;
   };
   onClaim?: () => void;
 }> = ({ quest, onClaim }) => {
-  const [isCompleted, setIsCompleted] = useState(quest.progress >= quest.maxProgress);
+  const [isCompleted, setIsCompleted] = useState(
+    quest.progress >= quest.maxProgress,
+  );
   const [showSuccess, setShowSuccess] = useState(false);
 
   const difficultyColors = {
-    easy: 'text-green-400 border-green-500',
-    medium: 'text-yellow-400 border-yellow-500',
-    hard: 'text-red-400 border-red-500'
+    easy: "text-green-400 border-green-500",
+    medium: "text-yellow-400 border-yellow-500",
+    hard: "text-red-400 border-red-500",
   };
 
   const handleClaim = () => {
@@ -351,11 +388,10 @@ export const QuestCard: React.FC<{
   }, [quest.progress, quest.maxProgress]);
 
   return (
-    <motion.div
-      whileHover={{ y: -2, scale: 1.02 }}
-      className="relative"
-    >
-      <Card className={`bg-slate-800/50 border-slate-700 ${isCompleted ? 'ring-2 ring-green-500/50' : ''}`}>
+    <motion.div whileHover={{ y: -2, scale: 1.02 }} className="relative">
+      <Card
+        className={`bg-slate-800/50 border-slate-700 ${isCompleted ? "ring-2 ring-green-500/50" : ""}`}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div>
@@ -370,7 +406,7 @@ export const QuestCard: React.FC<{
             </Badge>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <CelebrationProgress
             value={quest.progress}
@@ -378,26 +414,30 @@ export const QuestCard: React.FC<{
             label="Progress"
             showCelebration={isCompleted}
           />
-          
+
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center space-x-2">
               <Coins className="h-4 w-4 text-yellow-400" />
-              <span className="text-yellow-400 font-semibold">{quest.reward} GTT</span>
+              <span className="text-yellow-400 font-semibold">
+                {quest.reward} GTT
+              </span>
               {quest.timeLeft && (
                 <>
                   <span className="text-slate-500">•</span>
-                  <span className="text-slate-400 text-sm">{quest.timeLeft}</span>
+                  <span className="text-slate-400 text-sm">
+                    {quest.timeLeft}
+                  </span>
                 </>
               )}
             </div>
-            
+
             {isCompleted && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >
-                <Button 
+                <Button
                   size="sm"
                   onClick={handleClaim}
                   className="bg-green-600 hover:bg-green-700 text-white"
@@ -409,7 +449,7 @@ export const QuestCard: React.FC<{
             )}
           </div>
         </CardContent>
-        
+
         <SuccessCheckmark isVisible={showSuccess} size={40} />
       </Card>
     </motion.div>
@@ -418,15 +458,15 @@ export const QuestCard: React.FC<{
 
 // Power-up Animation
 export const PowerUpAnimation: React.FC<{
-  type: 'speed' | 'strength' | 'luck' | 'wisdom';
+  type: "speed" | "strength" | "luck" | "wisdom";
   isActive: boolean;
   duration: number;
 }> = ({ type, isActive, duration }) => {
   const powerUpConfig = {
-    speed: { icon: Zap, color: 'text-yellow-400', bg: 'bg-yellow-500/20' },
-    strength: { icon: Crown, color: 'text-red-400', bg: 'bg-red-500/20' },
-    luck: { icon: Star, color: 'text-purple-400', bg: 'bg-purple-500/20' },
-    wisdom: { icon: Award, color: 'text-blue-400', bg: 'bg-blue-500/20' }
+    speed: { icon: Zap, color: "text-yellow-400", bg: "bg-yellow-500/20" },
+    strength: { icon: Crown, color: "text-red-400", bg: "bg-red-500/20" },
+    luck: { icon: Star, color: "text-purple-400", bg: "bg-purple-500/20" },
+    wisdom: { icon: Award, color: "text-blue-400", bg: "bg-blue-500/20" },
   };
 
   const config = powerUpConfig[type];
@@ -442,14 +482,14 @@ export const PowerUpAnimation: React.FC<{
           transition={{ type: "spring", stiffness: 400 }}
         >
           <motion.div
-            animate={{ 
+            animate={{
               scale: [1, 1.2, 1],
-              rotate: [0, 360]
+              rotate: [0, 360],
             }}
-            transition={{ 
-              duration: 2, 
+            transition={{
+              duration: 2,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           >
             <config.icon className={`h-5 w-5 ${config.color}`} />
@@ -457,9 +497,7 @@ export const PowerUpAnimation: React.FC<{
           <span className={`text-sm font-semibold capitalize ${config.color}`}>
             {type} Boost
           </span>
-          <span className="text-xs text-slate-400">
-            {duration}s
-          </span>
+          <span className="text-xs text-slate-400">{duration}s</span>
         </motion.div>
       )}
     </AnimatePresence>

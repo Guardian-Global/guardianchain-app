@@ -1,16 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { 
-  GitBranch, 
-  Clock, 
-  User, 
-  ExternalLink, 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  GitBranch,
+  Clock,
+  User,
+  ExternalLink,
   ChevronRight,
   TreePine,
-  Link as LinkIcon
-} from 'lucide-react';
-import { Link } from 'wouter';
+  Link as LinkIcon,
+} from "lucide-react";
+import { Link } from "wouter";
 
 interface LineageNode {
   id: string;
@@ -19,8 +19,8 @@ interface LineageNode {
   date: string;
   griefScore?: number;
   generation: number;
-  relationship: 'parent' | 'child' | 'sibling' | 'root';
-  verificationStatus: 'verified' | 'pending' | 'unverified';
+  relationship: "parent" | "child" | "sibling" | "root";
+  verificationStatus: "verified" | "pending" | "unverified";
 }
 
 interface AncestryTreeProps {
@@ -28,33 +28,49 @@ interface AncestryTreeProps {
   currentCapsuleId: string;
 }
 
-export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTreeProps) {
-  const sortedLineage = [...lineage].sort((a, b) => a.generation - b.generation);
-  const maxGeneration = Math.max(...lineage.map(node => node.generation));
-  
+export default function AncestryTree({
+  lineage,
+  currentCapsuleId,
+}: AncestryTreeProps) {
+  const sortedLineage = [...lineage].sort(
+    (a, b) => a.generation - b.generation,
+  );
+  const maxGeneration = Math.max(...lineage.map((node) => node.generation));
+
   const getRelationshipColor = (relationship: string) => {
     switch (relationship) {
-      case 'root': return 'bg-purple-600';
-      case 'parent': return 'bg-blue-600';
-      case 'child': return 'bg-green-600';
-      case 'sibling': return 'bg-yellow-600';
-      default: return 'bg-slate-600';
+      case "root":
+        return "bg-purple-600";
+      case "parent":
+        return "bg-blue-600";
+      case "child":
+        return "bg-green-600";
+      case "sibling":
+        return "bg-yellow-600";
+      default:
+        return "bg-slate-600";
     }
   };
 
   const getVerificationIcon = (status: string) => {
     switch (status) {
-      case 'verified': return '✓';
-      case 'pending': return '⏳';
-      default: return '○';
+      case "verified":
+        return "✓";
+      case "pending":
+        return "⏳";
+      default:
+        return "○";
     }
   };
 
   const getVerificationColor = (status: string) => {
     switch (status) {
-      case 'verified': return 'text-green-400';
-      case 'pending': return 'text-yellow-400';
-      default: return 'text-slate-400';
+      case "verified":
+        return "text-green-400";
+      case "pending":
+        return "text-yellow-400";
+      default:
+        return "text-slate-400";
     }
   };
 
@@ -66,10 +82,11 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
           Capsule Thread Ancestry
         </CardTitle>
         <p className="text-slate-400 text-sm">
-          Trace the lineage and connections of this memory capsule through its family tree
+          Trace the lineage and connections of this memory capsule through its
+          family tree
         </p>
       </CardHeader>
-      
+
       <CardContent>
         {lineage.length === 0 ? (
           <div className="text-center py-8 text-slate-400">
@@ -82,16 +99,24 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
             {/* Tree Statistics */}
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div className="bg-slate-700/50 rounded-lg p-3 text-center">
-                <div className="text-lg font-bold text-white">{lineage.length}</div>
+                <div className="text-lg font-bold text-white">
+                  {lineage.length}
+                </div>
                 <div className="text-xs text-slate-400">Total Nodes</div>
               </div>
               <div className="bg-slate-700/50 rounded-lg p-3 text-center">
-                <div className="text-lg font-bold text-white">{maxGeneration + 1}</div>
+                <div className="text-lg font-bold text-white">
+                  {maxGeneration + 1}
+                </div>
                 <div className="text-xs text-slate-400">Generations</div>
               </div>
               <div className="bg-slate-700/50 rounded-lg p-3 text-center">
                 <div className="text-lg font-bold text-white">
-                  {lineage.filter(node => node.verificationStatus === 'verified').length}
+                  {
+                    lineage.filter(
+                      (node) => node.verificationStatus === "verified",
+                    ).length
+                  }
                 </div>
                 <div className="text-xs text-slate-400">Verified</div>
               </div>
@@ -100,12 +125,12 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
             {/* Ancestry Tree */}
             <div className="space-y-3 max-h-96 overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600">
               {sortedLineage.map((node, index) => (
-                <div 
-                  key={node.id} 
+                <div
+                  key={node.id}
                   className={`relative flex items-center space-x-3 p-3 rounded-lg transition-colors ${
-                    node.id === currentCapsuleId 
-                      ? 'bg-blue-600/20 border border-blue-600/30' 
-                      : 'bg-slate-700/30 hover:bg-slate-700/50'
+                    node.id === currentCapsuleId
+                      ? "bg-blue-600/20 border border-blue-600/30"
+                      : "bg-slate-700/30 hover:bg-slate-700/50"
                   }`}
                 >
                   {/* Generation Indicator */}
@@ -118,7 +143,7 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
                         <div className="w-0.5 h-6 bg-slate-600 mt-2"></div>
                       )}
                     </div>
-                    
+
                     {/* Connection Line */}
                     <div className="flex items-center mr-3">
                       <GitBranch className="w-4 h-4 text-slate-500" />
@@ -130,10 +155,14 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
-                        <Badge className={`${getRelationshipColor(node.relationship)} text-white text-xs`}>
+                        <Badge
+                          className={`${getRelationshipColor(node.relationship)} text-white text-xs`}
+                        >
                           {node.relationship}
                         </Badge>
-                        <span className={`text-xs ${getVerificationColor(node.verificationStatus)}`}>
+                        <span
+                          className={`text-xs ${getVerificationColor(node.verificationStatus)}`}
+                        >
                           {getVerificationIcon(node.verificationStatus)}
                         </span>
                         {node.id === currentCapsuleId && (
@@ -142,18 +171,21 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
                           </Badge>
                         )}
                       </div>
-                      
+
                       {node.griefScore && (
-                        <Badge variant="outline" className="border-slate-600 text-slate-400 text-xs">
+                        <Badge
+                          variant="outline"
+                          className="border-slate-600 text-slate-400 text-xs"
+                        >
                           {node.griefScore}/10
                         </Badge>
                       )}
                     </div>
-                    
+
                     <h4 className="text-white font-medium text-sm mb-1 truncate">
                       {node.title}
                     </h4>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 text-xs text-slate-400">
                         <div className="flex items-center">
@@ -165,9 +197,13 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
                           {new Date(node.date).toLocaleDateString()}
                         </div>
                       </div>
-                      
+
                       <Link href={`/capsule/${node.id}`}>
-                        <Button size="sm" variant="ghost" className="text-slate-400 hover:text-white h-6 px-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-slate-400 hover:text-white h-6 px-2"
+                        >
                           <ExternalLink className="w-3 h-3" />
                         </Button>
                       </Link>
@@ -183,9 +219,13 @@ export default function AncestryTree({ lineage, currentCapsuleId }: AncestryTree
                 <LinkIcon className="w-3 h-3 mr-1" />
                 <span>Connected memories preserve family legacy</span>
               </div>
-              
+
               <div className="flex space-x-2">
-                <Button size="sm" variant="outline" className="border-slate-600 text-slate-300">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-slate-600 text-slate-300"
+                >
                   View Full Tree
                 </Button>
                 <Button size="sm" className="bg-blue-600 hover:bg-blue-700">

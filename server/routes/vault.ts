@@ -8,7 +8,7 @@ const router = Router();
 router.get("/timeline/:userId", isDebugAuthenticated, async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     // For now, return mock data since we're setting up the infrastructure
     const mockTimelineEntries = [
       {
@@ -34,10 +34,10 @@ router.get("/timeline/:userId", isDebugAuthenticated, async (req, res) => {
           nftTokenId: null,
           isNftMinted: false,
           isTruthVaultSealed: false,
-        }
+        },
       },
       {
-        id: "entry-2", 
+        id: "entry-2",
         userId,
         capsuleId: "capsule-2",
         entryType: "post",
@@ -52,15 +52,16 @@ router.get("/timeline/:userId", isDebugAuthenticated, async (req, res) => {
         capsule: {
           id: "capsule-2",
           title: "Childhood Memory",
-          content: "A precious memory from when I was seven years old, playing in my grandmother's garden.",
+          content:
+            "A precious memory from when I was seven years old, playing in my grandmother's garden.",
           mediaType: null,
           mediaUrl: null,
           thumbnailUrl: null,
           nftTokenId: "0x123...abc",
           isNftMinted: true,
           isTruthVaultSealed: true,
-        }
-      }
+        },
+      },
     ];
 
     res.json(mockTimelineEntries);
@@ -77,8 +78,8 @@ router.post("/timeline", isDebugAuthenticated, async (req, res) => {
     const userId = req.user?.id;
 
     if (!capsuleId || !entryType) {
-      return res.status(400).json({ 
-        error: "Missing required fields: capsuleId, entryType" 
+      return res.status(400).json({
+        error: "Missing required fields: capsuleId, entryType",
       });
     }
 

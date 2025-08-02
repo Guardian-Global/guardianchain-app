@@ -1,4 +1,5 @@
 # GUARDIANCHAIN PROTOCOL DOCTRINE
+
 ## Foundational Principles for Decentralized Truth Verification
 
 **OFFICIAL DOCUMENT - CONFIDENTIAL**  
@@ -31,7 +32,7 @@
 **VII. COMMUNITY STANDARDS** ....................................................... 14  
 **VIII. ENFORCEMENT MECHANISMS** ................................................... 16  
 **IX. AMENDMENT PROCEDURES** ....................................................... 18  
-**X. APPENDICES & REFERENCES** ..................................................... 20  
+**X. APPENDICES & REFERENCES** ..................................................... 20
 
 ---
 
@@ -42,10 +43,13 @@
 GUARDIANCHAIN Protocol operates under the fundamental principle that **truth is a universal human right** and that **decentralized verification** represents the highest form of information integrity. This doctrine establishes the constitutional framework governing all operations, decisions, and evolutionary paths of the GUARDIANCHAIN ecosystem.
 
 #### Section 1.1: Mission Statement
+
 To establish an immutable, transparent, and democratically governed platform where truth is verified through community consensus, economic incentives, and blockchain technology, ensuring information integrity for current and future generations.
 
 #### Section 1.2: Vision Declaration
+
 GUARDIANCHAIN envisions a world where:
+
 - Truth verification is decentralized and community-driven
 - Economic incentives align with information accuracy
 - Misinformation is economically disincentivized
@@ -53,6 +57,7 @@ GUARDIANCHAIN envisions a world where:
 - Governance decisions reflect community consensus
 
 #### Section 1.3: Core Values Hierarchy
+
 1. **Truth Above All**: Accuracy supersedes profit, convenience, or popularity
 2. **Decentralized Governance**: Community decisions over centralized control
 3. **Economic Fairness**: Equitable reward distribution based on contribution
@@ -62,7 +67,9 @@ GUARDIANCHAIN envisions a world where:
 ### Article II: Philosophical Foundation
 
 #### Section 2.1: Truth Theory
+
 GUARDIANCHAIN adopts a **consensus-based truth model** where information accuracy is determined through:
+
 - Multi-source verification
 - Community peer review
 - Evidence-based analysis
@@ -70,7 +77,9 @@ GUARDIANCHAIN adopts a **consensus-based truth model** where information accurac
 - Expert opinion weighting
 
 #### Section 2.2: Economic Philosophy
+
 The platform operates on **Proof of Truth** consensus, where:
+
 - Economic rewards incentivize accurate information
 - False information carries economic penalties
 - Reputation systems compound reward mechanisms
@@ -84,9 +93,11 @@ The platform operates on **Proof of Truth** consensus, where:
 ### Principle I: Immutable Truth Preservation
 
 #### Foundation
+
 All truth capsules submitted to GUARDIANCHAIN become part of an immutable historical record, preserving information integrity across time and preventing retroactive censorship or modification.
 
 #### Implementation
+
 - **Blockchain Storage**: All content hashes stored on Polygon blockchain
 - **IPFS Integration**: Decentralized file storage preventing single points of failure
 - **Cryptographic Signatures**: Creator identity verification through digital signatures
@@ -94,6 +105,7 @@ All truth capsules submitted to GUARDIANCHAIN become part of an immutable histor
 - **Audit Trails**: Complete history of all verification activities
 
 #### Enforcement
+
 - Smart contract immutability prevents unauthorized modifications
 - Community consensus required for any protocol changes
 - Multi-signature requirements for administrative functions
@@ -103,9 +115,11 @@ All truth capsules submitted to GUARDIANCHAIN become part of an immutable histor
 ### Principle II: Democratic Governance
 
 #### Foundation
+
 All significant platform decisions must be made through democratic processes involving GTT token holders, with voting power proportional to economic stake and platform contribution.
 
 #### Governance Areas
+
 1. **Protocol Parameters**: Fee structures, reward mechanisms, staking requirements
 2. **Feature Development**: New tool implementation, user interface changes
 3. **Partnership Decisions**: Exchange listings, corporate collaborations
@@ -113,6 +127,7 @@ All significant platform decisions must be made through democratic processes inv
 5. **Legal Compliance**: Regulatory responses, jurisdiction changes
 
 #### Voting Mechanisms
+
 - **Proposal Submission**: 10,000 GTT minimum stake requirement
 - **Discussion Period**: 7-day community debate phase
 - **Voting Window**: 48-hour voting period with real-time tallying
@@ -122,9 +137,11 @@ All significant platform decisions must be made through democratic processes inv
 ### Principle III: Economic Incentive Alignment
 
 #### Foundation
+
 All economic mechanisms within GUARDIANCHAIN must align individual incentives with collective truth-seeking goals, ensuring platform sustainability and accuracy.
 
 #### Incentive Structure
+
 ```
 Truth Verification Rewards:
 - Accurate Verification: +10-50 GTT (based on complexity)
@@ -148,9 +165,11 @@ Economic Penalties:
 ### Principle IV: Transparency & Accountability
 
 #### Foundation
+
 All platform operations, decisions, and algorithms must be transparent and auditable by the community, with clear accountability mechanisms for all participants.
 
 #### Transparency Requirements
+
 - **Open Source Protocol**: All smart contracts publicly verifiable
 - **Decision Transparency**: Public voting records and rationale
 - **Financial Transparency**: Real-time treasury and revenue reporting
@@ -158,6 +177,7 @@ All platform operations, decisions, and algorithms must be transparent and audit
 - **Operational Transparency**: Regular reporting on platform metrics
 
 #### Accountability Mechanisms
+
 - **Community Oversight**: Elected oversight committee
 - **Regular Audits**: Quarterly financial and security audits
 - **Performance Metrics**: Public dashboards tracking platform health
@@ -171,9 +191,11 @@ All platform operations, decisions, and algorithms must be transparent and audit
 ### Executive Framework
 
 #### The GUARDIANCHAIN Council
+
 **Composition**: 7 elected members serving 2-year terms
 **Election Process**: Community vote by GTT holders
 **Responsibilities**:
+
 - Day-to-day operational decisions
 - Emergency response coordination
 - Community representation
@@ -181,6 +203,7 @@ All platform operations, decisions, and algorithms must be transparent and audit
 - Partnership negotiations
 
 #### Council Member Requirements
+
 - Minimum 100,000 GTT staked
 - 6+ months active platform participation
 - Clean reputation score (95%+ accuracy)
@@ -190,12 +213,14 @@ All platform operations, decisions, and algorithms must be transparent and audit
 ### Legislative Framework
 
 #### Community Assembly
+
 **Composition**: All GTT holders with voting rights
 **Voting Power**: Proportional to GTT holdings + reputation multipliers
 **Meeting Schedule**: Monthly virtual assemblies
 **Decision Authority**: All major platform changes
 
 #### Proposal Process
+
 1. **Ideation Phase**: Community discussion (minimum 72 hours)
 2. **Formal Proposal**: Technical specification and impact analysis
 3. **Review Period**: Council assessment and community feedback
@@ -205,12 +230,14 @@ All platform operations, decisions, and algorithms must be transparent and audit
 ### Judicial Framework
 
 #### Dispute Resolution System
+
 **First Level**: Automated algorithmic resolution
 **Second Level**: Community jury system (9 randomly selected verifiers)
 **Third Level**: Expert arbitration panel
 **Final Appeal**: Full community vote
 
 #### Enforcement Mechanisms
+
 - **Warning System**: Automated notifications for policy violations
 - **Reputation Penalties**: Temporary reduction in verification power
 - **Economic Sanctions**: GTT penalties for serious violations
@@ -224,6 +251,7 @@ All platform operations, decisions, and algorithms must be transparent and audit
 ### Content Standards & Guidelines
 
 #### Acceptable Content Categories
+
 1. **Factual Information**: Verifiable claims with supporting evidence
 2. **Opinion & Analysis**: Clearly labeled personal perspectives
 3. **Historical Records**: Documentation of past events
@@ -231,6 +259,7 @@ All platform operations, decisions, and algorithms must be transparent and audit
 5. **Investigative Reports**: Evidence-based journalism
 
 #### Prohibited Content
+
 - **Illegal Material**: Content violating applicable laws
 - **Personal Attacks**: Targeted harassment or doxxing
 - **Copyright Infringement**: Unauthorized use of protected material
@@ -238,7 +267,9 @@ All platform operations, decisions, and algorithms must be transparent and audit
 - **Intentionally False Information**: Deliberately misleading content
 
 #### Verification Standards
+
 **Evidence Requirements**:
+
 - Primary source documentation
 - Multiple independent confirmations
 - Expert opinion validation
@@ -246,6 +277,7 @@ All platform operations, decisions, and algorithms must be transparent and audit
 - Cross-platform verification
 
 **Quality Metrics**:
+
 - Source credibility scoring
 - Information completeness assessment
 - Logical consistency evaluation
@@ -255,6 +287,7 @@ All platform operations, decisions, and algorithms must be transparent and audit
 ### Verification Protocols
 
 #### Standard Verification Process
+
 1. **Submission**: Content creator uploads truth capsule
 2. **Initial Screening**: Automated content analysis
 3. **Community Assignment**: Random verifier selection
@@ -265,7 +298,9 @@ All platform operations, decisions, and algorithms must be transparent and audit
 8. **Reward Distribution**: GTT token allocation to participants
 
 #### Expedited Verification
+
 For time-sensitive information:
+
 - **Fast-Track Eligibility**: Breaking news, safety alerts
 - **Reduced Timeline**: 6-hour verification window
 - **Higher Stakes**: Increased rewards and penalties
@@ -273,6 +308,7 @@ For time-sensitive information:
 - **Emergency Protocols**: Critical information immediate publication
 
 #### Appeal Process
+
 - **Initial Appeal**: 48-hour window post-verification
 - **Evidence Submission**: Additional supporting documentation
 - **Re-verification**: Fresh community review
@@ -286,7 +322,9 @@ For time-sensitive information:
 ### Token Economics Foundation
 
 #### GTT Token Utility Philosophy
+
 GTT tokens represent **participation rights** in the GUARDIANCHAIN ecosystem, functioning as:
+
 - **Verification Stakes**: Economic commitment to accuracy
 - **Governance Power**: Voting rights proportional to holdings
 - **Reward Medium**: Compensation for truth verification activities
@@ -294,6 +332,7 @@ GTT tokens represent **participation rights** in the GUARDIANCHAIN ecosystem, fu
 - **Value Storage**: Appreciation based on platform success
 
 #### Economic Sustainability Model
+
 ```
 Revenue Sources (100%):
 ├── Capsule Creation Fees (40%)
@@ -313,24 +352,29 @@ Revenue Allocation:
 ### Inflation & Deflation Mechanisms
 
 #### Controlled Inflation
+
 - **Annual Issuance**: 2% of total supply
 - **Distribution**: 100% to verification rewards
 - **Purpose**: Incentivize continued participation
 - **Duration**: 10-year schedule with community review
 
 #### Deflationary Pressure
+
 - **Transaction Burns**: 2% of all transaction fees
 - **Penalty Burns**: Destroyed tokens from violations
 - **Buyback Program**: 10% of profits used for token purchases
 - **Staking Locks**: Long-term staking reducing circulating supply
 
 #### Economic Balance
+
 Target outcome: **Mild deflation** (1-2% annually) creating scarcity value while maintaining sufficient liquidity for platform operations.
 
 ### Reward Distribution Philosophy
 
 #### Merit-Based Allocation
+
 Rewards distributed based on:
+
 1. **Accuracy**: Historical verification success rate
 2. **Participation**: Frequency and quality of contributions
 3. **Expertise**: Domain knowledge and specialization
@@ -338,6 +382,7 @@ Rewards distributed based on:
 5. **Time Investment**: Effort dedicated to verification activities
 
 #### Anti-Gaming Measures
+
 - **Sybil Resistance**: Identity verification requirements
 - **Collusion Detection**: Algorithmic pattern recognition
 - **Reputation Weighting**: Long-term accuracy requirements
@@ -351,8 +396,10 @@ Rewards distributed based on:
 ### Regulatory Framework
 
 #### Securities Law Compliance
+
 **Token Classification**: GTT classified as **utility token** under U.S. securities law
 **Compliance Measures**:
+
 - No investment contract characteristics
 - Consumptive use within platform ecosystem
 - Decentralized network operation
@@ -360,7 +407,9 @@ Rewards distributed based on:
 - Clear utility functionality
 
 #### AML/KYC Requirements
+
 **Customer Identification Program**:
+
 - Identity verification for platform access
 - Enhanced due diligence for high-value users
 - Ongoing monitoring of transaction patterns
@@ -368,6 +417,7 @@ Rewards distributed based on:
 - Record keeping and audit trail maintenance
 
 **Compliance Infrastructure**:
+
 - Third-party KYC provider integration
 - Real-time transaction monitoring
 - Automated suspicious activity flagging
@@ -377,13 +427,16 @@ Rewards distributed based on:
 ### Data Protection & Privacy
 
 #### GDPR Compliance Framework
+
 **Data Processing Principles**:
+
 - Lawfulness, fairness, and transparency
 - Purpose limitation and data minimization
 - Accuracy and storage limitation
 - Integrity, confidentiality, and accountability
 
 **User Rights Implementation**:
+
 - Right to access personal data
 - Right to rectification of inaccurate data
 - Right to erasure ("right to be forgotten")
@@ -391,6 +444,7 @@ Rewards distributed based on:
 - Right to object to processing
 
 #### Technical Privacy Measures
+
 - **Encryption**: End-to-end encryption for sensitive data
 - **Pseudonymization**: Identity protection in public records
 - **Data Segregation**: Separation of public and private information
@@ -400,7 +454,9 @@ Rewards distributed based on:
 ### Intellectual Property Protection
 
 #### Content Rights Management
+
 **Creator Rights**:
+
 - Automatic copyright protection for original content
 - Attribution requirements for all uses
 - Licensing framework for commercial use
@@ -408,6 +464,7 @@ Rewards distributed based on:
 - Fair use determination processes
 
 **Platform Protection**:
+
 - Trademark protection for GUARDIANCHAIN brand
 - Patent applications for novel verification algorithms
 - Trade secret protection for proprietary systems
@@ -417,7 +474,9 @@ Rewards distributed based on:
 ### Jurisdiction & Legal Framework
 
 #### Multi-Jurisdictional Compliance
+
 **Primary Jurisdictions**:
+
 - United States (Delaware incorporation)
 - European Union (GDPR compliance)
 - Singapore (FinTech regulations)
@@ -425,6 +484,7 @@ Rewards distributed based on:
 - Switzerland (Crypto-friendly framework)
 
 **Legal Structure**:
+
 ```
 GUARDIANCHAIN Foundation (Switzerland)
 ├── GUARDIANCHAIN Technologies Inc. (Delaware)
@@ -440,7 +500,9 @@ GUARDIANCHAIN Foundation (Switzerland)
 ### Community Guidelines
 
 #### Behavioral Expectations
+
 **Professional Standards**:
+
 - Respectful communication in all interactions
 - Good faith participation in verification processes
 - Constructive feedback and criticism
@@ -448,6 +510,7 @@ GUARDIANCHAIN Foundation (Switzerland)
 - Commitment to truth and accuracy
 
 **Prohibited Behaviors**:
+
 - Personal attacks or harassment
 - Doxxing or privacy violations
 - Spam or irrelevant content
@@ -455,7 +518,9 @@ GUARDIANCHAIN Foundation (Switzerland)
 - Conflict of interest violations
 
 #### Content Quality Standards
+
 **Verification Requirements**:
+
 - Evidence-based claims with sources
 - Clear distinction between fact and opinion
 - Proper attribution for referenced material
@@ -463,6 +528,7 @@ GUARDIANCHAIN Foundation (Switzerland)
 - Regular updates for evolving situations
 
 **Community Moderation**:
+
 - Distributed moderation by verified users
 - Escalation procedures for disputes
 - Appeals process for moderation decisions
@@ -472,6 +538,7 @@ GUARDIANCHAIN Foundation (Switzerland)
 ### Reputation System
 
 #### Reputation Calculation
+
 ```
 Base Reputation = Verification Accuracy × Participation Rate
 Modifiers:
@@ -483,6 +550,7 @@ Modifiers:
 ```
 
 #### Reputation Benefits
+
 - **Higher Verification Weights**: More influential votes
 - **Priority Assignment**: First access to verification opportunities
 - **Increased Rewards**: Reputation multipliers for earnings
@@ -490,6 +558,7 @@ Modifiers:
 - **Governance Rights**: Enhanced voting power for platform decisions
 
 #### Reputation Recovery
+
 - **Improvement Period**: 90-day performance evaluation
 - **Rehabilitation Program**: Educational resources and mentoring
 - **Community Service**: Additional verification work at reduced rewards
@@ -499,7 +568,9 @@ Modifiers:
 ### Community Development Programs
 
 #### Education & Training
+
 **Verification Academy**:
+
 - Online courses in fact-checking methodology
 - Specialized training for different content types
 - Certification programs for expert verifiers
@@ -507,6 +578,7 @@ Modifiers:
 - Peer mentoring programs
 
 **Community Events**:
+
 - Monthly virtual meetups
 - Annual GUARDIANCHAIN conference
 - Regional community gatherings
@@ -514,7 +586,9 @@ Modifiers:
 - Truth verification competitions
 
 #### Ambassador Program
+
 **Selection Criteria**:
+
 - Minimum 6 months active participation
 - 95%+ reputation score
 - Demonstrated community leadership
@@ -522,6 +596,7 @@ Modifiers:
 - Commitment to platform values
 
 **Responsibilities**:
+
 - New user onboarding and education
 - Community event organization
 - Feedback collection and analysis
@@ -535,24 +610,30 @@ Modifiers:
 ### Violation Categories & Penalties
 
 #### Minor Violations
+
 **Examples**: Formatting errors, incomplete citations, minor accuracy issues
 **Penalties**:
+
 - Warning notification
 - Educational resource recommendation
 - Temporary reduction in verification power (24-48 hours)
 - Required completion of training modules
 
 #### Major Violations
+
 **Examples**: Deliberate misinformation, harassment, vote manipulation
 **Penalties**:
+
 - Significant reputation penalty (-50 to -200 points)
 - Temporary suspension (7-30 days)
 - Economic penalties (GTT token forfeiture)
 - Required community service participation
 
 #### Severe Violations
+
 **Examples**: Malicious attacks, doxxing, illegal content, persistent violation patterns
 **Penalties**:
+
 - Permanent reputation destruction (reset to zero)
 - Account suspension (6 months to permanent)
 - Full GTT token forfeiture
@@ -562,6 +643,7 @@ Modifiers:
 ### Due Process Procedures
 
 #### Investigation Process
+
 1. **Automated Detection**: Algorithm-based violation flagging
 2. **Community Reporting**: User-submitted violation reports
 3. **Initial Review**: Moderator assessment and evidence gathering
@@ -569,7 +651,9 @@ Modifiers:
 5. **Decision Making**: Penalty determination based on evidence
 
 #### Appeal Rights
+
 **First Appeal**:
+
 - 48-hour window post-penalty
 - Written explanation requirement
 - Additional evidence submission
@@ -577,6 +661,7 @@ Modifiers:
 - Decision within 72 hours
 
 **Final Appeal**:
+
 - Community jury review (9 members)
 - Public hearing option
 - Expert witness testimony
@@ -586,7 +671,9 @@ Modifiers:
 ### Monitoring & Detection Systems
 
 #### Automated Systems
+
 **Content Analysis**:
+
 - Plagiarism detection algorithms
 - Fact-checking database cross-reference
 - Sentiment analysis for bias detection
@@ -594,6 +681,7 @@ Modifiers:
 - Temporal consistency checking
 
 **Behavioral Monitoring**:
+
 - Vote pattern analysis for manipulation
 - Account relationship mapping
 - Activity timeline analysis
@@ -601,7 +689,9 @@ Modifiers:
 - Economic transaction monitoring
 
 #### Human Oversight
+
 **Community Moderators**:
+
 - Elected positions with community approval
 - Specialized training and certification
 - Regular performance reviews
@@ -609,6 +699,7 @@ Modifiers:
 - Clear accountability measures
 
 **Expert Review Panel**:
+
 - Subject matter experts for complex cases
 - Professional credentials verification
 - Conflict of interest disclosures
@@ -622,7 +713,9 @@ Modifiers:
 ### Constitutional Amendment Process
 
 #### Proposal Requirements
+
 **Eligibility**:
+
 - Minimum 100,000 GTT stake by proposer
 - Support from 1,000 unique community members
 - Technical feasibility assessment
@@ -630,6 +723,7 @@ Modifiers:
 - Economic impact analysis
 
 **Documentation**:
+
 - Detailed specification document
 - Implementation timeline
 - Resource requirements
@@ -637,6 +731,7 @@ Modifiers:
 - Community benefit analysis
 
 #### Review & Approval Process
+
 1. **Proposal Submission**: Formal documentation and stake deposit
 2. **Community Discussion**: 14-day public debate period
 3. **Technical Review**: Expert assessment of feasibility
@@ -647,13 +742,16 @@ Modifiers:
 8. **Implementation**: Phased rollout with monitoring
 
 #### Emergency Amendments
+
 **Criteria for Emergency Process**:
+
 - Security vulnerabilities requiring immediate action
 - Legal compliance requirements with deadlines
 - Critical system failures affecting platform operation
 - Economic attacks threatening platform stability
 
 **Expedited Timeline**:
+
 - 24-hour proposal period
 - 48-hour community vote
 - Immediate implementation authority
@@ -663,7 +761,9 @@ Modifiers:
 ### Governance Evolution
 
 #### Regular Review Cycles
+
 **Annual Assessment**:
+
 - Comprehensive governance effectiveness review
 - Community satisfaction surveys
 - Performance metric analysis
@@ -671,6 +771,7 @@ Modifiers:
 - Improvement recommendation development
 
 **Constitutional Convention**:
+
 - Every 5 years or by community petition
 - Comprehensive review of all governance structures
 - Opportunity for major structural changes
@@ -678,7 +779,9 @@ Modifiers:
 - Updated vision and mission statements
 
 #### Adaptive Mechanisms
+
 **Learning Systems**:
+
 - Continuous monitoring of decision outcomes
 - Machine learning optimization of processes
 - Community feedback integration
@@ -686,6 +789,7 @@ Modifiers:
 - Experimental governance programs
 
 **Future-Proofing**:
+
 - Technology advancement integration
 - Regulatory change adaptation
 - Market evolution response
@@ -699,6 +803,7 @@ Modifiers:
 ### Appendix A: Technical Specifications
 
 #### Smart Contract Architecture
+
 ```solidity
 // Core governance contract structure
 contract GuardianChainGovernance {
@@ -712,15 +817,15 @@ contract GuardianChainGovernance {
         bool executed;
         mapping(address => bool) hasVoted;
     }
-    
+
     mapping(uint256 => Proposal) public proposals;
     mapping(address => uint256) public votingPower;
-    
+
     modifier onlyStakeholders() {
         require(votingPower[msg.sender] > 0, "Insufficient voting power");
         _;
     }
-    
+
     function createProposal(string memory description) external;
     function vote(uint256 proposalId, bool support) external;
     function executeProposal(uint256 proposalId) external;
@@ -728,7 +833,9 @@ contract GuardianChainGovernance {
 ```
 
 #### Verification Algorithm Framework
+
 **Multi-Stage Verification Process**:
+
 1. **Content Ingestion**: Automated parsing and categorization
 2. **Source Analysis**: Credibility scoring and validation
 3. **Cross-Reference**: Database and external source checking
@@ -741,7 +848,9 @@ contract GuardianChainGovernance {
 ### Appendix B: Legal Documentation
 
 #### Terms of Service Template
+
 Comprehensive legal framework covering:
+
 - User rights and responsibilities
 - Platform usage guidelines
 - Intellectual property protection
@@ -750,7 +859,9 @@ Comprehensive legal framework covering:
 - Governing law and jurisdiction
 
 #### Privacy Policy Framework
+
 GDPR-compliant privacy protection including:
+
 - Data collection and processing purposes
 - Legal basis for processing
 - Data retention policies
@@ -761,6 +872,7 @@ GDPR-compliant privacy protection including:
 ### Appendix C: Economic Models
 
 #### Token Economics Mathematical Model
+
 ```
 Token Value = (Platform Revenue × Token Utility Factor) / Circulating Supply
 
@@ -777,6 +889,7 @@ Year 5: $0.20 → $1.00 (400% growth)
 ```
 
 #### Revenue Sharing Distribution
+
 ```
 Quarterly Revenue Distribution:
 ├── Token Holder Dividends (50%)
@@ -797,16 +910,19 @@ Quarterly Revenue Distribution:
 ### Appendix D: Compliance Framework
 
 #### Regulatory Compliance Matrix
-| Jurisdiction | Primary Laws | Compliance Status | Required Actions |
-|-------------|-------------|-------------------|------------------|
-| United States | Securities Act, Commodity Exchange Act | Compliant | Ongoing monitoring |
-| European Union | MiCA, GDPR | Compliant | Annual assessments |
-| Singapore | Payment Services Act | Compliant | Quarterly reporting |
-| United Kingdom | Financial Services Act | In Progress | License application |
-| Switzerland | FINMA Guidelines | Compliant | Annual certification |
+
+| Jurisdiction   | Primary Laws                           | Compliance Status | Required Actions     |
+| -------------- | -------------------------------------- | ----------------- | -------------------- |
+| United States  | Securities Act, Commodity Exchange Act | Compliant         | Ongoing monitoring   |
+| European Union | MiCA, GDPR                             | Compliant         | Annual assessments   |
+| Singapore      | Payment Services Act                   | Compliant         | Quarterly reporting  |
+| United Kingdom | Financial Services Act                 | In Progress       | License application  |
+| Switzerland    | FINMA Guidelines                       | Compliant         | Annual certification |
 
 #### Risk Management Framework
+
 **Operational Risks**:
+
 - Technology failures and cybersecurity threats
 - Regulatory changes and compliance challenges
 - Market volatility and economic downturns
@@ -814,6 +930,7 @@ Quarterly Revenue Distribution:
 - Key personnel dependencies
 
 **Mitigation Strategies**:
+
 - Comprehensive insurance coverage
 - Diversified revenue streams
 - Regular legal and compliance reviews

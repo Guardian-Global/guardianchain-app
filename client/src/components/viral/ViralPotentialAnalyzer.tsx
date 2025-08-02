@@ -62,12 +62,12 @@ const ViralPotentialAnalyzer: React.FC = () => {
     const contentLength = content.length;
     const hasEmojis =
       /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/u.test(
-        content
+        content,
       );
     const hasQuestions = content.includes("?");
     const hasCallToAction =
       /share|comment|like|follow|subscribe|check out|click|visit/i.test(
-        content
+        content,
       );
     const hasTrendingWords =
       /ai|crypto|viral|trending|breaking|exclusive|secret|hack/i.test(content);
@@ -81,27 +81,27 @@ const ViralPotentialAnalyzer: React.FC = () => {
           (hasEmojis ? 5 : 0) +
           (hasQuestions ? 5 : 0) +
           (hasCallToAction ? 10 : 0) +
-          (hasTrendingWords ? 15 : 0)
-      )
+          (hasTrendingWords ? 15 : 0),
+      ),
     );
 
     const analysis: ViralMetrics = {
       content,
       emotionalResonance: Math.min(
         95,
-        baseScore + Math.floor(Math.random() * 20) - 10
+        baseScore + Math.floor(Math.random() * 20) - 10,
       ),
       shareability: Math.min(
         95,
-        baseScore + Math.floor(Math.random() * 20) - 10
+        baseScore + Math.floor(Math.random() * 20) - 10,
       ),
       trendAlignment: Math.min(
         95,
-        baseScore + Math.floor(Math.random() * 20) - 10
+        baseScore + Math.floor(Math.random() * 20) - 10,
       ),
       audienceMatch: Math.min(
         95,
-        baseScore + Math.floor(Math.random() * 20) - 10
+        baseScore + Math.floor(Math.random() * 20) - 10,
       ),
       timingScore: Math.floor(Math.random() * 40) + 60,
       overallViralScore: 0,
@@ -118,7 +118,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
         analysis.trendAlignment +
         analysis.audienceMatch +
         analysis.timingScore) /
-        5
+        5,
     );
 
     // Determine best platforms
@@ -151,7 +151,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
     ];
     analysis.suggestedHashtags = possibleHashtags.slice(
       0,
-      5 + Math.floor(Math.random() * 3)
+      5 + Math.floor(Math.random() * 3),
     );
 
     // Optimal timing
@@ -270,7 +270,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
                 </div>
                 <Badge
                   className={`text-2xl px-4 py-2 ${getScoreColor(
-                    metrics.overallViralScore
+                    metrics.overallViralScore,
                   )}`}
                 >
                   {metrics.overallViralScore}%
@@ -283,7 +283,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
                   <Heart className="w-8 h-8 text-red-400 mx-auto mb-2" />
                   <div
                     className={`text-xl font-bold ${getScoreColor(
-                      metrics.emotionalResonance
+                      metrics.emotionalResonance,
                     )}`}
                   >
                     {metrics.emotionalResonance}%
@@ -299,7 +299,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
                   <Share2 className="w-8 h-8 text-blue-400 mx-auto mb-2" />
                   <div
                     className={`text-xl font-bold ${getScoreColor(
-                      metrics.shareability
+                      metrics.shareability,
                     )}`}
                   >
                     {metrics.shareability}%
@@ -312,7 +312,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
                   <Zap className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
                   <div
                     className={`text-xl font-bold ${getScoreColor(
-                      metrics.trendAlignment
+                      metrics.trendAlignment,
                     )}`}
                   >
                     {metrics.trendAlignment}%
@@ -328,7 +328,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
                   <Users className="w-8 h-8 text-green-400 mx-auto mb-2" />
                   <div
                     className={`text-xl font-bold ${getScoreColor(
-                      metrics.audienceMatch
+                      metrics.audienceMatch,
                     )}`}
                   >
                     {metrics.audienceMatch}%
@@ -344,7 +344,7 @@ const ViralPotentialAnalyzer: React.FC = () => {
                   <Clock className="w-8 h-8 text-purple-400 mx-auto mb-2" />
                   <div
                     className={`text-xl font-bold ${getScoreColor(
-                      metrics.timingScore
+                      metrics.timingScore,
                     )}`}
                   >
                     {metrics.timingScore}%
@@ -378,8 +378,8 @@ const ViralPotentialAnalyzer: React.FC = () => {
                             index === 0
                               ? "bg-green-600"
                               : index === 1
-                              ? "bg-blue-600"
-                              : "bg-purple-600"
+                                ? "bg-blue-600"
+                                : "bg-purple-600"
                           }`}
                         >
                           {index + 1}

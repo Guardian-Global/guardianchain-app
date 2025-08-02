@@ -214,22 +214,22 @@ export const wagmiConfig = createConfig({
     [mainnet.id]: http(
       `https://eth-mainnet.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY || "demo"
-      }`
+      }`,
     ),
     [sepolia.id]: http(
       `https://eth-sepolia.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY || "demo"
-      }`
+      }`,
     ),
     [polygon.id]: http(
       `https://polygon-mainnet.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY || "demo"
-      }`
+      }`,
     ),
     [polygonAmoy.id]: http(
       `https://polygon-amoy.g.alchemy.com/v2/${
         import.meta.env.VITE_ALCHEMY_API_KEY || "demo"
-      }`
+      }`,
     ),
   },
 });
@@ -237,7 +237,7 @@ export const wagmiConfig = createConfig({
 // Helper function to get contract address for current chain
 export function getContractAddress(
   contractName: keyof typeof CONTRACTS,
-  chainId: number
+  chainId: number,
 ): string {
   const address =
     CONTRACTS[contractName][
@@ -245,7 +245,7 @@ export function getContractAddress(
     ];
   if (!address || address === "0x0000000000000000000000000000000000000000") {
     console.warn(
-      `${contractName} not deployed on chain ${chainId}, using zero address`
+      `${contractName} not deployed on chain ${chainId}, using zero address`,
     );
     return "0x0000000000000000000000000000000000000000";
   }

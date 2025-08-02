@@ -1,9 +1,11 @@
 # 💰 TIER YIELD ROI PROJECTIONS
+
 **Generated:** August 2, 2025
 
 ## 📊 YIELD CALCULATION METHODOLOGY
 
 ### GTT Revenue Flow Integration
+
 ```
 BASE REVENUE STREAMS:
 ├── Transaction Fees: 8% on all GTT transfers
@@ -16,6 +18,7 @@ BASE REVENUE STREAMS:
 ## 🎯 TIER-BASED YIELD PROJECTIONS
 
 ### EXPLORER TIER (Free - Entry Level)
+
 ```
 MONTHLY PROJECTIONS:
 ├── User Base: 10,000 projected users
@@ -40,6 +43,7 @@ AGGRESSIVE SCENARIO:
 ```
 
 ### SEEKER TIER ($9.99/month)
+
 ```
 MONTHLY PROJECTIONS:
 ├── User Base: 5,000 projected users
@@ -64,6 +68,7 @@ AGGRESSIVE SCENARIO:
 ```
 
 ### CREATOR TIER ($29.99/month)
+
 ```
 MONTHLY PROJECTIONS:
 ├── User Base: 2,000 projected users
@@ -88,6 +93,7 @@ AGGRESSIVE SCENARIO:
 ```
 
 ### SOVEREIGN TIER ($99.99/month)
+
 ```
 MONTHLY PROJECTIONS:
 ├── User Base: 500 projected users
@@ -116,6 +122,7 @@ AGGRESSIVE SCENARIO:
 ## 📈 MARKET SCENARIO MODELING
 
 ### Conservative Market Assumptions
+
 ```
 MARKET CONDITIONS:
 ├── GTT Price: $0.001-$0.01 (first year)
@@ -133,6 +140,7 @@ YIELD CALCULATIONS:
 ```
 
 ### Aggressive Market Assumptions
+
 ```
 MARKET CONDITIONS:
 ├── GTT Price: $0.10-$1.00 (viral adoption)
@@ -152,6 +160,7 @@ YIELD CALCULATIONS:
 ## 🎰 RISK-ADJUSTED RETURNS
 
 ### Volatility Considerations
+
 ```
 RISK FACTORS:
 ├── Token Price Volatility: ±50-200% monthly swings
@@ -169,6 +178,7 @@ RISK MITIGATION:
 ```
 
 ### Expected Value Calculations
+
 ```
 TIER ROI EXPECTED VALUES:
 ├── Explorer: 5-25% APY (weighted average: 12%)
@@ -186,6 +196,7 @@ PROBABILITY WEIGHTS:
 ## 🚀 COMPOUND GROWTH MODELING
 
 ### Multi-Year Projections
+
 ```
 YEAR 1 TARGETS:
 ├── Platform Users: 100K total
@@ -206,4 +217,4 @@ YEAR 3 PROJECTIONS:
 
 **YIELD PROJECTION STATUS: ✅ MATHEMATICALLY MODELED FOR ALL SCENARIOS**
 
-*Tier-based yield system designed for progressive rewards encouraging upgrades while maintaining sustainable economics across all market conditions.*
+_Tier-based yield system designed for progressive rewards encouraging upgrades while maintaining sustainable economics across all market conditions._

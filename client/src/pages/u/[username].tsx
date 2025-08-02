@@ -3,20 +3,22 @@ import { useParams } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Share2, 
-  ExternalLink, 
-  Star, 
+import {
+  Share2,
+  ExternalLink,
+  Star,
   Flame,
   Shield,
   Crown,
   Eye,
   Heart,
   MessageCircle,
-  Download
+  Download,
 } from "lucide-react";
 import TruthGenomeCard from "@/components/profile/TruthGenomeCard";
-import CapsuleWallToggle, { type ViewMode } from "@/components/profile/CapsuleWallToggle";
+import CapsuleWallToggle, {
+  type ViewMode,
+} from "@/components/profile/CapsuleWallToggle";
 import { CapsuleVaultTimeline } from "@/components/CapsuleVaultTimeline";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -43,7 +45,7 @@ interface PublicProfile {
 export default function PublicProfilePage() {
   const { username } = useParams<{ username: string }>();
   const [profile, setProfile] = useState<PublicProfile | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
+  const [viewMode, setViewMode] = useState<ViewMode>("timeline");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -57,7 +59,7 @@ export default function PublicProfilePage() {
   const loadPublicProfile = async (username: string) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Mock public profile data for development
       const mockProfile: PublicProfile = {
@@ -76,13 +78,13 @@ export default function PublicProfilePage() {
         memberSince: "2024",
         isVerified: true,
         isPublic: true,
-        lastActive: new Date().toISOString()
+        lastActive: new Date().toISOString(),
       };
 
       setProfile(mockProfile);
     } catch (error) {
-      console.error('Failed to load public profile:', error);
-      setError('Profile not found or is private');
+      console.error("Failed to load public profile:", error);
+      setError("Profile not found or is private");
     } finally {
       setIsLoading(false);
     }
@@ -90,12 +92,12 @@ export default function PublicProfilePage() {
 
   const handleShare = async () => {
     const url = `${window.location.origin}/u/${username}`;
-    
+
     try {
       await navigator.share({
         title: `${profile?.displayName} - GuardianChain Profile`,
         text: `Check out ${profile?.displayName}'s sovereign memory wall on GuardianChain`,
-        url
+        url,
       });
     } catch (error) {
       // Fallback to clipboard
@@ -110,7 +112,8 @@ export default function PublicProfilePage() {
   const handleFollow = () => {
     toast({
       title: "Following Feature Coming Soon",
-      description: "Guardian network connections will be available in the next update",
+      description:
+        "Guardian network connections will be available in the next update",
     });
   };
 
@@ -132,9 +135,7 @@ export default function PublicProfilePage() {
             <p className="text-gray-600 mb-4">
               {error || "This profile doesn't exist or has been set to private"}
             </p>
-            <Button onClick={() => window.history.back()}>
-              Go Back
-            </Button>
+            <Button onClick={() => window.history.back()}>Go Back</Button>
           </CardContent>
         </Card>
       </div>
@@ -147,16 +148,20 @@ export default function PublicProfilePage() {
         {/* Profile Header */}
         <Card className="mb-6 overflow-hidden">
           {/* Background Image */}
-          <div 
+          <div
             className="h-64 bg-gradient-to-br from-purple-600 to-blue-600 relative"
-            style={profile.backgroundImageUrl ? {
-              backgroundImage: `url(${profile.backgroundImageUrl})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            } : {}}
+            style={
+              profile.backgroundImageUrl
+                ? {
+                    backgroundImage: `url(${profile.backgroundImageUrl})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : {}
+            }
           >
             <div className="absolute inset-0 bg-black/30" />
-            
+
             {/* Public Badge */}
             <div className="absolute top-4 left-4">
               <Badge variant="secondary" className="bg-white/90 text-black">
@@ -185,8 +190,8 @@ export default function PublicProfilePage() {
               <div className="relative -mt-16">
                 <div className="w-24 h-24 rounded-full border-4 border-white bg-gray-300 overflow-hidden">
                   {profile.profileImageUrl && (
-                    <img 
-                      src={profile.profileImageUrl} 
+                    <img
+                      src={profile.profileImageUrl}
                       alt={profile.displayName}
                       className="w-full h-full object-cover"
                     />
@@ -203,18 +208,23 @@ export default function PublicProfilePage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="text-3xl font-bold">{profile.displayName}</h1>
-                  <Badge variant="outline" className="border-yellow-400 text-yellow-400">
+                  <Badge
+                    variant="outline"
+                    className="border-yellow-400 text-yellow-400"
+                  >
                     <Crown className="w-3 h-3 mr-1" />
                     {profile.tier}
                   </Badge>
                 </div>
-                
-                <p className="text-lg text-gray-600 mb-3">@{profile.username}</p>
-                
+
+                <p className="text-lg text-gray-600 mb-3">
+                  @{profile.username}
+                </p>
+
                 {profile.bio && (
                   <p className="text-gray-700 mb-4 max-w-2xl">{profile.bio}</p>
                 )}
-                
+
                 <div className="flex items-center gap-6 text-sm text-gray-600">
                   <span>Guardian since {profile.memberSince}</span>
                   <span className="flex items-center gap-1">
@@ -246,33 +256,41 @@ export default function PublicProfilePage() {
               <div className="grid grid-cols-2 col-span-2 gap-4">
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-blue-500">{profile.capsuleCount}</div>
+                    <div className="text-2xl font-bold text-blue-500">
+                      {profile.capsuleCount}
+                    </div>
                     <div className="text-sm text-gray-600">Truth Capsules</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-purple-500">{profile.nftCount}</div>
+                    <div className="text-2xl font-bold text-purple-500">
+                      {profile.nftCount}
+                    </div>
                     <div className="text-sm text-gray-600">NFT Collection</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-green-500">{profile.veritasSealCount}</div>
+                    <div className="text-2xl font-bold text-green-500">
+                      {profile.veritasSealCount}
+                    </div>
                     <div className="text-sm text-gray-600">Verified Seals</div>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-4 text-center">
-                    <div className="text-2xl font-bold text-orange-500">{profile.griefScore}</div>
+                    <div className="text-2xl font-bold text-orange-500">
+                      {profile.griefScore}
+                    </div>
                     <div className="text-sm text-gray-600">Influence Score</div>
                   </CardContent>
                 </Card>
               </div>
-              
+
               {/* Truth Genome Card */}
               <div className="row-span-1">
-                <TruthGenomeCard 
+                <TruthGenomeCard
                   userId={profile.id}
                   overallScore={Math.round(profile.truthScore / 10)}
                   className="h-full"
@@ -299,8 +317,8 @@ export default function PublicProfilePage() {
                 onViewChange={setViewMode}
                 capsuleCount={profile.capsuleCount}
               />
-              <CapsuleVaultTimeline 
-                userId={profile.id} 
+              <CapsuleVaultTimeline
+                userId={profile.id}
                 viewMode={viewMode}
                 isPublicView={true}
               />
@@ -311,7 +329,7 @@ export default function PublicProfilePage() {
         {/* Footer */}
         <div className="text-center py-8 text-gray-500">
           <p className="text-sm">
-            This is a sovereign profile on GuardianChain - 
+            This is a sovereign profile on GuardianChain -
             <a href="/" className="text-purple-600 hover:underline ml-1">
               Create your own memory wall
             </a>

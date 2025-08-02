@@ -5,17 +5,17 @@ import PageHeader from "@/components/layout/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
-  Eye, 
-  ExternalLink, 
-  Download, 
-  Share2, 
-  Clock, 
-  User, 
+import {
+  Eye,
+  ExternalLink,
+  Download,
+  Share2,
+  Clock,
+  User,
   Award,
   FileText,
   Shield,
-  Coins
+  Coins,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -38,27 +38,30 @@ interface CapsuleDetails {
 export default function CapsuleViewPage() {
   const [location] = useLocation();
   const { toast } = useToast();
-  
+
   // Extract capsule ID from URL path like /capsule-view/cap_123
-  const pathParts = location.split('/');
+  const pathParts = location.split("/");
   const capsuleId = pathParts[pathParts.length - 1];
 
-  const { data: capsule, isLoading, error } = useQuery<CapsuleDetails>({
+  const {
+    data: capsule,
+    isLoading,
+    error,
+  } = useQuery<CapsuleDetails>({
     queryKey: [`/api/capsules/${capsuleId}`],
-    enabled: !!capsuleId && capsuleId !== 'capsule-view'
+    enabled: !!capsuleId && capsuleId !== "capsule-view",
   });
 
-  if (!capsuleId || capsuleId === 'capsule-view') {
+  if (!capsuleId || capsuleId === "capsule-view") {
     return (
       <Layout>
-        <PageHeader
-          title="Capsule Vault"
-          subtitle="View capsule details"
-        />
+        <PageHeader title="Capsule Vault" subtitle="View capsule details" />
         <div className="p-6 text-center">
-          <p className="text-brand-light/60 mb-4">No capsule ID was provided.</p>
-          <Button 
-            onClick={() => window.location.href = '/capsules/gallery'}
+          <p className="text-brand-light/60 mb-4">
+            No capsule ID was provided.
+          </p>
+          <Button
+            onClick={() => (window.location.href = "/capsules/gallery")}
             className="bg-brand-primary hover:bg-brand-primary/90"
           >
             Back to Gallery
@@ -102,9 +105,11 @@ export default function CapsuleViewPage() {
           subtitle="The requested capsule could not be found"
         />
         <div className="p-6 text-center">
-          <p className="text-brand-danger mb-4">Failed to load capsule details.</p>
-          <Button 
-            onClick={() => window.location.href = '/capsules/gallery'}
+          <p className="text-brand-danger mb-4">
+            Failed to load capsule details.
+          </p>
+          <Button
+            onClick={() => (window.location.href = "/capsules/gallery")}
             className="bg-brand-primary hover:bg-brand-primary/90"
           >
             Back to Gallery
@@ -116,21 +121,31 @@ export default function CapsuleViewPage() {
 
   const getGriefTierColor = (tier: number) => {
     switch (tier) {
-      case 1: return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 2: return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 3: return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 4: return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
-      case 5: return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-brand-surface text-brand-light border-brand-surface';
+      case 1:
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case 2:
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case 3:
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case 4:
+        return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+      case 5:
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      default:
+        return "bg-brand-surface text-brand-light border-brand-surface";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'verified': return 'bg-brand-accent text-white';
-      case 'pending': return 'bg-brand-warning text-white';
-      case 'rejected': return 'bg-brand-danger text-white';
-      default: return 'bg-brand-surface text-brand-light';
+      case "verified":
+        return "bg-brand-accent text-white";
+      case "pending":
+        return "bg-brand-warning text-white";
+      case "rejected":
+        return "bg-brand-danger text-white";
+      default:
+        return "bg-brand-surface text-brand-light";
     }
   };
 
@@ -142,15 +157,15 @@ export default function CapsuleViewPage() {
     try {
       await navigator.share({
         title: capsule.title || `Capsule #${capsule.id}`,
-        text: capsule.content.slice(0, 100) + '...',
-        url: window.location.href
+        text: capsule.content.slice(0, 100) + "...",
+        url: window.location.href,
       });
     } catch (err) {
       // Fallback to clipboard
       navigator.clipboard.writeText(window.location.href);
       toast({
         title: "Link Copied",
-        description: "Capsule link copied to clipboard"
+        description: "Capsule link copied to clipboard",
       });
     }
   };
@@ -159,7 +174,7 @@ export default function CapsuleViewPage() {
     // Simulate certificate download
     toast({
       title: "Certificate Download",
-      description: "Truth certificate will be generated and downloaded"
+      description: "Truth certificate will be generated and downloaded",
     });
   };
 
@@ -187,7 +202,7 @@ export default function CapsuleViewPage() {
                     {capsule.verificationStatus}
                   </Badge>
                   <Badge className="bg-brand-surface text-brand-light">
-                    {capsule.capsuleType.replace('_', ' ')}
+                    {capsule.capsuleType.replace("_", " ")}
                   </Badge>
                 </div>
               </div>
@@ -199,7 +214,7 @@ export default function CapsuleViewPage() {
               )}
             </div>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             {/* Content */}
             <div className="bg-brand-primary/5 border border-brand-primary/20 rounded-vault p-4">
@@ -217,11 +232,16 @@ export default function CapsuleViewPage() {
                 </div>
                 <div className="flex items-center gap-2 text-brand-light/60">
                   <Eye className="w-4 h-4" />
-                  <span>{capsule.replayCount || 0} replay{capsule.replayCount !== 1 ? 's' : ''}</span>
+                  <span>
+                    {capsule.replayCount || 0} replay
+                    {capsule.replayCount !== 1 ? "s" : ""}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-brand-light/60">
                   <Clock className="w-4 h-4" />
-                  <span>Minted {new Date(capsule.mintedAt).toLocaleDateString()}</span>
+                  <span>
+                    Minted {new Date(capsule.mintedAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
               <div className="space-y-3">
@@ -246,9 +266,9 @@ export default function CapsuleViewPage() {
                 <div className="text-sm text-brand-light/60">Tags:</div>
                 <div className="flex flex-wrap gap-2">
                   {capsule.tags.map((tag, index) => (
-                    <Badge 
+                    <Badge
                       key={index}
-                      variant="outline" 
+                      variant="outline"
                       className="border-brand-surface text-brand-light/80"
                     >
                       {tag}
@@ -267,7 +287,7 @@ export default function CapsuleViewPage() {
                 <Download className="w-4 h-4 mr-2" />
                 Download Certificate
               </Button>
-              
+
               <Button
                 onClick={handleShare}
                 variant="outline"
@@ -279,7 +299,7 @@ export default function CapsuleViewPage() {
 
               {capsule.openseaUrl && (
                 <Button
-                  onClick={() => window.open(capsule.openseaUrl, '_blank')}
+                  onClick={() => window.open(capsule.openseaUrl, "_blank")}
                   variant="outline"
                   className="border-brand-surface text-brand-light hover:bg-brand-surface"
                 >
@@ -293,16 +313,16 @@ export default function CapsuleViewPage() {
 
         {/* Navigation */}
         <div className="flex justify-between">
-          <Button 
+          <Button
             variant="outline"
-            onClick={() => window.location.href = '/capsules/gallery'}
+            onClick={() => (window.location.href = "/capsules/gallery")}
             className="border-brand-surface text-brand-light hover:bg-brand-surface"
           >
             Back to Gallery
           </Button>
-          
-          <Button 
-            onClick={() => window.location.href = '/create-capsule'}
+
+          <Button
+            onClick={() => (window.location.href = "/create-capsule")}
             className="bg-brand-primary hover:bg-brand-primary/90"
           >
             Create New Capsule

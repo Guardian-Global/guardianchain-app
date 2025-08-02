@@ -21,7 +21,9 @@ async function main() {
   console.log("Chain ID:", network.chainId.toString());
 
   if (network.chainId !== 80001n) {
-    throw new Error("❌ Not connected to Mumbai Testnet! Expected Chain ID: 80001");
+    throw new Error(
+      "❌ Not connected to Mumbai Testnet! Expected Chain ID: 80001",
+    );
   }
 
   console.log("✅ Connected to Mumbai Testnet");
@@ -30,7 +32,7 @@ async function main() {
   console.log("\n📄 Deploying GTT Token Contract...");
 
   const GTTToken = await hre.ethers.getContractFactory("GTTToken");
-  
+
   console.log("Token Configuration:");
   console.log("- Name: GUARDIANCHAIN Truth Token");
   console.log("- Symbol: GTT");
@@ -45,7 +47,7 @@ async function main() {
 
   // Verify deployment
   console.log("\n🔍 Verifying deployment...");
-  
+
   const tokenName = await gttToken.name();
   const tokenSymbol = await gttToken.symbol();
   const tokenDecimals = await gttToken.decimals();
@@ -56,7 +58,11 @@ async function main() {
   console.log("Token Symbol:", tokenSymbol);
   console.log("Token Decimals:", tokenDecimals.toString());
   console.log("Total Supply:", hre.ethers.formatEther(tokenSupply), "GTT");
-  console.log("Deployer Balance:", hre.ethers.formatEther(deployerBalance), "GTT");
+  console.log(
+    "Deployer Balance:",
+    hre.ethers.formatEther(deployerBalance),
+    "GTT",
+  );
 
   // Save deployment info
   const deploymentInfo = {
@@ -76,7 +82,7 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    "mumbai-testnet-gtt.json"
+    "mumbai-testnet-gtt.json",
   );
 
   // Create deployments directory if it doesn't exist

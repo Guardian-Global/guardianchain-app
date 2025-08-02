@@ -1,28 +1,28 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
-import { useMutation } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import { apiRequest, queryClient } from '@/lib/queryClient';
-import { 
-  Sparkles, 
-  Camera, 
-  Clock, 
-  Coins, 
-  Shield, 
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import {
+  Sparkles,
+  Camera,
+  Clock,
+  Coins,
+  Shield,
   ArrowRight,
   Loader2,
   Eye,
   Heart,
   Brain,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 interface CapsuleData {
   title: string;
@@ -39,19 +39,19 @@ export default function CreateCapsule() {
   const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
+
   // Form state
   const [formData, setFormData] = useState<CapsuleData>({
-    title: '',
-    content: '',
-    capsuleType: 'personal_memory',
+    title: "",
+    content: "",
+    capsuleType: "personal_memory",
     timelock: 365,
-    category: 'family',
+    category: "family",
     tags: [],
     isPrivate: false,
-    griefTier: 1
+    griefTier: 1,
   });
-  
+
   // UI state
   const [step, setStep] = useState(1);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -62,9 +62,9 @@ export default function CreateCapsule() {
   // AI Image Generation
   const generateImageMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/ai/generate-image', {
+      const response = await apiRequest("POST", "/api/ai/generate-image", {
         prompt: `${formData.title}: ${formData.content}`,
-        style: 'truth_capsule'
+        style: "truth_capsule",
       });
       return response.json();
     },
@@ -81,72 +81,80 @@ export default function CreateCapsule() {
         description: "Unable to generate image. Please try again.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   // AI Content Analysis
   const analyzeContentMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/ai/analyze-content', {
+      const response = await apiRequest("POST", "/api/ai/analyze-content", {
         title: formData.title,
         content: formData.content,
-        capsuleType: formData.capsuleType
+        capsuleType: formData.capsuleType,
       });
       return response.json();
     },
     onSuccess: (data) => {
       setAiAnalysis(data);
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         griefTier: data.recommendedGriefTier || prev.griefTier,
-        tags: data.suggestedTags || prev.tags
+        tags: data.suggestedTags || prev.tags,
       }));
       setStep(3);
-    }
+    },
   });
 
   // Yield Estimation
   const estimateYieldMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/capsules/estimate-yield', {
-        griefTier: formData.griefTier,
-        timelock: formData.timelock,
-        capsuleType: formData.capsuleType
-      });
+      const response = await apiRequest(
+        "POST",
+        "/api/capsules/estimate-yield",
+        {
+          griefTier: formData.griefTier,
+          timelock: formData.timelock,
+          capsuleType: formData.capsuleType,
+        },
+      );
       return response.json();
     },
     onSuccess: (data) => {
       setYieldEstimate(data);
-    }
+    },
   });
 
   // NFT Minting
   const mintNFTMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/capsules/mint-nft', {
+      const response = await apiRequest("POST", "/api/capsules/mint-nft", {
         ...formData,
         imageUrl: generatedImage,
-        aiAnalysis: aiAnalysis
+        aiAnalysis: aiAnalysis,
       });
       return response.json();
     },
     onSuccess: async (data) => {
       setMintedNFT(data);
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules/recent'] });
-      
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules/recent"] });
+
       // Create lineage connection if this capsule is inspired by another
-      if (formData.title.toLowerCase().includes('inspired') || 
-          formData.content.toLowerCase().includes('building on')) {
+      if (
+        formData.title.toLowerCase().includes("inspired") ||
+        formData.content.toLowerCase().includes("building on")
+      ) {
         try {
-          await apiRequest('POST', '/api/lineage/create', {
-            parent_id: 'foundational_truth_1', // Would be determined by AI analysis
+          await apiRequest("POST", "/api/lineage/create", {
+            parent_id: "foundational_truth_1", // Would be determined by AI analysis
             child_id: data.capsuleId,
             grief_flow: aiAnalysis?.contentScore || 75,
             influence_score: aiAnalysis?.recommendedGriefTier * 2 || 4,
-            triggered_by: user.id
+            triggered_by: user.id,
           });
         } catch (error) {
-          console.log('Lineage connection failed but capsule created successfully');
+          console.log(
+            "Lineage connection failed but capsule created successfully",
+          );
         }
       }
       toast({
@@ -161,7 +169,7 @@ export default function CreateCapsule() {
         description: "Unable to mint NFT. Please try again.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   // Auto-estimate yield when timelock or grief tier changes
@@ -193,9 +201,16 @@ export default function CreateCapsule() {
         <Card className="max-w-md mx-auto">
           <CardContent className="p-8 text-center">
             <Shield className="h-16 w-16 text-brand-primary mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Authentication Required</h2>
-            <p className="text-slate-300 mb-4">Please sign in to create your truth capsule</p>
-            <Button onClick={() => setLocation('/test-auth')} className="w-full">
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Authentication Required
+            </h2>
+            <p className="text-slate-300 mb-4">
+              Please sign in to create your truth capsule
+            </p>
+            <Button
+              onClick={() => setLocation("/test-auth")}
+              className="w-full"
+            >
               Sign In to Continue
             </Button>
           </CardContent>
@@ -209,15 +224,21 @@ export default function CreateCapsule() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Create Truth Capsule</h1>
-          <p className="text-slate-300">Preserve your truth for eternity on the blockchain</p>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Create Truth Capsule
+          </h1>
+          <p className="text-slate-300">
+            Preserve your truth for eternity on the blockchain
+          </p>
         </div>
 
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-slate-400">Step {step} of 5</span>
-            <span className="text-sm text-slate-400">{Math.round((step / 5) * 100)}% Complete</span>
+            <span className="text-sm text-slate-400">
+              {Math.round((step / 5) * 100)}% Complete
+            </span>
           </div>
           <Progress value={(step / 5) * 100} className="h-2" />
         </div>
@@ -239,7 +260,9 @@ export default function CreateCapsule() {
                 <Input
                   placeholder="What is this truth about?"
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, title: e.target.value }))
+                  }
                   className="bg-slate-700/50 border-slate-600 text-white"
                 />
               </div>
@@ -251,20 +274,33 @@ export default function CreateCapsule() {
                 <Textarea
                   placeholder="Share your story, memory, or truth..."
                   value={formData.content}
-                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      content: e.target.value,
+                    }))
+                  }
                   rows={6}
                   className="bg-slate-700/50 border-slate-600 text-white"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-walkthrough="capsule-type-selector">
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                data-walkthrough="capsule-type-selector"
+              >
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">
                     Capsule Type
                   </label>
                   <select
                     value={formData.capsuleType}
-                    onChange={(e) => setFormData(prev => ({ ...prev, capsuleType: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        capsuleType: e.target.value,
+                      }))
+                    }
                     className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
                   >
                     <option value="personal_memory">Personal Memory</option>
@@ -285,14 +321,19 @@ export default function CreateCapsule() {
                     min="1"
                     max="36500"
                     value={formData.timelock}
-                    onChange={(e) => setFormData(prev => ({ ...prev, timelock: parseInt(e.target.value) || 365 }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        timelock: parseInt(e.target.value) || 365,
+                      }))
+                    }
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
               </div>
 
-              <Button 
-                onClick={handleNext} 
+              <Button
+                onClick={handleNext}
                 disabled={!formData.title || !formData.content}
                 className="w-full bg-brand-primary hover:bg-brand-primary/90"
               >
@@ -321,7 +362,8 @@ export default function CreateCapsule() {
                       Generate AI Capsule Image
                     </h3>
                     <p className="text-slate-300 mb-4">
-                      Create a unique visual representation of your truth capsule
+                      Create a unique visual representation of your truth
+                      capsule
                     </p>
                     <Button
                       onClick={handleGenerateImage}
@@ -344,8 +386,8 @@ export default function CreateCapsule() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <img 
-                      src={generatedImage} 
+                    <img
+                      src={generatedImage}
                       alt="Generated capsule visualization"
                       className="max-w-md mx-auto rounded-xl shadow-2xl"
                     />
@@ -362,15 +404,15 @@ export default function CreateCapsule() {
               </div>
 
               <div className="flex gap-4">
-                <Button 
-                  onClick={() => setStep(1)} 
+                <Button
+                  onClick={() => setStep(1)}
                   variant="outline"
                   className="flex-1"
                 >
                   Back
                 </Button>
-                <Button 
-                  onClick={handleNext} 
+                <Button
+                  onClick={handleNext}
                   className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
                   disabled={analyzeContentMutation.isPending}
                 >
@@ -403,34 +445,56 @@ export default function CreateCapsule() {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-3">Content Insights</h3>
+                  <h3 className="text-lg font-semibold text-white mb-3">
+                    Content Insights
+                  </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-300">Emotional Intensity</span>
+                      <span className="text-slate-300">
+                        Emotional Intensity
+                      </span>
                       <Badge className="bg-brand-primary/20 text-brand-primary">
-                        {aiAnalysis.emotionalIntensity || 'Medium'}
+                        {aiAnalysis.emotionalIntensity || "Medium"}
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-300">Truth Confidence</span>
                       <Badge className="bg-brand-green/20 text-brand-green">
-                        {aiAnalysis.truthConfidence || '85%'}
+                        {aiAnalysis.truthConfidence || "85%"}
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center" data-walkthrough="grief-tier-display">
-                      <span className="text-slate-300">Recommended Grief Tier</span>
+                    <div
+                      className="flex justify-between items-center"
+                      data-walkthrough="grief-tier-display"
+                    >
+                      <span className="text-slate-300">
+                        Recommended Grief Tier
+                      </span>
                       <Badge className="bg-brand-accent/20 text-brand-accent">
-                        Tier {aiAnalysis.recommendedGriefTier || formData.griefTier}
+                        Tier{" "}
+                        {aiAnalysis.recommendedGriefTier || formData.griefTier}
                       </Badge>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-3">Suggested Tags</h3>
+                  <h3 className="text-lg font-semibold text-white mb-3">
+                    Suggested Tags
+                  </h3>
                   <div className="flex flex-wrap gap-2">
-                    {(aiAnalysis.suggestedTags || ['memory', 'truth', 'personal']).map((tag: string, i: number) => (
-                      <Badge key={i} variant="outline" className="border-slate-600 text-slate-300">
+                    {(
+                      aiAnalysis.suggestedTags || [
+                        "memory",
+                        "truth",
+                        "personal",
+                      ]
+                    ).map((tag: string, i: number) => (
+                      <Badge
+                        key={i}
+                        variant="outline"
+                        className="border-slate-600 text-slate-300"
+                      >
                         {tag}
                       </Badge>
                     ))}
@@ -441,20 +505,21 @@ export default function CreateCapsule() {
               <div className="bg-slate-700/30 p-4 rounded-lg">
                 <h3 className="text-white font-medium mb-2">AI Summary</h3>
                 <p className="text-slate-300 text-sm">
-                  {aiAnalysis.summary || 'This appears to be a meaningful personal truth that would benefit from long-term preservation. The content shows authenticity and emotional depth.'}
+                  {aiAnalysis.summary ||
+                    "This appears to be a meaningful personal truth that would benefit from long-term preservation. The content shows authenticity and emotional depth."}
                 </p>
               </div>
 
               <div className="flex gap-4">
-                <Button 
-                  onClick={() => setStep(2)} 
+                <Button
+                  onClick={() => setStep(2)}
                   variant="outline"
                   className="flex-1"
                 >
                   Back
                 </Button>
-                <Button 
-                  onClick={handleNext} 
+                <Button
+                  onClick={handleNext}
                   className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
                 >
                   Continue to Minting
@@ -477,23 +542,25 @@ export default function CreateCapsule() {
             <CardContent className="space-y-6">
               {yieldEstimate && (
                 <div className="bg-gradient-to-r from-brand-primary/10 to-brand-accent/10 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-white mb-4">Yield Projection</h3>
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Yield Projection
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-brand-accent">
-                        {yieldEstimate.estimatedYield || '245'} GTT
+                        {yieldEstimate.estimatedYield || "245"} GTT
                       </div>
                       <div className="text-sm text-slate-400">Total Yield</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-brand-primary">
-                        {yieldEstimate.apy || '12.5'}%
+                        {yieldEstimate.apy || "12.5"}%
                       </div>
                       <div className="text-sm text-slate-400">Annual Yield</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-brand-green">
-                        {Math.round(formData.timelock / 365 * 10) / 10} years
+                        {Math.round((formData.timelock / 365) * 10) / 10} years
                       </div>
                       <div className="text-sm text-slate-400">Lock Period</div>
                     </div>
@@ -502,7 +569,9 @@ export default function CreateCapsule() {
               )}
 
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white">Capsule Summary</h3>
+                <h3 className="text-lg font-semibold text-white">
+                  Capsule Summary
+                </h3>
                 <div className="bg-slate-700/30 p-4 rounded-lg space-y-2">
                   <div className="flex justify-between">
                     <span className="text-slate-300">Title:</span>
@@ -510,11 +579,15 @@ export default function CreateCapsule() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-300">Type:</span>
-                    <span className="text-white capitalize">{formData.capsuleType.replace('_', ' ')}</span>
+                    <span className="text-white capitalize">
+                      {formData.capsuleType.replace("_", " ")}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-300">Grief Tier:</span>
-                    <span className="text-white">Tier {formData.griefTier}</span>
+                    <span className="text-white">
+                      Tier {formData.griefTier}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-300">Time Lock:</span>
@@ -524,15 +597,15 @@ export default function CreateCapsule() {
               </div>
 
               <div className="flex gap-4">
-                <Button 
-                  onClick={() => setStep(3)} 
+                <Button
+                  onClick={() => setStep(3)}
                   variant="outline"
                   className="flex-1"
                 >
                   Back
                 </Button>
-                <Button 
-                  onClick={handleNext} 
+                <Button
+                  onClick={handleNext}
                   disabled={mintNFTMutation.isPending}
                   className="flex-1 bg-brand-accent hover:bg-brand-accent/90"
                   data-walkthrough="mint-nft-button"
@@ -562,21 +635,25 @@ export default function CreateCapsule() {
                 <div className="w-20 h-20 bg-brand-green/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Shield className="h-10 w-10 text-brand-green" />
                 </div>
-                <h2 className="text-3xl font-bold text-white mb-2">Truth Capsule Minted!</h2>
-                <p className="text-slate-300">Your truth has been sealed on the blockchain</p>
+                <h2 className="text-3xl font-bold text-white mb-2">
+                  Truth Capsule Minted!
+                </h2>
+                <p className="text-slate-300">
+                  Your truth has been sealed on the blockchain
+                </p>
               </div>
 
               <div className="bg-slate-700/30 p-6 rounded-xl mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <div className="text-lg font-semibold text-brand-accent">
-                      #{mintedNFT.tokenId || '1001'}
+                      #{mintedNFT.tokenId || "1001"}
                     </div>
                     <div className="text-sm text-slate-400">Token ID</div>
                   </div>
                   <div>
                     <div className="text-lg font-semibold text-brand-primary">
-                      {mintedNFT.contractAddress || '0x...abc123'}
+                      {mintedNFT.contractAddress || "0x...abc123"}
                     </div>
                     <div className="text-sm text-slate-400">Contract</div>
                   </div>
@@ -584,15 +661,15 @@ export default function CreateCapsule() {
               </div>
 
               <div className="space-y-4">
-                <Button 
-                  onClick={() => setLocation('/vault')} 
+                <Button
+                  onClick={() => setLocation("/vault")}
                   className="w-full bg-brand-primary hover:bg-brand-primary/90"
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   View in Vault
                 </Button>
-                <Button 
-                  onClick={() => setLocation('/capsules/gallery')} 
+                <Button
+                  onClick={() => setLocation("/capsules/gallery")}
                   variant="outline"
                   className="w-full border-brand-accent text-brand-accent hover:bg-brand-accent/10"
                 >

@@ -7,55 +7,63 @@ import { Link } from "wouter";
 
 interface CapsuleAccessGuardProps {
   children: ReactNode;
-  requiredTier: 'guest' | 'member' | 'moderator' | 'admin' | 'dao-owner';
+  requiredTier: "guest" | "member" | "moderator" | "admin" | "dao-owner";
   fallback?: ReactNode;
 }
 
 const tierHierarchy = {
-  'guest': 0,
-  'member': 1,
-  'moderator': 2,
-  'admin': 3,
-  'dao-owner': 4
+  guest: 0,
+  member: 1,
+  moderator: 2,
+  admin: 3,
+  "dao-owner": 4,
 };
 
 const tierInfo = {
-  'guest': {
-    name: 'Guest',
+  guest: {
+    name: "Guest",
     icon: Users,
-    color: 'text-gray-400',
-    description: 'Browse public content and explore features'
+    color: "text-gray-400",
+    description: "Browse public content and explore features",
   },
-  'member': {
-    name: 'Connected Member',
+  member: {
+    name: "Connected Member",
     icon: Shield,
-    color: 'text-blue-400',
-    description: 'Create capsules, earn GTT, and participate in verification'
+    color: "text-blue-400",
+    description: "Create capsules, earn GTT, and participate in verification",
   },
-  'moderator': {
-    name: 'DAO Moderator',
+  moderator: {
+    name: "DAO Moderator",
     icon: Crown,
-    color: 'text-purple-400',
-    description: 'Assign grief tiers, approve Veritas claims, and moderate content'
+    color: "text-purple-400",
+    description:
+      "Assign grief tiers, approve Veritas claims, and moderate content",
   },
-  'admin': {
-    name: 'Platform Admin',
+  admin: {
+    name: "Platform Admin",
     icon: Lock,
-    color: 'text-red-400',
-    description: 'Full capsule management, payment gateway, and system controls'
+    color: "text-red-400",
+    description:
+      "Full capsule management, payment gateway, and system controls",
   },
-  'dao-owner': {
-    name: 'DAO Owner',
+  "dao-owner": {
+    name: "DAO Owner",
     icon: Crown,
-    color: 'text-yellow-400',
-    description: 'Complete platform governance and treasury management'
-  }
+    color: "text-yellow-400",
+    description: "Complete platform governance and treasury management",
+  },
 };
 
-function TierUpgradePrompt({ currentTier, requiredTier }: { currentTier: string; requiredTier: string }) {
+function TierUpgradePrompt({
+  currentTier,
+  requiredTier,
+}: {
+  currentTier: string;
+  requiredTier: string;
+}) {
   const RequiredIcon = tierInfo[requiredTier as keyof typeof tierInfo].icon;
   const CurrentIcon = tierInfo[currentTier as keyof typeof tierInfo].icon;
-  
+
   return (
     <Card className="max-w-md mx-auto">
       <CardContent className="p-6 text-center">
@@ -69,15 +77,23 @@ function TierUpgradePrompt({ currentTier, requiredTier }: { currentTier: string;
         <div className="space-y-4 mb-6">
           <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <div className="flex items-center gap-2">
-              <CurrentIcon className={`h-4 w-4 ${tierInfo[currentTier as keyof typeof tierInfo].color}`} />
-              <span className="text-sm">Your Tier: {tierInfo[currentTier as keyof typeof tierInfo].name}</span>
+              <CurrentIcon
+                className={`h-4 w-4 ${tierInfo[currentTier as keyof typeof tierInfo].color}`}
+              />
+              <span className="text-sm">
+                Your Tier: {tierInfo[currentTier as keyof typeof tierInfo].name}
+              </span>
             </div>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
             <div className="flex items-center gap-2">
-              <RequiredIcon className={`h-4 w-4 ${tierInfo[requiredTier as keyof typeof tierInfo].color}`} />
-              <span className="text-sm">Required: {tierInfo[requiredTier as keyof typeof tierInfo].name}</span>
+              <RequiredIcon
+                className={`h-4 w-4 ${tierInfo[requiredTier as keyof typeof tierInfo].color}`}
+              />
+              <span className="text-sm">
+                Required: {tierInfo[requiredTier as keyof typeof tierInfo].name}
+              </span>
             </div>
           </div>
         </div>
@@ -87,7 +103,7 @@ function TierUpgradePrompt({ currentTier, requiredTier }: { currentTier: string;
         </p>
 
         <div className="space-y-2">
-          {requiredTier === 'member' && currentTier === 'guest' && (
+          {requiredTier === "member" && currentTier === "guest" && (
             <Button asChild className="w-full">
               <Link href="/api/login">
                 <Shield className="h-4 w-4 mr-2" />
@@ -95,8 +111,9 @@ function TierUpgradePrompt({ currentTier, requiredTier }: { currentTier: string;
               </Link>
             </Button>
           )}
-          
-          {tierHierarchy[requiredTier as keyof typeof tierHierarchy] > tierHierarchy['member'] && (
+
+          {tierHierarchy[requiredTier as keyof typeof tierHierarchy] >
+            tierHierarchy["member"] && (
             <Button asChild variant="outline" className="w-full">
               <Link href="/tier-access">
                 <Crown className="h-4 w-4 mr-2" />
@@ -106,9 +123,7 @@ function TierUpgradePrompt({ currentTier, requiredTier }: { currentTier: string;
           )}
 
           <Button asChild variant="ghost" className="w-full">
-            <Link href="/">
-              Return to Homepage
-            </Link>
+            <Link href="/">Return to Homepage</Link>
           </Button>
         </div>
       </CardContent>
@@ -116,10 +131,10 @@ function TierUpgradePrompt({ currentTier, requiredTier }: { currentTier: string;
   );
 }
 
-export default function CapsuleAccessGuard({ 
-  children, 
-  requiredTier, 
-  fallback 
+export default function CapsuleAccessGuard({
+  children,
+  requiredTier,
+  fallback,
 }: CapsuleAccessGuardProps) {
   const { user, isLoading } = useAuth();
 
@@ -132,18 +147,26 @@ export default function CapsuleAccessGuard({
   }
 
   // Determine user's current tier
-  const currentTier = user ? 
-    (user as any).tier?.toLowerCase() || 'member' : 
-    'guest';
+  const currentTier = user
+    ? (user as any).tier?.toLowerCase() || "member"
+    : "guest";
 
   // Check if user has required access level
-  const userTierLevel = tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
+  const userTierLevel =
+    tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
   const requiredTierLevel = tierHierarchy[requiredTier];
 
   const hasAccess = userTierLevel >= requiredTierLevel;
 
   if (!hasAccess) {
-    return fallback || <TierUpgradePrompt currentTier={currentTier} requiredTier={requiredTier} />;
+    return (
+      fallback || (
+        <TierUpgradePrompt
+          currentTier={currentTier}
+          requiredTier={requiredTier}
+        />
+      )
+    );
   }
 
   return <>{children}</>;

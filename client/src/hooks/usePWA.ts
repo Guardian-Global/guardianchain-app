@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface PWAHook {
   isInstallable: boolean;
@@ -17,7 +17,7 @@ export function usePWA(): PWAHook {
 
   useEffect(() => {
     // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
     }
 
@@ -39,41 +39,44 @@ export function usePWA(): PWAHook {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt,
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   const installApp = async (): Promise<void> => {
     if (!deferredPrompt) {
-      throw new Error('App installation not available');
+      throw new Error("App installation not available");
     }
 
     setIsLoading(true);
-    
+
     try {
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        console.log('✅ User accepted PWA install');
+
+      if (outcome === "accepted") {
+        console.log("✅ User accepted PWA install");
         setIsInstalled(true);
       } else {
-        console.log('❌ User dismissed PWA install');
+        console.log("❌ User dismissed PWA install");
       }
-      
+
       setDeferredPrompt(null);
       setIsInstallable(false);
     } catch (error) {
-      console.error('❌ PWA installation error:', error);
+      console.error("❌ PWA installation error:", error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -85,6 +88,6 @@ export function usePWA(): PWAHook {
     isInstalled,
     isOffline,
     installApp,
-    isLoading
+    isLoading,
   };
 }

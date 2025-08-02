@@ -327,7 +327,7 @@ export default function CapsuleClaimButton({
               onClick={() =>
                 window.open(
                   `https://etherscan.io/address/${truthVaultAddress}`,
-                  "_blank"
+                  "_blank",
                 )
               }
               className="w-full text-xs text-slate-400 hover:text-white"

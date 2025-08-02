@@ -45,13 +45,16 @@ interface AnimationFeature {
 const TeamsVisualUpgrades: React.FC = () => {
   const [activeTheme, setActiveTheme] = useState("guardianchain-pro");
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
-  const [performanceMode, setPerformanceMode] = useState<"standard" | "enhanced" | "maximum">("enhanced");
+  const [performanceMode, setPerformanceMode] = useState<
+    "standard" | "enhanced" | "maximum"
+  >("enhanced");
 
   const visualThemes: VisualTheme[] = [
     {
       id: "guardianchain-pro",
       name: "GUARDIANCHAIN Pro",
-      description: "Enhanced enterprise theme with advanced gradients and effects",
+      description:
+        "Enhanced enterprise theme with advanced gradients and effects",
       preview: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)",
       teamsOnly: true,
       colors: {
@@ -154,26 +157,26 @@ const TeamsVisualUpgrades: React.FC = () => {
   ];
 
   const applyTheme = (themeId: string) => {
-    const theme = visualThemes.find(t => t.id === themeId);
+    const theme = visualThemes.find((t) => t.id === themeId);
     if (!theme) return;
 
     setActiveTheme(themeId);
-    
+
     // Apply CSS custom properties
     const root = document.documentElement;
-    root.style.setProperty('--primary-color', theme.colors.primary);
-    root.style.setProperty('--secondary-color', theme.colors.secondary);
-    root.style.setProperty('--accent-color', theme.colors.accent);
-    root.style.setProperty('--background-color', theme.colors.background);
+    root.style.setProperty("--primary-color", theme.colors.primary);
+    root.style.setProperty("--secondary-color", theme.colors.secondary);
+    root.style.setProperty("--accent-color", theme.colors.accent);
+    root.style.setProperty("--background-color", theme.colors.background);
 
     console.log(`Applied theme: ${theme.name}`);
   };
 
   const toggleAnimation = (animationId: string) => {
-    const updatedFeatures = animationFeatures.map(feature => 
-      feature.id === animationId 
+    const updatedFeatures = animationFeatures.map((feature) =>
+      feature.id === animationId
         ? { ...feature, enabled: !feature.enabled }
-        : feature
+        : feature,
     );
     console.log(`Toggled animation: ${animationId}`);
   };
@@ -183,7 +186,9 @@ const TeamsVisualUpgrades: React.FC = () => {
     console.log(`Performance mode set to: ${level}`);
   };
 
-  const getPerformanceColor = (performance: AnimationFeature["performance"]) => {
+  const getPerformanceColor = (
+    performance: AnimationFeature["performance"],
+  ) => {
     switch (performance) {
       case "low":
         return "text-green-400";
@@ -206,12 +211,11 @@ const TeamsVisualUpgrades: React.FC = () => {
               <Sparkles className="w-6 h-6 mr-2 text-purple-400" />
               Teams Visual Enhancement Suite
             </div>
-            <Badge className="bg-purple-600 text-white">
-              Premium Unlocked
-            </Badge>
+            <Badge className="bg-purple-600 text-white">Premium Unlocked</Badge>
           </CardTitle>
           <p className="text-purple-100">
-            Unlock advanced visual features and premium themes with your Teams subscription
+            Unlock advanced visual features and premium themes with your Teams
+            subscription
           </p>
         </CardHeader>
         <CardContent>
@@ -224,12 +228,16 @@ const TeamsVisualUpgrades: React.FC = () => {
             <div className="text-center">
               <Zap className="w-8 h-8 text-purple-400 mx-auto mb-2" />
               <h3 className="text-white font-medium">Advanced Animations</h3>
-              <p className="text-purple-200 text-sm">Smooth, professional effects</p>
+              <p className="text-purple-200 text-sm">
+                Smooth, professional effects
+              </p>
             </div>
             <div className="text-center">
               <Crown className="w-8 h-8 text-purple-400 mx-auto mb-2" />
               <h3 className="text-white font-medium">Elite Features</h3>
-              <p className="text-purple-200 text-sm">Teams-exclusive enhancements</p>
+              <p className="text-purple-200 text-sm">
+                Teams-exclusive enhancements
+              </p>
             </div>
           </div>
         </CardContent>
@@ -255,10 +263,10 @@ const TeamsVisualUpgrades: React.FC = () => {
         <TabsContent value="themes" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {visualThemes.map((theme) => (
-              <Card 
-                key={theme.id} 
+              <Card
+                key={theme.id}
                 className={`bg-slate-800/50 border-slate-700 cursor-pointer transition-all hover:border-purple-500 ${
-                  activeTheme === theme.id ? 'ring-2 ring-purple-500' : ''
+                  activeTheme === theme.id ? "ring-2 ring-purple-500" : ""
                 }`}
                 onClick={() => applyTheme(theme.id)}
               >
@@ -274,16 +282,16 @@ const TeamsVisualUpgrades: React.FC = () => {
                       <Badge className="bg-purple-600 text-white">Active</Badge>
                     )}
                   </div>
-                  
-                  <div 
+
+                  <div
                     className="w-full h-20 rounded-lg mb-3"
                     style={{ background: theme.preview }}
                   />
-                  
+
                   <p className="text-sm text-slate-400 mb-3">
                     {theme.description}
                   </p>
-                  
+
                   <div className="flex space-x-2">
                     {Object.entries(theme.colors).map(([key, color]) => (
                       <div
@@ -303,15 +311,20 @@ const TeamsVisualUpgrades: React.FC = () => {
         <TabsContent value="animations" className="space-y-4">
           <div className="grid gap-4">
             {animationFeatures.map((feature) => (
-              <Card key={feature.id} className="bg-slate-800/50 border-slate-700">
+              <Card
+                key={feature.id}
+                className="bg-slate-800/50 border-slate-700"
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${
-                        feature.enabled 
-                          ? "bg-purple-600/20 text-purple-400" 
-                          : "bg-gray-600/20 text-gray-400"
-                      }`}>
+                      <div
+                        className={`p-2 rounded-lg ${
+                          feature.enabled
+                            ? "bg-purple-600/20 text-purple-400"
+                            : "bg-gray-600/20 text-gray-400"
+                        }`}
+                      >
                         <Layers className="w-5 h-5" />
                       </div>
                       <div>
@@ -358,7 +371,9 @@ const TeamsVisualUpgrades: React.FC = () => {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Button
-                  variant={performanceMode === "standard" ? "default" : "outline"}
+                  variant={
+                    performanceMode === "standard" ? "default" : "outline"
+                  }
                   onClick={() => setPerformanceLevel("standard")}
                   className="h-auto p-4 flex flex-col items-start"
                 >
@@ -368,9 +383,11 @@ const TeamsVisualUpgrades: React.FC = () => {
                     <div className="text-sm opacity-75">Basic animations</div>
                   </div>
                 </Button>
-                
+
                 <Button
-                  variant={performanceMode === "enhanced" ? "default" : "outline"}
+                  variant={
+                    performanceMode === "enhanced" ? "default" : "outline"
+                  }
                   onClick={() => setPerformanceLevel("enhanced")}
                   className="h-auto p-4 flex flex-col items-start"
                 >
@@ -380,16 +397,20 @@ const TeamsVisualUpgrades: React.FC = () => {
                     <div className="text-sm opacity-75">Teams optimized</div>
                   </div>
                 </Button>
-                
+
                 <Button
-                  variant={performanceMode === "maximum" ? "default" : "outline"}
+                  variant={
+                    performanceMode === "maximum" ? "default" : "outline"
+                  }
                   onClick={() => setPerformanceLevel("maximum")}
                   className="h-auto p-4 flex flex-col items-start"
                 >
                   <Crown className="w-6 h-6 mb-2" />
                   <div className="text-left">
                     <div className="font-medium">Maximum</div>
-                    <div className="text-sm opacity-75">All features enabled</div>
+                    <div className="text-sm opacity-75">
+                      All features enabled
+                    </div>
                   </div>
                 </Button>
               </div>
@@ -418,7 +439,7 @@ const TeamsVisualUpgrades: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <h3 className="text-white font-medium flex items-center">
                     <Monitor className="w-5 h-5 mr-2" />

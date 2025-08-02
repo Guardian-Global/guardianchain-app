@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { useTheme } from '@/components/web3/theme-provider';
-import { 
-  BarChart3, 
-  FileText, 
-  Eye, 
-  User, 
-  Target, 
-  Mic, 
-  Palette, 
-  Beaker, 
-  Music, 
-  Crown, 
-  TrendingUp, 
-  Users, 
-  Award, 
-  Zap, 
-  Globe, 
-  Shield, 
-  Settings, 
-  LogOut, 
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import { useTheme } from "@/components/web3/theme-provider";
+import {
+  BarChart3,
+  FileText,
+  Eye,
+  User,
+  Target,
+  Mic,
+  Palette,
+  Beaker,
+  Music,
+  Crown,
+  TrendingUp,
+  Users,
+  Award,
+  Zap,
+  Globe,
+  Shield,
+  Settings,
+  LogOut,
   Menu,
   X,
   ChevronDown,
@@ -65,7 +65,7 @@ import {
   Cpu,
   Languages,
   Radio,
-} from 'lucide-react';
+} from "lucide-react";
 
 // Navigation section interface
 interface NavigationItem {
@@ -100,46 +100,61 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
         { name: "Create Capsule", href: "/create-capsule", icon: FileText },
         { name: "All Capsules", href: "/capsules", icon: Eye },
         { name: "Profile", href: "/profile", icon: User },
-        { name: "Onboarding Guide", href: "/gamified-onboarding", icon: Target, badge: "NEW" },
-        { name: "System Validation", href: "/system-validation", icon: Shield, badge: "TEST" },
-        { name: "Launch Announcement", href: "/launch", icon: Rocket, badge: "LIVE" },
+        {
+          name: "Onboarding Guide",
+          href: "/gamified-onboarding",
+          icon: Target,
+          badge: "NEW",
+        },
+        {
+          name: "System Validation",
+          href: "/system-validation",
+          icon: Shield,
+          badge: "TEST",
+        },
+        {
+          name: "Launch Announcement",
+          href: "/launch",
+          icon: Rocket,
+          badge: "LIVE",
+        },
       ],
     },
     {
       title: "Memory Vault System",
       items: [
-        { 
-          name: "Memory Capsule Creator", 
-          href: "/memory-vault", 
-          icon: Vault, 
+        {
+          name: "Memory Capsule Creator",
+          href: "/memory-vault",
+          icon: Vault,
           description: "Transform any data into eternal digital assets",
-          badge: "NEW"
+          badge: "NEW",
         },
-        { 
-          name: "100-Year Staking", 
-          href: "/eternal-staking", 
-          icon: Clock, 
+        {
+          name: "100-Year Staking",
+          href: "/eternal-staking",
+          icon: Clock,
           tier: ["pro", "enterprise"],
           description: "Stake memory capsules for generational wealth",
-          badge: "YIELD"
+          badge: "YIELD",
         },
-        { 
-          name: "Family Legacy Hub", 
-          href: "/family-legacy", 
-          icon: Users, 
-          description: "Secure family memories forever"
+        {
+          name: "Family Legacy Hub",
+          href: "/family-legacy",
+          icon: Users,
+          description: "Secure family memories forever",
         },
-        { 
-          name: "Time-Lock Messages", 
-          href: "/time-messages", 
-          icon: MessageSquare, 
-          description: "Send messages centuries into the future"
+        {
+          name: "Time-Lock Messages",
+          href: "/time-messages",
+          icon: MessageSquare,
+          description: "Send messages centuries into the future",
         },
-        { 
-          name: "Infinite Recovery", 
-          href: "/infinite-recovery", 
-          icon: Infinity, 
-          description: "Ultimate security and infinite recoverability"
+        {
+          name: "Infinite Recovery",
+          href: "/infinite-recovery",
+          icon: Infinity,
+          description: "Ultimate security and infinite recoverability",
         },
       ],
     },
@@ -157,185 +172,186 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
     {
       title: "Revenue Features",
       items: [
-        { 
-          name: "Upgrade to Pro", 
-          href: "/upgrade", 
-          icon: Crown, 
-          description: "Unlock premium features"
+        {
+          name: "Upgrade to Pro",
+          href: "/upgrade",
+          icon: Crown,
+          description: "Unlock premium features",
         },
-        { 
-          name: "GTT Staking", 
-          href: "/stake", 
-          icon: Target, 
+        {
+          name: "GTT Staking",
+          href: "/stake",
+          icon: Target,
           tier: ["pro", "enterprise"],
-          description: "Earn rewards by staking GTT"
+          description: "Earn rewards by staking GTT",
         },
-        { 
-          name: "Premium Analytics", 
+        {
+          name: "Premium Analytics",
           href: "/analytics",
-          icon: BarChart2, 
-          tier: ["pro", "enterprise"]
+          icon: BarChart2,
+          tier: ["pro", "enterprise"],
         },
-        { 
-          name: "Token Launch", 
-          href: "/token-launch", 
-          icon: Coins, 
-          badge: "LIVE"
+        {
+          name: "Token Launch",
+          href: "/token-launch",
+          icon: Coins,
+          badge: "LIVE",
         },
-        { 
-          name: "Subscription Plans", 
-          href: "/pricing", 
-          icon: Crown 
+        {
+          name: "Subscription Plans",
+          href: "/pricing",
+          icon: Crown,
         },
-        { 
-          name: "Wallet Connect", 
-          href: "/wallet", 
-          icon: Wallet 
+        {
+          name: "Wallet Connect",
+          href: "/wallet",
+          icon: Wallet,
         },
-        { 
-          name: "Earning Dashboard", 
-          href: "/earnings", 
-          icon: TrendingUp, 
-          tier: ["pro", "enterprise"]
+        {
+          name: "Earning Dashboard",
+          href: "/earnings",
+          icon: TrendingUp,
+          tier: ["pro", "enterprise"],
         },
       ],
     },
     {
       title: "Institutional Trading",
       items: [
-        { 
-          name: "Whale Tracker", 
-          href: "/whale-tracker", 
-          icon: TrendingUp, 
+        {
+          name: "Whale Tracker",
+          href: "/whale-tracker",
+          icon: TrendingUp,
           description: "Track large GTT transactions and smart money",
-          badge: "ENTERPRISE"
+          badge: "ENTERPRISE",
         },
-        { 
-          name: "Trading Bot API", 
-          href: "/trading-bots", 
-          icon: Bot, 
+        {
+          name: "Trading Bot API",
+          href: "/trading-bots",
+          icon: Bot,
           description: "Enterprise APIs for algorithmic trading",
-          badge: "PROFESSIONAL"
+          badge: "PROFESSIONAL",
         },
-        { 
-          name: "DeFi Integrations", 
-          href: "/defi-integrations", 
-          icon: Network, 
+        {
+          name: "DeFi Integrations",
+          href: "/defi-integrations",
+          icon: Network,
           description: "Access deep liquidity pools and yield farming",
-          badge: "ENTERPRISE"
+          badge: "ENTERPRISE",
         },
-        { 
-          name: "Institutional Dashboard", 
-          href: "/institutional-dashboard", 
-          icon: Building2, 
+        {
+          name: "Institutional Dashboard",
+          href: "/institutional-dashboard",
+          icon: Building2,
           description: "Manage institutional clients and AUM",
-          badge: "ENTERPRISE"
+          badge: "ENTERPRISE",
         },
-        { 
-          name: "Market Maker Hub", 
-          href: "/market-maker", 
-          icon: DollarSign, 
+        {
+          name: "Market Maker Hub",
+          href: "/market-maker",
+          icon: DollarSign,
           description: "Automated market making strategies",
-          badge: "PROFESSIONAL"
+          badge: "PROFESSIONAL",
         },
       ],
     },
     {
       title: "Revolutionary Revenue Hub",
       items: [
-        { 
-          name: "AI Trading Oracle", 
-          href: "/ai-trading-oracle", 
-          icon: Brain, 
+        {
+          name: "AI Trading Oracle",
+          href: "/ai-trading-oracle",
+          icon: Brain,
           description: "Advanced AI predictions with $2.56M monthly revenue",
-          badge: "BREAKTHROUGH"
+          badge: "BREAKTHROUGH",
         },
-        { 
-          name: "Crypto Hedge Fund", 
-          href: "/crypto-hedge-fund", 
-          icon: Building2, 
+        {
+          name: "Crypto Hedge Fund",
+          href: "/crypto-hedge-fund",
+          icon: Building2,
           description: "Managing $2.5B+ AUM across institutional clients",
-          badge: "ELITE"
+          badge: "ELITE",
         },
-        { 
-          name: "Token Launchpad Pro", 
-          href: "/token-launchpad-pro", 
-          icon: Rocket, 
+        {
+          name: "Token Launchpad Pro",
+          href: "/token-launchpad-pro",
+          icon: Rocket,
           description: "$2.85B raised across 147 successful launches",
-          badge: "PREMIUM"
+          badge: "PREMIUM",
         },
-        { 
-          name: "NFT Marketplace Pro", 
-          href: "/nft-marketplace-pro", 
-          icon: Palette, 
+        {
+          name: "NFT Marketplace Pro",
+          href: "/nft-marketplace-pro",
+          icon: Palette,
           description: "$1.85B all-time volume, 489K traders",
-          badge: "ELITE"
+          badge: "ELITE",
         },
-        { 
-          name: "Enterprise DAO Suite", 
-          href: "/enterprise-dao-suite", 
-          icon: Crown, 
+        {
+          name: "Enterprise DAO Suite",
+          href: "/enterprise-dao-suite",
+          icon: Crown,
           description: "Managing $15.8B treasury across enterprise DAOs",
-          badge: "ENTERPRISE"
+          badge: "ENTERPRISE",
         },
       ],
     },
     {
       title: "Premium Legacy Preservation",
       items: [
-        { 
-          name: "Institutional Legacy", 
-          href: "/institutional-legacy", 
-          icon: Building2, 
-          description: "Fortune 500 & government institutional legacy preservation",
-          badge: "ENTERPRISE"
+        {
+          name: "Institutional Legacy",
+          href: "/institutional-legacy",
+          icon: Building2,
+          description:
+            "Fortune 500 & government institutional legacy preservation",
+          badge: "ENTERPRISE",
         },
-        { 
-          name: "Earth Legacy", 
-          href: "/earth-legacy", 
-          icon: TreePine, 
+        {
+          name: "Earth Legacy",
+          href: "/earth-legacy",
+          icon: TreePine,
           description: "Environmental & climate legacy with 987% ROI",
-          badge: "MILLENNIUM"
+          badge: "MILLENNIUM",
         },
-        { 
-          name: "Cultural Legacy", 
-          href: "/cultural-legacy", 
-          icon: Languages, 
+        {
+          name: "Cultural Legacy",
+          href: "/cultural-legacy",
+          icon: Languages,
           description: "Cultural heritage & UNESCO site preservation",
-          badge: "HERITAGE"
+          badge: "HERITAGE",
         },
-        { 
-          name: "Sovereign Legacy", 
-          href: "/sovereign-legacy", 
-          icon: Landmark, 
+        {
+          name: "Sovereign Legacy",
+          href: "/sovereign-legacy",
+          icon: Landmark,
           description: "National sovereignty & constitutional preservation",
-          badge: "SOVEREIGN"
+          badge: "SOVEREIGN",
         },
-        { 
-          name: "Technological Legacy", 
-          href: "/technological-legacy", 
-          icon: Cpu, 
+        {
+          name: "Technological Legacy",
+          href: "/technological-legacy",
+          icon: Cpu,
           description: "AI, quantum & breakthrough tech preservation",
-          badge: "INNOVATION"
+          badge: "INNOVATION",
         },
       ],
     },
     {
       title: "Communication & Streaming",
       items: [
-        { 
-          name: "Messaging Center", 
-          href: "/messaging", 
-          icon: MessageSquare, 
+        {
+          name: "Messaging Center",
+          href: "/messaging",
+          icon: MessageSquare,
           description: "User messaging and voice/video calling with Twilio",
-          badge: "LIVE"
+          badge: "LIVE",
         },
-        { 
-          name: "Live Streaming", 
-          href: "/live-streaming", 
-          icon: Radio, 
+        {
+          name: "Live Streaming",
+          href: "/live-streaming",
+          icon: Radio,
           description: "Watch live capsule creation and documentation streams",
-          badge: "STREAMING"
+          badge: "STREAMING",
         },
       ],
     },
@@ -344,16 +360,59 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
       items: [
         { name: "Leaderboard", href: "/leaderboard", icon: Award },
         { name: "Community", href: "/community", icon: Users },
-        { name: "Referral Program", href: "/referrals", icon: UserPlus, tier: ["pro", "enterprise"] },
-        { name: "Performance Analytics", href: "/capsule-analytics", icon: BarChart2 },
+        {
+          name: "Referral Program",
+          href: "/referrals",
+          icon: UserPlus,
+          tier: ["pro", "enterprise"],
+        },
+        {
+          name: "Performance Analytics",
+          href: "/capsule-analytics",
+          icon: BarChart2,
+        },
         { name: "Viral Tools", href: "/viral-tools", icon: Zap },
-        { name: "Revenue Dashboard", href: "/revenue-dashboard", icon: Database },
-        { name: "Top Revenue Drivers", href: "/top-revenue-drivers", icon: TrendingUp, badge: "STRATEGIC" },
-        { name: "Cross-Chain Trading", href: "/cross-trading", icon: Network, badge: "BETA" },
-        { name: "Redemption System", href: "/redemption-capsule", icon: Shield, badge: "NEW" },
-        { name: "Launch Dashboard", href: "/launch-dashboard", icon: Rocket, badge: "LIVE" },
-        { name: "Exchange Listings", href: "/exchange-listings", icon: Building2, badge: "ACTIVE" },
-        { name: "Micro-Interactions", href: "/micro-interactions", icon: Sparkles, badge: "FUN" },
+        {
+          name: "Revenue Dashboard",
+          href: "/revenue-dashboard",
+          icon: Database,
+        },
+        {
+          name: "Top Revenue Drivers",
+          href: "/top-revenue-drivers",
+          icon: TrendingUp,
+          badge: "STRATEGIC",
+        },
+        {
+          name: "Cross-Chain Trading",
+          href: "/cross-trading",
+          icon: Network,
+          badge: "BETA",
+        },
+        {
+          name: "Redemption System",
+          href: "/redemption-capsule",
+          icon: Shield,
+          badge: "NEW",
+        },
+        {
+          name: "Launch Dashboard",
+          href: "/launch-dashboard",
+          icon: Rocket,
+          badge: "LIVE",
+        },
+        {
+          name: "Exchange Listings",
+          href: "/exchange-listings",
+          icon: Building2,
+          badge: "ACTIVE",
+        },
+        {
+          name: "Micro-Interactions",
+          href: "/micro-interactions",
+          icon: Sparkles,
+          badge: "FUN",
+        },
       ],
     },
     {
@@ -377,14 +436,14 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
         {section.items.map((item) => {
           const Icon = item.icon;
           const isActive = location === item.href;
-          
+
           return (
             <Link key={item.name} href={item.href}>
               <Button
                 variant={isActive ? "secondary" : "ghost"}
                 className={`w-full justify-start space-x-3 h-auto p-3 ${
-                  isActive 
-                    ? "bg-purple-600/20 text-purple-300 border-purple-500/50" 
+                  isActive
+                    ? "bg-purple-600/20 text-purple-300 border-purple-500/50"
                     : "text-slate-300 hover:text-white hover:bg-slate-700/50"
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -394,13 +453,16 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">{item.name}</span>
                     {item.badge && (
-                      <Badge 
-                        variant="secondary" 
+                      <Badge
+                        variant="secondary"
                         className={`ml-2 text-xs ${
-                          item.badge === 'NEW' ? 'bg-green-600/20 text-green-400' :
-                          item.badge === 'LIVE' ? 'bg-red-600/20 text-red-400' :
-                          item.badge === 'YIELD' ? 'bg-yellow-600/20 text-yellow-400' :
-                          'bg-blue-600/20 text-blue-400'
+                          item.badge === "NEW"
+                            ? "bg-green-600/20 text-green-400"
+                            : item.badge === "LIVE"
+                              ? "bg-red-600/20 text-red-400"
+                              : item.badge === "YIELD"
+                                ? "bg-yellow-600/20 text-yellow-400"
+                                : "bg-blue-600/20 text-blue-400"
                         }`}
                       >
                         {item.badge}
@@ -408,7 +470,9 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                     )}
                   </div>
                   {item.description && (
-                    <p className="text-xs text-slate-400 mt-1">{item.description}</p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {item.description}
+                    </p>
                   )}
                 </div>
               </Button>
@@ -429,7 +493,9 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
               <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-green-600 rounded-lg flex items-center justify-center">
                 <Shield className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">GUARDIANCHAIN</span>
+              <span className="text-xl font-bold text-white">
+                GUARDIANCHAIN
+              </span>
             </div>
           </Link>
 
@@ -438,59 +504,87 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
             {/* Memory Vault System Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-slate-300 hover:text-white">
+                <Button
+                  variant="ghost"
+                  className="text-slate-300 hover:text-white"
+                >
                   <Vault className="h-4 w-4 mr-2" />
                   Memory Vault
                   <ChevronDown className="h-4 w-4 ml-2" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-80 bg-slate-800 border-slate-700">
-                <DropdownMenuLabel className="text-slate-300">Memory Vault System</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-slate-300">
+                  Memory Vault System
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-slate-700" />
-                {navigationSections.find(s => s.title === "Memory Vault System")?.items.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link href={item.href} className="flex items-center space-x-3 p-3">
-                        <Icon className="h-5 w-5 text-purple-400" />
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-white font-medium">{item.name}</span>
-                            {item.badge && (
-                              <Badge variant="secondary" className="text-xs bg-purple-600/20 text-purple-400">
-                                {item.badge}
-                              </Badge>
+                {navigationSections
+                  .find((s) => s.title === "Memory Vault System")
+                  ?.items.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link
+                          href={item.href}
+                          className="flex items-center space-x-3 p-3"
+                        >
+                          <Icon className="h-5 w-5 text-purple-400" />
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-white font-medium">
+                                {item.name}
+                              </span>
+                              {item.badge && (
+                                <Badge
+                                  variant="secondary"
+                                  className="text-xs bg-purple-600/20 text-purple-400"
+                                >
+                                  {item.badge}
+                                </Badge>
+                              )}
+                            </div>
+                            {item.description && (
+                              <p className="text-slate-400 text-xs mt-1">
+                                {item.description}
+                              </p>
                             )}
                           </div>
-                          {item.description && (
-                            <p className="text-slate-400 text-xs mt-1">{item.description}</p>
-                          )}
-                        </div>
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Quick Navigation Links */}
             <Link href="/create-capsule">
-              <Button variant="ghost" className="text-slate-300 hover:text-white">
+              <Button
+                variant="ghost"
+                className="text-slate-300 hover:text-white"
+              >
                 <FileText className="h-4 w-4 mr-2" />
                 Create
               </Button>
             </Link>
 
             <Link href="/eternal-staking">
-              <Button variant="ghost" className="text-slate-300 hover:text-white">
+              <Button
+                variant="ghost"
+                className="text-slate-300 hover:text-white"
+              >
                 <Clock className="h-4 w-4 mr-2" />
                 Stake
-                <Badge className="ml-2 bg-yellow-600/20 text-yellow-400 text-xs">YIELD</Badge>
+                <Badge className="ml-2 bg-yellow-600/20 text-yellow-400 text-xs">
+                  YIELD
+                </Badge>
               </Button>
             </Link>
 
             <Link href="/family-legacy">
-              <Button variant="ghost" className="text-slate-300 hover:text-white">
+              <Button
+                variant="ghost"
+                className="text-slate-300 hover:text-white"
+              >
                 <Heart className="h-4 w-4 mr-2" />
                 Legacy
               </Button>
@@ -503,16 +597,23 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
               className="text-slate-300 hover:text-white"
             >
-              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              {theme === "light" ? (
+                <Moon className="h-4 w-4" />
+              ) : (
+                <Sun className="h-4 w-4" />
+              )}
             </Button>
 
             {/* User Profile/Login */}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-slate-300 hover:text-white">
+                  <Button
+                    variant="ghost"
+                    className="text-slate-300 hover:text-white"
+                  >
                     <User className="h-4 w-4 mr-2" />
-                    {user.firstName || user.email.split('@')[0]}
+                    {user.firstName || user.email.split("@")[0]}
                     <Badge className="ml-2 bg-purple-600/20 text-purple-400 text-xs">
                       {user.tier}
                     </Badge>
@@ -523,7 +624,8 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                   <DropdownMenuLabel className="text-slate-300">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none text-white">
-                        {user.firstName || user.email.split('@')[0]} {user.lastName || ''}
+                        {user.firstName || user.email.split("@")[0]}{" "}
+                        {user.lastName || ""}
                       </p>
                       <p className="text-xs leading-none text-slate-400">
                         {user.email}
@@ -532,30 +634,41 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-slate-700" />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile-dashboard" className="flex items-center space-x-2">
+                    <Link
+                      href="/profile-dashboard"
+                      className="flex items-center space-x-2"
+                    >
                       <User className="h-4 w-4" />
                       <span>Profile Dashboard</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/advanced-profile" className="flex items-center space-x-2">
+                    <Link
+                      href="/advanced-profile"
+                      className="flex items-center space-x-2"
+                    >
                       <Settings className="h-4 w-4" />
                       <span>Advanced Profile</span>
-                      <Badge className="ml-auto bg-purple-600/20 text-purple-400 text-xs">AI</Badge>
+                      <Badge className="ml-auto bg-purple-600/20 text-purple-400 text-xs">
+                        AI
+                      </Badge>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/settings" className="flex items-center space-x-2">
+                    <Link
+                      href="/settings"
+                      className="flex items-center space-x-2"
+                    >
                       <Settings className="h-4 w-4" />
                       <span>Settings</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-slate-700" />
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => {
-                      localStorage.removeItem('auth_token');
-                      localStorage.removeItem('auth_user');
-                      window.location.href = '/';
+                      localStorage.removeItem("auth_token");
+                      localStorage.removeItem("auth_user");
+                      window.location.href = "/";
                     }}
                     className="flex items-center space-x-2 text-red-400"
                   >
@@ -582,9 +695,14 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-80 bg-slate-900 border-slate-800 overflow-y-auto">
+              <SheetContent
+                side="right"
+                className="w-80 bg-slate-900 border-slate-800 overflow-y-auto"
+              >
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-lg font-bold text-white">GUARDIANCHAIN</span>
+                  <span className="text-lg font-bold text-white">
+                    GUARDIANCHAIN
+                  </span>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -606,13 +724,22 @@ export default function UnifiedNavigation({ user }: UnifiedNavigationProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                      onClick={() =>
+                        setTheme(theme === "light" ? "dark" : "light")
+                      }
                       className="text-slate-300"
                     >
-                      {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                      {theme === "light" ? (
+                        <Moon className="h-4 w-4" />
+                      ) : (
+                        <Sun className="h-4 w-4" />
+                      )}
                     </Button>
                     <Link href="/login">
-                      <Button size="sm" className="bg-gradient-to-r from-purple-600 to-green-600">
+                      <Button
+                        size="sm"
+                        className="bg-gradient-to-r from-purple-600 to-green-600"
+                      >
                         Login
                       </Button>
                     </Link>

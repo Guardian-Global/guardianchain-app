@@ -129,11 +129,11 @@ export default function WalletPortfolio() {
 
   const totalUsdValue = walletAssets.reduce(
     (sum, asset) => sum + asset.usdValue,
-    0
+    0,
   );
   const totalChange24h = walletAssets.reduce(
     (sum, asset) => sum + (asset.usdValue * asset.change24h) / 100,
-    0
+    0,
   );
   const totalChangePercent = (totalChange24h / totalUsdValue) * 100;
 
@@ -414,8 +414,8 @@ export default function WalletPortfolio() {
                         transaction.status === "confirmed"
                           ? "bg-green-500"
                           : transaction.status === "pending"
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
                       } text-white`}
                     >
                       {transaction.status}
@@ -435,7 +435,7 @@ export default function WalletPortfolio() {
                       onClick={() =>
                         window.open(
                           `https://polygonscan.com/tx/${transaction.hash}`,
-                          "_blank"
+                          "_blank",
                         )
                       }
                     >

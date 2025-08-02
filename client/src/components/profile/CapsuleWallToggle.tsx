@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { 
-  Grid3X3, 
-  Calendar, 
-  Timeline, 
+import {
+  Grid3X3,
+  Calendar,
+  Timeline,
   TrendingUp,
   Filter,
   Search,
@@ -14,14 +14,20 @@ import {
   Eye,
   Lock,
   Users,
-  Clock
+  Clock,
 } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 
-export type ViewMode = 'grid' | 'timeline' | 'calendar' | 'trending';
-export type SortBy = 'newest' | 'oldest' | 'most-viewed' | 'trending' | 'name';
-export type FilterBy = 'all' | 'public' | 'private' | 'family' | 'sealed';
+export type ViewMode = "grid" | "timeline" | "calendar" | "trending";
+export type SortBy = "newest" | "oldest" | "most-viewed" | "trending" | "name";
+export type FilterBy = "all" | "public" | "private" | "family" | "sealed";
 
 interface CapsuleWallToggleProps {
   viewMode: ViewMode;
@@ -46,77 +52,79 @@ export default function CapsuleWallToggle({
   searchQuery,
   onSearchChange,
   totalCapsules,
-  className = ""
+  className = "",
 }: CapsuleWallToggleProps) {
   const viewModes = [
     {
-      value: 'grid' as const,
-      label: 'Grid',
+      value: "grid" as const,
+      label: "Grid",
       icon: Grid3X3,
-      description: 'Card-based layout'
+      description: "Card-based layout",
     },
     {
-      value: 'timeline' as const,
-      label: 'Timeline',
+      value: "timeline" as const,
+      label: "Timeline",
       icon: Timeline,
-      description: 'Chronological flow'
+      description: "Chronological flow",
     },
     {
-      value: 'calendar' as const,
-      label: 'Calendar',
+      value: "calendar" as const,
+      label: "Calendar",
       icon: Calendar,
-      description: 'Date-based view'
+      description: "Date-based view",
     },
     {
-      value: 'trending' as const,
-      label: 'Trending',
+      value: "trending" as const,
+      label: "Trending",
       icon: TrendingUp,
-      description: 'Popularity-based'
-    }
+      description: "Popularity-based",
+    },
   ];
 
   const sortOptions = [
-    { value: 'newest' as const, label: 'Newest First' },
-    { value: 'oldest' as const, label: 'Oldest First' },
-    { value: 'most-viewed' as const, label: 'Most Viewed' },
-    { value: 'trending' as const, label: 'Trending' },
-    { value: 'name' as const, label: 'Name A-Z' }
+    { value: "newest" as const, label: "Newest First" },
+    { value: "oldest" as const, label: "Oldest First" },
+    { value: "most-viewed" as const, label: "Most Viewed" },
+    { value: "trending" as const, label: "Trending" },
+    { value: "name" as const, label: "Name A-Z" },
   ];
 
   const filterOptions = [
-    { 
-      value: 'all' as const, 
-      label: 'All Capsules', 
+    {
+      value: "all" as const,
+      label: "All Capsules",
       icon: Eye,
-      description: 'Show everything'
+      description: "Show everything",
     },
-    { 
-      value: 'public' as const, 
-      label: 'Public', 
+    {
+      value: "public" as const,
+      label: "Public",
       icon: Eye,
-      description: 'Visible to everyone'
+      description: "Visible to everyone",
     },
-    { 
-      value: 'family' as const, 
-      label: 'Family & Friends', 
+    {
+      value: "family" as const,
+      label: "Family & Friends",
       icon: Users,
-      description: 'Close connections only'
+      description: "Close connections only",
     },
-    { 
-      value: 'private' as const, 
-      label: 'Private', 
+    {
+      value: "private" as const,
+      label: "Private",
       icon: Lock,
-      description: 'Only you can view'
+      description: "Only you can view",
     },
-    { 
-      value: 'sealed' as const, 
-      label: 'Time-Sealed', 
+    {
+      value: "sealed" as const,
+      label: "Time-Sealed",
       icon: Clock,
-      description: 'Locked until date'
-    }
+      description: "Locked until date",
+    },
   ];
 
-  const selectedFilter = filterOptions.find(option => option.value === filterBy);
+  const selectedFilter = filterOptions.find(
+    (option) => option.value === filterBy,
+  );
 
   return (
     <Card className={className}>
@@ -127,11 +135,11 @@ export default function CapsuleWallToggle({
             Memory Wall Controls
           </div>
           <Badge variant="secondary">
-            {totalCapsules} {totalCapsules === 1 ? 'Capsule' : 'Capsules'}
+            {totalCapsules} {totalCapsules === 1 ? "Capsule" : "Capsules"}
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Search */}
         <div className="space-y-2">
@@ -156,7 +164,9 @@ export default function CapsuleWallToggle({
           <ToggleGroup
             type="single"
             value={viewMode}
-            onValueChange={(value) => value && onViewModeChange(value as ViewMode)}
+            onValueChange={(value) =>
+              value && onViewModeChange(value as ViewMode)
+            }
             className="justify-start"
           >
             {viewModes.map((mode) => (
@@ -172,7 +182,7 @@ export default function CapsuleWallToggle({
             ))}
           </ToggleGroup>
           <div className="text-xs text-muted-foreground">
-            {viewModes.find(mode => mode.value === viewMode)?.description}
+            {viewModes.find((mode) => mode.value === viewMode)?.description}
           </div>
         </div>
 
@@ -184,7 +194,10 @@ export default function CapsuleWallToggle({
               <SortAsc className="w-4 h-4" />
               <span className="text-sm font-medium">Sort By</span>
             </div>
-            <Select value={sortBy} onValueChange={(value) => onSortChange(value as SortBy)}>
+            <Select
+              value={sortBy}
+              onValueChange={(value) => onSortChange(value as SortBy)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Choose sorting" />
               </SelectTrigger>
@@ -204,7 +217,10 @@ export default function CapsuleWallToggle({
               <Filter className="w-4 h-4" />
               <span className="text-sm font-medium">Filter By Privacy</span>
             </div>
-            <Select value={filterBy} onValueChange={(value) => onFilterChange(value as FilterBy)}>
+            <Select
+              value={filterBy}
+              onValueChange={(value) => onFilterChange(value as FilterBy)}
+            >
               <SelectTrigger>
                 <SelectValue>
                   {selectedFilter && (
@@ -222,7 +238,9 @@ export default function CapsuleWallToggle({
                       <option.icon className="w-4 h-4" />
                       <div>
                         <div className="font-medium">{option.label}</div>
-                        <div className="text-xs text-muted-foreground">{option.description}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {option.description}
+                        </div>
                       </div>
                     </div>
                   </SelectItem>
@@ -233,7 +251,7 @@ export default function CapsuleWallToggle({
         </div>
 
         {/* Active Filters Summary */}
-        {(searchQuery || filterBy !== 'all' || sortBy !== 'newest') && (
+        {(searchQuery || filterBy !== "all" || sortBy !== "newest") && (
           <div className="space-y-2">
             <div className="text-sm font-medium">Active Filters:</div>
             <div className="flex flex-wrap gap-2">
@@ -242,23 +260,23 @@ export default function CapsuleWallToggle({
                   Search: "{searchQuery}"
                 </Badge>
               )}
-              {filterBy !== 'all' && (
+              {filterBy !== "all" && (
                 <Badge variant="secondary" className="text-xs">
                   Privacy: {selectedFilter?.label}
                 </Badge>
               )}
-              {sortBy !== 'newest' && (
+              {sortBy !== "newest" && (
                 <Badge variant="secondary" className="text-xs">
-                  Sort: {sortOptions.find(s => s.value === sortBy)?.label}
+                  Sort: {sortOptions.find((s) => s.value === sortBy)?.label}
                 </Badge>
               )}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  onSearchChange('');
-                  onFilterChange('all');
-                  onSortChange('newest');
+                  onSearchChange("");
+                  onFilterChange("all");
+                  onSortChange("newest");
                 }}
                 className="h-6 px-2 text-xs"
               >
@@ -272,10 +290,14 @@ export default function CapsuleWallToggle({
         <div className="p-3 bg-muted/50 rounded-lg">
           <div className="text-sm font-medium mb-1">View Details</div>
           <div className="text-xs text-muted-foreground">
-            {viewMode === 'grid' && "Card-based layout with rich previews and quick actions"}
-            {viewMode === 'timeline' && "Chronological timeline showing your memory journey"}
-            {viewMode === 'calendar' && "Calendar view organized by creation or event dates"}
-            {viewMode === 'trending' && "Sorted by popularity, views, and community engagement"}
+            {viewMode === "grid" &&
+              "Card-based layout with rich previews and quick actions"}
+            {viewMode === "timeline" &&
+              "Chronological timeline showing your memory journey"}
+            {viewMode === "calendar" &&
+              "Calendar view organized by creation or event dates"}
+            {viewMode === "trending" &&
+              "Sorted by popularity, views, and community engagement"}
           </div>
         </div>
       </CardContent>

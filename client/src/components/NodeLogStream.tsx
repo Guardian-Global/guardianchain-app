@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Terminal, Activity, Clock } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Terminal, Activity, Clock } from "lucide-react";
 
 interface LogEntry {
   timestamp: string;
   event: string;
-  level: 'info' | 'warn' | 'error' | 'success';
+  level: "info" | "warn" | "error" | "success";
   nodeId?: string;
 }
 
@@ -16,18 +16,18 @@ export default function NodeLogStream() {
 
   useEffect(() => {
     // Simulate real-time log stream with WebSocket or Server-Sent Events
-    const eventSource = new EventSource('/api/logs/stream');
-    
+    const eventSource = new EventSource("/api/logs/stream");
+
     eventSource.onopen = () => {
       setIsConnected(true);
     };
-    
+
     eventSource.onmessage = (event) => {
       try {
         const parsed = JSON.parse(event.data);
         setLogs((prev) => [parsed, ...prev.slice(0, 99)]);
       } catch (error) {
-        console.error('Failed to parse log entry:', error);
+        console.error("Failed to parse log entry:", error);
       }
     };
 
@@ -38,19 +38,39 @@ export default function NodeLogStream() {
     // Fallback: Generate demo logs if no real stream
     const fallbackInterval = setInterval(() => {
       const demoLogs = [
-        { event: 'Capsule verification completed', level: 'success' as const, nodeId: 'node-001' },
-        { event: 'GTT token distribution processed', level: 'info' as const, nodeId: 'node-002' },
-        { event: 'Truth validation in progress', level: 'info' as const, nodeId: 'node-003' },
-        { event: 'Veritas seal generated', level: 'success' as const, nodeId: 'node-001' },
-        { event: 'Network consensus reached', level: 'info' as const, nodeId: 'node-004' },
+        {
+          event: "Capsule verification completed",
+          level: "success" as const,
+          nodeId: "node-001",
+        },
+        {
+          event: "GTT token distribution processed",
+          level: "info" as const,
+          nodeId: "node-002",
+        },
+        {
+          event: "Truth validation in progress",
+          level: "info" as const,
+          nodeId: "node-003",
+        },
+        {
+          event: "Veritas seal generated",
+          level: "success" as const,
+          nodeId: "node-001",
+        },
+        {
+          event: "Network consensus reached",
+          level: "info" as const,
+          nodeId: "node-004",
+        },
       ];
-      
+
       const randomLog = demoLogs[Math.floor(Math.random() * demoLogs.length)];
       const logEntry: LogEntry = {
         ...randomLog,
         timestamp: new Date().toISOString(),
       };
-      
+
       setLogs((prev) => [logEntry, ...prev.slice(0, 99)]);
     }, 5000);
 
@@ -62,19 +82,27 @@ export default function NodeLogStream() {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case 'success': return 'bg-green-600';
-      case 'warn': return 'bg-yellow-600';
-      case 'error': return 'bg-red-600';
-      default: return 'bg-blue-600';
+      case "success":
+        return "bg-green-600";
+      case "warn":
+        return "bg-yellow-600";
+      case "error":
+        return "bg-red-600";
+      default:
+        return "bg-blue-600";
     }
   };
 
   const getLevelIcon = (level: string) => {
     switch (level) {
-      case 'success': return '✓';
-      case 'warn': return '⚠';
-      case 'error': return '✗';
-      default: return '•';
+      case "success":
+        return "✓";
+      case "warn":
+        return "⚠";
+      case "error":
+        return "✗";
+      default:
+        return "•";
     }
   };
 
@@ -87,16 +115,16 @@ export default function NodeLogStream() {
             Veritas Node Stream
           </CardTitle>
           <div className="flex items-center space-x-2">
-            <Badge 
-              className={`${isConnected ? 'bg-green-600' : 'bg-red-600'} text-white`}
+            <Badge
+              className={`${isConnected ? "bg-green-600" : "bg-red-600"} text-white`}
             >
               <Activity className="w-3 h-3 mr-1" />
-              {isConnected ? 'Connected' : 'Disconnected'}
+              {isConnected ? "Connected" : "Disconnected"}
             </Badge>
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent>
         <div className="bg-black rounded-lg p-4 h-[300px] overflow-y-auto scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-600">
           {logs.length === 0 ? (
@@ -107,8 +135,13 @@ export default function NodeLogStream() {
           ) : (
             <ul className="text-xs space-y-2">
               {logs.map((log, i) => (
-                <li key={i} className="flex items-start space-x-3 text-green-400">
-                  <span className={`inline-block w-4 h-4 rounded-full text-xs flex items-center justify-center text-white ${getLevelColor(log.level)}`}>
+                <li
+                  key={i}
+                  className="flex items-start space-x-3 text-green-400"
+                >
+                  <span
+                    className={`inline-block w-4 h-4 rounded-full text-xs flex items-center justify-center text-white ${getLevelColor(log.level)}`}
+                  >
                     {getLevelIcon(log.level)}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -118,7 +151,10 @@ export default function NodeLogStream() {
                         {new Date(log.timestamp).toLocaleTimeString()}
                       </span>
                       {log.nodeId && (
-                        <Badge variant="outline" className="text-xs text-slate-400 border-slate-600">
+                        <Badge
+                          variant="outline"
+                          className="text-xs text-slate-400 border-slate-600"
+                        >
                           {log.nodeId}
                         </Badge>
                       )}

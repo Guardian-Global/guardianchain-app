@@ -67,7 +67,7 @@ export class WalletManager {
         title: "Wallet Connected",
         description: `Connected to ${this.walletInfo.address.slice(
           0,
-          6
+          6,
         )}...${this.walletInfo.address.slice(-4)}`,
       });
 
@@ -177,7 +177,7 @@ export class WalletManager {
           title: "Account Changed",
           description: `Switched to ${accounts[0].slice(
             0,
-            6
+            6,
           )}...${accounts[0].slice(-4)}`,
         });
       }
@@ -253,7 +253,7 @@ declare global {
       on: (event: string, handler: (...args: any[]) => void) => void;
       removeListener: (
         event: string,
-        handler: (...args: any[]) => void
+        handler: (...args: any[]) => void,
       ) => void;
       isMetaMask?: boolean;
     };

@@ -3,7 +3,18 @@ import { useRoute } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Heart, MessageCircle, Share2, Calendar, User, Tag, Shield, Loader2, ArrowLeft } from "lucide-react";
+import {
+  Eye,
+  Heart,
+  MessageCircle,
+  Share2,
+  Calendar,
+  User,
+  Tag,
+  Shield,
+  Loader2,
+  ArrowLeft,
+} from "lucide-react";
 import { Link } from "wouter";
 import VoteButton from "@/components/VoteButton";
 import { useAccount } from "wagmi";
@@ -53,21 +64,21 @@ export default function CapsuleDetailPage() {
     try {
       setLoading(true);
       const response = await fetch(`/api/capsules/${id}`);
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch capsule");
       }
-      
+
       const data = await response.json();
       setCapsule(data.capsule);
       setLikeCount(parseInt(data.capsule.likes || "0"));
-      
+
       // Check if capsule is already minted
       if (data.capsule.content?.minted && data.capsule.content?.tx_hash) {
         setMinted(true);
         setTxHash(data.capsule.content.tx_hash);
       }
-      
+
       // Check if capsule is already unlocked
       if (data.capsule.content?.unlocked) {
         setUnlocked(true);
@@ -81,35 +92,39 @@ export default function CapsuleDetailPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "verified": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "rejected": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+      case "verified":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      case "rejected":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   };
 
   const handleMint = async () => {
     if (!capsule) return;
-    
+
     setMinting(true);
     try {
-      const response = await fetch(`/api/capsules/${capsule.id}/mint`, { 
+      const response = await fetch(`/api/capsules/${capsule.id}/mint`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
-      
+
       if (data.txHash) {
         setTxHash(data.txHash);
         setMinted(true);
@@ -127,16 +142,16 @@ export default function CapsuleDetailPage() {
 
   const handleLike = async () => {
     if (!capsule) return;
-    
+
     try {
       const response = await fetch(`/api/capsules/${capsule.id}/like`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
-      
+
       if (response.ok) {
         setLiked(!liked);
-        setLikeCount(prev => liked ? prev - 1 : prev + 1);
+        setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
       }
     } catch (error) {
       console.error("Like error:", error);
@@ -158,42 +173,48 @@ export default function CapsuleDetailPage() {
 
   const handleUnlock = async () => {
     if (!capsule) return;
-    
+
     setUnlocking(true);
     try {
       const response = await fetch(`/api/capsules/${capsule.id}/unlock`);
       const data = await response.json();
-      
+
       if (data.capsule) {
         let updatedCapsule = data.capsule;
-        
+
         // If the capsule was encrypted and we have encrypted data, try client-side decryption
-        if (data.capsule.content?.encryptedContent && data.capsule.content?.encryptedSymmetricKey) {
+        if (
+          data.capsule.content?.encryptedContent &&
+          data.capsule.content?.encryptedSymmetricKey
+        ) {
           try {
-            const { decryptCapsule } = await import("../utils/lit/decryptCapsule");
-            
+            const { decryptCapsule } = await import(
+              "../utils/lit/decryptCapsule"
+            );
+
             const decryptedContent = await decryptCapsule({
               encryptedContent: data.capsule.content.encryptedContent,
               encryptedSymmetricKey: data.capsule.content.encryptedSymmetricKey,
-              accessControlConditions: data.capsule.content.accessControlConditions || [],
+              accessControlConditions:
+                data.capsule.content.accessControlConditions || [],
               chain: "polygon",
             });
-            
+
             // Update capsule with decrypted content
             updatedCapsule = {
               ...updatedCapsule,
               description: decryptedContent,
               content: {
                 ...updatedCapsule.content,
-                unlocked: true
-              }
+                unlocked: true,
+              },
             };
           } catch (decryptError) {
             console.error("Client-side decryption failed:", decryptError);
             // Server has already provided decrypted content as fallback
           }
         }
-        
+
         setCapsule(updatedCapsule);
         setUnlocked(true);
         alert("Capsule unlocked successfully! Hidden content is now visible.");
@@ -219,7 +240,9 @@ export default function CapsuleDetailPage() {
           <Card className="max-w-4xl mx-auto">
             <CardContent className="flex items-center justify-center py-16">
               <Loader2 className="w-8 h-8 animate-spin text-blue-600 mr-3" />
-              <span className="text-gray-600 dark:text-gray-300">Loading capsule...</span>
+              <span className="text-gray-600 dark:text-gray-300">
+                Loading capsule...
+              </span>
             </CardContent>
           </Card>
         </div>
@@ -277,8 +300,8 @@ export default function CapsuleDetailPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-green-600 dark:text-green-400 text-sm hover:underline mb-2"
                   >
-                    <Shield className="w-4 h-4 mr-1" />
-                    ✅ Minted on Polygon - View Transaction
+                    <Shield className="w-4 h-4 mr-1" />✅ Minted on Polygon -
+                    View Transaction
                   </a>
                 )}
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
@@ -317,11 +340,21 @@ export default function CapsuleDetailPage() {
               <div className="text-gray-600 dark:text-gray-300 leading-relaxed">
                 {capsule.content?.encrypted && !unlocked ? (
                   <div className="flex items-center p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                    <svg className="w-5 h-5 mr-3 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-5 h-5 mr-3 text-amber-600 dark:text-amber-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <div>
-                      <p className="font-medium text-amber-800 dark:text-amber-200">Encrypted Content</p>
+                      <p className="font-medium text-amber-800 dark:text-amber-200">
+                        Encrypted Content
+                      </p>
                       <p className="text-sm text-amber-600 dark:text-amber-400">
                         🔒 Capsule is locked. Unlock required to view content.
                       </p>
@@ -378,7 +411,9 @@ export default function CapsuleDetailPage() {
                       {parseInt(capsule.views).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Views</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Views
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
@@ -387,7 +422,9 @@ export default function CapsuleDetailPage() {
                       {likeCount.toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Likes</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Likes
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
@@ -396,7 +433,9 @@ export default function CapsuleDetailPage() {
                       {parseInt(capsule.comments).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Comments</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Comments
+                  </p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
@@ -405,7 +444,9 @@ export default function CapsuleDetailPage() {
                       {parseInt(capsule.shares).toLocaleString()}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Shares</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Shares
+                  </p>
                 </div>
               </div>
             </div>
@@ -414,20 +455,26 @@ export default function CapsuleDetailPage() {
             <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Interact</h4>
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Interact
+                  </h4>
                   <div className="flex flex-wrap gap-2">
                     <VoteButton
                       capsuleId={capsule.id}
                       wallet={address || ""}
                       initialLikes={parseInt(capsule.likes || "0")}
                     />
-                    <Button variant="outline" size="sm" className="flex items-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center"
+                    >
                       <MessageCircle className="w-4 h-4 mr-2" />
                       Comment
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={handleShare}
                       className="flex items-center"
                     >
@@ -436,12 +483,14 @@ export default function CapsuleDetailPage() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Blockchain Actions</h4>
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Blockchain Actions
+                  </h4>
                   <div className="flex flex-wrap gap-2">
                     {!minted && (
-                      <Button 
+                      <Button
                         onClick={handleMint}
                         disabled={minting}
                         className="flex items-center"
@@ -460,8 +509,8 @@ export default function CapsuleDetailPage() {
                       </Button>
                     )}
                     {!unlocked && capsule.content?.encrypted && (
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={handleUnlock}
                         disabled={unlocking}
                         className="flex items-center border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-900/20"
@@ -473,8 +522,16 @@ export default function CapsuleDetailPage() {
                           </>
                         ) : (
                           <>
-                            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clipRule="evenodd" />
+                            <svg
+                              className="w-4 h-4 mr-2"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
+                                clipRule="evenodd"
+                              />
                             </svg>
                             Decrypt Content
                           </>
@@ -495,16 +552,32 @@ export default function CapsuleDetailPage() {
                     )}
                     {capsule.content?.encrypted && !unlocked && (
                       <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
-                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        <svg
+                          className="w-3 h-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         🔒 Encrypted
                       </Badge>
                     )}
                     {capsule.isPrivate && (
                       <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        <svg
+                          className="w-3 h-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         Private Vault
                       </Badge>
@@ -512,7 +585,7 @@ export default function CapsuleDetailPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
                 <p className="text-sm text-blue-700 dark:text-blue-300">
                   <strong>Capsule ID:</strong> {capsule.id}

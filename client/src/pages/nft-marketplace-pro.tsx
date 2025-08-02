@@ -1,5 +1,5 @@
-import React from 'react';
-import { NFTMarketplacePro } from '@/components/revenue/NFTMarketplacePro';
+import React from "react";
+import { NFTMarketplacePro } from "@/components/revenue/NFTMarketplacePro";
 
 export default function NFTMarketplaceProPage() {
   return (

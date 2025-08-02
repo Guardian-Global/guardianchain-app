@@ -167,7 +167,7 @@ export function getPrivateCapsules(userId: string) {
 
   // Filter private capsules to only show those from accepted friends
   return mockPrivateCapsules.filter((capsule) =>
-    acceptedFriendIds.includes(capsule.creatorId)
+    acceptedFriendIds.includes(capsule.creatorId),
   );
 }
 
@@ -183,7 +183,7 @@ export function getFriends(userId: string): Friend[] {
  */
 export function getPendingFriendRequests(userId: string): FriendRequest[] {
   return mockFriendRequests.filter(
-    (request) => request.toUserId === userId && request.status === "pending"
+    (request) => request.toUserId === userId && request.status === "pending",
   );
 }
 
@@ -209,7 +209,7 @@ export function getFriendStats(userId: string) {
 export async function sendFriendRequest(
   fromUserId: string,
   toUserId: string,
-  message?: string
+  message?: string,
 ): Promise<boolean> {
   // In production, this would make an API call to create the friend request
   console.log("Sending friend request:", { fromUserId, toUserId, message });

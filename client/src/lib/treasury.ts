@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 export async function fetchTreasurySnapshot() {
   if (!supabase) {
     throw new Error(
-      "Treasury data unavailable: Supabase not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY"
+      "Treasury data unavailable: Supabase not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY",
     );
   }
 
@@ -36,7 +36,7 @@ export async function fetchGTTMarket() {
   try {
     // Try CoinGecko API first, fallback to internal price oracle
     const response = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=guardianchain&vs_currencies=usd&include_24hr_change=true"
+      "https://api.coingecko.com/api/v3/simple/price?ids=guardianchain&vs_currencies=usd&include_24hr_change=true",
     );
 
     if (response.ok) {
@@ -97,7 +97,7 @@ export async function fetchStripeSubscriptions() {
     };
   } catch (error) {
     throw new Error(
-      "Subscription data unavailable: " + (error as Error).message
+      "Subscription data unavailable: " + (error as Error).message,
     );
   }
 }

@@ -1,24 +1,30 @@
-import React from 'react';
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { 
-  Search, 
+import React from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Search,
   Filter,
   Package,
   X,
   Clock,
   Shield,
   Target,
-  TrendingUp
-} from 'lucide-react';
-import { apiRequest } from '@/lib/queryClient';
+  TrendingUp,
+} from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Capsule {
   id: string;
@@ -28,7 +34,7 @@ interface Capsule {
   tags: string[];
   guardian_id: string;
   created_at: string;
-  verification_status: 'pending' | 'verified' | 'disputed';
+  verification_status: "pending" | "verified" | "disputed";
   truth_score: number;
   interaction_count: number;
   region: string;
@@ -51,49 +57,68 @@ interface CapsuleSearchProps {
   onExport?: (capsules: Capsule[], format: string) => void;
 }
 
-export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSearchProps) {
+export default function CapsuleSearch({
+  onResultsChange,
+  onExport,
+}: CapsuleSearchProps) {
   const [filters, setFilters] = useState<CapsuleFilters>({
-    searchQuery: '',
-    griefTier: 'all',
-    verificationStatus: 'all',
-    region: 'all',
-    category: 'all',
+    searchQuery: "",
+    griefTier: "all",
+    verificationStatus: "all",
+    region: "all",
+    category: "all",
     truthScoreMin: 0,
-    dateRange: 'all',
-    tags: []
+    dateRange: "all",
+    tags: [],
   });
 
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Search capsules based on filters
-  const { data: searchResults, isLoading, refetch } = useQuery({
-    queryKey: ['/api/capsules/search', filters],
+  const {
+    data: searchResults,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["/api/capsules/search", filters],
     queryFn: async () => {
       const params = new URLSearchParams();
-      
-      if (filters.searchQuery) params.append('query', filters.searchQuery);
-      if (filters.griefTier !== 'all') params.append('grief_tier', filters.griefTier);
-      if (filters.verificationStatus !== 'all') params.append('verification_status', filters.verificationStatus);
-      if (filters.region !== 'all') params.append('region', filters.region);
-      if (filters.category !== 'all') params.append('category', filters.category);
-      if (filters.truthScoreMin > 0) params.append('truth_score_min', filters.truthScoreMin.toString());
-      if (filters.dateRange !== 'all') params.append('date_range', filters.dateRange);
-      if (selectedTags.length > 0) params.append('tags', selectedTags.join(','));
 
-      const response = await apiRequest('GET', `/api/capsules/search?${params}`);
+      if (filters.searchQuery) params.append("query", filters.searchQuery);
+      if (filters.griefTier !== "all")
+        params.append("grief_tier", filters.griefTier);
+      if (filters.verificationStatus !== "all")
+        params.append("verification_status", filters.verificationStatus);
+      if (filters.region !== "all") params.append("region", filters.region);
+      if (filters.category !== "all")
+        params.append("category", filters.category);
+      if (filters.truthScoreMin > 0)
+        params.append("truth_score_min", filters.truthScoreMin.toString());
+      if (filters.dateRange !== "all")
+        params.append("date_range", filters.dateRange);
+      if (selectedTags.length > 0)
+        params.append("tags", selectedTags.join(","));
+
+      const response = await apiRequest(
+        "GET",
+        `/api/capsules/search?${params}`,
+      );
       return response.json();
     },
-    enabled: filters.searchQuery.length > 2 || filters.griefTier !== 'all' || filters.verificationStatus !== 'all'
+    enabled:
+      filters.searchQuery.length > 2 ||
+      filters.griefTier !== "all" ||
+      filters.verificationStatus !== "all",
   });
 
   // Get available tags
   const { data: availableTags } = useQuery({
-    queryKey: ['/api/capsules/tags'],
+    queryKey: ["/api/capsules/tags"],
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/capsules/tags');
+      const response = await apiRequest("GET", "/api/capsules/tags");
       return response.json();
-    }
+    },
   });
 
   const handleFilterChange = (newFilters: Partial<CapsuleFilters>) => {
@@ -103,14 +128,14 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
 
   const clearFilters = () => {
     const defaultFilters: CapsuleFilters = {
-      searchQuery: '',
-      griefTier: 'all',
-      verificationStatus: 'all',
-      region: 'all',
-      category: 'all',
+      searchQuery: "",
+      griefTier: "all",
+      verificationStatus: "all",
+      region: "all",
+      category: "all",
       truthScoreMin: 0,
-      dateRange: 'all',
-      tags: []
+      dateRange: "all",
+      tags: [],
     };
     setFilters(defaultFilters);
     setSelectedTags([]);
@@ -118,9 +143,9 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
 
   const toggleTag = (tag: string) => {
     const newTags = selectedTags.includes(tag)
-      ? selectedTags.filter(t => t !== tag)
+      ? selectedTags.filter((t) => t !== tag)
       : [...selectedTags, tag];
-    
+
     setSelectedTags(newTags);
     handleFilterChange({ tags: newTags });
   };
@@ -128,12 +153,12 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
   const getFilterCount = () => {
     let count = 0;
     if (filters.searchQuery) count++;
-    if (filters.griefTier !== 'all') count++;
-    if (filters.verificationStatus !== 'all') count++;
-    if (filters.region !== 'all') count++;
-    if (filters.category !== 'all') count++;
+    if (filters.griefTier !== "all") count++;
+    if (filters.verificationStatus !== "all") count++;
+    if (filters.region !== "all") count++;
+    if (filters.category !== "all") count++;
     if (filters.truthScoreMin > 0) count++;
-    if (filters.dateRange !== 'all') count++;
+    if (filters.dateRange !== "all") count++;
     if (selectedTags.length > 0) count++;
     return count;
   };
@@ -155,7 +180,10 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
             <Package className="w-5 h-5 mr-2" />
             Capsule Search
             {getFilterCount() > 0 && (
-              <Badge variant="outline" className="ml-2 border-indigo-400 text-indigo-300">
+              <Badge
+                variant="outline"
+                className="ml-2 border-indigo-400 text-indigo-300"
+              >
                 {getFilterCount()} active
               </Badge>
             )}
@@ -185,14 +213,15 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        
         {/* Basic Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
             placeholder="Search capsules by title, content, guardian..."
             value={filters.searchQuery}
-            onChange={(e) => handleFilterChange({ searchQuery: e.target.value })}
+            onChange={(e) =>
+              handleFilterChange({ searchQuery: e.target.value })
+            }
             className="pl-10 bg-slate-800/50 border-indigo-500/30 text-white placeholder:text-gray-400"
           />
         </div>
@@ -200,8 +229,15 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
         {/* Quick Filters */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div>
-            <Label className="text-sm text-gray-300 mb-1 block">Grief Tier</Label>
-            <Select value={filters.griefTier} onValueChange={(value) => handleFilterChange({ griefTier: value })}>
+            <Label className="text-sm text-gray-300 mb-1 block">
+              Grief Tier
+            </Label>
+            <Select
+              value={filters.griefTier}
+              onValueChange={(value) =>
+                handleFilterChange({ griefTier: value })
+              }
+            >
               <SelectTrigger className="bg-slate-800 border-indigo-500/30">
                 <SelectValue />
               </SelectTrigger>
@@ -216,8 +252,15 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
           </div>
 
           <div>
-            <Label className="text-sm text-gray-300 mb-1 block">Verification</Label>
-            <Select value={filters.verificationStatus} onValueChange={(value) => handleFilterChange({ verificationStatus: value })}>
+            <Label className="text-sm text-gray-300 mb-1 block">
+              Verification
+            </Label>
+            <Select
+              value={filters.verificationStatus}
+              onValueChange={(value) =>
+                handleFilterChange({ verificationStatus: value })
+              }
+            >
               <SelectTrigger className="bg-slate-800 border-indigo-500/30">
                 <SelectValue />
               </SelectTrigger>
@@ -246,8 +289,15 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
           </div>
 
           <div>
-            <Label className="text-sm text-gray-300 mb-1 block">Time Range</Label>
-            <Select value={filters.dateRange} onValueChange={(value) => handleFilterChange({ dateRange: value })}>
+            <Label className="text-sm text-gray-300 mb-1 block">
+              Time Range
+            </Label>
+            <Select
+              value={filters.dateRange}
+              onValueChange={(value) =>
+                handleFilterChange({ dateRange: value })
+              }
+            >
               <SelectTrigger className="bg-slate-800 border-indigo-500/30">
                 <SelectValue />
               </SelectTrigger>
@@ -265,12 +315,18 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
         {/* Advanced Filters */}
         {showAdvancedFilters && (
           <div className="space-y-4 border-t border-gray-700 pt-4">
-            
             {/* Region and Category */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm text-gray-300 mb-1 block">Region</Label>
-                <Select value={filters.region} onValueChange={(value) => handleFilterChange({ region: value })}>
+                <Label className="text-sm text-gray-300 mb-1 block">
+                  Region
+                </Label>
+                <Select
+                  value={filters.region}
+                  onValueChange={(value) =>
+                    handleFilterChange({ region: value })
+                  }
+                >
                   <SelectTrigger className="bg-slate-800 border-indigo-500/30">
                     <SelectValue />
                   </SelectTrigger>
@@ -287,8 +343,15 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
               </div>
 
               <div>
-                <Label className="text-sm text-gray-300 mb-1 block">Category</Label>
-                <Select value={filters.category} onValueChange={(value) => handleFilterChange({ category: value })}>
+                <Label className="text-sm text-gray-300 mb-1 block">
+                  Category
+                </Label>
+                <Select
+                  value={filters.category}
+                  onValueChange={(value) =>
+                    handleFilterChange({ category: value })
+                  }
+                >
                   <SelectTrigger className="bg-slate-800 border-indigo-500/30">
                     <SelectValue />
                   </SelectTrigger>
@@ -315,7 +378,9 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
                 min="0"
                 max="100"
                 value={filters.truthScoreMin}
-                onChange={(e) => handleFilterChange({ truthScoreMin: Number(e.target.value) })}
+                onChange={(e) =>
+                  handleFilterChange({ truthScoreMin: Number(e.target.value) })
+                }
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
               />
             </div>
@@ -333,7 +398,10 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
                         onCheckedChange={() => toggleTag(tag)}
                         className="border-indigo-500/30"
                       />
-                      <Label htmlFor={tag} className="text-xs text-gray-300 cursor-pointer">
+                      <Label
+                        htmlFor={tag}
+                        className="text-xs text-gray-300 cursor-pointer"
+                      >
                         {tag}
                       </Label>
                     </div>
@@ -372,14 +440,14 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm text-gray-300">
                 <TrendingUp className="w-4 h-4 inline mr-1" />
-                Found {results.length} capsule{results.length !== 1 ? 's' : ''}
+                Found {results.length} capsule{results.length !== 1 ? "s" : ""}
               </div>
               {onExport && (
                 <div className="flex space-x-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onExport(results, 'csv')}
+                    onClick={() => onExport(results, "csv")}
                     className="border-indigo-500/30"
                   >
                     Export CSV
@@ -387,7 +455,7 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onExport(results, 'pdf')}
+                    onClick={() => onExport(results, "pdf")}
                     className="border-indigo-500/30"
                   >
                     Export PDF
@@ -398,7 +466,10 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
 
             <div className="space-y-3 max-h-64 overflow-y-auto">
               {results.slice(0, 10).map((capsule: Capsule) => (
-                <div key={capsule.id} className="bg-slate-800/50 p-3 rounded border border-gray-700">
+                <div
+                  key={capsule.id}
+                  className="bg-slate-800/50 p-3 rounded border border-gray-700"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <h4 className="text-sm font-medium text-white truncate">
                       {capsule.title}
@@ -407,7 +478,7 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
                       <Badge variant="outline" className="text-xs">
                         {capsule.grief_tier}
                       </Badge>
-                      {capsule.verification_status === 'verified' && (
+                      {capsule.verification_status === "verified" && (
                         <Shield className="w-3 h-3 text-green-400" />
                       )}
                     </div>
@@ -417,12 +488,18 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
                   </p>
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Score: {capsule.truth_score}</span>
-                    <span>{new Date(capsule.created_at).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(capsule.created_at).toLocaleDateString()}
+                    </span>
                   </div>
                   {capsule.tags.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {capsule.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {tag}
                         </Badge>
                       ))}
@@ -439,13 +516,15 @@ export default function CapsuleSearch({ onResultsChange, onExport }: CapsuleSear
           </div>
         )}
 
-        {filters.searchQuery.length > 2 && results.length === 0 && !isLoading && (
-          <div className="text-center py-4 text-gray-400">
-            <Package className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>No capsules found matching your criteria</p>
-            <p className="text-xs">Try adjusting your search filters</p>
-          </div>
-        )}
+        {filters.searchQuery.length > 2 &&
+          results.length === 0 &&
+          !isLoading && (
+            <div className="text-center py-4 text-gray-400">
+              <Package className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p>No capsules found matching your criteria</p>
+              <p className="text-xs">Try adjusting your search filters</p>
+            </div>
+          )}
       </CardContent>
     </Card>
   );

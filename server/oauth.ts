@@ -1,7 +1,7 @@
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { Strategy as GitHubStrategy } from 'passport-github2';
-import type { Express } from 'express';
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as GitHubStrategy } from "passport-github2";
+import type { Express } from "express";
 
 // OAuth configuration interface
 export interface OAuthConfig {
@@ -20,7 +20,7 @@ export interface OAuthConfig {
 // User profile from OAuth providers
 export interface OAuthProfile {
   id: string;
-  provider: 'google' | 'github';
+  provider: "google" | "github";
   email: string;
   firstName?: string;
   lastName?: string;
@@ -53,14 +53,14 @@ export function initializeOAuth(app: Express, config: OAuthConfig) {
         {
           clientID: config.google.clientId,
           clientSecret: config.google.clientSecret,
-          callbackURL: config.google.callbackURL || '/auth/google/callback',
+          callbackURL: config.google.callbackURL || "/auth/google/callback",
         },
         async (accessToken, refreshToken, profile, done) => {
           try {
             const user: OAuthProfile = {
               id: profile.id,
-              provider: 'google',
-              email: profile.emails?.[0]?.value || '',
+              provider: "google",
+              email: profile.emails?.[0]?.value || "",
               firstName: profile.name?.givenName,
               lastName: profile.name?.familyName,
               avatar: profile.photos?.[0]?.value,
@@ -69,21 +69,23 @@ export function initializeOAuth(app: Express, config: OAuthConfig) {
           } catch (error) {
             return done(error, null);
           }
-        }
-      )
+        },
+      ),
     );
 
     // Google OAuth routes
-    app.get('/auth/google', 
-      passport.authenticate('google', { scope: ['profile', 'email'] })
+    app.get(
+      "/auth/google",
+      passport.authenticate("google", { scope: ["profile", "email"] }),
     );
 
-    app.get('/auth/google/callback',
-      passport.authenticate('google', { failureRedirect: '/login' }),
+    app.get(
+      "/auth/google/callback",
+      passport.authenticate("google", { failureRedirect: "/login" }),
       (req, res) => {
         // Successful authentication, redirect to dashboard
-        res.redirect('/dashboard');
-      }
+        res.redirect("/dashboard");
+      },
     );
   }
 
@@ -94,16 +96,16 @@ export function initializeOAuth(app: Express, config: OAuthConfig) {
         {
           clientID: config.github.clientId,
           clientSecret: config.github.clientSecret,
-          callbackURL: config.github.callbackURL || '/auth/github/callback',
+          callbackURL: config.github.callbackURL || "/auth/github/callback",
         },
         async (accessToken, refreshToken, profile, done) => {
           try {
             const user: OAuthProfile = {
               id: profile.id,
-              provider: 'github',
-              email: profile.emails?.[0]?.value || '',
-              firstName: profile.displayName?.split(' ')[0],
-              lastName: profile.displayName?.split(' ')[1],
+              provider: "github",
+              email: profile.emails?.[0]?.value || "",
+              firstName: profile.displayName?.split(" ")[0],
+              lastName: profile.displayName?.split(" ")[1],
               avatar: profile.photos?.[0]?.value,
               username: profile.username,
             };
@@ -111,37 +113,39 @@ export function initializeOAuth(app: Express, config: OAuthConfig) {
           } catch (error) {
             return done(error, null);
           }
-        }
-      )
+        },
+      ),
     );
 
     // GitHub OAuth routes
-    app.get('/auth/github',
-      passport.authenticate('github', { scope: ['user:email'] })
+    app.get(
+      "/auth/github",
+      passport.authenticate("github", { scope: ["user:email"] }),
     );
 
-    app.get('/auth/github/callback',
-      passport.authenticate('github', { failureRedirect: '/login' }),
+    app.get(
+      "/auth/github/callback",
+      passport.authenticate("github", { failureRedirect: "/login" }),
       (req, res) => {
         // Successful authentication, redirect to dashboard
-        res.redirect('/dashboard');
-      }
+        res.redirect("/dashboard");
+      },
     );
   }
 
   // Logout route
-  app.get('/auth/logout', (req, res) => {
+  app.get("/auth/logout", (req, res) => {
     req.logout(() => {
-      res.redirect('/');
+      res.redirect("/");
     });
   });
 
   // OAuth user info endpoint
-  app.get('/api/auth/oauth-user', (req, res) => {
+  app.get("/api/auth/oauth-user", (req, res) => {
     if (req.isAuthenticated()) {
       res.json(req.user);
     } else {
-      res.status(401).json({ error: 'Not authenticated' });
+      res.status(401).json({ error: "Not authenticated" });
     }
   });
 }
@@ -153,7 +157,7 @@ export function requireOAuthAuth(req: any, res: any, next: any) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.status(401).json({ error: 'OAuth authentication required' });
+  res.status(401).json({ error: "OAuth authentication required" });
 }
 
 /**
@@ -161,15 +165,23 @@ export function requireOAuthAuth(req: any, res: any, next: any) {
  */
 export function getOAuthConfig(): OAuthConfig {
   return {
-    google: process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET ? {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL || '/auth/google/callback',
-    } : undefined,
-    github: process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET ? {
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: process.env.GITHUB_CALLBACK_URL || '/auth/github/callback',
-    } : undefined,
+    google:
+      process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+        ? {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL:
+              process.env.GOOGLE_CALLBACK_URL || "/auth/google/callback",
+          }
+        : undefined,
+    github:
+      process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
+        ? {
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            callbackURL:
+              process.env.GITHUB_CALLBACK_URL || "/auth/github/callback",
+          }
+        : undefined,
   };
 }

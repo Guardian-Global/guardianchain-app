@@ -29,7 +29,7 @@ export function registerStripeWebhook(app: Express) {
   app.post("/api/stripe/webhook", async (req, res) => {
     if (!stripe) {
       console.log(
-        "Stripe webhook received but no Stripe secret key configured"
+        "Stripe webhook received but no Stripe secret key configured",
       );
       return res.status(400).json({ error: "Stripe not configured" });
     }
@@ -42,7 +42,7 @@ export function registerStripeWebhook(app: Express) {
         event = stripe.webhooks.constructEvent(
           req.body,
           sig,
-          process.env.STRIPE_WEBHOOK_SECRET!
+          process.env.STRIPE_WEBHOOK_SECRET!,
         );
       } catch (err: any) {
         console.error("Webhook signature verification failed:", err.message);
@@ -76,7 +76,7 @@ export function registerStripeWebhook(app: Express) {
           });
 
           console.log(
-            `Updated user ${userId} to ${tierName} tier with ${tier.capsuleMints} credits`
+            `Updated user ${userId} to ${tierName} tier with ${tier.capsuleMints} credits`,
           );
         }
       }
@@ -106,7 +106,7 @@ export function registerStripeWebhook(app: Express) {
           });
 
           console.log(
-            `User ${userId} subscription cancelled, reset to Explorer tier`
+            `User ${userId} subscription cancelled, reset to Explorer tier`,
           );
         }
       }

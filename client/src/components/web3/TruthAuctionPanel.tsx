@@ -22,7 +22,7 @@ export default function TruthAuctionPanel() {
 
   const auctionEngineAddress = getContractAddress(
     chainId || 31337,
-    "auctionEngine"
+    "auctionEngine",
   );
 
   // Read auction counter
@@ -63,7 +63,7 @@ export default function TruthAuctionPanel() {
           variant: "destructive",
         });
       },
-    }
+    },
   );
 
   // Place Bid

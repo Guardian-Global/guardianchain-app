@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Search,
   LayoutDashboard,
   FileText,
@@ -14,7 +14,7 @@ import {
   Shield,
   Crown,
   Zap,
-  Hash
+  Hash,
 } from "lucide-react";
 
 interface Command {
@@ -37,7 +37,7 @@ const commands: Command[] = [
     icon: LayoutDashboard,
     category: "Navigation",
     roles: ["guest", "member", "moderator", "admin", "dao-owner"],
-    shortcut: "D"
+    shortcut: "D",
   },
   {
     id: "admin",
@@ -47,7 +47,7 @@ const commands: Command[] = [
     icon: Settings,
     category: "Navigation",
     roles: ["admin", "dao-owner"],
-    shortcut: "A"
+    shortcut: "A",
   },
   {
     id: "vault",
@@ -57,7 +57,7 @@ const commands: Command[] = [
     icon: FileText,
     category: "Navigation",
     roles: ["guest", "member", "moderator", "admin", "dao-owner"],
-    shortcut: "V"
+    shortcut: "V",
   },
   {
     id: "create",
@@ -67,7 +67,7 @@ const commands: Command[] = [
     icon: Plus,
     category: "Actions",
     roles: ["member", "moderator", "admin", "dao-owner"],
-    shortcut: "C"
+    shortcut: "C",
   },
   {
     id: "staking",
@@ -77,7 +77,7 @@ const commands: Command[] = [
     icon: TrendingUp,
     category: "Finance",
     roles: ["member", "moderator", "admin", "dao-owner"],
-    shortcut: "S"
+    shortcut: "S",
   },
   {
     id: "dao",
@@ -87,7 +87,7 @@ const commands: Command[] = [
     icon: Crown,
     category: "Governance",
     roles: ["dao-owner"],
-    shortcut: "G"
+    shortcut: "G",
   },
   {
     id: "validator",
@@ -97,16 +97,16 @@ const commands: Command[] = [
     icon: Shield,
     category: "Moderation",
     roles: ["moderator", "admin", "dao-owner"],
-    shortcut: "M"
-  }
+    shortcut: "M",
+  },
 ];
 
 const tierHierarchy = {
-  'guest': 0,
-  'member': 1,
-  'moderator': 2,
-  'admin': 3,
-  'dao-owner': 4
+  guest: 0,
+  member: 1,
+  moderator: 2,
+  admin: 3,
+  "dao-owner": 4,
 };
 
 const CommandPalette = () => {
@@ -114,32 +114,37 @@ const CommandPalette = () => {
   const [search, setSearch] = useState("");
   const { user } = useAuth();
 
-  const currentTier = (user as any)?.tier?.toLowerCase() || 'guest';
-  const currentTierLevel = tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
+  const currentTier = (user as any)?.tier?.toLowerCase() || "guest";
+  const currentTierLevel =
+    tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
 
   // Filter commands based on user permissions and search
-  const availableCommands = commands.filter(command => {
-    const hasPermission = command.roles.some(role => {
+  const availableCommands = commands.filter((command) => {
+    const hasPermission = command.roles.some((role) => {
       const roleLevel = tierHierarchy[role as keyof typeof tierHierarchy] ?? 0;
       return currentTierLevel >= roleLevel;
     });
-    
-    const matchesSearch = search === "" || 
+
+    const matchesSearch =
+      search === "" ||
       command.label.toLowerCase().includes(search.toLowerCase()) ||
       command.description?.toLowerCase().includes(search.toLowerCase()) ||
       command.category.toLowerCase().includes(search.toLowerCase());
-    
+
     return hasPermission && matchesSearch;
   });
 
   // Group commands by category
-  const groupedCommands = availableCommands.reduce((acc, command) => {
-    if (!acc[command.category]) {
-      acc[command.category] = [];
-    }
-    acc[command.category].push(command);
-    return acc;
-  }, {} as Record<string, Command[]>);
+  const groupedCommands = availableCommands.reduce(
+    (acc, command) => {
+      if (!acc[command.category]) {
+        acc[command.category] = [];
+      }
+      acc[command.category].push(command);
+      return acc;
+    },
+    {} as Record<string, Command[]>,
+  );
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -147,9 +152,9 @@ const CommandPalette = () => {
       // Open/close with Cmd+K or Ctrl+K
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setOpen(prev => !prev);
+        setOpen((prev) => !prev);
       }
-      
+
       // Close with Escape
       if (e.key === "Escape") {
         setOpen(false);
@@ -206,42 +211,44 @@ const CommandPalette = () => {
                 <p>No commands found</p>
               </div>
             ) : (
-              Object.entries(groupedCommands).map(([category, categoryCommands]) => (
-                <div key={category} className="mb-4">
-                  <div className="px-2 py-1 text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    {category}
-                  </div>
-                  <div className="space-y-1">
-                    {categoryCommands.map((command) => {
-                      const Icon = command.icon;
-                      return (
-                        <button
-                          key={command.id}
-                          onClick={() => executeCommand(command)}
-                          className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-slate-700/50 rounded-lg transition-colors group"
-                        >
-                          <Icon className="h-4 w-4 text-slate-400 group-hover:text-blue-400" />
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium text-white group-hover:text-blue-300">
-                              {command.label}
-                            </div>
-                            {command.description && (
-                              <div className="text-xs text-slate-400 truncate">
-                                {command.description}
+              Object.entries(groupedCommands).map(
+                ([category, categoryCommands]) => (
+                  <div key={category} className="mb-4">
+                    <div className="px-2 py-1 text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      {category}
+                    </div>
+                    <div className="space-y-1">
+                      {categoryCommands.map((command) => {
+                        const Icon = command.icon;
+                        return (
+                          <button
+                            key={command.id}
+                            onClick={() => executeCommand(command)}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-slate-700/50 rounded-lg transition-colors group"
+                          >
+                            <Icon className="h-4 w-4 text-slate-400 group-hover:text-blue-400" />
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-white group-hover:text-blue-300">
+                                {command.label}
                               </div>
+                              {command.description && (
+                                <div className="text-xs text-slate-400 truncate">
+                                  {command.description}
+                                </div>
+                              )}
+                            </div>
+                            {command.shortcut && (
+                              <Badge variant="outline" className="text-xs">
+                                {command.shortcut}
+                              </Badge>
                             )}
-                          </div>
-                          {command.shortcut && (
-                            <Badge variant="outline" className="text-xs">
-                              {command.shortcut}
-                            </Badge>
-                          )}
-                        </button>
-                      );
-                    })}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))
+                ),
+              )
             )}
           </div>
 

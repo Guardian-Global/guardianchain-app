@@ -63,7 +63,7 @@ export default function OnboardingPage() {
           profile,
           preferences,
           step: currentStep,
-        }
+        },
       );
       setAiRecommendations(recommendations);
     } catch (error) {
@@ -222,7 +222,7 @@ export default function OnboardingPage() {
                         <Checkbox
                           id={compliance}
                           checked={preferences.complianceNeeds.includes(
-                            compliance
+                            compliance,
                           )}
                           onCheckedChange={(checked) => {
                             if (checked) {
@@ -237,7 +237,7 @@ export default function OnboardingPage() {
                               setPreferences((prev) => ({
                                 ...prev,
                                 complianceNeeds: prev.complianceNeeds.filter(
-                                  (c) => c !== compliance
+                                  (c) => c !== compliance,
                                 ),
                               }));
                             }
@@ -247,7 +247,7 @@ export default function OnboardingPage() {
                           {compliance}
                         </Label>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>
@@ -307,7 +307,7 @@ export default function OnboardingPage() {
                             setPreferences((prev) => ({
                               ...prev,
                               integrations: prev.integrations.filter(
-                                (i) => i !== integration
+                                (i) => i !== integration,
                               ),
                             }));
                           }

@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,48 +24,64 @@ interface NFTBadge {
 export function NFTAvatarSystem() {
   const [badges] = useState<NFTBadge[]>([
     {
-      id: 'seeker',
-      name: 'Truth Seeker',
-      tier: 'SEEKER',
-      icon: '🟣',
-      color: 'purple',
+      id: "seeker",
+      name: "Truth Seeker",
+      tier: "SEEKER",
+      icon: "🟣",
+      color: "purple",
       earned: true,
-      description: 'Verified your first truth capsule'
+      description: "Verified your first truth capsule",
     },
     {
-      id: 'validator',
-      name: 'Truth Validator',
-      tier: 'VALIDATOR',
-      icon: '🔵',
-      color: 'blue',
+      id: "validator",
+      name: "Truth Validator",
+      tier: "VALIDATOR",
+      icon: "🔵",
+      color: "blue",
       earned: false,
-      description: 'Completed 10 capsule verifications'
+      description: "Completed 10 capsule verifications",
     },
     {
-      id: 'creator',
-      name: 'Truth Creator',
-      tier: 'CREATOR',
-      icon: '🟡',
-      color: 'yellow',
+      id: "creator",
+      name: "Truth Creator",
+      tier: "CREATOR",
+      icon: "🟡",
+      color: "yellow",
       earned: false,
-      description: 'Created 25 verified capsules'
+      description: "Created 25 verified capsules",
     },
     {
-      id: 'truthsmith',
-      name: 'Truth Smith',
-      tier: 'SOVEREIGN',
-      icon: '🔴',
-      color: 'red',
+      id: "truthsmith",
+      name: "Truth Smith",
+      tier: "SOVEREIGN",
+      icon: "🔴",
+      color: "red",
       earned: false,
-      description: 'Achieved Sovereign tier status'
-    }
+      description: "Achieved Sovereign tier status",
+    },
   ]);
 
   const [nftAvatars] = useState([
-    { id: 1, src: '/assets/icons/nft-avatar/guardian-1.png', name: 'Cosmic Guardian' },
-    { id: 2, src: '/assets/icons/nft-avatar/guardian-2.png', name: 'Quantum Verifier' },
-    { id: 3, src: '/assets/icons/nft-avatar/guardian-3.png', name: 'Truth Sage' },
-    { id: 4, src: '/assets/icons/nft-avatar/guardian-4.png', name: 'Digital Oracle' }
+    {
+      id: 1,
+      src: "/assets/icons/nft-avatar/guardian-1.png",
+      name: "Cosmic Guardian",
+    },
+    {
+      id: 2,
+      src: "/assets/icons/nft-avatar/guardian-2.png",
+      name: "Quantum Verifier",
+    },
+    {
+      id: 3,
+      src: "/assets/icons/nft-avatar/guardian-3.png",
+      name: "Truth Sage",
+    },
+    {
+      id: 4,
+      src: "/assets/icons/nft-avatar/guardian-4.png",
+      name: "Digital Oracle",
+    },
   ]);
 
   return (
@@ -72,8 +94,12 @@ export function NFTAvatarSystem() {
               <Palette className="h-6 w-6 text-blue-400" />
             </div>
             <div>
-              <CardTitle className="text-white">NFT Avatar Collection</CardTitle>
-              <CardDescription>Customize your guardian identity</CardDescription>
+              <CardTitle className="text-white">
+                NFT Avatar Collection
+              </CardTitle>
+              <CardDescription>
+                Customize your guardian identity
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -119,8 +145,8 @@ export function NFTAvatarSystem() {
                 key={badge.id}
                 className={`p-4 rounded-xl border transition-all duration-200 ${
                   badge.earned
-                    ? 'bg-white/10 border-white/20 shadow-lg'
-                    : 'bg-white/5 border-white/10 opacity-60'
+                    ? "bg-white/10 border-white/20 shadow-lg"
+                    : "bg-white/5 border-white/10 opacity-60"
                 }`}
               >
                 <div className="flex items-center gap-3">

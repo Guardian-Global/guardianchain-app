@@ -303,7 +303,7 @@ const DataEducationHub: React.FC = () => {
                         <Zap className="w-4 h-4 text-yellow-400 mr-2 mt-1 flex-shrink-0" />
                         <span className="text-slate-300 text-sm">{action}</span>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>

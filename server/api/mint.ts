@@ -38,7 +38,7 @@ interface MintResponse {
  */
 async function simulateGTTMint(
   amount: number,
-  wallet: string
+  wallet: string,
 ): Promise<MintResponse> {
   // Validate inputs
   if (amount <= 0) {
@@ -71,7 +71,7 @@ async function simulateGTTMint(
  */
 async function calculateAndMintRewards(
   capsuleMetrics: CapsuleMetrics,
-  wallet: string
+  wallet: string,
 ): Promise<MintResponse> {
   const rewards = calculateAdvancedGTT(capsuleMetrics);
 
@@ -112,7 +112,7 @@ export function registerMintRoutes(app: Express) {
       console.log(
         `[ADMIN MINT] ${amount} GTT minted to ${wallet}. Reason: ${
           reason || "Manual mint"
-        }`
+        }`,
       );
 
       res.status(200).json(result);
@@ -186,7 +186,7 @@ export function registerMintRoutes(app: Express) {
         try {
           const result = await simulateGTTMint(
             recipient.amount,
-            recipient.wallet
+            recipient.wallet,
           );
           results.push({ ...result, recipient: recipient.wallet });
         } catch (error: any) {
@@ -226,7 +226,7 @@ export function registerMintRoutes(app: Express) {
         recipient: `0x${Math.random().toString(16).substr(2, 40)}`,
         transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
         timestamp: new Date(
-          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+          Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
         ).toISOString(),
         reason: [
           "Capsule reward",

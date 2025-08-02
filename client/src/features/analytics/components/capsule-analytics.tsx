@@ -65,7 +65,7 @@ export default function CapsuleAnalytics({
     queryFn: async () => {
       const response = await apiRequest(
         "GET",
-        `/api/analytics/${capsule.id}/analytics`
+        `/api/analytics/${capsule.id}/analytics`,
       );
       return response.json();
     },
@@ -82,7 +82,7 @@ export default function CapsuleAnalytics({
         `/api/analytics/${capsule.id}/claim-yield`,
         {
           walletAddress,
-        }
+        },
       );
       return response.json();
     },
@@ -286,15 +286,15 @@ export default function CapsuleAnalytics({
                   metrics.status === "sealed"
                     ? "bg-purple-600"
                     : metrics.status === "verified"
-                    ? "bg-green-600"
-                    : "bg-blue-600"
+                      ? "bg-green-600"
+                      : "bg-blue-600"
                 }
               >
                 {metrics.status === "sealed"
                   ? "Veritas Sealed"
                   : metrics.status === "verified"
-                  ? "Truth Verified"
-                  : "Pending Review"}
+                    ? "Truth Verified"
+                    : "Pending Review"}
               </Badge>
             </div>
 

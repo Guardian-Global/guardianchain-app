@@ -9,95 +9,96 @@ const configItems = [
     key: "projectName",
     value: "GuardianChain",
     type: "string" as const,
-    editable: false
+    editable: false,
   },
   {
     key: "defaultTier",
     value: "guest",
     type: "string" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "projectStatus",
     value: "production",
     type: "string" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "veritasSealRequired",
     value: "true",
     type: "boolean" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "stripeEnabled",
     value: "true",
     type: "boolean" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "capsuleReplayFee",
     value: "2.50",
     type: "number" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "griefScoreEnabled",
     value: "true",
     type: "boolean" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "aiModeration",
     value: "on",
     type: "string" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "ipfsPinning",
     value: "pinata",
     type: "string" as const,
-    editable: true
+    editable: true,
   },
   {
     key: "network",
     value: "polygon-mainnet",
     type: "string" as const,
-    editable: false
-  }
+    editable: false,
+  },
 ];
 
 // Store for dynamic config changes (in production, use database)
-let runtimeConfig = new Map(configItems.map(item => [item.key, item.value]));
+let runtimeConfig = new Map(configItems.map((item) => [item.key, item.value]));
 
 // Middleware to check admin access
 const requireAdmin = (req: any, res: any, next: any) => {
   const user = req.user;
-  const isAdmin = user?.email === 'admin@guardianchain.app' || 
-                  user?.tier === 'ADMIN' ||
-                  user?.tier === 'DAO_OWNER';
-  
+  const isAdmin =
+    user?.email === "admin@guardianchain.app" ||
+    user?.tier === "ADMIN" ||
+    user?.tier === "DAO_OWNER";
+
   if (!isAdmin) {
-    return res.status(403).json({ 
+    return res.status(403).json({
       error: "Admin access required",
-      userTier: user?.tier || 'guest'
+      userTier: user?.tier || "guest",
     });
   }
-  
+
   next();
 };
 
 // Get configuration
 router.get("/config", isAuthenticated, requireAdmin, (req, res) => {
   try {
-    const enrichedConfig = configItems.map(item => ({
+    const enrichedConfig = configItems.map((item) => ({
       ...item,
-      value: runtimeConfig.get(item.key) || item.value
+      value: runtimeConfig.get(item.key) || item.value,
     }));
 
     res.json({
       config: enrichedConfig,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     });
   } catch (error) {
     console.error("Error fetching admin config:", error);
@@ -110,7 +111,7 @@ router.post("/config", isAuthenticated, requireAdmin, (req, res) => {
   try {
     const { updates } = req.body;
 
-    if (!updates || typeof updates !== 'object') {
+    if (!updates || typeof updates !== "object") {
       return res.status(400).json({ error: "Invalid updates format" });
     }
 
@@ -119,8 +120,8 @@ router.post("/config", isAuthenticated, requireAdmin, (req, res) => {
     const errors: string[] = [];
 
     for (const [key, value] of Object.entries(updates)) {
-      const configItem = configItems.find(item => item.key === key);
-      
+      const configItem = configItems.find((item) => item.key === key);
+
       if (!configItem) {
         errors.push(`Unknown config key: ${key}`);
         continue;
@@ -132,12 +133,12 @@ router.post("/config", isAuthenticated, requireAdmin, (req, res) => {
       }
 
       // Type validation
-      if (configItem.type === 'boolean') {
-        if (value !== 'true' && value !== 'false') {
+      if (configItem.type === "boolean") {
+        if (value !== "true" && value !== "false") {
           errors.push(`Config key '${key}' must be 'true' or 'false'`);
           continue;
         }
-      } else if (configItem.type === 'number') {
+      } else if (configItem.type === "number") {
         if (isNaN(Number(value))) {
           errors.push(`Config key '${key}' must be a valid number`);
           continue;
@@ -153,9 +154,8 @@ router.post("/config", isAuthenticated, requireAdmin, (req, res) => {
       success: true,
       appliedUpdates,
       errors,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
-
   } catch (error) {
     console.error("Error updating admin config:", error);
     res.status(500).json({ error: "Failed to update configuration" });

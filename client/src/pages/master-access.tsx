@@ -14,7 +14,7 @@ export default function MasterAccess() {
         email: credentials.email,
         timestamp: Date.now(),
         expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-      })
+      }),
     );
 
     // Redirect based on role
@@ -38,7 +38,9 @@ export default function MasterAccess() {
       <div className="p-8 rounded-lg border bg-card">
         <h2 className="text-2xl font-bold mb-4">Master Access</h2>
         <p className="mb-4">Access restricted to authenticated users.</p>
-        <Button onClick={() => setLocation("/dashboard")}>Go to Dashboard</Button>
+        <Button onClick={() => setLocation("/dashboard")}>
+          Go to Dashboard
+        </Button>
       </div>
     </div>
   );

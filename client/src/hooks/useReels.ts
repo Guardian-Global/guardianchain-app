@@ -13,7 +13,7 @@ export interface Reel {
 
 export function useReels() {
   return useQuery<Reel[]>({
-    queryKey: ['/api/reels'],
+    queryKey: ["/api/reels"],
     queryFn: () => api.reels.getAll(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -25,7 +25,7 @@ export function useCreateReel() {
   return useMutation({
     mutationFn: (reelData: any) => api.reels.create(reelData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/reels'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/reels"] });
     },
   });
 }
@@ -34,10 +34,10 @@ export function useUpdateReel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => 
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
       api.reels.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/reels'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/reels"] });
     },
   });
 }

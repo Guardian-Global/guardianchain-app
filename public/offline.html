@@ -1,96 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GuardianChain Offline</title>
-  <link rel="manifest" href="/manifest.json" />
-  <style>
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
-      color: white; 
-      text-align: center; 
-      padding: 3rem 1rem; 
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .container {
-      max-width: 400px;
-      padding: 2rem;
-      border-radius: 16px;
-      background: rgba(30, 41, 59, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-    }
-    h1 { 
-      font-size: 2rem; 
-      margin-bottom: 1rem; 
-      font-weight: 700;
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    p { 
-      font-size: 1rem; 
-      color: #cbd5e1; 
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-    .capsule-icon { 
-      font-size: 4rem; 
-      margin: 1.5rem 0;
-      filter: drop-shadow(0 4px 8px rgba(96, 165, 250, 0.3));
-    }
-    .brand {
-      font-size: 0.875rem;
-      color: #64748b;
-      margin-top: 2rem;
-      font-weight: 500;
-    }
-    .retry-btn {
-      margin-top: 1.5rem;
-      padding: 0.75rem 1.5rem;
-      background: linear-gradient(135deg, #3b82f6, #6366f1);
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .retry-btn:hover {
-      transform: translateY(-1px);
-    }
-    .pulse {
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="capsule-icon pulse">🔒</div>
-    <h1>You're Offline</h1>
-    <p>
-      GuardianChain requires an internet connection to mint, replay, and sync truth capsules with the blockchain.
-    </p>
-    <p>
-      Your sovereign memory infrastructure is temporarily unavailable.
-    </p>
-    <button class="retry-btn" onclick="window.location.reload()">
-      🔄 Retry Connection
-    </button>
-    <div class="brand">
-      GuardianChain • Truth Vault Platform
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GuardianChain Offline</title>
+    <link rel="manifest" href="/manifest.json" />
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: white;
+        text-align: center;
+        padding: 3rem 1rem;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        max-width: 400px;
+        padding: 2rem;
+        border-radius: 16px;
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      p {
+        font-size: 1rem;
+        color: #cbd5e1;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+      .capsule-icon {
+        font-size: 4rem;
+        margin: 1.5rem 0;
+        filter: drop-shadow(0 4px 8px rgba(96, 165, 250, 0.3));
+      }
+      .brand {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-top: 2rem;
+        font-weight: 500;
+      }
+      .retry-btn {
+        margin-top: 1.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .retry-btn:hover {
+        transform: translateY(-1px);
+      }
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="capsule-icon pulse">🔒</div>
+      <h1>You're Offline</h1>
+      <p>
+        GuardianChain requires an internet connection to mint, replay, and sync
+        truth capsules with the blockchain.
+      </p>
+      <p>Your sovereign memory infrastructure is temporarily unavailable.</p>
+      <button class="retry-btn" onclick="window.location.reload()">
+        🔄 Retry Connection
+      </button>
+      <div class="brand">GuardianChain • Truth Vault Platform</div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

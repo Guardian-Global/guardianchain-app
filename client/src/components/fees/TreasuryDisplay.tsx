@@ -239,7 +239,7 @@ export default function TreasuryDisplay({
               <div className="font-mono text-xs text-white mt-1">
                 {treasuryAddress
                   ? `${treasuryAddress.slice(0, 10)}...${treasuryAddress.slice(
-                      -8
+                      -8,
                     )}`
                   : "Not configured"}
               </div>

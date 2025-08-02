@@ -51,8 +51,8 @@ ${JSON.stringify(details, null, 2)}
           <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
             <p><strong>Type:</strong> ${transaction.type}</p>
             <p><strong>Amount:</strong> ${transaction.amount} ${
-        transaction.currency
-      }</p>
+              transaction.currency
+            }</p>
             <p><strong>User:</strong> ${transaction.userId}</p>
             <p><strong>Status:</strong> ${transaction.status}</p>
             <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>

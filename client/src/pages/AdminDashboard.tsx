@@ -2,13 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminConfigView from "@/components/admin/AdminConfigView";
 import CapsuleAccessGuard from "@/components/auth/CapsuleAccessGuard";
-import { 
-  Settings, 
-  Users, 
-  Shield, 
-  BarChart3, 
+import {
+  Settings,
+  Users,
+  Shield,
+  BarChart3,
   Database,
-  Activity
+  Activity,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -22,7 +22,8 @@ export default function AdminDashboard() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
             <p className="text-gray-400">
-              Welcome back, {user?.firstName}. Manage GuardianChain platform settings and operations.
+              Welcome back, {user?.firstName}. Manage GuardianChain platform
+              settings and operations.
             </p>
           </div>
 
@@ -36,11 +37,17 @@ export default function AdminDashboard() {
                 <Users className="h-4 w-4" />
                 Users
               </TabsTrigger>
-              <TabsTrigger value="verification" className="flex items-center gap-2">
+              <TabsTrigger
+                value="verification"
+                className="flex items-center gap-2"
+              >
                 <Shield className="h-4 w-4" />
                 Verification
               </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <TabsTrigger
+                value="analytics"
+                className="flex items-center gap-2"
+              >
                 <BarChart3 className="h-4 w-4" />
                 Analytics
               </TabsTrigger>
@@ -94,31 +101,43 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Total Capsules</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Total Capsules
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">25,847</div>
-                    <p className="text-xs text-green-400">+12% from last month</p>
+                    <p className="text-xs text-green-400">
+                      +12% from last month
+                    </p>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Active Users
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">12,450</div>
-                    <p className="text-xs text-green-400">+8% from last month</p>
+                    <p className="text-xs text-green-400">
+                      +8% from last month
+                    </p>
                   </CardContent>
                 </Card>
 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">GTT Distributed</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      GTT Distributed
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">$2.4M</div>
-                    <p className="text-xs text-green-400">+15% from last month</p>
+                    <p className="text-xs text-green-400">
+                      +15% from last month
+                    </p>
                   </CardContent>
                 </Card>
               </div>

@@ -31,14 +31,14 @@ class VeritusEngine {
     this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || "";
     if (!this.apiKey) {
       console.warn(
-        "OpenAI API key not configured. Add VITE_OPENAI_API_KEY to environment variables."
+        "OpenAI API key not configured. Add VITE_OPENAI_API_KEY to environment variables.",
       );
     }
   }
 
   async analyzeContent(
     content: string,
-    contentType: "text" | "idea" | "research" = "text"
+    contentType: "text" | "idea" | "research" = "text",
   ): Promise<VeritusAnalysis> {
     if (!this.apiKey) {
       return this.generateMockAnalysis(content);
@@ -115,19 +115,19 @@ Respond only with valid JSON.
           (metrics.wordCount > 100 ? 10 : 0) +
           (metrics.sentimentScore > 0.3 ? 10 : 0) +
           (metrics.complexityScore > 0.6 ? 15 : 0) +
-          (metrics.topicRelevance > 0.7 ? 15 : 0)
-      )
+          (metrics.topicRelevance > 0.7 ? 15 : 0),
+      ),
     );
 
     return {
       truthScore: Math.min(95, baseScore + Math.floor(Math.random() * 20) - 10),
       originalityScore: Math.min(
         95,
-        baseScore + Math.floor(Math.random() * 20) - 10
+        baseScore + Math.floor(Math.random() * 20) - 10,
       ),
       viralPotential: Math.min(
         95,
-        baseScore + Math.floor(Math.random() * 20) - 10
+        baseScore + Math.floor(Math.random() * 20) - 10,
       ),
       monetizationValue: Math.floor(baseScore * 100 + Math.random() * 5000),
       recommendations: this.generateRecommendations(content, metrics),
@@ -163,11 +163,11 @@ Respond only with valid JSON.
 
     const positiveCount = positiveWords.reduce(
       (count, word) => count + (content.toLowerCase().includes(word) ? 1 : 0),
-      0
+      0,
     );
     const negativeCount = negativeWords.reduce(
       (count, word) => count + (content.toLowerCase().includes(word) ? 1 : 0),
-      0
+      0,
     );
 
     const sentimentScore =
@@ -178,7 +178,7 @@ Respond only with valid JSON.
     const uniqueWords = new Set(words.map((w) => w.toLowerCase())).size;
     const complexityScore = Math.min(
       1,
-      avgSentenceLength / 15 + uniqueWords / words.length
+      avgSentenceLength / 15 + uniqueWords / words.length,
     );
 
     // Topic relevance (trending terms)
@@ -193,7 +193,7 @@ Respond only with valid JSON.
       "social media",
     ];
     const topicMatches = trendingTerms.filter((term) =>
-      content.toLowerCase().includes(term)
+      content.toLowerCase().includes(term),
     ).length;
     const topicRelevance = topicMatches / trendingTerms.length;
 
@@ -216,13 +216,13 @@ Respond only with valid JSON.
 
   private generateRecommendations(
     content: string,
-    metrics: ContentMetrics
+    metrics: ContentMetrics,
   ): string[] {
     const recommendations = [];
 
     if (metrics.wordCount < 50) {
       recommendations.push(
-        "Consider expanding content with more detailed explanations"
+        "Consider expanding content with more detailed explanations",
       );
     }
 
@@ -232,25 +232,25 @@ Respond only with valid JSON.
 
     if (metrics.topicRelevance < 0.3) {
       recommendations.push(
-        "Include trending topics to improve discoverability"
+        "Include trending topics to improve discoverability",
       );
     }
 
     if (!metrics.uniqueElements.includes("Statistics")) {
       recommendations.push(
-        "Add statistics or data points to increase credibility"
+        "Add statistics or data points to increase credibility",
       );
     }
 
     if (!metrics.uniqueElements.includes("Questions")) {
       recommendations.push(
-        "Include questions to encourage audience engagement"
+        "Include questions to encourage audience engagement",
       );
     }
 
     recommendations.push("Verify with GUARDIANCHAIN before sharing publicly");
     recommendations.push(
-      "Consider creating multiple versions for different platforms"
+      "Consider creating multiple versions for different platforms",
     );
 
     return recommendations.slice(0, 5);
@@ -313,7 +313,7 @@ Respond only with valid JSON.
 
   async estimateContentValue(
     content: string,
-    audienceSize: number = 1000
+    audienceSize: number = 1000,
   ): Promise<number> {
     try {
       const analysis = await this.analyzeContent(content);
@@ -326,7 +326,7 @@ Respond only with valid JSON.
       const uniquenessBonus = (analysis.originalityScore / 100) * baseValue;
 
       return Math.round(
-        baseValue * qualityMultiplier + viralBonus + uniquenessBonus
+        baseValue * qualityMultiplier + viralBonus + uniquenessBonus,
       );
     } catch (error) {
       console.error("Value estimation failed:", error);
@@ -336,7 +336,7 @@ Respond only with valid JSON.
 
   async predictViralPotential(
     content: string,
-    platform: string = "general"
+    platform: string = "general",
   ): Promise<{
     score: number;
     factors: string[];
@@ -452,7 +452,7 @@ export async function getTreasurySummary() {
 }
 
 export async function aiBusinessIntelligence(
-  treasuryData: any
+  treasuryData: any,
 ): Promise<string> {
   try {
     const response = await fetch("/api/estimate-value", {

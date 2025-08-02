@@ -95,7 +95,7 @@ export default function InteractiveBlock({
   const generateMockHash = (
     id: number,
     prevHash: string,
-    nonceValue: number
+    nonceValue: number,
   ) => {
     // Simple hash simulation for demo purposes
     const data = `${id}${prevHash}${nonceValue}${Date.now()}`;
@@ -129,10 +129,10 @@ export default function InteractiveBlock({
         !isActive
           ? "opacity-50 scale-95"
           : isComplete
-          ? "border-green-500 shadow-green-500/20 shadow-lg"
-          : isMining
-          ? "border-yellow-500 shadow-yellow-500/20 shadow-lg animate-pulse"
-          : "border-slate-600 hover:border-slate-500"
+            ? "border-green-500 shadow-green-500/20 shadow-lg"
+            : isMining
+              ? "border-yellow-500 shadow-yellow-500/20 shadow-lg animate-pulse"
+              : "border-slate-600 hover:border-slate-500"
       }`}
     >
       <div className="space-y-4">
@@ -144,8 +144,8 @@ export default function InteractiveBlock({
                 isComplete
                   ? "bg-green-600"
                   : isMining
-                  ? "bg-yellow-600"
-                  : "bg-slate-600"
+                    ? "bg-yellow-600"
+                    : "bg-slate-600"
               }`}
             >
               {isComplete ? (

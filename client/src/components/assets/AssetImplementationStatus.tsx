@@ -12,55 +12,64 @@ export function AssetImplementationStatus() {
       component: "Enhanced Logo Display",
       location: "Navigation Header",
       status: "active",
-      description: "Automatically uses highest-value branding assets"
+      description: "Automatically uses highest-value branding assets",
     },
     {
       component: "Hero Background",
-      location: "Admin Dashboards", 
+      location: "Admin Dashboards",
       status: "active",
-      description: "Commander and Founder dashboards with immersive backgrounds"
+      description:
+        "Commander and Founder dashboards with immersive backgrounds",
     },
     {
       component: "Asset Manager",
       location: "/asset-manager",
-      status: "active", 
-      description: "Complete asset browser with search and filtering"
+      status: "active",
+      description: "Complete asset browser with search and filtering",
     },
     {
       component: "Asset Integration Hub",
       location: "/asset-integration",
       status: "active",
-      description: "Strategic implementation guides and code snippets"
+      description: "Strategic implementation guides and code snippets",
     },
     {
       component: "Image Galleries",
       location: "Throughout App",
       status: "ready",
-      description: "Professional galleries ready for deployment"
+      description: "Professional galleries ready for deployment",
     },
     {
       component: "Video Integration",
       location: "Content Pages",
       status: "pending",
-      description: "Video assets integration planned"
-    }
+      description: "Video assets integration planned",
+    },
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-600";
-      case "ready": return "bg-blue-600";
-      case "pending": return "bg-yellow-600";
-      default: return "bg-slate-600";
+      case "active":
+        return "bg-green-600";
+      case "ready":
+        return "bg-blue-600";
+      case "pending":
+        return "bg-yellow-600";
+      default:
+        return "bg-slate-600";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "active": return CheckCircle;
-      case "ready": return ArrowRight;
-      case "pending": return Clock;
-      default: return Clock;
+      case "active":
+        return CheckCircle;
+      case "ready":
+        return ArrowRight;
+      case "pending":
+        return Clock;
+      default:
+        return Clock;
     }
   };
 
@@ -75,8 +84,12 @@ export function AssetImplementationStatus() {
     );
   }
 
-  const activeCount = implementationStatus.filter(item => item.status === "active").length;
-  const readyCount = implementationStatus.filter(item => item.status === "ready").length;
+  const activeCount = implementationStatus.filter(
+    (item) => item.status === "active",
+  ).length;
+  const readyCount = implementationStatus.filter(
+    (item) => item.status === "ready",
+  ).length;
 
   return (
     <Card className="bg-slate-800/50 border-slate-700">
@@ -91,15 +104,21 @@ export function AssetImplementationStatus() {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-400">{totalAssets}</div>
+            <div className="text-2xl font-bold text-green-400">
+              {totalAssets}
+            </div>
             <div className="text-sm text-slate-400">Total Assets</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-400">{activeCount}</div>
+            <div className="text-2xl font-bold text-blue-400">
+              {activeCount}
+            </div>
             <div className="text-sm text-slate-400">Active Integrations</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-yellow-400">{readyCount}</div>
+            <div className="text-2xl font-bold text-yellow-400">
+              {readyCount}
+            </div>
             <div className="text-sm text-slate-400">Ready to Deploy</div>
           </div>
         </div>
@@ -108,15 +127,27 @@ export function AssetImplementationStatus() {
           {implementationStatus.map((item, index) => {
             const StatusIcon = getStatusIcon(item.status);
             return (
-              <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-slate-700/50">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 rounded-lg bg-slate-700/50"
+              >
                 <div className="flex items-center space-x-3">
-                  <StatusIcon className={`h-5 w-5 ${
-                    item.status === "active" ? "text-green-400" :
-                    item.status === "ready" ? "text-blue-400" : "text-yellow-400"
-                  }`} />
+                  <StatusIcon
+                    className={`h-5 w-5 ${
+                      item.status === "active"
+                        ? "text-green-400"
+                        : item.status === "ready"
+                          ? "text-blue-400"
+                          : "text-yellow-400"
+                    }`}
+                  />
                   <div>
-                    <div className="text-white font-medium">{item.component}</div>
-                    <div className="text-sm text-slate-400">{item.location} • {item.description}</div>
+                    <div className="text-white font-medium">
+                      {item.component}
+                    </div>
+                    <div className="text-sm text-slate-400">
+                      {item.location} • {item.description}
+                    </div>
                   </div>
                 </div>
                 <Badge className={getStatusColor(item.status)}>
@@ -128,9 +159,13 @@ export function AssetImplementationStatus() {
         </div>
 
         <div className="p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
-          <h3 className="text-green-400 font-semibold mb-2">Successfully Implemented</h3>
+          <h3 className="text-green-400 font-semibold mb-2">
+            Successfully Implemented
+          </h3>
           <ul className="space-y-1 text-sm text-green-300">
-            <li>• Navigation automatically uses your highest-value branding assets</li>
+            <li>
+              • Navigation automatically uses your highest-value branding assets
+            </li>
             <li>• Admin dashboards enhanced with immersive hero backgrounds</li>
             <li>• Complete asset management system with professional UI</li>
             <li>• Real-time asset discovery across all Supabase buckets</li>

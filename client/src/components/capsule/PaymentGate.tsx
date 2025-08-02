@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Lock, 
-  CreditCard, 
-  Star, 
-  Crown, 
+import {
+  Lock,
+  CreditCard,
+  Star,
+  Crown,
   FileText,
   ArrowRight,
-  Check
+  Check,
 } from "lucide-react";
 
 interface PaymentGateProps {
@@ -17,7 +17,10 @@ interface PaymentGateProps {
   onCancel: () => void;
 }
 
-export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGateProps) {
+export default function PaymentGate({
+  onPaymentComplete,
+  onCancel,
+}: PaymentGateProps) {
   const [selectedTier, setSelectedTier] = useState<string>("");
   const [processing, setProcessing] = useState(false);
 
@@ -32,9 +35,9 @@ export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGate
         "Community verification",
         "Standard priority",
         "30-day verification window",
-        "5 GTT reward on approval"
+        "5 GTT reward on approval",
       ],
-      color: "from-blue-500 to-blue-600"
+      color: "from-blue-500 to-blue-600",
     },
     {
       id: "premium",
@@ -48,9 +51,9 @@ export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGate
         "Advanced analytics",
         "24-hour verification window",
         "25 GTT reward on approval",
-        "Truth seal certification"
+        "Truth seal certification",
       ],
-      color: "from-purple-500 to-purple-600"
+      color: "from-purple-500 to-purple-600",
     },
     {
       id: "enterprise",
@@ -64,33 +67,33 @@ export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGate
         "4-hour verification window",
         "100 GTT reward on approval",
         "Legal-grade documentation",
-        "White-label verification"
+        "White-label verification",
       ],
-      color: "from-yellow-500 to-yellow-600"
-    }
+      color: "from-yellow-500 to-yellow-600",
+    },
   ];
 
   const handlePayment = async (tierId: string) => {
     setProcessing(true);
     setSelectedTier(tierId);
-    
+
     try {
       // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // In production, integrate with Stripe
       // const response = await fetch('/api/create-payment-intent', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ 
+      //   body: JSON.stringify({
       //     tier: tierId,
-      //     amount: capsuleTiers.find(t => t.id === tierId)?.price 
+      //     amount: capsuleTiers.find(t => t.id === tierId)?.price
       //   })
       // });
-      
+
       onPaymentComplete(tierId);
     } catch (error) {
-      console.error('Payment failed:', error);
+      console.error("Payment failed:", error);
       setProcessing(false);
     }
   };
@@ -118,11 +121,11 @@ export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGate
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {capsuleTiers.map((tier) => (
-              <Card 
-                key={tier.id} 
+              <Card
+                key={tier.id}
                 className={`bg-slate-800/50 border-slate-700 cursor-pointer transition-all hover:scale-105 relative ${
-                  selectedTier === tier.id ? 'ring-2 ring-purple-500' : ''
-                } ${tier.popular ? 'ring-2 ring-purple-500/50' : ''}`}
+                  selectedTier === tier.id ? "ring-2 ring-purple-500" : ""
+                } ${tier.popular ? "ring-2 ring-purple-500/50" : ""}`}
                 onClick={() => setSelectedTier(tier.id)}
               >
                 {tier.popular && (
@@ -130,32 +133,42 @@ export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGate
                     Most Popular
                   </Badge>
                 )}
-                
+
                 <CardHeader className="text-center">
                   <div className="flex items-center justify-center mb-4">
-                    <div className={`p-4 bg-gradient-to-r ${tier.color}/20 rounded-full`}>
+                    <div
+                      className={`p-4 bg-gradient-to-r ${tier.color}/20 rounded-full`}
+                    >
                       <tier.icon className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                  
-                  <CardTitle className="text-xl text-white">{tier.name}</CardTitle>
+
+                  <CardTitle className="text-xl text-white">
+                    {tier.name}
+                  </CardTitle>
                   <div className="mt-4">
-                    <div className="text-3xl font-bold text-white">${tier.price}</div>
-                    <div className="text-green-400 font-medium">+{tier.gttReward} GTT</div>
+                    <div className="text-3xl font-bold text-white">
+                      ${tier.price}
+                    </div>
+                    <div className="text-green-400 font-medium">
+                      +{tier.gttReward} GTT
+                    </div>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent>
                   <div className="space-y-2">
                     {tier.features.map((feature, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <Check className="w-4 h-4 text-green-400 flex-shrink-0" />
-                        <span className="text-slate-300 text-sm">{feature}</span>
+                        <span className="text-slate-300 text-sm">
+                          {feature}
+                        </span>
                       </div>
                     ))}
                   </div>
-                  
-                  <Button 
+
+                  <Button
                     className={`w-full mt-6 bg-gradient-to-r ${tier.color} hover:opacity-90 text-white`}
                     onClick={() => handlePayment(tier.id)}
                     disabled={processing}
@@ -186,9 +199,9 @@ export default function PaymentGate({ onPaymentComplete, onCancel }: PaymentGate
             >
               Cancel
             </Button>
-            
+
             <Button
-              onClick={() => window.location.href = '/capsule-pricing'}
+              onClick={() => (window.location.href = "/capsule-pricing")}
               variant="ghost"
               className="text-purple-400 hover:bg-purple-500/10"
             >

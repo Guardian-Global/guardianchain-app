@@ -41,7 +41,7 @@ export function calculateTruthYield(capsule: Capsule): number {
   // Grief score multiplier (higher grief = lower yield)
   const griefMultiplier = Math.max(
     0.1,
-    1 - parseFloat(griefScore || "0") * 0.1
+    1 - parseFloat(griefScore || "0") * 0.1,
   );
   yieldScore *= griefMultiplier;
 
@@ -110,7 +110,7 @@ export function getYieldTier(truthYield: number): {
 // Calculate daily yield earning rate
 export function calculateDailyYieldRate(
   capsule: Capsule,
-  daysActive: number
+  daysActive: number,
 ): number {
   if (daysActive === 0) return 0;
 
@@ -123,7 +123,7 @@ export function estimateYieldProjection(
   currentYield: number,
   dailyViews: number,
   dailyShares: number,
-  projectionDays: number = 30
+  projectionDays: number = 30,
 ): number {
   const dailyYieldGrowth =
     dailyViews * ROI_WEIGHTS.VIEW + dailyShares * ROI_WEIGHTS.SHARE;
@@ -136,7 +136,7 @@ export function estimateYieldProjection(
 export function canClaimYield(
   capsule: Capsule,
   userId: number,
-  lastClaimDate?: Date
+  lastClaimDate?: Date,
 ): { canClaim: boolean; reason?: string } {
   // Must be the creator
   if (capsule.creatorId !== userId) {

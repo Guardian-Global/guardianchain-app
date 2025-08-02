@@ -56,21 +56,33 @@
               "score": "0-30",
               "multiplier": "1x",
               "yield": "$25-50/month",
-              "examples": ["Daily memories", "General observations", "Life updates"]
+              "examples": [
+                "Daily memories",
+                "General observations",
+                "Life updates"
+              ]
             },
             {
-              "name": "Memory Guardian", 
+              "name": "Memory Guardian",
               "score": "31-70",
               "multiplier": "2x",
               "yield": "$75-125/month",
-              "examples": ["Significant events", "Relationship memories", "Personal growth"]
+              "examples": [
+                "Significant events",
+                "Relationship memories",
+                "Personal growth"
+              ]
             },
             {
               "name": "Veritas Holder",
-              "score": "71-100", 
+              "score": "71-100",
               "multiplier": "3x",
               "yield": "$150-200+/month",
-              "examples": ["Trauma recovery", "Whistleblowing", "Legal testimony"]
+              "examples": [
+                "Trauma recovery",
+                "Whistleblowing",
+                "Legal testimony"
+              ]
             }
           ],
           "action": {
@@ -89,7 +101,7 @@
           "subheadline": "Create your first truth capsule with AI assistance",
           "steps": [
             "Choose your memory type",
-            "Write or speak your truth", 
+            "Write or speak your truth",
             "Add supporting evidence",
             "Set privacy preferences",
             "Submit for verification"
@@ -162,7 +174,7 @@
               "icon": "vault"
             },
             {
-              "title": "Yield Dashboard", 
+              "title": "Yield Dashboard",
               "description": "Track your GTT earnings and staking opportunities",
               "href": "/yield",
               "icon": "chart"
@@ -202,7 +214,7 @@
           "subheadline": "You're now part of the sovereign truth preservation network",
           "achievements": [
             "✅ Wallet connected and verified",
-            "✅ GriefScore system understood", 
+            "✅ GriefScore system understood",
             "✅ First capsule created",
             "✅ Platform features explored"
           ],

@@ -19,53 +19,59 @@ export class ServiceWorkerManager {
 
   async register(): Promise<void> {
     // Skip registration in development or insecure contexts
-    if (process.env.NODE_ENV === 'development' || !this.isServiceWorkerSupported()) {
-      console.log('🔧 Service Worker registration skipped in development environment');
+    if (
+      process.env.NODE_ENV === "development" ||
+      !this.isServiceWorkerSupported()
+    ) {
+      console.log(
+        "🔧 Service Worker registration skipped in development environment",
+      );
       return;
     }
 
     try {
       // Check if we're in a secure context (required for service workers)
       if (!window.isSecureContext) {
-        console.log('⚠️ Service Worker requires secure context (HTTPS)');
+        console.log("⚠️ Service Worker requires secure context (HTTPS)");
         return;
       }
 
       // Check if service workers are supported
-      if (!('serviceWorker' in navigator)) {
-        console.log('⚠️ Service Worker not supported in this browser');
+      if (!("serviceWorker" in navigator)) {
+        console.log("⚠️ Service Worker not supported in this browser");
         return;
       }
 
       // Attempt registration with error handling
-      this.registration = await navigator.serviceWorker.register('/sw.js', {
-        scope: '/',
-        updateViaCache: 'none'
+      this.registration = await navigator.serviceWorker.register("/sw.js", {
+        scope: "/",
+        updateViaCache: "none",
       });
 
-      console.log('✅ Service Worker registered successfully');
+      console.log("✅ Service Worker registered successfully");
       this.isRegistered = true;
 
       // Listen for updates
-      this.registration.addEventListener('updatefound', () => {
-        console.log('🔄 Service Worker update found');
+      this.registration.addEventListener("updatefound", () => {
+        console.log("🔄 Service Worker update found");
       });
 
       // Handle successful registration
       if (this.registration.installing) {
-        console.log('🔧 Service Worker installing...');
+        console.log("🔧 Service Worker installing...");
       } else if (this.registration.waiting) {
-        console.log('⏳ Service Worker waiting to activate');
+        console.log("⏳ Service Worker waiting to activate");
       } else if (this.registration.active) {
-        console.log('✅ Service Worker active');
+        console.log("✅ Service Worker active");
       }
-
     } catch (error: any) {
       // Silently handle SecurityError in development environments
-      if (error.name === 'SecurityError') {
-        console.log('🔒 Service Worker registration blocked by security policy (normal in development)');
+      if (error.name === "SecurityError") {
+        console.log(
+          "🔒 Service Worker registration blocked by security policy (normal in development)",
+        );
       } else {
-        console.log('❌ Service Worker registration failed:', error.message);
+        console.log("❌ Service Worker registration failed:", error.message);
       }
     }
   }
@@ -78,12 +84,12 @@ export class ServiceWorkerManager {
     try {
       const result = await this.registration.unregister();
       if (result) {
-        console.log('✅ Service Worker unregistered successfully');
+        console.log("✅ Service Worker unregistered successfully");
         this.isRegistered = false;
         this.registration = null;
       }
     } catch (error) {
-      console.log('❌ Service Worker unregistration failed:', error);
+      console.log("❌ Service Worker unregistration failed:", error);
     }
   }
 
@@ -96,15 +102,19 @@ export class ServiceWorkerManager {
   }
 
   private isServiceWorkerSupported(): boolean {
-    return typeof window !== 'undefined' && 
-           'serviceWorker' in navigator && 
-           window.isSecureContext;
+    return (
+      typeof window !== "undefined" &&
+      "serviceWorker" in navigator &&
+      window.isSecureContext
+    );
   }
 
   // Request background sync for offline features
   async requestBackgroundSync(tag: string): Promise<void> {
     if (!this.registration) {
-      console.log('⚠️ Cannot request background sync: Service Worker not registered');
+      console.log(
+        "⚠️ Cannot request background sync: Service Worker not registered",
+      );
       return;
     }
 
@@ -118,21 +128,23 @@ export class ServiceWorkerManager {
 
   // Check if app is running in standalone mode (PWA)
   isStandaloneMode(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches || 
-           (window.navigator as any).standalone === true;
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      (window.navigator as any).standalone === true
+    );
   }
 
   // Get app install status
-  getInstallStatus(): 'installed' | 'installable' | 'not-supported' {
+  getInstallStatus(): "installed" | "installable" | "not-supported" {
     if (this.isStandaloneMode()) {
-      return 'installed';
+      return "installed";
     }
 
-    if ('BeforeInstallPromptEvent' in window) {
-      return 'installable';
+    if ("BeforeInstallPromptEvent" in window) {
+      return "installable";
     }
 
-    return 'not-supported';
+    return "not-supported";
   }
 }
 
@@ -140,7 +152,7 @@ export class ServiceWorkerManager {
 export const serviceWorkerManager = ServiceWorkerManager.getInstance();
 
 // Auto-register on import (with error handling)
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // Delay registration to avoid blocking initial page load
   setTimeout(() => {
     serviceWorkerManager.register().catch(() => {

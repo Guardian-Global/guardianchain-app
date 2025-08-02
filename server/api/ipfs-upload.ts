@@ -53,7 +53,7 @@ export async function uploadToIPFS(req: Request, res: Response) {
               Authorization: auth,
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
 
         const ipfsHash = ipfsResponse.data.Hash;
@@ -116,7 +116,7 @@ export async function uploadJSONToIPFS(req: Request, res: Response) {
           Authorization: auth,
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
 
     const ipfsHash = ipfsResponse.data.Hash;

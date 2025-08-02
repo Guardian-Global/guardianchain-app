@@ -122,7 +122,7 @@ const SocialValueMining: React.FC = () => {
         estimatedValue: Math.floor(baseFollowers * 0.05 + baseEngagement * 100),
         currentOffers: Math.floor(Math.random() * 5) + 1,
         potentialEarnings: Math.floor(
-          baseFollowers * 0.1 + Math.random() * 5000
+          baseFollowers * 0.1 + Math.random() * 5000,
         ),
         dataPoints: {
           followers: baseFollowers,
@@ -143,7 +143,7 @@ const SocialValueMining: React.FC = () => {
 
     const totalValue = platformData.reduce(
       (sum, p) => sum + p.estimatedValue,
-      0
+      0,
     );
     const avgProtection =
       platformData.reduce((sum, p) => sum + p.protectionLevel, 0) /
@@ -191,7 +191,7 @@ const SocialValueMining: React.FC = () => {
     setSelectedPlatforms((prev) =>
       prev.includes(platformId)
         ? prev.filter((p) => p !== platformId)
-        : [...prev, platformId]
+        : [...prev, platformId],
     );
   };
 

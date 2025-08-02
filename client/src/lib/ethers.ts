@@ -37,7 +37,7 @@ export function useEthersSigner() {
 // Utility to format ethers addresses
 export function formatAddress(
   address: string | undefined,
-  length: number = 4
+  length: number = 4,
 ): string {
   if (!address) return "";
 
@@ -51,7 +51,7 @@ export function formatAddress(
 // Utility to parse ethers amounts safely
 export function parseEthersAmount(
   amount: string,
-  decimals: number = 18
+  decimals: number = 18,
 ): string {
   try {
     const { parseUnits } = require("ethers");
@@ -66,7 +66,7 @@ export function parseEthersAmount(
 export function formatEthersAmount(
   amount: string,
   decimals: number = 18,
-  displayDecimals: number = 4
+  displayDecimals: number = 4,
 ): string {
   try {
     const { formatUnits } = require("ethers");
@@ -98,7 +98,7 @@ export function isValidEthereumAddress(address: string): boolean {
 export async function getTransactionReceipt(
   provider: any,
   txHash: string,
-  maxRetries: number = 5
+  maxRetries: number = 5,
 ): Promise<any> {
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -115,7 +115,7 @@ export async function getTransactionReceipt(
   }
 
   throw new Error(
-    `Failed to get transaction receipt after ${maxRetries} attempts`
+    `Failed to get transaction receipt after ${maxRetries} attempts`,
   );
 }
 
@@ -123,7 +123,7 @@ export async function getTransactionReceipt(
 export async function safeContractCall<T>(
   contractCall: () => Promise<T>,
   fallbackValue: T,
-  errorMessage: string = "Contract call failed"
+  errorMessage: string = "Contract call failed",
 ): Promise<T> {
   try {
     return await contractCall();
@@ -138,7 +138,7 @@ export async function estimateGasWithBuffer(
   contract: any,
   method: string,
   args: any[],
-  bufferPercentage: number = 20
+  bufferPercentage: number = 20,
 ): Promise<bigint> {
   try {
     const gasEstimate = await contract[method].estimateGas(...args);
@@ -155,7 +155,7 @@ export async function estimateGasWithBuffer(
 export async function waitForTransaction(
   provider: any,
   txHash: string,
-  confirmations: number = 1
+  confirmations: number = 1,
 ): Promise<any> {
   try {
     const tx = await provider.getTransaction(txHash);

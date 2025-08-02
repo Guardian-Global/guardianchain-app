@@ -285,7 +285,7 @@ class PricingService {
    */
   getFeaturesForTier(tier: string): PricingFeature[] {
     return PRICING_FEATURES.filter((feature) =>
-      feature.tiers.includes(tier.toUpperCase())
+      feature.tiers.includes(tier.toUpperCase()),
     );
   }
 
@@ -332,13 +332,13 @@ class PricingService {
     const matrix = await this.getPricingMatrix();
     matrix.tiers.forEach((tier) => {
       const monthlyPrice = matrix.stripeMonthlyPrices.find(
-        (p) => p.tier === tier.id.toUpperCase()
+        (p) => p.tier === tier.id.toUpperCase(),
       );
       if (monthlyPrice && monthlyPrice.amount !== tier.price * 100) {
         errors.push(
           `Price mismatch for ${tier.name}: Stripe=${
             monthlyPrice.amount / 100
-          }, Tier=${tier.price}`
+          }, Tier=${tier.price}`,
         );
       }
     });

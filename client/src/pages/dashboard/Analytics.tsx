@@ -3,17 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Globe, 
-  Shield, 
-  Users, 
+import {
+  BarChart3,
+  TrendingUp,
+  Globe,
+  Shield,
+  Users,
   Coins,
   Eye,
   Clock,
   Award,
-  Zap
+  Zap,
 } from "lucide-react";
 
 interface AnalyticsData {
@@ -84,7 +84,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: BarChart3,
       color: "text-blue-600 dark:text-blue-400",
       bgColor: "bg-blue-50 dark:bg-blue-950",
-      description: "All created memories"
+      description: "All created memories",
     },
     {
       title: "Minted NFTs",
@@ -92,7 +92,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: Award,
       color: "text-purple-600 dark:text-purple-400",
       bgColor: "bg-purple-50 dark:bg-purple-950",
-      description: "Blockchain certified"
+      description: "Blockchain certified",
     },
     {
       title: "Sealed Truths",
@@ -100,7 +100,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: Clock,
       color: "text-orange-600 dark:text-orange-400",
       bgColor: "bg-orange-50 dark:bg-orange-950",
-      description: "Time-locked capsules"
+      description: "Time-locked capsules",
     },
     {
       title: "Truth Score",
@@ -108,7 +108,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: Shield,
       color: "text-green-600 dark:text-green-400",
       bgColor: "bg-green-50 dark:bg-green-950",
-      description: "Community verified"
+      description: "Community verified",
     },
     {
       title: "GTT Earned",
@@ -116,7 +116,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: Coins,
       color: "text-yellow-600 dark:text-yellow-400",
       bgColor: "bg-yellow-50 dark:bg-yellow-950",
-      description: "Tokens distributed"
+      description: "Tokens distributed",
     },
     {
       title: "Languages",
@@ -124,7 +124,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: Globe,
       color: "text-cyan-600 dark:text-cyan-400",
       bgColor: "bg-cyan-50 dark:bg-cyan-950",
-      description: "Supported globally"
+      description: "Supported globally",
     },
     {
       title: "Verification Rate",
@@ -132,7 +132,7 @@ export default function CapsuleAnalyticsDashboard() {
       icon: Eye,
       color: "text-indigo-600 dark:text-indigo-400",
       bgColor: "bg-indigo-50 dark:bg-indigo-950",
-      description: "Content accuracy"
+      description: "Content accuracy",
     },
     {
       title: "Growth Rate",
@@ -140,8 +140,8 @@ export default function CapsuleAnalyticsDashboard() {
       icon: TrendingUp,
       color: "text-emerald-600 dark:text-emerald-400",
       bgColor: "bg-emerald-50 dark:bg-emerald-950",
-      description: "Monthly increase"
-    }
+      description: "Monthly increase",
+    },
   ];
 
   return (
@@ -156,7 +156,10 @@ export default function CapsuleAnalyticsDashboard() {
             Real-time insights into your truth preservation ecosystem
           </p>
         </div>
-        <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        <Badge
+          variant="secondary"
+          className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+        >
           <Zap className="w-3 h-3 mr-1" />
           Live Data
         </Badge>
@@ -165,7 +168,10 @@ export default function CapsuleAnalyticsDashboard() {
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
-          <Card key={stat.title} className="hover:shadow-lg transition-shadow duration-300">
+          <Card
+            key={stat.title}
+            className="hover:shadow-lg transition-shadow duration-300"
+          >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -202,10 +208,12 @@ export default function CapsuleAnalyticsDashboard() {
             <div className="space-y-3">
               {analytics.languages.map((lang, index) => (
                 <div key={lang} className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{lang.toUpperCase()}</span>
+                  <span className="text-sm font-medium">
+                    {lang.toUpperCase()}
+                  </span>
                   <div className="flex items-center gap-2">
                     <div className="w-20 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
                         style={{ width: `${Math.max(20, 100 - index * 15)}%` }}
                       />
@@ -231,11 +239,14 @@ export default function CapsuleAnalyticsDashboard() {
           <CardContent>
             <div className="space-y-3">
               {analytics.topCategories?.map((category) => (
-                <div key={category.name} className="flex items-center justify-between">
+                <div
+                  key={category.name}
+                  className="flex items-center justify-between"
+                >
                   <span className="text-sm font-medium">{category.name}</span>
                   <div className="flex items-center gap-2">
                     <div className="w-20 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full"
                         style={{ width: `${category.percentage}%` }}
                       />
@@ -265,19 +276,25 @@ export default function CapsuleAnalyticsDashboard() {
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {analytics.activeValidators}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Active Validators</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Active Validators
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                 99.8%
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Network Uptime</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Network Uptime
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 2.3s
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Avg Response Time
+              </div>
             </div>
           </div>
         </CardContent>

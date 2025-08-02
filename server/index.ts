@@ -1,7 +1,7 @@
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import session from "express-session";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 // Temporarily disabled middleware imports to fix startup
@@ -17,7 +17,7 @@ import { setupVite, serveStatic, log } from "./vite";
 const app = express();
 
 // Trust proxy for Replit environment
-app.set('trust proxy', true);
+app.set("trust proxy", true);
 
 // Basic security middleware without rate limiting for now
 // app.use(securityHeaders);
@@ -28,18 +28,22 @@ app.set('trust proxy', true);
 // app.use(assetMiddleware);
 
 // Session configuration for authentication
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'guardianchain-session-secret-change-in-production',
-  resave: false,
-  saveUninitialized: true, // Allow sessions to be created
-  rolling: true, // Reset expiry on activity
-  cookie: {
-    secure: false, // Allow non-HTTPS in development
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'lax' // Allow cross-site requests in development
-  }
-}));
+app.use(
+  session({
+    secret:
+      process.env.SESSION_SECRET ||
+      "guardianchain-session-secret-change-in-production",
+    resave: false,
+    saveUninitialized: true, // Allow sessions to be created
+    rolling: true, // Reset expiry on activity
+    cookie: {
+      secure: false, // Allow non-HTTPS in development
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: "lax", // Allow cross-site requests in development
+    },
+  }),
+);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
@@ -48,83 +52,85 @@ app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 app.use(cookieParser());
 
 // Serve static assets with proper MIME types
-app.use('/assets', express.static('public/assets', {
-  setHeaders: (res, path) => {
-    if (path.endsWith('.mp4')) {
-      res.setHeader('Content-Type', 'video/mp4');
-    } else if (path.endsWith('.png')) {
-      res.setHeader('Content-Type', 'image/png');
-    }
-  }
-}));
+app.use(
+  "/assets",
+  express.static("public/assets", {
+    setHeaders: (res, path) => {
+      if (path.endsWith(".mp4")) {
+        res.setHeader("Content-Type", "video/mp4");
+      } else if (path.endsWith(".png")) {
+        res.setHeader("Content-Type", "image/png");
+      }
+    },
+  }),
+);
 
 // Demo authentication route (bypasses all other auth)
-app.post('/api/auth/demo-login', (req, res) => {
+app.post("/api/auth/demo-login", (req, res) => {
   console.log("DEMO AUTH HIT:", req.body);
   const { email, password } = req.body;
-  
+
   if (!email || !password) {
     return res.status(400).json({
       success: false,
-      message: "Email and password required"
+      message: "Email and password required",
     });
   }
 
   const user = {
     id: `demo-${Date.now()}`,
     email,
-    firstName: email.split('@')[0] || "Demo",
+    firstName: email.split("@")[0] || "Demo",
     lastName: "User",
     tier: "EXPLORER",
-    role: "USER"
+    role: "USER",
   };
 
   const token = `demo-token-${Date.now()}`;
   const session = {
     user,
     token,
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
   };
 
   console.log("DEMO LOGIN SUCCESS:", email);
   res.json({
     success: true,
     message: "Demo login successful",
-    session
+    session,
   });
 });
 
 // Authentication routes are handled in registerRoutes()
 
 // Replit Auth Integration
-const REPLIT_DOMAINS = process.env.REPLIT_DOMAINS || 'localhost:5000';
-const REPL_ID = process.env.REPL_ID || 'guardianchain-nft';
+const REPLIT_DOMAINS = process.env.REPLIT_DOMAINS || "localhost:5000";
+const REPL_ID = process.env.REPL_ID || "guardianchain-nft";
 
 // Simplified login route - redirect to frontend
-app.get('/api/login', (req, res) => {
+app.get("/api/login", (req, res) => {
   // Always redirect to frontend login page
-  res.redirect('/');
+  res.redirect("/");
 });
 
-
 // Callback route for Replit Auth (simplified)
-app.get('/api/callback', async (req, res) => {
+app.get("/api/callback", async (req, res) => {
   // Always redirect to frontend
-  res.redirect('/');
+  res.redirect("/");
 });
 
 // Logout route
-app.get('/api/logout', (req, res) => {
+app.get("/api/logout", (req, res) => {
   // Clear session and redirect
   if (req.session) {
     req.session.destroy((err) => {
       if (err) {
-        console.error('Session destroy error:', err);
+        console.error("Session destroy error:", err);
       }
-      res.redirect('/');
+      res.redirect("/");
     });
   } else {
-    res.redirect('/');
+    res.redirect("/");
   }
 });
 
@@ -217,6 +223,6 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
-    }
+    },
   );
 })();

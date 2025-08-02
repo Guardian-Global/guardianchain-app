@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-01-31 - Mainnet Launch
 
 ### Added
+
 - **Core Platform Features**
   - Truth capsule creation with grief scoring and Veritas ID generation
   - Professional Veritas certificate generator with PDF export
@@ -42,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Comprehensive error handling and validation
 
 ### Technical Stack
+
 - **Frontend**: React.js with TypeScript, Tailwind CSS, Radix UI
 - **Backend**: Node.js with Express.js and PostgreSQL
 - **Blockchain**: Polygon network with ethers.js integration
@@ -50,17 +52,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Authentication**: Replit Auth with JWT tokens
 
 ### Smart Contracts
+
 - **GuardianCapsule.sol** - ERC-721 NFT contract with yield mechanics
 - **Deployed on Polygon** - Mainnet ready with gas optimization
 - **Yield System** - Automated GTT distribution based on grief scoring
 
 ### Documentation
+
 - Complete API documentation and integration guides
 - User manuals and validator onboarding materials
 - Technical whitepaper and architecture documentation
 - Press kit with media resources and contact information
 
 ### Launch Metrics
+
 - Platform status: Fully operational and production-ready
 - Test coverage: 19+ comprehensive validation tests
 - Mobile support: iOS and Android compatible
@@ -69,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - Future Roadmap
 
 ### Planned Features
+
 - Cross-chain expansion to Ethereum mainnet
 - Advanced AI classification models and sentiment analysis
 - Enterprise API with rate limiting and SLA guarantees
@@ -77,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced governance mechanisms and proposal systems
 
 ### Under Consideration
+
 - Layer 2 scaling solutions for reduced transaction costs
 - Integration with additional blockchain networks
 - Advanced encryption for sensitive capsule content

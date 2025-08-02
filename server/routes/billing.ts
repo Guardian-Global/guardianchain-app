@@ -351,7 +351,7 @@ export function registerBillingRoutes(app: Express) {
   app.get("/api/billing/protocol-feed", async (req, res) => {
     try {
       const feedUrl = ProtocolBillingFeedPublisher.getFeedUrl(
-        req.protocol + "://" + req.get("host")
+        req.protocol + "://" + req.get("host"),
       );
 
       res.json({
@@ -397,7 +397,7 @@ export function registerBillingRoutes(app: Express) {
           triggerReason: reason,
           context,
           timestamp: new Date().toISOString(),
-        }
+        },
       );
 
       res.json({
@@ -424,7 +424,7 @@ export function registerBillingRoutes(app: Express) {
         data: {
           scheduled: true,
           nextAudit: new Date(
-            Date.now() + 7 * 24 * 60 * 60 * 1000
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
           ).toISOString(),
           message: "Weekly audit scheduled successfully",
         },

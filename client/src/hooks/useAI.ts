@@ -9,12 +9,12 @@ export interface TranslationRequest {
 
 export interface SummaryRequest {
   content: string;
-  type?: 'brief' | 'detailed' | 'voice';
+  type?: "brief" | "detailed" | "voice";
 }
 
 export interface AnalysisRequest {
   content: string;
-  type?: 'emotion' | 'truth' | 'sentiment' | 'full';
+  type?: "emotion" | "truth" | "sentiment" | "full";
 }
 
 export function useTranslate() {

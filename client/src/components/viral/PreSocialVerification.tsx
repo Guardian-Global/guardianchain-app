@@ -39,7 +39,7 @@ const PreSocialVerification: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [verification, setVerification] = useState<VerificationResult | null>(
-    null
+    null,
   );
   const { toast } = useToast();
 
@@ -132,7 +132,7 @@ const PreSocialVerification: React.FC = () => {
       a.href = url;
       a.download = `guardianchain_certificate_${verification.contentHash.slice(
         0,
-        8
+        8,
       )}.json`;
       a.click();
       URL.revokeObjectURL(url);

@@ -47,7 +47,7 @@ export async function mintCapsuleNFT(
       credibilityScore: number;
     };
   },
-  userAddress: string
+  userAddress: string,
 ): Promise<{ hash: string; tokenId: number }> {
   try {
     // Create NFT metadata
@@ -111,13 +111,13 @@ export async function mintCapsuleNFT(
     throw new Error(
       `Failed to mint NFT: ${
         error instanceof Error ? error.message : "Unknown error"
-      }`
+      }`,
     );
   }
 }
 
 export async function getTokenMetadata(
-  tokenId: number
+  tokenId: number,
 ): Promise<CapsuleMetadata | null> {
   try {
     // This would typically call the contract's tokenURI function

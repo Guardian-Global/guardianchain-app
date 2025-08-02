@@ -62,7 +62,7 @@ ${user.capsuleHighlights
 - **Yield:** ${capsule.yield} GTT
 - **Views:** ${capsule.views.toLocaleString()}
 - **[View Details](https://guardianchain.app/capsule/${capsule.id})**
-`
+`,
   )
   .join("\n")}
 

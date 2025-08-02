@@ -178,7 +178,7 @@ export default function CapsuleOrganizer() {
                       <TypeIcon className="w-5 h-5 text-purple-400" />
                       <Badge
                         className={`${getStatusColor(
-                          capsule.status
+                          capsule.status,
                         )} text-white text-xs`}
                       >
                         {capsule.status}
@@ -302,7 +302,7 @@ export default function CapsuleOrganizer() {
                       <div className="flex items-center space-x-2">
                         <Badge
                           className={`${getStatusColor(
-                            capsule.status
+                            capsule.status,
                           )} text-white`}
                         >
                           {capsule.status}

@@ -78,14 +78,14 @@ class Web3TokenService {
         // Test connection
         const blockNumber = await this.provider.getBlockNumber();
         console.log(
-          `✅ Connected to ${PRIMARY_NETWORK.name} via ${rpcUrl}, block: ${blockNumber}`
+          `✅ Connected to ${PRIMARY_NETWORK.name} via ${rpcUrl}, block: ${blockNumber}`,
         );
 
         // Initialize contract
         this.contract = new ethers.Contract(
           GTT_CONTRACT_ADDRESS,
           GTT_TOKEN_ABI,
-          this.provider
+          this.provider,
         );
 
         // Test contract call
@@ -205,7 +205,7 @@ class Web3TokenService {
       const events = await this.contract.queryFilter(
         transferFilter,
         fromBlock,
-        currentBlock
+        currentBlock,
       );
 
       const decimals = await this.contract.decimals();

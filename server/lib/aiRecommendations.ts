@@ -43,14 +43,14 @@ export interface RecommendationResult {
 export async function generateCapsuleRecommendations(
   userProfile: UserProfile,
   availableCapsules: CapsuleData[],
-  excludeViewed: boolean = true
+  excludeViewed: boolean = true,
 ): Promise<RecommendationResult[]> {
   try {
     // Filter out already viewed capsules if requested
     let candidateCapsules = availableCapsules;
     if (excludeViewed && userProfile.viewHistory) {
       candidateCapsules = availableCapsules.filter(
-        (capsule) => !userProfile.viewHistory!.includes(capsule.id)
+        (capsule) => !userProfile.viewHistory!.includes(capsule.id),
       );
     }
 
@@ -87,9 +87,9 @@ export async function generateCapsuleRecommendations(
     Tags: ${capsule.tags?.join(", ") || "None"}
     Verification Score: ${capsule.verificationScore || 0}
     Engagement: ${capsule.engagement?.views || 0} views, ${
-          capsule.engagement?.shares || 0
-        } shares
-    `
+      capsule.engagement?.shares || 0
+    } shares
+    `,
       )
       .join("\n---\n")}
 
@@ -135,7 +135,7 @@ export async function generateCapsuleRecommendations(
     });
 
     const result = JSON.parse(
-      response.choices[0].message.content || '{"recommendations": []}'
+      response.choices[0].message.content || '{"recommendations": []}',
     );
     return result.recommendations || [];
   } catch (error: any) {
@@ -204,7 +204,7 @@ export async function analyzeCapsuleContent(capsule: CapsuleData): Promise<{
 
 export async function generateUserInterestProfile(
   viewHistory: CapsuleData[],
-  verificationHistory: CapsuleData[]
+  verificationHistory: CapsuleData[],
 ): Promise<{
   interests: string[];
   preferredCategories: string[];

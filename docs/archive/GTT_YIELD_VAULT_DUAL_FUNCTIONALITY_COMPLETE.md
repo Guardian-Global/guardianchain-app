@@ -5,12 +5,14 @@
 The GTT Yield Vault now supports **dual functionality** for maximum flexibility in yield distribution:
 
 ### 1. Admin-Controlled Distribution (Original)
+
 - **Function**: `distributeYield(address author, uint256 griefTier)`
 - **Access**: Admin only (onlyAdmin modifier)
 - **Use Case**: Platform-initiated rewards, automated distribution
 - **Endpoint**: `POST /api/gtt/vault/distribute`
 
 ### 2. User-Initiated Claiming (NEW)
+
 - **Function**: `claimYield(uint256 griefTier)`
 - **Access**: Any user with valid grief tier
 - **Use Case**: Self-service yield claiming, user autonomy
@@ -45,6 +47,7 @@ function claimYield(uint256 griefTier) external {
 ### 1. User Self-Claim Endpoint
 
 **Request**:
+
 ```bash
 POST /api/gtt/vault/claim
 Content-Type: application/json
@@ -55,6 +58,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -75,6 +79,7 @@ Content-Type: application/json
 ### 2. Admin Distribution Endpoint
 
 **Request**:
+
 ```bash
 POST /api/gtt/vault/distribute
 Content-Type: application/json
@@ -86,6 +91,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -114,25 +120,28 @@ class GTTYieldVaultService {
     blockNumber: number;
     gasUsed: string;
     yieldAmount: string;
-  }>
+  }>;
 
   // Admin-controlled distribution
-  async distributeYield(authorAddress: string, griefTier: number): Promise<{
+  async distributeYield(
+    authorAddress: string,
+    griefTier: number,
+  ): Promise<{
     transactionHash: string;
     blockNumber: number;
     gasUsed: string;
     yieldAmount: string;
-  }>
+  }>;
 
   // Contract information
   async getContractInfo(): Promise<{
     yieldVaultAddress: string;
     gttTokenAddress: string;
     admin: string;
-  }>
+  }>;
 
   // Admin management
-  async updateAdmin(newAdminAddress: string): Promise<string>
+  async updateAdmin(newAdminAddress: string): Promise<string>;
 }
 ```
 
@@ -162,9 +171,24 @@ class GTTYieldVaultService {
   {
     "anonymous": false,
     "inputs": [
-      { "indexed": true, "internalType": "address", "name": "author", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "griefTier", "type": "uint256" }
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "author",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "griefTier",
+        "type": "uint256"
+      }
     ],
     "name": "YieldDistributed",
     "type": "event"
@@ -175,6 +199,7 @@ class GTTYieldVaultService {
 ## Development vs Production
 
 ### Development Mode (Current):
+
 - ✅ Both claim and distribute endpoints operational
 - ✅ Simulated transaction responses with realistic data
 - ✅ User authentication and validation working
@@ -182,6 +207,7 @@ class GTTYieldVaultService {
 - ✅ Complete API documentation and testing
 
 ### Production Mode (Ready):
+
 - ✅ Smart contract deployed with both functions
 - ✅ Real blockchain transactions on Polygon
 - ✅ Gas optimization for both transaction types
@@ -191,12 +217,14 @@ class GTTYieldVaultService {
 ## Security Features
 
 ### Access Controls:
+
 - **Admin Distribution**: Protected by `onlyAdmin` modifier
 - **User Claiming**: Open to all users with valid grief tiers
 - **Input Validation**: Grief tier bounds checking (1-5)
 - **Transaction Security**: ERC-20 transfer validation with revert on failure
 
 ### Error Handling:
+
 - **Invalid Grief Tiers**: Contract-level validation
 - **Insufficient Balance**: Automatic revert if vault lacks GTT tokens
 - **Gas Management**: Optimized gas limits for both function types
@@ -205,12 +233,14 @@ class GTTYieldVaultService {
 ## Use Cases
 
 ### Admin Distribution:
+
 - **Automated Rewards**: Platform-triggered distributions for achievements
 - **Batch Processing**: Multiple user rewards in single admin session
 - **Content Validation**: Yield distribution after content verification
 - **Emergency Distributions**: Admin-controlled special rewards
 
 ### User Self-Claiming:
+
 - **User Autonomy**: Self-service yield claiming without admin intervention
 - **Immediate Rewards**: Instant yield claiming after grief tier calculation
 - **Transparent Process**: Users control their own yield claiming timing
@@ -219,6 +249,7 @@ class GTTYieldVaultService {
 ## Testing Results
 
 ### Functionality Verification:
+
 - ✅ **User Claim (Tier 3)**: 30 GTT yield claimed successfully
 - ✅ **Admin Distribute (Tier 4)**: 40 GTT yield distributed successfully
 - ✅ **Authentication**: Both endpoints require valid user authentication
@@ -226,6 +257,7 @@ class GTTYieldVaultService {
 - ✅ **Response Format**: Consistent JSON API responses
 
 ### Performance Metrics:
+
 - **Claim Transaction Gas**: ~45,000 gas (optimized for user transactions)
 - **Distribution Gas**: ~65,000 gas (includes additional admin validation)
 - **Response Time**: <50ms for development mode simulation
@@ -234,6 +266,7 @@ class GTTYieldVaultService {
 ## Deployment Checklist
 
 ### Smart Contract:
+
 - [x] `claimYield` function implemented
 - [x] `distributeYield` function maintained
 - [x] Dual functionality tested
@@ -241,6 +274,7 @@ class GTTYieldVaultService {
 - [x] Event emission unified
 
 ### Backend Integration:
+
 - [x] GTTYieldVaultService updated
 - [x] API endpoints implemented
 - [x] Authentication middleware integrated
@@ -248,6 +282,7 @@ class GTTYieldVaultService {
 - [x] Development/production modes supported
 
 ### Frontend Integration:
+
 - [ ] Update GTTYieldButton to include claim option
 - [ ] Add user-initiated claiming UI
 - [ ] Implement grief tier selection for claiming

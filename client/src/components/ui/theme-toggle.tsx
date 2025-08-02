@@ -18,7 +18,11 @@ export function ThemeToggle() {
         <Button variant="outline" size="icon" className="relative">
           <motion.div
             initial={false}
-            animate={theme === "dark" ? { rotate: 180, scale: 0 } : { rotate: 0, scale: 1 }}
+            animate={
+              theme === "dark"
+                ? { rotate: 180, scale: 0 }
+                : { rotate: 0, scale: 1 }
+            }
             transition={{ duration: 0.2 }}
           >
             <Sun className="h-[1.2rem] w-[1.2rem]" />
@@ -26,7 +30,11 @@ export function ThemeToggle() {
           <motion.div
             className="absolute"
             initial={false}
-            animate={theme === "dark" ? { rotate: 0, scale: 1 } : { rotate: -90, scale: 0 }}
+            animate={
+              theme === "dark"
+                ? { rotate: 0, scale: 1 }
+                : { rotate: -90, scale: 0 }
+            }
             transition={{ duration: 0.2 }}
           >
             <Moon className="h-[1.2rem] w-[1.2rem]" />

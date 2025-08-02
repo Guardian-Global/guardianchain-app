@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Heart, Share2, BookOpen, ExternalLink, Sparkles } from 'lucide-react';
-import { FloatingTooltip, LikeAnimation, BouncyIcon } from './MicroInteractions';
+import React, { useState } from "react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Heart, Share2, BookOpen, ExternalLink, Sparkles } from "lucide-react";
+import {
+  FloatingTooltip,
+  LikeAnimation,
+  BouncyIcon,
+} from "./MicroInteractions";
 
 // Tilt Card Component
 export const TiltCard: React.FC<{
   children: React.ReactNode;
   className?: string;
   intensity?: number;
-}> = ({ children, className = '', intensity = 15 }) => {
+}> = ({ children, className = "", intensity = 15 }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  
+
   const rotateX = useTransform(y, [-100, 100], [intensity, -intensity]);
   const rotateY = useTransform(x, [-100, 100], [-intensity, intensity]);
 
@@ -52,16 +56,16 @@ export const InteractiveCapsuleCard: React.FC<{
   onLike?: () => void;
   onShare?: () => void;
   onView?: () => void;
-}> = ({ 
-  title, 
-  content, 
-  status, 
-  likes, 
-  author, 
+}> = ({
+  title,
+  content,
+  status,
+  likes,
+  author,
   category,
   onLike,
   onShare,
-  onView 
+  onView,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
@@ -69,16 +73,20 @@ export const InteractiveCapsuleCard: React.FC<{
 
   const handleLike = () => {
     setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     onLike?.();
   };
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'verified': return 'bg-green-500/20 text-green-400';
-      case 'pending': return 'bg-yellow-500/20 text-yellow-400';
-      case 'disputed': return 'bg-red-500/20 text-red-400';
-      default: return 'bg-blue-500/20 text-blue-400';
+      case "verified":
+        return "bg-green-500/20 text-green-400";
+      case "pending":
+        return "bg-yellow-500/20 text-yellow-400";
+      case "disputed":
+        return "bg-red-500/20 text-red-400";
+      default:
+        return "bg-blue-500/20 text-blue-400";
     }
   };
 
@@ -98,14 +106,18 @@ export const InteractiveCapsuleCard: React.FC<{
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.3 }}
           />
-          
+
           {/* Floating Sparkles */}
           <motion.div
             className="absolute top-2 right-2"
-            animate={isHovered ? {
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360]
-            } : {}}
+            animate={
+              isHovered
+                ? {
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 180, 360],
+                  }
+                : {}
+            }
             transition={{ duration: 2, repeat: Infinity }}
           >
             <Sparkles className="h-4 w-4 text-yellow-400 opacity-60" />
@@ -116,9 +128,7 @@ export const InteractiveCapsuleCard: React.FC<{
               <CardTitle className="text-white text-lg leading-tight">
                 {title}
               </CardTitle>
-              <Badge className={getStatusColor(status)}>
-                {status}
-              </Badge>
+              <Badge className={getStatusColor(status)}>{status}</Badge>
             </div>
             <div className="flex items-center space-x-2 text-sm text-slate-400">
               <span>by {author}</span>
@@ -169,8 +179,8 @@ export const InteractiveCapsuleCard: React.FC<{
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="outline"
                   onClick={onView}
                   className="border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
@@ -204,13 +214,13 @@ export const ExpandableCard: React.FC<{
       <motion.div
         className="p-4 cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
-        whileHover={{ backgroundColor: 'rgba(71, 85, 105, 0.3)' }}
+        whileHover={{ backgroundColor: "rgba(71, 85, 105, 0.3)" }}
       >
         <div className="flex items-center space-x-3">
           {Icon && (
-            <BouncyIcon 
-              icon={Icon} 
-              className="h-5 w-5 text-blue-400" 
+            <BouncyIcon
+              icon={Icon}
+              className="h-5 w-5 text-blue-400"
               bounce={false}
             />
           )}
@@ -222,8 +232,18 @@ export const ExpandableCard: React.FC<{
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
-            <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className="h-5 w-5 text-slate-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </motion.div>
         </div>
@@ -232,10 +252,10 @@ export const ExpandableCard: React.FC<{
       <motion.div
         initial={false}
         animate={{
-          height: isExpanded ? 'auto' : 0,
-          opacity: isExpanded ? 1 : 0
+          height: isExpanded ? "auto" : 0,
+          opacity: isExpanded ? 1 : 0,
         }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className="overflow-hidden"
       >
         <div className="p-4 pt-0 border-t border-slate-700">
@@ -266,12 +286,12 @@ export const DraggableCard: React.FC<{
         setIsDragging(false);
         onDragEnd?.(info);
       }}
-      whileDrag={{ 
-        scale: 1.05, 
+      whileDrag={{
+        scale: 1.05,
         rotate: 5,
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
       }}
-      className={`cursor-move ${isDragging ? 'z-50' : 'z-10'}`}
+      className={`cursor-move ${isDragging ? "z-50" : "z-10"}`}
     >
       {children}
     </motion.div>
@@ -283,7 +303,7 @@ export const FlipCard: React.FC<{
   frontContent: React.ReactNode;
   backContent: React.ReactNode;
   className?: string;
-}> = ({ frontContent, backContent, className = '' }) => {
+}> = ({ frontContent, backContent, className = "" }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
@@ -291,9 +311,9 @@ export const FlipCard: React.FC<{
       <motion.div
         className="relative h-full w-full cursor-pointer"
         onClick={() => setIsFlipped(!isFlipped)}
-        style={{ transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: "preserve-3d" }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, type: 'spring' }}
+        transition={{ duration: 0.6, type: "spring" }}
       >
         {/* Front Side */}
         <div className="absolute inset-0 h-full w-full backface-hidden">
@@ -305,7 +325,10 @@ export const FlipCard: React.FC<{
         </div>
 
         {/* Back Side */}
-        <div className="absolute inset-0 h-full w-full backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
+        <div
+          className="absolute inset-0 h-full w-full backface-hidden"
+          style={{ transform: "rotateY(180deg)" }}
+        >
           <Card className="h-full w-full bg-slate-700/50 border-slate-600">
             <CardContent className="p-6 h-full flex items-center justify-center">
               {backContent}

@@ -2,17 +2,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX, 
-  Heart, 
-  Share, 
-  ChevronLeft, 
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Heart,
+  Share,
+  ChevronLeft,
   ChevronRight,
   Zap,
-  Eye
+  Eye,
 } from "lucide-react";
 import { useSwipeable } from "react-swipeable";
 import { useAuth } from "@/hooks/useAuth";
@@ -48,7 +48,11 @@ interface ReelSwiperProps {
   fullscreen?: boolean;
 }
 
-export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true }: ReelSwiperProps) {
+export default function ReelSwiper({
+  reelId,
+  autoplay = true,
+  fullscreen = true,
+}: ReelSwiperProps) {
   const { user } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoplay);
@@ -59,7 +63,7 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
   const containerRef = useRef<HTMLDivElement>(null);
   const autoplayTimerRef = useRef<NodeJS.Timeout>();
 
-  const userLanguage = user?.language || 'en';
+  const userLanguage = user?.language || "en";
   const isRTLLayout = isRTL(userLanguage);
 
   // Fetch reel capsules
@@ -96,13 +100,13 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
   useEffect(() => {
     if (currentCapsule && videoRef.current) {
       const video = videoRef.current;
-      
+
       if (isPlaying) {
         video.play().catch(console.error);
       } else {
         video.pause();
       }
-      
+
       video.muted = isMuted;
     }
   }, [currentCapsule, isPlaying, isMuted]);
@@ -112,7 +116,7 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
     if (currentCapsule?.voiceoverUrl && audioRef.current) {
       const audio = audioRef.current;
       audio.src = currentCapsule.voiceoverUrl;
-      
+
       if (autoplay && !isMuted) {
         audio.play().catch(console.error);
         setIsVoiceoverPlaying(true);
@@ -133,7 +137,9 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
   }, [reelCapsules.length]);
 
   const previousReel = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + reelCapsules.length) % reelCapsules.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + reelCapsules.length) % reelCapsules.length,
+    );
   }, [reelCapsules.length]);
 
   const togglePlayPause = () => {
@@ -158,8 +164,8 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
 
   // Swipe handlers for mobile
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => !isRTLLayout ? nextReel() : previousReel(),
-    onSwipedRight: () => !isRTLLayout ? previousReel() : nextReel(),
+    onSwipedLeft: () => (!isRTLLayout ? nextReel() : previousReel()),
+    onSwipedRight: () => (!isRTLLayout ? previousReel() : nextReel()),
     onSwipedUp: () => nextReel(),
     onSwipedDown: () => previousReel(),
     trackMouse: false,
@@ -178,17 +184,22 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
     return (
       <div className="min-h-screen bg-black flex items-center justify-center text-white">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">{LABELS[userLanguage]?.noReelsAvailable || "No Reels Available"}</h2>
-          <p className="text-gray-400">{LABELS[userLanguage]?.createFirstReel || "Create your first reel to get started"}</p>
+          <h2 className="text-2xl font-bold mb-4">
+            {LABELS[userLanguage]?.noReelsAvailable || "No Reels Available"}
+          </h2>
+          <p className="text-gray-400">
+            {LABELS[userLanguage]?.createFirstReel ||
+              "Create your first reel to get started"}
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className={`relative ${fullscreen ? 'min-h-screen' : 'h-[600px]'} bg-black overflow-hidden`}
+      className={`relative ${fullscreen ? "min-h-screen" : "h-[600px]"} bg-black overflow-hidden`}
       {...swipeHandlers}
       {...getRTLContainerProps(isRTLLayout)}
     >
@@ -202,7 +213,10 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
         autoPlay={autoplay}
         poster="/assets/default-reel-poster.jpg"
       >
-        <source src={currentCapsule.mediaUrl || "/assets/default-reel-video.mp4"} type="video/mp4" />
+        <source
+          src={currentCapsule.mediaUrl || "/assets/default-reel-video.mp4"}
+          type="video/mp4"
+        />
       </video>
 
       {/* Audio Element for Voiceover */}
@@ -210,9 +224,10 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
 
       {/* Overlay Content */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20">
-        
         {/* Top Bar */}
-        <div className={`absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-20 ${isRTLLayout ? 'flex-row-reverse' : ''}`}>
+        <div
+          className={`absolute top-0 left-0 right-0 p-4 flex items-center justify-between z-20 ${isRTLLayout ? "flex-row-reverse" : ""}`}
+        >
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="bg-purple-600/80 text-white">
               {currentIndex + 1} / {reelCapsules.length}
@@ -222,23 +237,31 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
               {currentCapsule.views}
             </Badge>
           </div>
-          
+
           <div className="flex items-center gap-2">
-            <Button 
-              size="sm" 
-              variant="ghost" 
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={toggleMute}
               className="text-white hover:bg-white/20"
             >
-              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              {isMuted ? (
+                <VolumeX className="w-4 h-4" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
             </Button>
-            <Button 
-              size="sm" 
-              variant="ghost" 
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={togglePlayPause}
               className="text-white hover:bg-white/20"
             >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isPlaying ? (
+                <Pause className="w-4 h-4" />
+              ) : (
+                <Play className="w-4 h-4" />
+              )}
             </Button>
           </div>
         </div>
@@ -248,29 +271,38 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
           variant="ghost"
           size="lg"
           onClick={previousReel}
-          className={`absolute top-1/2 -translate-y-1/2 ${isRTLLayout ? 'right-4' : 'left-4'} text-white hover:bg-white/20 z-10`}
+          className={`absolute top-1/2 -translate-y-1/2 ${isRTLLayout ? "right-4" : "left-4"} text-white hover:bg-white/20 z-10`}
         >
-          {isRTLLayout ? <ChevronRight className="w-6 h-6" /> : <ChevronLeft className="w-6 h-6" />}
+          {isRTLLayout ? (
+            <ChevronRight className="w-6 h-6" />
+          ) : (
+            <ChevronLeft className="w-6 h-6" />
+          )}
         </Button>
-        
+
         <Button
           variant="ghost"
           size="lg"
           onClick={nextReel}
-          className={`absolute top-1/2 -translate-y-1/2 ${isRTLLayout ? 'left-4' : 'right-4'} text-white hover:bg-white/20 z-10`}
+          className={`absolute top-1/2 -translate-y-1/2 ${isRTLLayout ? "left-4" : "right-4"} text-white hover:bg-white/20 z-10`}
         >
-          {isRTLLayout ? <ChevronLeft className="w-6 h-6" /> : <ChevronRight className="w-6 h-6" />}
+          {isRTLLayout ? (
+            <ChevronLeft className="w-6 h-6" />
+          ) : (
+            <ChevronRight className="w-6 h-6" />
+          )}
         </Button>
 
         {/* Bottom Content */}
-        <div className={`absolute bottom-0 left-0 right-0 p-6 space-y-4 ${isRTLLayout ? 'text-right' : 'text-left'}`}>
-          
+        <div
+          className={`absolute bottom-0 left-0 right-0 p-6 space-y-4 ${isRTLLayout ? "text-right" : "text-left"}`}
+        >
           {/* Capsule Info */}
           <div className="space-y-2">
             <h1 className="text-white text-2xl font-bold leading-tight">
               {currentCapsule.title}
             </h1>
-            
+
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
@@ -278,9 +310,11 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
                     {currentCapsule.author.name.charAt(0)}
                   </span>
                 </div>
-                <span className="text-white font-medium">{currentCapsule.author.name}</span>
+                <span className="text-white font-medium">
+                  {currentCapsule.author.name}
+                </span>
               </div>
-              
+
               <Badge className="bg-yellow-500/80 text-black">
                 <Zap className="w-3 h-3 mr-1" />
                 {currentCapsule.truthScore}% Truth
@@ -290,7 +324,7 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
 
           {/* Summary with Translation */}
           <div className="space-y-2">
-            <TranslateToggle 
+            <TranslateToggle
               summary={currentCapsule.summary}
               translated={currentCapsule.translatedSummary}
               className="text-white/90 text-sm leading-relaxed"
@@ -299,13 +333,17 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
 
           {/* Voice Summary Player */}
           <div className="flex items-center gap-4">
-            <VoiceSummaryPlayer 
-              text={currentCapsule.language !== userLanguage ? currentCapsule.translatedSummary || currentCapsule.summary : currentCapsule.summary}
+            <VoiceSummaryPlayer
+              text={
+                currentCapsule.language !== userLanguage
+                  ? currentCapsule.translatedSummary || currentCapsule.summary
+                  : currentCapsule.summary
+              }
               language={userLanguage}
               autoPlay={false}
               className="text-white"
             />
-            
+
             {currentCapsule.voiceoverUrl && (
               <Button
                 size="sm"
@@ -313,14 +351,20 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
                 onClick={toggleVoiceover}
                 className="bg-white/20 border-white/30 text-white hover:bg-white/30"
               >
-                {isVoiceoverPlaying ? <Pause className="w-4 h-4 mr-2" /> : <Play className="w-4 h-4 mr-2" />}
+                {isVoiceoverPlaying ? (
+                  <Pause className="w-4 h-4 mr-2" />
+                ) : (
+                  <Play className="w-4 h-4 mr-2" />
+                )}
                 {LABELS[userLanguage]?.voiceover || "Voiceover"}
               </Button>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className={`flex items-center gap-4 ${isRTLLayout ? 'flex-row-reverse' : ''}`}>
+          <div
+            className={`flex items-center gap-4 ${isRTLLayout ? "flex-row-reverse" : ""}`}
+          >
             <Button
               size="sm"
               variant="ghost"
@@ -329,7 +373,7 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
               <Heart className="w-4 h-4 mr-2" />
               {currentCapsule.likes}
             </Button>
-            
+
             <Button
               size="sm"
               variant="ghost"
@@ -346,7 +390,7 @@ export default function ReelSwiper({ reelId, autoplay = true, fullscreen = true 
               <div
                 key={index}
                 className={`h-1 flex-1 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-white' : 'bg-white/30'
+                  index === currentIndex ? "bg-white" : "bg-white/30"
                 }`}
               />
             ))}

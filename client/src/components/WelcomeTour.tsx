@@ -1,46 +1,50 @@
-import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Shield, FileText, TrendingUp, Search, X } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Shield, FileText, TrendingUp, Search, X } from "lucide-react";
 
 export default function WelcomeTour() {
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !localStorage.getItem('seenWelcome')) {
+    if (typeof window !== "undefined" && !localStorage.getItem("seenWelcome")) {
       setShow(true);
     }
   }, []);
 
   const handleComplete = () => {
-    localStorage.setItem('seenWelcome', 'true');
+    localStorage.setItem("seenWelcome", "true");
     setShow(false);
     // Redirect to login for authentication
-    window.location.href = '/api/login';
+    window.location.href = "/api/login";
   };
 
   const steps = [
     {
       icon: Shield,
       title: "Welcome to GUARDIANCHAIN",
-      content: "The world's first sovereign memory preservation platform. Create truth capsules that grow in value over time."
+      content:
+        "The world's first sovereign memory preservation platform. Create truth capsules that grow in value over time.",
     },
     {
       icon: FileText,
       title: "Submit Truth Capsules",
-      content: "Upload documents, memories, and truth claims. Each capsule is secured on blockchain and preserved forever."
+      content:
+        "Upload documents, memories, and truth claims. Each capsule is secured on blockchain and preserved forever.",
     },
     {
       icon: TrendingUp,
       title: "Earn GTT Token Rewards",
-      content: "Your capsules generate yield through community verification and engagement. Real value from preserved truth."
+      content:
+        "Your capsules generate yield through community verification and engagement. Real value from preserved truth.",
     },
     {
       icon: Search,
       title: "Explore & Verify",
-      content: "Discover capsules from others, verify their authenticity, and earn rewards for community participation."
-    }
+      content:
+        "Discover capsules from others, verify their authenticity, and earn rewards for community participation.",
+    },
   ];
 
   if (!show) return null;
@@ -69,7 +73,7 @@ export default function WelcomeTour() {
           <h2 className="text-xl font-bold text-white mb-2">
             {currentStep.title}
           </h2>
-          
+
           <p className="text-slate-300 text-sm leading-relaxed mb-6">
             {currentStep.content}
           </p>
@@ -80,7 +84,7 @@ export default function WelcomeTour() {
                 <div
                   key={index}
                   className={`w-2 h-2 rounded-full ${
-                    index === step ? 'bg-blue-500' : 'bg-slate-600'
+                    index === step ? "bg-blue-500" : "bg-slate-600"
                   }`}
                 />
               ))}
@@ -97,7 +101,7 @@ export default function WelcomeTour() {
                   Back
                 </Button>
               )}
-              
+
               {step < steps.length - 1 ? (
                 <Button
                   size="sm"

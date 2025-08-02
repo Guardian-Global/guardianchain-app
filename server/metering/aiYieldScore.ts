@@ -186,7 +186,7 @@ export class GuardianTrustCalculator {
    */
   private static generateRecommendations(
     user: UserMetrics,
-    breakdown: any
+    breakdown: any,
   ): string[] {
     const recommendations: string[] = [];
 
@@ -194,11 +194,11 @@ export class GuardianTrustCalculator {
     if (breakdown.efficiency < 60) {
       if (user.gttEarned === 0) {
         recommendations.push(
-          "Create and seal your first truth capsule to start earning GTT"
+          "Create and seal your first truth capsule to start earning GTT",
         );
       } else {
         recommendations.push(
-          "Focus on high-yield capsule creation to improve efficiency ratio"
+          "Focus on high-yield capsule creation to improve efficiency ratio",
         );
       }
     }
@@ -206,14 +206,14 @@ export class GuardianTrustCalculator {
     // Activity recommendations
     if (breakdown.activity < 50) {
       recommendations.push(
-        "Increase platform engagement through capsule remixing and AI interactions"
+        "Increase platform engagement through capsule remixing and AI interactions",
       );
     }
 
     // Social recommendations
     if (breakdown.social < 60) {
       recommendations.push(
-        "Participate in DAO governance and remix community capsules"
+        "Participate in DAO governance and remix community capsules",
       );
     }
 
@@ -221,18 +221,18 @@ export class GuardianTrustCalculator {
     if (breakdown.legacy < 40) {
       if (!user.legacySet) {
         recommendations.push(
-          "Set up Legacy Protocol to demonstrate long-term commitment"
+          "Set up Legacy Protocol to demonstrate long-term commitment",
         );
       }
       recommendations.push(
-        "Save important AI conversations to build digital legacy"
+        "Save important AI conversations to build digital legacy",
       );
     }
 
     // Verification recommendations
     if (breakdown.verification < 80) {
       recommendations.push(
-        "Complete identity verification to access premium features"
+        "Complete identity verification to access premium features",
       );
     }
 
@@ -244,7 +244,7 @@ export class GuardianTrustCalculator {
    */
   private static calculateBillingEligibility(
     score: number,
-    tier: TrustScoreResult["tier"]
+    tier: TrustScoreResult["tier"],
   ): TrustScoreResult["billingEligibility"] {
     const baseCreditLimit = 1000; // GTT
     const tierMultipliers = {
@@ -265,12 +265,12 @@ export class GuardianTrustCalculator {
       tier === "Sovereign"
         ? "60 days"
         : tier === "Guardian"
-        ? "45 days"
-        : tier === "Creator"
-        ? "30 days"
-        : tier === "Seeker"
-        ? "14 days"
-        : "7 days";
+          ? "45 days"
+          : tier === "Creator"
+            ? "30 days"
+            : tier === "Seeker"
+              ? "14 days"
+              : "7 days";
 
     return {
       creditLimit,

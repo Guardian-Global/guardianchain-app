@@ -16,15 +16,15 @@ export async function getCapsuleStats(req: Request, res: Response) {
           views: 45892,
           likes: 3847,
           verificationStatus: "verified" as const,
-          griefScore: 92
+          griefScore: 92,
         },
         {
-          id: "cap_002", 
+          id: "cap_002",
           title: "Corporate Whistleblower Testimony",
           views: 38746,
           likes: 4521,
           verificationStatus: "verified" as const,
-          griefScore: 98
+          griefScore: 98,
         },
         {
           id: "cap_003",
@@ -32,7 +32,7 @@ export async function getCapsuleStats(req: Request, res: Response) {
           views: 29384,
           likes: 2847,
           verificationStatus: "pending" as const,
-          griefScore: 76
+          griefScore: 76,
         },
         {
           id: "cap_004",
@@ -40,7 +40,7 @@ export async function getCapsuleStats(req: Request, res: Response) {
           views: 24756,
           likes: 3201,
           verificationStatus: "verified" as const,
-          griefScore: 89
+          griefScore: 89,
         },
         {
           id: "cap_005",
@@ -48,22 +48,22 @@ export async function getCapsuleStats(req: Request, res: Response) {
           views: 21394,
           likes: 2156,
           verificationStatus: "verified" as const,
-          griefScore: 84
-        }
+          griefScore: 84,
+        },
       ],
       categoryBreakdown: [
         { category: "Truth Testimonies", count: 3842, percentage: 29.9 },
         { category: "Historical Records", count: 2947, percentage: 22.9 },
         { category: "Scientific Evidence", count: 2384, percentage: 18.5 },
         { category: "Personal Stories", count: 1923, percentage: 15.0 },
-        { category: "Educational Content", count: 1751, percentage: 13.6 }
+        { category: "Educational Content", count: 1751, percentage: 13.6 },
       ],
       performanceMetrics: {
         avgViews: 2847,
         avgLikes: 247,
         engagementRate: 8.7,
-        truthScore: 86.4
-      }
+        truthScore: 86.4,
+      },
     };
 
     res.json(stats);

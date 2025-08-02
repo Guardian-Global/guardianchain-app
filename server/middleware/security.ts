@@ -65,7 +65,7 @@ export const authRateLimit = rateLimit({
 export const productionHeaders = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Force HTTPS in production
   if (
@@ -82,11 +82,11 @@ export const productionHeaders = (
   res.setHeader("X-XSS-Protection", "1; mode=block");
   res.setHeader(
     "Strict-Transport-Security",
-    "max-age=31536000; includeSubDomains; preload"
+    "max-age=31536000; includeSubDomains; preload",
   );
   res.setHeader(
     "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=()"
+    "camera=(), microphone=(), geolocation=()",
   );
 
   next();
@@ -106,7 +106,7 @@ export const corsConfig = {
 export const validateContent = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Validate JSON payloads
   if (req.headers["content-type"]?.includes("application/json")) {
@@ -132,7 +132,7 @@ function sanitizeInput(obj: any): any {
   if (typeof obj === "string") {
     return obj.replace(
       /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-      ""
+      "",
     );
   }
   if (typeof obj === "object" && obj !== null) {

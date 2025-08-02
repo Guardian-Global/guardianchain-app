@@ -5,21 +5,26 @@
 ### MAJOR TOKENS WITH TRANSACTION FEES:
 
 **SAFEMOON**: 10% total fee
+
 - 5% redistributed to holders
 - 5% to liquidity pool
 
 **REFLECT TOKEN (RFI)**: 2% fee
+
 - 2% redistributed to all holders
 
 **ELONGATE**: 10% total fee
+
 - 5% to charity wallet
 - 5% burned/redistributed
 
 **BABYDOGE**: 10% total fee
+
 - 5% redistributed to holders
 - 5% to marketing/operations
 
 **SHIBA INU**: 0% transaction fee
+
 - Revenue from ecosystem/burns
 
 ### DEFI PROTOCOL FEES:
@@ -31,19 +36,25 @@
 ## 📊 RECOMMENDED GTT FEE STRUCTURE:
 
 ### OPTION 1: AGGRESSIVE REVENUE (RECOMMENDED)
+
 **5% Transaction Fee**
+
 - 3% to founder revenue wallet
 - 1% burned (deflationary)
 - 1% redistributed to holders
 
 ### OPTION 2: MODERATE REVENUE
-**3% Transaction Fee** 
+
+**3% Transaction Fee**
+
 - 2% to founder revenue wallet
 - 0.5% burned
 - 0.5% to development fund
 
 ### OPTION 3: CONSERVATIVE
+
 **2% Transaction Fee**
+
 - 1.5% to founder revenue wallet
 - 0.5% burned
 
@@ -59,6 +70,7 @@
 ## 🎯 INDUSTRY RECOMMENDATION:
 
 **OPTIMAL FEE: 3-5%**
+
 - Higher than 1% but not excessive
 - Generates substantial founder revenue
 - Includes burn mechanism (increases token value)

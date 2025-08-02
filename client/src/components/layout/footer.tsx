@@ -69,7 +69,7 @@ export default function Footer() {
               <a
                 href={`https://twitter.com/${PROTOCOL_CONFIG.SOCIAL.TWITTER.replace(
                   "@",
-                  ""
+                  "",
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -91,7 +91,7 @@ export default function Footer() {
               <a
                 href={`https://${PROTOCOL_CONFIG.SOCIAL.DISCORD.replace(
                   "discord.gg/",
-                  ""
+                  "",
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

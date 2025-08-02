@@ -71,7 +71,7 @@ export function registerFinancialRoutes(app: Express) {
         console.error("Payment processing error:", error);
         res.status(500).json({ error: "Payment processing failed" });
       }
-    }
+    },
   );
 
   // Treasury management

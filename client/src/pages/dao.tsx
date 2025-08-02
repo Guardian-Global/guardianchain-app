@@ -4,12 +4,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Gavel, Plus, Vote, Shield, FileText, Calendar } from "lucide-react";
@@ -32,7 +45,7 @@ export default function DAOPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  
+
   const form = useForm<ProposalForm>({
     resolver: zodResolver(proposalSchema),
     defaultValues: {
@@ -65,7 +78,13 @@ export default function DAOPage() {
   });
 
   const voteMutation = useMutation({
-    mutationFn: async ({ proposalId, choice }: { proposalId: string; choice: string }) => {
+    mutationFn: async ({
+      proposalId,
+      choice,
+    }: {
+      proposalId: string;
+      choice: string;
+    }) => {
       return apiRequest("POST", "/api/dao/vote", { proposalId, choice });
     },
     onSuccess: () => {
@@ -84,7 +103,10 @@ export default function DAOPage() {
     },
   });
 
-  const handleVote = (proposalId: string, choice: 'support' | 'reject' | 'abstain') => {
+  const handleVote = (
+    proposalId: string,
+    choice: "support" | "reject" | "abstain",
+  ) => {
     voteMutation.mutate({ proposalId, choice });
   };
 
@@ -99,7 +121,7 @@ export default function DAOPage() {
         description="Participate in GuardianChain decentralized governance"
         breadcrumbs={[
           { label: "Home", href: "/" },
-          { label: "DAO Governance" }
+          { label: "DAO Governance" },
         ]}
       />
 
@@ -113,8 +135,9 @@ export default function DAOPage() {
             </h1>
           </div>
           <p className="text-lg text-brand-light/80 max-w-2xl mx-auto">
-            Shape the future of truth preservation through decentralized governance.
-            Create proposals, vote on initiatives, and earn GTT rewards for participation.
+            Shape the future of truth preservation through decentralized
+            governance. Create proposals, vote on initiatives, and earn GTT
+            rewards for participation.
           </p>
         </div>
 
@@ -124,23 +147,31 @@ export default function DAOPage() {
             <CardContent className="p-6 text-center">
               <Vote className="w-8 h-8 text-brand-accent mx-auto mb-3" />
               <div className="text-2xl font-bold text-brand-light mb-1">12</div>
-              <div className="text-sm text-brand-light/60">Active Proposals</div>
+              <div className="text-sm text-brand-light/60">
+                Active Proposals
+              </div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-brand-secondary border-brand-surface shadow-card">
             <CardContent className="p-6 text-center">
               <Shield className="w-8 h-8 text-brand-primary mx-auto mb-3" />
-              <div className="text-2xl font-bold text-brand-light mb-1">1,247</div>
-              <div className="text-sm text-brand-light/60">Total Votes Cast</div>
+              <div className="text-2xl font-bold text-brand-light mb-1">
+                1,247
+              </div>
+              <div className="text-sm text-brand-light/60">
+                Total Votes Cast
+              </div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-brand-secondary border-brand-surface shadow-card">
             <CardContent className="p-6 text-center">
               <FileText className="w-8 h-8 text-brand-warning mx-auto mb-3" />
               <div className="text-2xl font-bold text-brand-light mb-1">89</div>
-              <div className="text-sm text-brand-light/60">Truth Certificates</div>
+              <div className="text-sm text-brand-light/60">
+                Truth Certificates
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -148,21 +179,32 @@ export default function DAOPage() {
         {/* Main Content */}
         <Tabs defaultValue="proposals" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 bg-brand-surface">
-            <TabsTrigger value="proposals" className="data-[state=active]:bg-brand-primary data-[state=active]:text-white">
+            <TabsTrigger
+              value="proposals"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+            >
               Active Proposals
             </TabsTrigger>
-            <TabsTrigger value="history" className="data-[state=active]:bg-brand-primary data-[state=active]:text-white">
+            <TabsTrigger
+              value="history"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+            >
               Voting History
             </TabsTrigger>
-            <TabsTrigger value="certificates" className="data-[state=active]:bg-brand-primary data-[state=active]:text-white">
+            <TabsTrigger
+              value="certificates"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+            >
               Truth Certificates
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="proposals" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-brand-light">Active Proposals</h2>
-              
+              <h2 className="text-xl font-semibold text-brand-light">
+                Active Proposals
+              </h2>
+
               <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-brand-primary hover:bg-brand-primary/90 text-white">
@@ -172,19 +214,26 @@ export default function DAOPage() {
                 </DialogTrigger>
                 <DialogContent className="bg-brand-secondary border-brand-surface max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="text-brand-light font-brand">Create New Proposal</DialogTitle>
+                    <DialogTitle className="text-brand-light font-brand">
+                      Create New Proposal
+                    </DialogTitle>
                   </DialogHeader>
-                  
+
                   <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
                       <FormField
                         control={form.control}
                         name="title"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-brand-light">Proposal Title</FormLabel>
+                            <FormLabel className="text-brand-light">
+                              Proposal Title
+                            </FormLabel>
                             <FormControl>
-                              <Input 
+                              <Input
                                 placeholder="Enter proposal title..."
                                 className="bg-brand-surface border-brand-primary/20 text-brand-light"
                                 {...field}
@@ -194,15 +243,17 @@ export default function DAOPage() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-brand-light">Description</FormLabel>
+                            <FormLabel className="text-brand-light">
+                              Description
+                            </FormLabel>
                             <FormControl>
-                              <Textarea 
+                              <Textarea
                                 placeholder="Detailed description of your proposal..."
                                 className="bg-brand-surface border-brand-primary/20 text-brand-light min-h-[120px]"
                                 {...field}
@@ -212,15 +263,17 @@ export default function DAOPage() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="endTime"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-brand-light">End Time (Optional)</FormLabel>
+                            <FormLabel className="text-brand-light">
+                              End Time (Optional)
+                            </FormLabel>
                             <FormControl>
-                              <Input 
+                              <Input
                                 type="datetime-local"
                                 className="bg-brand-surface border-brand-primary/20 text-brand-light"
                                 {...field}
@@ -230,17 +283,19 @@ export default function DAOPage() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <div className="flex gap-3">
-                        <Button 
-                          type="submit" 
+                        <Button
+                          type="submit"
                           disabled={createProposalMutation.isPending}
                           className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
                         >
-                          {createProposalMutation.isPending ? "Creating..." : "Create Proposal"}
+                          {createProposalMutation.isPending
+                            ? "Creating..."
+                            : "Create Proposal"}
                         </Button>
-                        <Button 
-                          type="button" 
+                        <Button
+                          type="button"
                           variant="outline"
                           onClick={() => setIsCreateOpen(false)}
                           className="border-brand-surface text-brand-light hover:bg-brand-surface"
@@ -254,7 +309,7 @@ export default function DAOPage() {
               </Dialog>
             </div>
 
-            <ProposalList 
+            <ProposalList
               onVote={handleVote}
               userAddress={user?.walletAddress}
             />
@@ -264,9 +319,12 @@ export default function DAOPage() {
             <Card className="bg-brand-secondary border-brand-surface">
               <CardContent className="p-8 text-center">
                 <Calendar className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-brand-light mb-2">Voting History</h3>
+                <h3 className="text-lg font-medium text-brand-light mb-2">
+                  Voting History
+                </h3>
                 <p className="text-brand-light/60">
-                  Your voting history will appear here once you start participating in governance.
+                  Your voting history will appear here once you start
+                  participating in governance.
                 </p>
               </CardContent>
             </Card>
@@ -276,9 +334,12 @@ export default function DAOPage() {
             <Card className="bg-brand-secondary border-brand-surface">
               <CardContent className="p-8 text-center">
                 <FileText className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-brand-light mb-2">Truth Certificates</h3>
+                <h3 className="text-lg font-medium text-brand-light mb-2">
+                  Truth Certificates
+                </h3>
                 <p className="text-brand-light/60">
-                  Truth certificates for verified capsules will be displayed here.
+                  Truth certificates for verified capsules will be displayed
+                  here.
                 </p>
               </CardContent>
             </Card>

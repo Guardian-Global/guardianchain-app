@@ -156,7 +156,7 @@ export default function AirdropPage() {
     if (referralData?.referralLink) {
       const tweetText = `Join me on GUARDIANCHAIN and earn GTT tokens! 🚀\n\nSign up with my referral link and we both get 50 GTT tokens when you start staking.\n\n${referralData.referralLink}\n\n#GUARDIANCHAIN #GTT #DeFi`;
       const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        tweetText
+        tweetText,
       )}`;
       window.open(tweetUrl, "_blank");
     }

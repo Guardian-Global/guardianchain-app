@@ -45,7 +45,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
   const refreshAssets = async () => {
     if (!supabase) {
       setError(
-        "Supabase not configured. Please add your Supabase credentials."
+        "Supabase not configured. Please add your Supabase credentials.",
       );
       setLoading(false);
       return;
@@ -66,7 +66,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
         nfts: allAssets.filter(
           (a) =>
             a.name.toLowerCase().includes("nft") ||
-            a.name.toLowerCase().includes("guardian")
+            a.name.toLowerCase().includes("guardian"),
         ).length,
       });
     } catch (err) {
@@ -84,7 +84,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
   const getAssetByName = (name: string): Asset | null => {
     return (
       assets.find((asset) =>
-        asset.name.toLowerCase().includes(name.toLowerCase())
+        asset.name.toLowerCase().includes(name.toLowerCase()),
       ) || null
     );
   };
@@ -93,7 +93,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
     return assets.filter(
       (asset) =>
         asset.name.toLowerCase().includes(pattern.toLowerCase()) ||
-        asset.bucket.toLowerCase().includes(pattern.toLowerCase())
+        asset.bucket.toLowerCase().includes(pattern.toLowerCase()),
     );
   };
 
@@ -102,7 +102,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
     (asset) =>
       asset.name.toLowerCase().includes("logo") ||
       asset.name.toLowerCase().includes("brand") ||
-      asset.bucket.toLowerCase().includes("logo")
+      asset.bucket.toLowerCase().includes("logo"),
   );
 
   const videos = assets.filter((asset) => asset.type === "video");
@@ -112,7 +112,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
       asset.name.toLowerCase().includes("nft") ||
       asset.name.toLowerCase().includes("guardian") ||
       asset.name.toLowerCase().includes("icon") ||
-      asset.bucket.toLowerCase().includes("nft")
+      asset.bucket.toLowerCase().includes("nft"),
   );
 
   const capsuleArt = assets.filter(
@@ -120,7 +120,7 @@ export const AssetProvider: React.FC<{ children: React.ReactNode }> = ({
       asset.name.toLowerCase().includes("capsule") ||
       asset.name.toLowerCase().includes("cover") ||
       asset.name.toLowerCase().includes("art") ||
-      asset.bucket.toLowerCase().includes("capsule")
+      asset.bucket.toLowerCase().includes("capsule"),
   );
 
   return (

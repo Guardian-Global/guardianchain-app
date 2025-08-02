@@ -17,7 +17,7 @@
     "themeColor": "#6324E2",
     "badges": [
       "🟢 Production Ready",
-      "🔒 Veritas Certified", 
+      "🔒 Veritas Certified",
       "💎 Institutional Grade",
       "🚀 Launch Ready"
     ]
@@ -44,16 +44,36 @@
   },
   "features": {
     "tags": [
-      "web3", "blockchain", "nextjs", "supabase", "openai", 
-      "veritas", "capsules", "truth", "GTT", "sovereign-app"
+      "web3",
+      "blockchain",
+      "nextjs",
+      "supabase",
+      "openai",
+      "veritas",
+      "capsules",
+      "truth",
+      "GTT",
+      "sovereign-app"
     ],
     "searchKeywords": [
-      "truth capsule", "memory protocol", "veritas sealed",
-      "grief score", "blockchain truth", "digital memory",
-      "truth verification", "GTT token", "guardian chain"
+      "truth capsule",
+      "memory protocol",
+      "veritas sealed",
+      "grief score",
+      "blockchain truth",
+      "digital memory",
+      "truth verification",
+      "GTT token",
+      "guardian chain"
     ],
     "capsuleFilters": [
-      "Mint", "Unlock", "Replay", "Audit", "Verify", "Claim $GTT", "DAO View"
+      "Mint",
+      "Unlock",
+      "Replay",
+      "Audit",
+      "Verify",
+      "Claim $GTT",
+      "DAO View"
     ],
     "userTiers": [
       {
@@ -65,7 +85,7 @@
         "access": "Submit capsule, replay memory, earn GTT"
       },
       {
-        "name": "DAO Moderator", 
+        "name": "DAO Moderator",
         "access": "Assign grief tiers, approve Veritas claim"
       },
       {
@@ -90,7 +110,7 @@
       },
       {
         "name": "Memory Guardian",
-        "multiplier": "2x", 
+        "multiplier": "2x",
         "estimatedMonthly": "$75-125"
       },
       {
@@ -104,8 +124,16 @@
     "discovery": true,
     "pluginSearchIndexing": true,
     "intentTags": [
-      "truth", "memory", "capsule", "blockchain", "proof", 
-      "ai", "GTT", "veritas", "vault", "witness"
+      "truth",
+      "memory",
+      "capsule",
+      "blockchain",
+      "proof",
+      "ai",
+      "GTT",
+      "veritas",
+      "vault",
+      "witness"
     ],
     "assistantPrompts": {
       "truthCapsule": "Check out GuardianChain on Replit – a sovereign memory protocol where you mint Veritas Capsules, earn $GTT, and verify sealed truth using griefScore logic.",

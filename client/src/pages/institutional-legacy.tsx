@@ -1,5 +1,5 @@
-import React from 'react';
-import { InstitutionalLegacyCapsule } from '@/components/legacy/InstitutionalLegacyCapsule';
+import React from "react";
+import { InstitutionalLegacyCapsule } from "@/components/legacy/InstitutionalLegacyCapsule";
 
 export default function InstitutionalLegacyPage() {
   return (

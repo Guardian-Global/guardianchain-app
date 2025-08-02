@@ -15,27 +15,27 @@ interface CapsuleMintButtonProps {
 // CapsuleNFT ABI (minimal for minting)
 const CAPSULE_NFT_ABI = [
   {
-    "inputs": [
-      { "internalType": "string", "name": "title", "type": "string" },
-      { "internalType": "string", "name": "content", "type": "string" },
-      { "internalType": "uint256", "name": "griefTier", "type": "uint256" },
-      { "internalType": "string", "name": "tokenURI", "type": "string" }
+    inputs: [
+      { internalType: "string", name: "title", type: "string" },
+      { internalType: "string", name: "content", type: "string" },
+      { internalType: "uint256", name: "griefTier", type: "uint256" },
+      { internalType: "string", name: "tokenURI", type: "string" },
     ],
-    "name": "mint",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    name: "mint",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 const CAPSULE_NFT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Update when deployed
 
-export default function CapsuleMintButton({ 
-  title, 
-  content, 
-  griefTier, 
+export default function CapsuleMintButton({
+  title,
+  content,
+  griefTier,
   onMintSuccess,
-  disabled = false 
+  disabled = false,
 }: CapsuleMintButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -45,26 +45,29 @@ export default function CapsuleMintButton({
     if (!title || !content || griefTier < 1 || griefTier > 5) {
       toast({
         title: "Invalid Data",
-        description: "Please provide valid title, content, and grief tier (1-5)",
+        description:
+          "Please provide valid title, content, and grief tier (1-5)",
         variant: "destructive",
       });
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       // Check if MetaMask is available
       if (!window.ethereum) {
-        throw new Error("MetaMask not found. Please install MetaMask to mint NFTs.");
+        throw new Error(
+          "MetaMask not found. Please install MetaMask to mint NFTs.",
+        );
       }
 
       // Connect to MetaMask
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      
+
       // Check if we're on the correct network (Polygon)
       const network = await provider.getNetwork();
       if (network.chainId !== 137n) {
@@ -72,21 +75,23 @@ export default function CapsuleMintButton({
       }
 
       // Check if contract is deployed
-      if (CAPSULE_NFT_ADDRESS === "0x0000000000000000000000000000000000000000") {
+      if (
+        CAPSULE_NFT_ADDRESS === "0x0000000000000000000000000000000000000000"
+      ) {
         // Development mode - simulate minting
         const simulatedTokenId = Math.floor(Math.random() * 10000) + 1;
         const simulatedTxHash = `0x${Math.random().toString(16).slice(2, 18)}...`;
-        
+
         setTimeout(() => {
           setTxHash(simulatedTxHash);
           onMintSuccess?.(simulatedTokenId.toString(), simulatedTxHash);
-          
+
           toast({
             title: "NFT Minted (Simulated)",
             description: `Guardian Capsule #${simulatedTokenId} created successfully!`,
           });
         }, 2000);
-        
+
         return;
       }
 
@@ -94,18 +99,18 @@ export default function CapsuleMintButton({
       const contract = new ethers.Contract(
         CAPSULE_NFT_ADDRESS,
         CAPSULE_NFT_ABI,
-        signer
+        signer,
       );
 
       // Generate metadata URI
       const baseUrl = window.location.origin;
-      
+
       // Estimate gas
       const gasEstimate = await contract.mint.estimateGas(
         title,
         content,
         griefTier,
-        `${baseUrl}/api/metadata/` // TokenURI will be appended with tokenId
+        `${baseUrl}/api/metadata/`, // TokenURI will be appended with tokenId
       );
 
       // Execute mint transaction
@@ -115,23 +120,26 @@ export default function CapsuleMintButton({
         griefTier,
         `${baseUrl}/api/metadata/`,
         {
-          gasLimit: gasEstimate * 120n / 100n, // Add 20% buffer
-        }
+          gasLimit: (gasEstimate * 120n) / 100n, // Add 20% buffer
+        },
       );
 
       toast({
         title: "Transaction Submitted",
-        description: "Your capsule NFT is being minted. Please wait for confirmation.",
+        description:
+          "Your capsule NFT is being minted. Please wait for confirmation.",
       });
 
       // Wait for transaction confirmation
       const receipt = await tx.wait();
-      
+
       // Extract token ID from events
-      const mintEvent = receipt.logs.find((log: any) => 
-        log.topics[0] === ethers.id("CapsuleMinted(uint256,address,string,uint256)")
+      const mintEvent = receipt.logs.find(
+        (log: any) =>
+          log.topics[0] ===
+          ethers.id("CapsuleMinted(uint256,address,string,uint256)"),
       );
-      
+
       let tokenId = "Unknown";
       if (mintEvent) {
         tokenId = ethers.toNumber(mintEvent.topics[1]);
@@ -144,10 +152,9 @@ export default function CapsuleMintButton({
         title: "NFT Minted Successfully!",
         description: `Guardian Capsule #${tokenId} has been created and stored on-chain.`,
       });
-
     } catch (error: any) {
-      console.error('❌ NFT minting failed:', error);
-      
+      console.error("❌ NFT minting failed:", error);
+
       let errorMessage = "Failed to mint NFT";
       if (error.message.includes("user rejected")) {
         errorMessage = "Transaction was cancelled by user";

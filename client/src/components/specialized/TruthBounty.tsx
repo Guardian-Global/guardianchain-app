@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Target, DollarSign, Users, Clock, Award, TrendingUp, Loader2 } from "lucide-react";
+import {
+  Target,
+  DollarSign,
+  Users,
+  Clock,
+  Award,
+  TrendingUp,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -46,7 +54,8 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
     onSuccess: (data) => {
       toast({
         title: "Truth Bounty Created",
-        description: "Your bounty has been posted for the community to investigate.",
+        description:
+          "Your bounty has been posted for the community to investigate.",
       });
       onBountyCreated?.(data);
       // Reset form
@@ -89,7 +98,8 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-white">Truth Bounty</h1>
         <p className="text-slate-400">
-          Crowdsource truth discovery by offering rewards for verified information
+          Crowdsource truth discovery by offering rewards for verified
+          information
         </p>
       </div>
 
@@ -98,13 +108,18 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Target className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+              <Target
+                className="w-5 h-5"
+                style={{ color: BRAND_COLORS.CHAIN }}
+              />
               Create Truth Bounty
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Bounty Title *</label>
+              <label className="text-sm font-medium text-white">
+                Bounty Title *
+              </label>
               <Input
                 value={bountyTitle}
                 onChange={(e) => setBountyTitle(e.target.value)}
@@ -129,7 +144,9 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Description *</label>
+              <label className="text-sm font-medium text-white">
+                Description *
+              </label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -140,7 +157,9 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">Reward (GTT) *</label>
+                <label className="text-sm font-medium text-white">
+                  Reward (GTT) *
+                </label>
                 <Input
                   type="number"
                   step="0.01"
@@ -152,7 +171,9 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">Deadline (Optional)</label>
+                <label className="text-sm font-medium text-white">
+                  Deadline (Optional)
+                </label>
                 <Input
                   type="date"
                   value={deadline}
@@ -186,7 +207,10 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <TrendingUp className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+              <TrendingUp
+                className="w-5 h-5"
+                style={{ color: BRAND_COLORS.CHAIN }}
+              />
               Active Bounties
             </CardTitle>
           </CardHeader>
@@ -218,15 +242,23 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
                 submissions: 12,
               },
             ].map((bounty) => (
-              <Card key={bounty.id} className="bg-slate-700/30 border-slate-600">
+              <Card
+                key={bounty.id}
+                className="bg-slate-700/30 border-slate-600"
+              >
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-white text-sm">{bounty.title}</h3>
-                    <Badge variant="outline" className="text-green-400 border-green-600">
+                    <h3 className="font-semibold text-white text-sm">
+                      {bounty.title}
+                    </h3>
+                    <Badge
+                      variant="outline"
+                      className="text-green-400 border-green-600"
+                    >
                       {bounty.reward} GTT
                     </Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between text-xs text-slate-400">
                     <span className="capitalize">{bounty.category}</span>
                     <div className="flex items-center gap-4">
@@ -244,7 +276,10 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
               </Card>
             ))}
 
-            <Button variant="outline" className="w-full border-slate-600 text-slate-300">
+            <Button
+              variant="outline"
+              className="w-full border-slate-600 text-slate-300"
+            >
               View All Bounties
             </Button>
           </CardContent>
@@ -262,15 +297,21 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
               <Target className="w-6 h-6 text-orange-400" />
             </div>
             <h3 className="font-semibold text-white">1. Post Bounty</h3>
-            <p className="text-sm text-slate-400">Create a bounty with reward and deadline</p>
+            <p className="text-sm text-slate-400">
+              Create a bounty with reward and deadline
+            </p>
           </div>
 
           <div className="text-center space-y-2">
             <div className="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto">
               <Users className="w-6 h-6 text-blue-400" />
             </div>
-            <h3 className="font-semibold text-white">2. Community Investigates</h3>
-            <p className="text-sm text-slate-400">Truth seekers research and submit evidence</p>
+            <h3 className="font-semibold text-white">
+              2. Community Investigates
+            </h3>
+            <p className="text-sm text-slate-400">
+              Truth seekers research and submit evidence
+            </p>
           </div>
 
           <div className="text-center space-y-2">
@@ -278,7 +319,9 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
               <Award className="w-6 h-6 text-purple-400" />
             </div>
             <h3 className="font-semibold text-white">3. Verification</h3>
-            <p className="text-sm text-slate-400">Submissions are verified by the community</p>
+            <p className="text-sm text-slate-400">
+              Submissions are verified by the community
+            </p>
           </div>
 
           <div className="text-center space-y-2">
@@ -286,7 +329,9 @@ export default function TruthBounty({ onBountyCreated }: TruthBountyProps) {
               <DollarSign className="w-6 h-6 text-green-400" />
             </div>
             <h3 className="font-semibold text-white">4. Reward Distribution</h3>
-            <p className="text-sm text-slate-400">GTT rewards are distributed to contributors</p>
+            <p className="text-sm text-slate-400">
+              GTT rewards are distributed to contributors
+            </p>
           </div>
         </CardContent>
       </Card>

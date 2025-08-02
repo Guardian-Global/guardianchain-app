@@ -79,7 +79,7 @@ export default function AuthenticationHub({
 }: AuthenticationHubProps) {
   const [activeTab, setActiveTab] = useState("tier-selection");
   const [selectedTier, setSelectedTier] = useState<UserTier>(
-    USER_TIERS.PROFESSIONAL
+    USER_TIERS.PROFESSIONAL,
   );
   const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -99,7 +99,7 @@ export default function AuthenticationHub({
           selectedTier,
           activeTab,
           providers: selectedProviders,
-        }
+        },
       );
       setAiRecommendations(recommendations);
     } catch (error) {
@@ -111,7 +111,7 @@ export default function AuthenticationHub({
     setSelectedProviders((prev) =>
       prev.includes(providerId)
         ? prev.filter((id) => id !== providerId)
-        : [...prev, providerId]
+        : [...prev, providerId],
     );
   };
 
@@ -203,7 +203,7 @@ export default function AuthenticationHub({
                   <CardHeader className="text-center">
                     <div
                       className={`w-12 h-12 rounded-full ${getTierColor(
-                        tier
+                        tier,
                       )} flex items-center justify-center mx-auto mb-2`}
                     >
                       {tier === USER_TIERS.SOVEREIGN ? (
@@ -323,7 +323,7 @@ export default function AuthenticationHub({
                                 <CheckCircle className="w-4 h-4 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
                                 {rec}
                               </li>
-                            )
+                            ),
                           )}
                         </ul>
                       </div>
@@ -339,7 +339,7 @@ export default function AuthenticationHub({
                                 <AlertCircle className="w-4 h-4 text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
                                 {step}
                               </li>
-                            )
+                            ),
                           )}
                         </ul>
                       </div>
@@ -366,7 +366,7 @@ export default function AuthenticationHub({
             <div className="grid md:grid-cols-3 gap-6">
               {selectedProviders.map((providerId) => {
                 const provider = AUTH_PROVIDERS.find(
-                  (p) => p.id === providerId
+                  (p) => p.id === providerId,
                 );
                 if (!provider) return null;
 

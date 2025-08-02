@@ -6,7 +6,7 @@ const router = Router();
 
 const voteSchema = z.object({
   wallet: z.string().min(1, "Wallet address is required"),
-  vote_type: z.enum(["upvote", "downvote"]).default("upvote")
+  vote_type: z.enum(["upvote", "downvote"]).default("upvote"),
 });
 
 // POST /api/capsules/:id/vote - Vote on a capsule
@@ -20,7 +20,9 @@ router.post("/:id/vote", async (req, res) => {
       return res.status(400).json({ error: "Invalid capsule ID" });
     }
 
-    console.log(`Vote request: capsule ${id}, wallet ${wallet}, type ${vote_type}`);
+    console.log(
+      `Vote request: capsule ${id}, wallet ${wallet}, type ${vote_type}`,
+    );
 
     // Check if capsule exists
     const capsule = await storage.getCapsule(id);
@@ -33,36 +35,36 @@ router.post("/:id/vote", async (req, res) => {
       capsuleId: id,
       voterWallet: wallet,
       voteType: vote_type,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
 
     // Update capsule vote counts
     const currentLikes = parseInt(capsule.likes || "0");
-    const updatedLikes = vote_type === "upvote" ? currentLikes + 1 : Math.max(0, currentLikes - 1);
-    
+    const updatedLikes =
+      vote_type === "upvote" ? currentLikes + 1 : Math.max(0, currentLikes - 1);
+
     await storage.updateCapsule(id, {
-      likes: updatedLikes.toString()
+      likes: updatedLikes.toString(),
     });
 
     res.status(200).json({
       message: "Vote recorded successfully",
       vote,
-      updatedLikes
+      updatedLikes,
     });
-
   } catch (error) {
     console.error("Vote recording error:", error);
-    
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         error: "Invalid vote data",
-        details: error.errors
+        details: error.errors,
       });
     }
 
     res.status(500).json({
       error: "Failed to record vote",
-      message: error.message
+      message: error.message,
     });
   }
 });
@@ -71,7 +73,7 @@ router.post("/:id/vote", async (req, res) => {
 router.get("/:id/votes", async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     if (!id || typeof id !== "string") {
       return res.status(400).json({ error: "Invalid capsule ID" });
     }
@@ -82,8 +84,10 @@ router.get("/:id/votes", async (req, res) => {
     }
 
     const votes = await storage.getVotesByCapsule(id);
-    const upvotes = votes.filter(vote => vote.voteType === "upvote").length;
-    const downvotes = votes.filter(vote => vote.voteType === "downvote").length;
+    const upvotes = votes.filter((vote) => vote.voteType === "upvote").length;
+    const downvotes = votes.filter(
+      (vote) => vote.voteType === "downvote",
+    ).length;
 
     res.json({
       capsuleId: id,
@@ -91,19 +95,18 @@ router.get("/:id/votes", async (req, res) => {
       upvotes,
       downvotes,
       score: upvotes - downvotes,
-      votes: votes.map(vote => ({
+      votes: votes.map((vote) => ({
         id: vote.id,
         wallet: vote.voterWallet,
         type: vote.voteType,
-        createdAt: vote.createdAt
-      }))
+        createdAt: vote.createdAt,
+      })),
     });
-
   } catch (error) {
     console.error("Vote retrieval error:", error);
     res.status(500).json({
       error: "Failed to retrieve votes",
-      message: error.message
+      message: error.message,
     });
   }
 });
@@ -112,24 +115,25 @@ router.get("/:id/votes", async (req, res) => {
 router.get("/:id/user-vote/:wallet", async (req, res) => {
   try {
     const { id, wallet } = req.params;
-    
+
     if (!id || !wallet) {
-      return res.status(400).json({ error: "Missing capsule ID or wallet address" });
+      return res
+        .status(400)
+        .json({ error: "Missing capsule ID or wallet address" });
     }
 
     const userVote = await storage.getUserVote(id, wallet);
-    
+
     res.json({
       hasVoted: !!userVote,
       voteType: userVote?.voteType || null,
-      votedAt: userVote?.createdAt || null
+      votedAt: userVote?.createdAt || null,
     });
-
   } catch (error) {
     console.error("User vote check error:", error);
     res.status(500).json({
       error: "Failed to check user vote",
-      message: error.message
+      message: error.message,
     });
   }
 });

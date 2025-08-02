@@ -109,7 +109,7 @@ export default function StripeCheckout() {
   const { toast } = useToast();
   const [selectedTier, setSelectedTier] = useState("seeker");
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">(
-    "monthly"
+    "monthly",
   );
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isProcessing, setIsProcessing] = useState(false);

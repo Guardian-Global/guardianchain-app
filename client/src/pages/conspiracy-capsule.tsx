@@ -5,7 +5,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, Shield, Lock, AlertTriangle, FileText, Upload, Download, Globe } from "lucide-react";
+import {
+  Eye,
+  Shield,
+  Lock,
+  AlertTriangle,
+  FileText,
+  Upload,
+  Download,
+  Globe,
+} from "lucide-react";
 
 export default function ConspiracyCapsulePage() {
   const [conspiracyData, setConspiracyData] = useState({
@@ -13,14 +22,15 @@ export default function ConspiracyCapsulePage() {
     allegation: "",
     evidence: "",
     securityLevel: "high",
-    category: "corporate"
+    category: "corporate",
   });
   const { toast } = useToast();
 
   const handleSubmit = () => {
     toast({
       title: "Conspiracy Capsule Created",
-      description: "Your secure conspiracy disclosure has been submitted for verification.",
+      description:
+        "Your secure conspiracy disclosure has been submitted for verification.",
     });
   };
 
@@ -35,8 +45,9 @@ export default function ConspiracyCapsulePage() {
             </h1>
           </div>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Secure conspiracy disclosure portal. Submit sensitive allegations with military-grade 
-            encryption and witness protection protocols for maximum safety.
+            Secure conspiracy disclosure portal. Submit sensitive allegations
+            with military-grade encryption and witness protection protocols for
+            maximum safety.
           </p>
         </div>
 
@@ -53,61 +64,100 @@ export default function ConspiracyCapsulePage() {
                 <Input
                   placeholder="Conspiracy Title (Anonymous ID will be assigned)"
                   value={conspiracyData.title}
-                  onChange={(e) => setConspiracyData({...conspiracyData, title: e.target.value})}
+                  onChange={(e) =>
+                    setConspiracyData({
+                      ...conspiracyData,
+                      title: e.target.value,
+                    })
+                  }
                   className="bg-slate-700 border-slate-600"
                 />
                 <Textarea
                   placeholder="Detailed conspiracy allegation, key players, timeline, and methods..."
                   value={conspiracyData.allegation}
-                  onChange={(e) => setConspiracyData({...conspiracyData, allegation: e.target.value})}
+                  onChange={(e) =>
+                    setConspiracyData({
+                      ...conspiracyData,
+                      allegation: e.target.value,
+                    })
+                  }
                   className="bg-slate-700 border-slate-600 min-h-[200px]"
                 />
                 <Textarea
                   placeholder="Supporting evidence, documents, witness accounts, or data sources..."
                   value={conspiracyData.evidence}
-                  onChange={(e) => setConspiracyData({...conspiracyData, evidence: e.target.value})}
+                  onChange={(e) =>
+                    setConspiracyData({
+                      ...conspiracyData,
+                      evidence: e.target.value,
+                    })
+                  }
                   className="bg-slate-700 border-slate-600 min-h-[150px]"
                 />
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Security Level</label>
-                    <select 
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Security Level
+                    </label>
+                    <select
                       className="w-full p-2 bg-slate-700 border border-slate-600 rounded"
                       value={conspiracyData.securityLevel}
-                      onChange={(e) => setConspiracyData({...conspiracyData, securityLevel: e.target.value})}
+                      onChange={(e) =>
+                        setConspiracyData({
+                          ...conspiracyData,
+                          securityLevel: e.target.value,
+                        })
+                      }
                     >
-                      <option value="maximum">Maximum (Tor + Encryption)</option>
+                      <option value="maximum">
+                        Maximum (Tor + Encryption)
+                      </option>
                       <option value="high">High (Anonymous)</option>
                       <option value="standard">Standard</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Category</label>
-                    <select 
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Category
+                    </label>
+                    <select
                       className="w-full p-2 bg-slate-700 border border-slate-600 rounded"
                       value={conspiracyData.category}
-                      onChange={(e) => setConspiracyData({...conspiracyData, category: e.target.value})}
+                      onChange={(e) =>
+                        setConspiracyData({
+                          ...conspiracyData,
+                          category: e.target.value,
+                        })
+                      }
                     >
                       <option value="corporate">Corporate Conspiracy</option>
                       <option value="government">Government Cover-up</option>
                       <option value="financial">Financial Fraud</option>
                       <option value="scientific">Scientific Suppression</option>
-                      <option value="environmental">Environmental Cover-up</option>
+                      <option value="environmental">
+                        Environmental Cover-up
+                      </option>
                       <option value="medical">Medical Conspiracy</option>
                     </select>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <Button variant="outline" className="flex-1 border-slate-600 text-slate-300">
+                  <Button
+                    variant="outline"
+                    className="flex-1 border-slate-600 text-slate-300"
+                  >
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Evidence Files
                   </Button>
-                  <Button variant="outline" className="flex-1 border-slate-600 text-slate-300">
+                  <Button
+                    variant="outline"
+                    className="flex-1 border-slate-600 text-slate-300"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Export Encrypted Backup
                   </Button>
                 </div>
-                <Button 
+                <Button
                   onClick={handleSubmit}
                   className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700"
                 >
@@ -142,7 +192,9 @@ export default function ConspiracyCapsulePage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-green-400" />
-                    <span className="text-sm">Witness Protection Protocols</span>
+                    <span className="text-sm">
+                      Witness Protection Protocols
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Shield className="w-4 h-4 text-green-400" />
@@ -167,10 +219,14 @@ export default function ConspiracyCapsulePage() {
                 <div className="space-y-3">
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">Corporate Price Fixing</h4>
+                      <h4 className="font-semibold text-sm">
+                        Corporate Price Fixing
+                      </h4>
                       <Badge className="bg-red-600">INVESTIGATING</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Anonymous #47291 - Evidence of coordinated pricing...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Anonymous #47291 - Evidence of coordinated pricing...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Eye className="w-3 h-3" />
                       <span>3,247 views</span>
@@ -178,13 +234,17 @@ export default function ConspiracyCapsulePage() {
                       <span>12 documents</span>
                     </div>
                   </div>
-                  
+
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">Research Data Suppression</h4>
+                      <h4 className="font-semibold text-sm">
+                        Research Data Suppression
+                      </h4>
                       <Badge className="bg-orange-600">VERIFIED</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Anonymous #42885 - Clinical trial results hidden...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Anonymous #42885 - Clinical trial results hidden...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Eye className="w-3 h-3" />
                       <span>8,291 views</span>
@@ -209,9 +269,10 @@ export default function ConspiracyCapsulePage() {
                     <strong>Maximum Security Protocol Active</strong>
                   </p>
                   <p className="text-xs text-slate-400">
-                    Your identity is completely protected. All submissions are anonymized,
-                    encrypted, and routed through secure networks. Legal protection
-                    frameworks are automatically activated for high-risk disclosures.
+                    Your identity is completely protected. All submissions are
+                    anonymized, encrypted, and routed through secure networks.
+                    Legal protection frameworks are automatically activated for
+                    high-risk disclosures.
                   </p>
                 </div>
               </CardContent>

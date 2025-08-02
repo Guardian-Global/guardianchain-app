@@ -12,7 +12,13 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 
@@ -25,7 +31,7 @@ ChartJS.register(
   ArcElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface AnalyticsData {
@@ -41,7 +47,11 @@ interface AnalyticsData {
 }
 
 export default function AnalyticsDashboard() {
-  const { data: analyticsData, isLoading, error } = useQuery({
+  const {
+    data: analyticsData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["/api/analytics/dashboard"],
     refetchInterval: 30000, // Refresh every 30 seconds
   });
@@ -89,7 +99,13 @@ export default function AnalyticsDashboard() {
   };
 
   const griefTierChart = {
-    labels: data?.griefTierDistribution?.labels || ["Tier 1", "Tier 2", "Tier 3", "Tier 4", "Tier 5"],
+    labels: data?.griefTierDistribution?.labels || [
+      "Tier 1",
+      "Tier 2",
+      "Tier 3",
+      "Tier 4",
+      "Tier 5",
+    ],
     datasets: [
       {
         data: data?.griefTierDistribution?.data || [0, 0, 0, 0, 0],
@@ -164,7 +180,9 @@ export default function AnalyticsDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total GTT Yield</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total GTT Yield
+            </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -182,13 +200,17 @@ export default function AnalyticsDashboard() {
             <div className="text-2xl font-bold">
               {data?.yieldDistribution?.total || 0} GTT
             </div>
-            <p className="text-xs text-muted-foreground">Distributed to authors</p>
+            <p className="text-xs text-muted-foreground">
+              Distributed to authors
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Capsules</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Capsules
+            </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -207,13 +229,17 @@ export default function AnalyticsDashboard() {
             <div className="text-2xl font-bold">
               {data?.topCapsules?.length || 0}
             </div>
-            <p className="text-xs text-muted-foreground">With recent activity</p>
+            <p className="text-xs text-muted-foreground">
+              With recent activity
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Grief Tier</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg Grief Tier
+            </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -231,8 +257,14 @@ export default function AnalyticsDashboard() {
             <div className="text-2xl font-bold">
               {data?.griefTierDistribution?.data
                 ? (
-                    data.griefTierDistribution.data.reduce((sum, count, index) => sum + count * (index + 1), 0) /
-                    data.griefTierDistribution.data.reduce((sum, count) => sum + count, 0)
+                    data.griefTierDistribution.data.reduce(
+                      (sum, count, index) => sum + count * (index + 1),
+                      0,
+                    ) /
+                    data.griefTierDistribution.data.reduce(
+                      (sum, count) => sum + count,
+                      0,
+                    )
                   ).toFixed(1)
                 : "0.0"}
             </div>
@@ -254,7 +286,9 @@ export default function AnalyticsDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Daily Replay Activity</CardTitle>
-              <CardDescription>Capsule replays over the last 14 days</CardDescription>
+              <CardDescription>
+                Capsule replays over the last 14 days
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
@@ -268,11 +302,16 @@ export default function AnalyticsDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Grief Tier Distribution</CardTitle>
-              <CardDescription>Distribution of capsules by grief tier</CardDescription>
+              <CardDescription>
+                Distribution of capsules by grief tier
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
-                <Doughnut data={griefTierChart} options={{ responsive: true, maintainAspectRatio: false }} />
+                <Doughnut
+                  data={griefTierChart}
+                  options={{ responsive: true, maintainAspectRatio: false }}
+                />
               </div>
             </CardContent>
           </Card>
@@ -282,7 +321,9 @@ export default function AnalyticsDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>GTT Yield by Tier</CardTitle>
-              <CardDescription>GTT token distribution across grief tiers</CardDescription>
+              <CardDescription>
+                GTT token distribution across grief tiers
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
@@ -296,7 +337,9 @@ export default function AnalyticsDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Top Performing Capsules</CardTitle>
-              <CardDescription>Capsules with highest replay activity</CardDescription>
+              <CardDescription>
+                Capsules with highest replay activity
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -311,16 +354,22 @@ export default function AnalyticsDashboard() {
                       </div>
                       <div>
                         <p className="font-medium">{capsule.title}</p>
-                        <p className="text-sm text-gray-500">{capsule.replays} replays</p>
+                        <p className="text-sm text-gray-500">
+                          {capsule.replays} replays
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-green-600">{capsule.yield} GTT</p>
+                      <p className="font-medium text-green-600">
+                        {capsule.yield} GTT
+                      </p>
                       <p className="text-sm text-gray-500">yield earned</p>
                     </div>
                   </div>
                 )) || (
-                  <p className="text-center text-gray-500 py-8">No capsule data available</p>
+                  <p className="text-center text-gray-500 py-8">
+                    No capsule data available
+                  </p>
                 )}
               </div>
             </CardContent>

@@ -45,12 +45,12 @@ interface Transaction {
 const BlockchainVisualization: React.FC = () => {
   const [blockchain, setBlockchain] = useState<Block[]>([]);
   const [pendingTransactions, setPendingTransactions] = useState<Transaction[]>(
-    []
+    [],
   );
   const [isRunning, setIsRunning] = useState(false);
   const [miningProgress, setMiningProgress] = useState(0);
   const [currentMiningBlock, setCurrentMiningBlock] = useState<Block | null>(
-    null
+    null,
   );
   const [stats, setStats] = useState({
     totalBlocks: 0,
@@ -133,7 +133,7 @@ const BlockchainVisualization: React.FC = () => {
   // Calculate hash (simplified)
   const calculateHash = (block: Partial<Block>): string => {
     const data = `${block.previousHash}${block.timestamp}${JSON.stringify(
-      block.transactions
+      block.transactions,
     )}${block.nonce}`;
     // Simplified hash simulation
     let hash = 0;
@@ -507,8 +507,8 @@ const BlockchainVisualization: React.FC = () => {
                         block.isMining
                           ? "bg-orange-900/20 border border-orange-700"
                           : block.isValid
-                          ? "bg-green-900/20 border border-green-700"
-                          : "bg-red-900/20 border border-red-700"
+                            ? "bg-green-900/20 border border-green-700"
+                            : "bg-red-900/20 border border-red-700"
                       }`}
                     >
                       <div className="flex items-center justify-between mb-3">
@@ -518,8 +518,8 @@ const BlockchainVisualization: React.FC = () => {
                               block.isMining
                                 ? "bg-orange-400 animate-pulse"
                                 : block.isValid
-                                ? "bg-green-400"
-                                : "bg-red-400"
+                                  ? "bg-green-400"
+                                  : "bg-red-400"
                             }`}
                           ></div>
                           <div>
@@ -561,7 +561,7 @@ const BlockchainVisualization: React.FC = () => {
                               <div key={tx.id} className="flex items-center">
                                 <div
                                   className={`w-2 h-2 rounded-full mr-2 ${getTransactionColor(
-                                    tx.type
+                                    tx.type,
                                   ).replace("bg-", "bg-")}`}
                                 ></div>
                                 <span className="text-xs text-slate-300">

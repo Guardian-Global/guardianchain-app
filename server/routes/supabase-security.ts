@@ -48,7 +48,7 @@ router.post("/api/supabase/security/harden", async (req, res) => {
             hardeningSteps.push(`RLS check completed for ${tableName}`);
           } else {
             errors.push(
-              `Failed to verify RLS for ${tableName}: ${sqlError.message}`
+              `Failed to verify RLS for ${tableName}: ${sqlError.message}`,
             );
           }
         } else {
@@ -62,7 +62,7 @@ router.post("/api/supabase/security/harden", async (req, res) => {
     // Step 2: Create secure user profile view
     try {
       const { error: viewError } = await supabase.rpc(
-        "create_secure_user_view"
+        "create_secure_user_view",
       );
       if (viewError) {
         hardeningSteps.push("User profile view creation attempted");
@@ -89,14 +89,14 @@ router.post("/api/supabase/security/harden", async (req, res) => {
     // Step 4: Test security functions
     try {
       const { data: securityStatus, error: statusError } = await supabase.rpc(
-        "get_security_status"
+        "get_security_status",
       );
       if (statusError) {
         errors.push(`Security status check failed: ${statusError.message}`);
       } else {
         hardeningSteps.push("Security status functions verified");
         hardeningSteps.push(
-          `RLS coverage: ${securityStatus?.rls_coverage_percentage || 0}%`
+          `RLS coverage: ${securityStatus?.rls_coverage_percentage || 0}%`,
         );
       }
     } catch (error: any) {
@@ -177,18 +177,18 @@ router.get("/api/supabase/security/status", async (req, res) => {
     // Check security functions
     try {
       const { data: securityStatus, error: statusError } = await supabase.rpc(
-        "get_security_status"
+        "get_security_status",
       );
       securityChecks.secure_functions = !statusError;
       if (statusError) {
         details.push(
-          `Security functions not available: ${statusError.message}`
+          `Security functions not available: ${statusError.message}`,
         );
       } else {
         details.push("Security functions operational");
         if (securityStatus) {
           details.push(
-            `RLS coverage: ${securityStatus.rls_coverage_percentage}%`
+            `RLS coverage: ${securityStatus.rls_coverage_percentage}%`,
           );
         }
       }
@@ -252,11 +252,11 @@ router.post("/api/supabase/security/fix/:issue", async (req, res) => {
         try {
           // Attempt to create secure view
           const { error: viewError } = await supabase.rpc(
-            "create_secure_user_view"
+            "create_secure_user_view",
           );
           if (viewError) {
             fixResult.actions.push(
-              `View creation attempted: ${viewError.message}`
+              `View creation attempted: ${viewError.message}`,
             );
           } else {
             fixResult.success = true;
@@ -272,11 +272,11 @@ router.post("/api/supabase/security/fix/:issue", async (req, res) => {
         try {
           // Log security functions check
           const { data: functions, error: fnError } = await supabase.rpc(
-            "get_security_status"
+            "get_security_status",
           );
           if (fnError) {
             fixResult.actions.push(
-              `Function security check: ${fnError.message}`
+              `Function security check: ${fnError.message}`,
             );
           } else {
             fixResult.success = true;
@@ -297,13 +297,13 @@ router.post("/api/supabase/security/fix/:issue", async (req, res) => {
 
           if (tableError) {
             fixResult.actions.push(
-              `Foreign table check: ${tableError.message}`
+              `Foreign table check: ${tableError.message}`,
             );
           } else {
             fixResult.success = true;
             fixResult.message = "Foreign table access secured";
             fixResult.actions.push(
-              `Found ${tables?.length || 0} foreign tables`
+              `Found ${tables?.length || 0} foreign tables`,
             );
           }
         } catch (error: any) {
@@ -315,7 +315,7 @@ router.post("/api/supabase/security/fix/:issue", async (req, res) => {
         fixResult.message =
           "Password protection must be configured in Supabase dashboard";
         fixResult.actions.push(
-          "Configure password requirements in Auth settings"
+          "Configure password requirements in Auth settings",
         );
         fixResult.actions.push("Enable email confirmation");
         fixResult.actions.push("Set password strength requirements");

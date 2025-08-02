@@ -1,5 +1,5 @@
 // Import fix for module compatibility
-const anthropicSdk = require('@anthropic-ai/sdk');
+const anthropicSdk = require("@anthropic-ai/sdk");
 const Anthropic = anthropicSdk.default || anthropicSdk;
 
 const anthropic = new Anthropic({
@@ -16,20 +16,20 @@ export async function moderateCapsule(content: string): Promise<{
   try {
     // Primary moderation with Anthropic Claude
     const claudeResult = await moderateWithClaude(content);
-    
+
     // Fallback to OpenAI if Claude fails
     if (!claudeResult.success) {
       return await moderateWithOpenAI(content);
     }
-    
+
     return claudeResult.result;
   } catch (error) {
-    console.error('Content moderation failed:', error);
+    console.error("Content moderation failed:", error);
     // Conservative approach: block content if moderation fails
     return {
       isAllowed: false,
-      reason: 'Content moderation system unavailable',
-      severity: 5
+      reason: "Content moderation system unavailable",
+      severity: 5,
     };
   }
 }
@@ -41,7 +41,7 @@ async function moderateWithClaude(content: string): Promise<{
     reason?: string;
     severity?: number;
     flags?: string[];
-  }
+  };
 }> {
   try {
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -71,20 +71,20 @@ Response format (JSON only):
 Be lenient with personal stories, emotional content, and historical accounts. The platform is for preserving truth and memory.`,
       messages: [
         {
-          role: 'user',
-          content: `Please moderate this capsule content: "${content}"`
-        }
-      ]
+          role: "user",
+          content: `Please moderate this capsule content: "${content}"`,
+        },
+      ],
     });
 
     const contentBlock = response.content[0];
-    if (contentBlock.type !== 'text') {
-      throw new Error('Unexpected response format from Claude');
+    if (contentBlock.type !== "text") {
+      throw new Error("Unexpected response format from Claude");
     }
     const result = JSON.parse(contentBlock.text);
     return { success: true, result };
   } catch (error) {
-    console.error('Claude moderation failed:', error);
+    console.error("Claude moderation failed:", error);
     return { success: false, result: { isAllowed: false } };
   }
 }
@@ -99,18 +99,18 @@ async function moderateWithOpenAI(content: string): Promise<{
     if (!process.env.OPENAI_API_KEY) {
       return {
         isAllowed: false,
-        reason: 'No moderation service available',
-        severity: 5
+        reason: "No moderation service available",
+        severity: 5,
       };
     }
 
     const res = await fetch("https://api.openai.com/v1/moderations", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ input: content })
+      body: JSON.stringify({ input: content }),
     });
 
     const json = await res.json();
@@ -123,19 +123,19 @@ async function moderateWithOpenAI(content: string): Promise<{
 
       return {
         isAllowed: false,
-        reason: `Content flagged for: ${flags.join(', ')}`,
+        reason: `Content flagged for: ${flags.join(", ")}`,
         severity: 4,
-        flags
+        flags,
       };
     }
 
     return { isAllowed: true };
   } catch (error) {
-    console.error('OpenAI moderation failed:', error);
+    console.error("OpenAI moderation failed:", error);
     return {
       isAllowed: false,
-      reason: 'Content moderation system error',
-      severity: 5
+      reason: "Content moderation system error",
+      severity: 5,
     };
   }
 }
@@ -162,46 +162,63 @@ Consider: loss, trauma, injustice, emotional weight, historical significance.
 Return only a number 1-5.`,
       messages: [
         {
-          role: 'user',
-          content: `Analyze grief level: "${content}"`
-        }
-      ]
+          role: "user",
+          content: `Analyze grief level: "${content}"`,
+        },
+      ],
     });
 
     const contentBlock = response.content[0];
-    if (contentBlock.type !== 'text') {
-      throw new Error('Unexpected response format from Claude');
+    if (contentBlock.type !== "text") {
+      throw new Error("Unexpected response format from Claude");
     }
     const score = parseInt(contentBlock.text.trim());
     return isNaN(score) ? 3 : Math.max(1, Math.min(5, score));
   } catch (error) {
-    console.error('Grief score calculation failed:', error);
+    console.error("Grief score calculation failed:", error);
     return calculateBasicGriefScore(content);
   }
 }
 
 function calculateBasicGriefScore(content: string): number {
   const griefKeywords = [
-    'loss', 'death', 'grief', 'trauma', 'pain', 'suffering', 'injustice',
-    'betrayal', 'abuse', 'violence', 'war', 'tragedy', 'victim', 'hurt',
-    'broken', 'destroyed', 'devastated', 'heartbroken', 'murdered', 'killed'
+    "loss",
+    "death",
+    "grief",
+    "trauma",
+    "pain",
+    "suffering",
+    "injustice",
+    "betrayal",
+    "abuse",
+    "violence",
+    "war",
+    "tragedy",
+    "victim",
+    "hurt",
+    "broken",
+    "destroyed",
+    "devastated",
+    "heartbroken",
+    "murdered",
+    "killed",
   ];
 
   const lowerContent = content.toLowerCase();
-  const keywordMatches = griefKeywords.filter(keyword => 
-    lowerContent.includes(keyword)
+  const keywordMatches = griefKeywords.filter((keyword) =>
+    lowerContent.includes(keyword),
   ).length;
 
   // Base score calculation
   let score = 1;
-  
+
   if (keywordMatches >= 5) score = 5;
   else if (keywordMatches >= 3) score = 4;
   else if (keywordMatches >= 2) score = 3;
   else if (keywordMatches >= 1) score = 2;
-  
+
   // Adjust for content length (longer content may have more emotional weight)
   if (content.length > 1000 && score < 3) score++;
-  
+
   return Math.max(1, Math.min(5, score));
 }

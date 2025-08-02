@@ -241,7 +241,7 @@ export default function CategoryDiscoveryPage() {
   };
 
   const selectedCategoryData = ADDITIONAL_CATEGORIES.find(
-    (c) => c.id === selectedCategory
+    (c) => c.id === selectedCategory,
   );
 
   const getUrgencyColor = (urgency: string) => {
@@ -328,7 +328,7 @@ export default function CategoryDiscoveryPage() {
                         </Badge>
                         <div
                           className={`px-2 py-1 rounded text-xs text-white ${getUrgencyColor(
-                            category.urgency
+                            category.urgency,
                           )}`}
                         >
                           {category.urgency}
@@ -456,7 +456,7 @@ export default function CategoryDiscoveryPage() {
                         <h5 className="font-medium text-sm">Urgency Level</h5>
                         <div
                           className={`px-2 py-1 rounded text-xs text-white w-fit ${getUrgencyColor(
-                            selectedCategoryData?.urgency || ""
+                            selectedCategoryData?.urgency || "",
                           )}`}
                         >
                           {selectedCategoryData?.urgency}
@@ -486,7 +486,7 @@ export default function CategoryDiscoveryPage() {
                   <div className="grid md:grid-cols-3 gap-4">
                     {priority.items.map((item) => {
                       const category = ADDITIONAL_CATEGORIES.find(
-                        (c) => c.name === item
+                        (c) => c.name === item,
                       );
                       if (!category) return null;
                       const IconComponent = category.icon;
@@ -518,7 +518,7 @@ export default function CategoryDiscoveryPage() {
                               </Badge>
                               <div
                                 className={`px-2 py-1 rounded text-xs text-white ${getUrgencyColor(
-                                  category.urgency
+                                  category.urgency,
                                 )}`}
                               >
                                 {category.urgency}

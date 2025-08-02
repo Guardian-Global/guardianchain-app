@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, DollarSign, Scale, MessageCircle, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
+import {
+  Heart,
+  DollarSign,
+  Scale,
+  MessageCircle,
+  CheckCircle,
+  AlertTriangle,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -15,7 +23,10 @@ interface TruthRedemptionProps {
   onRedemptionCreated?: (redemptionData: any) => void;
 }
 
-export default function TruthRedemption({ capsuleId, onRedemptionCreated }: TruthRedemptionProps) {
+export default function TruthRedemption({
+  capsuleId,
+  onRedemptionCreated,
+}: TruthRedemptionProps) {
   const { toast } = useToast();
   const [redemptionType, setRedemptionType] = useState("public_apology");
   const [targetIndividual, setTargetIndividual] = useState("");
@@ -24,10 +35,30 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
   const [publicStatement, setPublicStatement] = useState("");
 
   const redemptionTypes = [
-    { value: "public_apology", label: "Public Apology", icon: MessageCircle, color: "text-blue-400" },
-    { value: "financial_compensation", label: "Financial Compensation", icon: DollarSign, color: "text-green-400" },
-    { value: "legal_acknowledgment", label: "Legal Acknowledgment", icon: Scale, color: "text-purple-400" },
-    { value: "restorative_action", label: "Restorative Action", icon: Heart, color: "text-red-400" },
+    {
+      value: "public_apology",
+      label: "Public Apology",
+      icon: MessageCircle,
+      color: "text-blue-400",
+    },
+    {
+      value: "financial_compensation",
+      label: "Financial Compensation",
+      icon: DollarSign,
+      color: "text-green-400",
+    },
+    {
+      value: "legal_acknowledgment",
+      label: "Legal Acknowledgment",
+      icon: Scale,
+      color: "text-purple-400",
+    },
+    {
+      value: "restorative_action",
+      label: "Restorative Action",
+      icon: Heart,
+      color: "text-red-400",
+    },
   ];
 
   // Fetch active redemption requests
@@ -76,12 +107,16 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
       redemptionType,
       targetIndividual: targetIndividual.trim(),
       description: description.trim(),
-      compensationAmount: compensationAmount ? parseFloat(compensationAmount) : null,
+      compensationAmount: compensationAmount
+        ? parseFloat(compensationAmount)
+        : null,
       publicStatement: publicStatement.trim() || null,
     });
   };
 
-  const selectedType = redemptionTypes.find(type => type.value === redemptionType);
+  const selectedType = redemptionTypes.find(
+    (type) => type.value === redemptionType,
+  );
   const IconComponent = selectedType?.icon || MessageCircle;
 
   return (
@@ -98,13 +133,18 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Heart className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+              <Heart
+                className="w-5 h-5"
+                style={{ color: BRAND_COLORS.CHAIN }}
+              />
               Create Truth Redemption
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Redemption Type</label>
+              <label className="text-sm font-medium text-white">
+                Redemption Type
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 {redemptionTypes.map((type) => {
                   const TypeIcon = type.icon;
@@ -119,7 +159,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
                       }`}
                     >
                       <TypeIcon className={`w-4 h-4 mb-1 ${type.color}`} />
-                      <div className="text-sm font-medium text-white">{type.label}</div>
+                      <div className="text-sm font-medium text-white">
+                        {type.label}
+                      </div>
                     </button>
                   );
                 })}
@@ -127,7 +169,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Target Individual/Entity *</label>
+              <label className="text-sm font-medium text-white">
+                Target Individual/Entity *
+              </label>
               <Input
                 value={targetIndividual}
                 onChange={(e) => setTargetIndividual(e.target.value)}
@@ -137,7 +181,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Description *</label>
+              <label className="text-sm font-medium text-white">
+                Description *
+              </label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -148,7 +194,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
 
             {redemptionType === "financial_compensation" && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">Compensation Amount (USD)</label>
+                <label className="text-sm font-medium text-white">
+                  Compensation Amount (USD)
+                </label>
                 <Input
                   type="number"
                   step="0.01"
@@ -161,7 +209,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">Public Statement (Optional)</label>
+              <label className="text-sm font-medium text-white">
+                Public Statement (Optional)
+              </label>
               <Textarea
                 value={publicStatement}
                 onChange={(e) => setPublicStatement(e.target.value)}
@@ -194,7 +244,10 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Scale className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+              <Scale
+                className="w-5 h-5"
+                style={{ color: BRAND_COLORS.CHAIN }}
+              />
               Active Redemptions
             </CardTitle>
           </CardHeader>
@@ -227,31 +280,42 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
                 daysActive: 14,
               },
             ].map((redemption) => {
-              const typeInfo = redemptionTypes.find(t => t.value === redemption.type);
+              const typeInfo = redemptionTypes.find(
+                (t) => t.value === redemption.type,
+              );
               const StatusIcon = typeInfo?.icon || MessageCircle;
-              
+
               return (
-                <Card key={redemption.id} className="bg-slate-700/30 border-slate-600">
+                <Card
+                  key={redemption.id}
+                  className="bg-slate-700/30 border-slate-600"
+                >
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <StatusIcon className={`w-4 h-4 ${typeInfo?.color}`} />
-                        <h3 className="font-semibold text-white text-sm">{redemption.target}</h3>
+                        <h3 className="font-semibold text-white text-sm">
+                          {redemption.target}
+                        </h3>
                       </div>
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         className={`${
-                          redemption.status === "acknowledged" ? "text-green-400 border-green-600" :
-                          redemption.status === "in_progress" ? "text-blue-400 border-blue-600" :
-                          "text-yellow-400 border-yellow-600"
+                          redemption.status === "acknowledged"
+                            ? "text-green-400 border-green-600"
+                            : redemption.status === "in_progress"
+                              ? "text-blue-400 border-blue-600"
+                              : "text-yellow-400 border-yellow-600"
                         }`}
                       >
                         {redemption.status.replace("_", " ")}
                       </Badge>
                     </div>
-                    
-                    <p className="text-xs text-slate-400 mb-2">{redemption.description}</p>
-                    
+
+                    <p className="text-xs text-slate-400 mb-2">
+                      {redemption.description}
+                    </p>
+
                     <div className="flex items-center justify-between text-xs text-slate-500">
                       <span>{typeInfo?.label}</span>
                       <span>{redemption.daysActive} days active</span>
@@ -267,7 +331,10 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
               );
             })}
 
-            <Button variant="outline" className="w-full border-slate-600 text-slate-300">
+            <Button
+              variant="outline"
+              className="w-full border-slate-600 text-slate-300"
+            >
               View All Redemptions
             </Button>
           </CardContent>
@@ -277,7 +344,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
       {/* How It Works */}
       <Card className="bg-slate-800/30 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-white">How Truth Redemption Works</CardTitle>
+          <CardTitle className="text-white">
+            How Truth Redemption Works
+          </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center space-y-2">
@@ -285,15 +354,21 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
               <AlertTriangle className="w-6 h-6 text-red-400" />
             </div>
             <h3 className="font-semibold text-white">1. Truth Disclosed</h3>
-            <p className="text-sm text-slate-400">Truth capsule reveals wrongdoing or harm</p>
+            <p className="text-sm text-slate-400">
+              Truth capsule reveals wrongdoing or harm
+            </p>
           </div>
 
           <div className="text-center space-y-2">
             <div className="w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto">
               <Heart className="w-6 h-6 text-purple-400" />
             </div>
-            <h3 className="font-semibold text-white">2. Redemption Requested</h3>
-            <p className="text-sm text-slate-400">Affected parties request appropriate response</p>
+            <h3 className="font-semibold text-white">
+              2. Redemption Requested
+            </h3>
+            <p className="text-sm text-slate-400">
+              Affected parties request appropriate response
+            </p>
           </div>
 
           <div className="text-center space-y-2">
@@ -301,7 +376,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
               <MessageCircle className="w-6 h-6 text-blue-400" />
             </div>
             <h3 className="font-semibold text-white">3. Public Visibility</h3>
-            <p className="text-sm text-slate-400">Redemption request becomes publicly visible</p>
+            <p className="text-sm text-slate-400">
+              Redemption request becomes publicly visible
+            </p>
           </div>
 
           <div className="text-center space-y-2">
@@ -309,7 +386,9 @@ export default function TruthRedemption({ capsuleId, onRedemptionCreated }: Trut
               <CheckCircle className="w-6 h-6 text-green-400" />
             </div>
             <h3 className="font-semibold text-white">4. Resolution</h3>
-            <p className="text-sm text-slate-400">Acknowledgment and reparations provided</p>
+            <p className="text-sm text-slate-400">
+              Acknowledgment and reparations provided
+            </p>
           </div>
         </CardContent>
       </Card>

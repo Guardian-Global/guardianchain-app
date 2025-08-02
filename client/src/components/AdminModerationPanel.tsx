@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +21,7 @@ interface ModerationLog {
   reason: string;
   severity: number;
   flags: string[];
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   created_at: string;
   reviewed_at?: string;
   reviewer?: string;
@@ -47,15 +53,19 @@ export default function AdminModerationPanel() {
 
   // Moderation action mutation
   const moderationMutation = useMutation({
-    mutationFn: async ({ logId, action, reviewerNotes }: {
+    mutationFn: async ({
+      logId,
+      action,
+      reviewerNotes,
+    }: {
       logId: string;
-      action: 'approve' | 'reject';
+      action: "approve" | "reject";
       reviewerNotes?: string;
     }) => {
       return apiRequest("POST", `/api/moderation/review`, {
         logId,
         action,
-        reviewerNotes
+        reviewerNotes,
       });
     },
     onSuccess: () => {
@@ -75,7 +85,10 @@ export default function AdminModerationPanel() {
     },
   });
 
-  const handleModerationAction = (logId: string, action: 'approve' | 'reject') => {
+  const handleModerationAction = (
+    logId: string,
+    action: "approve" | "reject",
+  ) => {
     moderationMutation.mutate({ logId, action });
   };
 
@@ -88,9 +101,12 @@ export default function AdminModerationPanel() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'approved': return <Check className="h-4 w-4 text-green-600" />;
-      case 'rejected': return <X className="h-4 w-4 text-red-600" />;
-      default: return <Clock className="h-4 w-4 text-yellow-600" />;
+      case "approved":
+        return <Check className="h-4 w-4 text-green-600" />;
+      case "rejected":
+        return <X className="h-4 w-4 text-red-600" />;
+      default:
+        return <Clock className="h-4 w-4 text-yellow-600" />;
     }
   };
 
@@ -115,16 +131,27 @@ export default function AdminModerationPanel() {
 
   const mockStats: ModerationStats = stats || {
     total: logs.length || 0,
-    pending: logs.filter((log: ModerationLog) => log.status === 'pending').length || 0,
-    approved: logs.filter((log: ModerationLog) => log.status === 'approved').length || 0,
-    rejected: logs.filter((log: ModerationLog) => log.status === 'rejected').length || 0,
-    todayTotal: logs.filter((log: ModerationLog) => 
-      new Date(log.created_at).toDateString() === new Date().toDateString()
-    ).length || 0,
+    pending:
+      logs.filter((log: ModerationLog) => log.status === "pending").length || 0,
+    approved:
+      logs.filter((log: ModerationLog) => log.status === "approved").length ||
+      0,
+    rejected:
+      logs.filter((log: ModerationLog) => log.status === "rejected").length ||
+      0,
+    todayTotal:
+      logs.filter(
+        (log: ModerationLog) =>
+          new Date(log.created_at).toDateString() === new Date().toDateString(),
+      ).length || 0,
   };
 
-  const pendingLogs = logs.filter((log: ModerationLog) => log.status === 'pending' || !log.status);
-  const reviewedLogs = logs.filter((log: ModerationLog) => log.status && log.status !== 'pending');
+  const pendingLogs = logs.filter(
+    (log: ModerationLog) => log.status === "pending" || !log.status,
+  );
+  const reviewedLogs = logs.filter(
+    (log: ModerationLog) => log.status && log.status !== "pending",
+  );
 
   return (
     <div className="space-y-6">
@@ -143,11 +170,15 @@ export default function AdminModerationPanel() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Pending Review
+            </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{mockStats.pending}</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              {mockStats.pending}
+            </div>
             <p className="text-xs text-muted-foreground">Awaiting action</p>
           </CardContent>
         </Card>
@@ -158,14 +189,18 @@ export default function AdminModerationPanel() {
             <Check className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{mockStats.approved}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {mockStats.approved}
+            </div>
             <p className="text-xs text-muted-foreground">Content approved</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Reviews</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Today's Reviews
+            </CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -183,7 +218,8 @@ export default function AdminModerationPanel() {
             Content Moderation Dashboard
           </CardTitle>
           <CardDescription>
-            Review and moderate user-submitted content for GuardianChain platform
+            Review and moderate user-submitted content for GuardianChain
+            platform
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -218,8 +254,10 @@ export default function AdminModerationPanel() {
                               <Badge className={getSeverityColor(log.severity)}>
                                 Severity {log.severity}
                               </Badge>
-                              {log.flags?.map(flag => (
-                                <Badge key={flag} variant="outline">{flag}</Badge>
+                              {log.flags?.map((flag) => (
+                                <Badge key={flag} variant="outline">
+                                  {flag}
+                                </Badge>
                               ))}
                             </div>
                             <p className="text-sm text-gray-600">
@@ -231,7 +269,9 @@ export default function AdminModerationPanel() {
                               size="sm"
                               variant="outline"
                               className="text-green-600 border-green-300 hover:bg-green-50"
-                              onClick={() => handleModerationAction(log.id, 'approve')}
+                              onClick={() =>
+                                handleModerationAction(log.id, "approve")
+                              }
                               disabled={moderationMutation.isPending}
                             >
                               <Check className="h-4 w-4 mr-1" />
@@ -241,7 +281,9 @@ export default function AdminModerationPanel() {
                               size="sm"
                               variant="outline"
                               className="text-red-600 border-red-300 hover:bg-red-50"
-                              onClick={() => handleModerationAction(log.id, 'reject')}
+                              onClick={() =>
+                                handleModerationAction(log.id, "reject")
+                              }
                               disabled={moderationMutation.isPending}
                             >
                               <X className="h-4 w-4 mr-1" />
@@ -249,15 +291,17 @@ export default function AdminModerationPanel() {
                             </Button>
                           </div>
                         </div>
-                        
+
                         <div className="bg-gray-50 p-3 rounded-md">
                           <p className="text-sm font-medium mb-1">Content:</p>
                           <p className="text-sm">{log.content}</p>
                         </div>
-                        
+
                         {log.reason && (
                           <div className="bg-red-50 p-3 rounded-md">
-                            <p className="text-sm font-medium mb-1 text-red-800">Moderation Reason:</p>
+                            <p className="text-sm font-medium mb-1 text-red-800">
+                              Moderation Reason:
+                            </p>
                             <p className="text-sm text-red-700">{log.reason}</p>
                           </div>
                         )}
@@ -270,9 +314,14 @@ export default function AdminModerationPanel() {
 
             <TabsContent value="reviewed" className="space-y-4">
               {reviewedLogs.map((log: ModerationLog) => (
-                <Card key={log.id} className={`border-l-4 ${
-                  log.status === 'approved' ? 'border-l-green-400' : 'border-l-red-400'
-                }`}>
+                <Card
+                  key={log.id}
+                  className={`border-l-4 ${
+                    log.status === "approved"
+                      ? "border-l-green-400"
+                      : "border-l-red-400"
+                  }`}
+                >
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between">
                       <div className="space-y-2">
@@ -284,14 +333,21 @@ export default function AdminModerationPanel() {
                           </Badge>
                         </div>
                         <p className="text-sm text-gray-600">
-                          Reviewed: {log.reviewed_at ? new Date(log.reviewed_at).toLocaleString() : 'Unknown'}
+                          Reviewed:{" "}
+                          {log.reviewed_at
+                            ? new Date(log.reviewed_at).toLocaleString()
+                            : "Unknown"}
                         </p>
                       </div>
-                      <Badge variant={log.status === 'approved' ? 'default' : 'destructive'}>
+                      <Badge
+                        variant={
+                          log.status === "approved" ? "default" : "destructive"
+                        }
+                      >
                         {log.status?.toUpperCase()}
                       </Badge>
                     </div>
-                    
+
                     <div className="mt-4 bg-gray-50 p-3 rounded-md">
                       <p className="text-sm">{log.content}</p>
                     </div>
@@ -307,7 +363,7 @@ export default function AdminModerationPanel() {
                     <div className="flex items-start justify-between">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          {getStatusIcon(log.status || 'pending')}
+                          {getStatusIcon(log.status || "pending")}
                           <Badge variant="secondary">{log.user}</Badge>
                           <Badge className={getSeverityColor(log.severity)}>
                             Severity {log.severity}
@@ -317,14 +373,19 @@ export default function AdminModerationPanel() {
                           {new Date(log.created_at).toLocaleString()}
                         </p>
                       </div>
-                      <Badge variant={
-                        log.status === 'approved' ? 'default' : 
-                        log.status === 'rejected' ? 'destructive' : 'secondary'
-                      }>
-                        {(log.status || 'PENDING').toUpperCase()}
+                      <Badge
+                        variant={
+                          log.status === "approved"
+                            ? "default"
+                            : log.status === "rejected"
+                              ? "destructive"
+                              : "secondary"
+                        }
+                      >
+                        {(log.status || "PENDING").toUpperCase()}
                       </Badge>
                     </div>
-                    
+
                     <div className="mt-4 bg-gray-50 p-3 rounded-md">
                       <p className="text-sm">{log.content}</p>
                     </div>

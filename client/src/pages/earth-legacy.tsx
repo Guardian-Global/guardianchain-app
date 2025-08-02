@@ -1,5 +1,5 @@
-import React from 'react';
-import { EarthLegacyCapsule } from '@/components/legacy/EarthLegacyCapsule';
+import React from "react";
+import { EarthLegacyCapsule } from "@/components/legacy/EarthLegacyCapsule";
 
 export default function EarthLegacyPage() {
   return (

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Mail,
+  Phone,
+  MapPin,
   Clock,
   Send,
   MessageCircle,
@@ -15,11 +15,11 @@ import {
   Heart,
   Globe,
   Shield,
-  ExternalLink
-} from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+  ExternalLink,
+} from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface ContactFormData {
   name: string;
@@ -27,54 +27,56 @@ interface ContactFormData {
   subject: string;
   category: string;
   message: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  priority: "low" | "medium" | "high" | "urgent";
 }
 
 export default function ContactPage() {
   const { toast } = useToast();
   const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    subject: '',
-    category: 'general',
-    message: '',
-    priority: 'medium'
+    name: "",
+    email: "",
+    subject: "",
+    category: "general",
+    message: "",
+    priority: "medium",
   });
 
   const submitMutation = useMutation({
     mutationFn: async (data: ContactFormData) => {
-      return apiRequest('POST', '/api/contact/submit', data);
+      return apiRequest("POST", "/api/contact/submit", data);
     },
     onSuccess: () => {
       toast({
-        title: 'Message Sent',
-        description: 'Thank you for contacting us. We\'ll get back to you within 24 hours.',
+        title: "Message Sent",
+        description:
+          "Thank you for contacting us. We'll get back to you within 24 hours.",
       });
       setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        category: 'general',
-        message: '',
-        priority: 'medium'
+        name: "",
+        email: "",
+        subject: "",
+        category: "general",
+        message: "",
+        priority: "medium",
       });
     },
     onError: (error) => {
       toast({
-        title: 'Send Failed',
-        description: 'There was an error sending your message. Please try again.',
-        variant: 'destructive',
+        title: "Send Failed",
+        description:
+          "There was an error sending your message. Please try again.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       toast({
-        title: 'Incomplete Form',
-        description: 'Please fill in all required fields.',
-        variant: 'destructive',
+        title: "Incomplete Form",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
       });
       return;
     }
@@ -82,69 +84,69 @@ export default function ContactPage() {
   };
 
   const contactCategories = [
-    { value: 'general', label: 'General Inquiry', icon: MessageCircle },
-    { value: 'support', label: 'Technical Support', icon: Shield },
-    { value: 'partnerships', label: 'Partnerships', icon: Users },
-    { value: 'investors', label: 'Investor Relations', icon: Briefcase },
-    { value: 'grants', label: 'Grants & Funding', icon: Heart },
-    { value: 'media', label: 'Media & Press', icon: Globe }
+    { value: "general", label: "General Inquiry", icon: MessageCircle },
+    { value: "support", label: "Technical Support", icon: Shield },
+    { value: "partnerships", label: "Partnerships", icon: Users },
+    { value: "investors", label: "Investor Relations", icon: Briefcase },
+    { value: "grants", label: "Grants & Funding", icon: Heart },
+    { value: "media", label: "Media & Press", icon: Globe },
   ];
 
   const contactMethods = [
     {
       icon: Mail,
-      label: 'Email',
-      value: 'hello@guardianchain.app',
-      description: 'General inquiries and support'
+      label: "Email",
+      value: "hello@guardianchain.app",
+      description: "General inquiries and support",
     },
     {
       icon: Mail,
-      label: 'Investors',
-      value: 'investors@guardianchain.app',
-      description: 'Investment opportunities and partnerships'
+      label: "Investors",
+      value: "investors@guardianchain.app",
+      description: "Investment opportunities and partnerships",
     },
     {
       icon: Mail,
-      label: 'Grants',
-      value: 'grants@guardianchain.app',
-      description: 'Public goods and grant applications'
+      label: "Grants",
+      value: "grants@guardianchain.app",
+      description: "Public goods and grant applications",
     },
     {
       icon: Phone,
-      label: 'Phone',
-      value: '+1 (555) 123-4567',
-      description: 'Business hours: Mon-Fri 9AM-6PM PST'
-    }
+      label: "Phone",
+      value: "+1 (555) 123-4567",
+      description: "Business hours: Mon-Fri 9AM-6PM PST",
+    },
   ];
 
   const officeLocations = [
     {
-      city: 'San Francisco',
-      address: '123 Innovation Drive, Suite 400',
-      state: 'CA 94107',
-      type: 'Headquarters'
+      city: "San Francisco",
+      address: "123 Innovation Drive, Suite 400",
+      state: "CA 94107",
+      type: "Headquarters",
     },
     {
-      city: 'New York',
-      address: '456 Blockchain Avenue, Floor 12',
-      state: 'NY 10001',
-      type: 'East Coast Office'
+      city: "New York",
+      address: "456 Blockchain Avenue, Floor 12",
+      state: "NY 10001",
+      type: "East Coast Office",
     },
     {
-      city: 'London',
-      address: '789 Fintech Square, Level 8',
-      state: 'EC2M 7PY, UK',
-      type: 'European Hub'
-    }
+      city: "London",
+      address: "789 Fintech Square, Level 8",
+      state: "EC2M 7PY, UK",
+      type: "European Hub",
+    },
   ];
 
   const responseTimeByCategory = {
-    'general': '24 hours',
-    'support': '4-8 hours',
-    'partnerships': '48 hours',
-    'investors': '24 hours',
-    'grants': '48-72 hours',
-    'media': '12 hours'
+    general: "24 hours",
+    support: "4-8 hours",
+    partnerships: "48 hours",
+    investors: "24 hours",
+    grants: "48-72 hours",
+    media: "12 hours",
   };
 
   return (
@@ -159,8 +161,9 @@ export default function ContactPage() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Get in touch with our team for support, partnerships, investment opportunities, 
-            or general inquiries. We're here to help build the future of truth preservation.
+            Get in touch with our team for support, partnerships, investment
+            opportunities, or general inquiries. We're here to help build the
+            future of truth preservation.
           </p>
         </div>
 
@@ -184,7 +187,12 @@ export default function ContactPage() {
                       </label>
                       <Input
                         value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
                         placeholder="Your full name"
                         required
                       />
@@ -196,7 +204,12 @@ export default function ContactPage() {
                       <Input
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            email: e.target.value,
+                          }))
+                        }
                         placeholder="your.email@example.com"
                         required
                       />
@@ -214,21 +227,33 @@ export default function ContactPage() {
                           key={category.value}
                           className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
                             formData.category === category.value
-                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                              : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                              ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                              : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
                           }`}
-                          onClick={() => setFormData(prev => ({ ...prev, category: category.value }))}
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              category: category.value,
+                            }))
+                          }
                         >
                           <div className="flex items-center">
                             <category.icon className="w-4 h-4 mr-2 text-blue-500" />
-                            <span className="text-sm font-medium">{category.label}</span>
+                            <span className="text-sm font-medium">
+                              {category.label}
+                            </span>
                           </div>
                         </div>
                       ))}
                     </div>
                     {formData.category && (
                       <p className="text-xs text-gray-500 mt-2">
-                        Expected response time: {responseTimeByCategory[formData.category as keyof typeof responseTimeByCategory]}
+                        Expected response time:{" "}
+                        {
+                          responseTimeByCategory[
+                            formData.category as keyof typeof responseTimeByCategory
+                          ]
+                        }
                       </p>
                     )}
                   </div>
@@ -241,7 +266,12 @@ export default function ContactPage() {
                       </label>
                       <Input
                         value={formData.subject}
-                        onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            subject: e.target.value,
+                          }))
+                        }
                         placeholder="Brief description of your inquiry"
                       />
                     </div>
@@ -251,7 +281,12 @@ export default function ContactPage() {
                       </label>
                       <select
                         value={formData.priority}
-                        onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as any }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            priority: e.target.value as any,
+                          }))
+                        }
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                       >
                         <option value="low">Low</option>
@@ -269,7 +304,12 @@ export default function ContactPage() {
                     </label>
                     <Textarea
                       value={formData.message}
-                      onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          message: e.target.value,
+                        }))
+                      }
                       placeholder="Please provide details about your inquiry..."
                       rows={6}
                       required
@@ -297,7 +337,8 @@ export default function ContactPage() {
                   </Button>
 
                   <p className="text-xs text-gray-500 text-center">
-                    By sending this message, you agree to our privacy policy and terms of service.
+                    By sending this message, you agree to our privacy policy and
+                    terms of service.
                   </p>
                 </form>
               </CardContent>
@@ -321,7 +362,9 @@ export default function ContactPage() {
                     <div>
                       <p className="font-medium">{method.label}</p>
                       <p className="text-sm text-blue-600">{method.value}</p>
-                      <p className="text-xs text-gray-500">{method.description}</p>
+                      <p className="text-xs text-gray-500">
+                        {method.description}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -350,7 +393,8 @@ export default function ContactPage() {
                   <span className="text-gray-500">Closed</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-3">
-                  For urgent matters outside business hours, please mark your inquiry as "Urgent"
+                  For urgent matters outside business hours, please mark your
+                  inquiry as "Urgent"
                 </p>
               </CardContent>
             </Card>
@@ -395,7 +439,10 @@ export default function ContactPage() {
                 <p className="text-sm text-red-600 dark:text-red-400 mb-3">
                   For security vulnerabilities or urgent platform issues:
                 </p>
-                <Button variant="outline" className="w-full border-red-300 text-red-700 hover:bg-red-100">
+                <Button
+                  variant="outline"
+                  className="w-full border-red-300 text-red-700 hover:bg-red-100"
+                >
                   <Mail className="w-4 h-4 mr-2" />
                   security@guardianchain.app
                 </Button>
@@ -428,44 +475,58 @@ export default function ContactPage() {
 
         {/* FAQ Section */}
         <section className="mt-16">
-          <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-bold text-center mb-8">
+            Frequently Asked Questions
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardContent className="p-6">
-                <h3 className="font-semibold mb-3">How do I report a bug or technical issue?</h3>
+                <h3 className="font-semibold mb-3">
+                  How do I report a bug or technical issue?
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Use the "Technical Support" category when contacting us, or email support@guardianchain.app directly. 
-                  Include steps to reproduce the issue and any error messages.
+                  Use the "Technical Support" category when contacting us, or
+                  email support@guardianchain.app directly. Include steps to
+                  reproduce the issue and any error messages.
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-6">
-                <h3 className="font-semibold mb-3">Can I schedule a demo or product walkthrough?</h3>
+                <h3 className="font-semibold mb-3">
+                  Can I schedule a demo or product walkthrough?
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Yes! Select "Partnerships" or "General Inquiry" and mention your interest in a demo. 
-                  We offer personalized demonstrations for potential partners and enterprise clients.
+                  Yes! Select "Partnerships" or "General Inquiry" and mention
+                  your interest in a demo. We offer personalized demonstrations
+                  for potential partners and enterprise clients.
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-6">
-                <h3 className="font-semibold mb-3">How can I apply for grants or funding?</h3>
+                <h3 className="font-semibold mb-3">
+                  How can I apply for grants or funding?
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Choose "Grants & Funding" category or email grants@guardianchain.app. 
-                  We support public good initiatives and have various funding programs available.
+                  Choose "Grants & Funding" category or email
+                  grants@guardianchain.app. We support public good initiatives
+                  and have various funding programs available.
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-6">
-                <h3 className="font-semibold mb-3">What if I have investment or partnership opportunities?</h3>
+                <h3 className="font-semibold mb-3">
+                  What if I have investment or partnership opportunities?
+                </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Use "Investor Relations" or "Partnerships" categories respectively. 
-                  Our business development team will respond within 24 hours to qualified inquiries.
+                  Use "Investor Relations" or "Partnerships" categories
+                  respectively. Our business development team will respond
+                  within 24 hours to qualified inquiries.
                 </p>
               </CardContent>
             </Card>

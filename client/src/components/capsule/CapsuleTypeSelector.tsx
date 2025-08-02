@@ -122,7 +122,7 @@ export default function CapsuleTypeSelector({
               <div className="text-right">
                 <div
                   className={`font-bold text-lg ${getFeeCSSClass(
-                    selectedConfig.baseFee + selectedConfig.premiumFee
+                    selectedConfig.baseFee + selectedConfig.premiumFee,
                   )}`}
                 >
                   {selectedConfig.baseFee + selectedConfig.premiumFee} GTT
@@ -179,7 +179,7 @@ export default function CapsuleTypeSelector({
                         </h4>
                         <div
                           className={`font-semibold text-sm ${getFeeCSSClass(
-                            totalFee
+                            totalFee,
                           )}`}
                         >
                           {totalFee} GTT
@@ -280,7 +280,7 @@ export default function CapsuleTypeSelector({
                 <span className="text-white">Total Cost</span>
                 <span
                   className={getFeeCSSClass(
-                    selectedConfig.baseFee + selectedConfig.premiumFee
+                    selectedConfig.baseFee + selectedConfig.premiumFee,
                   )}
                 >
                   {selectedConfig.baseFee + selectedConfig.premiumFee} GTT

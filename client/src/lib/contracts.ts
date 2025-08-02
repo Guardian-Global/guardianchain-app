@@ -35,7 +35,7 @@ export const TRUTH_DAO_ABI = [
   "function vote(uint256 proposalId, bool support)",
   "function execute(uint256 proposalId)",
   "event ProposalCreated(uint256 indexed proposalId, address indexed proposer, string title)",
-  "event Voted(uint256 indexed proposalId, address indexed voter, bool support, uint256 votes)"
+  "event Voted(uint256 indexed proposalId, address indexed voter, bool support, uint256 votes)",
 ];
 
 export const TRUTH_VAULT_ABI = [
@@ -72,20 +72,16 @@ export const SUPPORTED_NETWORKS = [
 
 export const DEFAULT_NETWORK = SUPPORTED_NETWORKS[0];
 
-
-
 // Get contract addresses for current chain
 export function getContractAddresses(chainId: number = DEFAULT_CHAIN_ID) {
   return CONTRACT_ADDRESSES[chainId] || CONTRACT_ADDRESSES.MUMBAI;
 }
 
-
-
 // Get contract instance
 export function getContract(
   address: string,
   abi: string[],
-  provider: ethers.Provider | ethers.Signer
+  provider: ethers.Provider | ethers.Signer,
 ) {
   return new ethers.Contract(address, abi, provider);
 }
@@ -93,7 +89,7 @@ export function getContract(
 // Get GTT Token contract
 export function getGTTTokenContract(
   provider: ethers.Provider | ethers.Signer,
-  chainId: number = DEFAULT_CHAIN_ID
+  chainId: number = DEFAULT_CHAIN_ID,
 ) {
   const addresses = getContractAddresses(chainId);
   return getContract(addresses.GTTToken, GTT_TOKEN_ABI, provider);
@@ -102,7 +98,7 @@ export function getGTTTokenContract(
 // Get TruthVault contract
 export function getTruthVaultContract(
   provider: ethers.Provider | ethers.Signer,
-  chainId: number = DEFAULT_CHAIN_ID
+  chainId: number = DEFAULT_CHAIN_ID,
 ) {
   const addresses = getContractAddresses(chainId);
   return getContract(addresses.TruthVault, TRUTH_VAULT_ABI, provider);
@@ -120,11 +116,11 @@ export function parseGTT(amount: string): bigint {
 export function generateCapsuleId(
   creator: string,
   content: string,
-  timestamp: number
+  timestamp: number,
 ): string {
   const data = ethers.solidityPackedKeccak256(
     ["address", "string", "uint256"],
-    [creator, content, timestamp]
+    [creator, content, timestamp],
   );
   return data;
 }
@@ -156,7 +152,7 @@ export function getChainName(chainId: number): string {
 // Contract address helper
 export function getContractAddress(
   chainId: number,
-  contractName: string
+  contractName: string,
 ): string {
   const addresses = getContractAddresses(chainId);
   return addresses[contractName as keyof typeof addresses] || "";

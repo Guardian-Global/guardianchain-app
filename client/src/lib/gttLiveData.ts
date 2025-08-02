@@ -110,7 +110,7 @@ class GTTLiveDataService {
             includeListings: true,
             includeYields: true,
           },
-        })
+        }),
       );
     }
   }
@@ -203,7 +203,7 @@ class GTTLiveDataService {
       marketCap: this.formatNumber(rawData.marketCap || 18750000),
       volume24h: this.formatNumber(rawData.volume24h || 2450000),
       circulatingSupply: this.formatNumber(
-        rawData.circulatingSupply || 2500000000
+        rawData.circulatingSupply || 2500000000,
       ),
       totalSupply: this.formatNumber(rawData.totalSupply || 10000000000),
       balance: rawData.balance || "0",
@@ -334,7 +334,7 @@ export function useGTTLiveData() {
       await gttLiveData.refreshData();
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to refresh GTT data"
+        err instanceof Error ? err.message : "Failed to refresh GTT data",
       );
     } finally {
       setIsLoading(false);

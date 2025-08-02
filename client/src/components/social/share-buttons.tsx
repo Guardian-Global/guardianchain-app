@@ -91,7 +91,7 @@ export default function ShareButtons({
     window.open(
       link,
       "_blank",
-      "width=600,height=400,scrollbars=yes,resizable=yes"
+      "width=600,height=400,scrollbars=yes,resizable=yes",
     );
   };
 

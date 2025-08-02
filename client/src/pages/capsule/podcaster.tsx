@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Mic, Radio, Users, Calendar, FileText, Upload, Loader2 } from "lucide-react";
+import {
+  Mic,
+  Radio,
+  Users,
+  Calendar,
+  FileText,
+  Upload,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -29,7 +37,8 @@ export default function PodcasterCapsulePage() {
     onSuccess: (data) => {
       toast({
         title: "Podcast Capsule Created",
-        description: "Your podcast episode has been documented as a truth capsule.",
+        description:
+          "Your podcast episode has been documented as a truth capsule.",
       });
       // Reset form
       setEpisodeTitle("");
@@ -70,7 +79,7 @@ export default function PodcasterCapsulePage() {
     formData.append("recordingDate", recordingDate);
     formData.append("keyTopics", keyTopics.trim());
     formData.append("capsuleType", "PODCASTER");
-    
+
     if (transcriptFile) formData.append("transcript", transcriptFile);
     if (audioFile) formData.append("audio", audioFile);
 
@@ -83,7 +92,8 @@ export default function PodcasterCapsulePage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-white">Podcaster Capsule</h1>
           <p className="text-slate-400">
-            Document podcast episodes and conversations as verified truth capsules
+            Document podcast episodes and conversations as verified truth
+            capsules
           </p>
         </div>
 
@@ -93,14 +103,19 @@ export default function PodcasterCapsulePage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Mic className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Mic
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Episode Documentation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Episode Title *</label>
+                    <label className="text-sm font-medium text-white">
+                      Episode Title *
+                    </label>
                     <Input
                       value={episodeTitle}
                       onChange={(e) => setEpisodeTitle(e.target.value)}
@@ -108,9 +123,11 @@ export default function PodcasterCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Show Name *</label>
+                    <label className="text-sm font-medium text-white">
+                      Show Name *
+                    </label>
                     <Input
                       value={showName}
                       onChange={(e) => setShowName(e.target.value)}
@@ -122,7 +139,9 @@ export default function PodcasterCapsulePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Episode Number</label>
+                    <label className="text-sm font-medium text-white">
+                      Episode Number
+                    </label>
                     <Input
                       value={episodeNumber}
                       onChange={(e) => setEpisodeNumber(e.target.value)}
@@ -130,9 +149,11 @@ export default function PodcasterCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Guest Name</label>
+                    <label className="text-sm font-medium text-white">
+                      Guest Name
+                    </label>
                     <Input
                       value={guestName}
                       onChange={(e) => setGuestName(e.target.value)}
@@ -140,9 +161,11 @@ export default function PodcasterCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Recording Date</label>
+                    <label className="text-sm font-medium text-white">
+                      Recording Date
+                    </label>
                     <Input
                       type="date"
                       value={recordingDate}
@@ -153,7 +176,9 @@ export default function PodcasterCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Episode Description</label>
+                  <label className="text-sm font-medium text-white">
+                    Episode Description
+                  </label>
                   <Textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -163,7 +188,9 @@ export default function PodcasterCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Key Topics & Claims</label>
+                  <label className="text-sm font-medium text-white">
+                    Key Topics & Claims
+                  </label>
                   <Textarea
                     value={keyTopics}
                     onChange={(e) => setKeyTopics(e.target.value)}
@@ -174,25 +201,33 @@ export default function PodcasterCapsulePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Transcript File</label>
+                    <label className="text-sm font-medium text-white">
+                      Transcript File
+                    </label>
                     <div className="flex items-center space-x-2">
                       <Input
                         type="file"
                         accept=".txt,.pdf,.docx"
-                        onChange={(e) => setTranscriptFile(e.target.files?.[0] || null)}
+                        onChange={(e) =>
+                          setTranscriptFile(e.target.files?.[0] || null)
+                        }
                         className="bg-slate-700/50 border-slate-600 text-white"
                       />
                       <Upload className="w-4 h-4 text-slate-400" />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Audio File</label>
+                    <label className="text-sm font-medium text-white">
+                      Audio File
+                    </label>
                     <div className="flex items-center space-x-2">
                       <Input
                         type="file"
                         accept=".mp3,.wav,.m4a"
-                        onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
+                        onChange={(e) =>
+                          setAudioFile(e.target.files?.[0] || null)
+                        }
                         className="bg-slate-700/50 border-slate-600 text-white"
                       />
                       <Radio className="w-4 h-4 text-slate-400" />
@@ -227,7 +262,10 @@ export default function PodcasterCapsulePage() {
             <Card className="bg-slate-800/30 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <FileText className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <FileText
+                    className="w-4 h-4"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Podcast Features
                 </CardTitle>
               </CardHeader>
@@ -235,25 +273,31 @@ export default function PodcasterCapsulePage() {
                 <div className="flex items-start gap-2">
                   <Radio className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Audio Archiving:</strong> Permanent audio storage
+                    <strong className="text-white">Audio Archiving:</strong>{" "}
+                    Permanent audio storage
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <FileText className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Transcript Verification:</strong> Searchable text content
+                    <strong className="text-white">
+                      Transcript Verification:
+                    </strong>{" "}
+                    Searchable text content
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Users className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Guest Attribution:</strong> Proper credit and verification
+                    <strong className="text-white">Guest Attribution:</strong>{" "}
+                    Proper credit and verification
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Calendar className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Timestamp Proof:</strong> Immutable recording date
+                    <strong className="text-white">Timestamp Proof:</strong>{" "}
+                    Immutable recording date
                   </div>
                 </div>
               </CardContent>
@@ -287,8 +331,13 @@ export default function PodcasterCapsulePage() {
                 ].map((episode, index) => (
                   <div key={index} className="p-3 bg-slate-700/30 rounded-lg">
                     <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-white text-sm">{episode.title}</h4>
-                      <Badge variant="outline" className="text-orange-400 border-orange-600 text-xs">
+                      <h4 className="font-medium text-white text-sm">
+                        {episode.title}
+                      </h4>
+                      <Badge
+                        variant="outline"
+                        className="text-orange-400 border-orange-600 text-xs"
+                      >
                         {episode.episode}
                       </Badge>
                     </div>
@@ -306,7 +355,9 @@ export default function PodcasterCapsulePage() {
         {/* How It Works */}
         <Card className="bg-slate-800/30 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">How Podcast Capsules Work</CardTitle>
+            <CardTitle className="text-white">
+              How Podcast Capsules Work
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center space-y-2">
@@ -314,7 +365,9 @@ export default function PodcasterCapsulePage() {
                 <Radio className="w-6 h-6 text-orange-400" />
               </div>
               <h3 className="font-semibold text-white">1. Record</h3>
-              <p className="text-sm text-slate-400">Create your podcast episode with guests or solo</p>
+              <p className="text-sm text-slate-400">
+                Create your podcast episode with guests or solo
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -322,7 +375,9 @@ export default function PodcasterCapsulePage() {
                 <Upload className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="font-semibold text-white">2. Upload</h3>
-              <p className="text-sm text-slate-400">Add audio files, transcripts, and metadata</p>
+              <p className="text-sm text-slate-400">
+                Add audio files, transcripts, and metadata
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -330,7 +385,9 @@ export default function PodcasterCapsulePage() {
                 <FileText className="w-6 h-6 text-purple-400" />
               </div>
               <h3 className="font-semibold text-white">3. Verify</h3>
-              <p className="text-sm text-slate-400">Content is verified and timestamped</p>
+              <p className="text-sm text-slate-400">
+                Content is verified and timestamped
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -338,7 +395,9 @@ export default function PodcasterCapsulePage() {
                 <Users className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="font-semibold text-white">4. Archive</h3>
-              <p className="text-sm text-slate-400">Permanent archive for truth reference</p>
+              <p className="text-sm text-slate-400">
+                Permanent archive for truth reference
+              </p>
             </div>
           </CardContent>
         </Card>

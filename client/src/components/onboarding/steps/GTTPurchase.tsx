@@ -6,16 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Coins, 
-  CreditCard, 
-  Wallet, 
-  TrendingUp, 
+import {
+  Coins,
+  CreditCard,
+  Wallet,
+  TrendingUp,
   Shield,
   Zap,
   Star,
   CheckCircle,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -37,74 +37,75 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
   const purchasePackages = [
     {
       amount: 1000,
-      price: 7.50,
+      price: 7.5,
       bonus: 0,
       popular: false,
-      tier: "Starter Pack"
+      tier: "Starter Pack",
     },
     {
       amount: 5000,
-      price: 35.00,
+      price: 35.0,
       bonus: 500,
       popular: true,
-      tier: "Popular Choice"
+      tier: "Popular Choice",
     },
     {
       amount: 10000,
-      price: 65.00,
+      price: 65.0,
       bonus: 1500,
       popular: false,
-      tier: "Power User"
+      tier: "Power User",
     },
     {
       amount: 25000,
-      price: 150.00,
+      price: 150.0,
       bonus: 5000,
       popular: false,
-      tier: "Enterprise"
-    }
+      tier: "Enterprise",
+    },
   ];
 
   const gttBenefits = [
     {
       icon: <Star className="h-5 w-5 text-yellow-400" />,
       title: "Premium Features",
-      description: "Unlock advanced capsule creation and AI-powered analysis"
+      description: "Unlock advanced capsule creation and AI-powered analysis",
     },
     {
       icon: <TrendingUp className="h-5 w-5 text-green-400" />,
       title: "Staking Rewards",
-      description: "Earn up to 25% APY by staking your GTT tokens"
+      description: "Earn up to 25% APY by staking your GTT tokens",
     },
     {
       icon: <Shield className="h-5 w-5 text-blue-400" />,
       title: "Truth Verification",
-      description: "Participate in community verification and earn rewards"
+      description: "Participate in community verification and earn rewards",
     },
     {
       icon: <Zap className="h-5 w-5 text-purple-400" />,
       title: "Faster Processing",
-      description: "Priority processing for all your truth capsules"
-    }
+      description: "Priority processing for all your truth capsules",
+    },
   ];
 
   const handlePurchase = async () => {
     setIsLoading(true);
-    
+
     try {
       // Simulate purchase process
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       toast({
         title: "Purchase Successful!",
         description: `Successfully purchased ${purchaseAmount} GTT tokens.`,
       });
-      
+
       onComplete();
     } catch (error) {
       toast({
         title: "Purchase Failed",
-        description: "There was an error processing your purchase. Please try again.",
+        description:
+          "There was an error processing your purchase. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -119,9 +120,12 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
         <div className="mx-auto w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mb-4">
           <Coins className="h-8 w-8 text-yellow-400" />
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">Get GTT Tokens</h3>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          Get GTT Tokens
+        </h3>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          GTT tokens unlock premium features, staking rewards, and voting power in the GUARDIANCHAIN ecosystem.
+          GTT tokens unlock premium features, staking rewards, and voting power
+          in the GUARDIANCHAIN ecosystem.
         </p>
       </div>
 
@@ -131,7 +135,9 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-yellow-400 font-medium">Current GTT Price</p>
-              <p className="text-white text-2xl font-bold">${gttPrice.toFixed(4)}</p>
+              <p className="text-white text-2xl font-bold">
+                ${gttPrice.toFixed(4)}
+              </p>
             </div>
             <Badge className="bg-green-500/20 text-green-400 border-green-500">
               <TrendingUp className="h-3 w-3 mr-1" />
@@ -146,7 +152,7 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
         <h4 className="text-white font-medium mb-4">Choose a Package</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {purchasePackages.map((pkg, index) => (
-            <Card 
+            <Card
               key={index}
               className={`cursor-pointer transition-all ${
                 parseInt(purchaseAmount) === pkg.amount
@@ -180,7 +186,9 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-400">Price</span>
-                    <span className="text-white font-bold">${pkg.price.toFixed(2)}</span>
+                    <span className="text-white font-bold">
+                      ${pkg.price.toFixed(2)}
+                    </span>
                   </div>
                   {pkg.bonus > 0 && (
                     <p className="text-green-400 text-sm">
@@ -224,7 +232,7 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
       <div>
         <h4 className="text-white font-medium mb-4">Payment Method</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card 
+          <Card
             className={`cursor-pointer transition-all ${
               paymentMethod === "card"
                 ? "bg-purple-500/20 border-purple-500"
@@ -237,13 +245,15 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
                 <CreditCard className="h-6 w-6 text-blue-400" />
                 <div>
                   <p className="text-white font-medium">Credit/Debit Card</p>
-                  <p className="text-slate-400 text-sm">Pay with Stripe (Recommended)</p>
+                  <p className="text-slate-400 text-sm">
+                    Pay with Stripe (Recommended)
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card 
+          <Card
             className={`cursor-pointer transition-all ${
               paymentMethod === "crypto"
                 ? "bg-purple-500/20 border-purple-500"
@@ -257,7 +267,9 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
                 <div>
                   <p className="text-white font-medium">Cryptocurrency</p>
                   <p className="text-slate-400 text-sm">
-                    {isConnected ? "Pay with connected wallet" : "Wallet required"}
+                    {isConnected
+                      ? "Pay with connected wallet"
+                      : "Wallet required"}
                   </p>
                 </div>
               </div>
@@ -271,10 +283,15 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
         <h4 className="text-white font-medium mb-4">What You Get with GTT</h4>
         <div className="space-y-3">
           {gttBenefits.map((benefit, index) => (
-            <div key={index} className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
+            <div
+              key={index}
+              className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg"
+            >
               {benefit.icon}
               <div>
-                <p className="text-white text-sm font-medium">{benefit.title}</p>
+                <p className="text-white text-sm font-medium">
+                  {benefit.title}
+                </p>
                 <p className="text-slate-400 text-sm">{benefit.description}</p>
               </div>
             </div>
@@ -286,7 +303,7 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
       {paymentMethod === "crypto" && !isConnected && (
         <Alert className="bg-yellow-500/10 border-yellow-500/20">
           <AlertDescription className="text-yellow-200">
-            You need to connect a wallet first to pay with cryptocurrency. 
+            You need to connect a wallet first to pay with cryptocurrency.
             <Button variant="link" className="text-yellow-400 p-0 ml-1">
               Go back to wallet connection
             </Button>
@@ -305,13 +322,15 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
             Skip for Now
           </Button>
         )}
-        
+
         <Button
           onClick={handlePurchase}
           disabled={isLoading || (paymentMethod === "crypto" && !isConnected)}
           className="bg-yellow-600 hover:bg-yellow-700 text-white min-w-[200px]"
         >
-          {isLoading ? "Processing..." : `Buy ${parseInt(purchaseAmount).toLocaleString()} GTT for $${totalCost.toFixed(2)}`}
+          {isLoading
+            ? "Processing..."
+            : `Buy ${parseInt(purchaseAmount).toLocaleString()} GTT for $${totalCost.toFixed(2)}`}
         </Button>
       </div>
 
@@ -320,7 +339,10 @@ export default function GTTPurchase({ onComplete, onSkip }: GTTPurchaseProps) {
         <p className="text-slate-400 text-sm mb-2">
           Need help with your purchase?
         </p>
-        <Button variant="link" className="text-purple-400 hover:text-purple-300 p-0">
+        <Button
+          variant="link"
+          className="text-purple-400 hover:text-purple-300 p-0"
+        >
           <ExternalLink className="h-3 w-3 mr-1" />
           Contact Support
         </Button>

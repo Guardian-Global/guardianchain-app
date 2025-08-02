@@ -1,38 +1,44 @@
-import React from 'react';
-import { useState } from 'react';
-import { useLocation } from 'wouter';
-import { useMutation } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import { apiRequest, queryClient } from '@/lib/queryClient';
-import { 
-  Sparkles, 
-  Camera, 
-  Clock, 
+import React from "react";
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import {
+  Sparkles,
+  Camera,
+  Clock,
   Share2,
   ExternalLink,
   CheckCircle,
-  Loader2
-} from 'lucide-react';
+  Loader2,
+} from "lucide-react";
 
 export default function CapsuleCreatorStreamlined() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
-  
+
   // Form state
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [lockDuration, setLockDuration] = useState(365);
   const [recipient, setRecipient] = useState("");
   const [platform, setPlatform] = useState("twitter");
-  
+
   // AI & Minting state
   const [aiImageUrl, setAiImageUrl] = useState("");
   const [minted, setMinted] = useState(false);
@@ -46,32 +52,33 @@ export default function CapsuleCreatorStreamlined() {
       toast({
         title: "Content Required",
         description: "Please enter a summary before generating an image.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsGeneratingImage(true);
     try {
-      const response = await apiRequest('POST', '/api/ai/generate-image', {
+      const response = await apiRequest("POST", "/api/ai/generate-image", {
         prompt: `Create an artistic representation of: ${summary}. Style: ethereal, mystical, digital art, high quality, guardian theme`,
         size: "1024x1024",
-        quality: "hd"
+        quality: "hd",
       });
-      
+
       const data = await response.json();
       setAiImageUrl(data.imageUrl);
-      
+
       toast({
         title: "Image Generated!",
         description: "AI has created a visual representation of your capsule.",
       });
     } catch (error) {
-      console.error('AI image generation failed:', error);
+      console.error("AI image generation failed:", error);
       toast({
         title: "Image Generation Failed",
-        description: "Could not generate AI image. You can still mint without it.",
-        variant: "destructive"
+        description:
+          "Could not generate AI image. You can still mint without it.",
+        variant: "destructive",
       });
     } finally {
       setIsGeneratingImage(false);
@@ -84,45 +91,44 @@ export default function CapsuleCreatorStreamlined() {
       toast({
         title: "Missing Information",
         description: "Please fill in both title and summary.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsMinting(true);
     try {
-      const response = await apiRequest('POST', '/api/capsules/mint-nft', {
+      const response = await apiRequest("POST", "/api/capsules/mint-nft", {
         title,
         content: summary,
         timelock: lockDuration,
-        recipient: recipient || (user as any)?.email || '',
+        recipient: recipient || (user as any)?.email || "",
         imageUrl: aiImageUrl,
-        capsuleType: 'memory',
+        capsuleType: "memory",
         metadata: {
           hasAiImage: !!aiImageUrl,
           lockDurationDays: lockDuration,
-          createdWith: 'streamlined-creator'
-        }
+          createdWith: "streamlined-creator",
+        },
       });
-      
+
       const data = await response.json();
       setTxn(data.transactionHash);
       setMinted(true);
 
       // Invalidate cache to refresh capsule lists
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules/recent'] });
-      
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules/recent"] });
+
       toast({
         title: "Capsule Minted Successfully!",
         description: `NFT #${data.tokenId} has been created and secured on-chain.`,
       });
-
     } catch (error) {
-      console.error('Minting failed:', error);
+      console.error("Minting failed:", error);
       toast({
         title: "Minting Failed",
         description: "Could not mint your capsule. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsMinting(false);
@@ -132,9 +138,13 @@ export default function CapsuleCreatorStreamlined() {
   // Social Sharing
   const shareCapsule = () => {
     let shareUrl = "";
-    const capsuleUrl = encodeURIComponent(`https://guardianchain.app/capsule/${txn}`);
-    const shareText = encodeURIComponent(`I just created a Truth Capsule on GuardianChain! 🔮 "${title}"`);
-    
+    const capsuleUrl = encodeURIComponent(
+      `https://guardianchain.app/capsule/${txn}`,
+    );
+    const shareText = encodeURIComponent(
+      `I just created a Truth Capsule on GuardianChain! 🔮 "${title}"`,
+    );
+
     if (platform === "twitter") {
       shareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${capsuleUrl}&hashtags=GuardianChain,TruthCapsule,Web3`;
     } else if (platform === "ens") {
@@ -142,7 +152,7 @@ export default function CapsuleCreatorStreamlined() {
     } else if (platform === "linkedin") {
       shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${capsuleUrl}`;
     }
-    
+
     window.open(shareUrl, "_blank");
   };
 
@@ -150,7 +160,7 @@ export default function CapsuleCreatorStreamlined() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-      
+
       <div className="relative z-10 container mx-auto px-4 py-8">
         <Card className="max-w-4xl mx-auto bg-black/40 backdrop-blur-xl border-blue-500/20">
           <CardHeader className="text-center pb-6">
@@ -161,11 +171,14 @@ export default function CapsuleCreatorStreamlined() {
               Preserve your memories with AI-powered visual storytelling
             </p>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             {/* Title Input */}
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-lg font-medium text-blue-300">
+              <Label
+                htmlFor="title"
+                className="text-lg font-medium text-blue-300"
+              >
                 Capsule Title
               </Label>
               <Input
@@ -179,7 +192,10 @@ export default function CapsuleCreatorStreamlined() {
 
             {/* Summary Input */}
             <div className="space-y-2">
-              <Label htmlFor="summary" className="text-lg font-medium text-blue-300">
+              <Label
+                htmlFor="summary"
+                className="text-lg font-medium text-blue-300"
+              >
                 Truth Content
               </Label>
               <Textarea
@@ -194,7 +210,10 @@ export default function CapsuleCreatorStreamlined() {
 
             {/* Recipient Input */}
             <div className="space-y-2">
-              <Label htmlFor="recipient" className="text-lg font-medium text-blue-300">
+              <Label
+                htmlFor="recipient"
+                className="text-lg font-medium text-blue-300"
+              >
                 Recipient (Optional)
               </Label>
               <Input
@@ -208,7 +227,10 @@ export default function CapsuleCreatorStreamlined() {
 
             {/* Lock Duration */}
             <div className="space-y-2">
-              <Label htmlFor="duration" className="text-lg font-medium text-blue-300">
+              <Label
+                htmlFor="duration"
+                className="text-lg font-medium text-blue-300"
+              >
                 <Clock className="inline w-5 h-5 mr-2" />
                 Time Lock Duration (Days)
               </Label>
@@ -222,7 +244,8 @@ export default function CapsuleCreatorStreamlined() {
                 className="bg-slate-800/50 border-blue-500/30 text-white"
               />
               <p className="text-sm text-gray-400">
-                Your capsule will be locked for {lockDuration} days ({Math.round(lockDuration / 365 * 10) / 10} years)
+                Your capsule will be locked for {lockDuration} days (
+                {Math.round((lockDuration / 365) * 10) / 10} years)
               </p>
             </div>
 
@@ -254,9 +277,9 @@ export default function CapsuleCreatorStreamlined() {
 
               {aiImageUrl && (
                 <div className="relative">
-                  <img 
-                    src={aiImageUrl} 
-                    alt="AI Generated Capsule Visual" 
+                  <img
+                    src={aiImageUrl}
+                    alt="AI Generated Capsule Visual"
                     className="w-full h-64 object-cover rounded-lg border border-blue-500/30"
                   />
                   <div className="absolute top-2 right-2">
@@ -302,7 +325,7 @@ export default function CapsuleCreatorStreamlined() {
                     <p className="text-gray-300">
                       Your truth has been secured on the blockchain forever.
                     </p>
-                    
+
                     {txn && (
                       <a
                         href={`https://polygonscan.com/tx/${txn}`}
@@ -331,7 +354,7 @@ export default function CapsuleCreatorStreamlined() {
                             <SelectItem value="ens">ENS Share</SelectItem>
                           </SelectContent>
                         </Select>
-                        
+
                         <Button
                           onClick={shareCapsule}
                           className="bg-blue-600 hover:bg-blue-700"
@@ -345,7 +368,7 @@ export default function CapsuleCreatorStreamlined() {
                     {/* Navigation */}
                     <div className="pt-4 space-x-4">
                       <Button
-                        onClick={() => setLocation('/dashboard')}
+                        onClick={() => setLocation("/dashboard")}
                         variant="outline"
                         className="border-blue-500/30 text-blue-300 hover:bg-blue-500/10"
                       >

@@ -1,4 +1,4 @@
-import SystemValidator from '@/components/SystemValidator';
+import SystemValidator from "@/components/SystemValidator";
 
 export default function SystemValidationPage() {
   return (
@@ -9,11 +9,12 @@ export default function SystemValidationPage() {
             System Validation Suite
           </h1>
           <p className="text-slate-300 max-w-3xl mx-auto">
-            Comprehensive testing of all GUARDIANCHAIN functionality including authentication flows, 
-            capsule lifecycle, yield mechanics, export capabilities, responsive design, and error handling.
+            Comprehensive testing of all GUARDIANCHAIN functionality including
+            authentication flows, capsule lifecycle, yield mechanics, export
+            capabilities, responsive design, and error handling.
           </p>
         </div>
-        
+
         <SystemValidator />
       </div>
     </div>

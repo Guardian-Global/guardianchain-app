@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+import * as crypto from "crypto";
 
 export interface AccessControlCondition {
   contractAddress: string;
@@ -26,33 +26,33 @@ export interface EncryptedCapsuleResult {
 
 // Development fallback encryption using Node.js crypto
 function simpleEncrypt(text: string, password: string): string {
-  const algorithm = 'aes-256-gcm';
-  const key = crypto.scryptSync(password, 'salt', 32);
+  const algorithm = "aes-256-gcm";
+  const key = crypto.scryptSync(password, "salt", 32);
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipher(algorithm, key);
-  
-  let encrypted = cipher.update(text, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
-  
-  return iv.toString('hex') + ':' + encrypted;
+
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
+
+  return iv.toString("hex") + ":" + encrypted;
 }
 
-export async function encryptCapsule({ 
-  content, 
-  accessControlConditions, 
-  chain = "polygon" 
+export async function encryptCapsule({
+  content,
+  accessControlConditions,
+  chain = "polygon",
 }: EncryptCapsuleParams): Promise<EncryptedCapsuleResult> {
   try {
     // For development, use simple encryption
     // In production, this would use actual Lit Protocol
     console.log("Using development encryption fallback for Lit Protocol");
-    
-    const encryptionKey = crypto.randomBytes(32).toString('hex');
+
+    const encryptionKey = crypto.randomBytes(32).toString("hex");
     const encryptedContent = simpleEncrypt(content, encryptionKey);
-    const encryptedSymmetricKey = Buffer.from(encryptionKey).toString('base64');
+    const encryptedSymmetricKey = Buffer.from(encryptionKey).toString("base64");
 
     return {
-      encryptedContent: Buffer.from(encryptedContent).toString('base64'),
+      encryptedContent: Buffer.from(encryptedContent).toString("base64"),
       encryptedSymmetricKey,
       accessControlConditions,
     };

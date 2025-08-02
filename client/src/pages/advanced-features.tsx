@@ -1,10 +1,10 @@
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import MicroInteractionWalletConnection from '@/components/replit/MicroInteractionWalletConnection';
-import PlayfulBlockchainLearning from '@/components/replit/PlayfulBlockchainLearning';
-import OneClickAIDeployment from '@/components/replit/OneClickAIDeployment';
-import DynamicNetworkStatusGlobe from '@/components/replit/DynamicNetworkStatusGlobe';
-import GamifiedPlatformAchievements from '@/components/replit/GamifiedPlatformAchievements';
+import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MicroInteractionWalletConnection from "@/components/replit/MicroInteractionWalletConnection";
+import PlayfulBlockchainLearning from "@/components/replit/PlayfulBlockchainLearning";
+import OneClickAIDeployment from "@/components/replit/OneClickAIDeployment";
+import DynamicNetworkStatusGlobe from "@/components/replit/DynamicNetworkStatusGlobe";
+import GamifiedPlatformAchievements from "@/components/replit/GamifiedPlatformAchievements";
 
 export default function AdvancedFeaturesPage() {
   return (

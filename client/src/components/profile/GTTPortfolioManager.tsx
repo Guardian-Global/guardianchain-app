@@ -70,8 +70,8 @@ export default function GTTPortfolioManager() {
       capsuleTitle: "AI Training Data Integrity",
       investmentDate: "2024-09-08",
       gttInvested: 1000,
-      currentValue: 1042.50,
-      yieldGenerated: 42.50,
+      currentValue: 1042.5,
+      yieldGenerated: 42.5,
       projectedYield: 140.0,
       roi: 4.3,
     },
@@ -114,19 +114,19 @@ export default function GTTPortfolioManager() {
 
   const totalInvested = investments.reduce(
     (sum, inv) => sum + inv.gttInvested,
-    0
+    0,
   );
   const totalCurrentValue = investments.reduce(
     (sum, inv) => sum + inv.currentValue,
-    0
+    0,
   );
   const totalYieldGenerated = investments.reduce(
     (sum, inv) => sum + inv.yieldGenerated,
-    0
+    0,
   );
   const totalProjectedYield = investments.reduce(
     (sum, inv) => sum + inv.projectedYield,
-    0
+    0,
   );
   const avgROI =
     totalCurrentValue > 0
@@ -328,7 +328,7 @@ export default function GTTPortfolioManager() {
                         <p className="text-sm text-slate-400">
                           Invested:{" "}
                           {new Date(
-                            investment.investmentDate
+                            investment.investmentDate,
                           ).toLocaleDateString()}
                         </p>
                       </div>
@@ -503,7 +503,7 @@ export default function GTTPortfolioManager() {
                       <div className="flex items-center space-x-3">
                         <div
                           className={`p-2 rounded-full bg-slate-600 ${getTradeColor(
-                            trade.type
+                            trade.type,
                           )}`}
                         >
                           <TradeIcon className="w-4 h-4" />
@@ -548,17 +548,22 @@ export default function GTTPortfolioManager() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       {/* Legal Disclaimer */}
       <div className="mt-8 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
-        <h4 className="text-red-400 font-semibold mb-2">Investment Risk Disclaimer</h4>
+        <h4 className="text-red-400 font-semibold mb-2">
+          Investment Risk Disclaimer
+        </h4>
         <p className="text-red-300 text-xs leading-relaxed">
-          *All performance data, yield projections, and market values are hypothetical estimates for demonstration purposes only. 
-          These figures do NOT represent actual investment returns, guaranteed yields, or real market performance. 
-          Cryptocurrency investments carry significant risk including potential total loss of principal. 
-          Past performance does not predict future results. This platform is for educational and entertainment purposes. 
-          Always consult qualified financial advisors before making investment decisions. 
-          GTT token values and market data shown are simulated examples, not real trading data.
+          *All performance data, yield projections, and market values are
+          hypothetical estimates for demonstration purposes only. These figures
+          do NOT represent actual investment returns, guaranteed yields, or real
+          market performance. Cryptocurrency investments carry significant risk
+          including potential total loss of principal. Past performance does not
+          predict future results. This platform is for educational and
+          entertainment purposes. Always consult qualified financial advisors
+          before making investment decisions. GTT token values and market data
+          shown are simulated examples, not real trading data.
         </p>
       </div>
     </div>

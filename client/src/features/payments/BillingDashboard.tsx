@@ -300,7 +300,7 @@ export default function BillingDashboard() {
                   <Progress value={treasury.healthScore} className="mb-2" />
                   <div
                     className={`text-sm font-medium ${getRiskColor(
-                      treasury.riskLevel
+                      treasury.riskLevel,
                     )}`}
                   >
                     {treasury.riskLevel} RISK
@@ -362,7 +362,7 @@ export default function BillingDashboard() {
                         <div className="flex items-center space-x-4">
                           <div
                             className={`w-3 h-3 rounded-full ${getStatusColor(
-                              invoice.status
+                              invoice.status,
                             )}`}
                           ></div>
                           <div>
@@ -386,8 +386,8 @@ export default function BillingDashboard() {
                               invoice.status === "paid"
                                 ? "default"
                                 : invoice.status === "pending"
-                                ? "secondary"
-                                : "destructive"
+                                  ? "secondary"
+                                  : "destructive"
                             }
                           >
                             {invoice.status.toUpperCase()}

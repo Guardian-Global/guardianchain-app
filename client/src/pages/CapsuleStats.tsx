@@ -43,7 +43,10 @@ export default function CapsuleStats() {
           <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div
+                key={i}
+                className="h-32 bg-gray-200 dark:bg-gray-700 rounded"
+              ></div>
             ))}
           </div>
         </div>
@@ -54,7 +57,9 @@ export default function CapsuleStats() {
   return (
     <div className="container mx-auto p-4 md:p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Capsule Statistics</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Capsule Statistics
+        </h1>
         <Badge variant="outline" className="text-sm">
           <TrendingUp className="w-4 h-4 mr-1" />
           Live Data
@@ -124,11 +129,15 @@ export default function CapsuleStats() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-gray-900 dark:text-white">Performance Metrics</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">
+              Performance Metrics
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Verification Rate</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Verification Rate
+              </span>
               <span className="text-sm font-medium text-gray-900 dark:text-white">
                 {stats?.verificationRate}%
               </span>
@@ -136,33 +145,47 @@ export default function CapsuleStats() {
             <Progress value={stats?.verificationRate} className="h-2" />
 
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Engagement Rate</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Engagement Rate
+              </span>
               <span className="text-sm font-medium text-gray-900 dark:text-white">
                 {stats?.performanceMetrics.engagementRate}%
               </span>
             </div>
-            <Progress value={stats?.performanceMetrics.engagementRate} className="h-2" />
+            <Progress
+              value={stats?.performanceMetrics.engagementRate}
+              className="h-2"
+            />
 
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Truth Score</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">
+                Truth Score
+              </span>
               <span className="text-sm font-medium text-gray-900 dark:text-white">
                 {stats?.performanceMetrics.truthScore}/100
               </span>
             </div>
-            <Progress value={stats?.performanceMetrics.truthScore} className="h-2" />
+            <Progress
+              value={stats?.performanceMetrics.truthScore}
+              className="h-2"
+            />
           </CardContent>
         </Card>
 
         <Card className="bg-white dark:bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-gray-900 dark:text-white">Category Breakdown</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-white">
+              Category Breakdown
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {stats?.categoryBreakdown.map((category, index) => (
                 <div key={index} className="space-y-1">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">{category.category}</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      {category.category}
+                    </span>
                     <span className="text-gray-900 dark:text-white font-medium">
                       {category.count} ({category.percentage}%)
                     </span>
@@ -178,14 +201,21 @@ export default function CapsuleStats() {
       {/* Top Performing Capsules */}
       <Card className="bg-white dark:bg-gray-800">
         <CardHeader>
-          <CardTitle className="text-gray-900 dark:text-white">Top Performing Capsules</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-white">
+            Top Performing Capsules
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {stats?.topPerformingCapsules.map((capsule, index) => (
-              <div key={capsule.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+              <div
+                key={capsule.id}
+                className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700"
+              >
                 <div className="flex-1">
-                  <h3 className="font-medium text-gray-900 dark:text-white">{capsule.title}</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-white">
+                    {capsule.title}
+                  </h3>
                   <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600 dark:text-gray-400">
                     <span className="flex items-center">
                       <Eye className="w-4 h-4 mr-1" />
@@ -198,9 +228,14 @@ export default function CapsuleStats() {
                     <span>Grief Score: {capsule.griefScore}</span>
                   </div>
                 </div>
-                <Badge 
-                  variant={capsule.verificationStatus === "verified" ? "default" : 
-                          capsule.verificationStatus === "pending" ? "secondary" : "destructive"}
+                <Badge
+                  variant={
+                    capsule.verificationStatus === "verified"
+                      ? "default"
+                      : capsule.verificationStatus === "pending"
+                        ? "secondary"
+                        : "destructive"
+                  }
                   className="ml-4"
                 >
                   {capsule.verificationStatus}

@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Mail, User, Building, MapPin } from "lucide-react";
@@ -29,7 +35,9 @@ interface ProfileCompletionProps {
   onComplete: () => void;
 }
 
-export default function ProfileCompletion({ onComplete }: ProfileCompletionProps) {
+export default function ProfileCompletion({
+  onComplete,
+}: ProfileCompletionProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
@@ -80,7 +88,8 @@ export default function ProfileCompletion({ onComplete }: ProfileCompletionProps
     } catch (error) {
       toast({
         title: "Update Failed",
-        description: "There was an error updating your profile. Please try again.",
+        description:
+          "There was an error updating your profile. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -140,7 +149,9 @@ export default function ProfileCompletion({ onComplete }: ProfileCompletionProps
 
       {/* Profile Progress */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">Complete Your Profile</h3>
+        <h3 className="text-lg font-semibold text-white">
+          Complete Your Profile
+        </h3>
         <Badge variant="outline" className="text-slate-300">
           {Math.round(profileProgress)}% Complete
         </Badge>
@@ -294,7 +305,7 @@ export default function ProfileCompletion({ onComplete }: ProfileCompletionProps
           >
             {isLoading ? "Saving Profile..." : "Complete Profile"}
           </Button>
-          
+
           {!user?.emailVerified && (
             <p className="text-yellow-400 text-sm mt-2 text-center">
               Please verify your email before completing your profile

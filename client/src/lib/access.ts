@@ -96,10 +96,10 @@ export function getTierRestrictions(user: UserProfile): {
       tier.id === "explorer"
         ? "community"
         : tier.id === "seeker"
-        ? "email"
-        : tier.id === "creator"
-        ? "priority"
-        : "dedicated",
+          ? "email"
+          : tier.id === "creator"
+            ? "priority"
+            : "dedicated",
   };
 }
 
@@ -108,7 +108,7 @@ export function getTierRestrictions(user: UserProfile): {
  */
 export function calculateYieldWithBonus(
   baseYield: number,
-  user: UserProfile
+  user: UserProfile,
 ): number {
   const tier = getTierById(user.tierId);
   return baseYield * (1 + tier.yieldBonus);
@@ -118,7 +118,7 @@ export function calculateYieldWithBonus(
  * Get upgrade urgency level
  */
 export function getUpgradeUrgency(
-  user: UserProfile
+  user: UserProfile,
 ): "none" | "low" | "medium" | "high" {
   const usagePercentage = getMintUsagePercentage(user);
   const tier = getTierById(user.tierId);
@@ -145,7 +145,7 @@ export function canDonate(user: UserProfile, donationAmount: number): boolean {
  */
 export function canUpgradeToTier(
   currentTierId: string,
-  targetTierId: string
+  targetTierId: string,
 ): boolean {
   const currentTier = getTierById(currentTierId);
   const targetTier = getTierById(targetTierId);
@@ -159,7 +159,7 @@ export function canUpgradeToTier(
  */
 export function getRecommendedTier(
   user: UserProfile,
-  projectedUsage?: number
+  projectedUsage?: number,
 ): Tier {
   const currentTier = getTierById(user.tierId);
   const usage = projectedUsage || user.mintsThisPeriod;
@@ -167,7 +167,7 @@ export function getRecommendedTier(
   // Find the most cost-effective tier for the usage
   const suitableTiers = getAllTiers().filter(
     (tier) =>
-      tier.capsuleLimit >= usage && tier.priceUSD >= currentTier.priceUSD
+      tier.capsuleLimit >= usage && tier.priceUSD >= currentTier.priceUSD,
   );
 
   return suitableTiers.length > 0 ? suitableTiers[0] : currentTier;

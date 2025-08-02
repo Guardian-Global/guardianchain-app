@@ -3,15 +3,15 @@ import { createPortal } from "react-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, 
-  X, 
-  Lightbulb, 
-  Target, 
+import {
+  ArrowRight,
+  X,
+  Lightbulb,
+  Target,
   Zap,
   ChevronLeft,
   ChevronRight,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 
 interface TooltipStep {
@@ -36,12 +36,12 @@ interface InteractiveTooltipProps {
   currentStepIndex?: number;
 }
 
-export default function InteractiveTooltip({ 
-  steps, 
-  isActive, 
-  onComplete, 
+export default function InteractiveTooltip({
+  steps,
+  isActive,
+  onComplete,
   onClose,
-  currentStepIndex = 0 
+  currentStepIndex = 0,
 }: InteractiveTooltipProps) {
   const [currentStep, setCurrentStep] = useState(currentStepIndex);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -122,7 +122,7 @@ export default function InteractiveTooltip({
 
   const getTooltipStyle = () => {
     let transform = "translate(-50%, -50%)";
-    
+
     switch (currentTooltip.position) {
       case "top":
         transform = "translate(-50%, -100%)";
@@ -220,8 +220,7 @@ export default function InteractiveTooltip({
           {/* Reward badge */}
           {currentTooltip.reward && (
             <Badge className="mb-3 bg-gradient-to-r from-yellow-600 to-orange-600">
-              <Target className="w-3 h-3 mr-1" />
-              +{currentTooltip.reward} GTT
+              <Target className="w-3 h-3 mr-1" />+{currentTooltip.reward} GTT
             </Badge>
           )}
 
@@ -249,11 +248,11 @@ export default function InteractiveTooltip({
               >
                 <ChevronLeft className="w-4 h-4" />
               </Button>
-              
+
               <span className="text-xs text-slate-400 px-2">
                 {currentStep + 1} of {steps.length}
               </span>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -277,7 +276,7 @@ export default function InteractiveTooltip({
               >
                 Skip Tour
               </Button>
-              
+
               <Button
                 size="sm"
                 onClick={nextStep}
@@ -291,7 +290,7 @@ export default function InteractiveTooltip({
         </CardContent>
       </Card>
     </>,
-    document.body
+    document.body,
   );
 }
 

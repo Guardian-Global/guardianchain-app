@@ -24,7 +24,7 @@ future_enhancements:
   cta={[
     { label: "Submit Bug", url: "#submit", style: "primary" },
     { label: "View Leaderboard", url: "#leaderboard", style: "secondary" },
-    { label: "Download Disclosure", url: "#disclosure", style: "holo" }
+    { label: "Download Disclosure", url: "#disclosure", style: "holo" },
   ]}
 />
 
@@ -32,11 +32,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/security-bounty" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -44,20 +48,22 @@ future_enhancements:
 ---
 
 ## <span id="submit">Submit Vulnerability or Bug <BugIcon /></span>
-<BugSubmissionForm />
-- Every bug is scored by AI and reviewed by DAO/security council
-- Anonymous and named submissions allowed (proof-of-human for bounty payout)
+
+<BugSubmissionForm />- Every bug is scored by AI and reviewed by DAO/security
+council - Anonymous and named submissions allowed (proof-of-human for bounty
+payout)
 
 ---
 
 ## <span id="leaderboard">Live Leaderboard & Bounty Payouts <LeaderboardIcon /></span>
-<Leaderboard />
-- Top contributors, recent payouts, and DAO/community upvote overlays
-- Downloadable public audit log
+
+<Leaderboard />- Top contributors, recent payouts, and DAO/community upvote
+overlays - Downloadable public audit log
 
 ---
 
 ## <span id="disclosure">Responsible Disclosure Policy <LegalIcon /></span>
+
 - All vulnerabilities are responsibly disclosed to affected parties before public release
 - Time-stamped, NFT-minted disclosure logs for full transparency
 - Emergency DAO proposals for critical issues

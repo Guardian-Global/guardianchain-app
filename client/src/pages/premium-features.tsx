@@ -59,7 +59,9 @@ const PremiumFeaturesPage: React.FC = () => {
                 <CardTitle>Enterprise Authentication</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>Enhanced authentication features moved to unified auth system.</p>
+                <p>
+                  Enhanced authentication features moved to unified auth system.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>

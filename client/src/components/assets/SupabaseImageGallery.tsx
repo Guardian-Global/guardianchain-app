@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Download, 
-  ExternalLink, 
-  Copy, 
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  ExternalLink,
+  Copy,
   Star,
-  ZoomIn
+  ZoomIn,
 } from "lucide-react";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useToast } from "@/hooks/use-toast";
@@ -28,17 +33,18 @@ export function SupabaseImageGallery({
   maxImages = 12,
   showControls = true,
   gridCols = 3,
-  className = ""
+  className = "",
 }: SupabaseImageGalleryProps) {
-  const { getAssetsByType, getAssetsByCategory, isLoading } = useSupabaseAssets();
+  const { getAssetsByType, getAssetsByCategory, isLoading } =
+    useSupabaseAssets();
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState<any>(null);
 
   // Get images based on category or all images
-  const allImages = category 
+  const allImages = category
     ? getAssetsByCategory(category)
     : getAssetsByType("image");
-  
+
   const images = allImages.slice(0, maxImages);
 
   const copyImageUrl = async (asset: any) => {
@@ -52,16 +58,16 @@ export function SupabaseImageGallery({
       toast({
         title: "Copy Failed",
         description: "Failed to copy URL to clipboard",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   const downloadImage = (asset: any) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = asset.url;
     link.download = asset.name;
-    link.target = '_blank';
+    link.target = "_blank";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -84,9 +90,7 @@ export function SupabaseImageGallery({
         <CardContent className="p-8 text-center">
           <p className="text-slate-400">No images found in Supabase storage</p>
           {category && (
-            <p className="text-sm text-slate-500 mt-2">
-              Category: {category}
-            </p>
+            <p className="text-sm text-slate-500 mt-2">Category: {category}</p>
           )}
         </CardContent>
       </Card>
@@ -96,7 +100,7 @@ export function SupabaseImageGallery({
   const gridColsClass = {
     2: "grid-cols-1 md:grid-cols-2",
     3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-    4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
   };
 
   return (
@@ -105,9 +109,13 @@ export function SupabaseImageGallery({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-semibold text-white">
-            {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Images` : 'Image Gallery'}
+            {category
+              ? `${category.charAt(0).toUpperCase() + category.slice(1)} Images`
+              : "Image Gallery"}
           </h3>
-          <p className="text-slate-400">{images.length} images from Supabase storage</p>
+          <p className="text-slate-400">
+            {images.length} images from Supabase storage
+          </p>
         </div>
         {showControls && (
           <div className="flex items-center space-x-2">
@@ -121,7 +129,10 @@ export function SupabaseImageGallery({
       {/* Image Grid */}
       <div className={`grid ${gridColsClass[gridCols]} gap-4`}>
         {images.map((image, index) => (
-          <Card key={image.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors group">
+          <Card
+            key={image.id}
+            className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-colors group"
+          >
             <CardContent className="p-0">
               <div className="relative aspect-video overflow-hidden rounded-t-lg">
                 <img
@@ -130,7 +141,7 @@ export function SupabaseImageGallery({
                   className="w-full h-full object-cover transition-transform group-hover:scale-105"
                   loading="lazy"
                 />
-                
+
                 {/* Overlay Controls */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex items-center space-x-2">
@@ -144,8 +155,13 @@ export function SupabaseImageGallery({
                           <ZoomIn className="h-4 w-4" />
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-4xl bg-slate-900 border-slate-700" aria-describedby="image-preview">
-                        <DialogTitle className="sr-only">Image Preview - {image.name}</DialogTitle>
+                      <DialogContent
+                        className="max-w-4xl bg-slate-900 border-slate-700"
+                        aria-describedby="image-preview"
+                      >
+                        <DialogTitle className="sr-only">
+                          Image Preview - {image.name}
+                        </DialogTitle>
                         <div className="relative">
                           <img
                             src={image.url}
@@ -153,29 +169,35 @@ export function SupabaseImageGallery({
                             className="w-full h-auto max-h-[80vh] object-contain"
                           />
                           <div className="absolute top-4 right-4 flex space-x-2">
-                            <Button size="sm" onClick={() => copyImageUrl(image)}>
+                            <Button
+                              size="sm"
+                              onClick={() => copyImageUrl(image)}
+                            >
                               <Copy className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" onClick={() => downloadImage(image)}>
+                            <Button
+                              size="sm"
+                              onClick={() => downloadImage(image)}
+                            >
                               <Download className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
                       </DialogContent>
                     </Dialog>
-                    
+
                     <Button
-                      size="sm" 
+                      size="sm"
                       variant="secondary"
                       onClick={() => copyImageUrl(image)}
                     >
                       <Copy className="h-4 w-4" />
                     </Button>
-                    
+
                     <Button
                       size="sm"
                       variant="secondary"
-                      onClick={() => window.open(image.url, '_blank')}
+                      onClick={() => window.open(image.url, "_blank")}
                     >
                       <ExternalLink className="h-4 w-4" />
                     </Button>
@@ -194,14 +216,17 @@ export function SupabaseImageGallery({
               {/* Image Info */}
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-white truncate" title={image.name}>
+                  <h4
+                    className="font-medium text-white truncate"
+                    title={image.name}
+                  >
                     {image.name}
                   </h4>
                   <Badge variant="outline" className="text-xs">
                     {image.category}
                   </Badge>
                 </div>
-                
+
                 <div className="flex items-center justify-between text-sm text-slate-400">
                   <span>{(image.size / 1024).toFixed(1)}KB</span>
                   <span>{image.type.toUpperCase()}</span>
@@ -236,7 +261,10 @@ export function SupabaseImageGallery({
       {/* Show More Button */}
       {allImages.length > maxImages && (
         <div className="text-center">
-          <Button variant="outline" className="text-purple-400 border-purple-400 hover:bg-purple-400/10">
+          <Button
+            variant="outline"
+            className="text-purple-400 border-purple-400 hover:bg-purple-400/10"
+          >
             View All {allImages.length} Images
           </Button>
         </div>

@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Wallet, 
-  CheckCircle, 
-  ExternalLink, 
+import {
+  Wallet,
+  CheckCircle,
+  ExternalLink,
   Info,
   Shield,
-  Coins
+  Coins,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,7 +19,10 @@ interface WalletConnectionProps {
   onSkip?: () => void;
 }
 
-export default function WalletConnection({ onComplete, onSkip }: WalletConnectionProps) {
+export default function WalletConnection({
+  onComplete,
+  onSkip,
+}: WalletConnectionProps) {
   const { address, isConnected, chain } = useAccount();
   const { connect, connectors, error, isLoading } = useConnect();
   const { disconnect } = useDisconnect();
@@ -32,7 +35,8 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
       setHasConnected(true);
       toast({
         title: "Wallet Connected!",
-        description: "Your wallet has been successfully connected to GUARDIANCHAIN.",
+        description:
+          "Your wallet has been successfully connected to GUARDIANCHAIN.",
       });
     } catch (error) {
       toast({
@@ -51,18 +55,19 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
     {
       icon: <Coins className="h-5 w-5 text-yellow-400" />,
       title: "GTT Token Integration",
-      description: "Earn, stake, and spend GTT tokens directly from your wallet"
+      description:
+        "Earn, stake, and spend GTT tokens directly from your wallet",
     },
     {
       icon: <Shield className="h-5 w-5 text-green-400" />,
       title: "Blockchain Verification",
-      description: "Sign transactions to prove ownership of truth capsules"
+      description: "Sign transactions to prove ownership of truth capsules",
     },
     {
       icon: <CheckCircle className="h-5 w-5 text-purple-400" />,
       title: "Decentralized Identity",
-      description: "Use your wallet as a secure, decentralized identity"
-    }
+      description: "Use your wallet as a secure, decentralized identity",
+    },
   ];
 
   if (isConnected && address) {
@@ -72,7 +77,9 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
           <div className="mx-auto w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
             <CheckCircle className="h-8 w-8 text-green-400" />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">Wallet Connected!</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">
+            Wallet Connected!
+          </h3>
           <p className="text-slate-400">
             Your wallet is now connected and ready for blockchain features.
           </p>
@@ -106,10 +113,15 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
         <div className="space-y-3">
           <h4 className="text-white font-medium">What's Next?</h4>
           {walletBenefits.map((benefit, index) => (
-            <div key={index} className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
+            <div
+              key={index}
+              className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg"
+            >
               {benefit.icon}
               <div>
-                <p className="text-white text-sm font-medium">{benefit.title}</p>
+                <p className="text-white text-sm font-medium">
+                  {benefit.title}
+                </p>
                 <p className="text-slate-400 text-sm">{benefit.description}</p>
               </div>
             </div>
@@ -133,10 +145,12 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
         <div className="mx-auto w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-4">
           <Wallet className="h-8 w-8 text-purple-400" />
         </div>
-        <h3 className="text-xl font-semibold text-white mb-2">Connect Your Wallet</h3>
+        <h3 className="text-xl font-semibold text-white mb-2">
+          Connect Your Wallet
+        </h3>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          Connect your Web3 wallet to unlock blockchain features like GTT token management 
-          and decentralized verification.
+          Connect your Web3 wallet to unlock blockchain features like GTT token
+          management and decentralized verification.
         </p>
       </div>
 
@@ -144,20 +158,28 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
       <Alert className="bg-blue-500/10 border-blue-500/20">
         <Info className="h-4 w-4 text-blue-400" />
         <AlertDescription className="text-blue-200">
-          <strong>This step is optional.</strong> You can use GUARDIANCHAIN without a wallet, 
-          but connecting one unlocks additional blockchain features.
+          <strong>This step is optional.</strong> You can use GUARDIANCHAIN
+          without a wallet, but connecting one unlocks additional blockchain
+          features.
         </AlertDescription>
       </Alert>
 
       {/* Benefits */}
       <div>
-        <h4 className="text-white font-medium mb-4">Benefits of Connecting Your Wallet</h4>
+        <h4 className="text-white font-medium mb-4">
+          Benefits of Connecting Your Wallet
+        </h4>
         <div className="space-y-3">
           {walletBenefits.map((benefit, index) => (
-            <div key={index} className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
+            <div
+              key={index}
+              className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg"
+            >
               {benefit.icon}
               <div>
-                <p className="text-white text-sm font-medium">{benefit.title}</p>
+                <p className="text-white text-sm font-medium">
+                  {benefit.title}
+                </p>
                 <p className="text-slate-400 text-sm">{benefit.description}</p>
               </div>
             </div>
@@ -170,7 +192,7 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
         <h4 className="text-white font-medium mb-4">Choose Your Wallet</h4>
         <div className="grid gap-3">
           {connectors.map((connector) => (
-            <Card 
+            <Card
               key={connector.uid}
               className="bg-slate-700/50 border-slate-600 cursor-pointer transition-all hover:bg-slate-700/70"
             >
@@ -213,7 +235,7 @@ export default function WalletConnection({ onComplete, onSkip }: WalletConnectio
             Skip for Now
           </Button>
         )}
-        
+
         <Button
           onClick={handleComplete}
           disabled={!hasConnected && !isConnected}

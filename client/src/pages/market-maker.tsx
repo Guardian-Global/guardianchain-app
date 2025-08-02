@@ -1,5 +1,5 @@
-import React from 'react';
-import { MarketMakerHub } from '@/components/trading/MarketMakerHub';
+import React from "react";
+import { MarketMakerHub } from "@/components/trading/MarketMakerHub";
 
 export default function MarketMakerPage() {
   return (
@@ -8,10 +8,11 @@ export default function MarketMakerPage() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">Market Maker Hub</h1>
           <p className="text-slate-400">
-            Professional market making strategies and automated liquidity provision
+            Professional market making strategies and automated liquidity
+            provision
           </p>
         </div>
-        
+
         <MarketMakerHub />
       </div>
     </div>

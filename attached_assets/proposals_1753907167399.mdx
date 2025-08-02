@@ -23,7 +23,7 @@ future_enhancements:
   cta={[
     { label: "Browse Proposals", url: "#proposal-list", style: "primary" },
     { label: "Submit Proposal", url: "#submit", style: "secondary" },
-    { label: "Vote Dashboard", url: "#dashboard", style: "holo" }
+    { label: "Vote Dashboard", url: "#dashboard", style: "holo" },
   ]}
 />
 
@@ -31,11 +31,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/proposals" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -43,18 +47,19 @@ future_enhancements:
 ---
 
 ## <span id="proposal-list">All Proposals & Votes <VoteIcon /></span>
-<ProposalArchive />
-- Search, filter, or replay any DAO vote, outcome, or impact
+
+<ProposalArchive />- Search, filter, or replay any DAO vote, outcome, or impact
 
 ---
 
 ## <span id="submit">Submit New Proposal <SubmitIcon /></span>
-<ProposalForm />
-- Draft, preview, and submit new protocol or governance upgrades
+
+<ProposalForm />- Draft, preview, and submit new protocol or governance upgrades
 
 ---
 
 ## <span id="dashboard">Vote Dashboard & Timeline <TimelineIcon /></span>
+
 <VoteDashboard />
 
 ---

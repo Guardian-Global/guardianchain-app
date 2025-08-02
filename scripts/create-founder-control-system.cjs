@@ -1,10 +1,10 @@
 const fs = require("fs");
 
 function createFounderControlSystem() {
-    console.log("👑 CREATING FOUNDER CONTROL SYSTEM");
-    console.log("=================================");
+  console.log("👑 CREATING FOUNDER CONTROL SYSTEM");
+  console.log("=================================");
 
-    const founderControlContract = `
+  const founderControlContract = `
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -119,7 +119,7 @@ contract GTTToken is ERC20, Ownable, Pausable {
     }
 }`;
 
-    const founderDashboard = `
+  const founderDashboard = `
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
@@ -300,18 +300,26 @@ export default function FounderControlDashboard() {
     );
 }`;
 
-    // Save files
-    fs.writeFileSync('contracts/GTTTokenWithFounderControl.sol', founderControlContract);
-    fs.writeFileSync('client/src/components/FounderControlDashboard.tsx', founderDashboard);
-    
-    console.log("✅ Founder control system created");
-    console.log("📄 Smart contract: contracts/GTTTokenWithFounderControl.sol");
-    console.log("🖥️ Dashboard: client/src/components/FounderControlDashboard.tsx");
-    
-    return {
-        contractPath: 'contracts/GTTTokenWithFounderControl.sol',
-        dashboardPath: 'client/src/components/FounderControlDashboard.tsx'
-    };
+  // Save files
+  fs.writeFileSync(
+    "contracts/GTTTokenWithFounderControl.sol",
+    founderControlContract,
+  );
+  fs.writeFileSync(
+    "client/src/components/FounderControlDashboard.tsx",
+    founderDashboard,
+  );
+
+  console.log("✅ Founder control system created");
+  console.log("📄 Smart contract: contracts/GTTTokenWithFounderControl.sol");
+  console.log(
+    "🖥️ Dashboard: client/src/components/FounderControlDashboard.tsx",
+  );
+
+  return {
+    contractPath: "contracts/GTTTokenWithFounderControl.sol",
+    dashboardPath: "client/src/components/FounderControlDashboard.tsx",
+  };
 }
 
 createFounderControlSystem();

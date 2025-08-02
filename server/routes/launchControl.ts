@@ -128,13 +128,13 @@ router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
       try {
         const deploymentFile = path.join(
           deploymentsDir,
-          `${network.name}_gtt.json`
+          `${network.name}_gtt.json`,
         );
         const stats = await fs.stat(deploymentFile);
 
         if (stats.isFile()) {
           const deployment = JSON.parse(
-            await fs.readFile(deploymentFile, "utf8")
+            await fs.readFile(deploymentFile, "utf8"),
           );
           network.status = "deployed";
           network.contractAddress = deployment.contractAddress;
@@ -145,15 +145,15 @@ router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
           try {
             const liquidityFiles = await fs.readdir(liquidityDir);
             const networkLiquidityFile = liquidityFiles.find((f) =>
-              f.startsWith(network.name)
+              f.startsWith(network.name),
             );
 
             if (networkLiquidityFile) {
               const liquidityData = JSON.parse(
                 await fs.readFile(
                   path.join(liquidityDir, networkLiquidityFile),
-                  "utf8"
-                )
+                  "utf8",
+                ),
               );
 
               network.liquidityPools = liquidityData.map((pool: any) => ({
@@ -179,21 +179,21 @@ router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
     try {
       const applicationsDir = path.join(
         deploymentsDir,
-        "exchange-applications"
+        "exchange-applications",
       );
       const applicationFiles = await fs.readdir(applicationsDir);
 
       for (const exchange of exchanges) {
         const applicationFile = applicationFiles.find((f) =>
-          f.toLowerCase().includes(exchange.name.toLowerCase())
+          f.toLowerCase().includes(exchange.name.toLowerCase()),
         );
 
         if (applicationFile) {
           const application = JSON.parse(
             await fs.readFile(
               path.join(applicationsDir, applicationFile),
-              "utf8"
-            )
+              "utf8",
+            ),
           );
 
           exchange.status = application.status;
@@ -213,7 +213,7 @@ router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
 
       for (const bridge of bridges) {
         const bridgeFile = bridgeFiles.find((f) =>
-          f.toLowerCase().includes(bridge.name.toLowerCase().replace(" ", "_"))
+          f.toLowerCase().includes(bridge.name.toLowerCase().replace(" ", "_")),
         );
 
         if (bridgeFile) {
@@ -226,20 +226,20 @@ router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
 
     // Calculate overall progress
     const deployedNetworks = networks.filter(
-      (n) => n.status === "deployed"
+      (n) => n.status === "deployed",
     ).length;
     const appliedExchanges = exchanges.filter(
-      (e) => e.status !== "not_applied"
+      (e) => e.status !== "not_applied",
     ).length;
     const configuredBridges = bridges.filter(
-      (b) => b.status !== "not_configured"
+      (b) => b.status !== "not_configured",
     ).length;
 
     const totalTasks = networks.length + exchanges.length + bridges.length;
     const completedTasks =
       deployedNetworks + appliedExchanges + configuredBridges;
     const completionPercentage = Math.round(
-      (completedTasks / totalTasks) * 100
+      (completedTasks / totalTasks) * 100,
     );
 
     // Determine current phase
@@ -322,7 +322,7 @@ router.post("/add-liquidity", isDebugAuthenticated, async (req, res) => {
     // Execute liquidity addition script
     const scriptPath = path.join(process.cwd(), "scripts", "addLiquidity.js");
     const command = `node ${scriptPath} --network ${network} --router ${dex} --pair GTT/ETH --amounts ${amounts.join(
-      ","
+      ",",
     )}`;
 
     const { stdout, stderr } = await execAsync(command);
@@ -365,7 +365,7 @@ router.post(
       const scriptPath = path.join(
         process.cwd(),
         "scripts",
-        `apply${exchange}.js`
+        `apply${exchange}.js`,
       );
       const command = `node ${scriptPath} --action submit`;
 
@@ -389,7 +389,7 @@ router.post(
         message: error.message,
       });
     }
-  }
+  },
 );
 
 // Configure cross-chain bridge
@@ -404,7 +404,7 @@ router.post("/configure-bridge", isDebugAuthenticated, async (req, res) => {
     }
 
     console.log(
-      `Configuring ${bridge} bridge: ${sourceNetwork} → ${targetNetwork}...`
+      `Configuring ${bridge} bridge: ${sourceNetwork} → ${targetNetwork}...`,
     );
 
     // Execute bridge setup script
@@ -467,27 +467,31 @@ router.post("/test-bridge", isDebugAuthenticated, async (req, res) => {
 });
 
 // Get deployment logs
-router.get("/deployment-logs/:network", isDebugAuthenticated, async (req, res) => {
-  try {
-    const { network } = req.params;
+router.get(
+  "/deployment-logs/:network",
+  isDebugAuthenticated,
+  async (req, res) => {
+    try {
+      const { network } = req.params;
 
-    const deploymentsDir = path.join(process.cwd(), "deployments");
-    const deploymentFile = path.join(deploymentsDir, `${network}_gtt.json`);
+      const deploymentsDir = path.join(process.cwd(), "deployments");
+      const deploymentFile = path.join(deploymentsDir, `${network}_gtt.json`);
 
-    const deployment = JSON.parse(await fs.readFile(deploymentFile, "utf8"));
+      const deployment = JSON.parse(await fs.readFile(deploymentFile, "utf8"));
 
-    res.json({
-      success: true,
-      deployment,
-    });
-  } catch (error) {
-    console.error("Failed to get deployment logs:", error);
-    res.status(404).json({
-      error: "Deployment logs not found",
-      message: error.message,
-    });
-  }
-});
+      res.json({
+        success: true,
+        deployment,
+      });
+    } catch (error) {
+      console.error("Failed to get deployment logs:", error);
+      res.status(404).json({
+        error: "Deployment logs not found",
+        message: error.message,
+      });
+    }
+  },
+);
 
 // Emergency pause functionality
 router.post("/emergency-pause", isDebugAuthenticated, async (req, res) => {
@@ -517,17 +521,17 @@ router.post("/emergency-pause", isDebugAuthenticated, async (req, res) => {
 function generateNextActions(
   networks: any[],
   exchanges: any[],
-  bridges: any[]
+  bridges: any[],
 ): string[] {
   const actions: string[] = [];
 
   const pendingNetworks = networks.filter((n) => n.status === "pending");
   const deployedNetworks = networks.filter((n) => n.status === "deployed");
   const unappliedExchanges = exchanges.filter(
-    (e) => e.status === "not_applied"
+    (e) => e.status === "not_applied",
   );
   const unconfiguredBridges = bridges.filter(
-    (b) => b.status === "not_configured"
+    (b) => b.status === "not_configured",
   );
 
   if (pendingNetworks.length > 0) {
@@ -543,7 +547,7 @@ function generateNextActions(
 
   if (unappliedExchanges.length > 0) {
     actions.push(
-      `Submit listing applications to ${unappliedExchanges.length} exchanges`
+      `Submit listing applications to ${unappliedExchanges.length} exchanges`,
     );
   }
 

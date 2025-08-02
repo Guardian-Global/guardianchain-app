@@ -48,7 +48,8 @@ const TeamsEnhancedSecurity: React.FC = () => {
       value: 98,
       max: 100,
       status: "excellent",
-      description: "Multi-provider enterprise authentication with biometric support",
+      description:
+        "Multi-provider enterprise authentication with biometric support",
     },
     {
       name: "API Protection",
@@ -62,7 +63,8 @@ const TeamsEnhancedSecurity: React.FC = () => {
       value: 92,
       max: 100,
       status: "excellent",
-      description: "End-to-end encryption for sensitive data and communications",
+      description:
+        "End-to-end encryption for sensitive data and communications",
     },
     {
       name: "Access Control",
@@ -141,7 +143,9 @@ const TeamsEnhancedSecurity: React.FC = () => {
     setIsScanning(true);
     // Simulate security scan
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    setSecurityScore(Math.min(97, securityScore + Math.floor(Math.random() * 3)));
+    setSecurityScore(
+      Math.min(97, securityScore + Math.floor(Math.random() * 3)),
+    );
     setActiveThreats(Math.floor(Math.random() * 2));
     setIsScanning(false);
   };
@@ -191,9 +195,7 @@ const TeamsEnhancedSecurity: React.FC = () => {
               <Shield className="w-6 h-6 mr-2 text-green-400" />
               GUARDIANCHAIN Security Center
             </div>
-            <Badge className="bg-green-600 text-white">
-              Teams Enhanced
-            </Badge>
+            <Badge className="bg-green-600 text-white">Teams Enhanced</Badge>
           </CardTitle>
           <p className="text-slate-300">
             Enterprise-grade security monitoring and control for your Teams
@@ -217,7 +219,9 @@ const TeamsEnhancedSecurity: React.FC = () => {
               <div className="text-sm text-slate-400">Monitored & Blocked</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-purple-400 mb-2">24/7</div>
+              <div className="text-4xl font-bold text-purple-400 mb-2">
+                24/7
+              </div>
               <div className="text-slate-300">Monitoring</div>
               <div className="text-sm text-slate-400">Always Protected</div>
             </div>
@@ -263,7 +267,9 @@ const TeamsEnhancedSecurity: React.FC = () => {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-white font-medium">{metric.name}</h3>
-                  <Badge className={`${getStatusBg(metric.status)} ${getStatusColor(metric.status)} border-0`}>
+                  <Badge
+                    className={`${getStatusBg(metric.status)} ${getStatusColor(metric.status)} border-0`}
+                  >
                     {metric.value}%
                   </Badge>
                 </div>
@@ -283,15 +289,20 @@ const TeamsEnhancedSecurity: React.FC = () => {
         <TabsContent value="features" className="space-y-4">
           <div className="grid gap-4">
             {teamsSecurityFeatures.map((feature) => (
-              <Card key={feature.id} className="bg-slate-800/50 border-slate-700">
+              <Card
+                key={feature.id}
+                className="bg-slate-800/50 border-slate-700"
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${
-                        feature.enabled 
-                          ? "bg-green-600/20 text-green-400" 
-                          : "bg-gray-600/20 text-gray-400"
-                      }`}>
+                      <div
+                        className={`p-2 rounded-lg ${
+                          feature.enabled
+                            ? "bg-green-600/20 text-green-400"
+                            : "bg-gray-600/20 text-gray-400"
+                        }`}
+                      >
                         <feature.icon className="w-5 h-5" />
                       </div>
                       <div>
@@ -312,8 +323,8 @@ const TeamsEnhancedSecurity: React.FC = () => {
                           feature.impact === "high"
                             ? "destructive"
                             : feature.impact === "medium"
-                            ? "secondary"
-                            : "outline"
+                              ? "secondary"
+                              : "outline"
                         }
                         className="text-xs"
                       >

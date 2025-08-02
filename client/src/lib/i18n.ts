@@ -441,7 +441,7 @@ class I18nManager {
 
       // Set RTL direction for Arabic
       const language = SUPPORTED_LANGUAGES.find(
-        (lang) => lang.code === languageCode
+        (lang) => lang.code === languageCode,
       );
       if (language?.rtl) {
         document.documentElement.setAttribute("dir", "rtl");

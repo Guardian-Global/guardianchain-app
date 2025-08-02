@@ -4,17 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Zap, 
-  Users, 
-  TrendingUp, 
+import {
+  Zap,
+  Users,
+  TrendingUp,
   Share2,
   Crown,
   Timer,
   Gift,
   Target,
   Rocket,
-  DollarSign
+  DollarSign,
 } from "lucide-react";
 
 interface ViralPost {
@@ -34,9 +34,9 @@ export default function InstantViralTrigger() {
 
   const generateViralContent = async () => {
     if (!userHandle || !contentIdea) return;
-    
+
     setIsGenerating(true);
-    
+
     // Simulate AI generation
     setTimeout(() => {
       const posts: ViralPost[] = [
@@ -46,23 +46,35 @@ export default function InstantViralTrigger() {
           hashtags: ["#GTT", "#TruthToken", "#DeFi", "#Crypto", "#100x"],
           expectedViews: 25000,
           expectedClicks: 750,
-          gttReward: 50
+          gttReward: 50,
         },
         {
           platform: "TikTok",
           content: `POV: You discover a token that pays 8% fees to holders 💰\n\n${contentIdea}\n\nLink in bio to join the revolution! 🚀`,
-          hashtags: ["#crypto", "#defi", "#passiveincome", "#investing", "#gtt"],
+          hashtags: [
+            "#crypto",
+            "#defi",
+            "#passiveincome",
+            "#investing",
+            "#gtt",
+          ],
           expectedViews: 100000,
           expectedClicks: 2000,
-          gttReward: 100
+          gttReward: 100,
         },
         {
           platform: "Instagram",
           content: `The truth about ${contentIdea}...\n\nJust uploaded it to @guardianchain and already earned 25 GTT tokens! 💎\n\nFirst 100 people to verify get MASSIVE bonuses!\n\nStory highlight for details ↗️`,
-          hashtags: ["#truthseeker", "#crypto", "#blockchain", "#gtt", "#viral"],
+          hashtags: [
+            "#truthseeker",
+            "#crypto",
+            "#blockchain",
+            "#gtt",
+            "#viral",
+          ],
           expectedViews: 15000,
           expectedClicks: 450,
-          gttReward: 35
+          gttReward: 35,
         },
         {
           platform: "YouTube Short",
@@ -70,22 +82,30 @@ export default function InstantViralTrigger() {
           hashtags: ["#blockchain", "#crypto", "#makemoney", "#gtt", "#shorts"],
           expectedViews: 50000,
           expectedClicks: 1200,
-          gttReward: 75
-        }
+          gttReward: 75,
+        },
       ];
-      
+
       setViralPosts(posts);
       setIsGenerating(false);
     }, 2000);
   };
 
-  const totalExpectedViews = viralPosts.reduce((sum, post) => sum + post.expectedViews, 0);
-  const totalExpectedClicks = viralPosts.reduce((sum, post) => sum + post.expectedClicks, 0);
-  const totalGttReward = viralPosts.reduce((sum, post) => sum + post.gttReward, 0);
+  const totalExpectedViews = viralPosts.reduce(
+    (sum, post) => sum + post.expectedViews,
+    0,
+  );
+  const totalExpectedClicks = viralPosts.reduce(
+    (sum, post) => sum + post.expectedClicks,
+    0,
+  );
+  const totalGttReward = viralPosts.reduce(
+    (sum, post) => sum + post.gttReward,
+    0,
+  );
 
   return (
     <div className="space-y-8">
-      
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center mb-4">
@@ -95,7 +115,8 @@ export default function InstantViralTrigger() {
           </h2>
         </div>
         <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-          Generate platform-specific viral content that drives massive GTT trading volume
+          Generate platform-specific viral content that drives massive GTT
+          trading volume
         </p>
       </div>
 
@@ -119,7 +140,7 @@ export default function InstantViralTrigger() {
               className="bg-slate-700 border-slate-600 text-white"
             />
           </div>
-          
+
           <div>
             <label className="text-white font-semibold mb-2 block">
               Content/Truth Idea
@@ -131,8 +152,8 @@ export default function InstantViralTrigger() {
               className="bg-slate-700 border-slate-600 text-white h-24"
             />
           </div>
-          
-          <Button 
+
+          <Button
             onClick={generateViralContent}
             disabled={!userHandle || !contentIdea || isGenerating}
             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
@@ -166,7 +187,7 @@ export default function InstantViralTrigger() {
                 <div className="text-slate-400">Expected Views</div>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 border-green-500/30">
               <CardContent className="pt-6 text-center">
                 <TrendingUp className="w-8 h-8 text-green-400 mx-auto mb-2" />
@@ -176,7 +197,7 @@ export default function InstantViralTrigger() {
                 <div className="text-slate-400">Expected Clicks</div>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border-yellow-500/30">
               <CardContent className="pt-6 text-center">
                 <Gift className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
@@ -186,7 +207,7 @@ export default function InstantViralTrigger() {
                 <div className="text-slate-400">GTT Rewards</div>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-gradient-to-r from-red-600/20 to-pink-600/20 border-red-500/30">
               <CardContent className="pt-6 text-center">
                 <DollarSign className="w-8 h-8 text-red-400 mx-auto mb-2" />
@@ -203,7 +224,7 @@ export default function InstantViralTrigger() {
             <h3 className="text-2xl font-bold text-white text-center">
               Your Viral Content Strategy
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {viralPosts.map((post, index) => (
                 <Card key={index} className="bg-slate-800/50 border-slate-600">
@@ -221,18 +242,24 @@ export default function InstantViralTrigger() {
                         {post.content}
                       </p>
                     </div>
-                    
+
                     <div>
-                      <div className="text-slate-400 text-sm mb-2">Hashtags:</div>
+                      <div className="text-slate-400 text-sm mb-2">
+                        Hashtags:
+                      </div>
                       <div className="flex flex-wrap gap-2">
                         {post.hashtags.map((tag, i) => (
-                          <Badge key={i} variant="outline" className="text-blue-400 border-blue-400">
+                          <Badge
+                            key={i}
+                            variant="outline"
+                            className="text-blue-400 border-blue-400"
+                          >
                             {tag}
                           </Badge>
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <div className="text-slate-400">Expected Views</div>
@@ -247,10 +274,12 @@ export default function InstantViralTrigger() {
                         </div>
                       </div>
                     </div>
-                    
-                    <Button 
+
+                    <Button
                       className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                      onClick={() => navigator.clipboard.writeText(post.content)}
+                      onClick={() =>
+                        navigator.clipboard.writeText(post.content)
+                      }
                     >
                       <Share2 className="w-4 h-4 mr-2" />
                       Copy & Post Now
@@ -269,22 +298,23 @@ export default function InstantViralTrigger() {
                 ⚠️ Post These Within 2 Hours for Maximum Impact
               </h3>
               <p className="text-slate-300 mb-6">
-                Viral content has a short window. Post all 4 platforms within 2 hours to maximize 
-                cross-platform momentum and GTT trading volume surge.
+                Viral content has a short window. Post all 4 platforms within 2
+                hours to maximize cross-platform momentum and GTT trading volume
+                surge.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button 
+                <Button
                   size="lg"
                   className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                  onClick={() => window.location.href = '/create-capsule'}
+                  onClick={() => (window.location.href = "/create-capsule")}
                 >
                   Create Truth Capsule First
                 </Button>
-                <Button 
+                <Button
                   size="lg"
                   variant="outline"
                   className="border-green-500 text-green-400 hover:bg-green-500/10"
-                  onClick={() => window.location.href = '/launch-bonuses'}
+                  onClick={() => (window.location.href = "/launch-bonuses")}
                 >
                   Check Launch Bonuses
                 </Button>
@@ -293,7 +323,6 @@ export default function InstantViralTrigger() {
           </Card>
         </>
       )}
-
     </div>
   );
 }

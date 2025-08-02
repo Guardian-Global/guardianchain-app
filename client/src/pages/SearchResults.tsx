@@ -4,7 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, Heart, MessageCircle, Share2, Search, Calendar, User, Tag } from "lucide-react";
+import {
+  Eye,
+  Heart,
+  MessageCircle,
+  Share2,
+  Search,
+  Calendar,
+  User,
+  Tag,
+} from "lucide-react";
 
 interface SearchResult {
   id: string;
@@ -39,8 +48,8 @@ export default function SearchResults() {
 
   // Extract query from URL parameters
   useEffect(() => {
-    const urlParams = new URLSearchParams(location.split('?')[1] || '');
-    const urlQuery = urlParams.get('q') || '';
+    const urlParams = new URLSearchParams(location.split("?")[1] || "");
+    const urlQuery = urlParams.get("q") || "";
     setQuery(urlQuery);
     setSearchInput(urlQuery);
     if (urlQuery) {
@@ -50,17 +59,19 @@ export default function SearchResults() {
 
   const performSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
-    
+
     setLoading(true);
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
-      if (!response.ok) throw new Error('Search failed');
-      
+      const response = await fetch(
+        `/api/search?q=${encodeURIComponent(searchQuery)}`,
+      );
+      if (!response.ok) throw new Error("Search failed");
+
       const data: SearchResponse = await response.json();
       setResults(data.results);
       setTotalResults(data.total);
     } catch (error) {
-      console.error('Search error:', error);
+      console.error("Search error:", error);
       setResults([]);
       setTotalResults(0);
     } finally {
@@ -76,19 +87,23 @@ export default function SearchResults() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "verified": return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "pending": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "rejected": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+      case "verified":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      case "rejected":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   };
 
@@ -100,7 +115,7 @@ export default function SearchResults() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
             Search Truth Capsules
           </h1>
-          
+
           <form onSubmit={handleSearch} className="flex gap-2 max-w-2xl">
             <Input
               type="text"
@@ -146,13 +161,18 @@ export default function SearchResults() {
             ) : results.length > 0 ? (
               <div className="space-y-4">
                 {results.map((result) => (
-                  <Card key={result.id} className="bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow">
+                  <Card
+                    key={result.id}
+                    className="bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow"
+                  >
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                           {result.title}
                         </h3>
-                        <Badge className={getStatusColor(result.verification_status)}>
+                        <Badge
+                          className={getStatusColor(result.verification_status)}
+                        >
                           {result.verification_status}
                         </Badge>
                       </div>
@@ -180,7 +200,11 @@ export default function SearchResults() {
                       {result.tags && result.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {result.tags.map((tag, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
+                            <Badge
+                              key={index}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               {tag}
                             </Badge>
                           ))}
@@ -206,7 +230,13 @@ export default function SearchResults() {
                             {parseInt(result.shares).toLocaleString()}
                           </span>
                         </div>
-                        <Button variant="outline" size="sm" onClick={() => window.location.href = `/capsule/${result.id}`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            (window.location.href = `/capsule/${result.id}`)
+                          }
+                        >
                           View Capsule
                         </Button>
                       </div>
@@ -222,7 +252,8 @@ export default function SearchResults() {
                     No Results Found
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    No capsules found matching "{query}". Try different keywords or check your spelling.
+                    No capsules found matching "{query}". Try different keywords
+                    or check your spelling.
                   </p>
                 </CardContent>
               </Card>
@@ -238,7 +269,8 @@ export default function SearchResults() {
                 Search Truth Capsules
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Enter keywords to search through thousands of truth capsules, testimonies, and verified content.
+                Enter keywords to search through thousands of truth capsules,
+                testimonies, and verified content.
               </p>
             </CardContent>
           </Card>

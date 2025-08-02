@@ -17,7 +17,7 @@ async function main() {
 
   if (parseFloat(balanceInMatic) < 0.02) {
     console.log(
-      "⚠️  WARNING: Low MATIC balance. Need at least 0.02 MATIC for deployment."
+      "⚠️  WARNING: Low MATIC balance. Need at least 0.02 MATIC for deployment.",
     );
     console.log("Please fund the deployer wallet:", deployer.address);
     console.log("Required: ~0.02 MATIC (~$0.02 USD)");
@@ -30,12 +30,12 @@ async function main() {
     "Network:",
     network.name,
     "Chain ID:",
-    network.chainId.toString()
+    network.chainId.toString(),
   );
 
   if (network.chainId !== 137n) {
     throw new Error(
-      "❌ Not connected to Polygon Mainnet! Expected Chain ID: 137"
+      "❌ Not connected to Polygon Mainnet! Expected Chain ID: 137",
     );
   }
 
@@ -45,7 +45,7 @@ async function main() {
   console.log("\n📄 Deploying GTT Token Contract...");
 
   const GTTToken = await hre.ethers.getContractFactory("GTTToken");
-  
+
   console.log("Token Configuration:");
   console.log("- Name: GUARDIANCHAIN Truth Token");
   console.log("- Symbol: GTT");
@@ -60,7 +60,7 @@ async function main() {
 
   // Verify deployment
   console.log("\n🔍 Verifying deployment...");
-  
+
   const tokenName = await gttToken.name();
   const tokenSymbol = await gttToken.symbol();
   const tokenDecimals = await gttToken.decimals();
@@ -71,7 +71,11 @@ async function main() {
   console.log("Token Symbol:", tokenSymbol);
   console.log("Token Decimals:", tokenDecimals.toString());
   console.log("Total Supply:", hre.ethers.formatEther(tokenSupply), "GTT");
-  console.log("Deployer Balance:", hre.ethers.formatEther(deployerBalance), "GTT");
+  console.log(
+    "Deployer Balance:",
+    hre.ethers.formatEther(deployerBalance),
+    "GTT",
+  );
 
   // Save deployment info
   const deploymentInfo = {
@@ -91,7 +95,7 @@ async function main() {
     __dirname,
     "..",
     "deployments",
-    "polygon-mainnet-gtt.json"
+    "polygon-mainnet-gtt.json",
   );
 
   // Create deployments directory if it doesn't exist

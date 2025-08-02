@@ -114,8 +114,8 @@ export default function TransactionPool({
         txType.type === "mint"
           ? `0x${Math.random().toString(16).substr(2, 8)}...`
           : txType.type === "verify"
-          ? `Capsule #${Math.floor(Math.random() * 1000)}`
-          : `0x${Math.random().toString(16).substr(2, 8)}...`,
+            ? `Capsule #${Math.floor(Math.random() * 1000)}`
+            : `0x${Math.random().toString(16).substr(2, 8)}...`,
       amount: Math.floor(Math.random() * 500) + 10,
       type: txType.type,
       fee: Math.round((Math.random() * 2 + 0.1) * 100) / 100,
@@ -146,10 +146,10 @@ export default function TransactionPool({
 
   const updateTransactionStatus = (
     id: string,
-    status: Transaction["status"]
+    status: Transaction["status"],
   ) => {
     setTransactions((prev) =>
-      prev.map((tx) => (tx.id === id ? { ...tx, status } : tx))
+      prev.map((tx) => (tx.id === id ? { ...tx, status } : tx)),
     );
   };
 
@@ -255,8 +255,8 @@ export default function TransactionPool({
                   tx.status === "mining"
                     ? "border-blue-500 bg-blue-900/10 animate-pulse"
                     : tx.status === "confirmed"
-                    ? "border-green-500 bg-green-900/10"
-                    : "border-slate-600 bg-slate-900/50 hover:border-slate-500"
+                      ? "border-green-500 bg-green-900/10"
+                      : "border-slate-600 bg-slate-900/50 hover:border-slate-500"
                 }`}
               >
                 <div className="flex items-start justify-between">

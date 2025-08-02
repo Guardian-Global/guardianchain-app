@@ -99,8 +99,8 @@ export default function CapsuleTypeSelector({
                     isSelected
                       ? "border-purple-500 bg-purple-900/20"
                       : isHovered
-                      ? "border-slate-500 bg-slate-700/30"
-                      : "border-slate-600 bg-slate-700/20 hover:bg-slate-700/30"
+                        ? "border-slate-500 bg-slate-700/30"
+                        : "border-slate-600 bg-slate-700/20 hover:bg-slate-700/30"
                   }`}
                   onClick={() => onTypeSelect(config.id)}
                   onMouseEnter={() => setHoveredType(config.id)}
@@ -194,7 +194,7 @@ export default function CapsuleTypeSelector({
                           {feature}
                         </span>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </div>
@@ -242,7 +242,7 @@ export default function CapsuleTypeSelector({
                           .replace(/([A-Z])/g, " $1")
                           .replace(/^./, (str) => str.toUpperCase())}
                       </Badge>
-                    )
+                    ),
                   )}
                 </div>
               </div>

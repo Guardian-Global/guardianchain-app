@@ -13,7 +13,7 @@ export interface TimeMessage {
 
 export function useSentTimeMessages() {
   return useQuery({
-    queryKey: ['/api/time-messages/sent'],
+    queryKey: ["/api/time-messages/sent"],
     queryFn: () => api.timeMessages.getSent(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -21,7 +21,7 @@ export function useSentTimeMessages() {
 
 export function useReceivedTimeMessages() {
   return useQuery({
-    queryKey: ['/api/time-messages/received'],
+    queryKey: ["/api/time-messages/received"],
     queryFn: () => api.timeMessages.getReceived(),
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
@@ -33,7 +33,7 @@ export function useSendTimeMessage() {
   return useMutation({
     mutationFn: (messageData: any) => api.timeMessages.send(messageData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/time-messages/sent'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/time-messages/sent"] });
     },
   });
 }

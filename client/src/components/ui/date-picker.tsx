@@ -4,7 +4,11 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface DatePickerProps {
   date: Date | null;
@@ -13,7 +17,12 @@ interface DatePickerProps {
   className?: string;
 }
 
-export function DatePicker({ date, setDate, placeholder = "Pick a date", className }: DatePickerProps) {
+export function DatePicker({
+  date,
+  setDate,
+  placeholder = "Pick a date",
+  className,
+}: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -22,14 +31,17 @@ export function DatePicker({ date, setDate, placeholder = "Pick a date", classNa
           className={cn(
             "w-full justify-start text-left font-normal bg-slate-900 border-slate-600 text-white hover:bg-slate-800",
             !date && "text-slate-400",
-            className
+            className,
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 bg-slate-900 border-slate-600" align="start">
+      <PopoverContent
+        className="w-auto p-0 bg-slate-900 border-slate-600"
+        align="start"
+      >
         <Calendar
           mode="single"
           selected={date || undefined}

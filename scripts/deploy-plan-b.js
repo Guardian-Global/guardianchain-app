@@ -2,10 +2,10 @@ const { ethers } = require("hardhat");
 
 /**
  * PLAN B GTT TOKEN DEPLOYMENT SCRIPT
- * 
+ *
  * This script deploys the optimized Plan B tokenomics configuration:
  * - 1B total supply (institutional optimal)
- * - 8% transaction fee structure  
+ * - 8% transaction fee structure
  * - 2.5% strategic burn mechanism
  * - Enhanced founder revenue stream
  */
@@ -13,11 +13,11 @@ const { ethers } = require("hardhat");
 async function main() {
   console.log("\n🚀 PLAN B GTT TOKEN DEPLOYMENT STARTING...");
   console.log("=====================================");
-  
+
   // Configuration
   const DEPLOYMENT_CONFIG = {
     name: "GUARDIANCHAIN Token",
-    symbol: "GTT", 
+    symbol: "GTT",
     totalSupply: "1000000000", // 1B tokens (Plan B)
     founderAllocation: "200000000", // 20% to founder
     communityRewards: "400000000", // 40% to community
@@ -30,12 +30,12 @@ async function main() {
   // Get deployment account
   const [deployer] = await ethers.getSigners();
   console.log("📍 Deploying from account:", deployer.address);
-  
+
   // Check balance
   const balance = await deployer.getBalance();
   const balanceInMatic = ethers.formatEther(balance);
   console.log("💰 Account balance:", balanceInMatic, "MATIC");
-  
+
   if (parseFloat(balanceInMatic) < 0.1) {
     console.log("⚠️  WARNING: Low MATIC balance. Deployment may fail.");
     console.log("💡 Minimum recommended: 0.1 MATIC");
@@ -54,30 +54,32 @@ async function main() {
     console.log(`Token Name: ${DEPLOYMENT_CONFIG.name}`);
     console.log(`Token Symbol: ${DEPLOYMENT_CONFIG.symbol}`);
     console.log(`Total Supply: ${DEPLOYMENT_CONFIG.totalSupply} GTT`);
-    console.log(`Transaction Fee: ${DEPLOYMENT_CONFIG.transactionFeeRate / 100}%`);
+    console.log(
+      `Transaction Fee: ${DEPLOYMENT_CONFIG.transactionFeeRate / 100}%`,
+    );
     console.log(`Burn Rate: ${DEPLOYMENT_CONFIG.burnRate / 100}% of fees`);
     console.log(`Founder Wallet: ${ADDRESSES.founder}`);
 
     console.log("\n🔨 Deploying GTT Token Plan B...");
-    
+
     // Deploy the Plan B contract
     const GTTTokenPlanB = await ethers.getContractFactory("GTTTokenPlanB");
     const gttToken = await GTTTokenPlanB.deploy(
       ADDRESSES.founder,
-      ADDRESSES.communityPool, 
-      ADDRESSES.protocolTreasury
+      ADDRESSES.communityPool,
+      ADDRESSES.protocolTreasury,
     );
 
     console.log("⏳ Waiting for deployment confirmation...");
     await gttToken.waitForDeployment();
-    
+
     const contractAddress = await gttToken.getAddress();
     console.log("\n✅ PLAN B DEPLOYMENT SUCCESSFUL!");
     console.log("================================");
     console.log(`📍 Contract Address: ${contractAddress}`);
     console.log(`🌐 Network: Polygon Mainnet`);
     console.log(`⛽ Gas Used: Calculating...`);
-    
+
     // Get deployment transaction details
     const deploymentTx = gttToken.deploymentTransaction();
     if (deploymentTx) {
@@ -85,19 +87,22 @@ async function main() {
       const gasUsed = receipt.gasUsed;
       const gasPrice = deploymentTx.gasPrice;
       const deploymentCost = gasUsed * gasPrice;
-      
+
       console.log(`💳 Gas Used: ${gasUsed.toString()}`);
-      console.log(`💰 Deployment Cost: ${ethers.formatEther(deploymentCost)} MATIC`);
+      console.log(
+        `💰 Deployment Cost: ${ethers.formatEther(deploymentCost)} MATIC`,
+      );
       console.log(`🔗 Transaction Hash: ${receipt.hash}`);
     }
 
     // Verify Plan B configuration
     console.log("\n🔍 VERIFYING PLAN B CONFIGURATION:");
     console.log("===================================");
-    
+
     const totalSupply = await gttToken.totalSupply();
-    const [supply, feeRate, burnRate, feesCollected, feesBurned] = await gttToken.getPlanBSummary();
-    
+    const [supply, feeRate, burnRate, feesCollected, feesBurned] =
+      await gttToken.getPlanBSummary();
+
     console.log(`✅ Total Supply: ${ethers.formatEther(totalSupply)} GTT`);
     console.log(`✅ Transaction Fee Rate: ${feeRate / 100}%`);
     console.log(`✅ Burn Rate: ${burnRate / 100}% of fees`);
@@ -107,14 +112,22 @@ async function main() {
     // Check allocations
     console.log("\n📊 CHECKING ALLOCATIONS:");
     console.log("========================");
-    
+
     const founderBalance = await gttToken.balanceOf(ADDRESSES.founder);
     const communityBalance = await gttToken.balanceOf(ADDRESSES.communityPool);
-    const protocolBalance = await gttToken.balanceOf(ADDRESSES.protocolTreasury);
-    
-    console.log(`👑 Founder Balance: ${ethers.formatEther(founderBalance)} GTT (20%)`);
-    console.log(`🏛️  Community Pool: ${ethers.formatEther(communityBalance)} GTT (40%)`);
-    console.log(`🔧 Protocol Treasury: ${ethers.formatEther(protocolBalance)} GTT (25%)`);
+    const protocolBalance = await gttToken.balanceOf(
+      ADDRESSES.protocolTreasury,
+    );
+
+    console.log(
+      `👑 Founder Balance: ${ethers.formatEther(founderBalance)} GTT (20%)`,
+    );
+    console.log(
+      `🏛️  Community Pool: ${ethers.formatEther(communityBalance)} GTT (40%)`,
+    );
+    console.log(
+      `🔧 Protocol Treasury: ${ethers.formatEther(protocolBalance)} GTT (25%)`,
+    );
 
     // Generate deployment summary
     const deploymentSummary = {
@@ -142,10 +155,10 @@ async function main() {
     console.log(`🚀 Trade on QuickSwap: ${deploymentSummary.quickswapUrl}`);
 
     // Save deployment summary
-    const fs = require('fs');
+    const fs = require("fs");
     fs.writeFileSync(
-      'plan-b-deployment-summary.json', 
-      JSON.stringify(deploymentSummary, null, 2)
+      "plan-b-deployment-summary.json",
+      JSON.stringify(deploymentSummary, null, 2),
     );
 
     console.log("\n💰 PLAN B REVENUE PROJECTIONS:");
@@ -156,19 +169,18 @@ async function main() {
     console.log("   Annual Revenue: $292,000,000");
     console.log("\n🔥 PLAN B DEPLOYMENT SUCCESSFUL!");
     console.log("Ready for DEX listings and institutional partnerships!");
-
   } catch (error) {
     console.error("\n❌ PLAN B DEPLOYMENT FAILED:");
     console.error("============================");
     console.error(error.message);
-    
+
     if (error.message.includes("insufficient funds")) {
       console.log("\n💡 SOLUTION:");
       console.log("1. Fund wallet with at least 0.1 MATIC");
       console.log("2. Current wallet:", deployer.address);
       console.log("3. Get MATIC from: https://wallet.polygon.technology/");
     }
-    
+
     process.exit(1);
   }
 }

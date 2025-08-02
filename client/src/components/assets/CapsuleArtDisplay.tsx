@@ -70,20 +70,20 @@ export const CapsuleArtDisplay: React.FC<CapsuleArtDisplayProps> = ({
 
   // Try to match by variant first
   const variantMatches = capsuleArt.filter((art) =>
-    art.name.toLowerCase().includes(variant.toLowerCase())
+    art.name.toLowerCase().includes(variant.toLowerCase()),
   );
 
   if (variantMatches.length > 0) {
     // Try to match category within variant matches
     selectedArt =
       variantMatches.find((art) =>
-        art.name.toLowerCase().includes(category.toLowerCase())
+        art.name.toLowerCase().includes(category.toLowerCase()),
       ) || variantMatches[0];
   } else {
     // Try to match by category
     selectedArt =
       capsuleArt.find((art) =>
-        art.name.toLowerCase().includes(category.toLowerCase())
+        art.name.toLowerCase().includes(category.toLowerCase()),
       ) || capsuleArt[0];
   }
 

@@ -284,7 +284,7 @@ export default function GuardianPassPage() {
                     <div className="text-center">
                       <div
                         className={`w-16 h-16 ${getRarityColor(
-                          pass.rarity
+                          pass.rarity,
                         )} rounded-full flex items-center justify-center mx-auto mb-3`}
                       >
                         <div className="text-white">
@@ -417,7 +417,7 @@ export default function GuardianPassPage() {
                           <span className="flex items-center gap-2">
                             <div
                               className={`w-3 h-3 ${getRarityColor(
-                                rarity
+                                rarity,
                               )} rounded`}
                             ></div>
                             {rarity}
@@ -431,7 +431,7 @@ export default function GuardianPassPage() {
                           className="h-2"
                         />
                       </div>
-                    )
+                    ),
                   )}
               </CardContent>
             </Card>
@@ -454,7 +454,7 @@ export default function GuardianPassPage() {
                       <p className="text-2xl font-bold text-green-600">
                         +
                         {(passCollection.benefits.totalAPYBoost / 100).toFixed(
-                          1
+                          1,
                         )}
                         %
                       </p>
@@ -482,7 +482,7 @@ export default function GuardianPassPage() {
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                             {feature}
                           </li>
-                        )
+                        ),
                       )}
                     </ul>
                   </div>

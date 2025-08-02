@@ -60,7 +60,7 @@ export async function sendGuardianEmail({
     const htmlWithTracking =
       finalHtml +
       `<img src="https://track.guardianchain.app/pixel?email=${encodeURIComponent(
-        to
+        to,
       )}&type=${notificationType}" width="1" height="1" style="display:none;" />`;
 
     // Always CC founder for oversight and compliance
@@ -75,7 +75,7 @@ export async function sendGuardianEmail({
     });
 
     console.log(
-      `✉️ GUARDIANCHAIN email sent to ${to} (CC: founder): ${subject} (type: ${notificationType})`
+      `✉️ GUARDIANCHAIN email sent to ${to} (CC: founder): ${subject} (type: ${notificationType})`,
     );
     return res;
   } catch (err) {

@@ -1,5 +1,5 @@
-import React from 'react';
-import { InstitutionalDashboard } from '@/components/trading/InstitutionalDashboard';
+import React from "react";
+import { InstitutionalDashboard } from "@/components/trading/InstitutionalDashboard";
 
 export default function InstitutionalDashboardPage() {
   return (
@@ -11,7 +11,7 @@ export default function InstitutionalDashboardPage() {
             Enterprise client management and performance tracking
           </p>
         </div>
-        
+
         <InstitutionalDashboard />
       </div>
     </div>

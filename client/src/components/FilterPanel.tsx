@@ -1,7 +1,13 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Filter, X } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Filter, X } from "lucide-react";
 
 interface FilterState {
   sortBy: string;
@@ -17,13 +23,12 @@ interface FilterPanelProps {
   onClearFilters?: () => void;
 }
 
-export default function FilterPanel({ 
-  filters, 
-  setFilters, 
+export default function FilterPanel({
+  filters,
+  setFilters,
   activeFiltersCount = 0,
-  onClearFilters 
+  onClearFilters,
 }: FilterPanelProps) {
-  
   const updateFilter = (key: keyof FilterState, value: string) => {
     setFilters({ ...filters, [key]: value });
   };
@@ -33,7 +38,9 @@ export default function FilterPanel({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <Filter className="w-4 h-4 text-slate-400" />
-          <span className="text-sm font-medium text-slate-300">Filter & Sort</span>
+          <span className="text-sm font-medium text-slate-300">
+            Filter & Sort
+          </span>
           {activeFiltersCount > 0 && (
             <Badge variant="secondary" className="bg-blue-600 text-white">
               {activeFiltersCount} active
@@ -56,7 +63,10 @@ export default function FilterPanel({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <label className="text-xs text-slate-400 mb-1 block">Sort By</label>
-          <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value)}>
+          <Select
+            value={filters.sortBy}
+            onValueChange={(value) => updateFilter("sortBy", value)}
+          >
             <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
               <SelectValue placeholder="Select sort..." />
             </SelectTrigger>
@@ -71,8 +81,13 @@ export default function FilterPanel({
         </div>
 
         <div>
-          <label className="text-xs text-slate-400 mb-1 block">Access Tier</label>
-          <Select value={filters.tier} onValueChange={(value) => updateFilter('tier', value)}>
+          <label className="text-xs text-slate-400 mb-1 block">
+            Access Tier
+          </label>
+          <Select
+            value={filters.tier}
+            onValueChange={(value) => updateFilter("tier", value)}
+          >
             <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
               <SelectValue placeholder="All Tiers" />
             </SelectTrigger>
@@ -88,7 +103,10 @@ export default function FilterPanel({
 
         <div>
           <label className="text-xs text-slate-400 mb-1 block">Category</label>
-          <Select value={filters.category} onValueChange={(value) => updateFilter('category', value)}>
+          <Select
+            value={filters.category}
+            onValueChange={(value) => updateFilter("category", value)}
+          >
             <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
@@ -105,8 +123,13 @@ export default function FilterPanel({
         </div>
 
         <div>
-          <label className="text-xs text-slate-400 mb-1 block">Verification</label>
-          <Select value={filters.verificationStatus} onValueChange={(value) => updateFilter('verificationStatus', value)}>
+          <label className="text-xs text-slate-400 mb-1 block">
+            Verification
+          </label>
+          <Select
+            value={filters.verificationStatus}
+            onValueChange={(value) => updateFilter("verificationStatus", value)}
+          >
             <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>

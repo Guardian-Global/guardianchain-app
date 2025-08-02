@@ -1,7 +1,7 @@
 // Simple Card components for the new pages
 export function Card({ children, className = "", ...props }: any) {
   return (
-    <div 
+    <div
       className={`rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm ${className}`}
       {...props}
     >
@@ -20,9 +20,20 @@ export function CardHeader({ children, className = "", ...props }: any) {
 
 export function CardTitle({ children, className = "", ...props }: any) {
   return (
-    <h3 className={`text-2xl font-semibold leading-none tracking-tight ${className}`} {...props}>
+    <h3
+      className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
+      {...props}
+    >
       {children}
     </h3>
+  );
+}
+
+export function CardDescription({ children, className = "", ...props }: any) {
+  return (
+    <p className={`text-sm text-muted-foreground ${className}`} {...props}>
+      {children}
+    </p>
   );
 }
 

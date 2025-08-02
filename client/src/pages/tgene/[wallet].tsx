@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useParams } from 'wouter';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Dna, 
-  Eye, 
-  Share2, 
-  Download, 
+import React, { useState } from "react";
+import { useParams } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Dna,
+  Eye,
+  Share2,
+  Download,
   Star,
   TrendingUp,
   Calendar,
@@ -17,8 +17,8 @@ import {
   Users,
   Award,
   Zap,
-  Activity
-} from 'lucide-react';
+  Activity,
+} from "lucide-react";
 
 interface TruthGeneData {
   wallet: string;
@@ -59,18 +59,20 @@ interface TruthGeneData {
     rank: number;
     totalSupply: number;
     rarityScore: number;
-    tier: 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary' | 'Mythic';
+    tier: "Common" | "Uncommon" | "Rare" | "Epic" | "Legendary" | "Mythic";
   };
 }
 
 export default function TruthGenomeViewer() {
   const params = useParams();
   const wallet = params.wallet;
-  const [activeTab, setActiveTab] = useState<'overview' | 'traits' | 'genome' | 'evolution'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "traits" | "genome" | "evolution"
+  >("overview");
 
   const { data: tgeneData, isLoading } = useQuery<TruthGeneData>({
-    queryKey: ['/api/tgene', wallet],
-    enabled: !!wallet
+    queryKey: ["/api/tgene", wallet],
+    enabled: !!wallet,
   });
 
   if (isLoading) {
@@ -81,7 +83,10 @@ export default function TruthGenomeViewer() {
             <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div
+                  key={i}
+                  className="h-24 bg-gray-200 dark:bg-gray-700 rounded"
+                ></div>
               ))}
             </div>
             <div className="h-96 bg-gray-200 dark:bg-gray-700 rounded"></div>
@@ -107,21 +112,28 @@ export default function TruthGenomeViewer() {
 
   const getRarityColor = (tier: string) => {
     switch (tier) {
-      case 'Common': return 'text-gray-600 bg-gray-100';
-      case 'Uncommon': return 'text-green-600 bg-green-100';
-      case 'Rare': return 'text-blue-600 bg-blue-100';
-      case 'Epic': return 'text-purple-600 bg-purple-100';
-      case 'Legendary': return 'text-yellow-600 bg-yellow-100';
-      case 'Mythic': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case "Common":
+        return "text-gray-600 bg-gray-100";
+      case "Uncommon":
+        return "text-green-600 bg-green-100";
+      case "Rare":
+        return "text-blue-600 bg-blue-100";
+      case "Epic":
+        return "text-purple-600 bg-purple-100";
+      case "Legendary":
+        return "text-yellow-600 bg-yellow-100";
+      case "Mythic":
+        return "text-red-600 bg-red-100";
+      default:
+        return "text-gray-600 bg-gray-100";
     }
   };
 
   const getTraitColor = (value: number) => {
-    if (value >= 80) return 'text-green-600';
-    if (value >= 60) return 'text-blue-600';
-    if (value >= 40) return 'text-yellow-600';
-    return 'text-red-600';
+    if (value >= 80) return "text-green-600";
+    if (value >= 60) return "text-blue-600";
+    if (value >= 40) return "text-yellow-600";
+    return "text-red-600";
   };
 
   const formatWallet = (address: string) => {
@@ -129,10 +141,10 @@ export default function TruthGenomeViewer() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -157,7 +169,9 @@ export default function TruthGenomeViewer() {
           <CardContent className="p-8">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold mb-2">Genome #{tgeneData.nftTokenId}</h2>
+                <h2 className="text-2xl font-bold mb-2">
+                  Genome #{tgeneData.nftTokenId}
+                </h2>
                 <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center">
                     <Hash className="w-4 h-4 mr-1" />
@@ -190,24 +204,24 @@ export default function TruthGenomeViewer() {
         {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm">
-            {['overview', 'traits', 'genome', 'evolution'].map((tab) => (
+            {["overview", "traits", "genome", "evolution"].map((tab) => (
               <Button
                 key={tab}
-                variant={activeTab === tab ? 'default' : 'ghost'}
+                variant={activeTab === tab ? "default" : "ghost"}
                 onClick={() => setActiveTab(tab as any)}
                 className="mx-1"
               >
-                {tab === 'overview' && <Activity className="w-4 h-4 mr-2" />}
-                {tab === 'traits' && <Star className="w-4 h-4 mr-2" />}
-                {tab === 'genome' && <Dna className="w-4 h-4 mr-2" />}
-                {tab === 'evolution' && <TrendingUp className="w-4 h-4 mr-2" />}
+                {tab === "overview" && <Activity className="w-4 h-4 mr-2" />}
+                {tab === "traits" && <Star className="w-4 h-4 mr-2" />}
+                {tab === "genome" && <Dna className="w-4 h-4 mr-2" />}
+                {tab === "evolution" && <TrendingUp className="w-4 h-4 mr-2" />}
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </Button>
             ))}
           </div>
         </div>
 
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <div className="space-y-6">
             {/* Analytics Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -215,8 +229,12 @@ export default function TruthGenomeViewer() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Total Capsules</p>
-                      <p className="text-3xl font-bold">{tgeneData.analytics.totalCapsules}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Total Capsules
+                      </p>
+                      <p className="text-3xl font-bold">
+                        {tgeneData.analytics.totalCapsules}
+                      </p>
                     </div>
                     <Eye className="w-10 h-10 text-blue-500" />
                   </div>
@@ -227,8 +245,12 @@ export default function TruthGenomeViewer() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Avg Grief Score</p>
-                      <p className="text-3xl font-bold">{tgeneData.analytics.griefScoreAverage.toFixed(1)}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Avg Grief Score
+                      </p>
+                      <p className="text-3xl font-bold">
+                        {tgeneData.analytics.griefScoreAverage.toFixed(1)}
+                      </p>
                     </div>
                     <TrendingUp className="w-10 h-10 text-green-500" />
                   </div>
@@ -239,8 +261,12 @@ export default function TruthGenomeViewer() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Influence Network</p>
-                      <p className="text-3xl font-bold">{tgeneData.analytics.influenceNetwork}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Influence Network
+                      </p>
+                      <p className="text-3xl font-bold">
+                        {tgeneData.analytics.influenceNetwork}
+                      </p>
                     </div>
                     <Users className="w-10 h-10 text-purple-500" />
                   </div>
@@ -282,19 +308,27 @@ export default function TruthGenomeViewer() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between">
                     <span>Verification Rate</span>
-                    <span className="font-semibold">{tgeneData.analytics.verificationRate.toFixed(1)}%</span>
+                    <span className="font-semibold">
+                      {tgeneData.analytics.verificationRate.toFixed(1)}%
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Community Impact</span>
-                    <span className="font-semibold">{tgeneData.analytics.communityImpact}</span>
+                    <span className="font-semibold">
+                      {tgeneData.analytics.communityImpact}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Generation</span>
-                    <span className="font-semibold">Gen {tgeneData.evolution.generation}</span>
+                    <span className="font-semibold">
+                      Gen {tgeneData.evolution.generation}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Evolution Score</span>
-                    <span className="font-semibold">{tgeneData.evolution.evolutionScore}</span>
+                    <span className="font-semibold">
+                      {tgeneData.evolution.evolutionScore}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -312,15 +346,21 @@ export default function TruthGenomeViewer() {
                   </div>
                   <div className="flex justify-between">
                     <span>Secondary Markers</span>
-                    <span className="font-semibold">{tgeneData.genome.secondaryMarkers.length}</span>
+                    <span className="font-semibold">
+                      {tgeneData.genome.secondaryMarkers.length}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Mutations</span>
-                    <span className="font-semibold">{tgeneData.genome.mutationHistory.length}</span>
+                    <span className="font-semibold">
+                      {tgeneData.genome.mutationHistory.length}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Last Updated</span>
-                    <span className="font-semibold">{formatDate(tgeneData.lastUpdated)}</span>
+                    <span className="font-semibold">
+                      {formatDate(tgeneData.lastUpdated)}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -328,7 +368,7 @@ export default function TruthGenomeViewer() {
           </div>
         )}
 
-        {activeTab === 'traits' && (
+        {activeTab === "traits" && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -339,11 +379,18 @@ export default function TruthGenomeViewer() {
             <CardContent>
               <div className="space-y-6">
                 {Object.entries(tgeneData.traits).map(([trait, value]) => (
-                  <div key={trait} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div
+                    key={trait}
+                    className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  >
                     <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-lg font-semibold capitalize">{trait}</h3>
+                      <h3 className="text-lg font-semibold capitalize">
+                        {trait}
+                      </h3>
                       <div className="flex items-center space-x-2">
-                        <span className={`text-2xl font-bold ${getTraitColor(value)}`}>
+                        <span
+                          className={`text-2xl font-bold ${getTraitColor(value)}`}
+                        >
                           {value}
                         </span>
                         <span className="text-gray-500">/100</span>
@@ -351,12 +398,18 @@ export default function TruthGenomeViewer() {
                     </div>
                     <Progress value={value} className="h-3 mb-3" />
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {trait === 'truthfulness' && 'Measures consistency and accuracy in truth-telling across all capsules.'}
-                      {trait === 'creativity' && 'Evaluates originality and innovative approaches in content creation.'}
-                      {trait === 'influence' && 'Tracks the impact and reach of created content within the community.'}
-                      {trait === 'consistency' && 'Analyzes the reliability and pattern stability in behavior.'}
-                      {trait === 'depth' && 'Measures the complexity and profundity of shared truths.'}
-                      {trait === 'resonance' && 'Evaluates how well content connects with and affects others.'}
+                      {trait === "truthfulness" &&
+                        "Measures consistency and accuracy in truth-telling across all capsules."}
+                      {trait === "creativity" &&
+                        "Evaluates originality and innovative approaches in content creation."}
+                      {trait === "influence" &&
+                        "Tracks the impact and reach of created content within the community."}
+                      {trait === "consistency" &&
+                        "Analyzes the reliability and pattern stability in behavior."}
+                      {trait === "depth" &&
+                        "Measures the complexity and profundity of shared truths."}
+                      {trait === "resonance" &&
+                        "Evaluates how well content connects with and affects others."}
                     </p>
                   </div>
                 ))}
@@ -365,7 +418,7 @@ export default function TruthGenomeViewer() {
           </Card>
         )}
 
-        {activeTab === 'genome' && (
+        {activeTab === "genome" && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
@@ -377,22 +430,30 @@ export default function TruthGenomeViewer() {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Primary Sequence</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Primary Sequence
+                    </label>
                     <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm break-all">
                       {tgeneData.genome.primarySequence}
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Secondary Markers ({tgeneData.genome.secondaryMarkers.length})
+                      Secondary Markers (
+                      {tgeneData.genome.secondaryMarkers.length})
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {tgeneData.genome.secondaryMarkers.map((marker, index) => (
-                        <div key={index} className="bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs font-mono">
-                          {marker}
-                        </div>
-                      ))}
+                      {tgeneData.genome.secondaryMarkers.map(
+                        (marker, index) => (
+                          <div
+                            key={index}
+                            className="bg-gray-100 dark:bg-gray-800 p-2 rounded text-xs font-mono"
+                          >
+                            {marker}
+                          </div>
+                        ),
+                      )}
                     </div>
                   </div>
                 </div>
@@ -406,11 +467,16 @@ export default function TruthGenomeViewer() {
               <CardContent>
                 <div className="space-y-4">
                   {tgeneData.genome.mutationHistory.map((mutation, index) => (
-                    <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                    <div
+                      key={index}
+                      className="flex items-center space-x-4 p-3 bg-gray-50 dark:bg-gray-800 rounded"
+                    >
                       <div className="w-2 h-2 bg-blue-500 rounded-full" />
                       <div className="flex-1">
                         <p className="font-medium">{mutation.change}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{mutation.trigger}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {mutation.trigger}
+                        </p>
                       </div>
                       <div className="text-sm text-gray-500">
                         {formatDate(mutation.timestamp)}
@@ -423,7 +489,7 @@ export default function TruthGenomeViewer() {
           </div>
         )}
 
-        {activeTab === 'evolution' && (
+        {activeTab === "evolution" && (
           <div className="space-y-6">
             <Card>
               <CardHeader>
@@ -440,32 +506,44 @@ export default function TruthGenomeViewer() {
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
                     Evolution Score: {tgeneData.evolution.evolutionScore}
                   </p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                       <h3 className="font-semibold mb-4">Parent Genomes</h3>
                       {tgeneData.evolution.parentGenomes.length > 0 ? (
                         <div className="space-y-2">
-                          {tgeneData.evolution.parentGenomes.map((parent, index) => (
-                            <div key={index} className="bg-gray-100 dark:bg-gray-800 p-3 rounded">
-                              <code className="text-sm">{parent}</code>
-                            </div>
-                          ))}
+                          {tgeneData.evolution.parentGenomes.map(
+                            (parent, index) => (
+                              <div
+                                key={index}
+                                className="bg-gray-100 dark:bg-gray-800 p-3 rounded"
+                              >
+                                <code className="text-sm">{parent}</code>
+                              </div>
+                            ),
+                          )}
                         </div>
                       ) : (
-                        <p className="text-gray-500">Genesis genome - no parents</p>
+                        <p className="text-gray-500">
+                          Genesis genome - no parents
+                        </p>
                       )}
                     </div>
-                    
+
                     <div>
                       <h3 className="font-semibold mb-4">Child Genomes</h3>
                       {tgeneData.evolution.childGenomes.length > 0 ? (
                         <div className="space-y-2">
-                          {tgeneData.evolution.childGenomes.map((child, index) => (
-                            <div key={index} className="bg-gray-100 dark:bg-gray-800 p-3 rounded">
-                              <code className="text-sm">{child}</code>
-                            </div>
-                          ))}
+                          {tgeneData.evolution.childGenomes.map(
+                            (child, index) => (
+                              <div
+                                key={index}
+                                className="bg-gray-100 dark:bg-gray-800 p-3 rounded"
+                              >
+                                <code className="text-sm">{child}</code>
+                              </div>
+                            ),
+                          )}
                         </div>
                       ) : (
                         <p className="text-gray-500">No child genomes yet</p>

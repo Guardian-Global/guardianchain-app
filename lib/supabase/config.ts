@@ -32,18 +32,18 @@ export function logSupabaseStatus(): void {
   if (config.environment === "development") {
     if (!config.configured) {
       console.info(
-        "ℹ️ Supabase: Not configured. Platform will operate without Supabase features."
+        "ℹ️ Supabase: Not configured. Platform will operate without Supabase features.",
       );
 
       if (!config.url) {
         console.info(
-          "   Missing: NEXT_PUBLIC_SUPABASE_URL environment variable"
+          "   Missing: NEXT_PUBLIC_SUPABASE_URL environment variable",
         );
       }
 
       if (!config.serviceKey) {
         console.info(
-          "   Missing: SUPABASE_SERVICE_ROLE_KEY environment variable"
+          "   Missing: SUPABASE_SERVICE_ROLE_KEY environment variable",
         );
       }
     } else {

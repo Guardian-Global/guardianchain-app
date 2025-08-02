@@ -1,17 +1,25 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { encryptCapsule } from "../utils/lit/encryptCapsule";
-import { createTimeBasedCondition, createTokenBalanceCondition } from "../utils/lit/accessConditions";
+import {
+  createTimeBasedCondition,
+  createTokenBalanceCondition,
+} from "../utils/lit/accessConditions";
 
 // Initialize Supabase client for server-side operations
 const createSupabaseClient = () => {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error("Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to environment variables.");
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.SUPABASE_SERVICE_ROLE_KEY
+  ) {
+    throw new Error(
+      "Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to environment variables.",
+    );
   }
-  
+
   return {
     url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    key: process.env.SUPABASE_SERVICE_ROLE_KEY
+    key: process.env.SUPABASE_SERVICE_ROLE_KEY,
   };
 };
 
@@ -23,41 +31,47 @@ const createCapsuleSchema = z.object({
   author: z.string().min(1, "Author is required"),
   tags: z.array(z.string()).optional().default([]),
   // Time lock settings
-  timelock: z.object({
-    enabled: z.boolean().default(false),
-    unlockDate: z.string().optional(),
-    unlockTimestamp: z.number().optional()
-  }).optional(),
+  timelock: z
+    .object({
+      enabled: z.boolean().default(false),
+      unlockDate: z.string().optional(),
+      unlockTimestamp: z.number().optional(),
+    })
+    .optional(),
   // Access control settings
-  accessControl: z.object({
-    type: z.enum(["public", "time_locked", "token_gated", "nft_gated"]).default("public"),
-    tokenAddress: z.string().optional(),
-    minimumBalance: z.string().optional(),
-    nftContractAddress: z.string().optional()
-  }).optional(),
+  accessControl: z
+    .object({
+      type: z
+        .enum(["public", "time_locked", "token_gated", "nft_gated"])
+        .default("public"),
+      tokenAddress: z.string().optional(),
+      minimumBalance: z.string().optional(),
+      nftContractAddress: z.string().optional(),
+    })
+    .optional(),
   // Client-side encryption fields
   clientEncrypted: z.boolean().optional(),
   encryptedContent: z.string().optional(),
   encryptedSymmetricKey: z.string().optional(),
-  accessControlConditions: z.array(z.any()).optional()
+  accessControlConditions: z.array(z.any()).optional(),
 });
 
 export async function createCapsule(req: Request, res: Response) {
   try {
     // Validate request body
     const validatedData = createCapsuleSchema.parse(req.body);
-    
+
     try {
       const supabaseConfig = createSupabaseClient();
-      
+
       // Prepare content for potential encryption
       let contentData = {
         type: "text",
         data: validatedData.description || "",
         metadata: {
           created_via: "web_interface",
-          version: "1.0"
-        }
+          version: "1.0",
+        },
       };
 
       // Handle client-side encrypted content
@@ -69,23 +83,33 @@ export async function createCapsule(req: Request, res: Response) {
           encryptedSymmetricKey: validatedData.encryptedSymmetricKey,
           accessControlConditions: validatedData.accessControlConditions,
           originalData: null, // Hide original data when encrypted
-          encryptionMethod: "client_side"
+          encryptionMethod: "client_side",
         };
       }
       // Handle server-side encryption for time-locked or access-controlled capsules
-      else if (validatedData.timelock?.enabled || validatedData.accessControl?.type !== "public") {
+      else if (
+        validatedData.timelock?.enabled ||
+        validatedData.accessControl?.type !== "public"
+      ) {
         try {
           let accessConditions = [];
 
           // Create access control conditions based on settings
-          if (validatedData.timelock?.enabled && validatedData.timelock.unlockTimestamp) {
-            accessConditions = createTimeBasedCondition(validatedData.timelock.unlockTimestamp);
-          } else if (validatedData.accessControl?.type === "token_gated" && 
-                     validatedData.accessControl.tokenAddress && 
-                     validatedData.accessControl.minimumBalance) {
+          if (
+            validatedData.timelock?.enabled &&
+            validatedData.timelock.unlockTimestamp
+          ) {
+            accessConditions = createTimeBasedCondition(
+              validatedData.timelock.unlockTimestamp,
+            );
+          } else if (
+            validatedData.accessControl?.type === "token_gated" &&
+            validatedData.accessControl.tokenAddress &&
+            validatedData.accessControl.minimumBalance
+          ) {
             accessConditions = createTokenBalanceCondition(
               validatedData.accessControl.tokenAddress,
-              validatedData.accessControl.minimumBalance
+              validatedData.accessControl.minimumBalance,
             );
           }
 
@@ -93,7 +117,7 @@ export async function createCapsule(req: Request, res: Response) {
             // Encrypt the sensitive content
             const encryptionResult = await encryptCapsule({
               content: validatedData.description || "",
-              accessControlConditions: accessConditions
+              accessControlConditions: accessConditions,
             });
 
             contentData = {
@@ -103,7 +127,7 @@ export async function createCapsule(req: Request, res: Response) {
               encryptedSymmetricKey: encryptionResult.encryptedSymmetricKey,
               accessControlConditions: encryptionResult.accessControlConditions,
               originalData: null, // Hide original data when encrypted
-              encryptionMethod: "server_side"
+              encryptionMethod: "server_side",
             };
           }
         } catch (encryptionError) {
@@ -127,39 +151,41 @@ export async function createCapsule(req: Request, res: Response) {
         likes: "0",
         comments: "0",
         shares: "0",
-        content: contentData
+        content: contentData,
       };
-      
+
       // Make direct API call to Supabase
       const response = await fetch(`${supabaseConfig.url}/rest/v1/capsules`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-          'Prefer': 'return=representation'
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${supabaseConfig.key}`,
+          apikey: supabaseConfig.key,
+          Prefer: "return=representation",
         },
-        body: JSON.stringify(capsuleData)
+        body: JSON.stringify(capsuleData),
       });
 
       if (!response.ok) {
         const errorData = await response.text();
         console.error("Supabase capsule creation error:", errorData);
-        return res.status(response.status).json({ error: "Failed to create capsule" });
+        return res
+          .status(response.status)
+          .json({ error: "Failed to create capsule" });
       }
 
       const data = await response.json();
       const createdCapsule = Array.isArray(data) ? data[0] : data;
-      
-      res.status(201).json({ 
+
+      res.status(201).json({
         success: true,
         id: createdCapsule.id,
         message: "Capsule created successfully",
-        capsule: createdCapsule
+        capsule: createdCapsule,
       });
     } catch (supabaseError) {
       console.error("Supabase connection error:", supabaseError);
-      
+
       // Fallback to mock creation for development
       const mockCapsule = {
         id: `cap_${Date.now()}`,
@@ -174,26 +200,28 @@ export async function createCapsule(req: Request, res: Response) {
         likes: "0",
         comments: "0",
         shares: "0",
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       };
-      
-      console.log(`Development fallback - New capsule created: ${validatedData.title}`);
-      
-      res.status(201).json({ 
+
+      console.log(
+        `Development fallback - New capsule created: ${validatedData.title}`,
+      );
+
+      res.status(201).json({
         success: true,
         id: mockCapsule.id,
         message: "Capsule created successfully (development mode)",
-        capsule: mockCapsule
+        capsule: mockCapsule,
       });
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return res.status(400).json({ 
-        error: "Validation failed", 
-        details: error.errors.map(e => e.message).join(", ")
+      return res.status(400).json({
+        error: "Validation failed",
+        details: error.errors.map((e) => e.message).join(", "),
       });
     }
-    
+
     console.error("Error creating capsule:", error);
     res.status(500).json({ error: "Failed to create capsule" });
   }
@@ -202,45 +230,47 @@ export async function createCapsule(req: Request, res: Response) {
 export async function getCapsuleById(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    
+
     if (!id) {
       return res.status(400).json({ error: "Capsule ID is required" });
     }
 
     try {
       const supabaseConfig = createSupabaseClient();
-      
+
       // Make direct API call to Supabase
       const searchUrl = new URL(`${supabaseConfig.url}/rest/v1/capsules`);
-      searchUrl.searchParams.append('select', '*');
-      searchUrl.searchParams.append('id', `eq.${id}`);
+      searchUrl.searchParams.append("select", "*");
+      searchUrl.searchParams.append("id", `eq.${id}`);
 
       const response = await fetch(searchUrl.toString(), {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${supabaseConfig.key}`,
+          apikey: supabaseConfig.key,
+          "Content-Type": "application/json",
+        },
       });
 
       if (!response.ok) {
         const errorData = await response.text();
         console.error("Supabase capsule fetch error:", errorData);
-        return res.status(response.status).json({ error: "Failed to fetch capsule" });
+        return res
+          .status(response.status)
+          .json({ error: "Failed to fetch capsule" });
       }
 
       const data = await response.json();
       const capsule = Array.isArray(data) ? data[0] : data;
-      
+
       if (!capsule) {
         return res.status(404).json({ error: "Capsule not found" });
       }
-      
+
       res.json({ capsule });
     } catch (supabaseError) {
       console.error("Supabase connection error:", supabaseError);
-      
+
       // Fallback to mock data for development
       const mockCapsule = {
         id: id,
@@ -259,13 +289,13 @@ export async function getCapsuleById(req: Request, res: Response) {
         content: {
           type: "text",
           data: "Sample capsule content for development",
-          metadata: { created_via: "development" }
-        }
+          metadata: { created_via: "development" },
+        },
       };
-      
-      res.json({ 
+
+      res.json({
         capsule: mockCapsule,
-        note: "Development mode - using mock data"
+        note: "Development mode - using mock data",
       });
     }
   } catch (error) {

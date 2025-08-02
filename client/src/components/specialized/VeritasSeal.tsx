@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, CheckCircle, ExternalLink, FileText, Clock, Star, Loader2 } from "lucide-react";
+import {
+  Shield,
+  CheckCircle,
+  ExternalLink,
+  FileText,
+  Clock,
+  Star,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -15,7 +23,10 @@ interface VeritasSealProps {
   onSealComplete?: (sealData: any) => void;
 }
 
-export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealProps) {
+export default function VeritasSeal({
+  capsuleId,
+  onSealComplete,
+}: VeritasSealProps) {
   const { toast } = useToast();
   const [selectedCapsuleId, setSelectedCapsuleId] = useState(capsuleId || "");
   const [sealReason, setSealReason] = useState("");
@@ -28,7 +39,8 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
     onSuccess: (data) => {
       toast({
         title: "Veritas Seal Applied",
-        description: "Your truth capsule has been sealed with DocuSign verification.",
+        description:
+          "Your truth capsule has been sealed with DocuSign verification.",
       });
       onSealComplete?.(data);
       setSealReason("");
@@ -63,7 +75,8 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-white">Veritas Seal</h1>
         <p className="text-slate-400">
-          Apply immutable DocuSign verification to your truth capsules for legal authenticity
+          Apply immutable DocuSign verification to your truth capsules for legal
+          authenticity
         </p>
       </div>
 
@@ -87,7 +100,9 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-white">Seal Reason (Optional)</label>
+            <label className="text-sm font-medium text-white">
+              Seal Reason (Optional)
+            </label>
             <Textarea
               value={sealReason}
               onChange={(e) => setSealReason(e.target.value)}
@@ -120,8 +135,13 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-slate-800/30 border-slate-700">
           <CardContent className="p-4 text-center">
-            <FileText className="w-8 h-8 mx-auto mb-2" style={{ color: BRAND_COLORS.CHAIN }} />
-            <h3 className="font-semibold text-white mb-1">Legal Authenticity</h3>
+            <FileText
+              className="w-8 h-8 mx-auto mb-2"
+              style={{ color: BRAND_COLORS.CHAIN }}
+            />
+            <h3 className="font-semibold text-white mb-1">
+              Legal Authenticity
+            </h3>
             <p className="text-sm text-slate-400">
               DocuSign-backed verification with legal validity
             </p>
@@ -130,8 +150,13 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
 
         <Card className="bg-slate-800/30 border-slate-700">
           <CardContent className="p-4 text-center">
-            <Clock className="w-8 h-8 mx-auto mb-2" style={{ color: BRAND_COLORS.CHAIN }} />
-            <h3 className="font-semibold text-white mb-1">Immutable Timestamp</h3>
+            <Clock
+              className="w-8 h-8 mx-auto mb-2"
+              style={{ color: BRAND_COLORS.CHAIN }}
+            />
+            <h3 className="font-semibold text-white mb-1">
+              Immutable Timestamp
+            </h3>
             <p className="text-sm text-slate-400">
               Blockchain-backed proof of submission time
             </p>
@@ -140,8 +165,13 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
 
         <Card className="bg-slate-800/30 border-slate-700">
           <CardContent className="p-4 text-center">
-            <Star className="w-8 h-8 mx-auto mb-2" style={{ color: BRAND_COLORS.CHAIN }} />
-            <h3 className="font-semibold text-white mb-1">Premium Verification</h3>
+            <Star
+              className="w-8 h-8 mx-auto mb-2"
+              style={{ color: BRAND_COLORS.CHAIN }}
+            />
+            <h3 className="font-semibold text-white mb-1">
+              Premium Verification
+            </h3>
             <p className="text-sm text-slate-400">
               Highest level of truth verification available
             </p>
@@ -156,20 +186,42 @@ export default function VeritasSeal({ capsuleId, onSealComplete }: VeritasSealPr
         </CardHeader>
         <CardContent className="space-y-3 text-slate-400">
           <div className="flex items-start gap-3">
-            <Badge variant="outline" className="border-purple-600 text-purple-400 mt-1">1</Badge>
+            <Badge
+              variant="outline"
+              className="border-purple-600 text-purple-400 mt-1"
+            >
+              1
+            </Badge>
             <p>Enter your capsule ID and optional verification reason</p>
           </div>
           <div className="flex items-start gap-3">
-            <Badge variant="outline" className="border-purple-600 text-purple-400 mt-1">2</Badge>
+            <Badge
+              variant="outline"
+              className="border-purple-600 text-purple-400 mt-1"
+            >
+              2
+            </Badge>
             <p>System generates DocuSign envelope with your capsule content</p>
           </div>
           <div className="flex items-start gap-3">
-            <Badge variant="outline" className="border-purple-600 text-purple-400 mt-1">3</Badge>
+            <Badge
+              variant="outline"
+              className="border-purple-600 text-purple-400 mt-1"
+            >
+              3
+            </Badge>
             <p>Legal verification seal is applied with blockchain timestamp</p>
           </div>
           <div className="flex items-start gap-3">
-            <Badge variant="outline" className="border-purple-600 text-purple-400 mt-1">4</Badge>
-            <p>Immutable certificate link is generated for public verification</p>
+            <Badge
+              variant="outline"
+              className="border-purple-600 text-purple-400 mt-1"
+            >
+              4
+            </Badge>
+            <p>
+              Immutable certificate link is generated for public verification
+            </p>
           </div>
         </CardContent>
       </Card>

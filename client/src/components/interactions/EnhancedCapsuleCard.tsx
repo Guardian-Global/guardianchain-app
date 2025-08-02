@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Heart, Share2, BookOpen, ExternalLink, Eye, Star, Sparkles } from 'lucide-react';
-import { TiltCard } from './InteractiveCards';
-import { LikeAnimation, FloatingTooltip, BouncyIcon } from './MicroInteractions';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Heart,
+  Share2,
+  BookOpen,
+  ExternalLink,
+  Eye,
+  Star,
+  Sparkles,
+} from "lucide-react";
+import { TiltCard } from "./InteractiveCards";
+import {
+  LikeAnimation,
+  FloatingTooltip,
+  BouncyIcon,
+} from "./MicroInteractions";
 
 interface EnhancedCapsuleCardProps {
   capsule: {
@@ -14,7 +26,7 @@ interface EnhancedCapsuleCardProps {
     content: string;
     author: string;
     category: string;
-    status: 'verified' | 'pending' | 'disputed';
+    status: "verified" | "pending" | "disputed";
     likes: number;
     views: number;
     createdAt: string;
@@ -29,7 +41,7 @@ export const EnhancedCapsuleCard: React.FC<EnhancedCapsuleCardProps> = ({
   capsule,
   onLike,
   onShare,
-  onView
+  onView,
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(capsule.likes);
@@ -37,25 +49,33 @@ export const EnhancedCapsuleCard: React.FC<EnhancedCapsuleCardProps> = ({
 
   const handleLike = () => {
     setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     onLike?.(capsule.id);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'verified': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'pending': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'disputed': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case "verified":
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case "pending":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "disputed":
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      default:
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'verified': return '✅';
-      case 'pending': return '⏳';
-      case 'disputed': return '⚠️';
-      default: return '📝';
+      case "verified":
+        return "✅";
+      case "pending":
+        return "⏳";
+      case "disputed":
+        return "⚠️";
+      default:
+        return "📝";
     }
   };
 
@@ -75,14 +95,18 @@ export const EnhancedCapsuleCard: React.FC<EnhancedCapsuleCardProps> = ({
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.3 }}
           />
-          
+
           {/* Status Badge with Animation */}
           <motion.div
             className="absolute top-3 right-3 z-10"
-            animate={isHovered ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }}
+            animate={
+              isHovered ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }
+            }
             transition={{ duration: 0.2 }}
           >
-            <Badge className={`${getStatusColor(capsule.status)} border text-xs`}>
+            <Badge
+              className={`${getStatusColor(capsule.status)} border text-xs`}
+            >
               <span className="mr-1">{getStatusIcon(capsule.status)}</span>
               {capsule.status}
             </Badge>
@@ -91,11 +115,15 @@ export const EnhancedCapsuleCard: React.FC<EnhancedCapsuleCardProps> = ({
           {/* Floating Sparkles */}
           <motion.div
             className="absolute top-2 left-2 z-10"
-            animate={isHovered ? {
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360],
-              opacity: [0.6, 1, 0.6]
-            } : { scale: 1, rotate: 0, opacity: 0.4 }}
+            animate={
+              isHovered
+                ? {
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 180, 360],
+                    opacity: [0.6, 1, 0.6],
+                  }
+                : { scale: 1, rotate: 0, opacity: 0.4 }
+            }
             transition={{ duration: 2, repeat: Infinity }}
           >
             <Sparkles className="h-4 w-4 text-yellow-400" />
@@ -144,14 +172,16 @@ export const EnhancedCapsuleCard: React.FC<EnhancedCapsuleCardProps> = ({
             {/* Interactive Actions */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <FloatingTooltip content={`${likeCount} ${likeCount === 1 ? 'like' : 'likes'}`}>
+                <FloatingTooltip
+                  content={`${likeCount} ${likeCount === 1 ? "like" : "likes"}`}
+                >
                   <div className="flex items-center space-x-1">
                     <LikeAnimation
                       isLiked={isLiked}
                       onToggle={handleLike}
                       size={20}
                     />
-                    <motion.span 
+                    <motion.span
                       className="text-slate-400 text-sm"
                       animate={{ scale: isLiked ? [1, 1.2, 1] : 1 }}
                       transition={{ duration: 0.3 }}
@@ -184,8 +214,8 @@ export const EnhancedCapsuleCard: React.FC<EnhancedCapsuleCardProps> = ({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="outline"
                   onClick={() => onView?.(capsule.id)}
                   className="border-blue-500/50 text-blue-400 hover:bg-blue-500/20 transition-all duration-200"

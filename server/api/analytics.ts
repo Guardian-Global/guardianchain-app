@@ -102,8 +102,8 @@ router.get("/:id/analytics", async (req, res) => {
       1,
       Math.ceil(
         (Date.now() - new Date(capsule.createdAt || Date.now()).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+          (1000 * 60 * 60 * 24),
+      ),
     );
     const dailyViewRate = (capsule.viewCount || 0) / daysActive;
     const dailyShareRate = (capsule.shareCount || 0) / daysActive;

@@ -122,7 +122,7 @@ const EnhancedAuth: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
           setAuthStatus(
-            data.authenticated ? "authenticated" : "unauthenticated"
+            data.authenticated ? "authenticated" : "unauthenticated",
           );
         }
       } catch (error) {
@@ -166,7 +166,7 @@ const EnhancedAuth: React.FC = () => {
                 address: walletInfo.address,
                 chainId: walletInfo.chainId,
                 signature: await walletManager.signMessage(
-                  "GUARDIANCHAIN Login"
+                  "GUARDIANCHAIN Login",
                 ),
                 message: "GUARDIANCHAIN Login",
               }),
@@ -255,15 +255,15 @@ const EnhancedAuth: React.FC = () => {
                 authStatus === "authenticated"
                   ? "bg-green-600"
                   : authStatus === "unauthenticated"
-                  ? "bg-red-600"
-                  : "bg-yellow-600"
+                    ? "bg-red-600"
+                    : "bg-yellow-600"
               }`}
             >
               {authStatus === "authenticated"
                 ? "Authenticated"
                 : authStatus === "unauthenticated"
-                ? "Not Authenticated"
-                : "Checking..."}
+                  ? "Not Authenticated"
+                  : "Checking..."}
             </Badge>
           </CardTitle>
           <p className="text-slate-300">

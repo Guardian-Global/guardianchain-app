@@ -11,7 +11,7 @@ export async function fetchNotifications() {
     return data.notifications || [];
   } catch (error) {
     throw new Error(
-      "Notifications not configured: Connect notification provider to activate"
+      "Notifications not configured: Connect notification provider to activate",
     );
   }
 }

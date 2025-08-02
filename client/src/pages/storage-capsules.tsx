@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { Database, Upload, Shield, Clock, Star, Crown } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { Database, Upload, Shield, Clock, Star, Crown } from "lucide-react";
 
 interface StorageTier {
   size: string;
@@ -16,8 +16,8 @@ interface StorageTier {
 
 export default function StorageCapsules() {
   const [pricingData, setPricingData] = useState<any>(null);
-  const [selectedTier, setSelectedTier] = useState<string>('');
-  const [email, setEmail] = useState('');
+  const [selectedTier, setSelectedTier] = useState<string>("");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -27,7 +27,7 @@ export default function StorageCapsules() {
 
   const fetchPricingData = async () => {
     try {
-      const response = await fetch('/api/checkout/storage-pricing');
+      const response = await fetch("/api/checkout/storage-pricing");
       const data = await response.json();
       setPricingData(data);
     } catch (error) {
@@ -50,19 +50,19 @@ export default function StorageCapsules() {
     }
 
     setIsLoading(true);
-    
+
     try {
-      const user = JSON.parse(localStorage.getItem('auth_user') || '{}');
-      
-      const response = await fetch('/api/checkout/create-storage-session', {
-        method: 'POST',
+      const user = JSON.parse(localStorage.getItem("auth_user") || "{}");
+
+      const response = await fetch("/api/checkout/create-storage-session", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           size,
           email,
-          userId: user.id || 'anonymous'
+          userId: user.id || "anonymous",
         }),
       });
 
@@ -72,7 +72,7 @@ export default function StorageCapsules() {
         // Redirect to Stripe checkout
         window.location.href = data.url;
       } else {
-        throw new Error(data.error || 'Failed to create checkout session');
+        throw new Error(data.error || "Failed to create checkout session");
       }
     } catch (error: any) {
       toast({
@@ -87,18 +87,25 @@ export default function StorageCapsules() {
 
   const getStorageIcon = (size: string) => {
     switch (size) {
-      case '64GB': return <Database className="w-6 h-6 text-blue-400" />;
-      case '128GB': return <Upload className="w-6 h-6 text-green-400" />;
-      case '256GB': return <Shield className="w-6 h-6 text-purple-400" />;
-      case '512GB': return <Clock className="w-6 h-6 text-orange-400" />;
-      case '1TB': return <Star className="w-6 h-6 text-yellow-400" />;
-      case '2TB': return <Crown className="w-6 h-6 text-red-400" />;
-      default: return <Database className="w-6 h-6 text-gray-400" />;
+      case "64GB":
+        return <Database className="w-6 h-6 text-blue-400" />;
+      case "128GB":
+        return <Upload className="w-6 h-6 text-green-400" />;
+      case "256GB":
+        return <Shield className="w-6 h-6 text-purple-400" />;
+      case "512GB":
+        return <Clock className="w-6 h-6 text-orange-400" />;
+      case "1TB":
+        return <Star className="w-6 h-6 text-yellow-400" />;
+      case "2TB":
+        return <Crown className="w-6 h-6 text-red-400" />;
+      default:
+        return <Database className="w-6 h-6 text-gray-400" />;
     }
   };
 
   const isPopular = (size: string) => {
-    return size === '256GB' || size === '512GB';
+    return size === "256GB" || size === "512GB";
   };
 
   if (!pricingData) {
@@ -123,9 +130,12 @@ export default function StorageCapsules() {
             📸 Secure Capsule Storage for Life
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Stop paying monthly fees for data you don't own. With GuardianChain Storage Capsules,
-            your most precious photos and videos are permanently encrypted and sealed on-chain.
-            <span className="block mt-2 text-purple-400 font-semibold">Private. Sovereign. Immutable.</span>
+            Stop paying monthly fees for data you don't own. With GuardianChain
+            Storage Capsules, your most precious photos and videos are
+            permanently encrypted and sealed on-chain.
+            <span className="block mt-2 text-purple-400 font-semibold">
+              Private. Sovereign. Immutable.
+            </span>
           </p>
         </div>
 
@@ -142,87 +152,114 @@ export default function StorageCapsules() {
 
         {/* Storage Tiers */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Object.entries(pricingData.pricing).map(([size, price]: [string, any]) => (
-            <Card 
-              key={size}
-              className={`bg-slate-800 border-slate-700 relative ${
-                isPopular(size) ? 'ring-2 ring-purple-500' : ''
-              }`}
-            >
-              {isPopular(size) && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600">
-                  Popular
-                </Badge>
-              )}
-              
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-2">
-                  {getStorageIcon(size)}
-                </div>
-                <CardTitle className="text-white text-2xl">{size} Capsule</CardTitle>
-                <div className="text-sm text-gray-400 mb-2">Permanent on-chain storage</div>
-                <div className="text-3xl font-bold text-purple-400">
-                  ${price} USD
-                  <span className="text-sm text-gray-400 font-normal block">One-time payment</span>
-                </div>
-              </CardHeader>
+          {Object.entries(pricingData.pricing).map(
+            ([size, price]: [string, any]) => (
+              <Card
+                key={size}
+                className={`bg-slate-800 border-slate-700 relative ${
+                  isPopular(size) ? "ring-2 ring-purple-500" : ""
+                }`}
+              >
+                {isPopular(size) && (
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600">
+                    Popular
+                  </Badge>
+                )}
 
-              <CardContent>
-                <ul className="space-y-2 mb-6">
-                  {(pricingData.features as any)[size]?.map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center text-gray-300">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                <CardHeader className="text-center">
+                  <div className="flex justify-center mb-2">
+                    {getStorageIcon(size)}
+                  </div>
+                  <CardTitle className="text-white text-2xl">
+                    {size} Capsule
+                  </CardTitle>
+                  <div className="text-sm text-gray-400 mb-2">
+                    Permanent on-chain storage
+                  </div>
+                  <div className="text-3xl font-bold text-purple-400">
+                    ${price} USD
+                    <span className="text-sm text-gray-400 font-normal block">
+                      One-time payment
+                    </span>
+                  </div>
+                </CardHeader>
 
-                <Button
-                  onClick={() => handlePurchase(size)}
-                  disabled={isLoading || !email}
-                  className={`w-full ${
-                    isPopular(size) 
-                      ? 'bg-purple-600 hover:bg-purple-700' 
-                      : 'bg-slate-700 hover:bg-slate-600'
-                  }`}
-                >
-                  {isLoading ? 'Processing...' : `Purchase ${size}`}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent>
+                  <ul className="space-y-2 mb-6">
+                    {(pricingData.features as any)[size]?.map(
+                      (feature: string, index: number) => (
+                        <li
+                          key={index}
+                          className="flex items-center text-gray-300"
+                        >
+                          <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                          {feature}
+                        </li>
+                      ),
+                    )}
+                  </ul>
+
+                  <Button
+                    onClick={() => handlePurchase(size)}
+                    disabled={isLoading || !email}
+                    className={`w-full ${
+                      isPopular(size)
+                        ? "bg-purple-600 hover:bg-purple-700"
+                        : "bg-slate-700 hover:bg-slate-600"
+                    }`}
+                  >
+                    {isLoading ? "Processing..." : `Purchase ${size}`}
+                  </Button>
+                </CardContent>
+              </Card>
+            ),
+          )}
         </div>
 
         {/* Why Choose Guardian Capsules */}
         <div className="mt-16 bg-purple-900/30 rounded-xl p-8">
-          <h2 className="text-3xl font-bold mb-6 text-center">📦 Why Choose Guardian Capsules?</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            📦 Why Choose Guardian Capsules?
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                <span className="text-gray-300">Permanent IPFS + blockchain-based storage</span>
+                <span className="text-gray-300">
+                  Permanent IPFS + blockchain-based storage
+                </span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                <span className="text-gray-300">No monthly or hidden fees — ever</span>
+                <span className="text-gray-300">
+                  No monthly or hidden fees — ever
+                </span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                <span className="text-gray-300">Private ownership, sovereign control</span>
+                <span className="text-gray-300">
+                  Private ownership, sovereign control
+                </span>
               </div>
             </div>
             <div className="space-y-4">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                <span className="text-gray-300">Encrypted & immortalized for legacy</span>
+                <span className="text-gray-300">
+                  Encrypted & immortalized for legacy
+                </span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                <span className="text-gray-300">Backed by Veritas Seal with time-stamped proof</span>
+                <span className="text-gray-300">
+                  Backed by Veritas Seal with time-stamped proof
+                </span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
-                <span className="text-gray-300">Stop paying forever for what you should own</span>
+                <span className="text-gray-300">
+                  Stop paying forever for what you should own
+                </span>
               </div>
             </div>
           </div>

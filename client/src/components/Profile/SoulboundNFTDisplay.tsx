@@ -149,10 +149,10 @@ export default function SoulboundNFTDisplay({
     ? achievements
     : defaultAchievements;
   const legendaryCount = displayAchievements.filter(
-    (a) => a.rarity === "legendary"
+    (a) => a.rarity === "legendary",
   ).length;
   const epicCount = displayAchievements.filter(
-    (a) => a.rarity === "epic"
+    (a) => a.rarity === "epic",
   ).length;
   const totalValue = displayAchievements.length * 100; // Example calculation
 
@@ -211,14 +211,14 @@ export default function SoulboundNFTDisplay({
                 <Card
                   key={achievement.id}
                   className={`bg-slate-700/30 border ${getRarityColor(
-                    achievement.rarity
+                    achievement.rarity,
                   )}`}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       <div
                         className={`p-2 rounded-lg ${getRarityColor(
-                          achievement.rarity
+                          achievement.rarity,
                         )}`}
                       >
                         <Icon className="w-5 h-5" />
@@ -230,7 +230,7 @@ export default function SoulboundNFTDisplay({
                           </h3>
                           <Badge
                             className={`${getRarityColor(
-                              achievement.rarity
+                              achievement.rarity,
                             )} text-xs`}
                           >
                             {getRarityIcon(achievement.rarity)}
@@ -275,7 +275,7 @@ export default function SoulboundNFTDisplay({
                         <div className="text-xs text-slate-500 mt-2">
                           Unlocked:{" "}
                           {new Date(
-                            achievement.unlockedAt
+                            achievement.unlockedAt,
                           ).toLocaleDateString()}
                         </div>
                       </div>

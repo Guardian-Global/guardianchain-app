@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { HelpCircle, BookOpen } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useHelp } from './HelpProvider';
-import { HelpCenter } from './HelpCenter';
+import React, { useState } from "react";
+import { HelpCircle, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useHelp } from "./HelpProvider";
+import { HelpCenter } from "./HelpCenter";
 
 export const HelpToggle: React.FC = () => {
   const [isHelpCenterOpen, setIsHelpCenterOpen] = useState(false);

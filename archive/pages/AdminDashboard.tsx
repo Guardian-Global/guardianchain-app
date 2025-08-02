@@ -224,7 +224,7 @@ export default function AdminDashboard() {
   const handleModerateUser = (
     userId: string,
     action: string,
-    reason?: string
+    reason?: string,
   ) => {
     moderateUserMutation.mutate({ userId, action, reason });
   };
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
                             onClick={() =>
                               handleRejectCapsule(
                                 capsule.id,
-                                "Content policy violation"
+                                "Content policy violation",
                               )
                             }
                             disabled={rejectCapsuleMutation.isPending}
@@ -502,7 +502,7 @@ export default function AdminDashboard() {
                             onClick={() =>
                               handleRejectCapsule(
                                 item.id,
-                                "Confirmed policy violation"
+                                "Confirmed policy violation",
                               )
                             }
                             disabled={rejectCapsuleMutation.isPending}
@@ -555,10 +555,10 @@ export default function AdminDashboard() {
                                 user.status === "active"
                                   ? "default"
                                   : user.status === "warned"
-                                  ? "secondary"
-                                  : user.status === "suspended"
-                                  ? "destructive"
-                                  : "destructive"
+                                    ? "secondary"
+                                    : user.status === "suspended"
+                                      ? "destructive"
+                                      : "destructive"
                               }
                             >
                               {user.status}
@@ -585,7 +585,7 @@ export default function AdminDashboard() {
                                   handleModerateUser(
                                     user.id,
                                     "warn",
-                                    "Community guidelines reminder"
+                                    "Community guidelines reminder",
                                   )
                                 }
                               >
@@ -598,7 +598,7 @@ export default function AdminDashboard() {
                                   handleModerateUser(
                                     user.id,
                                     "suspend",
-                                    "Policy violation"
+                                    "Policy violation",
                                   )
                                 }
                               >
@@ -698,7 +698,7 @@ export default function AdminDashboard() {
                     <span>GTT in Circulation</span>
                     <span className="font-bold">
                       {parseFloat(
-                        stats?.gttDistributed || "0"
+                        stats?.gttDistributed || "0",
                       ).toLocaleString()}
                     </span>
                   </div>
@@ -709,7 +709,7 @@ export default function AdminDashboard() {
                         ? Math.round(
                             ((stats.totalCapsules - stats.pendingCapsules) /
                               stats.totalCapsules) *
-                              100
+                              100,
                           )
                         : 0}
                       %

@@ -110,7 +110,7 @@ export default function NotificationPreferences() {
 
   const updatePreference = (
     key: keyof NotificationPreferences["preferences"],
-    value: boolean
+    value: boolean,
   ) => {
     if (!preferences) return;
 
@@ -359,7 +359,7 @@ export default function NotificationPreferences() {
                       toast({
                         title: "Founder Test Sent",
                         description: "Check founder@guardianchain.org inbox",
-                      })
+                      }),
                     )
                 }
                 variant="secondary"

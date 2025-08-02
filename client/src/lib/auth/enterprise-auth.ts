@@ -233,7 +233,7 @@ export class EnterpriseAuth {
       tier?: UserTier;
       returnUrl?: string;
       metadata?: Record<string, any>;
-    }
+    },
   ) {
     const response = await fetch(`${this.baseUrl}/initiate`, {
       method: "POST",
@@ -329,7 +329,7 @@ export class EnterpriseAuth {
   // Get AI onboarding recommendations
   async getOnboardingRecommendations(
     step: number,
-    userContext?: Record<string, any>
+    userContext?: Record<string, any>,
   ) {
     try {
       const response = await fetch(
@@ -344,7 +344,7 @@ export class EnterpriseAuth {
             step,
             userContext,
           }),
-        }
+        },
       );
 
       if (!response.ok) {

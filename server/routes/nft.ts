@@ -7,19 +7,19 @@ const router = Router();
 router.post("/upload-metadata", isDebugAuthenticated, async (req, res) => {
   try {
     const { capsuleId, metadata } = req.body;
-    
+
     // Mock IPFS hash generation
     const ipfsHash = `Qm${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
-    
+
     console.log(`📦 NFT metadata uploaded for capsule ${capsuleId}:`, {
       ipfsHash,
-      metadata: metadata.name
+      metadata: metadata.name,
     });
-    
+
     res.json({
       ipfsHash,
       metadataUri: `ipfs://${ipfsHash}`,
-      gateway: `https://ipfs.io/ipfs/${ipfsHash}`
+      gateway: `https://ipfs.io/ipfs/${ipfsHash}`,
     });
   } catch (error) {
     console.error("Error uploading NFT metadata:", error);
@@ -31,19 +31,19 @@ router.post("/upload-metadata", isDebugAuthenticated, async (req, res) => {
 router.post("/mint", isDebugAuthenticated, async (req, res) => {
   try {
     const { capsuleId, metadataUri, recipient } = req.body;
-    
+
     // Mock NFT minting
     const tokenId = Math.floor(Math.random() * 1000000);
     const contractAddress = "0x1234567890123456789012345678901234567890";
     const transactionHash = `0x${Math.random().toString(16).substring(2, 66)}`;
-    
+
     console.log(`🎨 NFT minted for capsule ${capsuleId}:`, {
       tokenId,
       contractAddress,
       recipient,
-      metadataUri
+      metadataUri,
     });
-    
+
     res.json({
       tokenId,
       contractAddress,
@@ -51,7 +51,7 @@ router.post("/mint", isDebugAuthenticated, async (req, res) => {
       metadataUri,
       recipient,
       blockNumber: Math.floor(Math.random() * 1000000),
-      gasUsed: "21000"
+      gasUsed: "21000",
     });
   } catch (error) {
     console.error("Error minting NFT:", error);
@@ -63,7 +63,7 @@ router.post("/mint", isDebugAuthenticated, async (req, res) => {
 router.get("/metadata/:tokenId", async (req, res) => {
   try {
     const { tokenId } = req.params;
-    
+
     // Mock metadata retrieval
     const metadata = {
       name: `Truth Capsule #${tokenId}`,
@@ -72,12 +72,12 @@ router.get("/metadata/:tokenId", async (req, res) => {
       attributes: [
         { trait_type: "Truth Score", value: Math.floor(Math.random() * 100) },
         { trait_type: "Verification Level", value: "Verified" },
-        { trait_type: "Creation Date", value: new Date().toISOString() }
-      ]
+        { trait_type: "Creation Date", value: new Date().toISOString() },
+      ],
     };
-    
+
     console.log(`🎨 NFT metadata requested for token ${tokenId}`);
-    
+
     res.json(metadata);
   } catch (error) {
     console.error("Error fetching NFT metadata:", error);

@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { 
-  Archive, 
-  Search, 
-  Filter, 
-  Calendar, 
-  Lock, 
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Archive,
+  Search,
+  Filter,
+  Calendar,
+  Lock,
   Eye,
   Download,
   ExternalLink,
   Star,
-  Clock
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+  Clock,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface VaultCapsule {
   id: string;
@@ -25,7 +25,7 @@ interface VaultCapsule {
   category: string;
   tags: string[];
   createdAt: string;
-  status: 'sealed' | 'timelocked' | 'archived' | 'permanent';
+  status: "sealed" | "timelocked" | "archived" | "permanent";
   verificationLevel: string;
   griefScore: number;
   viewCount: number;
@@ -35,58 +35,69 @@ interface VaultCapsule {
 
 export default function CapsuleVault() {
   const { user } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterCategory, setFilterCategory] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const { data: vaultCapsules, isLoading } = useQuery<VaultCapsule[]>({
-    queryKey: ['/api/capsules/vault', user?.id],
+    queryKey: ["/api/capsules/vault", user?.id],
     enabled: !!user?.id,
   });
 
-  const filteredCapsules = vaultCapsules?.filter(capsule => {
-    const matchesSearch = capsule.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         capsule.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         capsule.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesCategory = filterCategory === 'all' || capsule.category === filterCategory;
-    const matchesStatus = filterStatus === 'all' || capsule.status === filterStatus;
-    
-    return matchesSearch && matchesCategory && matchesStatus;
-  }) || [];
+  const filteredCapsules =
+    vaultCapsules?.filter((capsule) => {
+      const matchesSearch =
+        capsule.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        capsule.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        capsule.tags.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase()),
+        );
+
+      const matchesCategory =
+        filterCategory === "all" || capsule.category === filterCategory;
+      const matchesStatus =
+        filterStatus === "all" || capsule.status === filterStatus;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    }) || [];
 
   const categories = [
-    { value: 'all', label: 'All Categories' },
-    { value: 'personal', label: 'Personal' },
-    { value: 'family', label: 'Family' },
-    { value: 'professional', label: 'Professional' },
-    { value: 'historical', label: 'Historical' },
-    { value: 'creative', label: 'Creative' }
+    { value: "all", label: "All Categories" },
+    { value: "personal", label: "Personal" },
+    { value: "family", label: "Family" },
+    { value: "professional", label: "Professional" },
+    { value: "historical", label: "Historical" },
+    { value: "creative", label: "Creative" },
   ];
 
   const statusOptions = [
-    { value: 'all', label: 'All Status' },
-    { value: 'sealed', label: 'Sealed' },
-    { value: 'timelocked', label: 'Time Locked' },
-    { value: 'archived', label: 'Archived' },
-    { value: 'permanent', label: 'Permanent' }
+    { value: "all", label: "All Status" },
+    { value: "sealed", label: "Sealed" },
+    { value: "timelocked", label: "Time Locked" },
+    { value: "archived", label: "Archived" },
+    { value: "permanent", label: "Permanent" },
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'sealed': return 'bg-blue-500';
-      case 'timelocked': return 'bg-yellow-500';
-      case 'archived': return 'bg-gray-500';
-      case 'permanent': return 'bg-green-500';
-      default: return 'bg-gray-500';
+      case "sealed":
+        return "bg-blue-500";
+      case "timelocked":
+        return "bg-yellow-500";
+      case "archived":
+        return "bg-gray-500";
+      case "permanent":
+        return "bg-green-500";
+      default:
+        return "bg-gray-500";
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -151,7 +162,7 @@ export default function CapsuleVault() {
                 onChange={(e) => setFilterCategory(e.target.value)}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
               >
-                {categories.map(cat => (
+                {categories.map((cat) => (
                   <option key={cat.value} value={cat.value}>
                     {cat.label}
                   </option>
@@ -164,7 +175,7 @@ export default function CapsuleVault() {
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
               >
-                {statusOptions.map(status => (
+                {statusOptions.map((status) => (
                   <option key={status.value} value={status.value}>
                     {status.label}
                   </option>
@@ -180,8 +191,12 @@ export default function CapsuleVault() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Capsules</p>
-                  <p className="text-2xl font-bold">{vaultCapsules?.length || 0}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Total Capsules
+                  </p>
+                  <p className="text-2xl font-bold">
+                    {vaultCapsules?.length || 0}
+                  </p>
                 </div>
                 <Archive className="w-8 h-8 text-blue-500" />
               </div>
@@ -192,9 +207,11 @@ export default function CapsuleVault() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Permanent</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Permanent
+                  </p>
                   <p className="text-2xl font-bold">
-                    {vaultCapsules?.filter(c => c.isPermanent).length || 0}
+                    {vaultCapsules?.filter((c) => c.isPermanent).length || 0}
                   </p>
                 </div>
                 <Lock className="w-8 h-8 text-green-500" />
@@ -206,9 +223,12 @@ export default function CapsuleVault() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Time Locked</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Time Locked
+                  </p>
                   <p className="text-2xl font-bold">
-                    {vaultCapsules?.filter(c => c.status === 'timelocked').length || 0}
+                    {vaultCapsules?.filter((c) => c.status === "timelocked")
+                      .length || 0}
                   </p>
                 </div>
                 <Clock className="w-8 h-8 text-yellow-500" />
@@ -220,9 +240,12 @@ export default function CapsuleVault() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Views</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Total Views
+                  </p>
                   <p className="text-2xl font-bold">
-                    {vaultCapsules?.reduce((sum, c) => sum + c.viewCount, 0) || 0}
+                    {vaultCapsules?.reduce((sum, c) => sum + c.viewCount, 0) ||
+                      0}
                   </p>
                 </div>
                 <Eye className="w-8 h-8 text-purple-500" />
@@ -234,15 +257,24 @@ export default function CapsuleVault() {
         {/* Capsules Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCapsules.map((capsule) => (
-            <Card key={capsule.id} className="hover:shadow-lg transition-shadow">
+            <Card
+              key={capsule.id}
+              className="hover:shadow-lg transition-shadow"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-lg mb-2">{capsule.title}</CardTitle>
+                    <CardTitle className="text-lg mb-2">
+                      {capsule.title}
+                    </CardTitle>
                     <div className="flex items-center space-x-2">
                       <Badge variant="outline">{capsule.category}</Badge>
-                      <div className={`w-3 h-3 rounded-full ${getStatusColor(capsule.status)}`} />
-                      <span className="text-xs text-gray-500 capitalize">{capsule.status}</span>
+                      <div
+                        className={`w-3 h-3 rounded-full ${getStatusColor(capsule.status)}`}
+                      />
+                      <span className="text-xs text-gray-500 capitalize">
+                        {capsule.status}
+                      </span>
                     </div>
                   </div>
                   {capsule.isPermanent && (
@@ -275,7 +307,7 @@ export default function CapsuleVault() {
                     <span>Created: {formatDate(capsule.createdAt)}</span>
                     <span>Views: {capsule.viewCount}</span>
                   </div>
-                  
+
                   {capsule.unlockDate && (
                     <div className="flex items-center text-xs text-yellow-600">
                       <Clock className="w-3 h-3 mr-1" />
@@ -284,7 +316,9 @@ export default function CapsuleVault() {
                   )}
 
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500">Grief Score: {capsule.griefScore}</span>
+                    <span className="text-gray-500">
+                      Grief Score: {capsule.griefScore}
+                    </span>
                     <div className="flex items-center">
                       <Star className="w-3 h-3 text-yellow-500 mr-1" />
                       <span>{capsule.verificationLevel}</span>
@@ -315,9 +349,9 @@ export default function CapsuleVault() {
             <Archive className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-xl font-semibold mb-2">No Capsules Found</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              {searchTerm || filterCategory !== 'all' || filterStatus !== 'all'
-                ? 'Try adjusting your search or filters'
-                : 'Create your first truth capsule to start building your vault'}
+              {searchTerm || filterCategory !== "all" || filterStatus !== "all"
+                ? "Try adjusting your search or filters"
+                : "Create your first truth capsule to start building your vault"}
             </p>
           </div>
         )}

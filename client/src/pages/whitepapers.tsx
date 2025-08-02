@@ -343,7 +343,7 @@ export default function WhitepapersPage() {
             <TabsContent key={category} value={category} className="space-y-6">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {WHITEPAPERS.filter(
-                  (wp) => category === "All" || wp.category === category
+                  (wp) => category === "All" || wp.category === category,
                 ).map((whitepaper) => {
                   const IconComponent = whitepaper.icon;
                   return (

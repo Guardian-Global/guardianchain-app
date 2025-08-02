@@ -131,7 +131,7 @@ export default function PlayfulBlockchainAnimation() {
     setBlocks([genesisBlock]);
     setMiners(initialMiners);
     setTotalHashrate(
-      initialMiners.reduce((sum, miner) => sum + miner.hashRate, 0)
+      initialMiners.reduce((sum, miner) => sum + miner.hashRate, 0),
     );
 
     // Create initial transactions
@@ -224,8 +224,8 @@ export default function PlayfulBlockchainAnimation() {
         prevTxs.map((tx) =>
           pendingTxs.some((ptx) => ptx.id === tx.id)
             ? { ...tx, status: "mining" as const }
-            : tx
-        )
+            : tx,
+        ),
       );
 
       // Complete mining after animation
@@ -239,16 +239,16 @@ export default function PlayfulBlockchainAnimation() {
                   isMined: true,
                   color: "#10b981",
                 }
-              : block
-          )
+              : block,
+          ),
         );
 
         setTransactions((prevTxs) =>
           prevTxs.map((tx) =>
             pendingTxs.some((ptx) => ptx.id === tx.id)
               ? { ...tx, status: "confirmed" as const }
-              : tx
-          )
+              : tx,
+          ),
         );
 
         setStats((prevStats) => ({
@@ -315,7 +315,7 @@ export default function PlayfulBlockchainAnimation() {
           }
         }
         return tx;
-      })
+      }),
     );
   };
 
@@ -325,7 +325,7 @@ export default function PlayfulBlockchainAnimation() {
         ...miner,
         isActive: Math.random() > 0.1, // 90% uptime
         hashRate: miner.hashRate + (Math.random() - 0.5) * 10, // Fluctuating hashrate
-      }))
+      })),
     );
   };
 
@@ -561,8 +561,8 @@ export default function PlayfulBlockchainAnimation() {
                           block.isBeingMined
                             ? "border-yellow-500 bg-yellow-900/20 animate-pulse"
                             : block.isMined
-                            ? "border-green-500 bg-green-900/20"
-                            : "border-gray-500 bg-gray-900/20"
+                              ? "border-green-500 bg-green-900/20"
+                              : "border-gray-500 bg-gray-900/20"
                         }`}
                       >
                         <div className="text-xs font-mono text-white">
@@ -601,8 +601,8 @@ export default function PlayfulBlockchainAnimation() {
                         tx.status === "pending"
                           ? "border-gray-500 bg-gray-900/50"
                           : tx.status === "mining"
-                          ? "border-yellow-500 bg-yellow-900/20 animate-pulse"
-                          : "border-green-500 bg-green-900/20"
+                            ? "border-yellow-500 bg-yellow-900/20 animate-pulse"
+                            : "border-green-500 bg-green-900/20"
                       }`}
                     >
                       <div className="flex items-center gap-1 mb-1">
@@ -620,8 +620,8 @@ export default function PlayfulBlockchainAnimation() {
                           tx.status === "pending"
                             ? "border-gray-500 text-gray-400"
                             : tx.status === "mining"
-                            ? "border-yellow-500 text-yellow-400"
-                            : "border-green-500 text-green-400"
+                              ? "border-yellow-500 text-yellow-400"
+                              : "border-green-500 text-green-400"
                         }`}
                       >
                         {tx.status}

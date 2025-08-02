@@ -287,7 +287,7 @@ export default function MintNFT() {
                           <Badge
                             variant="outline"
                             className={`border-current ${getGriefScoreColor(
-                              nft.griefScore
+                              nft.griefScore,
                             )}`}
                           >
                             {getGriefScoreLabel(nft.griefScore)}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { TokenLaunchpadPro } from '@/components/revenue/TokenLaunchpadPro';
+import React from "react";
+import { TokenLaunchpadPro } from "@/components/revenue/TokenLaunchpadPro";
 
 export default function TokenLaunchpadProPage() {
   return (

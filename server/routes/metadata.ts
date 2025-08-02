@@ -2,59 +2,68 @@ import type { Express } from "express";
 
 export function registerMetadataRoutes(app: Express) {
   // NFT metadata endpoint for CapsuleNFT tokens
-  app.get('/api/metadata/:tokenId', async (req, res) => {
+  app.get("/api/metadata/:tokenId", async (req, res) => {
     try {
       const tokenId = req.params.tokenId;
-      const baseUrl = req.get('host') || 'guardianchain.app';
-      const protocol = req.secure ? 'https' : 'http';
+      const baseUrl = req.get("host") || "guardianchain.app";
+      const protocol = req.secure ? "https" : "http";
 
       // In production, this would fetch capsule data from database
       // For now, we'll generate standardized metadata
       const metadata = {
         name: `Guardian Capsule #${tokenId}`,
-        description: "A sealed capsule of memory and truth preserved on GuardianChain - the sovereign Web3 infrastructure for time-locked proof and grief-score yield.",
+        description:
+          "A sealed capsule of memory and truth preserved on GuardianChain - the sovereign Web3 infrastructure for time-locked proof and grief-score yield.",
         image: `${protocol}://${baseUrl}/api/capsule-image/${tokenId}`,
         external_url: `${protocol}://${baseUrl}/capsules/${tokenId}`,
         attributes: [
           { trait_type: "Chain", value: "Polygon" },
           { trait_type: "Category", value: "Veritas Capsule" },
           { trait_type: "Platform", value: "GuardianChain" },
-          { display_type: "number", trait_type: "Token ID", value: parseInt(tokenId) },
-          { display_type: "date", trait_type: "Minted", value: Math.floor(Date.now() / 1000) }
+          {
+            display_type: "number",
+            trait_type: "Token ID",
+            value: parseInt(tokenId),
+          },
+          {
+            display_type: "date",
+            trait_type: "Minted",
+            value: Math.floor(Date.now() / 1000),
+          },
         ],
         properties: {
           files: [
             {
               uri: `${protocol}://${baseUrl}/api/capsule-image/${tokenId}`,
-              type: "image/png"
-            }
+              type: "image/png",
+            },
           ],
-          category: "image"
-        }
+          category: "image",
+        },
       };
 
       // Set appropriate headers for NFT metadata
       res.set({
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600'
+        "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=3600",
       });
 
       console.log(`📋 NFT metadata requested for token ${tokenId}`);
       res.status(200).json(metadata);
     } catch (error) {
-      console.error('❌ Metadata generation failed:', error);
-      res.status(500).json({ 
-        error: 'Failed to generate metadata',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      console.error("❌ Metadata generation failed:", error);
+      res.status(500).json({
+        error: "Failed to generate metadata",
+        details: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });
 
   // Generate capsule preview image (SVG)
-  app.get('/api/capsule-image/:tokenId', async (req, res) => {
+  app.get("/api/capsule-image/:tokenId", async (req, res) => {
     try {
       const tokenId = req.params.tokenId;
-      
+
       // Generate SVG preview for the capsule NFT
       const svg = `
         <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
@@ -103,16 +112,16 @@ export function registerMetadataRoutes(app: Express) {
       `;
 
       res.set({
-        'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=86400'
+        "Content-Type": "image/svg+xml",
+        "Cache-Control": "public, max-age=86400",
       });
 
       res.status(200).send(svg);
     } catch (error) {
-      console.error('❌ Capsule image generation failed:', error);
-      res.status(500).json({ 
-        error: 'Failed to generate capsule image',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      console.error("❌ Capsule image generation failed:", error);
+      res.status(500).json({
+        error: "Failed to generate capsule image",
+        details: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });

@@ -1,17 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Play, 
-  BarChart3, 
-  Coins, 
-  Link2, 
-  Brain, 
-  Shield, 
-  Briefcase, 
+import {
+  Play,
+  BarChart3,
+  Coins,
+  Link2,
+  Brain,
+  Shield,
+  Briefcase,
   Globe,
   Download,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
 export default function DemoKit() {
@@ -19,45 +19,51 @@ export default function DemoKit() {
     {
       title: "Hero Video & Mission Statement",
       icon: Play,
-      description: "Watch our 2-minute explainer video showcasing the GuardianChain vision",
+      description:
+        "Watch our 2-minute explainer video showcasing the GuardianChain vision",
       link: "/",
-      status: "Live"
+      status: "Live",
     },
     {
       title: "Real-time Metrics Dashboard",
       icon: BarChart3,
-      description: "Live analytics showing platform growth, user engagement, and truth verification rates",
+      description:
+        "Live analytics showing platform growth, user engagement, and truth verification rates",
       link: "/dashboard/analytics",
-      status: "Live"
+      status: "Live",
     },
     {
       title: "GTT Token Summary & Supply Chart",
       icon: Coins,
-      description: "Complete tokenomics overview with real-time price data and yield mechanics",
+      description:
+        "Complete tokenomics overview with real-time price data and yield mechanics",
       link: "/token",
-      status: "Live"
+      status: "Live",
     },
     {
       title: "Public Capsule Feed & Reels",
       icon: Link2,
-      description: "Interactive demo of our TikTok-style truth preservation experience",
+      description:
+        "Interactive demo of our TikTok-style truth preservation experience",
       link: "/explore",
-      status: "Live"
+      status: "Live",
     },
     {
       title: "AI Features Showcase",
       icon: Brain,
-      description: "GPT-powered title suggestions, voice summaries, and content verification",
+      description:
+        "GPT-powered title suggestions, voice summaries, and content verification",
       link: "/ai-features",
-      status: "Demo"
+      status: "Demo",
     },
     {
       title: "Use Cases & Applications",
       icon: Shield,
-      description: "Whistleblower protection, eternal declarations, and sovereign social profiles",
+      description:
+        "Whistleblower protection, eternal declarations, and sovereign social profiles",
       link: "/use-cases",
-      status: "Live"
-    }
+      status: "Live",
+    },
   ];
 
   const documentLinks = [
@@ -65,26 +71,28 @@ export default function DemoKit() {
       title: "Grant Eligibility PDF",
       description: "Complete technical specifications and funding requirements",
       url: "/assets/pdf/GuardianChain_GrantKit.pdf",
-      type: "PDF"
+      type: "PDF",
     },
     {
       title: "Pitch Deck",
-      description: "Investor-ready presentation with market analysis and projections",
+      description:
+        "Investor-ready presentation with market analysis and projections",
       url: "/assets/pdf/GuardianChain_PitchDeck.pdf",
-      type: "PDF"
+      type: "PDF",
     },
     {
       title: "Technical Whitepaper",
-      description: "Deep dive into our truth verification and blockchain architecture",
+      description:
+        "Deep dive into our truth verification and blockchain architecture",
       url: "/whitepaper",
-      type: "Web"
+      type: "Web",
     },
     {
       title: "Roadmap & Milestones",
       description: "Quarterly development timeline and key deliverables",
       url: "/roadmap",
-      type: "Web"
-    }
+      type: "Web",
+    },
   ];
 
   return (
@@ -96,8 +104,9 @@ export default function DemoKit() {
             🧾 GuardianChain Grant & Investor Demo Kit
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Comprehensive demonstration package showcasing our truth preservation platform, 
-            AI capabilities, and investment opportunity for grants and ecosystem partners.
+            Comprehensive demonstration package showcasing our truth
+            preservation platform, AI capabilities, and investment opportunity
+            for grants and ecosystem partners.
           </p>
         </div>
 
@@ -108,7 +117,10 @@ export default function DemoKit() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {demoSections.map((section) => (
-              <Card key={section.title} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <Card
+                key={section.title}
+                className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -116,9 +128,13 @@ export default function DemoKit() {
                         <section.icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-medium">{section.title}</CardTitle>
-                        <Badge 
-                          variant={section.status === "Live" ? "default" : "secondary"}
+                        <CardTitle className="text-sm font-medium">
+                          {section.title}
+                        </CardTitle>
+                        <Badge
+                          variant={
+                            section.status === "Live" ? "default" : "secondary"
+                          }
                           className="mt-1"
                         >
                           {section.status}
@@ -131,13 +147,17 @@ export default function DemoKit() {
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     {section.description}
                   </p>
-                  <Button 
-                    asChild 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
                     className="w-full"
                   >
-                    <a href={section.link} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={section.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Demo
                     </a>
@@ -151,13 +171,17 @@ export default function DemoKit() {
         {/* Key Metrics */}
         <Card className="mb-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
           <CardHeader>
-            <CardTitle className="text-center text-2xl">📊 Platform Metrics</CardTitle>
+            <CardTitle className="text-center text-2xl">
+              📊 Platform Metrics
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               <div>
                 <div className="text-3xl font-bold">139</div>
-                <div className="text-blue-100 text-sm">Truth Capsules Created</div>
+                <div className="text-blue-100 text-sm">
+                  Truth Capsules Created
+                </div>
               </div>
               <div>
                 <div className="text-3xl font-bold">58</div>
@@ -165,7 +189,9 @@ export default function DemoKit() {
               </div>
               <div>
                 <div className="text-3xl font-bold">87%</div>
-                <div className="text-blue-100 text-sm">Truth Verification Rate</div>
+                <div className="text-blue-100 text-sm">
+                  Truth Verification Rate
+                </div>
               </div>
               <div>
                 <div className="text-3xl font-bold">6</div>
@@ -182,7 +208,10 @@ export default function DemoKit() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {documentLinks.map((doc) => (
-              <Card key={doc.title} className="hover:shadow-lg transition-shadow duration-300">
+              <Card
+                key={doc.title}
+                className="hover:shadow-lg transition-shadow duration-300"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -194,7 +223,11 @@ export default function DemoKit() {
                         {doc.description}
                       </p>
                       <Button asChild variant="outline" size="sm">
-                        <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={doc.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Download className="w-4 h-4 mr-2" />
                           {doc.type === "PDF" ? "Download PDF" : "View Online"}
                         </a>
@@ -218,7 +251,9 @@ export default function DemoKit() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-semibold mb-3 text-green-600 dark:text-green-400">✅ Qualifications Met</h4>
+                <h4 className="font-semibold mb-3 text-green-600 dark:text-green-400">
+                  ✅ Qualifications Met
+                </h4>
                 <ul className="space-y-2 text-sm">
                   <li>• Open source core protocol components</li>
                   <li>• Public goods focus (truth preservation)</li>
@@ -229,7 +264,9 @@ export default function DemoKit() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold mb-3 text-blue-600 dark:text-blue-400">🎯 Grant Categories</h4>
+                <h4 className="font-semibold mb-3 text-blue-600 dark:text-blue-400">
+                  🎯 Grant Categories
+                </h4>
                 <ul className="space-y-2 text-sm">
                   <li>• Web3 Social Impact Grants</li>
                   <li>• AI for Good Initiatives</li>
@@ -246,10 +283,13 @@ export default function DemoKit() {
         {/* Contact Information */}
         <Card className="text-center">
           <CardContent className="p-8">
-            <h3 className="text-2xl font-bold mb-4">Ready to Partner With Us?</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              Ready to Partner With Us?
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-              We're actively seeking strategic partnerships, grant opportunities, and investment 
-              to scale our truth preservation infrastructure globally.
+              We're actively seeking strategic partnerships, grant
+              opportunities, and investment to scale our truth preservation
+              infrastructure globally.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">

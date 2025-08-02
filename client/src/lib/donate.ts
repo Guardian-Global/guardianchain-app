@@ -60,7 +60,7 @@ export interface Donation {
 }
 
 export async function donateCapsuleCredits(
-  donation: DonationRequest
+  donation: DonationRequest,
 ): Promise<void> {
   try {
     const donationRecord = {
@@ -89,7 +89,7 @@ export async function donateCapsuleCredits(
 }
 
 export async function getDonationHistory(
-  limit: number = 10
+  limit: number = 10,
 ): Promise<Donation[]> {
   try {
     return new Promise((resolve) => {
@@ -111,7 +111,7 @@ export async function getDonationHistory(
 export async function donateToTraumaSurvivor(
   amount: number,
   survivorEmail: string,
-  donorId: string
+  donorId: string,
 ) {
   return donateCapsuleCredits({
     amount,
@@ -126,7 +126,7 @@ export async function donateToNonprofit(
   amount: number,
   organizationEmail: string,
   donorId: string,
-  cause: string
+  cause: string,
 ) {
   return donateCapsuleCredits({
     amount,
@@ -140,7 +140,7 @@ export async function donateToNonprofit(
 export async function donateToPublicTruth(
   amount: number,
   donorId: string,
-  campaign: string
+  campaign: string,
 ) {
   return donateCapsuleCredits({
     amount,
@@ -155,7 +155,7 @@ export async function donateToCharity(
   amount: number,
   charityAddress: string,
   donorId: string,
-  charityName: string
+  charityName: string,
 ) {
   return donateCapsuleCredits({
     amount,
@@ -234,7 +234,7 @@ export function validateDonation(donation: DonationRequest): {
 
 export function calculateDonationImpact(
   amount: number,
-  recipientType: string
+  recipientType: string,
 ): string {
   switch (recipientType) {
     case "individual":

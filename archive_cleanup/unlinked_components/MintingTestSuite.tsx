@@ -42,7 +42,7 @@ export default function MintingTestSuite() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { toast } = useToast();
-  
+
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [currentTest, setCurrentTest] = useState<string | null>(null);
@@ -51,8 +51,18 @@ export default function MintingTestSuite() {
   const testCapsuleData = {
     title: "GUARDIANCHAIN Minting Test Capsule",
     blocks: [
-      { id: 1, type: "text", content: "This is a test capsule for verifying blockchain minting functionality." },
-      { id: 2, type: "text", content: "Created by automated testing suite to ensure proper Web3 integration." },
+      {
+        id: 1,
+        type: "text",
+        content:
+          "This is a test capsule for verifying blockchain minting functionality.",
+      },
+      {
+        id: 2,
+        type: "text",
+        content:
+          "Created by automated testing suite to ensure proper Web3 integration.",
+      },
     ],
     metadata: {
       category: "TESTING",
@@ -72,15 +82,15 @@ export default function MintingTestSuite() {
         if (!isConnected || !address) {
           throw new Error("Wallet not connected");
         }
-        
+
         // Check ETH balance for gas
         const response = await fetch(`/api/web3/balance/${address}`);
         const balanceData = await response.json();
-        
+
         if (balanceData.ethBalance < 0.001) {
           throw new Error("Insufficient ETH balance for gas fees");
         }
-        
+
         return {
           address,
           chainId,
@@ -97,15 +107,21 @@ export default function MintingTestSuite() {
       test: async () => {
         const contracts = ["gtt", "vault", "factory", "nft", "dao"];
         const results = {};
-        
+
         for (const contract of contracts) {
-          const contractAddress = getContractAddress(contract, chainId || 31337);
-          if (!contractAddress || contractAddress === "0x0000000000000000000000000000000000000000") {
+          const contractAddress = getContractAddress(
+            contract,
+            chainId || 31337,
+          );
+          if (
+            !contractAddress ||
+            contractAddress === "0x0000000000000000000000000000000000000000"
+          ) {
             throw new Error(`${contract.toUpperCase()} contract not deployed`);
           }
           (results as any)[contract] = contractAddress;
         }
-        
+
         return results;
       },
     },
@@ -121,17 +137,19 @@ export default function MintingTestSuite() {
           "/api/ai/analyze-capsule",
           "/api/ai/capsule-assistant",
         ];
-        
+
         const results = {};
-        
+
         for (const endpoint of endpoints) {
           try {
             const response = await fetch(endpoint, {
               method: endpoint.includes("capsules") ? "GET" : "POST",
               headers: { "Content-Type": "application/json" },
-              body: endpoint.includes("capsules") ? undefined : JSON.stringify({ test: true }),
+              body: endpoint.includes("capsules")
+                ? undefined
+                : JSON.stringify({ test: true }),
             });
-            
+
             (results as any)[endpoint] = {
               status: response.status,
               ok: response.ok,
@@ -143,7 +161,7 @@ export default function MintingTestSuite() {
             };
           }
         }
-        
+
         return results;
       },
     },
@@ -157,12 +175,12 @@ export default function MintingTestSuite() {
           ...testCapsuleData,
           userId: address || "test-user",
         });
-        
+
         if (!response.ok) {
           const error = await response.json();
           throw new Error(error.message || "Failed to create capsule");
         }
-        
+
         const capsule = await response.json();
         return {
           capsuleId: capsule.id,
@@ -181,18 +199,18 @@ export default function MintingTestSuite() {
           capsuleData: testCapsuleData,
           userAddress: address,
         });
-        
+
         if (!response.ok) {
           throw new Error("Failed to generate NFT metadata");
         }
-        
+
         const metadata = await response.json();
-        
+
         // Validate required metadata fields
         if (!metadata.name || !metadata.description || !metadata.attributes) {
           throw new Error("Invalid metadata structure");
         }
-        
+
         return {
           metadataUri: metadata.uri,
           attributes: metadata.attributes.length,
@@ -211,14 +229,14 @@ export default function MintingTestSuite() {
           walletAddress: address,
           testMode: true,
         });
-        
+
         if (!response.ok) {
           const error = await response.json();
           throw new Error(error.message || "Minting failed");
         }
-        
+
         const result = await response.json();
-        
+
         return {
           transactionHash: result.transactionHash,
           tokenId: result.tokenId,
@@ -237,12 +255,12 @@ export default function MintingTestSuite() {
         const steps = [
           "Capsule created",
           "Metadata generated",
-          "IPFS upload completed", 
+          "IPFS upload completed",
           "NFT minted on chain",
           "Database updated",
           "Event logs recorded",
         ];
-        
+
         return {
           completedSteps: steps,
           verificationTime: Date.now(),
@@ -255,20 +273,20 @@ export default function MintingTestSuite() {
   const runTest = async (testCase: MintingTestCase) => {
     const startTime = Date.now();
     setCurrentTest(testCase.id);
-    
+
     // Update test status to running
     setTestResults((prev) =>
       prev.map((result) =>
         result.id === testCase.id
           ? { ...result, status: "running", message: "Running..." }
-          : result
-      )
+          : result,
+      ),
     );
 
     try {
       const result = await testCase.test();
       const duration = Date.now() - startTime;
-      
+
       setTestResults((prev) =>
         prev.map((testResult) =>
           testResult.id === testCase.id
@@ -279,14 +297,14 @@ export default function MintingTestSuite() {
                 details: result,
                 duration,
               }
-            : testResult
-        )
+            : testResult,
+        ),
       );
 
       return true;
     } catch (error: any) {
       const duration = Date.now() - startTime;
-      
+
       setTestResults((prev) =>
         prev.map((testResult) =>
           testResult.id === testCase.id
@@ -296,8 +314,8 @@ export default function MintingTestSuite() {
                 message: error.message || "Test failed",
                 duration,
               }
-            : testResult
-        )
+            : testResult,
+        ),
       );
 
       return false;
@@ -312,15 +330,15 @@ export default function MintingTestSuite() {
         name: test.name,
         status: "pending",
         message: "Waiting to run...",
-      }))
+      })),
     );
 
     let passedTests = 0;
-    
+
     for (const testCase of testCases) {
       const success = await runTest(testCase);
       if (success) passedTests++;
-      
+
       // Small delay between tests
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
@@ -364,9 +382,13 @@ export default function MintingTestSuite() {
   };
 
   const getSuccessRate = () => {
-    const completed = testResults.filter((r) => r.status !== "pending" && r.status !== "running");
+    const completed = testResults.filter(
+      (r) => r.status !== "pending" && r.status !== "running",
+    );
     const successful = testResults.filter((r) => r.status === "success");
-    return completed.length > 0 ? (successful.length / completed.length) * 100 : 0;
+    return completed.length > 0
+      ? (successful.length / completed.length) * 100
+      : 0;
   };
 
   return (
@@ -382,7 +404,8 @@ export default function MintingTestSuite() {
           </CardTitle>
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Comprehensive testing of capsule minting and blockchain integration
+              Comprehensive testing of capsule minting and blockchain
+              integration
             </p>
             <Button
               onClick={runAllTests}
@@ -398,7 +421,7 @@ export default function MintingTestSuite() {
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           {testResults.length > 0 && (
             <div className="mb-6">
@@ -425,7 +448,7 @@ export default function MintingTestSuite() {
             {testCases.map((testCase) => {
               const result = testResults.find((r) => r.id === testCase.id);
               const isCurrentTest = currentTest === testCase.id;
-              
+
               return (
                 <div
                   key={testCase.id}
@@ -448,7 +471,7 @@ export default function MintingTestSuite() {
                         <p className="text-sm text-muted-foreground mt-1">
                           {testCase.description}
                         </p>
-                        
+
                         {result && (
                           <div className="mt-2">
                             <div className="flex items-center gap-2 text-sm">
@@ -458,8 +481,8 @@ export default function MintingTestSuite() {
                                   result.status === "success"
                                     ? "text-emerald-600"
                                     : result.status === "error"
-                                    ? "text-red-600"
-                                    : "text-blue-600"
+                                      ? "text-red-600"
+                                      : "text-blue-600"
                                 }
                               >
                                 {result.message}
@@ -470,7 +493,7 @@ export default function MintingTestSuite() {
                                 </span>
                               )}
                             </div>
-                            
+
                             {result.details && result.status === "success" && (
                               <details className="mt-2">
                                 <summary className="text-xs text-gray-600 cursor-pointer">
@@ -485,7 +508,7 @@ export default function MintingTestSuite() {
                         )}
                       </div>
                     </div>
-                    
+
                     <Button
                       variant="ghost"
                       size="sm"

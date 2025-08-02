@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  DollarSign, 
-  TrendingUp, 
-  Wallet, 
+import {
+  DollarSign,
+  TrendingUp,
+  Wallet,
   Copy,
   ExternalLink,
   RefreshCw,
@@ -14,7 +14,7 @@ import {
   Coins,
   Clock,
   Target,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -39,7 +39,7 @@ export default function RevenueDashboard() {
     subscriptionRevenue: 0,
     gttFees: 0,
     walletBalance: 0,
-    pendingPayouts: 0
+    pendingPayouts: 0,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -54,39 +54,39 @@ export default function RevenueDashboard() {
     setIsLoading(true);
     try {
       // Simulate real revenue fetching - replace with actual API calls
-      const response = await fetch('/api/financial/revenue-streams');
+      const response = await fetch("/api/financial/revenue-streams");
       if (response.ok) {
         const data = await response.json();
         setRevenueData({
-          totalRevenue: data.total?.monthly || 447.50, // Starting small but real
+          totalRevenue: data.total?.monthly || 447.5, // Starting small but real
           todayRevenue: data.subscription?.monthly / 30 || 15.25,
-          hourlyRevenue: (data.subscription?.monthly / 30 / 24) || 0.63,
-          capsuleRevenue: data.transactionFees?.capsuleMinting || 125.00,
+          hourlyRevenue: data.subscription?.monthly / 30 / 24 || 0.63,
+          capsuleRevenue: data.transactionFees?.capsuleMinting || 125.0,
           subscriptionRevenue: data.subscription?.monthly || 289.75,
-          gttFees: data.transactionFees?.gtt || 32.50,
+          gttFees: data.transactionFees?.gtt || 32.5,
           walletBalance: 58.37, // Current MATIC balance confirmed
-          pendingPayouts: 0
+          pendingPayouts: 0,
         });
       } else {
         // Fallback to actual launch day numbers
         setRevenueData({
-          totalRevenue: 447.50,
+          totalRevenue: 447.5,
           todayRevenue: 15.25,
           hourlyRevenue: 0.63,
-          capsuleRevenue: 125.00,
+          capsuleRevenue: 125.0,
           subscriptionRevenue: 289.75,
-          gttFees: 32.50,
+          gttFees: 32.5,
           walletBalance: 58.37,
-          pendingPayouts: 0
+          pendingPayouts: 0,
         });
       }
       setLastUpdated(new Date());
     } catch (error) {
-      console.error('Revenue fetch error:', error);
+      console.error("Revenue fetch error:", error);
       toast({
         title: "Revenue Update Failed",
         description: "Unable to fetch latest revenue data",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -109,7 +109,7 @@ export default function RevenueDashboard() {
   };
 
   const openInExplorer = (address: string) => {
-    window.open(`https://polygonscan.com/address/${address}`, '_blank');
+    window.open(`https://polygonscan.com/address/${address}`, "_blank");
   };
 
   const revenueMetrics = [
@@ -118,29 +118,29 @@ export default function RevenueDashboard() {
       value: `$${revenueData.totalRevenue.toFixed(2)}`,
       change: "+23.5%",
       icon: DollarSign,
-      positive: true
+      positive: true,
     },
     {
       title: "Today's Revenue",
       value: `$${revenueData.todayRevenue.toFixed(2)}`,
       change: "+$2.50",
       icon: TrendingUp,
-      positive: true
+      positive: true,
     },
     {
       title: "Hourly Rate",
       value: `$${revenueData.hourlyRevenue.toFixed(2)}`,
       change: "+0.12",
       icon: Clock,
-      positive: true
+      positive: true,
     },
     {
       title: "Wallet Balance",
       value: `${revenueData.walletBalance} MATIC`,
       change: "$12.59 USD",
       icon: Wallet,
-      positive: true
-    }
+      positive: true,
+    },
   ];
 
   const revenueStreams = [
@@ -148,26 +148,25 @@ export default function RevenueDashboard() {
       source: "Capsule Creation Fees",
       amount: revenueData.capsuleRevenue,
       percentage: 28,
-      color: "bg-purple-500"
+      color: "bg-purple-500",
     },
     {
       source: "Subscription Plans",
       amount: revenueData.subscriptionRevenue,
       percentage: 65,
-      color: "bg-blue-500"
+      color: "bg-blue-500",
     },
     {
       source: "GTT Transaction Fees",
       amount: revenueData.gttFees,
       percentage: 7,
-      color: "bg-green-500"
-    }
+      color: "bg-green-500",
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-black text-white">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -178,18 +177,23 @@ export default function RevenueDashboard() {
               Real-time financial tracking for GUARDIANCHAIN
             </p>
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <Badge variant="outline" className="text-green-400 border-green-400">
+            <Badge
+              variant="outline"
+              className="text-green-400 border-green-400"
+            >
               <CheckCircle className="w-4 h-4 mr-1" />
               Live Data
             </Badge>
-            <Button 
+            <Button
               onClick={fetchRealRevenue}
               disabled={isLoading}
               className="bg-purple-600 hover:bg-purple-700"
             >
-              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+              />
               Refresh
             </Button>
           </div>
@@ -203,14 +207,19 @@ export default function RevenueDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-slate-400 text-sm">{metric.title}</p>
-                    <p className="text-2xl font-bold text-white">{metric.value}</p>
-                    <div className={`flex items-center text-sm ${
-                      metric.positive ? 'text-green-400' : 'text-red-400'
-                    }`}>
-                      {metric.positive ? 
-                        <ArrowUpRight className="w-4 h-4 mr-1" /> :
+                    <p className="text-2xl font-bold text-white">
+                      {metric.value}
+                    </p>
+                    <div
+                      className={`flex items-center text-sm ${
+                        metric.positive ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {metric.positive ? (
+                        <ArrowUpRight className="w-4 h-4 mr-1" />
+                      ) : (
                         <ArrowDownRight className="w-4 h-4 mr-1" />
-                      }
+                      )}
                       {metric.change}
                     </div>
                   </div>
@@ -239,7 +248,7 @@ export default function RevenueDashboard() {
                     </span>
                   </div>
                   <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div 
+                    <div
                       className={`${stream.color} h-2 rounded-full transition-all duration-500`}
                       style={{ width: `${stream.percentage}%` }}
                     ></div>
@@ -257,20 +266,24 @@ export default function RevenueDashboard() {
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div>
-                  <div className="text-slate-400 text-sm mb-1">GTT Contract (Primary)</div>
+                  <div className="text-slate-400 text-sm mb-1">
+                    GTT Contract (Primary)
+                  </div>
                   <div className="flex items-center gap-2 bg-slate-700/50 p-3 rounded-lg">
                     <code className="text-white font-mono text-sm flex-1">
                       {founderWallet}
                     </code>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
-                      onClick={() => copyToClipboard(founderWallet, "GTT Contract")}
+                      onClick={() =>
+                        copyToClipboard(founderWallet, "GTT Contract")
+                      }
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
                       onClick={() => openInExplorer(founderWallet)}
                     >
@@ -280,20 +293,24 @@ export default function RevenueDashboard() {
                 </div>
 
                 <div>
-                  <div className="text-slate-400 text-sm mb-1">Revenue Wallet</div>
+                  <div className="text-slate-400 text-sm mb-1">
+                    Revenue Wallet
+                  </div>
                   <div className="flex items-center gap-2 bg-slate-700/50 p-3 rounded-lg">
                     <code className="text-white font-mono text-sm flex-1">
                       {revenueWallet}
                     </code>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
-                      onClick={() => copyToClipboard(revenueWallet, "Revenue Wallet")}
+                      onClick={() =>
+                        copyToClipboard(revenueWallet, "Revenue Wallet")
+                      }
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
                       onClick={() => openInExplorer(revenueWallet)}
                     >
@@ -306,20 +323,24 @@ export default function RevenueDashboard() {
                 </div>
 
                 <div>
-                  <div className="text-slate-400 text-sm mb-1">Backup Wallet</div>
+                  <div className="text-slate-400 text-sm mb-1">
+                    Backup Wallet
+                  </div>
                   <div className="flex items-center gap-2 bg-slate-700/50 p-3 rounded-lg">
                     <code className="text-white font-mono text-sm flex-1">
                       {backupWallet}
                     </code>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
-                      onClick={() => copyToClipboard(backupWallet, "Backup Wallet")}
+                      onClick={() =>
+                        copyToClipboard(backupWallet, "Backup Wallet")
+                      }
                     >
                       <Copy className="w-4 h-4" />
                     </Button>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
                       onClick={() => openInExplorer(backupWallet)}
                     >
@@ -335,7 +356,9 @@ export default function RevenueDashboard() {
         {/* Recent Transactions */}
         <Card className="bg-slate-800/50 border-slate-600">
           <CardHeader>
-            <CardTitle className="text-white">Recent Revenue Transactions</CardTitle>
+            <CardTitle className="text-white">
+              Recent Revenue Transactions
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -345,8 +368,12 @@ export default function RevenueDashboard() {
                     <Coins className="w-4 h-4 text-green-400" />
                   </div>
                   <div>
-                    <div className="text-white font-semibold">Capsule Creation Fee</div>
-                    <div className="text-slate-400 text-sm">Premium truth capsule</div>
+                    <div className="text-white font-semibold">
+                      Capsule Creation Fee
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      Premium truth capsule
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -361,8 +388,12 @@ export default function RevenueDashboard() {
                     <Target className="w-4 h-4 text-blue-400" />
                   </div>
                   <div>
-                    <div className="text-white font-semibold">Subscription Payment</div>
-                    <div className="text-slate-400 text-sm">Pro plan renewal</div>
+                    <div className="text-white font-semibold">
+                      Subscription Payment
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      Pro plan renewal
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
@@ -377,7 +408,6 @@ export default function RevenueDashboard() {
             </div>
           </CardContent>
         </Card>
-
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ interface VeritasSealResponse {
  * In production, this would integrate with actual DocuSign API
  */
 async function createVeritasSeal(
-  request: VeritasSealRequest
+  request: VeritasSealRequest,
 ): Promise<VeritasSealResponse> {
   // Simulate API call delay
   await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -139,7 +139,7 @@ export function registerSealRoutes(app: Express) {
         status: "completed",
         createdAt: new Date().toISOString(),
         expiresAt: new Date(
-          Date.now() + 365 * 24 * 60 * 60 * 1000
+          Date.now() + 365 * 24 * 60 * 60 * 1000,
         ).toISOString(),
         veritasUrl: `https://seal.docusign.com/veritas/${sealId}`,
         certificateUrl: `https://seal.docusign.com/certificate/${sealId}.pdf`,
@@ -181,7 +181,7 @@ export function registerSealRoutes(app: Express) {
             subject: `Veritas Seal ${sealId}`,
             validFrom: new Date().toISOString(),
             validUntil: new Date(
-              Date.now() + 365 * 24 * 60 * 60 * 1000
+              Date.now() + 365 * 24 * 60 * 60 * 1000,
             ).toISOString(),
           },
         ],

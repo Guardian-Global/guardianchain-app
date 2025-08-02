@@ -175,7 +175,7 @@ export async function generateNightlyReport() {
           <p>Report generated at: ${new Date().toISOString()}</p>
           <p>Data sources: Treasury API, Donation tracking, AI analysis engine</p>
           <p>Next report: ${new Date(
-            Date.now() + 24 * 60 * 60 * 1000
+            Date.now() + 24 * 60 * 60 * 1000,
           ).toLocaleDateString()}</p>
         </div>
       </body>

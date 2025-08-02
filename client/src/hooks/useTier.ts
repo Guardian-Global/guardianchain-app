@@ -14,7 +14,7 @@ const mockUserProfile: UserProfile = {
   totalYieldEarned: 45.25,
   subscriptionStatus: "active",
   subscriptionEndDate: new Date(
-    Date.now() + 30 * 24 * 60 * 60 * 1000
+    Date.now() + 30 * 24 * 60 * 60 * 1000,
   ).toISOString(),
 };
 
@@ -90,7 +90,7 @@ export function useTier(userId?: string) {
       // });
 
       setUserProfile((prev) =>
-        prev ? { ...prev, mintsThisPeriod: prev.mintsThisPeriod + 1 } : null
+        prev ? { ...prev, mintsThisPeriod: prev.mintsThisPeriod + 1 } : null,
       );
     } catch (err) {
       setError("Failed to update mint count");
@@ -105,7 +105,7 @@ export function useTier(userId?: string) {
     if (!userProfile) return;
 
     setUserProfile((prev) =>
-      prev ? { ...prev, gttBalance: newBalance } : null
+      prev ? { ...prev, gttBalance: newBalance } : null,
     );
   };
 

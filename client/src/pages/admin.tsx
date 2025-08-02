@@ -152,9 +152,9 @@ export default function AdminDashboard() {
                         section.status === "healthy"
                           ? "bg-green-600"
                           : section.status === "active" ||
-                            section.status === "monitoring"
-                          ? "bg-blue-600"
-                          : "bg-yellow-600"
+                              section.status === "monitoring"
+                            ? "bg-blue-600"
+                            : "bg-yellow-600"
                       }`}
                     >
                       {section.status}

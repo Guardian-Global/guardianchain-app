@@ -98,9 +98,7 @@ class AuthenticationService {
   /**
    * User signup with email verification
    */
-  async signup(
-    signupData: SignupData
-  ): Promise<{
+  async signup(signupData: SignupData): Promise<{
     success: boolean;
     message: string;
     requiresVerification?: boolean;
@@ -142,7 +140,7 @@ class AuthenticationService {
    * User login
    */
   async login(
-    credentials: LoginCredentials
+    credentials: LoginCredentials,
   ): Promise<{ success: boolean; message: string; session?: AuthSession }> {
     try {
       const response = await fetch("/api/auth/login", {
@@ -202,7 +200,7 @@ class AuthenticationService {
    * Upgrade user tier with Stripe payment
    */
   async upgradeTier(
-    upgradeData: TierUpgradeData
+    upgradeData: TierUpgradeData,
   ): Promise<{ success: boolean; message: string; subscriptionId?: string }> {
     if (!this.currentSession) {
       return { success: false, message: "Not authenticated" };
@@ -250,7 +248,7 @@ class AuthenticationService {
    * Update user's GTT stake amount
    */
   async updateStakeAmount(
-    stakeAmount: number
+    stakeAmount: number,
   ): Promise<{ success: boolean; message: string }> {
     if (!this.currentSession) {
       return { success: false, message: "Not authenticated" };
@@ -342,7 +340,7 @@ class AuthenticationService {
 
     if (!data.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)) {
       errors.push(
-        "Password must contain at least one lowercase letter, one uppercase letter, and one number"
+        "Password must contain at least one lowercase letter, one uppercase letter, and one number",
       );
     }
 
@@ -414,7 +412,7 @@ class AuthenticationService {
     if (!this.hasFeatureAccess(feature)) {
       const currentTier = this.currentSession!.tier;
       const availableTiers = Object.values(USER_TIERS).filter((tier) =>
-        tier.features.includes(feature)
+        tier.features.includes(feature),
       );
       const minTier = availableTiers.sort((a, b) => a.price - b.price)[0];
 

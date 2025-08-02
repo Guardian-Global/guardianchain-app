@@ -598,7 +598,7 @@ export default function TokenLaunchPage() {
                     <div className="mt-2 text-sm text-slate-400">
                       RSI:{" "}
                       {tokenMetrics.analytics.technicalIndicators.rsi.toFixed(
-                        1
+                        1,
                       )}
                     </div>
                   </CardContent>
@@ -790,7 +790,7 @@ export default function TokenLaunchPage() {
                     <div className="text-center space-y-2">
                       <div
                         className={`text-2xl font-bold ${getRiskColor(
-                          tokenMetrics.security.overallRisk
+                          tokenMetrics.security.overallRisk,
                         )}`}
                       >
                         {tokenMetrics.security.overallRisk.toUpperCase()}
@@ -841,7 +841,7 @@ export default function TokenLaunchPage() {
                         variant="outline"
                         onClick={() =>
                           copyToClipboard(
-                            "0x742d35cc6cf7b2e85c9f49c69e0bb5b4c02ad500"
+                            "0x742d35cc6cf7b2e85c9f49c69e0bb5b4c02ad500",
                           )
                         }
                       >
@@ -896,7 +896,7 @@ export default function TokenLaunchPage() {
                                   <ChevronUp className="w-4 h-4 text-purple-400" />
                                   {action}
                                 </li>
-                              )
+                              ),
                             )}
                           </ul>
                         </div>
@@ -924,8 +924,8 @@ export default function TokenLaunchPage() {
                                 network.status === "deployed"
                                   ? "default"
                                   : network.status === "pending"
-                                  ? "outline"
-                                  : "destructive"
+                                    ? "outline"
+                                    : "destructive"
                               }
                             >
                               {network.status}
@@ -964,12 +964,12 @@ export default function TokenLaunchPage() {
                                 exchange.status === "listed"
                                   ? "default"
                                   : exchange.status === "approved"
-                                  ? "default"
-                                  : exchange.status === "under_review"
-                                  ? "outline"
-                                  : exchange.status === "rejected"
-                                  ? "destructive"
-                                  : "secondary"
+                                    ? "default"
+                                    : exchange.status === "under_review"
+                                      ? "outline"
+                                      : exchange.status === "rejected"
+                                        ? "destructive"
+                                        : "secondary"
                               }
                             >
                               {exchange.status}

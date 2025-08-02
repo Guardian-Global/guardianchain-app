@@ -7,13 +7,13 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui"],
-        brand: ["Space Grotesk", "Inter", "sans-serif"]
+        brand: ["Space Grotesk", "Inter", "sans-serif"],
       },
       boxShadow: {
         card: "var(--shadow-card)",
         brand: "var(--shadow-brand)",
         "brand-lg": "var(--shadow-brand-lg)",
-        install: "0 2px 6px rgba(0,0,0,0.25)"
+        install: "0 2px 6px rgba(0,0,0,0.25)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -22,7 +22,7 @@ export default {
         xl: "1.25rem",
         capsule: "var(--radius-capsule)",
         vault: "var(--radius-vault)",
-        button: "0.5rem"
+        button: "0.5rem",
       },
       colors: {
         // GuardianChain Design Token Colors
@@ -35,7 +35,7 @@ export default {
           danger: "var(--brand-danger)",
           highlight: "var(--brand-highlight)",
           light: "var(--brand-light)",
-          dark: "var(--brand-dark)"
+          dark: "var(--brand-dark)",
         },
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -116,7 +116,7 @@ export default {
         "fade-in": {
           from: { opacity: "0" },
           to: { opacity: "1" },
-        }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

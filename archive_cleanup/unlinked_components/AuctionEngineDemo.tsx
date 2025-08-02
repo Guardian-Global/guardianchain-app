@@ -13,7 +13,7 @@ export default function AuctionEngineDemo() {
 
   const auctionEngineAddress = getContractAddress(
     chainId || 31337,
-    "auctionEngine"
+    "auctionEngine",
   );
 
   // Read auction counter

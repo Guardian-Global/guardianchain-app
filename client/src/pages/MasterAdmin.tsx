@@ -70,7 +70,7 @@ interface FinancialData {
 export default function MasterAdmin() {
   const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
   const [financialData, setFinancialData] = useState<FinancialData | null>(
-    null
+    null,
   );
   const [securityStatus, setSecurityStatus] = useState<any>(null);
   const [complianceStatus, setComplianceStatus] = useState<any>(null);
@@ -86,7 +86,7 @@ export default function MasterAdmin() {
         fetch("/api/admin/system-health"),
         fetch("/api/admin/financial-overview"),
         fetch("/api/admin/security-status"),
-        fetch("/api/admin/compliance-status")
+        fetch("/api/admin/compliance-status"),
       ]);
 
       // Check if all responses are OK
@@ -98,22 +98,34 @@ export default function MasterAdmin() {
 
       // Parse JSON safely
       const [health, financial, security, compliance] = await Promise.all([
-        responses[0].text().then(text => {
-          try { return JSON.parse(text); } 
-          catch { throw new Error('Health API returned invalid JSON'); }
+        responses[0].text().then((text) => {
+          try {
+            return JSON.parse(text);
+          } catch {
+            throw new Error("Health API returned invalid JSON");
+          }
         }),
-        responses[1].text().then(text => {
-          try { return JSON.parse(text); } 
-          catch { throw new Error('Financial API returned invalid JSON'); }
+        responses[1].text().then((text) => {
+          try {
+            return JSON.parse(text);
+          } catch {
+            throw new Error("Financial API returned invalid JSON");
+          }
         }),
-        responses[2].text().then(text => {
-          try { return JSON.parse(text); } 
-          catch { throw new Error('Security API returned invalid JSON'); }
+        responses[2].text().then((text) => {
+          try {
+            return JSON.parse(text);
+          } catch {
+            throw new Error("Security API returned invalid JSON");
+          }
         }),
-        responses[3].text().then(text => {
-          try { return JSON.parse(text); } 
-          catch { throw new Error('Compliance API returned invalid JSON'); }
-        })
+        responses[3].text().then((text) => {
+          try {
+            return JSON.parse(text);
+          } catch {
+            throw new Error("Compliance API returned invalid JSON");
+          }
+        }),
       ]);
 
       setSystemHealth(health);
@@ -177,7 +189,7 @@ export default function MasterAdmin() {
 
   const emergencyPause = async () => {
     const confirmed = window.confirm(
-      "Are you sure you want to emergency pause the platform?"
+      "Are you sure you want to emergency pause the platform?",
     );
     if (confirmed) {
       try {
@@ -353,7 +365,7 @@ export default function MasterAdmin() {
                             {status}
                           </Badge>
                         </div>
-                      )
+                      ),
                     )}
                 </div>
               </CardContent>

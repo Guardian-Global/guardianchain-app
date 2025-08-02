@@ -27,7 +27,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 interface YieldDataPoint {
@@ -60,7 +60,7 @@ export default function CapsuleAnalyticsChart({
       try {
         // First attempt to fetch from API/Supabase
         const response = await fetch(
-          `/api/capsule/${capsuleId}/analytics?timeRange=${timeRange}`
+          `/api/capsule/${capsuleId}/analytics?timeRange=${timeRange}`,
         );
 
         if (response.ok) {
@@ -78,16 +78,16 @@ export default function CapsuleAnalyticsChart({
       // Fallback to realistic demo data based on capsule ID and time range
       const generateMockData = (
         id: string,
-        range: string
+        range: string,
       ): YieldDataPoint[] => {
         const days =
           range === "7d"
             ? 7
             : range === "30d"
-            ? 30
-            : range === "90d"
-            ? 90
-            : 365;
+              ? 30
+              : range === "90d"
+                ? 90
+                : 365;
         const data: YieldDataPoint[] = [];
 
         for (let i = days - 1; i >= 0; i--) {
@@ -105,16 +105,19 @@ export default function CapsuleAnalyticsChart({
               baseMultiplier * timeVariation * randomFactor * (1 + i / 100),
             emotionalResonance: Math.min(
               95,
-              40 + baseMultiplier * 15 + timeVariation * 20 + Math.random() * 10
+              40 +
+                baseMultiplier * 15 +
+                timeVariation * 20 +
+                Math.random() * 10,
             ),
             viewCount: Math.floor(
-              baseMultiplier * timeVariation * randomFactor * (50 + i * 2)
+              baseMultiplier * timeVariation * randomFactor * (50 + i * 2),
             ),
             verificationCount: Math.floor(
-              baseMultiplier * timeVariation * (3 + i / 10)
+              baseMultiplier * timeVariation * (3 + i / 10),
             ),
             shareCount: Math.floor(
-              baseMultiplier * timeVariation * (8 + i / 5)
+              baseMultiplier * timeVariation * (8 + i / 5),
             ),
           });
         }
@@ -377,7 +380,7 @@ export default function CapsuleAnalyticsChart({
                 <p className="text-2xl font-bold text-white">
                   {dataPoints.reduce(
                     (sum, dp) => sum + dp.verificationCount,
-                    0
+                    0,
                   )}
                 </p>
               </div>
@@ -451,7 +454,7 @@ export default function CapsuleAnalyticsChart({
                   <span className="text-slate-400">Peak daily yield:</span>
                   <span className="text-white font-medium">
                     {Math.max(
-                      ...dataPoints.map((dp) => dp.yieldAmount)
+                      ...dataPoints.map((dp) => dp.yieldAmount),
                     ).toFixed(2)}{" "}
                     GTT
                   </span>
@@ -487,7 +490,7 @@ export default function CapsuleAnalyticsChart({
                   <span className="text-slate-400">Peak resonance:</span>
                   <span className="text-white font-medium">
                     {Math.max(
-                      ...dataPoints.map((dp) => dp.emotionalResonance)
+                      ...dataPoints.map((dp) => dp.emotionalResonance),
                     ).toFixed(0)}
                     %
                   </span>
@@ -498,7 +501,7 @@ export default function CapsuleAnalyticsChart({
                     {(
                       (dataPoints.reduce(
                         (sum, dp) => sum + dp.verificationCount,
-                        0
+                        0,
                       ) /
                         dataPoints.reduce((sum, dp) => sum + dp.viewCount, 0)) *
                       100

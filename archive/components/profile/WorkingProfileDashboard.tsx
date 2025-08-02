@@ -127,7 +127,7 @@ export default function WorkingProfileDashboard({
             <CardContent>
               <Badge
                 className={`${getTierColor(
-                  userData.tier
+                  userData.tier,
                 )} bg-transparent text-lg`}
               >
                 {userData.tier}

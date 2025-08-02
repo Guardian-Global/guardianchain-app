@@ -124,12 +124,13 @@ export default function NFTSales() {
 
   const filteredSales = mockSales
     .filter(
-      (sale) => selectedCategory === "all" || sale.category === selectedCategory
+      (sale) =>
+        selectedCategory === "all" || sale.category === selectedCategory,
     )
     .filter(
       (sale) =>
         sale.capsule.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        sale.user.toLowerCase().includes(searchQuery.toLowerCase())
+        sale.user.toLowerCase().includes(searchQuery.toLowerCase()),
     )
     .sort((a, b) => {
       switch (sortBy) {
@@ -253,7 +254,7 @@ export default function NFTSales() {
                     </h3>
                     <Badge
                       className={`${getCategoryColor(
-                        sale.category
+                        sale.category,
                       )} text-white text-xs`}
                     >
                       {sale.category}
@@ -330,8 +331,8 @@ export default function NFTSales() {
                 {Math.round(
                   filteredSales.reduce(
                     (sum, sale) => sum + sale.griefScore,
-                    0
-                  ) / filteredSales.length
+                    0,
+                  ) / filteredSales.length,
                 )}
               </div>
               <div className="text-slate-400 text-sm">Avg Grief Score</div>
@@ -344,8 +345,8 @@ export default function NFTSales() {
                 {Math.round(
                   filteredSales.reduce(
                     (sum, sale) => sum + parseInt(sale.price),
-                    0
-                  ) / filteredSales.length
+                    0,
+                  ) / filteredSales.length,
                 )}{" "}
                 GTT
               </div>

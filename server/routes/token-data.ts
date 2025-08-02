@@ -98,7 +98,7 @@ router.get("/live-feed", async (req: Request, res: Response) => {
         type: "price_update",
         price: parseFloat(currentPrice.toFixed(4)),
         change24h: parseFloat(
-          (((currentPrice - basePrice) / basePrice) * 100).toFixed(2)
+          (((currentPrice - basePrice) / basePrice) * 100).toFixed(2),
         ),
         timestamp: Date.now(),
         volume: Math.floor(Math.random() * 100000) + 50000,

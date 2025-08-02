@@ -4,7 +4,7 @@
   "projectStatus": "production",
   "veritasSealRequired": true,
   "stripeEnabled": true,
-  "capsuleReplayFee": 2.50,
+  "capsuleReplayFee": 2.5,
   "griefScoreEnabled": true,
   "aiModeration": "on",
   "ipfsPinning": "pinata",

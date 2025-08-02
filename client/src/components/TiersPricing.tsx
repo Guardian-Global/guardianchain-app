@@ -20,7 +20,7 @@ export default function TiersPricing({
 }: TiersPricingProps) {
   const [loading, setLoading] = useState<string | null>(null);
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
-    "monthly"
+    "monthly",
   );
   const { userProfile } = useTier(userId);
 

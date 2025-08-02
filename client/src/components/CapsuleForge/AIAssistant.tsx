@@ -132,7 +132,7 @@ export default function AIAssistant({
   const getContentAnalysis = () => {
     const totalContent = capsuleData.blocks.reduce(
       (total, block) => total + block.content.length,
-      0
+      0,
     );
     const hasTitle = capsuleData.title.length > 0;
     const blockCount = capsuleData.blocks.length;
@@ -144,8 +144,8 @@ export default function AIAssistant({
         totalContent > 500
           ? "Detailed"
           : totalContent > 100
-          ? "Moderate"
-          : "Brief",
+            ? "Moderate"
+            : "Brief",
     };
   };
 

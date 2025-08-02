@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +32,7 @@ export default function MascotSettings() {
   } = useMascot();
 
   const completedDate = localStorage.getItem("onboarding_completed_date");
-  const formattedDate = completedDate 
+  const formattedDate = completedDate
     ? new Date(completedDate).toLocaleDateString()
     : null;
 
@@ -70,7 +76,7 @@ export default function MascotSettings() {
               <User className="h-4 w-4" />
               Onboarding Status
             </h3>
-            
+
             <div className="bg-muted/50 rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Tutorial Completion</span>
@@ -106,7 +112,7 @@ export default function MascotSettings() {
               <Settings className="h-4 w-4" />
               Actions
             </h3>
-            
+
             <div className="grid gap-3">
               <Button
                 onClick={startOnboarding}
@@ -142,10 +148,11 @@ export default function MascotSettings() {
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">About Guardian</h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Guardian is your friendly AI assistant designed to help new users 
-                  navigate GUARDIANCHAIN's features. The interactive tutorial covers 
-                  profile setup, capsule creation, verification, earning tokens, and 
-                  advanced features. You can restart the tour anytime!
+                  Guardian is your friendly AI assistant designed to help new
+                  users navigate GUARDIANCHAIN's features. The interactive
+                  tutorial covers profile setup, capsule creation, verification,
+                  earning tokens, and advanced features. You can restart the
+                  tour anytime!
                 </p>
                 <div className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400">
                   <Star className="h-3 w-3" />

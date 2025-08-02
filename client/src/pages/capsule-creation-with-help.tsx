@@ -1,23 +1,28 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { QuickHelp } from '@/components/help/ContextualHelp';
-import { Plus, Lock, Globe, Users, Eye } from 'lucide-react';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { QuickHelp } from "@/components/help/ContextualHelp";
+import { Plus, Lock, Globe, Users, Eye } from "lucide-react";
 
 export default function CapsuleCreationWithHelp() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [privacy, setPrivacy] = useState('public');
-  const [accessLevel, setAccessLevel] = useState('free');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [privacy, setPrivacy] = useState("public");
+  const [accessLevel, setAccessLevel] = useState("free");
 
   return (
     <div className="min-h-screen bg-slate-900 text-white pt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
         {/* Header with Help */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
@@ -28,7 +33,8 @@ export default function CapsuleCreationWithHelp() {
             <QuickHelp helpId="capsule-creation" position="bottom" />
           </div>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Package your truth into an immutable capsule for community verification
+            Package your truth into an immutable capsule for community
+            verification
           </p>
         </div>
 
@@ -40,7 +46,6 @@ export default function CapsuleCreationWithHelp() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            
             {/* Title Section */}
             <div>
               <div className="flex items-center mb-2">
@@ -61,7 +66,9 @@ export default function CapsuleCreationWithHelp() {
             {/* Content Section */}
             <div>
               <div className="flex items-center mb-2">
-                <label className="text-white font-medium">Content & Evidence</label>
+                <label className="text-white font-medium">
+                  Content & Evidence
+                </label>
                 <QuickHelp helpId="capsule-creation" position="top" />
               </div>
               <Textarea
@@ -79,14 +86,18 @@ export default function CapsuleCreationWithHelp() {
             {/* Privacy Controls Section */}
             <div>
               <div className="flex items-center mb-4">
-                <h3 className="text-white font-medium">Privacy & Access Controls</h3>
+                <h3 className="text-white font-medium">
+                  Privacy & Access Controls
+                </h3>
                 <QuickHelp helpId="privacy-controls" position="right" />
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Privacy Level */}
                 <div>
-                  <label className="text-white font-medium mb-2 block">Visibility Level</label>
+                  <label className="text-white font-medium mb-2 block">
+                    Visibility Level
+                  </label>
                   <Select value={privacy} onValueChange={setPrivacy}>
                     <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                       <SelectValue />
@@ -116,16 +127,24 @@ export default function CapsuleCreationWithHelp() {
 
                 {/* Access Requirements */}
                 <div>
-                  <label className="text-white font-medium mb-2 block">Access Requirements</label>
+                  <label className="text-white font-medium mb-2 block">
+                    Access Requirements
+                  </label>
                   <Select value={accessLevel} onValueChange={setAccessLevel}>
                     <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="free">Free Access</SelectItem>
-                      <SelectItem value="stake">5 GTT Stake Required</SelectItem>
-                      <SelectItem value="premium">10 GTT Stake Required</SelectItem>
-                      <SelectItem value="exclusive">50 GTT Stake Required</SelectItem>
+                      <SelectItem value="stake">
+                        5 GTT Stake Required
+                      </SelectItem>
+                      <SelectItem value="premium">
+                        10 GTT Stake Required
+                      </SelectItem>
+                      <SelectItem value="exclusive">
+                        50 GTT Stake Required
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -135,20 +154,26 @@ export default function CapsuleCreationWithHelp() {
             {/* Verification Section */}
             <div>
               <div className="flex items-center mb-4">
-                <h3 className="text-white font-medium">Verification Settings</h3>
+                <h3 className="text-white font-medium">
+                  Verification Settings
+                </h3>
                 <QuickHelp helpId="verification-process" position="right" />
               </div>
-              
+
               <div className="bg-slate-700/50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-white">Community Verification</span>
-                  <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">
+                  <Badge
+                    variant="outline"
+                    className="bg-green-500/20 text-green-400 border-green-500/30"
+                  >
                     Enabled
                   </Badge>
                 </div>
                 <p className="text-slate-400 text-sm">
-                  Your capsule will be reviewed by the community for accuracy and credibility.
-                  Higher quality evidence leads to faster verification and better rewards.
+                  Your capsule will be reviewed by the community for accuracy
+                  and credibility. Higher quality evidence leads to faster
+                  verification and better rewards.
                 </p>
               </div>
             </div>
@@ -159,20 +184,30 @@ export default function CapsuleCreationWithHelp() {
                 <h3 className="text-white font-medium">Potential Rewards</h3>
                 <QuickHelp helpId="gtt-rewards" position="right" />
               </div>
-              
+
               <div className="bg-gradient-to-r from-purple-900/30 to-green-900/30 rounded-lg p-4 border border-purple-500/30">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-green-400">5-25 GTT</div>
+                    <div className="text-2xl font-bold text-green-400">
+                      5-25 GTT
+                    </div>
                     <div className="text-slate-400 text-sm">Base Reward</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-purple-400">2.5x</div>
-                    <div className="text-slate-400 text-sm">Quality Multiplier</div>
+                    <div className="text-2xl font-bold text-purple-400">
+                      2.5x
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      Quality Multiplier
+                    </div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-yellow-400">62.5 GTT</div>
-                    <div className="text-slate-400 text-sm">Total Potential</div>
+                    <div className="text-2xl font-bold text-yellow-400">
+                      62.5 GTT
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      Total Potential
+                    </div>
                   </div>
                 </div>
               </div>
@@ -180,14 +215,15 @@ export default function CapsuleCreationWithHelp() {
 
             {/* Submit Button */}
             <div className="pt-6">
-              <Button 
+              <Button
                 className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700 text-white font-semibold py-3"
                 disabled={!title || !content}
               >
                 Create Truth Capsule
               </Button>
               <p className="text-slate-400 text-sm text-center mt-2">
-                By creating this capsule, you agree to the community verification process
+                By creating this capsule, you agree to the community
+                verification process
               </p>
             </div>
           </CardContent>
@@ -198,7 +234,9 @@ export default function CapsuleCreationWithHelp() {
           <CardContent className="p-6">
             <div className="flex items-center mb-4">
               <Eye className="w-5 h-5 text-blue-400 mr-2" />
-              <h3 className="text-white font-medium">Pro Tips for Better Verification</h3>
+              <h3 className="text-white font-medium">
+                Pro Tips for Better Verification
+              </h3>
             </div>
             <ul className="space-y-2 text-slate-300">
               <li className="flex items-start">
@@ -215,7 +253,8 @@ export default function CapsuleCreationWithHelp() {
               </li>
               <li className="flex items-start">
                 <span className="text-blue-400 mr-2">•</span>
-                Engage constructively with community feedback during verification
+                Engage constructively with community feedback during
+                verification
               </li>
             </ul>
           </CardContent>

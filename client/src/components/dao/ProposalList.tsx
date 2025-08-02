@@ -3,7 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, ThumbsUp, ThumbsDown, Minus, Calendar, BarChart3 } from "lucide-react";
+import {
+  Clock,
+  Users,
+  ThumbsUp,
+  ThumbsDown,
+  Minus,
+  Calendar,
+  BarChart3,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { Proposal, Vote } from "@shared/schema";
 
@@ -16,21 +24,31 @@ interface ProposalWithVotes extends Proposal {
 }
 
 interface ProposalListProps {
-  onVote?: (proposalId: string, choice: 'support' | 'reject' | 'abstain') => void;
+  onVote?: (
+    proposalId: string,
+    choice: "support" | "reject" | "abstain",
+  ) => void;
   userAddress?: string;
 }
 
-export default function ProposalList({ onVote, userAddress }: ProposalListProps) {
+export default function ProposalList({
+  onVote,
+  userAddress,
+}: ProposalListProps) {
   const { data: proposals, isLoading } = useQuery<ProposalWithVotes[]>({
     queryKey: ["/api/dao/proposals"],
   });
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return 'bg-brand-accent text-white';
-      case 'closed': return 'bg-brand-surface text-brand-light';
-      case 'executed': return 'bg-brand-primary text-white';
-      default: return 'bg-brand-surface text-brand-light';
+      case "open":
+        return "bg-brand-accent text-white";
+      case "closed":
+        return "bg-brand-surface text-brand-light";
+      case "executed":
+        return "bg-brand-primary text-white";
+      default:
+        return "bg-brand-surface text-brand-light";
     }
   };
 
@@ -39,14 +57,17 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
   };
 
   const hasUserVoted = (proposal: ProposalWithVotes) => {
-    return proposal.votes.some(vote => vote.voterAddress === userAddress);
+    return proposal.votes.some((vote) => vote.voterAddress === userAddress);
   };
 
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {[1, 2, 3].map(i => (
-          <Card key={i} className="bg-brand-secondary border-brand-surface animate-pulse">
+        {[1, 2, 3].map((i) => (
+          <Card
+            key={i}
+            className="bg-brand-secondary border-brand-surface animate-pulse"
+          >
             <CardContent className="p-6">
               <div className="h-4 bg-brand-surface rounded mb-2"></div>
               <div className="h-3 bg-brand-surface rounded w-3/4"></div>
@@ -72,7 +93,9 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
         <Card className="bg-brand-secondary border-brand-surface">
           <CardContent className="p-8 text-center">
             <Users className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-brand-light mb-2">No Active Proposals</h3>
+            <h3 className="text-lg font-medium text-brand-light mb-2">
+              No Active Proposals
+            </h3>
             <p className="text-brand-light/60">
               Check back later for new governance proposals to vote on.
             </p>
@@ -81,14 +104,28 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
       ) : (
         <div className="space-y-4">
           {proposals.map((proposal) => {
-            const supportPercent = getVotePercentage(proposal.supportVotes, proposal.totalWeight);
-            const rejectPercent = getVotePercentage(proposal.rejectVotes, proposal.totalWeight);
-            const abstainPercent = getVotePercentage(proposal.abstainVotes, proposal.totalWeight);
+            const supportPercent = getVotePercentage(
+              proposal.supportVotes,
+              proposal.totalWeight,
+            );
+            const rejectPercent = getVotePercentage(
+              proposal.rejectVotes,
+              proposal.totalWeight,
+            );
+            const abstainPercent = getVotePercentage(
+              proposal.abstainVotes,
+              proposal.totalWeight,
+            );
             const userVoted = hasUserVoted(proposal);
-            const isActive = proposal.status === 'open' && (!proposal.endTime || new Date(proposal.endTime) > new Date());
+            const isActive =
+              proposal.status === "open" &&
+              (!proposal.endTime || new Date(proposal.endTime) > new Date());
 
             return (
-              <Card key={proposal.id} className="bg-brand-secondary border-brand-surface shadow-card">
+              <Card
+                key={proposal.id}
+                className="bg-brand-secondary border-brand-surface shadow-card"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -103,19 +140,21 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-4 text-sm text-brand-light/60">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       <span>
-                        Created {formatDistanceToNow(new Date(proposal.createdAt!))} ago
+                        Created{" "}
+                        {formatDistanceToNow(new Date(proposal.createdAt!))} ago
                       </span>
                     </div>
                     {proposal.endTime && (
                       <div className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
                         <span>
-                          Ends {formatDistanceToNow(new Date(proposal.endTime))} from now
+                          Ends {formatDistanceToNow(new Date(proposal.endTime))}{" "}
+                          from now
                         </span>
                       </div>
                     )}
@@ -134,10 +173,15 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                         <ThumbsUp className="w-4 h-4" />
                         <span>Support ({proposal.supportVotes} votes)</span>
                       </div>
-                      <span className="text-brand-light/60">{supportPercent.toFixed(1)}%</span>
+                      <span className="text-brand-light/60">
+                        {supportPercent.toFixed(1)}%
+                      </span>
                     </div>
-                    <Progress value={supportPercent} className="h-2 bg-brand-surface">
-                      <div 
+                    <Progress
+                      value={supportPercent}
+                      className="h-2 bg-brand-surface"
+                    >
+                      <div
                         className="h-full bg-brand-accent rounded-full transition-all"
                         style={{ width: `${supportPercent}%` }}
                       />
@@ -148,10 +192,15 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                         <ThumbsDown className="w-4 h-4" />
                         <span>Reject ({proposal.rejectVotes} votes)</span>
                       </div>
-                      <span className="text-brand-light/60">{rejectPercent.toFixed(1)}%</span>
+                      <span className="text-brand-light/60">
+                        {rejectPercent.toFixed(1)}%
+                      </span>
                     </div>
-                    <Progress value={rejectPercent} className="h-2 bg-brand-surface">
-                      <div 
+                    <Progress
+                      value={rejectPercent}
+                      className="h-2 bg-brand-surface"
+                    >
+                      <div
                         className="h-full bg-brand-danger rounded-full transition-all"
                         style={{ width: `${rejectPercent}%` }}
                       />
@@ -162,10 +211,15 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                         <Minus className="w-4 h-4" />
                         <span>Abstain ({proposal.abstainVotes} votes)</span>
                       </div>
-                      <span className="text-brand-light/60">{abstainPercent.toFixed(1)}%</span>
+                      <span className="text-brand-light/60">
+                        {abstainPercent.toFixed(1)}%
+                      </span>
                     </div>
-                    <Progress value={abstainPercent} className="h-2 bg-brand-surface">
-                      <div 
+                    <Progress
+                      value={abstainPercent}
+                      className="h-2 bg-brand-surface"
+                    >
+                      <div
                         className="h-full bg-brand-light/40 rounded-full transition-all"
                         style={{ width: `${abstainPercent}%` }}
                       />
@@ -179,7 +233,7 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                         <Button
                           size="sm"
                           className="flex-1 bg-brand-accent hover:bg-brand-accent/90 text-white"
-                          onClick={() => onVote(proposal.id, 'support')}
+                          onClick={() => onVote(proposal.id, "support")}
                         >
                           <ThumbsUp className="w-4 h-4 mr-1" />
                           Support
@@ -188,7 +242,7 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                           size="sm"
                           variant="destructive"
                           className="flex-1"
-                          onClick={() => onVote(proposal.id, 'reject')}
+                          onClick={() => onVote(proposal.id, "reject")}
                         >
                           <ThumbsDown className="w-4 h-4 mr-1" />
                           Reject
@@ -197,7 +251,7 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                           size="sm"
                           variant="outline"
                           className="flex-1 border-brand-surface text-brand-light hover:bg-brand-surface"
-                          onClick={() => onVote(proposal.id, 'abstain')}
+                          onClick={() => onVote(proposal.id, "abstain")}
                         >
                           <Minus className="w-4 h-4 mr-1" />
                           Abstain
@@ -208,7 +262,9 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                         size="sm"
                         variant="outline"
                         className="flex-1 border-brand-surface text-brand-light hover:bg-brand-surface"
-                        onClick={() => window.location.href = `/dao/results/${proposal.id}`}
+                        onClick={() =>
+                          (window.location.href = `/dao/results/${proposal.id}`)
+                        }
                       >
                         <BarChart3 className="w-4 h-4 mr-1" />
                         View Results

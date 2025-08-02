@@ -55,7 +55,7 @@ router.post("/openai-analyze", async (req, res) => {
       truthScore: Math.min(100, Math.max(0, analysis.truthScore || 50)),
       originalityScore: Math.min(
         100,
-        Math.max(0, analysis.originalityScore || 50)
+        Math.max(0, analysis.originalityScore || 50),
       ),
       viralPotential: Math.min(100, Math.max(0, analysis.viralPotential || 50)),
       monetizationValue: Math.max(0, analysis.monetizationValue || 100),
@@ -253,7 +253,7 @@ Respond with JSON:
     });
 
     const prediction = JSON.parse(
-      completion.choices[0].message.content || "{}"
+      completion.choices[0].message.content || "{}",
     );
 
     res.json({

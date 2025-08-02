@@ -121,29 +121,35 @@ guardianchain/
 ## 📋 Key Files Description
 
 ### Core Configuration
+
 - **package.json** - Dependencies, scripts, and project metadata
 - **.env.example** - Environment variables template for setup
 - **tsconfig.json** - TypeScript compiler configuration
 - **tailwind.config.ts** - Tailwind CSS customization
 
 ### Smart Contracts
+
 - **contracts/GuardianCapsule.sol** - Main ERC-721 NFT implementation
 - **hardhat.config.cjs** - Ethereum development environment
 
 ### Database & ORM
+
 - **shared/schema.ts** - Drizzle ORM schema definitions
 - **drizzle.config.ts** - Database connection and migration settings
 
 ### Frontend Architecture
+
 - **client/src/App.tsx** - Main React application entry point
 - **client/src/components/** - Reusable React components
 - **client/src/pages/** - Page-level components and routing
 
 ### Backend Architecture
+
 - **server/routes.ts** - Express.js API endpoint definitions
 - **server/storage.ts** - Database abstraction and operations
 
 ### Documentation
+
 - **README.md** - Project overview and setup instructions
 - **RELEASE_NOTES.md** - Version history and feature changelog
 - **docs/API.md** - Complete API documentation
@@ -176,6 +182,7 @@ npm run build
 ## 📦 Deployment Structure
 
 ### Production Environment
+
 - **Frontend**: Deployed on Replit with Vite build
 - **Backend**: Express.js server on Replit infrastructure
 - **Database**: PostgreSQL with Neon serverless
@@ -183,6 +190,7 @@ npm run build
 - **Storage**: IPFS for decentralized content, Supabase for assets
 
 ### CI/CD Pipeline
+
 - **GitHub Actions** for automated testing and deployment
 - **Automated migrations** on successful deployments
 - **Environment-specific configurations** for dev/staging/prod

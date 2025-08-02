@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Shield, 
-  Search, 
-  CheckCircle, 
-  XCircle, 
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Shield,
+  Search,
+  CheckCircle,
+  XCircle,
   AlertTriangle,
   Hash,
   Calendar,
@@ -17,9 +17,9 @@ import {
   Eye,
   ExternalLink,
   Copy,
-  Download
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+  Download,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface VerificationResult {
   id: string;
@@ -28,7 +28,7 @@ interface VerificationResult {
   author: string;
   createdAt: string;
   blockchainTx: string;
-  status: 'verified' | 'unverified' | 'tampered' | 'not_found';
+  status: "verified" | "unverified" | "tampered" | "not_found";
   verificationData: {
     ipfsHash: string;
     merkleRoot: string;
@@ -54,21 +54,26 @@ interface VerificationResult {
 
 export default function VerifyPage() {
   const { toast } = useToast();
-  const [searchInput, setSearchInput] = useState('');
-  const [searchType, setSearchType] = useState<'hash' | 'id' | 'tx'>('hash');
-  
-  const { data: verificationResult, isLoading, error, refetch } = useQuery<VerificationResult>({
-    queryKey: ['/api/verify', searchInput, searchType],
+  const [searchInput, setSearchInput] = useState("");
+  const [searchType, setSearchType] = useState<"hash" | "id" | "tx">("hash");
+
+  const {
+    data: verificationResult,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<VerificationResult>({
+    queryKey: ["/api/verify", searchInput, searchType],
     enabled: searchInput.length > 10,
-    retry: false
+    retry: false,
   });
 
   const handleSearch = () => {
     if (searchInput.trim().length < 10) {
       toast({
-        title: 'Invalid Input',
-        description: 'Please enter a valid hash, ID, or transaction hash.',
-        variant: 'destructive',
+        title: "Invalid Input",
+        description: "Please enter a valid hash, ID, or transaction hash.",
+        variant: "destructive",
       });
       return;
     }
@@ -78,38 +83,53 @@ export default function VerifyPage() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast({
-      title: 'Copied',
-      description: 'Content copied to clipboard.',
+      title: "Copied",
+      description: "Content copied to clipboard.",
     });
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'verified': return <CheckCircle className="w-6 h-6 text-green-500" />;
-      case 'unverified': return <AlertTriangle className="w-6 h-6 text-yellow-500" />;
-      case 'tampered': return <XCircle className="w-6 h-6 text-red-500" />;
-      case 'not_found': return <XCircle className="w-6 h-6 text-gray-500" />;
-      default: return <Shield className="w-6 h-6 text-gray-500" />;
+      case "verified":
+        return <CheckCircle className="w-6 h-6 text-green-500" />;
+      case "unverified":
+        return <AlertTriangle className="w-6 h-6 text-yellow-500" />;
+      case "tampered":
+        return <XCircle className="w-6 h-6 text-red-500" />;
+      case "not_found":
+        return <XCircle className="w-6 h-6 text-gray-500" />;
+      default:
+        return <Shield className="w-6 h-6 text-gray-500" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'verified': return 'text-green-600 bg-green-50 border-green-200';
-      case 'unverified': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'tampered': return 'text-red-600 bg-red-50 border-red-200';
-      case 'not_found': return 'text-gray-600 bg-gray-50 border-gray-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case "verified":
+        return "text-green-600 bg-green-50 border-green-200";
+      case "unverified":
+        return "text-yellow-600 bg-yellow-50 border-yellow-200";
+      case "tampered":
+        return "text-red-600 bg-red-50 border-red-200";
+      case "not_found":
+        return "text-gray-600 bg-gray-50 border-gray-200";
+      default:
+        return "text-gray-600 bg-gray-50 border-gray-200";
     }
   };
 
   const getStatusMessage = (status: string) => {
     switch (status) {
-      case 'verified': return 'This content has been verified and authenticated on the blockchain.';
-      case 'unverified': return 'This content exists but verification is incomplete or pending.';
-      case 'tampered': return 'Warning: This content may have been tampered with or corrupted.';
-      case 'not_found': return 'No content found matching the provided identifier.';
-      default: return 'Unknown verification status.';
+      case "verified":
+        return "This content has been verified and authenticated on the blockchain.";
+      case "unverified":
+        return "This content exists but verification is incomplete or pending.";
+      case "tampered":
+        return "Warning: This content may have been tampered with or corrupted.";
+      case "not_found":
+        return "No content found matching the provided identifier.";
+      default:
+        return "Unknown verification status.";
     }
   };
 
@@ -118,7 +138,9 @@ export default function VerifyPage() {
   };
 
   const formatDate = (timestamp: number | string) => {
-    const date = new Date(typeof timestamp === 'number' ? timestamp * 1000 : timestamp);
+    const date = new Date(
+      typeof timestamp === "number" ? timestamp * 1000 : timestamp,
+    );
     return date.toLocaleString();
   };
 
@@ -134,7 +156,8 @@ export default function VerifyPage() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Verify the authenticity and integrity of truth capsules using blockchain technology.
+            Verify the authenticity and integrity of truth capsules using
+            blockchain technology.
           </p>
         </div>
 
@@ -150,24 +173,24 @@ export default function VerifyPage() {
             {/* Search Type Selection */}
             <div className="flex space-x-4">
               <Button
-                variant={searchType === 'hash' ? 'default' : 'outline'}
-                onClick={() => setSearchType('hash')}
+                variant={searchType === "hash" ? "default" : "outline"}
+                onClick={() => setSearchType("hash")}
                 size="sm"
               >
                 <Hash className="w-4 h-4 mr-1" />
                 Content Hash
               </Button>
               <Button
-                variant={searchType === 'id' ? 'default' : 'outline'}
-                onClick={() => setSearchType('id')}
+                variant={searchType === "id" ? "default" : "outline"}
+                onClick={() => setSearchType("id")}
                 size="sm"
               >
                 <FileText className="w-4 h-4 mr-1" />
                 Capsule ID
               </Button>
               <Button
-                variant={searchType === 'tx' ? 'default' : 'outline'}
-                onClick={() => setSearchType('tx')}
+                variant={searchType === "tx" ? "default" : "outline"}
+                onClick={() => setSearchType("tx")}
                 size="sm"
               >
                 <ExternalLink className="w-4 h-4 mr-1" />
@@ -180,11 +203,11 @@ export default function VerifyPage() {
               <Input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder={`Enter ${searchType === 'hash' ? 'content hash' : searchType === 'id' ? 'capsule ID' : 'transaction hash'}...`}
+                placeholder={`Enter ${searchType === "hash" ? "content hash" : searchType === "id" ? "capsule ID" : "transaction hash"}...`}
                 className="flex-1"
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
               />
-              <Button 
+              <Button
                 onClick={handleSearch}
                 disabled={isLoading || searchInput.length < 10}
               >
@@ -197,9 +220,12 @@ export default function VerifyPage() {
             </div>
 
             <p className="text-sm text-gray-500">
-              {searchType === 'hash' && 'Enter the SHA-256 hash of the content to verify its integrity.'}
-              {searchType === 'id' && 'Enter the unique capsule identifier to verify its authenticity.'}
-              {searchType === 'tx' && 'Enter the blockchain transaction hash that sealed the content.'}
+              {searchType === "hash" &&
+                "Enter the SHA-256 hash of the content to verify its integrity."}
+              {searchType === "id" &&
+                "Enter the unique capsule identifier to verify its authenticity."}
+              {searchType === "tx" &&
+                "Enter the blockchain transaction hash that sealed the content."}
             </p>
           </CardContent>
         </Card>
@@ -208,13 +234,19 @@ export default function VerifyPage() {
         {verificationResult && (
           <div className="space-y-6">
             {/* Status Overview */}
-            <Card className={`border-2 ${getStatusColor(verificationResult.status)}`}>
+            <Card
+              className={`border-2 ${getStatusColor(verificationResult.status)}`}
+            >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
                   {getStatusIcon(verificationResult.status)}
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold capitalize">{verificationResult.status}</h2>
-                    <p className="text-sm mt-1">{getStatusMessage(verificationResult.status)}</p>
+                    <h2 className="text-xl font-bold capitalize">
+                      {verificationResult.status}
+                    </h2>
+                    <p className="text-sm mt-1">
+                      {getStatusMessage(verificationResult.status)}
+                    </p>
                   </div>
                   <Badge className={getStatusColor(verificationResult.status)}>
                     {verificationResult.status.toUpperCase()}
@@ -238,7 +270,9 @@ export default function VerifyPage() {
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Title
                       </label>
-                      <p className="text-gray-900 dark:text-white">{verificationResult.title}</p>
+                      <p className="text-gray-900 dark:text-white">
+                        {verificationResult.title}
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -259,26 +293,33 @@ export default function VerifyPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Grief Score
                       </label>
-                      <p className="text-gray-900 dark:text-white">{verificationResult.metadata.griefScore}</p>
+                      <p className="text-gray-900 dark:text-white">
+                        {verificationResult.metadata.griefScore}
+                      </p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Verification Level
                       </label>
-                      <Badge variant="outline">{verificationResult.metadata.verificationLevel}</Badge>
+                      <Badge variant="outline">
+                        {verificationResult.metadata.verificationLevel}
+                      </Badge>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         File Size
                       </label>
                       <p className="text-gray-900 dark:text-white">
-                        {(verificationResult.metadata.fileSize / 1024).toFixed(2)} KB
+                        {(verificationResult.metadata.fileSize / 1024).toFixed(
+                          2,
+                        )}{" "}
+                        KB
                       </p>
                     </div>
                   </div>
@@ -308,7 +349,9 @@ export default function VerifyPage() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => copyToClipboard(verificationResult.blockchainTx)}
+                          onClick={() =>
+                            copyToClipboard(verificationResult.blockchainTx)
+                          }
                         >
                           <Copy className="w-4 h-4" />
                         </Button>
@@ -326,10 +369,12 @@ export default function VerifyPage() {
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Network
                       </label>
-                      <Badge variant="outline">{verificationResult.verificationData.networkId}</Badge>
+                      <Badge variant="outline">
+                        {verificationResult.verificationData.networkId}
+                      </Badge>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -342,7 +387,9 @@ export default function VerifyPage() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => copyToClipboard(verificationResult.hash)}
+                          onClick={() =>
+                            copyToClipboard(verificationResult.hash)
+                          }
                         >
                           <Copy className="w-4 h-4" />
                         </Button>
@@ -354,12 +401,18 @@ export default function VerifyPage() {
                       </label>
                       <div className="flex items-center space-x-2">
                         <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-                          {formatHash(verificationResult.verificationData.ipfsHash)}
+                          {formatHash(
+                            verificationResult.verificationData.ipfsHash,
+                          )}
                         </code>
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => copyToClipboard(verificationResult.verificationData.ipfsHash)}
+                          onClick={() =>
+                            copyToClipboard(
+                              verificationResult.verificationData.ipfsHash,
+                            )
+                          }
                         >
                           <Copy className="w-4 h-4" />
                         </Button>
@@ -370,7 +423,9 @@ export default function VerifyPage() {
                         Timestamp
                       </label>
                       <p className="text-gray-900 dark:text-white">
-                        {formatDate(verificationResult.verificationData.timestamp)}
+                        {formatDate(
+                          verificationResult.verificationData.timestamp,
+                        )}
                       </p>
                     </div>
                   </div>
@@ -453,9 +508,12 @@ export default function VerifyPage() {
               <div className="flex items-center space-x-4">
                 <XCircle className="w-6 h-6 text-red-500" />
                 <div>
-                  <h3 className="font-semibold text-red-800">Verification Failed</h3>
+                  <h3 className="font-semibold text-red-800">
+                    Verification Failed
+                  </h3>
                   <p className="text-red-600">
-                    Unable to verify the provided identifier. Please check the input and try again.
+                    Unable to verify the provided identifier. Please check the
+                    input and try again.
                   </p>
                 </div>
               </div>
@@ -471,14 +529,30 @@ export default function VerifyPage() {
           <CardContent>
             <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400">
               <p>
-                GuardianChain uses blockchain technology to ensure the authenticity and integrity of truth capsules:
+                GuardianChain uses blockchain technology to ensure the
+                authenticity and integrity of truth capsules:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
-                <li><strong>Content Hashing:</strong> Each capsule is hashed using SHA-256 to create a unique fingerprint.</li>
-                <li><strong>Blockchain Sealing:</strong> The hash is recorded on the blockchain with a timestamp.</li>
-                <li><strong>IPFS Storage:</strong> Content is stored on IPFS for decentralized access.</li>
-                <li><strong>Cryptographic Signatures:</strong> Digital signatures ensure author authenticity.</li>
-                <li><strong>Merkle Proofs:</strong> Efficient verification without revealing content.</li>
+                <li>
+                  <strong>Content Hashing:</strong> Each capsule is hashed using
+                  SHA-256 to create a unique fingerprint.
+                </li>
+                <li>
+                  <strong>Blockchain Sealing:</strong> The hash is recorded on
+                  the blockchain with a timestamp.
+                </li>
+                <li>
+                  <strong>IPFS Storage:</strong> Content is stored on IPFS for
+                  decentralized access.
+                </li>
+                <li>
+                  <strong>Cryptographic Signatures:</strong> Digital signatures
+                  ensure author authenticity.
+                </li>
+                <li>
+                  <strong>Merkle Proofs:</strong> Efficient verification without
+                  revealing content.
+                </li>
               </ul>
             </div>
           </CardContent>

@@ -110,18 +110,18 @@ export default function CapsuleHistory({ userAddress }: CapsuleHistoryProps) {
   const displayCapsules = capsules?.length ? capsules : defaultCapsules;
   const totalViews = displayCapsules.reduce(
     (sum, cap) => sum + cap.stats.views,
-    0
+    0,
   );
   const totalShares = displayCapsules.reduce(
     (sum, cap) => sum + cap.stats.shares,
-    0
+    0,
   );
   const verifiedCount = displayCapsules.filter(
-    (cap) => cap.status === "verified"
+    (cap) => cap.status === "verified",
   ).length;
   const totalYield = displayCapsules.reduce(
     (sum, cap) => sum + cap.truthYield,
-    0
+    0,
   );
 
   return (

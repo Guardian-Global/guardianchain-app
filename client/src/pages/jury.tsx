@@ -1,11 +1,11 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import JuryVotePanel from '@/components/JuryVotePanel';
-import AncestryTree from '@/components/AncestryTree';
-import InstitutionAccess from '@/components/InstitutionAccess';
-import { Scale, Users, Shield, Clock } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import JuryVotePanel from "@/components/JuryVotePanel";
+import AncestryTree from "@/components/AncestryTree";
+import InstitutionAccess from "@/components/InstitutionAccess";
+import { Scale, Users, Shield, Clock } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 function JuryPage() {
   const { user } = useAuth();
@@ -15,14 +15,15 @@ function JuryPage() {
     id: "caps_123",
     title: "Evidence of Environmental Cover-up in Manufacturing District",
     author: "WhistleblowerX",
-    description: "Documentation showing deliberate pollution data manipulation by industrial corporation",
-    category: "environmental"
+    description:
+      "Documentation showing deliberate pollution data manipulation by industrial corporation",
+    category: "environmental",
   };
 
   const mockVotes = {
     yes: 2,
     no: 1,
-    abstain: 0
+    abstain: 0,
   };
 
   const mockLineage = [
@@ -32,30 +33,30 @@ function JuryPage() {
       author: "CommunityActivist",
       date: "2024-01-15",
       generation: 0,
-      relationship: 'root' as const,
-      verificationStatus: 'verified' as const,
-      griefScore: 8.2
+      relationship: "root" as const,
+      verificationStatus: "verified" as const,
+      griefScore: 8.2,
     },
     {
-      id: "caps_110", 
+      id: "caps_110",
       title: "Corporate Response and Denial",
       author: "CompanyPR",
       date: "2024-01-22",
       generation: 1,
-      relationship: 'child' as const,
-      verificationStatus: 'verified' as const,
-      griefScore: 3.1
+      relationship: "child" as const,
+      verificationStatus: "verified" as const,
+      griefScore: 3.1,
     },
     {
       id: "caps_123",
       title: "Evidence of Environmental Cover-up in Manufacturing District",
-      author: "WhistleblowerX", 
+      author: "WhistleblowerX",
       date: "2024-02-01",
       generation: 2,
-      relationship: 'child' as const,
-      verificationStatus: 'pending' as const,
-      griefScore: 9.7
-    }
+      relationship: "child" as const,
+      verificationStatus: "pending" as const,
+      griefScore: 9.7,
+    },
   ];
 
   return (
@@ -67,8 +68,9 @@ function JuryPage() {
           Veritas Jury Portal
         </h1>
         <p className="text-slate-300 max-w-2xl mx-auto">
-          Participate in decentralized truth validation as a qualified jury member. 
-          Your expertise helps determine the authenticity of critical truth capsules.
+          Participate in decentralized truth validation as a qualified jury
+          member. Your expertise helps determine the authenticity of critical
+          truth capsules.
         </p>
       </div>
 
@@ -81,7 +83,7 @@ function JuryPage() {
             <div className="text-sm text-slate-400">Cases Voted</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-slate-800 border-slate-700">
           <CardContent className="p-4 text-center">
             <Shield className="w-6 h-6 text-green-400 mx-auto mb-2" />
@@ -89,7 +91,7 @@ function JuryPage() {
             <div className="text-sm text-slate-400">Accuracy Rate</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-slate-800 border-slate-700">
           <CardContent className="p-4 text-center">
             <Users className="w-6 h-6 text-purple-400 mx-auto mb-2" />
@@ -97,7 +99,7 @@ function JuryPage() {
             <div className="text-sm text-slate-400">Reputation Score</div>
           </CardContent>
         </Card>
-        
+
         <Card className="bg-slate-800 border-slate-700">
           <CardContent className="p-4 text-center">
             <Clock className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
@@ -110,30 +112,43 @@ function JuryPage() {
       {/* Active Case */}
       <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-white">Current Case Under Review</CardTitle>
+          <CardTitle className="text-white">
+            Current Case Under Review
+          </CardTitle>
           <div className="flex space-x-2">
             <Badge className="bg-red-600">High Priority</Badge>
-            <Badge variant="outline" className="border-slate-600 text-slate-300">Environmental</Badge>
+            <Badge
+              variant="outline"
+              className="border-slate-600 text-slate-300"
+            >
+              Environmental
+            </Badge>
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">{mockCapsule.title}</h3>
-              <p className="text-slate-400 mb-2">Submitted by: {mockCapsule.author}</p>
+              <h3 className="text-lg font-semibold text-white mb-2">
+                {mockCapsule.title}
+              </h3>
+              <p className="text-slate-400 mb-2">
+                Submitted by: {mockCapsule.author}
+              </p>
               <p className="text-slate-300">{mockCapsule.description}</p>
             </div>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <JuryVotePanel 
+              <JuryVotePanel
                 capsuleId={mockCapsule.id}
                 currentVotes={mockVotes}
-                votingDeadline={new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString()}
+                votingDeadline={new Date(
+                  Date.now() + 2 * 24 * 60 * 60 * 1000,
+                ).toISOString()}
                 requiredConsensus={3}
                 jurySize={5}
               />
-              
-              <AncestryTree 
+
+              <AncestryTree
                 lineage={mockLineage}
                 currentCapsuleId={mockCapsule.id}
               />
@@ -143,9 +158,7 @@ function JuryPage() {
       </Card>
 
       {/* Institutional Access */}
-      {user && (
-        <InstitutionAccess user={user as any} />
-      )}
+      {user && <InstitutionAccess user={user as any} />}
 
       {/* Jury Guidelines */}
       <Card className="bg-slate-800 border-slate-700">
@@ -160,27 +173,30 @@ function JuryPage() {
                 Authenticity
               </h3>
               <p className="text-slate-400 text-sm">
-                Evaluate if the capsule contains genuine, unmanipulated evidence and truthful claims.
+                Evaluate if the capsule contains genuine, unmanipulated evidence
+                and truthful claims.
               </p>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-white mb-2 flex items-center">
                 <Users className="w-5 h-5 mr-2 text-green-400" />
                 Impact
               </h3>
               <p className="text-slate-400 text-sm">
-                Consider the potential social, legal, or historical significance of the submitted evidence.
+                Consider the potential social, legal, or historical significance
+                of the submitted evidence.
               </p>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-white mb-2 flex items-center">
                 <Scale className="w-5 h-5 mr-2 text-purple-400" />
                 Standards
               </h3>
               <p className="text-slate-400 text-sm">
-                Apply consistent verification standards while respecting the grief and courage of truth-tellers.
+                Apply consistent verification standards while respecting the
+                grief and courage of truth-tellers.
               </p>
             </div>
           </div>

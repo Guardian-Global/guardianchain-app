@@ -69,7 +69,7 @@ const IdeaValueCalculator: React.FC = () => {
       const audienceValue = metrics.audienceSize * 0.005; // $0.005 per follower (more realistic)
       const engagementBonus =
         (metrics.engagementRate / 100) * audienceValue * 1.5; // Reduced multiplier
-      const uniquenessBonus = (metrics.uniqueness / 100) * audienceValue * 1.0; // Reduced multiplier  
+      const uniquenessBonus = (metrics.uniqueness / 100) * audienceValue * 1.0; // Reduced multiplier
       const trendBonus = (metrics.trendRelevance / 100) * audienceValue * 0.5; // Much lower trend bonus
       const monetizationBonus =
         (metrics.monetizationPotential / 100) * audienceValue * 1.0; // Realistic monetization

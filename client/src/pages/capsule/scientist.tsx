@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Beaker, FileText, Users, Calendar, Award, Upload, Loader2 } from "lucide-react";
+import {
+  Beaker,
+  FileText,
+  Users,
+  Calendar,
+  Award,
+  Upload,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -24,8 +32,17 @@ export default function ScientistCapsulePage() {
   const [publicationDate, setPublicationDate] = useState("");
 
   const researchFields = [
-    "Biology", "Chemistry", "Physics", "Environmental Science", "Medicine", 
-    "Psychology", "Computer Science", "Engineering", "Mathematics", "Earth Science", "Other"
+    "Biology",
+    "Chemistry",
+    "Physics",
+    "Environmental Science",
+    "Medicine",
+    "Psychology",
+    "Computer Science",
+    "Engineering",
+    "Mathematics",
+    "Earth Science",
+    "Other",
   ];
 
   const createResearchCapsuleMutation = useMutation({
@@ -35,7 +52,8 @@ export default function ScientistCapsulePage() {
     onSuccess: (data) => {
       toast({
         title: "Research Capsule Created",
-        description: "Your scientific research has been documented for verification.",
+        description:
+          "Your scientific research has been documented for verification.",
       });
       // Reset form
       setResearchTitle("");
@@ -67,7 +85,8 @@ export default function ScientistCapsulePage() {
     if (!researchTitle.trim() || !researcherName.trim()) {
       toast({
         title: "Validation Error",
-        description: "Please provide at least research title and researcher name.",
+        description:
+          "Please provide at least research title and researcher name.",
         variant: "destructive",
       });
       return;
@@ -84,7 +103,7 @@ export default function ScientistCapsulePage() {
     formData.append("collaborators", collaborators.trim());
     formData.append("publicationDate", publicationDate);
     formData.append("capsuleType", "SCIENTIST");
-    
+
     dataFiles.forEach((file, index) => {
       formData.append(`data_${index}`, file);
     });
@@ -98,7 +117,8 @@ export default function ScientistCapsulePage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-white">Scientist Capsule</h1>
           <p className="text-slate-400">
-            Document and verify scientific research with transparent methodology and data
+            Document and verify scientific research with transparent methodology
+            and data
           </p>
         </div>
 
@@ -108,14 +128,19 @@ export default function ScientistCapsulePage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Beaker className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Beaker
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Research Documentation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Research Title *</label>
+                    <label className="text-sm font-medium text-white">
+                      Research Title *
+                    </label>
                     <Input
                       value={researchTitle}
                       onChange={(e) => setResearchTitle(e.target.value)}
@@ -123,9 +148,11 @@ export default function ScientistCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Researcher Name *</label>
+                    <label className="text-sm font-medium text-white">
+                      Researcher Name *
+                    </label>
                     <Input
                       value={researcherName}
                       onChange={(e) => setResearcherName(e.target.value)}
@@ -137,7 +164,9 @@ export default function ScientistCapsulePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Institution</label>
+                    <label className="text-sm font-medium text-white">
+                      Institution
+                    </label>
                     <Input
                       value={institution}
                       onChange={(e) => setInstitution(e.target.value)}
@@ -145,9 +174,11 @@ export default function ScientistCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Research Field</label>
+                    <label className="text-sm font-medium text-white">
+                      Research Field
+                    </label>
                     <select
                       value={field}
                       onChange={(e) => setField(e.target.value)}
@@ -161,9 +192,11 @@ export default function ScientistCapsulePage() {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Publication Date</label>
+                    <label className="text-sm font-medium text-white">
+                      Publication Date
+                    </label>
                     <Input
                       type="date"
                       value={publicationDate}
@@ -174,7 +207,9 @@ export default function ScientistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Research Methodology</label>
+                  <label className="text-sm font-medium text-white">
+                    Research Methodology
+                  </label>
                   <Textarea
                     value={methodology}
                     onChange={(e) => setMethodology(e.target.value)}
@@ -184,7 +219,9 @@ export default function ScientistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Key Findings</label>
+                  <label className="text-sm font-medium text-white">
+                    Key Findings
+                  </label>
                   <Textarea
                     value={findings}
                     onChange={(e) => setFindings(e.target.value)}
@@ -194,7 +231,9 @@ export default function ScientistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Implications & Significance</label>
+                  <label className="text-sm font-medium text-white">
+                    Implications & Significance
+                  </label>
                   <Textarea
                     value={implications}
                     onChange={(e) => setImplications(e.target.value)}
@@ -204,7 +243,9 @@ export default function ScientistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Collaborators & Credits</label>
+                  <label className="text-sm font-medium text-white">
+                    Collaborators & Credits
+                  </label>
                   <Textarea
                     value={collaborators}
                     onChange={(e) => setCollaborators(e.target.value)}
@@ -214,7 +255,9 @@ export default function ScientistCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Research Data & Files</label>
+                  <label className="text-sm font-medium text-white">
+                    Research Data & Files
+                  </label>
                   <div className="flex items-center space-x-2">
                     <Input
                       type="file"
@@ -259,7 +302,10 @@ export default function ScientistCapsulePage() {
             <Card className="bg-slate-800/30 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Award className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Award
+                    className="w-4 h-4"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Research Features
                 </CardTitle>
               </CardHeader>
@@ -267,25 +313,29 @@ export default function ScientistCapsulePage() {
                 <div className="flex items-start gap-2">
                   <FileText className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Data Integrity:</strong> Immutable research records
+                    <strong className="text-white">Data Integrity:</strong>{" "}
+                    Immutable research records
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Users className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Peer Review:</strong> Community verification process
+                    <strong className="text-white">Peer Review:</strong>{" "}
+                    Community verification process
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Calendar className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Timestamp Proof:</strong> Publication date verification
+                    <strong className="text-white">Timestamp Proof:</strong>{" "}
+                    Publication date verification
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Award className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Attribution:</strong> Proper research credit
+                    <strong className="text-white">Attribution:</strong> Proper
+                    research credit
                   </div>
                 </div>
               </CardContent>
@@ -319,14 +369,22 @@ export default function ScientistCapsulePage() {
                 ].map((research, index) => (
                   <div key={index} className="p-3 bg-slate-700/30 rounded-lg">
                     <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-white text-sm">{research.title}</h4>
-                      <Badge variant="outline" className="text-blue-400 border-blue-600 text-xs">
+                      <h4 className="font-medium text-white text-sm">
+                        {research.title}
+                      </h4>
+                      <Badge
+                        variant="outline"
+                        className="text-blue-400 border-blue-600 text-xs"
+                      >
                         {research.field}
                       </Badge>
                     </div>
                     <div className="text-xs text-slate-400">
                       <div>By: {research.researcher}</div>
-                      <div>Published: {new Date(research.date).toLocaleDateString()}</div>
+                      <div>
+                        Published:{" "}
+                        {new Date(research.date).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -338,7 +396,9 @@ export default function ScientistCapsulePage() {
         {/* How It Works */}
         <Card className="bg-slate-800/30 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">How Research Capsules Work</CardTitle>
+            <CardTitle className="text-white">
+              How Research Capsules Work
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center space-y-2">
@@ -346,7 +406,9 @@ export default function ScientistCapsulePage() {
                 <Beaker className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="font-semibold text-white">1. Research</h3>
-              <p className="text-sm text-slate-400">Conduct rigorous scientific investigation</p>
+              <p className="text-sm text-slate-400">
+                Conduct rigorous scientific investigation
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -354,7 +416,9 @@ export default function ScientistCapsulePage() {
                 <FileText className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="font-semibold text-white">2. Document</h3>
-              <p className="text-sm text-slate-400">Record methodology, data, and findings</p>
+              <p className="text-sm text-slate-400">
+                Record methodology, data, and findings
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -362,7 +426,9 @@ export default function ScientistCapsulePage() {
                 <Users className="w-6 h-6 text-purple-400" />
               </div>
               <h3 className="font-semibold text-white">3. Verify</h3>
-              <p className="text-sm text-slate-400">Peer review and community validation</p>
+              <p className="text-sm text-slate-400">
+                Peer review and community validation
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -370,7 +436,9 @@ export default function ScientistCapsulePage() {
                 <Award className="w-6 h-6 text-yellow-400" />
               </div>
               <h3 className="font-semibold text-white">4. Archive</h3>
-              <p className="text-sm text-slate-400">Permanent scientific truth record</p>
+              <p className="text-sm text-slate-400">
+                Permanent scientific truth record
+              </p>
             </div>
           </CardContent>
         </Card>

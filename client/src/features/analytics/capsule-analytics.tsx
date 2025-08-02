@@ -21,7 +21,7 @@ export default function CapsuleAnalyticsPage() {
   const [location] = useLocation();
   const urlParams = new URLSearchParams(location.split("?")[1] || "");
   const [selectedCapsuleId, setSelectedCapsuleId] = useState(
-    urlParams.get("id") || "1"
+    urlParams.get("id") || "1",
   );
   const [timeRange, setTimeRange] = useState<TimeRange>("30d");
 
@@ -134,7 +134,10 @@ export default function CapsuleAnalyticsPage() {
                 <h3 className="text-xl font-semibold text-white mb-4">
                   Analytics for Capsule {selectedCapsuleId}
                 </h3>
-                <p className="text-slate-400">Analytics chart component temporarily unavailable during refactor.</p>
+                <p className="text-slate-400">
+                  Analytics chart component temporarily unavailable during
+                  refactor.
+                </p>
               </CardContent>
             </Card>
           ) : (
@@ -177,15 +180,15 @@ export default function CapsuleAnalyticsPage() {
                         capsule.performance === "High"
                           ? "default"
                           : capsule.performance === "Viral"
-                          ? "secondary"
-                          : "outline"
+                            ? "secondary"
+                            : "outline"
                       }
                       className={
                         capsule.performance === "High"
                           ? "bg-green-600"
                           : capsule.performance === "Viral"
-                          ? "bg-purple-600"
-                          : "bg-yellow-600"
+                            ? "bg-purple-600"
+                            : "bg-yellow-600"
                       }
                     >
                       {capsule.performance}

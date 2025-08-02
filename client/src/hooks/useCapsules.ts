@@ -16,7 +16,7 @@ export interface Capsule {
 
 export function useCapsules(params?: Record<string, string>) {
   return useQuery<Capsule[]>({
-    queryKey: ['/api/capsules', params],
+    queryKey: ["/api/capsules", params],
     queryFn: () => api.capsules.getAll(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -24,7 +24,7 @@ export function useCapsules(params?: Record<string, string>) {
 
 export function useCapsule(id: string) {
   return useQuery({
-    queryKey: ['/api/capsules', id],
+    queryKey: ["/api/capsules", id],
     queryFn: () => api.capsules.getById(id),
     enabled: !!id,
     staleTime: 10 * 60 * 1000, // 10 minutes
@@ -33,7 +33,7 @@ export function useCapsule(id: string) {
 
 export function useRecentCapsule() {
   return useQuery({
-    queryKey: ['/api/capsules/recent'],
+    queryKey: ["/api/capsules/recent"],
     queryFn: () => api.capsules.getRecent(),
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
@@ -45,8 +45,8 @@ export function useCreateCapsule() {
   return useMutation({
     mutationFn: (capsuleData: any) => api.capsules.create(capsuleData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/stats'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/stats"] });
     },
   });
 }
@@ -55,11 +55,11 @@ export function useUpdateCapsule() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => 
+    mutationFn: ({ id, data }: { id: string; data: any }) =>
       api.capsules.update(id, data),
     onSuccess: (_, { id }) => {
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules', id] });
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules", id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
     },
   });
 }
@@ -70,8 +70,8 @@ export function useDeleteCapsule() {
   return useMutation({
     mutationFn: (id: string) => api.capsules.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/capsules'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/stats'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/stats"] });
     },
   });
 }

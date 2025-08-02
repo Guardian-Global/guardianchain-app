@@ -5,7 +5,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Newspaper, FileText, Users, Calendar, Video, Upload, Loader2 } from "lucide-react";
+import {
+  Newspaper,
+  FileText,
+  Users,
+  Calendar,
+  Video,
+  Upload,
+  Loader2,
+} from "lucide-react";
 import { BRAND_COLORS } from "@/lib/constants";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -24,8 +32,16 @@ export default function MediaCapsulePage() {
   const [corrections, setCorrections] = useState("");
 
   const mediaTypes = [
-    "News Article", "Investigative Report", "Editorial", "Interview", 
-    "Documentary", "News Video", "Podcast Episode", "Blog Post", "Social Media Post", "Other"
+    "News Article",
+    "Investigative Report",
+    "Editorial",
+    "Interview",
+    "Documentary",
+    "News Video",
+    "Podcast Episode",
+    "Blog Post",
+    "Social Media Post",
+    "Other",
   ];
 
   const createMediaCapsuleMutation = useMutation({
@@ -35,7 +51,8 @@ export default function MediaCapsulePage() {
     onSuccess: (data) => {
       toast({
         title: "Media Capsule Created",
-        description: "Your media content has been documented for truth verification.",
+        description:
+          "Your media content has been documented for truth verification.",
       });
       // Reset form
       setArticleTitle("");
@@ -84,7 +101,7 @@ export default function MediaCapsulePage() {
     formData.append("publishDate", publishDate);
     formData.append("corrections", corrections.trim());
     formData.append("capsuleType", "MEDIA");
-    
+
     mediaFiles.forEach((file, index) => {
       formData.append(`media_${index}`, file);
     });
@@ -98,7 +115,8 @@ export default function MediaCapsulePage() {
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-white">Media Capsule</h1>
           <p className="text-slate-400">
-            Document and verify media content with full source attribution and fact-checking
+            Document and verify media content with full source attribution and
+            fact-checking
           </p>
         </div>
 
@@ -108,14 +126,19 @@ export default function MediaCapsulePage() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <Newspaper className="w-5 h-5" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <Newspaper
+                    className="w-5 h-5"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Media Documentation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Article/Content Title *</label>
+                    <label className="text-sm font-medium text-white">
+                      Article/Content Title *
+                    </label>
                     <Input
                       value={articleTitle}
                       onChange={(e) => setArticleTitle(e.target.value)}
@@ -123,9 +146,11 @@ export default function MediaCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Author/Reporter *</label>
+                    <label className="text-sm font-medium text-white">
+                      Author/Reporter *
+                    </label>
                     <Input
                       value={authorName}
                       onChange={(e) => setAuthorName(e.target.value)}
@@ -137,7 +162,9 @@ export default function MediaCapsulePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Publication/Outlet</label>
+                    <label className="text-sm font-medium text-white">
+                      Publication/Outlet
+                    </label>
                     <Input
                       value={publication}
                       onChange={(e) => setPublication(e.target.value)}
@@ -145,9 +172,11 @@ export default function MediaCapsulePage() {
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Media Type</label>
+                    <label className="text-sm font-medium text-white">
+                      Media Type
+                    </label>
                     <select
                       value={mediaType}
                       onChange={(e) => setMediaType(e.target.value)}
@@ -161,9 +190,11 @@ export default function MediaCapsulePage() {
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white">Publish Date</label>
+                    <label className="text-sm font-medium text-white">
+                      Publish Date
+                    </label>
                     <Input
                       type="date"
                       value={publishDate}
@@ -174,7 +205,9 @@ export default function MediaCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Content Summary/Excerpt</label>
+                  <label className="text-sm font-medium text-white">
+                    Content Summary/Excerpt
+                  </label>
                   <Textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
@@ -184,7 +217,9 @@ export default function MediaCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Sources & References</label>
+                  <label className="text-sm font-medium text-white">
+                    Sources & References
+                  </label>
                   <Textarea
                     value={sources}
                     onChange={(e) => setSources(e.target.value)}
@@ -194,7 +229,9 @@ export default function MediaCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Fact-Checking & Verification</label>
+                  <label className="text-sm font-medium text-white">
+                    Fact-Checking & Verification
+                  </label>
                   <Textarea
                     value={factChecks}
                     onChange={(e) => setFactChecks(e.target.value)}
@@ -204,7 +241,9 @@ export default function MediaCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Corrections & Updates</label>
+                  <label className="text-sm font-medium text-white">
+                    Corrections & Updates
+                  </label>
                   <Textarea
                     value={corrections}
                     onChange={(e) => setCorrections(e.target.value)}
@@ -214,7 +253,9 @@ export default function MediaCapsulePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white">Media Files</label>
+                  <label className="text-sm font-medium text-white">
+                    Media Files
+                  </label>
                   <div className="flex items-center space-x-2">
                     <Input
                       type="file"
@@ -259,7 +300,10 @@ export default function MediaCapsulePage() {
             <Card className="bg-slate-800/30 border-slate-700">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
-                  <FileText className="w-4 h-4" style={{ color: BRAND_COLORS.CHAIN }} />
+                  <FileText
+                    className="w-4 h-4"
+                    style={{ color: BRAND_COLORS.CHAIN }}
+                  />
                   Media Features
                 </CardTitle>
               </CardHeader>
@@ -267,25 +311,29 @@ export default function MediaCapsulePage() {
                 <div className="flex items-start gap-2">
                   <Newspaper className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Source Verification:</strong> Track original sources
+                    <strong className="text-white">Source Verification:</strong>{" "}
+                    Track original sources
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <FileText className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Fact-Check Record:</strong> Document verification process
+                    <strong className="text-white">Fact-Check Record:</strong>{" "}
+                    Document verification process
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Calendar className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Publication Trail:</strong> Immutable publication history
+                    <strong className="text-white">Publication Trail:</strong>{" "}
+                    Immutable publication history
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <Video className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <strong className="text-white">Media Archive:</strong> Preserve original content
+                    <strong className="text-white">Media Archive:</strong>{" "}
+                    Preserve original content
                   </div>
                 </div>
               </CardContent>
@@ -319,8 +367,13 @@ export default function MediaCapsulePage() {
                 ].map((media, index) => (
                   <div key={index} className="p-3 bg-slate-700/30 rounded-lg">
                     <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-white text-sm">{media.title}</h4>
-                      <Badge variant="outline" className="text-green-400 border-green-600 text-xs">
+                      <h4 className="font-medium text-white text-sm">
+                        {media.title}
+                      </h4>
+                      <Badge
+                        variant="outline"
+                        className="text-green-400 border-green-600 text-xs"
+                      >
                         {media.type}
                       </Badge>
                     </div>
@@ -338,7 +391,9 @@ export default function MediaCapsulePage() {
         {/* How It Works */}
         <Card className="bg-slate-800/30 border-slate-700">
           <CardHeader>
-            <CardTitle className="text-white">How Media Capsules Work</CardTitle>
+            <CardTitle className="text-white">
+              How Media Capsules Work
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center space-y-2">
@@ -346,7 +401,9 @@ export default function MediaCapsulePage() {
                 <Newspaper className="w-6 h-6 text-green-400" />
               </div>
               <h3 className="font-semibold text-white">1. Report</h3>
-              <p className="text-sm text-slate-400">Create media content with thorough research</p>
+              <p className="text-sm text-slate-400">
+                Create media content with thorough research
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -354,7 +411,9 @@ export default function MediaCapsulePage() {
                 <Users className="w-6 h-6 text-blue-400" />
               </div>
               <h3 className="font-semibold text-white">2. Source</h3>
-              <p className="text-sm text-slate-400">Document all sources and verification methods</p>
+              <p className="text-sm text-slate-400">
+                Document all sources and verification methods
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -362,7 +421,9 @@ export default function MediaCapsulePage() {
                 <FileText className="w-6 h-6 text-purple-400" />
               </div>
               <h3 className="font-semibold text-white">3. Verify</h3>
-              <p className="text-sm text-slate-400">Community fact-checking and validation</p>
+              <p className="text-sm text-slate-400">
+                Community fact-checking and validation
+              </p>
             </div>
 
             <div className="text-center space-y-2">
@@ -370,7 +431,9 @@ export default function MediaCapsulePage() {
                 <Video className="w-6 h-6 text-red-400" />
               </div>
               <h3 className="font-semibold text-white">4. Archive</h3>
-              <p className="text-sm text-slate-400">Permanent media truth preservation</p>
+              <p className="text-sm text-slate-400">
+                Permanent media truth preservation
+              </p>
             </div>
           </CardContent>
         </Card>

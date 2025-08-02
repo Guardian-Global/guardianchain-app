@@ -5,21 +5,30 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, MessageSquare, Trophy, Users, CheckCircle, Star, Clock } from "lucide-react";
+import {
+  Heart,
+  MessageSquare,
+  Trophy,
+  Users,
+  CheckCircle,
+  Star,
+  Clock,
+} from "lucide-react";
 
 export default function TruthRedemptionPage() {
   const [redemptionData, setRedemptionData] = useState({
     title: "",
     acknowledgment: "",
     category: "personal",
-    publicLevel: "community"
+    publicLevel: "community",
   });
   const { toast } = useToast();
 
   const handleSubmit = () => {
     toast({
       title: "Truth Redemption Submitted",
-      description: "Your public acknowledgment has been posted to the community.",
+      description:
+        "Your public acknowledgment has been posted to the community.",
     });
   };
 
@@ -34,8 +43,9 @@ export default function TruthRedemptionPage() {
             </h1>
           </div>
           <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Public acknowledgments and apologies. Take responsibility, make amends, 
-            and rebuild trust through transparent community accountability.
+            Public acknowledgments and apologies. Take responsibility, make
+            amends, and rebuild trust through transparent community
+            accountability.
           </p>
         </div>
 
@@ -52,22 +62,39 @@ export default function TruthRedemptionPage() {
                 <Input
                   placeholder="Acknowledgment Title"
                   value={redemptionData.title}
-                  onChange={(e) => setRedemptionData({...redemptionData, title: e.target.value})}
+                  onChange={(e) =>
+                    setRedemptionData({
+                      ...redemptionData,
+                      title: e.target.value,
+                    })
+                  }
                   className="bg-slate-700 border-slate-600"
                 />
                 <Textarea
                   placeholder="Your public acknowledgment, apology, or commitment to change..."
                   value={redemptionData.acknowledgment}
-                  onChange={(e) => setRedemptionData({...redemptionData, acknowledgment: e.target.value})}
+                  onChange={(e) =>
+                    setRedemptionData({
+                      ...redemptionData,
+                      acknowledgment: e.target.value,
+                    })
+                  }
                   className="bg-slate-700 border-slate-600 min-h-[200px]"
                 />
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Category</label>
-                    <select 
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Category
+                    </label>
+                    <select
                       className="w-full p-2 bg-slate-700 border border-slate-600 rounded"
                       value={redemptionData.category}
-                      onChange={(e) => setRedemptionData({...redemptionData, category: e.target.value})}
+                      onChange={(e) =>
+                        setRedemptionData({
+                          ...redemptionData,
+                          category: e.target.value,
+                        })
+                      }
                     >
                       <option value="personal">Personal</option>
                       <option value="professional">Professional</option>
@@ -76,11 +103,18 @@ export default function TruthRedemptionPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm text-slate-400 mb-1 block">Visibility</label>
-                    <select 
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Visibility
+                    </label>
+                    <select
                       className="w-full p-2 bg-slate-700 border border-slate-600 rounded"
                       value={redemptionData.publicLevel}
-                      onChange={(e) => setRedemptionData({...redemptionData, publicLevel: e.target.value})}
+                      onChange={(e) =>
+                        setRedemptionData({
+                          ...redemptionData,
+                          publicLevel: e.target.value,
+                        })
+                      }
                     >
                       <option value="community">Community</option>
                       <option value="public">Fully Public</option>
@@ -88,7 +122,7 @@ export default function TruthRedemptionPage() {
                     </select>
                   </div>
                 </div>
-                <Button 
+                <Button
                   onClick={handleSubmit}
                   className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700"
                 >
@@ -111,10 +145,14 @@ export default function TruthRedemptionPage() {
                 <div className="space-y-3">
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">CEO Public Apology</h4>
+                      <h4 className="font-semibold text-sm">
+                        CEO Public Apology
+                      </h4>
                       <Badge className="bg-green-600">Verified</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Acknowledging data breach oversight...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Acknowledging data breach oversight...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Users className="w-3 h-3" />
                       <span>2.3K views</span>
@@ -122,13 +160,17 @@ export default function TruthRedemptionPage() {
                       <span>89% positive</span>
                     </div>
                   </div>
-                  
+
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">Research Methodology Correction</h4>
+                      <h4 className="font-semibold text-sm">
+                        Research Methodology Correction
+                      </h4>
                       <Badge className="bg-blue-600">Community</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Correcting previous study limitations...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Correcting previous study limitations...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Users className="w-3 h-3" />
                       <span>456 views</span>
@@ -139,10 +181,14 @@ export default function TruthRedemptionPage() {
 
                   <div className="p-3 bg-slate-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold text-sm">Policy Reversal Acknowledgment</h4>
+                      <h4 className="font-semibold text-sm">
+                        Policy Reversal Acknowledgment
+                      </h4>
                       <Badge className="bg-purple-600">Official</Badge>
                     </div>
-                    <p className="text-xs text-slate-400 mb-2">Admitting policy implementation errors...</p>
+                    <p className="text-xs text-slate-400 mb-2">
+                      Admitting policy implementation errors...
+                    </p>
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Users className="w-3 h-3" />
                       <span>1.1K views</span>

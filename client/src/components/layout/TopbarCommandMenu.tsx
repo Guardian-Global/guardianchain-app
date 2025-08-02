@@ -29,7 +29,7 @@ export default function TopbarCommandMenu({ tier }: TopbarCommandMenuProps) {
         { label: "Vault", value: "/vault", icon: "🏛️" },
         { label: "GTT Demo", value: "/gtt-demo", icon: "💎" },
         { label: "Analytics", value: "/analytics", icon: "📊" },
-      ]
+      ],
     },
     {
       group: "Tools",
@@ -38,7 +38,7 @@ export default function TopbarCommandMenu({ tier }: TopbarCommandMenuProps) {
         { label: "DAO Governance", value: "/dao", icon: "🗳️" },
         { label: "Validator Dashboard", value: "/validator", icon: "🛡️" },
         { label: "Press Kit", value: "/press-kit", icon: "📰" },
-      ]
+      ],
     },
     {
       group: "Account",
@@ -46,8 +46,8 @@ export default function TopbarCommandMenu({ tier }: TopbarCommandMenuProps) {
         { label: "Profile", value: "/profile", icon: "👤" },
         { label: "Settings", value: "/settings", icon: "⚙️" },
         { label: "Legal", value: "/legal", icon: "📜" },
-      ]
-    }
+      ],
+    },
   ];
 
   const handleSelect = (value: string) => {
@@ -71,8 +71,8 @@ export default function TopbarCommandMenu({ tier }: TopbarCommandMenuProps) {
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput 
-          placeholder="Type a command or search..." 
+        <CommandInput
+          placeholder="Type a command or search..."
           className="bg-brand-secondary text-brand-light"
         />
         <CommandList className="bg-brand-secondary">
@@ -80,8 +80,8 @@ export default function TopbarCommandMenu({ tier }: TopbarCommandMenuProps) {
             No results found.
           </CommandEmpty>
           {commands.map((group) => (
-            <CommandGroup 
-              key={group.group} 
+            <CommandGroup
+              key={group.group}
               heading={group.group}
               className="text-brand-light"
             >

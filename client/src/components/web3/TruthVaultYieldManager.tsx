@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Vault,
   TrendingUp,
@@ -17,7 +17,7 @@ import {
   Users,
   Calendar,
   Star,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface TruthVaultData {
   contractAddress: string;
@@ -31,7 +31,7 @@ interface TruthVaultData {
 
 interface MemoryCapsule {
   id: string;
-  type: 'photo' | 'video' | 'song' | 'poem' | 'message' | 'data';
+  type: "photo" | "video" | "song" | "poem" | "message" | "data";
   name: string;
   stakeAmount: string;
   stakingPeriod: number;
@@ -43,91 +43,91 @@ interface MemoryCapsule {
 
 export default function TruthVaultYieldManager() {
   const [vaultData, setVaultData] = useState<TruthVaultData>({
-    contractAddress: '0x1Ad81D7A2e954B502A543b672876f6f3603d072',
-    totalStaked: '12,500,000',
-    userStake: '2,450',
-    pendingRewards: '186',
-    apy: '9.2',
+    contractAddress: "0x1Ad81D7A2e954B502A543b672876f6f3603d072",
+    totalStaked: "12,500,000",
+    userStake: "2,450",
+    pendingRewards: "186",
+    apy: "9.2",
     lockPeriod: 100,
-    lastRewardClaim: '2 days ago'
+    lastRewardClaim: "2 days ago",
   });
 
   const [memoryCapsules, setMemoryCapsules] = useState<MemoryCapsule[]>([
     {
-      id: '1',
-      type: 'photo',
-      name: 'Family Portrait 2025',
-      stakeAmount: '250',
+      id: "1",
+      type: "photo",
+      name: "Family Portrait 2025",
+      stakeAmount: "250",
       stakingPeriod: 100,
-      currentValue: '4,225',
-      projectedValue: '42,250',
-      yieldEarned: '125',
-      createdAt: '3 months ago'
+      currentValue: "4,225",
+      projectedValue: "42,250",
+      yieldEarned: "125",
+      createdAt: "3 months ago",
     },
     {
-      id: '2',
-      type: 'video',
-      name: 'Wedding Anniversary',
-      stakeAmount: '400',
+      id: "2",
+      type: "video",
+      name: "Wedding Anniversary",
+      stakeAmount: "400",
       stakingPeriod: 50,
-      currentValue: '2,840',
-      projectedValue: '18,760',
-      yieldEarned: '89',
-      createdAt: '6 months ago'
+      currentValue: "2,840",
+      projectedValue: "18,760",
+      yieldEarned: "89",
+      createdAt: "6 months ago",
     },
     {
-      id: '3',
-      type: 'message',
-      name: 'Birthday Message 2625',
-      stakeAmount: '15',
+      id: "3",
+      type: "message",
+      name: "Birthday Message 2625",
+      stakeAmount: "15",
       stakingPeriod: 600,
-      currentValue: '1,250',
-      projectedValue: '1,500,000',
-      yieldEarned: '45',
-      createdAt: '1 month ago'
-    }
+      currentValue: "1,250",
+      projectedValue: "1,500,000",
+      yieldEarned: "45",
+      createdAt: "1 month ago",
+    },
   ]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const getTypeIcon = (type: string) => {
     const icons = {
-      photo: '📸',
-      video: '🎥',
-      song: '🎵',
-      poem: '📝',
-      message: '💌',
-      data: '💾'
+      photo: "📸",
+      video: "🎥",
+      song: "🎵",
+      poem: "📝",
+      message: "💌",
+      data: "💾",
     };
-    return icons[type as keyof typeof icons] || '📄';
+    return icons[type as keyof typeof icons] || "📄";
   };
 
   const getTypeColor = (type: string) => {
     const colors = {
-      photo: 'text-purple-400',
-      video: 'text-blue-400',
-      song: 'text-green-400',
-      poem: 'text-yellow-400',
-      message: 'text-pink-400',
-      data: 'text-cyan-400'
+      photo: "text-purple-400",
+      video: "text-blue-400",
+      song: "text-green-400",
+      poem: "text-yellow-400",
+      message: "text-pink-400",
+      data: "text-cyan-400",
     };
-    return colors[type as keyof typeof colors] || 'text-slate-400';
+    return colors[type as keyof typeof colors] || "text-slate-400";
   };
 
   const calculateROI = (current: string, initial: string) => {
-    const currentValue = parseFloat(current.replace(',', ''));
-    const initialValue = parseFloat(initial.replace(',', ''));
-    return ((currentValue - initialValue) / initialValue * 100).toFixed(1);
+    const currentValue = parseFloat(current.replace(",", ""));
+    const initialValue = parseFloat(initial.replace(",", ""));
+    return (((currentValue - initialValue) / initialValue) * 100).toFixed(1);
   };
 
   const handleClaimRewards = async () => {
     setIsLoading(true);
     // Simulate TruthVault contract interaction
     setTimeout(() => {
-      setVaultData(prev => ({
+      setVaultData((prev) => ({
         ...prev,
-        pendingRewards: '0',
-        lastRewardClaim: 'Just now'
+        pendingRewards: "0",
+        lastRewardClaim: "Just now",
       }));
       setIsLoading(false);
     }, 2000);
@@ -137,16 +137,21 @@ export default function TruthVaultYieldManager() {
     setIsLoading(true);
     // Simulate staking additional GTT to memory capsule
     setTimeout(() => {
-      setMemoryCapsules(prev => 
-        prev.map(capsule => 
-          capsule.id === capsuleId 
-            ? { 
-                ...capsule, 
-                stakeAmount: (parseFloat(capsule.stakeAmount) + parseFloat(amount)).toString(),
-                currentValue: (parseFloat(capsule.currentValue.replace(',', '')) + parseFloat(amount) * 1.5).toLocaleString()
+      setMemoryCapsules((prev) =>
+        prev.map((capsule) =>
+          capsule.id === capsuleId
+            ? {
+                ...capsule,
+                stakeAmount: (
+                  parseFloat(capsule.stakeAmount) + parseFloat(amount)
+                ).toString(),
+                currentValue: (
+                  parseFloat(capsule.currentValue.replace(",", "")) +
+                  parseFloat(amount) * 1.5
+                ).toLocaleString(),
               }
-            : capsule
-        )
+            : capsule,
+        ),
       );
       setIsLoading(false);
     }, 2000);
@@ -160,7 +165,9 @@ export default function TruthVaultYieldManager() {
           <CardTitle className="text-white flex items-center space-x-3">
             <Vault className="h-6 w-6 text-purple-400" />
             <span>TruthVault Yield Manager</span>
-            <Badge className="bg-green-600/20 text-green-400">LIVE CONTRACT</Badge>
+            <Badge className="bg-green-600/20 text-green-400">
+              LIVE CONTRACT
+            </Badge>
           </CardTitle>
           {/* TruthVault Demo Video */}
           <div className="mt-4">
@@ -171,14 +178,21 @@ export default function TruthVaultYieldManager() {
                 loop
                 playsInline
                 className="w-full h-auto"
-                style={{ maxHeight: '200px' }}
+                style={{ maxHeight: "200px" }}
               >
-                <source src="/capsule_mint_sealed_staked_video.mp4" type="video/mp4" />
+                <source
+                  src="/capsule_mint_sealed_staked_video.mp4"
+                  type="video/mp4"
+                />
                 Your browser does not support the video tag.
               </video>
               <div className="absolute bottom-2 left-2 right-2">
-                <div className="text-white text-xs font-medium">Smart Contract Integration</div>
-                <div className="text-slate-300 text-xs">Live yield tracking and reward distribution</div>
+                <div className="text-white text-xs font-medium">
+                  Smart Contract Integration
+                </div>
+                <div className="text-slate-300 text-xs">
+                  Live yield tracking and reward distribution
+                </div>
               </div>
             </div>
           </div>
@@ -186,22 +200,30 @@ export default function TruthVaultYieldManager() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center p-4 bg-slate-800/50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-400 mb-2">{vaultData.totalStaked} GTT</div>
+              <div className="text-2xl font-bold text-purple-400 mb-2">
+                {vaultData.totalStaked} GTT
+              </div>
               <p className="text-slate-400 text-sm">Total Value Locked</p>
             </div>
-            
+
             <div className="text-center p-4 bg-slate-800/50 rounded-lg">
-              <div className="text-2xl font-bold text-white mb-2">{vaultData.userStake} GTT</div>
+              <div className="text-2xl font-bold text-white mb-2">
+                {vaultData.userStake} GTT
+              </div>
               <p className="text-slate-400 text-sm">Your Total Stake</p>
             </div>
-            
+
             <div className="text-center p-4 bg-slate-800/50 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-400 mb-2">{vaultData.pendingRewards} GTT</div>
+              <div className="text-2xl font-bold text-yellow-400 mb-2">
+                {vaultData.pendingRewards} GTT
+              </div>
               <p className="text-slate-400 text-sm">Pending Rewards</p>
             </div>
-            
+
             <div className="text-center p-4 bg-slate-800/50 rounded-lg">
-              <div className="text-2xl font-bold text-green-400 mb-2">{vaultData.apy}%</div>
+              <div className="text-2xl font-bold text-green-400 mb-2">
+                {vaultData.apy}%
+              </div>
               <p className="text-slate-400 text-sm">Current APY</p>
             </div>
           </div>
@@ -243,14 +265,21 @@ export default function TruthVaultYieldManager() {
         <CardContent>
           <div className="space-y-6">
             {memoryCapsules.map((capsule) => (
-              <div key={capsule.id} className="p-6 bg-slate-700/30 rounded-lg border border-slate-600">
+              <div
+                key={capsule.id}
+                className="p-6 bg-slate-700/30 rounded-lg border border-slate-600"
+              >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Capsule Info */}
                   <div>
                     <div className="flex items-center space-x-3 mb-4">
-                      <div className="text-2xl">{getTypeIcon(capsule.type)}</div>
+                      <div className="text-2xl">
+                        {getTypeIcon(capsule.type)}
+                      </div>
                       <div>
-                        <h3 className="text-white font-semibold">{capsule.name}</h3>
+                        <h3 className="text-white font-semibold">
+                          {capsule.name}
+                        </h3>
                         <p className={`text-sm ${getTypeColor(capsule.type)}`}>
                           {capsule.type.toUpperCase()} • {capsule.createdAt}
                         </p>
@@ -260,11 +289,15 @@ export default function TruthVaultYieldManager() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-slate-400">Staking Period:</span>
-                        <span className="text-white">{capsule.stakingPeriod} years</span>
+                        <span className="text-white">
+                          {capsule.stakingPeriod} years
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-400">Initial Stake:</span>
-                        <span className="text-white">{capsule.stakeAmount} GTT</span>
+                        <span className="text-white">
+                          {capsule.stakeAmount} GTT
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -275,20 +308,31 @@ export default function TruthVaultYieldManager() {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-slate-400">Current Value:</span>
-                        <span className="text-green-400 font-bold">{capsule.currentValue} GTT</span>
+                        <span className="text-green-400 font-bold">
+                          {capsule.currentValue} GTT
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-400">Projected Value:</span>
-                        <span className="text-purple-400 font-bold">{capsule.projectedValue} GTT</span>
+                        <span className="text-purple-400 font-bold">
+                          {capsule.projectedValue} GTT
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-400">Yield Earned:</span>
-                        <span className="text-yellow-400 font-bold">{capsule.yieldEarned} GTT</span>
+                        <span className="text-yellow-400 font-bold">
+                          {capsule.yieldEarned} GTT
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-400">ROI:</span>
                         <span className="text-green-400 font-bold">
-                          +{calculateROI(capsule.currentValue, capsule.stakeAmount)}%
+                          +
+                          {calculateROI(
+                            capsule.currentValue,
+                            capsule.stakeAmount,
+                          )}
+                          %
                         </span>
                       </div>
                     </div>
@@ -301,13 +345,13 @@ export default function TruthVaultYieldManager() {
                       <Button
                         size="sm"
                         className="w-full bg-purple-600 hover:bg-purple-700"
-                        onClick={() => handleStakeCapsule(capsule.id, '100')}
+                        onClick={() => handleStakeCapsule(capsule.id, "100")}
                         disabled={isLoading}
                       >
                         <Zap className="h-4 w-4 mr-2" />
                         Boost Stake (+100 GTT)
                       </Button>
-                      
+
                       <Button
                         variant="outline"
                         size="sm"
@@ -316,7 +360,7 @@ export default function TruthVaultYieldManager() {
                         <BarChart3 className="h-4 w-4 mr-2" />
                         View Analytics
                       </Button>
-                      
+
                       <Button
                         variant="outline"
                         size="sm"
@@ -334,12 +378,23 @@ export default function TruthVaultYieldManager() {
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-slate-400">Staking Progress</span>
                     <span className="text-slate-300">
-                      {Math.min((Date.now() - new Date().getTime()) / (capsule.stakingPeriod * 365 * 24 * 60 * 60 * 1000) * 100, 5).toFixed(1)}%
+                      {Math.min(
+                        ((Date.now() - new Date().getTime()) /
+                          (capsule.stakingPeriod * 365 * 24 * 60 * 60 * 1000)) *
+                          100,
+                        5,
+                      ).toFixed(1)}
+                      %
                     </span>
                   </div>
-                  <Progress 
-                    value={Math.min((Date.now() - new Date().getTime()) / (capsule.stakingPeriod * 365 * 24 * 60 * 60 * 1000) * 100, 5)} 
-                    className="h-2" 
+                  <Progress
+                    value={Math.min(
+                      ((Date.now() - new Date().getTime()) /
+                        (capsule.stakingPeriod * 365 * 24 * 60 * 60 * 1000)) *
+                        100,
+                      5,
+                    )}
+                    className="h-2"
                   />
                   <p className="text-xs text-slate-500 mt-1">
                     Time remaining: {capsule.stakingPeriod - 1} years, 11 months
@@ -378,7 +433,9 @@ export default function TruthVaultYieldManager() {
             <Clock className="h-8 w-8 text-yellow-400 mx-auto mb-3" />
             <div className="text-2xl font-bold text-white mb-2">67 Years</div>
             <p className="text-slate-400 text-sm">Average Lock Period</p>
-            <p className="text-yellow-400 text-xs font-medium">Long-term focus</p>
+            <p className="text-yellow-400 text-xs font-medium">
+              Long-term focus
+            </p>
           </CardContent>
         </Card>
 

@@ -4,13 +4,33 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import CapsuleMintButton from "@/components/CapsuleMintButton";
-import { Plus, AlertTriangle, Shield, Coins, ExternalLink, Eye } from "lucide-react";
+import {
+  Plus,
+  AlertTriangle,
+  Shield,
+  Coins,
+  ExternalLink,
+  Eye,
+} from "lucide-react";
 
 interface CapsuleData {
   title: string;
@@ -25,13 +45,13 @@ export default function CapsuleDrawer() {
     title: "",
     content: "",
     griefTier: undefined,
-    category: "memory"
+    category: "memory",
   });
   const [moderationResult, setModerationResult] = useState<any>(null);
   const [capsuleId, setCapsuleId] = useState<string | null>(null);
   const [nftTokenId, setNftTokenId] = useState<string | null>(null);
   const [step, setStep] = useState<"create" | "moderate" | "mint">("create");
-  
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -43,11 +63,11 @@ export default function CapsuleDrawer() {
     onSuccess: (data) => {
       console.log("🔍 Moderation result:", data);
       setModerationResult(data);
-      
+
       if (data.moderation.isAllowed) {
-        setFormData(prev => ({ 
-          ...prev, 
-          griefTier: data.griefScore 
+        setFormData((prev) => ({
+          ...prev,
+          griefTier: data.griefScore,
         }));
         setStep("mint");
         toast({
@@ -81,7 +101,7 @@ export default function CapsuleDrawer() {
       console.log("📦 Capsule created:", data);
       setCapsuleId(data.id);
       queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
-      
+
       toast({
         title: "Capsule Created",
         description: "Your truth capsule has been created successfully.",
@@ -113,7 +133,7 @@ export default function CapsuleDrawer() {
 
   const handleMintSuccess = (tokenId: string, txHash: string) => {
     setNftTokenId(tokenId);
-    
+
     toast({
       title: "NFT Minted Successfully!",
       description: `Guardian Capsule #${tokenId} has been minted on-chain.`,
@@ -124,9 +144,9 @@ export default function CapsuleDrawer() {
       ...formData,
       griefTier: formData.griefTier || moderationResult?.griefScore || 3,
       nftTokenId: tokenId,
-      transactionHash: txHash
+      transactionHash: txHash,
     };
-    
+
     createMutation.mutate(capsuleWithNft);
   };
 
@@ -135,7 +155,7 @@ export default function CapsuleDrawer() {
       title: "",
       content: "",
       griefTier: undefined,
-      category: "memory"
+      category: "memory",
     });
     setModerationResult(null);
     setCapsuleId(null);
@@ -146,10 +166,14 @@ export default function CapsuleDrawer() {
 
   const getStepIcon = (currentStep: string) => {
     switch (currentStep) {
-      case "create": return <Plus className="h-4 w-4" />;
-      case "moderate": return <Shield className="h-4 w-4" />;
-      case "mint": return <Coins className="h-4 w-4" />;
-      default: return <Plus className="h-4 w-4" />;
+      case "create":
+        return <Plus className="h-4 w-4" />;
+      case "moderate":
+        return <Shield className="h-4 w-4" />;
+      case "mint":
+        return <Coins className="h-4 w-4" />;
+      default:
+        return <Plus className="h-4 w-4" />;
     }
   };
 
@@ -186,23 +210,35 @@ export default function CapsuleDrawer() {
 
           {/* Step Indicator */}
           <div className="flex items-center justify-between mb-6">
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-              step === "create" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-600"
-            }`}>
+            <div
+              className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                step === "create"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
               <Plus className="h-3 w-3" />
               Create
             </div>
             <div className="flex-1 h-px bg-gray-200 mx-2" />
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-              step === "moderate" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-600"
-            }`}>
+            <div
+              className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                step === "moderate"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
               <Shield className="h-3 w-3" />
               Moderate
             </div>
             <div className="flex-1 h-px bg-gray-200 mx-2" />
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-              step === "mint" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-600"
-            }`}>
+            <div
+              className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                step === "mint"
+                  ? "bg-blue-100 text-blue-800"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
               <Coins className="h-3 w-3" />
               Mint NFT
             </div>
@@ -218,16 +254,23 @@ export default function CapsuleDrawer() {
                     id="title"
                     placeholder="Give your capsule a meaningful title..."
                     value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
                     className="mt-1"
                   />
                 </div>
 
                 <div>
                   <Label htmlFor="category">Category</Label>
-                  <Select 
-                    value={formData.category} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) =>
+                      setFormData((prev) => ({ ...prev, category: value }))
+                    }
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Select category" />
@@ -236,7 +279,9 @@ export default function CapsuleDrawer() {
                       <SelectItem value="memory">Personal Memory</SelectItem>
                       <SelectItem value="legacy">Family Legacy</SelectItem>
                       <SelectItem value="testimony">Testimony</SelectItem>
-                      <SelectItem value="historical">Historical Account</SelectItem>
+                      <SelectItem value="historical">
+                        Historical Account
+                      </SelectItem>
                       <SelectItem value="tribute">Tribute</SelectItem>
                       <SelectItem value="wisdom">Life Wisdom</SelectItem>
                     </SelectContent>
@@ -249,7 +294,12 @@ export default function CapsuleDrawer() {
                     id="content"
                     placeholder="Share your memory, truth, or legacy. This content will be preserved on the blockchain..."
                     value={formData.content}
-                    onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        content: e.target.value,
+                      }))
+                    }
                     className="mt-1 min-h-[120px]"
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -261,9 +311,11 @@ export default function CapsuleDrawer() {
                   <Button variant="outline" onClick={resetForm}>
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleSubmitForModeration}
-                    disabled={!formData.title.trim() || !formData.content.trim()}
+                    disabled={
+                      !formData.title.trim() || !formData.content.trim()
+                    }
                   >
                     <Shield className="mr-2 h-4 w-4" />
                     Submit for Review
@@ -279,7 +331,9 @@ export default function CapsuleDrawer() {
                   {moderateMutation.isPending ? (
                     <div className="flex flex-col items-center gap-4">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                      <p className="text-sm text-gray-600">Analyzing content...</p>
+                      <p className="text-sm text-gray-600">
+                        Analyzing content...
+                      </p>
                     </div>
                   ) : moderationResult ? (
                     <div className="space-y-4">
@@ -297,8 +351,14 @@ export default function CapsuleDrawer() {
 
                       {/* Grief Score Display */}
                       <div className="flex items-center justify-center gap-2">
-                        <span className="text-sm text-gray-600">Emotional Weight:</span>
-                        <Badge className={getGriefTierColor(moderationResult.griefScore)}>
+                        <span className="text-sm text-gray-600">
+                          Emotional Weight:
+                        </span>
+                        <Badge
+                          className={getGriefTierColor(
+                            moderationResult.griefScore,
+                          )}
+                        >
                           Tier {moderationResult.griefScore}/5
                         </Badge>
                       </div>
@@ -307,21 +367,29 @@ export default function CapsuleDrawer() {
                       {moderationResult.moderation.reason && (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
                           <p className="text-sm text-yellow-800">
-                            <strong>Review Note:</strong> {moderationResult.moderation.reason}
+                            <strong>Review Note:</strong>{" "}
+                            {moderationResult.moderation.reason}
                           </p>
                         </div>
                       )}
 
                       {/* Flags Display */}
-                      {moderationResult.moderation.flags && moderationResult.moderation.flags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 justify-center">
-                          {moderationResult.moderation.flags.map((flag: string) => (
-                            <Badge key={flag} variant="outline" className="text-xs">
-                              {flag.replace(/_/g, ' ')}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                      {moderationResult.moderation.flags &&
+                        moderationResult.moderation.flags.length > 0 && (
+                          <div className="flex flex-wrap gap-2 justify-center">
+                            {moderationResult.moderation.flags.map(
+                              (flag: string) => (
+                                <Badge
+                                  key={flag}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
+                                  {flag.replace(/_/g, " ")}
+                                </Badge>
+                              ),
+                            )}
+                          </div>
+                        )}
                     </div>
                   ) : null}
                 </div>
@@ -351,11 +419,15 @@ export default function CapsuleDrawer() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Category:</span>
-                      <span className="font-medium capitalize">{formData.category}</span>
+                      <span className="font-medium capitalize">
+                        {formData.category}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Grief Tier:</span>
-                      <Badge className={getGriefTierColor(formData.griefTier || 3)}>
+                      <Badge
+                        className={getGriefTierColor(formData.griefTier || 3)}
+                      >
                         {formData.griefTier || 3}/5
                       </Badge>
                     </div>
@@ -386,7 +458,7 @@ export default function CapsuleDrawer() {
                         Guardian Capsule #{nftTokenId}
                       </p>
                     </div>
-                    
+
                     <div className="flex gap-2">
                       <Button
                         variant="outline"
@@ -420,9 +492,7 @@ export default function CapsuleDrawer() {
                   <Button variant="outline" onClick={() => setStep("moderate")}>
                     Back
                   </Button>
-                  <Button onClick={resetForm}>
-                    Create Another
-                  </Button>
+                  <Button onClick={resetForm}>Create Another</Button>
                 </div>
               </div>
             )}

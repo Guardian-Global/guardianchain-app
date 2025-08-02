@@ -75,7 +75,7 @@ async function getContract(): Promise<ethers.Contract> {
   contractCache = new ethers.Contract(
     GTT_CONTRACT_ADDRESS,
     ERC20_ABI,
-    provider
+    provider,
   );
   return contractCache;
 }

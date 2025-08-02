@@ -19,8 +19,12 @@ interface MintedCapsule {
 }
 
 export default function CapsuleGallery() {
-  const { data: capsules, isLoading, error } = useQuery<MintedCapsule[]>({
-    queryKey: ['/api/capsules/minted'],
+  const {
+    data: capsules,
+    isLoading,
+    error,
+  } = useQuery<MintedCapsule[]>({
+    queryKey: ["/api/capsules/minted"],
   });
 
   if (isLoading) {
@@ -32,7 +36,10 @@ export default function CapsuleGallery() {
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className="bg-brand-secondary border-brand-surface animate-pulse">
+            <Card
+              key={i}
+              className="bg-brand-secondary border-brand-surface animate-pulse"
+            >
               <CardContent className="p-6">
                 <div className="space-y-3">
                   <div className="h-4 bg-brand-surface rounded w-3/4"></div>
@@ -62,7 +69,7 @@ export default function CapsuleGallery() {
           <div className="text-brand-danger mb-4">
             Failed to load minted capsules. Please try again later.
           </div>
-          <Button 
+          <Button
             onClick={() => window.location.reload()}
             className="bg-brand-primary hover:bg-brand-primary/90"
           >
@@ -82,10 +89,11 @@ export default function CapsuleGallery() {
         />
         <div className="p-6 text-center">
           <div className="text-brand-light/60 mb-4">
-            No minted capsules found. Create and mint your first truth capsule to get started.
+            No minted capsules found. Create and mint your first truth capsule
+            to get started.
           </div>
-          <Button 
-            onClick={() => window.location.href = '/create-capsule'}
+          <Button
+            onClick={() => (window.location.href = "/create-capsule")}
             className="bg-brand-primary hover:bg-brand-primary/90"
           >
             Create Capsule
@@ -97,12 +105,18 @@ export default function CapsuleGallery() {
 
   const getGriefTierColor = (tier: number) => {
     switch (tier) {
-      case 1: return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 2: return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 3: return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 4: return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
-      case 5: return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-brand-surface text-brand-light border-brand-surface';
+      case 1:
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case 2:
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case 3:
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case 4:
+        return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+      case 5:
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      default:
+        return "bg-brand-surface text-brand-light border-brand-surface";
     }
   };
 
@@ -111,10 +125,10 @@ export default function CapsuleGallery() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
@@ -128,10 +142,11 @@ export default function CapsuleGallery() {
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="text-brand-light/60">
-            {capsules.length} minted capsule{capsules.length !== 1 ? 's' : ''} found
+            {capsules.length} minted capsule{capsules.length !== 1 ? "s" : ""}{" "}
+            found
           </div>
-          <Button 
-            onClick={() => window.location.href = '/create-capsule'}
+          <Button
+            onClick={() => (window.location.href = "/create-capsule")}
             className="bg-brand-accent hover:bg-brand-accent/90"
           >
             Create New Capsule
@@ -140,13 +155,16 @@ export default function CapsuleGallery() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {capsules.map((capsule) => (
-            <Card key={capsule.id} className="bg-brand-secondary border-brand-surface shadow-card hover:shadow-card-hover transition-all duration-200 group">
+            <Card
+              key={capsule.id}
+              className="bg-brand-secondary border-brand-surface shadow-card hover:shadow-card-hover transition-all duration-200 group"
+            >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-brand-light font-brand text-lg truncate flex-1 mr-2">
                     {capsule.title || `Capsule #${capsule.id.slice(-6)}`}
                   </CardTitle>
-                  <Badge 
+                  <Badge
                     className={`${getGriefTierColor(capsule.griefTier)} border text-xs font-medium`}
                   >
                     Tier {capsule.griefTier}
@@ -164,11 +182,16 @@ export default function CapsuleGallery() {
                 <div className="space-y-2 text-xs text-brand-light/60">
                   <div className="flex items-center gap-2">
                     <User className="w-3 h-3" />
-                    <span>Creator: {truncateAddress(capsule.walletAddress)}</span>
+                    <span>
+                      Creator: {truncateAddress(capsule.walletAddress)}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Eye className="w-3 h-3" />
-                    <span>{capsule.replayCount || 0} replay{capsule.replayCount !== 1 ? 's' : ''}</span>
+                    <span>
+                      {capsule.replayCount || 0} replay
+                      {capsule.replayCount !== 1 ? "s" : ""}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-3 h-3" />
@@ -181,18 +204,20 @@ export default function CapsuleGallery() {
                   <Button
                     size="sm"
                     className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
-                    onClick={() => window.location.href = `/capsule/${capsule.id}`}
+                    onClick={() =>
+                      (window.location.href = `/capsule/${capsule.id}`)
+                    }
                   >
                     <Eye className="w-4 h-4 mr-1" />
                     View
                   </Button>
-                  
+
                   {capsule.openseaUrl && (
                     <Button
                       size="sm"
                       variant="outline"
                       className="border-brand-surface text-brand-light hover:bg-brand-surface"
-                      onClick={() => window.open(capsule.openseaUrl, '_blank')}
+                      onClick={() => window.open(capsule.openseaUrl, "_blank")}
                     >
                       <ExternalLink className="w-4 h-4 mr-1" />
                       OpenSea

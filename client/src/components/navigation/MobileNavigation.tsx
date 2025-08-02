@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Link, useLocation } from 'wouter';
-import { useAuth } from '@/hooks/useAuth';
-import { DynamicBadge } from './DynamicBadgeSystem';
-import { RoleBasedAccess } from './RoleBasedAccess';
-import { navigationItems, getVisibleNavigation } from './NavigationData';
+import React, { useState, useEffect } from "react";
+import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
+import { DynamicBadge } from "./DynamicBadgeSystem";
+import { RoleBasedAccess } from "./RoleBasedAccess";
+import { navigationItems, getVisibleNavigation } from "./NavigationData";
 
 interface MobileNavigationProps {
   isOpen: boolean;
@@ -15,10 +15,16 @@ interface MobileNavigationProps {
   onClose: () => void;
 }
 
-export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigationProps) {
+export function MobileNavigation({
+  isOpen,
+  onToggle,
+  onClose,
+}: MobileNavigationProps) {
   const [location] = useLocation();
   const { user } = useAuth();
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Auto-close on route change
   useEffect(() => {
@@ -27,16 +33,19 @@ export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigation
 
   // Get visible navigation items for current user
   const visibleItems = getVisibleNavigation(user);
-  
+
   // Group navigation items by category
-  const groupedItems = visibleItems.reduce((groups: Record<string, any[]>, item: any) => {
-    const category = item.category;
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(item);
-    return groups;
-  }, {} as Record<string, any[]>);
+  const groupedItems = visibleItems.reduce(
+    (groups: Record<string, any[]>, item: any) => {
+      const category = item.category;
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(item);
+      return groups;
+    },
+    {} as Record<string, any[]>,
+  );
 
   const toggleCategory = (category: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -50,13 +59,20 @@ export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigation
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'core': return '🏛️';
-      case 'creation': return '✍️';
-      case 'governance': return '🗳️';
-      case 'analytics': return '📊';
-      case 'tools': return '🛠️';
-      case 'network': return '🌐';
-      default: return '📁';
+      case "core":
+        return "🏛️";
+      case "creation":
+        return "✍️";
+      case "governance":
+        return "🗳️";
+      case "analytics":
+        return "📊";
+      case "tools":
+        return "🛠️";
+      case "network":
+        return "🌐";
+      default:
+        return "📁";
     }
   };
 
@@ -65,7 +81,7 @@ export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigation
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 z-40 lg:hidden"
         onClick={onClose}
       />
@@ -78,7 +94,9 @@ export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigation
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white text-sm font-bold">G</span>
             </div>
-            <h2 className="font-bold text-lg text-gray-900 dark:text-white">GuardianChain</h2>
+            <h2 className="font-bold text-lg text-gray-900 dark:text-white">
+              GuardianChain
+            </h2>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="w-5 h-5" />
@@ -91,7 +109,7 @@ export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigation
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-medium">
-                  {(user as any)?.firstName?.charAt(0) || 'U'}
+                  {(user as any)?.firstName?.charAt(0) || "U"}
                 </span>
               </div>
               <div>
@@ -108,67 +126,75 @@ export function MobileNavigation({ isOpen, onToggle, onClose }: MobileNavigation
 
         {/* Navigation Items */}
         <div className="p-4 space-y-2">
-          {Object.entries(groupedItems).map(([category, items]: [string, any]) => (
-            <div key={category} className="space-y-1">
-              {/* Category Header */}
-              <Button
-                variant="ghost"
-                className="w-full justify-between p-2 h-auto"
-                onClick={() => toggleCategory(category)}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{getCategoryIcon(category)}</span>
-                  <span className="font-medium capitalize">{category}</span>
-                </div>
-                {expandedCategories.has(category) ? (
-                  <ChevronDown className="w-4 h-4" />
-                ) : (
-                  <ChevronRight className="w-4 h-4" />
-                )}
-              </Button>
+          {Object.entries(groupedItems).map(
+            ([category, items]: [string, any]) => (
+              <div key={category} className="space-y-1">
+                {/* Category Header */}
+                <Button
+                  variant="ghost"
+                  className="w-full justify-between p-2 h-auto"
+                  onClick={() => toggleCategory(category)}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{getCategoryIcon(category)}</span>
+                    <span className="font-medium capitalize">{category}</span>
+                  </div>
+                  {expandedCategories.has(category) ? (
+                    <ChevronDown className="w-4 h-4" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4" />
+                  )}
+                </Button>
 
-              {/* Category Items */}
-              {expandedCategories.has(category) && (
-                <div className="pl-4 space-y-1">
-                  {(items as any[]).map((item: any) => (
-                    <Link key={item.id} href={item.path}>
-                      <div
-                        className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
-                          location === item.path
-                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
-                            : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <item.icon className="w-5 h-5" />
-                          <div>
-                            <p className="font-medium">{item.title}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
-                              {item.description}
-                            </p>
+                {/* Category Items */}
+                {expandedCategories.has(category) && (
+                  <div className="pl-4 space-y-1">
+                    {(items as any[]).map((item: any) => (
+                      <Link key={item.id} href={item.path}>
+                        <div
+                          className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
+                            location === item.path
+                              ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                              : "hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <item.icon className="w-5 h-5" />
+                            <div>
+                              <p className="font-medium">{item.title}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
+                                {item.description}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <DynamicBadge routeId={item.id} />
+                            {item.isNew && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-green-100 text-green-700 text-xs"
+                              >
+                                New
+                              </Badge>
+                            )}
+                            {item.isPopular && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-purple-100 text-purple-700 text-xs"
+                              >
+                                Popular
+                              </Badge>
+                            )}
                           </div>
                         </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <DynamicBadge routeId={item.id} />
-                          {item.isNew && (
-                            <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
-                              New
-                            </Badge>
-                          )}
-                          {item.isPopular && (
-                            <Badge variant="secondary" className="bg-purple-100 text-purple-700 text-xs">
-                              Popular
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ),
+          )}
         </div>
 
         {/* Footer */}
@@ -199,14 +225,14 @@ export function MobileHeader() {
         >
           <Menu className="w-5 h-5" />
         </Button>
-        
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
             <span className="text-white text-xs font-bold">G</span>
           </div>
-          <span className="font-bold text-gray-900 dark:text-white">GuardianChain</span>
+          <span className="font-bold text-gray-900 dark:text-white">
+            GuardianChain
+          </span>
         </div>
-
         <div className="w-10" /> {/* Spacer for centering */}
       </div>
 

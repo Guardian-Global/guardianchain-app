@@ -7,7 +7,12 @@ import { useState } from "react";
 
 interface TimelineEvent {
   id: string;
-  type: "capsule_created" | "capsule_verified" | "capsule_liked" | "comment_added" | "capsule_shared";
+  type:
+    | "capsule_created"
+    | "capsule_verified"
+    | "capsule_liked"
+    | "comment_added"
+    | "capsule_shared";
   timestamp: string;
   capsule: {
     id: string;
@@ -39,7 +44,7 @@ const eventIcons = {
   capsule_verified: "✅",
   capsule_liked: "❤️",
   comment_added: "💬",
-  capsule_shared: "🔄"
+  capsule_shared: "🔄",
 };
 
 const eventLabels = {
@@ -47,7 +52,7 @@ const eventLabels = {
   capsule_verified: "Verification Complete",
   capsule_liked: "Capsule Liked",
   comment_added: "Comment Added",
-  capsule_shared: "Capsule Shared"
+  capsule_shared: "Capsule Shared",
 };
 
 export default function Timeline() {
@@ -61,8 +66,10 @@ export default function Timeline() {
   const formatTimeAgo = (timestamp: string) => {
     const now = new Date();
     const eventTime = new Date(timestamp);
-    const diffInHours = Math.floor((now.getTime() - eventTime.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - eventTime.getTime()) / (1000 * 60 * 60),
+    );
+
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
@@ -75,7 +82,10 @@ export default function Timeline() {
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div
+              key={i}
+              className="h-32 bg-gray-200 dark:bg-gray-700 rounded"
+            ></div>
           ))}
         </div>
       </div>
@@ -85,8 +95,10 @@ export default function Timeline() {
   return (
     <div className="container mx-auto p-4 md:p-6 space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Capsule Timeline</h1>
-        
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Capsule Timeline
+        </h1>
+
         <div className="flex items-center gap-2">
           <Button
             variant={filter === "all" ? "default" : "outline"}
@@ -118,7 +130,10 @@ export default function Timeline() {
 
       <div className="space-y-4">
         {timeline?.events.map((event, index) => (
-          <Card key={event.id} className="bg-white dark:bg-gray-800 transition-all hover:shadow-lg">
+          <Card
+            key={event.id}
+            className="bg-white dark:bg-gray-800 transition-all hover:shadow-lg"
+          >
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
                 {/* Event Icon */}
@@ -138,9 +153,14 @@ export default function Timeline() {
                         {formatTimeAgo(event.timestamp)}
                       </span>
                     </div>
-                    <Badge 
-                      variant={event.capsule.verificationStatus === "verified" ? "default" : 
-                              event.capsule.verificationStatus === "pending" ? "secondary" : "destructive"}
+                    <Badge
+                      variant={
+                        event.capsule.verificationStatus === "verified"
+                          ? "default"
+                          : event.capsule.verificationStatus === "pending"
+                            ? "secondary"
+                            : "destructive"
+                      }
                       className="text-xs"
                     >
                       {event.capsule.verificationStatus}
@@ -195,7 +215,7 @@ export default function Timeline() {
         <div className="flex justify-center pt-6">
           <Button
             variant="outline"
-            onClick={() => setPage(prev => prev + 1)}
+            onClick={() => setPage((prev) => prev + 1)}
             className="w-full sm:w-auto"
           >
             Load More Events
@@ -211,7 +231,8 @@ export default function Timeline() {
               No Timeline Events
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Timeline events will appear here as capsules are created and interactions occur.
+              Timeline events will appear here as capsules are created and
+              interactions occur.
             </p>
           </CardContent>
         </Card>

@@ -31,10 +31,10 @@ async function main() {
 
     // Deploy GTT Token
     const GTTToken = await hre.ethers.getContractFactory("GTTToken");
-    
+
     console.log("Deploying GTT Token contract...");
     const gttToken = await GTTToken.deploy();
-    
+
     console.log("Waiting for deployment confirmation...");
     await gttToken.waitForDeployment();
 
@@ -67,7 +67,12 @@ async function main() {
       totalSupply: hre.ethers.formatEther(tokenSupply),
     };
 
-    const deploymentPath = path.join(__dirname, "..", "deployments", "polygon-mainnet-gtt.json");
+    const deploymentPath = path.join(
+      __dirname,
+      "..",
+      "deployments",
+      "polygon-mainnet-gtt.json",
+    );
     const deploymentsDir = path.dirname(deploymentPath);
     if (!fs.existsSync(deploymentsDir)) {
       fs.mkdirSync(deploymentsDir, { recursive: true });
@@ -75,11 +80,13 @@ async function main() {
     fs.writeFileSync(deploymentPath, JSON.stringify(deploymentInfo, null, 2));
 
     console.log("\n✅ DEPLOYMENT COMPLETE!");
-    console.log("PolygonScan:", `https://polygonscan.com/address/${gttAddress}`);
+    console.log(
+      "PolygonScan:",
+      `https://polygonscan.com/address/${gttAddress}`,
+    );
     console.log("Deployment saved to:", deploymentPath);
 
     return gttAddress;
-
   } catch (error) {
     console.error("❌ Deployment failed:", error.message);
     if (error.message.includes("insufficient funds")) {

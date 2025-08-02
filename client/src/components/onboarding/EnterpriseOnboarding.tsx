@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, User, Shield, Wallet, DollarSign, AlertTriangle } from "lucide-react";
+import {
+  CheckCircle,
+  User,
+  Shield,
+  Wallet,
+  DollarSign,
+  AlertTriangle,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ProfileCompletion from "./steps/ProfileCompletion";
 import IdentityVerification from "./steps/IdentityVerification";
@@ -73,12 +86,13 @@ export default function EnterpriseOnboarding() {
   ];
 
   // Check if user needs onboarding
-  const needsOnboarding = !user?.emailVerified || 
-    !user?.firstName || 
-    !user?.lastName || 
+  const needsOnboarding =
+    !user?.emailVerified ||
+    !user?.firstName ||
+    !user?.lastName ||
     currentStep < steps.length;
 
-  const completedSteps = steps.filter(step => step.completed).length;
+  const completedSteps = steps.filter((step) => step.completed).length;
   const progress = (completedSteps / steps.length) * 100;
 
   const handleStepComplete = async (stepId: string) => {
@@ -90,7 +104,7 @@ export default function EnterpriseOnboarding() {
 
     toast({
       title: "Step Completed!",
-      description: `${steps.find(s => s.id === stepId)?.title} has been completed.`,
+      description: `${steps.find((s) => s.id === stepId)?.title} has been completed.`,
     });
 
     // Move to next step if not at the end
@@ -126,7 +140,8 @@ export default function EnterpriseOnboarding() {
             Welcome to <span className="text-purple-400">GUARDIANCHAIN</span>
           </h1>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-            Complete your enterprise onboarding to unlock the full power of our truth verification platform
+            Complete your enterprise onboarding to unlock the full power of our
+            truth verification platform
           </p>
         </div>
 
@@ -145,10 +160,12 @@ export default function EnterpriseOnboarding() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-white">Overall Progress</span>
-                <span className="text-purple-400 font-semibold">{Math.round(progress)}%</span>
+                <span className="text-purple-400 font-semibold">
+                  {Math.round(progress)}%
+                </span>
               </div>
               <Progress value={progress} className="h-2" />
-              
+
               {/* Step indicators */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                 {steps.map((step, index) => (
@@ -158,8 +175,8 @@ export default function EnterpriseOnboarding() {
                       step.completed
                         ? "bg-green-500/20 border-green-500 text-green-400"
                         : index === currentStep
-                        ? "bg-purple-500/20 border-purple-500 text-purple-400"
-                        : "bg-slate-700/50 border-slate-600 text-slate-400"
+                          ? "bg-purple-500/20 border-purple-500 text-purple-400"
+                          : "bg-slate-700/50 border-slate-600 text-slate-400"
                     }`}
                     onClick={() => goToStep(index)}
                   >
@@ -214,10 +231,14 @@ export default function EnterpriseOnboarding() {
                 </p>
               </div>
             )}
-            
+
             <CurrentStepComponent
               onComplete={() => handleStepComplete(currentStepData.id)}
-              onSkip={!currentStepData.required ? () => handleStepSkip(currentStepData.id) : undefined}
+              onSkip={
+                !currentStepData.required
+                  ? () => handleStepSkip(currentStepData.id)
+                  : undefined
+              }
             />
           </CardContent>
         </Card>
@@ -232,7 +253,7 @@ export default function EnterpriseOnboarding() {
           >
             Previous Step
           </Button>
-          
+
           <div className="space-x-3">
             {!currentStepData.required && (
               <Button
@@ -243,9 +264,11 @@ export default function EnterpriseOnboarding() {
                 Skip for Now
               </Button>
             )}
-            
+
             <Button
-              onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
+              onClick={() =>
+                setCurrentStep(Math.min(steps.length - 1, currentStep + 1))
+              }
               disabled={currentStep === steps.length - 1}
               className="bg-purple-600 hover:bg-purple-700 text-white"
             >

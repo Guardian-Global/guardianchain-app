@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { 
-  Search, 
-  Download, 
-  Eye, 
-  Grid, 
-  List, 
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Search,
+  Download,
+  Eye,
+  Grid,
+  List,
   Filter,
   Star,
   Zap,
   Shield,
   Play,
-  Image as ImageIcon
-} from 'lucide-react';
+  Image as ImageIcon,
+} from "lucide-react";
 
 interface SupabaseAsset {
   name: string;
   url: string;
-  type: 'image' | 'video' | 'icon' | 'nft' | 'logo';
+  type: "image" | "video" | "icon" | "nft" | "logo";
   category: string;
   size?: string;
   featured?: boolean;
@@ -29,47 +29,146 @@ interface SupabaseAsset {
 // Your 40+ Supabase assets based on the screenshots
 const SUPABASE_ASSETS: SupabaseAsset[] = [
   // Core Logos
-  { name: 'GUARDIANCHAIN_LOGO', url: '', type: 'logo', category: 'branding', featured: true },
-  { name: 'GTT_LOGO_PRIMARY', url: '', type: 'logo', category: 'branding', featured: true },
-  { name: 'GTT_LOGO_VIDEO', url: '', type: 'video', category: 'branding', featured: true },
-  
+  {
+    name: "GUARDIANCHAIN_LOGO",
+    url: "",
+    type: "logo",
+    category: "branding",
+    featured: true,
+  },
+  {
+    name: "GTT_LOGO_PRIMARY",
+    url: "",
+    type: "logo",
+    category: "branding",
+    featured: true,
+  },
+  {
+    name: "GTT_LOGO_VIDEO",
+    url: "",
+    type: "video",
+    category: "branding",
+    featured: true,
+  },
+
   // Blockchain Assets
-  { name: 'BLOCKCHAIN_ASSEMBLY', url: '', type: 'image', category: 'blockchain' },
-  { name: 'BLOCKCHAIN_BACKGROUND', url: '', type: 'image', category: 'blockchain' },
-  { name: 'BLOCKCHAIN_SEALCHAIN', url: '', type: 'image', category: 'blockchain' },
-  { name: 'blockchain-video-bg', url: '', type: 'video', category: 'blockchain' },
-  { name: 'blockchain-image-bg', url: '', type: 'image', category: 'blockchain' },
-  
+  {
+    name: "BLOCKCHAIN_ASSEMBLY",
+    url: "",
+    type: "image",
+    category: "blockchain",
+  },
+  {
+    name: "BLOCKCHAIN_BACKGROUND",
+    url: "",
+    type: "image",
+    category: "blockchain",
+  },
+  {
+    name: "BLOCKCHAIN_SEALCHAIN",
+    url: "",
+    type: "image",
+    category: "blockchain",
+  },
+  {
+    name: "blockchain-video-bg",
+    url: "",
+    type: "video",
+    category: "blockchain",
+  },
+  {
+    name: "blockchain-image-bg",
+    url: "",
+    type: "image",
+    category: "blockchain",
+  },
+
   // NFT Capsule Collection
-  { name: 'capsule-block-bg', url: '', type: 'image', category: 'nft', featured: true },
-  { name: 'capsule-blockchain-image', url: '', type: 'image', category: 'nft' },
-  { name: 'capsule-blockchain-video', url: '', type: 'video', category: 'nft' },
-  { name: 'capsule-preview-memory', url: '', type: 'image', category: 'nft' },
-  { name: 'GUARDIANCHAIN_CAPS', url: '', type: 'nft', category: 'nft' },
-  { name: 'GUARDIANCHAIN_DASH', url: '', type: 'nft', category: 'nft' },
-  
+  {
+    name: "capsule-block-bg",
+    url: "",
+    type: "image",
+    category: "nft",
+    featured: true,
+  },
+  { name: "capsule-blockchain-image", url: "", type: "image", category: "nft" },
+  { name: "capsule-blockchain-video", url: "", type: "video", category: "nft" },
+  { name: "capsule-preview-memory", url: "", type: "image", category: "nft" },
+  { name: "GUARDIANCHAIN_CAPS", url: "", type: "nft", category: "nft" },
+  { name: "GUARDIANCHAIN_DASH", url: "", type: "nft", category: "nft" },
+
   // Icon Collection
-  { name: 'BLOCK_ICON', url: '', type: 'icon', category: 'icons' },
-  { name: 'hand-holding-tech-bg', url: '', type: 'icon', category: 'icons' },
-  { name: 'hero-flow-bg', url: '', type: 'icon', category: 'icons' },
-  { name: 'global-communication-bg', url: '', type: 'icon', category: 'icons' },
-  
+  { name: "BLOCK_ICON", url: "", type: "icon", category: "icons" },
+  { name: "hand-holding-tech-bg", url: "", type: "icon", category: "icons" },
+  { name: "hero-flow-bg", url: "", type: "icon", category: "icons" },
+  { name: "global-communication-bg", url: "", type: "icon", category: "icons" },
+
   // NFT Time Capsules
-  { name: '_Icon NFT time capsule (1)', url: '', type: 'nft', category: 'time-capsules' },
-  { name: '_Icon NFT time capsule_37', url: '', type: 'nft', category: 'time-capsules' },
-  { name: '_Icon NFT time capsule (2)', url: '', type: 'nft', category: 'time-capsules' },
-  { name: '_Icon NFT Truth Time cap', url: '', type: 'nft', category: 'time-capsules' },
-  { name: '_Icon NFT Truth Time cap_', url: '', type: 'nft', category: 'time-capsules' },
-  
+  {
+    name: "_Icon NFT time capsule (1)",
+    url: "",
+    type: "nft",
+    category: "time-capsules",
+  },
+  {
+    name: "_Icon NFT time capsule_37",
+    url: "",
+    type: "nft",
+    category: "time-capsules",
+  },
+  {
+    name: "_Icon NFT time capsule (2)",
+    url: "",
+    type: "nft",
+    category: "time-capsules",
+  },
+  {
+    name: "_Icon NFT Truth Time cap",
+    url: "",
+    type: "nft",
+    category: "time-capsules",
+  },
+  {
+    name: "_Icon NFT Truth Time cap_",
+    url: "",
+    type: "nft",
+    category: "time-capsules",
+  },
+
   // Truth Verification Assets
-  { name: 'FIRST_TIME_UNLOCK_TR', url: '', type: 'image', category: 'verification' },
-  { name: '_NFT Truth Time capsule (', url: '', type: 'nft', category: 'verification' },
-  { name: '_NFT Truth Time capsule_', url: '', type: 'nft', category: 'verification' },
-  { name: 'NFT Capsule Icon_373t5h', url: '', type: 'nft', category: 'verification' },
-  
+  {
+    name: "FIRST_TIME_UNLOCK_TR",
+    url: "",
+    type: "image",
+    category: "verification",
+  },
+  {
+    name: "_NFT Truth Time capsule (",
+    url: "",
+    type: "nft",
+    category: "verification",
+  },
+  {
+    name: "_NFT Truth Time capsule_",
+    url: "",
+    type: "nft",
+    category: "verification",
+  },
+  {
+    name: "NFT Capsule Icon_373t5h",
+    url: "",
+    type: "nft",
+    category: "verification",
+  },
+
   // Protocol Assets
-  { name: 'GTT_Badge_Certificate', url: '', type: 'image', category: 'protocol' },
-  { name: 'GUARDIANCHAIN_PROT', url: '', type: 'image', category: 'protocol' }
+  {
+    name: "GTT_Badge_Certificate",
+    url: "",
+    type: "image",
+    category: "protocol",
+  },
+  { name: "GUARDIANCHAIN_PROT", url: "", type: "image", category: "protocol" },
 ];
 
 interface SupabaseAssetGalleryProps {
@@ -78,35 +177,48 @@ interface SupabaseAssetGalleryProps {
   featured?: boolean;
 }
 
-export default function SupabaseAssetGallery({ 
-  onAssetSelect, 
+export default function SupabaseAssetGallery({
+  onAssetSelect,
   category,
-  featured = false 
+  featured = false,
 }: SupabaseAssetGalleryProps) {
   const [assets, setAssets] = useState<SupabaseAsset[]>(SUPABASE_ASSETS);
-  const [filteredAssets, setFilteredAssets] = useState<SupabaseAsset[]>(SUPABASE_ASSETS);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(category || 'all');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [filteredAssets, setFilteredAssets] =
+    useState<SupabaseAsset[]>(SUPABASE_ASSETS);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(category || "all");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [loading, setLoading] = useState(false);
 
-  const categories = ['all', 'branding', 'blockchain', 'nft', 'icons', 'time-capsules', 'verification', 'protocol'];
+  const categories = [
+    "all",
+    "branding",
+    "blockchain",
+    "nft",
+    "icons",
+    "time-capsules",
+    "verification",
+    "protocol",
+  ];
 
   useEffect(() => {
     let filtered = assets;
 
     if (featured) {
-      filtered = filtered.filter(asset => asset.featured);
+      filtered = filtered.filter((asset) => asset.featured);
     }
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(asset => asset.category === selectedCategory);
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (asset) => asset.category === selectedCategory,
+      );
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(asset => 
-        asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        asset.category.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (asset) =>
+          asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          asset.category.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -115,25 +227,30 @@ export default function SupabaseAssetGallery({
 
   const getAssetIcon = (type: string) => {
     switch (type) {
-      case 'video': return <Play className="h-4 w-4" />;
-      case 'logo': return <Star className="h-4 w-4" />;
-      case 'nft': return <Zap className="h-4 w-4" />;
-      case 'icon': return <Shield className="h-4 w-4" />;
-      default: return <ImageIcon className="h-4 w-4" />;
+      case "video":
+        return <Play className="h-4 w-4" />;
+      case "logo":
+        return <Star className="h-4 w-4" />;
+      case "nft":
+        return <Zap className="h-4 w-4" />;
+      case "icon":
+        return <Shield className="h-4 w-4" />;
+      default:
+        return <ImageIcon className="h-4 w-4" />;
     }
   };
 
   const getAssetBadgeColor = (category: string) => {
     const colors = {
-      branding: 'bg-purple-600',
-      blockchain: 'bg-blue-600', 
-      nft: 'bg-green-600',
-      icons: 'bg-orange-600',
-      'time-capsules': 'bg-pink-600',
-      verification: 'bg-red-600',
-      protocol: 'bg-indigo-600'
+      branding: "bg-purple-600",
+      blockchain: "bg-blue-600",
+      nft: "bg-green-600",
+      icons: "bg-orange-600",
+      "time-capsules": "bg-pink-600",
+      verification: "bg-red-600",
+      protocol: "bg-indigo-600",
     };
-    return colors[category as keyof typeof colors] || 'bg-gray-600';
+    return colors[category as keyof typeof colors] || "bg-gray-600";
   };
 
   return (
@@ -150,16 +267,16 @@ export default function SupabaseAssetGallery({
         </div>
         <div className="flex items-center space-x-2">
           <Button
-            variant={viewMode === 'grid' ? 'default' : 'outline'}
+            variant={viewMode === "grid" ? "default" : "outline"}
             size="sm"
-            onClick={() => setViewMode('grid')}
+            onClick={() => setViewMode("grid")}
           >
             <Grid className="h-4 w-4" />
           </Button>
           <Button
-            variant={viewMode === 'list' ? 'default' : 'outline'}
+            variant={viewMode === "list" ? "default" : "outline"}
             size="sm"
-            onClick={() => setViewMode('list')}
+            onClick={() => setViewMode("list")}
           >
             <List className="h-4 w-4" />
           </Button>
@@ -183,7 +300,7 @@ export default function SupabaseAssetGallery({
           {categories.map((cat) => (
             <Button
               key={cat}
-              variant={selectedCategory === cat ? 'default' : 'outline'}
+              variant={selectedCategory === cat ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory(cat)}
               className="capitalize"
@@ -195,22 +312,30 @@ export default function SupabaseAssetGallery({
       </div>
 
       {/* Asset Grid/List */}
-      <div className={
-        viewMode === 'grid' 
-          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
-          : "space-y-4"
-      }>
+      <div
+        className={
+          viewMode === "grid"
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            : "space-y-4"
+        }
+      >
         {filteredAssets.map((asset, index) => (
-          <Card 
-            key={index} 
+          <Card
+            key={index}
             className={`bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors cursor-pointer ${
-              viewMode === 'list' ? 'flex-row' : ''
+              viewMode === "list" ? "flex-row" : ""
             }`}
             onClick={() => onAssetSelect?.(asset)}
           >
-            <CardContent className={viewMode === 'list' ? 'flex items-center space-x-4 p-4' : 'p-4'}>
+            <CardContent
+              className={
+                viewMode === "list" ? "flex items-center space-x-4 p-4" : "p-4"
+              }
+            >
               {/* Asset Preview */}
-              <div className={`${viewMode === 'list' ? 'w-16 h-16' : 'w-full h-32'} bg-slate-700/50 rounded-lg flex items-center justify-center mb-3 ${viewMode === 'list' ? 'mb-0' : ''}`}>
+              <div
+                className={`${viewMode === "list" ? "w-16 h-16" : "w-full h-32"} bg-slate-700/50 rounded-lg flex items-center justify-center mb-3 ${viewMode === "list" ? "mb-0" : ""}`}
+              >
                 {getAssetIcon(asset.type)}
                 {asset.featured && (
                   <Star className="absolute top-2 right-2 h-4 w-4 text-yellow-400 fill-current" />
@@ -218,27 +343,33 @@ export default function SupabaseAssetGallery({
               </div>
 
               {/* Asset Info */}
-              <div className={viewMode === 'list' ? 'flex-1' : ''}>
+              <div className={viewMode === "list" ? "flex-1" : ""}>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className={`font-semibold text-white ${viewMode === 'list' ? 'text-sm' : 'text-xs'} truncate`}>
+                  <h3
+                    className={`font-semibold text-white ${viewMode === "list" ? "text-sm" : "text-xs"} truncate`}
+                  >
                     {asset.name}
                   </h3>
-                  {viewMode === 'grid' && asset.featured && (
+                  {viewMode === "grid" && asset.featured && (
                     <Star className="h-3 w-3 text-yellow-400 fill-current" />
                   )}
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                  <Badge className={`${getAssetBadgeColor(asset.category)} text-white text-xs`}>
+                  <Badge
+                    className={`${getAssetBadgeColor(asset.category)} text-white text-xs`}
+                  >
                     {asset.category}
                   </Badge>
                   <div className="flex items-center space-x-1">
                     {getAssetIcon(asset.type)}
-                    <span className="text-xs text-slate-400 capitalize">{asset.type}</span>
+                    <span className="text-xs text-slate-400 capitalize">
+                      {asset.type}
+                    </span>
                   </div>
                 </div>
 
-                {viewMode === 'list' && (
+                {viewMode === "list" && (
                   <div className="flex items-center space-x-2 mt-2">
                     <Button size="sm" variant="outline">
                       <Eye className="h-3 w-3 mr-1" />
@@ -264,15 +395,15 @@ export default function SupabaseAssetGallery({
         <div className="flex items-center justify-center space-x-6 mt-2 text-sm">
           <span className="flex items-center gap-1">
             <Star className="h-3 w-3 text-yellow-400" />
-            {assets.filter(a => a.featured).length} Featured
+            {assets.filter((a) => a.featured).length} Featured
           </span>
           <span className="flex items-center gap-1">
             <Play className="h-3 w-3 text-blue-400" />
-            {assets.filter(a => a.type === 'video').length} Videos
+            {assets.filter((a) => a.type === "video").length} Videos
           </span>
           <span className="flex items-center gap-1">
             <Zap className="h-3 w-3 text-green-400" />
-            {assets.filter(a => a.type === 'nft').length} NFTs
+            {assets.filter((a) => a.type === "nft").length} NFTs
           </span>
         </div>
       </div>

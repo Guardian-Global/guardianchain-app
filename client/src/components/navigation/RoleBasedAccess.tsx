@@ -1,8 +1,8 @@
-import React from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import React from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface UserRole {
-  tier: 'EXPLORER' | 'SEEKER' | 'CREATOR' | 'SOVEREIGN' | 'ADMIN';
+  tier: "EXPLORER" | "SEEKER" | "CREATOR" | "SOVEREIGN" | "ADMIN";
   permissions: string[];
   isAdmin?: boolean;
   isDaoMember?: boolean;
@@ -19,21 +19,21 @@ interface RoleBasedAccessProps {
   fallback?: React.ReactNode;
 }
 
-export function RoleBasedAccess({ 
-  children, 
+export function RoleBasedAccess({
+  children,
   requiredTiers = [],
   requiredPermissions = [],
   adminOnly = false,
   daoOnly = false,
   validatorOnly = false,
-  fallback = null 
+  fallback = null,
 }: RoleBasedAccessProps) {
   const { user } = useAuth();
-  
+
   if (!user) return fallback;
 
   const userRole = getUserRole(user);
-  
+
   // Check admin access
   if (adminOnly && !userRole.isAdmin) {
     return fallback;
@@ -56,8 +56,8 @@ export function RoleBasedAccess({
 
   // Check permission access
   if (requiredPermissions.length > 0) {
-    const hasPermission = requiredPermissions.every(permission => 
-      userRole.permissions.includes(permission)
+    const hasPermission = requiredPermissions.every((permission) =>
+      userRole.permissions.includes(permission),
     );
     if (!hasPermission) {
       return fallback;
@@ -68,10 +68,10 @@ export function RoleBasedAccess({
 }
 
 function getUserRole(user: any): UserRole {
-  const tier = user.tier || 'EXPLORER';
-  const isAdmin = user.email === 'admin@guardianchain.app' || tier === 'ADMIN';
-  const isDaoMember = ['CREATOR', 'SOVEREIGN', 'ADMIN'].includes(tier);
-  const isValidator = user.isValidator || tier === 'SOVEREIGN' || isAdmin;
+  const tier = user.tier || "EXPLORER";
+  const isAdmin = user.email === "admin@guardianchain.app" || tier === "ADMIN";
+  const isDaoMember = ["CREATOR", "SOVEREIGN", "ADMIN"].includes(tier);
+  const isValidator = user.isValidator || tier === "SOVEREIGN" || isAdmin;
 
   // Define permissions based on tier
   const permissions = getPermissionsForTier(tier);
@@ -81,32 +81,46 @@ function getUserRole(user: any): UserRole {
     permissions,
     isAdmin,
     isDaoMember,
-    isValidator
+    isValidator,
   };
 }
 
 function getPermissionsForTier(tier: string): string[] {
-  const basePermissions = ['view_capsules', 'create_basic_capsule'];
-  
+  const basePermissions = ["view_capsules", "create_basic_capsule"];
+
   switch (tier) {
-    case 'EXPLORER':
+    case "EXPLORER":
       return [...basePermissions];
-    
-    case 'SEEKER':
-      return [...basePermissions, 'create_advanced_capsule', 'view_analytics'];
-    
-    case 'CREATOR':
-      return [...basePermissions, 'create_advanced_capsule', 'view_analytics', 
-              'create_eternal_contract', 'participate_dao', 'mint_nft'];
-    
-    case 'SOVEREIGN':
-      return [...basePermissions, 'create_advanced_capsule', 'view_analytics',
-              'create_eternal_contract', 'participate_dao', 'mint_nft',
-              'validate_capsules', 'access_validator_tools', 'unlimited_capsules'];
-    
-    case 'ADMIN':
-      return ['*']; // All permissions
-    
+
+    case "SEEKER":
+      return [...basePermissions, "create_advanced_capsule", "view_analytics"];
+
+    case "CREATOR":
+      return [
+        ...basePermissions,
+        "create_advanced_capsule",
+        "view_analytics",
+        "create_eternal_contract",
+        "participate_dao",
+        "mint_nft",
+      ];
+
+    case "SOVEREIGN":
+      return [
+        ...basePermissions,
+        "create_advanced_capsule",
+        "view_analytics",
+        "create_eternal_contract",
+        "participate_dao",
+        "mint_nft",
+        "validate_capsules",
+        "access_validator_tools",
+        "unlimited_capsules",
+      ];
+
+    case "ADMIN":
+      return ["*"]; // All permissions
+
     default:
       return basePermissions;
   }
@@ -115,21 +129,32 @@ function getPermissionsForTier(tier: string): string[] {
 // Hook for checking permissions
 export function usePermissions() {
   const { user } = useAuth();
-  
+
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
-    
+
     const userRole = getUserRole(user);
-    return userRole.permissions.includes('*') || userRole.permissions.includes(permission);
+    return (
+      userRole.permissions.includes("*") ||
+      userRole.permissions.includes(permission)
+    );
   };
 
   const hasTier = (tier: string): boolean => {
     if (!user) return false;
-    
-    const tierHierarchy = ['EXPLORER', 'SEEKER', 'CREATOR', 'SOVEREIGN', 'ADMIN'];
-    const userTierIndex = tierHierarchy.indexOf((user as any).tier || 'EXPLORER');
+
+    const tierHierarchy = [
+      "EXPLORER",
+      "SEEKER",
+      "CREATOR",
+      "SOVEREIGN",
+      "ADMIN",
+    ];
+    const userTierIndex = tierHierarchy.indexOf(
+      (user as any).tier || "EXPLORER",
+    );
     const requiredTierIndex = tierHierarchy.indexOf(tier);
-    
+
     return userTierIndex >= requiredTierIndex;
   };
 
@@ -154,6 +179,6 @@ export function usePermissions() {
     isAdmin,
     isDaoMember,
     isValidator,
-    userRole: user ? getUserRole(user) : null
+    userRole: user ? getUserRole(user) : null,
   };
 }

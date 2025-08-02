@@ -90,7 +90,7 @@ export function calculateStakingRewards(
   stakedAmount: number,
   stakingDuration: number, // in days
   totalStaked: number,
-  rewardPool: number
+  rewardPool: number,
 ): number {
   const annualRate = 0.08; // 8% APY base rate
   const dailyRate = annualRate / 365;
@@ -113,14 +113,14 @@ export function calculateStakingRewards(
 export function calculateVotingPower(
   gttBalance: number,
   reputation: number,
-  stakingBonus: number = 0
+  stakingBonus: number = 0,
 ): number {
   const baseVotingPower = Math.sqrt(gttBalance); // Square root to prevent whale dominance
   const reputationMultiplier = 1 + reputation / 1000; // Max 2x multiplier
   const stakingMultiplier = 1 + stakingBonus; // Bonus for staked tokens
 
   return parseFloat(
-    (baseVotingPower * reputationMultiplier * stakingMultiplier).toFixed(2)
+    (baseVotingPower * reputationMultiplier * stakingMultiplier).toFixed(2),
   );
 }
 
@@ -128,7 +128,7 @@ export function calculateVotingPower(
  * Calculate creator rewards for successful capsules
  */
 export function calculateCreatorRewards(
-  capsuleMetrics: CapsuleMetrics[]
+  capsuleMetrics: CapsuleMetrics[],
 ): number {
   let totalRewards = 0;
 
@@ -146,7 +146,7 @@ export function calculateCreatorRewards(
  */
 export function calculateNetworkFees(
   operation: string,
-  amount: number
+  amount: number,
 ): number {
   const feeRates = {
     mint: 0.001, // 0.1% fee for minting
@@ -165,7 +165,7 @@ export function calculateNetworkFees(
  */
 export function simulateYieldProjection(
   initialMetrics: CapsuleMetrics,
-  daysToProject: number
+  daysToProject: number,
 ): { day: number; cumulativeYield: number; dailyYield: number }[] {
   const projection = [];
   let cumulativeYield = 0;
@@ -178,10 +178,10 @@ export function simulateYieldProjection(
     const simulatedMetrics: CapsuleMetrics = {
       ...initialMetrics,
       viewCount: Math.floor(
-        initialMetrics.viewCount * growthFactor * decayFactor
+        initialMetrics.viewCount * growthFactor * decayFactor,
       ),
       shareCount: Math.floor(
-        initialMetrics.shareCount * growthFactor * decayFactor
+        initialMetrics.shareCount * growthFactor * decayFactor,
       ),
       timeActive: day * 24, // Convert days to hours
     };

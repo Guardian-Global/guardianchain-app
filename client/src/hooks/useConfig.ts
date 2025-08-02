@@ -21,12 +21,12 @@ const defaultConfig: ProjectConfig = {
   projectStatus: "production",
   veritasSealRequired: true,
   stripeEnabled: true,
-  capsuleReplayFee: 2.50,
+  capsuleReplayFee: 2.5,
   griefScoreEnabled: true,
   aiModeration: "on",
   ipfsPinning: "pinata",
   allowedWallets: ["metamask", "walletconnect"],
-  network: "polygon-mainnet"
+  network: "polygon-mainnet",
 };
 
 export function useConfig() {
@@ -42,6 +42,6 @@ export function useConfig() {
       }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 }

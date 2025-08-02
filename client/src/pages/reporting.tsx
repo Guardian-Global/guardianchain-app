@@ -257,8 +257,8 @@ ${report.date},${report.gttMinted},${report.yieldDistributed},${report.activeUse
                             report.complianceScore >= 99
                               ? "bg-green-600"
                               : report.complianceScore >= 95
-                              ? "bg-yellow-600"
-                              : "bg-red-600"
+                                ? "bg-yellow-600"
+                                : "bg-red-600"
                           } text-white`}
                         >
                           {report.complianceScore.toFixed(1)}%

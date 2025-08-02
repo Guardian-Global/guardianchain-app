@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { HelpContent } from './ContextualHelp';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { HelpContent } from "./ContextualHelp";
 
 interface HelpContextType {
   isHelpMode: boolean;
@@ -16,7 +16,7 @@ const HelpContext = createContext<HelpContextType | undefined>(undefined);
 export const useHelp = () => {
   const context = useContext(HelpContext);
   if (!context) {
-    throw new Error('useHelp must be used within a HelpProvider');
+    throw new Error("useHelp must be used within a HelpProvider");
   }
   return context;
 };
@@ -31,7 +31,7 @@ export const HelpProvider: React.FC<HelpProviderProps> = ({ children }) => {
   const [helpHistory, setHelpHistory] = useState<string[]>([]);
 
   const toggleHelpMode = useCallback(() => {
-    setIsHelpMode(prev => !prev);
+    setIsHelpMode((prev) => !prev);
     if (isHelpMode) {
       setCurrentHelp(null);
     }
@@ -47,8 +47,8 @@ export const HelpProvider: React.FC<HelpProviderProps> = ({ children }) => {
   }, []);
 
   const addToHistory = useCallback((helpId: string) => {
-    setHelpHistory(prev => {
-      const filtered = prev.filter(id => id !== helpId);
+    setHelpHistory((prev) => {
+      const filtered = prev.filter((id) => id !== helpId);
       return [helpId, ...filtered].slice(0, 10); // Keep last 10 items
     });
   }, []);
@@ -60,12 +60,8 @@ export const HelpProvider: React.FC<HelpProviderProps> = ({ children }) => {
     hideHelp,
     currentHelp,
     helpHistory,
-    addToHistory
+    addToHistory,
   };
 
-  return (
-    <HelpContext.Provider value={value}>
-      {children}
-    </HelpContext.Provider>
-  );
+  return <HelpContext.Provider value={value}>{children}</HelpContext.Provider>;
 };

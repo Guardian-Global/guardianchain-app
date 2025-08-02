@@ -122,8 +122,8 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
       // Update command result
       setCommandHistory((prev) =>
         prev.map((cmd) =>
-          cmd.id === newCommand.id ? { ...cmd, result, status } : cmd
-        )
+          cmd.id === newCommand.id ? { ...cmd, result, status } : cmd,
+        ),
       );
 
       toast({
@@ -140,8 +140,8 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
                 result: "Command execution failed",
                 status: "error" as const,
               }
-            : cmd
-        )
+            : cmd,
+        ),
       );
     } finally {
       setIsExecuting(false);
@@ -364,8 +364,8 @@ export function CommandDashboard({ className }: CommandDashboardProps) {
                               cmd.status === "success"
                                 ? "default"
                                 : cmd.status === "error"
-                                ? "destructive"
-                                : "secondary"
+                                  ? "destructive"
+                                  : "secondary"
                             }
                           >
                             {cmd.status}

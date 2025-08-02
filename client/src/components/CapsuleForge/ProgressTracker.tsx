@@ -63,9 +63,9 @@ export default function ProgressTracker({
   metadata = {},
 }: ProgressTrackerProps) {
   const getStepStatus = (stepId: string): ProgressStep["status"] => {
-    const stepIndex = steps.findIndex(step => step.id === stepId);
-    const currentIndex = steps.findIndex(step => step.id === currentStep);
-    
+    const stepIndex = steps.findIndex((step) => step.id === stepId);
+    const currentIndex = steps.findIndex((step) => step.id === currentStep);
+
     if (stepIndex < currentIndex) return "completed";
     if (stepIndex === currentIndex && isUploading) return "active";
     if (stepIndex === currentIndex && !isUploading) return "pending";
@@ -85,7 +85,9 @@ export default function ProgressTracker({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-slate-300">Overall Progress</span>
-            <span className="text-purple-400 font-medium">{Math.round(progress)}%</span>
+            <span className="text-purple-400 font-medium">
+              {Math.round(progress)}%
+            </span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
@@ -95,7 +97,7 @@ export default function ProgressTracker({
           {steps.map((step, index) => {
             const stepStatus = getStepStatus(step.id);
             const IconComponent = step.icon;
-            
+
             return (
               <div
                 key={step.id}
@@ -103,8 +105,8 @@ export default function ProgressTracker({
                   stepStatus === "active"
                     ? "bg-purple-900/30 border border-purple-500/50"
                     : stepStatus === "completed"
-                    ? "bg-green-900/20 border border-green-500/30"
-                    : "bg-slate-900/30"
+                      ? "bg-green-900/20 border border-green-500/30"
+                      : "bg-slate-900/30"
                 }`}
               >
                 <div
@@ -112,28 +114,37 @@ export default function ProgressTracker({
                     stepStatus === "completed"
                       ? "bg-green-500 text-white"
                       : stepStatus === "active"
-                      ? "bg-purple-500 text-white animate-pulse"
-                      : "bg-slate-700 text-slate-400"
+                        ? "bg-purple-500 text-white animate-pulse"
+                        : "bg-slate-700 text-slate-400"
                   }`}
                 >
                   <IconComponent className="h-4 w-4" />
                 </div>
-                
+
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <h4 className="text-white font-medium">{step.label}</h4>
                     <Badge
                       variant={
-                        stepStatus === "completed" ? "default" :
-                        stepStatus === "active" ? "secondary" : "outline"
+                        stepStatus === "completed"
+                          ? "default"
+                          : stepStatus === "active"
+                            ? "secondary"
+                            : "outline"
                       }
                       className={
-                        stepStatus === "completed" ? "bg-green-500" :
-                        stepStatus === "active" ? "bg-purple-500" : ""
+                        stepStatus === "completed"
+                          ? "bg-green-500"
+                          : stepStatus === "active"
+                            ? "bg-purple-500"
+                            : ""
                       }
                     >
-                      {stepStatus === "completed" ? "Done" :
-                       stepStatus === "active" ? "Processing" : "Pending"}
+                      {stepStatus === "completed"
+                        ? "Done"
+                        : stepStatus === "active"
+                          ? "Processing"
+                          : "Pending"}
                     </Badge>
                   </div>
                   <p className="text-sm text-slate-400">{step.description}</p>
@@ -150,13 +161,17 @@ export default function ProgressTracker({
             {metadata.ipfsHash && (
               <div className="flex justify-between text-sm">
                 <span className="text-slate-400">IPFS Hash:</span>
-                <span className="text-green-400 font-mono">{metadata.ipfsHash.slice(0, 20)}...</span>
+                <span className="text-green-400 font-mono">
+                  {metadata.ipfsHash.slice(0, 20)}...
+                </span>
               </div>
             )}
             {metadata.estimatedTime && (
               <div className="flex justify-between text-sm">
                 <span className="text-slate-400">Est. Time:</span>
-                <span className="text-purple-400">{metadata.estimatedTime}</span>
+                <span className="text-purple-400">
+                  {metadata.estimatedTime}
+                </span>
               </div>
             )}
             {metadata.fileSize && (
@@ -181,7 +196,9 @@ export default function ProgressTracker({
               <span className="text-sm">Capsule created successfully!</span>
             </div>
           ) : (
-            <div className="text-slate-400 text-sm">Ready to begin creation process</div>
+            <div className="text-slate-400 text-sm">
+              Ready to begin creation process
+            </div>
           )}
         </div>
       </CardContent>

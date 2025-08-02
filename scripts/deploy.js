@@ -12,13 +12,16 @@ async function main() {
 
   // Wait for deployment
   await gttToken.waitForDeployment();
-  
+
   const contractAddress = await gttToken.getAddress();
 
   console.log("✅ GTT Token deployed successfully!");
   console.log("📍 Contract Address:", contractAddress);
-  console.log("🔗 View on PolygonScan: https://polygonscan.com/address/" + contractAddress);
-  
+  console.log(
+    "🔗 View on PolygonScan: https://polygonscan.com/address/" +
+      contractAddress,
+  );
+
   // Log deployment details
   console.log("\n📊 Deployment Summary:");
   console.log("- Token Name: GUARDIANCHAIN Token");
@@ -27,7 +30,7 @@ async function main() {
   console.log("- Decimals: 18");
   console.log("- Network: Polygon Mainnet");
   console.log("- Gas Used: Approximately 1.2M gas");
-  
+
   return contractAddress;
 }
 

@@ -17,22 +17,29 @@ export default function PrivacyPolicy() {
           <CardContent className="prose prose-invert max-w-none">
             <div className="space-y-6 text-slate-300">
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">1. Information We Collect</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  1. Information We Collect
+                </h2>
                 <p>
-                  We collect information you provide directly to us, such as when you create an account, submit truth capsules,
-                  or contact us for support.
+                  We collect information you provide directly to us, such as
+                  when you create an account, submit truth capsules, or contact
+                  us for support.
                 </p>
                 <ul className="list-disc pl-6 space-y-2 mt-3">
                   <li>Account information (username, email address)</li>
                   <li>Profile information you choose to provide</li>
                   <li>Content you submit to the platform</li>
-                  <li>Transaction and wallet information for Web3 interactions</li>
+                  <li>
+                    Transaction and wallet information for Web3 interactions
+                  </li>
                   <li>Usage data and analytics</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">2. How We Use Your Information</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  2. How We Use Your Information
+                </h2>
                 <ul className="list-disc pl-6 space-y-2">
                   <li>Provide, maintain, and improve our services</li>
                   <li>Process transactions and send related information</li>
@@ -44,9 +51,12 @@ export default function PrivacyPolicy() {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">3. Information Sharing</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  3. Information Sharing
+                </h2>
                 <p>
-                  We do not sell, trade, or otherwise transfer your personal information to third parties except as described below:
+                  We do not sell, trade, or otherwise transfer your personal
+                  information to third parties except as described below:
                 </p>
                 <ul className="list-disc pl-6 space-y-2 mt-3">
                   <li>With your consent</li>
@@ -58,33 +68,46 @@ export default function PrivacyPolicy() {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">4. Blockchain and Cryptocurrency</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  4. Blockchain and Cryptocurrency
+                </h2>
                 <p>
-                  Our platform integrates with blockchain networks. Please note that transactions on blockchain networks
-                  are generally public and immutable. We cannot control or modify blockchain transactions once they are confirmed.
+                  Our platform integrates with blockchain networks. Please note
+                  that transactions on blockchain networks are generally public
+                  and immutable. We cannot control or modify blockchain
+                  transactions once they are confirmed.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">5. Data Security</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  5. Data Security
+                </h2>
                 <p>
-                  We implement appropriate technical and organizational measures to protect your personal information against
-                  unauthorized access, alteration, disclosure, or destruction.
+                  We implement appropriate technical and organizational measures
+                  to protect your personal information against unauthorized
+                  access, alteration, disclosure, or destruction.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">6. Data Retention</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  6. Data Retention
+                </h2>
                 <p>
-                  We retain your personal information for as long as necessary to provide our services, comply with legal
-                  obligations, resolve disputes, and enforce our agreements.
+                  We retain your personal information for as long as necessary
+                  to provide our services, comply with legal obligations,
+                  resolve disputes, and enforce our agreements.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">7. Your Rights</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  7. Your Rights
+                </h2>
                 <p>
-                  Depending on your location, you may have certain rights regarding your personal information, including:
+                  Depending on your location, you may have certain rights
+                  regarding your personal information, including:
                 </p>
                 <ul className="list-disc pl-6 space-y-2 mt-3">
                   <li>Access to your personal information</li>
@@ -96,33 +119,46 @@ export default function PrivacyPolicy() {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">8. Cookies and Tracking</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  8. Cookies and Tracking
+                </h2>
                 <p>
-                  We use cookies and similar tracking technologies to collect and use personal information about you.
-                  You can control cookies through your browser settings.
+                  We use cookies and similar tracking technologies to collect
+                  and use personal information about you. You can control
+                  cookies through your browser settings.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">9. International Data Transfers</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  9. International Data Transfers
+                </h2>
                 <p>
-                  Your information may be transferred to and maintained on computers located outside of your jurisdiction
-                  where privacy laws may differ. We ensure appropriate safeguards are in place.
+                  Your information may be transferred to and maintained on
+                  computers located outside of your jurisdiction where privacy
+                  laws may differ. We ensure appropriate safeguards are in
+                  place.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">10. Changes to Privacy Policy</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  10. Changes to Privacy Policy
+                </h2>
                 <p>
-                  We may update this Privacy Policy from time to time. We will notify you of any changes by posting the
-                  new Privacy Policy on this page and updating the "last updated" date.
+                  We may update this Privacy Policy from time to time. We will
+                  notify you of any changes by posting the new Privacy Policy on
+                  this page and updating the "last updated" date.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-white mb-3">11. Contact Us</h2>
+                <h2 className="text-xl font-semibold text-white mb-3">
+                  11. Contact Us
+                </h2>
                 <p>
-                  If you have any questions about this Privacy Policy, please contact us:
+                  If you have any questions about this Privacy Policy, please
+                  contact us:
                   <br />
                   Email: privacy@guardianchain.org
                   <br />

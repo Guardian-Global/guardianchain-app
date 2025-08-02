@@ -29,7 +29,7 @@ future_enhancements:
   cta={[
     { label: "Read as User", url: "#executive-summary", style: "primary" },
     { label: "Read as DAO/Dev", url: "#dao-governance", style: "secondary" },
-    { label: "Explore in AR", url: "#ar-architecture", style: "holo" }
+    { label: "Explore in AR", url: "#ar-architecture", style: "holo" },
   ]}
 />
 
@@ -37,11 +37,22 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/guardianchain-protocol" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "wechat", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={[
+        "twitter",
+        "linkedin",
+        "telegram",
+        "wechat",
+        "farcaster",
+        "email",
+      ]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -51,12 +62,18 @@ future_enhancements:
 ---
 
 ## <span id="executive-summary">Executive Summary <InfoIcon /></span>
+
 <Callout type="impact" icon="🚀">
-  <b>GuardianChain sets the global standard for digital truth and institutional memory.</b>
-  This document is interactive, AI-narrated, live-audited, and can be explored visually or in AR/VR.
+  <b>
+    GuardianChain sets the global standard for digital truth and institutional
+    memory.
+  </b>
+  This document is interactive, AI-narrated, live-audited, and can be explored
+  visually or in AR/VR.
 </Callout>
 
 GuardianChain is a next-generation protocol, purpose-built for:
+
 - Sovereign, censorship-resistant digital memory
 - Verifiable, cryptographically sealed authorship
 - DAO-controlled compliance and economic logic
@@ -67,16 +84,21 @@ GuardianChain is a next-generation protocol, purpose-built for:
 ---
 
 ## <span id="need">Why GuardianChain? (A 2035 Perspective) <FutureIcon /></span>
+
 <Callout type="risk" icon="⚠️">
-  <b>Risk:</b> Most blockchains, even in 2035, cannot guarantee legal, compliant, and human/AI-auditable authorship or institutional-grade memory permanence.
+  <b>Risk:</b> Most blockchains, even in 2035, cannot guarantee legal,
+  compliant, and human/AI-auditable authorship or institutional-grade memory
+  permanence.
 </Callout>
 
 ### Problems in Digital Trust:
+
 - Memory loss, censorship, jurisdictional overreach
 - Lack of on-chain legal standing or institutional audit
 - Insufficient incentive and governance mechanisms
 
 ### GuardianChain Solution:
+
 - Every memory capsule is quantum-signed, Veritas-certified, and globally recognized
 - Modular privacy/compliance layers for every jurisdiction, user, and use-case
 - Native AI explanations, legal references, and cross-layer economic value
@@ -84,21 +106,25 @@ GuardianChain is a next-generation protocol, purpose-built for:
 ---
 
 ## <span id="ar-architecture">Interactive Protocol Stack <HoloIcon /></span>
+
 <Diagram name="GuardianChain-HoloStack" interactive arMode />
 <AnimatedSVG src="/media/protocol-stack.svg" />
 
 ### Architecture Layers:
+
 - **Quantum SealChain:** zk-proof, post-quantum, with instant authorship validation and AR trace
 - **VaultStream:** Geo-distributed, redundant, multi-tiered, privacy-selectable
 - **AI-DAO:** Real-time, upgradable, role-aware governance with audit-proof tracking
 
 <Callout type="pro" icon="🛠️">
-  <b>Pro Tip:</b> Click any protocol layer above to see live node stats, audit logs, or recent DAO upgrades.
+  <b>Pro Tip:</b> Click any protocol layer above to see live node stats, audit
+  logs, or recent DAO upgrades.
 </Callout>
 
 ---
 
 ## <span id="security">Security & Trust <ShieldIcon /></span>
+
 - Multi-factor auth: DAO, VeritasChain, quantum-sig, multi-sig
 - Real-time security stats: <LiveStats type="security" />
 - Continuous bug bounty, auto-patched by protocol AI
@@ -106,23 +132,28 @@ GuardianChain is a next-generation protocol, purpose-built for:
 - Open audit trail: <AuditTrail doc="guardianchain-protocol" />
 
 <Callout type="legal" icon="⚖️">
-  All security, audit, and governance records are notarized, chain-linked, and available for legal or regulatory review.
+  All security, audit, and governance records are notarized, chain-linked, and
+  available for legal or regulatory review.
 </Callout>
 
 ---
 
 ## <span id="dao-governance">DAO Governance (Live) <DAOBadge /></span>
+
 - GTT holders: propose, delegate, and vote
 - Real-time governance widget: <LiveVote proposal="current" />
 - Transparent, replayable vote timeline: <VoteTimeline proposal="all" />
 - Arbitration, dispute, and compliance modules are all on-chain and open-source
 
 <CommunityChat section="dao-governance" />
-<ProTip>Join the DAO, submit a proposal, and see your governance power in real time.</ProTip>
+<ProTip>
+  Join the DAO, submit a proposal, and see your governance power in real time.
+</ProTip>
 
 ---
 
 ## <span id="compliance">Compliance, Privacy & Global Law <GlobeIcon /></span>
+
 - GuardianChain LLC, foundation transition ready
 - Full compliance with GDPR, FATF, WIPO, OECD
 - Live compliance simulator: <ComplianceSimulator />
@@ -131,12 +162,14 @@ GuardianChain is a next-generation protocol, purpose-built for:
 - Privacy controls, data erasure, and multi-jurisdiction overlays
 
 <Callout type="legal" icon="📝">
-  Every section here links to relevant laws, guidance, or protocol policies (auto-updating).
+  Every section here links to relevant laws, guidance, or protocol policies
+  (auto-updating).
 </Callout>
 
 ---
 
 ## <span id="economic">GTT Tokenomics, Yield & Treasury <TokenIcon /></span>
+
 <Diagram name="GTT-Tokenomics" interactive />
 <AnimatedChart src="/media/gtt-yield-chart.svg" />
 
@@ -152,36 +185,75 @@ GuardianChain is a next-generation protocol, purpose-built for:
 ---
 
 ## <span id="roadmap">Roadmap <RocketIcon /></span>
-<RoadmapTable milestones={[
-  { date: "Q3 2025", event: "Mainnet Launch, DAO Onboarding", status: "done" },
-  { date: "Q4 2025", event: "Global Compliance, Institutional Onboarding", status: "in-progress" },
-  { date: "2026+", event: "AI Capsule Index, Cross-Chain Bridge", status: "planned" },
-  { date: "2030+", event: "AR/VR, Quantum, Gov Integrations", status: "future" }
-]} />
 
-<ProTip>All milestones are DAO governed and can be expanded with community proposals.</ProTip>
+<RoadmapTable
+  milestones={[
+    {
+      date: "Q3 2025",
+      event: "Mainnet Launch, DAO Onboarding",
+      status: "done",
+    },
+    {
+      date: "Q4 2025",
+      event: "Global Compliance, Institutional Onboarding",
+      status: "in-progress",
+    },
+    {
+      date: "2026+",
+      event: "AI Capsule Index, Cross-Chain Bridge",
+      status: "planned",
+    },
+    {
+      date: "2030+",
+      event: "AR/VR, Quantum, Gov Integrations",
+      status: "future",
+    },
+  ]}
+/>
+
+<ProTip>
+  All milestones are DAO governed and can be expanded with community proposals.
+</ProTip>
 
 ---
 
 ## <span id="faq">FAQ & Interactive Help <HelpIcon /></span>
+
 <FAQ>
-  <Question q="Who can use GuardianChain?">Anyone—users, DAOs, institutions, governments, and AI systems can mint, validate, or govern.</Question>
-  <Question q="How can I verify authorship?">Click the Veritas badge or NFT for any section to see on-chain proof.</Question>
-  <Question q="How does the DAO work?">Every GTT holder can propose, delegate, and vote. See <LiveVote /> for current proposals.</Question>
-  <Question q="What about privacy and compliance?">All data is opt-in, multi-jurisdictional, and legally verifiable. See the Compliance Simulator.</Question>
-  <Question q="Is this document open source?">Yes, and every version is NFT-minted with full audit trail.</Question>
+  <Question q="Who can use GuardianChain?">
+    Anyone—users, DAOs, institutions, governments, and AI systems can mint,
+    validate, or govern.
+  </Question>
+  <Question q="How can I verify authorship?">
+    Click the Veritas badge or NFT for any section to see on-chain proof.
+  </Question>
+  <Question q="How does the DAO work?">
+    Every GTT holder can propose, delegate, and vote. See <LiveVote /> for
+    current proposals.
+  </Question>
+  <Question q="What about privacy and compliance?">
+    All data is opt-in, multi-jurisdictional, and legally verifiable. See the
+    Compliance Simulator.
+  </Question>
+  <Question q="Is this document open source?">
+    Yes, and every version is NFT-minted with full audit trail.
+  </Question>
 </FAQ>
 
 ---
 
 ## <span id="annotations">Community Annotations & Chat <ChatIcon /></span>
+
 <CommunityAnnotations section="all" />
 <CommunityChat section="all" />
-<ProTip>Hover on any paragraph to upvote, comment, or see DAO-verified responses.</ProTip>
+<ProTip>
+  Hover on any paragraph to upvote, comment, or see DAO-verified responses.
+</ProTip>
 
 ---
 
 ## <span id="audit">Audit Trail, Versioning & Authorship NFT <AuditIcon /></span>
+
 - All edits, votes, and major upgrades are time-stamped, signed, and recorded on VeritasChain
 - Mint “proof of authorship” NFT for each new version: <ProofOfAuthorshipNFT section="conclusion" />
 - Download or compare all prior versions: <AuditTrail doc="guardianchain-protocol" />
@@ -189,6 +261,7 @@ GuardianChain is a next-generation protocol, purpose-built for:
 ---
 
 ## <span id="conclusion">Conclusion & Share <ShareIcon /></span>
+
 GuardianChain Protocol is the first web3 protocol whitepaper to be quantum-audited, AI-narrated, multi-modal, and DAO-verified.  
 This living document is your permanent, trusted entry point into sovereign memory, decentralized governance, and programmable economic truth.
 

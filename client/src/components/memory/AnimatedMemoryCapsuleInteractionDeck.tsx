@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Sparkles, 
-  Heart, 
-  Clock, 
-  Star, 
-  Zap, 
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Sparkles,
+  Heart,
+  Clock,
+  Star,
+  Zap,
   Globe,
   Users,
   Trophy,
   Eye,
-  ArrowRight
-} from 'lucide-react';
+  ArrowRight,
+} from "lucide-react";
 
 interface MemoryCapsule {
   id: string;
@@ -22,46 +22,48 @@ interface MemoryCapsule {
   content: string;
   emotionalScore: number;
   timeStamp: Date;
-  category: 'family' | 'achievement' | 'milestone' | 'wisdom' | 'adventure';
+  category: "family" | "achievement" | "milestone" | "wisdom" | "adventure";
   interactionCount: number;
-  resonanceLevel: 'low' | 'medium' | 'high' | 'legendary';
+  resonanceLevel: "low" | "medium" | "high" | "legendary";
   stakingReward: number;
 }
 
 const SAMPLE_CAPSULES: MemoryCapsule[] = [
   {
-    id: '1',
-    title: 'First Steps',
-    content: 'The moment our daughter took her first steps, captured forever in time...',
+    id: "1",
+    title: "First Steps",
+    content:
+      "The moment our daughter took her first steps, captured forever in time...",
     emotionalScore: 95,
-    timeStamp: new Date('2023-06-15'),
-    category: 'family',
+    timeStamp: new Date("2023-06-15"),
+    category: "family",
     interactionCount: 1247,
-    resonanceLevel: 'legendary',
-    stakingReward: 15.7
+    resonanceLevel: "legendary",
+    stakingReward: 15.7,
   },
   {
-    id: '2', 
-    title: 'Mountain Summit',
-    content: 'Reaching the peak after years of training, the view was breathtaking...',
+    id: "2",
+    title: "Mountain Summit",
+    content:
+      "Reaching the peak after years of training, the view was breathtaking...",
     emotionalScore: 88,
-    timeStamp: new Date('2023-08-22'),
-    category: 'achievement',
+    timeStamp: new Date("2023-08-22"),
+    category: "achievement",
     interactionCount: 892,
-    resonanceLevel: 'high',
-    stakingReward: 12.3
+    resonanceLevel: "high",
+    stakingReward: 12.3,
   },
   {
-    id: '3',
-    title: 'Grandmother\'s Recipe',
-    content: 'The secret family recipe passed down through generations...',
+    id: "3",
+    title: "Grandmother's Recipe",
+    content: "The secret family recipe passed down through generations...",
     emotionalScore: 76,
-    timeStamp: new Date('2023-11-03'),
-    category: 'wisdom',
+    timeStamp: new Date("2023-11-03"),
+    category: "wisdom",
     interactionCount: 634,
-    resonanceLevel: 'medium',
-    stakingReward: 8.9
-  }
+    resonanceLevel: "medium",
+    stakingReward: 8.9,
+  },
 ];
 
 const categoryIcons = {
@@ -69,31 +71,39 @@ const categoryIcons = {
   achievement: Trophy,
   milestone: Star,
   wisdom: Globe,
-  adventure: Zap
+  adventure: Zap,
 };
 
 const resonanceColors = {
-  low: 'bg-gray-500',
-  medium: 'bg-blue-500',
-  high: 'bg-purple-500',
-  legendary: 'bg-gradient-to-r from-yellow-400 to-orange-500'
+  low: "bg-gray-500",
+  medium: "bg-blue-500",
+  high: "bg-purple-500",
+  legendary: "bg-gradient-to-r from-yellow-400 to-orange-500",
 };
 
 export default function AnimatedMemoryCapsuleInteractionDeck() {
-  const [selectedCapsule, setSelectedCapsule] = useState<MemoryCapsule | null>(null);
+  const [selectedCapsule, setSelectedCapsule] = useState<MemoryCapsule | null>(
+    null,
+  );
   const [hoveredCapsule, setHoveredCapsule] = useState<string | null>(null);
   const [capsules, setCapsules] = useState(SAMPLE_CAPSULES);
   const [activeAnimation, setActiveAnimation] = useState<string | null>(null);
 
   const handleCapsuleInteraction = (capsule: MemoryCapsule) => {
     setActiveAnimation(capsule.id);
-    
+
     // Simulate interaction reward
-    setCapsules(prev => prev.map(c => 
-      c.id === capsule.id 
-        ? { ...c, interactionCount: c.interactionCount + 1, stakingReward: c.stakingReward + 0.1 }
-        : c
-    ));
+    setCapsules((prev) =>
+      prev.map((c) =>
+        c.id === capsule.id
+          ? {
+              ...c,
+              interactionCount: c.interactionCount + 1,
+              stakingReward: c.stakingReward + 0.1,
+            }
+          : c,
+      ),
+    );
 
     setTimeout(() => setActiveAnimation(null), 1000);
     setSelectedCapsule(capsule);
@@ -104,26 +114,26 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 20,
-      scale: 0.9
+      scale: 0.9,
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       scale: 1,
       transition: {
         type: "spring",
         stiffness: 300,
-        damping: 20
-      }
+        damping: 20,
+      },
     },
     hover: {
       scale: 1.05,
@@ -132,12 +142,12 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
       transition: {
         type: "spring",
         stiffness: 400,
-        damping: 10
-      }
+        damping: 10,
+      },
     },
     tap: {
-      scale: 0.95
-    }
+      scale: 0.95,
+    },
   };
 
   const pulseVariants = {
@@ -148,9 +158,9 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
       transition: {
         duration: 2,
         repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
 
   return (
@@ -163,7 +173,7 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
       >
         {/* Header */}
         <motion.div className="text-center mb-12">
-          <motion.h1 
+          <motion.h1
             className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -172,26 +182,39 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
             Animated Memory Capsule Interaction Deck
             <Sparkles className="text-yellow-400" />
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-gray-300 text-lg max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Experience your memories through interactive, animated capsules that reward engagement
+            Experience your memories through interactive, animated capsules that
+            reward engagement
           </motion.p>
         </motion.div>
 
         {/* Stats Overview */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
           variants={containerVariants}
         >
           {[
-            { label: 'Total Capsules', value: capsules.length, icon: Eye },
-            { label: 'Total Interactions', value: capsules.reduce((sum, c) => sum + c.interactionCount, 0), icon: Users },
-            { label: 'Staking Rewards', value: `${capsules.reduce((sum, c) => sum + c.stakingReward, 0).toFixed(1)} GTT`, icon: Trophy },
-            { label: 'Avg Resonance', value: `${Math.round(capsules.reduce((sum, c) => sum + c.emotionalScore, 0) / capsules.length)}%`, icon: Heart }
+            { label: "Total Capsules", value: capsules.length, icon: Eye },
+            {
+              label: "Total Interactions",
+              value: capsules.reduce((sum, c) => sum + c.interactionCount, 0),
+              icon: Users,
+            },
+            {
+              label: "Staking Rewards",
+              value: `${capsules.reduce((sum, c) => sum + c.stakingReward, 0).toFixed(1)} GTT`,
+              icon: Trophy,
+            },
+            {
+              label: "Avg Resonance",
+              value: `${Math.round(capsules.reduce((sum, c) => sum + c.emotionalScore, 0) / capsules.length)}%`,
+              icon: Heart,
+            },
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -210,13 +233,13 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
         </motion.div>
 
         {/* Memory Capsules Grid */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
           variants={containerVariants}
         >
           {capsules.map((capsule) => {
             const CategoryIcon = categoryIcons[capsule.category];
-            
+
             return (
               <motion.div
                 key={capsule.id}
@@ -238,22 +261,26 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
                       className="absolute inset-0 bg-purple-500/20 rounded-lg pointer-events-none"
                     />
                   )}
-                  
+
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <CategoryIcon className="text-purple-400" size={20} />
-                      <Badge className={`${resonanceColors[capsule.resonanceLevel]} text-white`}>
+                      <Badge
+                        className={`${resonanceColors[capsule.resonanceLevel]} text-white`}
+                      >
                         {capsule.resonanceLevel}
                       </Badge>
                     </div>
-                    <CardTitle className="text-white text-lg">{capsule.title}</CardTitle>
+                    <CardTitle className="text-white text-lg">
+                      {capsule.title}
+                    </CardTitle>
                   </CardHeader>
-                  
+
                   <CardContent>
                     <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                       {capsule.content}
                     </p>
-                    
+
                     <div className="space-y-3">
                       {/* Emotional Score Bar */}
                       <div>
@@ -270,7 +297,7 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
                           />
                         </div>
                       </div>
-                      
+
                       {/* Stats */}
                       <div className="grid grid-cols-2 gap-4 text-xs">
                         <div className="flex items-center gap-1 text-gray-400">
@@ -282,18 +309,26 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
                           <span>{capsule.timeStamp.toLocaleDateString()}</span>
                         </div>
                       </div>
-                      
+
                       {/* Rewards */}
                       <motion.div
                         className="flex items-center justify-between p-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg"
-                        animate={activeAnimation === capsule.id ? { scale: [1, 1.05, 1] } : {}}
+                        animate={
+                          activeAnimation === capsule.id
+                            ? { scale: [1, 1.05, 1] }
+                            : {}
+                        }
                       >
-                        <span className="text-yellow-400 text-sm font-medium">Staking Reward</span>
-                        <span className="text-yellow-300 font-bold">{capsule.stakingReward.toFixed(1)} GTT</span>
+                        <span className="text-yellow-400 text-sm font-medium">
+                          Staking Reward
+                        </span>
+                        <span className="text-yellow-300 font-bold">
+                          {capsule.stakingReward.toFixed(1)} GTT
+                        </span>
                       </motion.div>
                     </div>
                   </CardContent>
-                  
+
                   {/* Hover Effect */}
                   <AnimatePresence>
                     {hoveredCapsule === capsule.id && (
@@ -331,45 +366,66 @@ export default function AnimatedMemoryCapsuleInteractionDeck() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
-                onClick={e => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-start mb-6">
-                  <h2 className="text-2xl font-bold text-white">{selectedCapsule.title}</h2>
-                  <Button variant="ghost" onClick={() => setSelectedCapsule(null)}>
+                  <h2 className="text-2xl font-bold text-white">
+                    {selectedCapsule.title}
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setSelectedCapsule(null)}
+                  >
                     ✕
                   </Button>
                 </div>
-                
+
                 <div className="space-y-6">
-                  <p className="text-gray-300 leading-relaxed">{selectedCapsule.content}</p>
-                  
+                  <p className="text-gray-300 leading-relaxed">
+                    {selectedCapsule.content}
+                  </p>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-slate-700/50 rounded-lg p-4">
-                      <h3 className="text-purple-400 font-semibold mb-2">Memory Stats</h3>
+                      <h3 className="text-purple-400 font-semibold mb-2">
+                        Memory Stats
+                      </h3>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Emotional Score:</span>
-                          <span className="text-white">{selectedCapsule.emotionalScore}%</span>
+                          <span className="text-gray-400">
+                            Emotional Score:
+                          </span>
+                          <span className="text-white">
+                            {selectedCapsule.emotionalScore}%
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Interactions:</span>
-                          <span className="text-white">{selectedCapsule.interactionCount}</span>
+                          <span className="text-white">
+                            {selectedCapsule.interactionCount}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Resonance:</span>
-                          <Badge className={`${resonanceColors[selectedCapsule.resonanceLevel]} text-white`}>
+                          <Badge
+                            className={`${resonanceColors[selectedCapsule.resonanceLevel]} text-white`}
+                          >
                             {selectedCapsule.resonanceLevel}
                           </Badge>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-lg p-4">
-                      <h3 className="text-yellow-400 font-semibold mb-2">Rewards Earned</h3>
+                      <h3 className="text-yellow-400 font-semibold mb-2">
+                        Rewards Earned
+                      </h3>
                       <div className="text-2xl font-bold text-yellow-300">
                         {selectedCapsule.stakingReward.toFixed(1)} GTT
                       </div>
-                      <p className="text-yellow-200/70 text-sm">From community interactions</p>
+                      <p className="text-yellow-200/70 text-sm">
+                        From community interactions
+                      </p>
                     </div>
                   </div>
                 </div>

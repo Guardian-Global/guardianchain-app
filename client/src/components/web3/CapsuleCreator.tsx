@@ -53,7 +53,7 @@ export default function CapsuleCreator() {
     try {
       const factoryAddress = getContractAddress(
         chainId,
-        "factoryV2"
+        "factoryV2",
       ) as `0x${string}`;
 
       writeContract({

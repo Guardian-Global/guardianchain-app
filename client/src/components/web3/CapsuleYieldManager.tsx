@@ -152,7 +152,7 @@ export default function CapsuleYieldManager({
   const claimAllMutation = useMutation({
     mutationFn: async () => {
       const claimableCapsules = capsules.filter(
-        (c) => c.verified && !c.yieldClaimed
+        (c) => c.verified && !c.yieldClaimed,
       );
 
       if (claimableCapsules.length === 0) {
@@ -170,12 +170,12 @@ export default function CapsuleYieldManager({
     onSuccess: (results) => {
       const totalClaimed = results.reduce(
         (sum, r) => sum + parseFloat(r.amount),
-        0
+        0,
       );
       toast({
         title: "All Yields Claimed!",
         description: `Successfully claimed ${totalClaimed.toFixed(
-          2
+          2,
         )} GTT tokens from ${results.length} capsules`,
       });
     },
@@ -189,7 +189,7 @@ export default function CapsuleYieldManager({
   });
 
   const claimableCapsules = capsules.filter(
-    (c) => c.verified && !c.yieldClaimed
+    (c) => c.verified && !c.yieldClaimed,
   );
   const claimedCapsules = capsules.filter((c) => c.yieldClaimed);
 
@@ -397,7 +397,7 @@ export default function CapsuleYieldManager({
                         Claimed {capsule.yieldAmount.toFixed(2)} GTT on{" "}
                         {capsule.yieldClaimedAt
                           ? new Date(
-                              capsule.yieldClaimedAt
+                              capsule.yieldClaimedAt,
                             ).toLocaleDateString()
                           : "Unknown date"}
                       </div>

@@ -3,18 +3,18 @@ import { useAuth } from "@/hooks/useAuth";
 import { Link } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
-  Menu, 
-  X, 
-  LayoutDashboard, 
-  FileText, 
-  Plus, 
-  TrendingUp, 
-  Users, 
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  FileText,
+  Plus,
+  TrendingUp,
+  Users,
   Settings,
   Shield,
   Crown,
-  Zap
+  Zap,
 } from "lucide-react";
 
 interface Route {
@@ -26,70 +26,71 @@ interface Route {
 }
 
 const routes: Route[] = [
-  { 
-    name: "Dashboard", 
-    href: "/dashboard", 
+  {
+    name: "Dashboard",
+    href: "/dashboard",
     icon: LayoutDashboard,
-    roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
+    roles: ["guest", "member", "moderator", "admin", "dao-owner"],
   },
-  { 
-    name: "Admin Panel", 
-    href: "/admin", 
+  {
+    name: "Admin Panel",
+    href: "/admin",
     icon: Settings,
     roles: ["admin", "dao-owner"],
-    badge: "ADMIN" 
+    badge: "ADMIN",
   },
-  { 
-    name: "Capsules", 
-    href: "/vault", 
+  {
+    name: "Capsules",
+    href: "/vault",
     icon: FileText,
-    roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
+    roles: ["guest", "member", "moderator", "admin", "dao-owner"],
   },
-  { 
-    name: "Create", 
-    href: "/create", 
+  {
+    name: "Create",
+    href: "/create",
     icon: Plus,
-    roles: ["member", "moderator", "admin", "dao-owner"] 
+    roles: ["member", "moderator", "admin", "dao-owner"],
   },
-  { 
-    name: "Staking", 
-    href: "/staking", 
+  {
+    name: "Staking",
+    href: "/staking",
     icon: TrendingUp,
-    roles: ["member", "moderator", "admin", "dao-owner"] 
+    roles: ["member", "moderator", "admin", "dao-owner"],
   },
-  { 
-    name: "DAO", 
-    href: "/dao", 
+  {
+    name: "DAO",
+    href: "/dao",
     icon: Crown,
     roles: ["dao-owner"],
-    badge: "DAO" 
+    badge: "DAO",
   },
-  { 
-    name: "Validator", 
-    href: "/validator", 
+  {
+    name: "Validator",
+    href: "/validator",
     icon: Shield,
     roles: ["moderator", "admin", "dao-owner"],
-    badge: "MOD+" 
-  }
+    badge: "MOD+",
+  },
 ];
 
 const tierHierarchy = {
-  'guest': 0,
-  'member': 1,
-  'moderator': 2,
-  'admin': 3,
-  'dao-owner': 4
+  guest: 0,
+  member: 1,
+  moderator: 2,
+  admin: 3,
+  "dao-owner": 4,
 };
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
-  
-  const currentTier = (user as any)?.tier?.toLowerCase() || 'guest';
-  const currentTierLevel = tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
 
-  const availableRoutes = routes.filter(route => {
-    return route.roles.some(role => {
+  const currentTier = (user as any)?.tier?.toLowerCase() || "guest";
+  const currentTierLevel =
+    tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
+
+  const availableRoutes = routes.filter((route) => {
+    return route.roles.some((role) => {
       const roleLevel = tierHierarchy[role as keyof typeof tierHierarchy] ?? 0;
       return currentTierLevel >= roleLevel;
     });
@@ -113,11 +114,11 @@ const MobileNav = () => {
       {isOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm" 
-            onClick={() => setIsOpen(false)} 
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
           />
-          
+
           {/* Slide-out menu */}
           <div className="fixed left-0 top-0 h-full w-80 max-w-[90vw] bg-slate-800 border-r border-slate-700 transform transition-transform duration-300 ease-in-out">
             {/* Header */}
@@ -126,8 +127,8 @@ const MobileNav = () => {
                 <Shield className="h-6 w-6 text-blue-400" />
                 <h1 className="font-bold text-lg text-white">GuardianChain</h1>
               </div>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => setIsOpen(false)}
                 className="text-slate-400 hover:text-white"
@@ -139,10 +140,11 @@ const MobileNav = () => {
             {/* User info */}
             <div className="p-4 border-b border-slate-700">
               <div className="text-sm font-medium text-white mb-1">
-                {(user as any)?.firstName || 'Debug'} {(user as any)?.lastName || 'User'}
+                {(user as any)?.firstName || "Debug"}{" "}
+                {(user as any)?.lastName || "User"}
               </div>
               <div className="text-xs text-slate-400 mb-2">
-                {(user as any)?.email || 'debug@guardianchain.app'}
+                {(user as any)?.email || "debug@guardianchain.app"}
               </div>
               <Badge variant="outline" className="text-xs">
                 {currentTier.toUpperCase()}
@@ -155,7 +157,7 @@ const MobileNav = () => {
                 const Icon = route.icon;
                 return (
                   <Link key={route.name} href={route.href}>
-                    <div 
+                    <div
                       className="flex items-center gap-3 px-3 py-3 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors group cursor-pointer"
                       onClick={() => setIsOpen(false)}
                     >
@@ -182,7 +184,7 @@ const MobileNav = () => {
                   Upgrade your tier to access advanced tools
                 </p>
                 <Link href="/tier-access">
-                  <div 
+                  <div
                     className="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-md transition-colors cursor-pointer inline-block"
                     onClick={() => setIsOpen(false)}
                   >

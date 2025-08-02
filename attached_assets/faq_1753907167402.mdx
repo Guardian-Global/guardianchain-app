@@ -26,7 +26,7 @@ future_enhancements:
   cta={[
     { label: "Ask AI", url: "#ai-chat", style: "primary" },
     { label: "Browse FAQ", url: "#faq-list", style: "secondary" },
-    { label: "Get Human Help", url: "#support", style: "holo" }
+    { label: "Get Human Help", url: "#support", style: "holo" },
   ]}
 />
 
@@ -34,11 +34,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/faq" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -46,35 +50,62 @@ future_enhancements:
 ---
 
 ## <span id="ai-chat">Ask AI — Interactive FAQ <AIIcon /></span>
-<AIChatbot />
-- Instantly answers questions, links docs, and escalates to human support if needed
+
+<AIChatbot />- Instantly answers questions, links docs, and escalates to human
+support if needed
 
 ---
 
 ## <span id="faq-list">Frequently Asked Questions <ListIcon /></span>
+
 <FAQ>
-  <Question q="What is GuardianChain?">A protocol for sovereign digital memory and truth—see the Protocol Whitepaper.</Question>
-  <Question q="How do I mint a capsule?">Connect your wallet and follow the onboarding steps. See Validator/Onboarding Guide.</Question>
-  <Question q="What is GTT?">The native, fixed-supply token for protocol utility, rewards, and governance. See Tokenomics.</Question>
-  <Question q="How do I participate in governance?">Hold GTT, connect, and vote/propose via the DAO portal.</Question>
-  <Question q="How do I run a validator?">See Validator Guide or try the onboarding wizard.</Question>
-  <Question q="How do I get technical support?">Ask the AI, join community chat, or escalate to the DAO support team.</Question>
-  <Question q="How can I verify compliance or audit status?">All docs, audits, and legal opinions are downloadable from Compliance page.</Question>
-  <Question q="Where can I find your API or SDKs?">See Developer Portal for live docs, code samples, and OpenAPI explorer.</Question>
-  <Question q="How can I report bugs or security issues?">Submit via the Security Bounty section or open a DAO proposal.</Question>
-  <Question q="Can I help translate or improve docs?">Yes, every page supports DAO/community annotation, translation, and upvoting.</Question>
+  <Question q="What is GuardianChain?">
+    A protocol for sovereign digital memory and truth—see the Protocol
+    Whitepaper.
+  </Question>
+  <Question q="How do I mint a capsule?">
+    Connect your wallet and follow the onboarding steps. See
+    Validator/Onboarding Guide.
+  </Question>
+  <Question q="What is GTT?">
+    The native, fixed-supply token for protocol utility, rewards, and
+    governance. See Tokenomics.
+  </Question>
+  <Question q="How do I participate in governance?">
+    Hold GTT, connect, and vote/propose via the DAO portal.
+  </Question>
+  <Question q="How do I run a validator?">
+    See Validator Guide or try the onboarding wizard.
+  </Question>
+  <Question q="How do I get technical support?">
+    Ask the AI, join community chat, or escalate to the DAO support team.
+  </Question>
+  <Question q="How can I verify compliance or audit status?">
+    All docs, audits, and legal opinions are downloadable from Compliance page.
+  </Question>
+  <Question q="Where can I find your API or SDKs?">
+    See Developer Portal for live docs, code samples, and OpenAPI explorer.
+  </Question>
+  <Question q="How can I report bugs or security issues?">
+    Submit via the Security Bounty section or open a DAO proposal.
+  </Question>
+  <Question q="Can I help translate or improve docs?">
+    Yes, every page supports DAO/community annotation, translation, and
+    upvoting.
+  </Question>
 </FAQ>
 
 ---
 
 ## <span id="support">Get Human Support <HelpIcon /></span>
-<SupportRequest />
-- Open ticket, join live chat, or get phone/video support
-- Human escalation for legal/compliance issues
+
+<SupportRequest />- Open ticket, join live chat, or get phone/video support -
+Human escalation for legal/compliance issues
 
 ---
 
 ## <span id="feedback">Feedback & Community Upvotes <UpvoteIcon /></span>
+
 - Vote on answers, suggest edits, or annotate sections for the DAO to review
 
 ---

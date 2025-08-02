@@ -10,14 +10,14 @@ export default function LoginSuccessPage() {
   useEffect(() => {
     // Auto-redirect to dashboard after 3 seconds
     const timer = setTimeout(() => {
-      setLocation('/dashboard');
+      setLocation("/dashboard");
     }, 3000);
 
     return () => clearTimeout(timer);
   }, [setLocation]);
 
   const handleContinue = () => {
-    setLocation('/dashboard');
+    setLocation("/dashboard");
   };
 
   return (
@@ -29,7 +29,7 @@ export default function LoginSuccessPage() {
               <CheckCircle className="w-12 h-12 text-green-400" />
             </div>
           </div>
-          
+
           <CardTitle className="text-2xl text-white mb-2">
             Welcome to GUARDIANCHAIN!
           </CardTitle>
@@ -37,7 +37,7 @@ export default function LoginSuccessPage() {
             Authentication successful. Setting up your account...
           </p>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {/* Success Message */}
           <div className="text-center space-y-2">
@@ -52,14 +52,18 @@ export default function LoginSuccessPage() {
             <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
               <Rocket className="w-5 h-5 text-blue-400" />
               <div>
-                <div className="text-sm font-medium text-white">Start Your Journey</div>
-                <div className="text-xs text-slate-400">Create your first truth capsule</div>
+                <div className="text-sm font-medium text-white">
+                  Start Your Journey
+                </div>
+                <div className="text-xs text-slate-400">
+                  Create your first truth capsule
+                </div>
               </div>
             </div>
           </div>
 
           {/* Continue Button */}
-          <Button 
+          <Button
             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
             onClick={handleContinue}
           >

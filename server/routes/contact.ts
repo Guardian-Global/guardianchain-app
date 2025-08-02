@@ -44,7 +44,7 @@ export function registerContactRoutes(app: Express) {
           priority,
           recipient,
           timestamp: new Date(),
-        }
+        },
       );
 
       // Send confirmation to user
@@ -158,10 +158,10 @@ function getExpectedResponseTime(priority: string): string {
 async function sendConfirmationEmail(
   email: string,
   name: string,
-  subject: string
+  subject: string,
 ) {
   // In production, send confirmation email using Resend
   console.log(
-    `Confirmation email would be sent to ${email} for subject: ${subject}`
+    `Confirmation email would be sent to ${email} for subject: ${subject}`,
   );
 }

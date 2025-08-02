@@ -3,18 +3,24 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest, getQueryFn } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Crown, 
-  Shield, 
-  Star, 
-  Zap, 
-  CheckCircle, 
+import {
+  Crown,
+  Shield,
+  Star,
+  Zap,
+  CheckCircle,
   Clock,
   CreditCard,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 
 interface SubscriptionPlan {
@@ -38,10 +44,10 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       "Basic truth verification",
       "5 capsules per month",
       "Community access",
-      "Basic analytics"
+      "Basic analytics",
     ],
     icon: Shield,
-    color: "text-blue-400"
+    color: "text-blue-400",
   },
   {
     id: "seeker",
@@ -53,11 +59,11 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       "25 capsules per month",
       "Priority support",
       "Enhanced analytics",
-      "Jury participation"
+      "Jury participation",
     ],
     icon: Star,
     color: "text-purple-400",
-    popular: true
+    popular: true,
   },
   {
     id: "creator",
@@ -70,10 +76,10 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       "API access",
       "Custom branding",
       "Advanced reporting",
-      "Truth bounty creation"
+      "Truth bounty creation",
     ],
     icon: Zap,
-    color: "text-green-400"
+    color: "text-green-400",
   },
   {
     id: "sovereign",
@@ -86,11 +92,11 @@ const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       "Dedicated support",
       "Custom integrations",
       "Governance voting rights",
-      "Revenue sharing"
+      "Revenue sharing",
     ],
     icon: Crown,
-    color: "text-yellow-400"
-  }
+    color: "text-yellow-400",
+  },
 ];
 
 export function SubscriptionManager() {
@@ -101,12 +107,14 @@ export function SubscriptionManager() {
   const { data: subscription, isLoading } = useQuery({
     queryKey: ["/api/subscription/status"],
     queryFn: getQueryFn({ on401: "returnNull" }),
-    enabled: !!user
+    enabled: !!user,
   });
 
   const upgradeMutation = useMutation({
     mutationFn: async (planId: string) => {
-      const response = await apiRequest("POST", "/api/subscription/upgrade", { planId });
+      const response = await apiRequest("POST", "/api/subscription/upgrade", {
+        planId,
+      });
       return response.json();
     },
     onSuccess: (data) => {
@@ -114,12 +122,17 @@ export function SubscriptionManager() {
         window.location.href = data.checkoutUrl;
       } else {
         console.log("Subscription updated successfully");
-        queryClient.invalidateQueries({ queryKey: ["/api/subscription/status"] });
+        queryClient.invalidateQueries({
+          queryKey: ["/api/subscription/status"],
+        });
       }
     },
     onError: (error: any) => {
-      console.error("Upgrade failed:", error.message || "Failed to upgrade subscription");
-    }
+      console.error(
+        "Upgrade failed:",
+        error.message || "Failed to upgrade subscription",
+      );
+    },
   });
 
   const cancelMutation = useMutation({
@@ -132,8 +145,11 @@ export function SubscriptionManager() {
       queryClient.invalidateQueries({ queryKey: ["/api/subscription/status"] });
     },
     onError: (error: any) => {
-      console.error("Cancellation failed:", error.message || "Failed to cancel subscription");
-    }
+      console.error(
+        "Cancellation failed:",
+        error.message || "Failed to cancel subscription",
+      );
+    },
   });
 
   if (isLoading) {
@@ -144,8 +160,10 @@ export function SubscriptionManager() {
     );
   }
 
-  const currentTier = user?.tier || 'EXPLORER';
-  const currentPlan = SUBSCRIPTION_PLANS.find(plan => plan.tier === currentTier);
+  const currentTier = user?.tier || "EXPLORER";
+  const currentPlan = SUBSCRIPTION_PLANS.find(
+    (plan) => plan.tier === currentTier,
+  );
 
   return (
     <div className="space-y-8">
@@ -161,19 +179,32 @@ export function SubscriptionManager() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                {currentPlan && <currentPlan.icon className={`h-6 w-6 ${currentPlan.color}`} />}
+                {currentPlan && (
+                  <currentPlan.icon
+                    className={`h-6 w-6 ${currentPlan.color}`}
+                  />
+                )}
                 <div>
-                  <p className="font-semibold">{currentPlan?.name || currentTier}</p>
+                  <p className="font-semibold">
+                    {currentPlan?.name || currentTier}
+                  </p>
                   <p className="text-sm text-gray-400">
-                    {subscription.status === 'active' ? 'Active' : subscription.status}
+                    {subscription.status === "active"
+                      ? "Active"
+                      : subscription.status}
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-semibold">${currentPlan?.price || 0}/month</p>
+                <p className="font-semibold">
+                  ${currentPlan?.price || 0}/month
+                </p>
                 {subscription.nextBillingDate && (
                   <p className="text-sm text-gray-400">
-                    Next billing: {new Date(subscription.nextBillingDate).toLocaleDateString()}
+                    Next billing:{" "}
+                    {new Date(
+                      subscription.nextBillingDate,
+                    ).toLocaleDateString()}
                   </p>
                 )}
               </div>
@@ -183,23 +214,32 @@ export function SubscriptionManager() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Capsules Used</span>
-                  <span>{subscription.usage.capsules}/{subscription.usage.capsulesLimit}</span>
+                  <span>
+                    {subscription.usage.capsules}/
+                    {subscription.usage.capsulesLimit}
+                  </span>
                 </div>
-                <Progress 
-                  value={(subscription.usage.capsules / subscription.usage.capsulesLimit) * 100} 
-                  className="h-2" 
+                <Progress
+                  value={
+                    (subscription.usage.capsules /
+                      subscription.usage.capsulesLimit) *
+                    100
+                  }
+                  className="h-2"
                 />
               </div>
             )}
 
-            {subscription.status === 'active' && currentTier !== 'EXPLORER' && (
-              <Button 
-                variant="outline" 
+            {subscription.status === "active" && currentTier !== "EXPLORER" && (
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => cancelMutation.mutate()}
                 disabled={cancelMutation.isPending}
               >
-                {cancelMutation.isPending ? 'Cancelling...' : 'Cancel Subscription'}
+                {cancelMutation.isPending
+                  ? "Cancelling..."
+                  : "Cancel Subscription"}
               </Button>
             )}
           </CardContent>
@@ -211,15 +251,16 @@ export function SubscriptionManager() {
         {SUBSCRIPTION_PLANS.map((plan) => {
           const Icon = plan.icon;
           const isCurrentPlan = plan.tier === currentTier;
-          const isUpgrade = SUBSCRIPTION_PLANS.findIndex(p => p.tier === currentTier) < 
-                           SUBSCRIPTION_PLANS.findIndex(p => p.tier === plan.tier);
+          const isUpgrade =
+            SUBSCRIPTION_PLANS.findIndex((p) => p.tier === currentTier) <
+            SUBSCRIPTION_PLANS.findIndex((p) => p.tier === plan.tier);
 
           return (
-            <Card 
+            <Card
               key={plan.id}
               className={`relative bg-slate-800/50 border-slate-700 ${
-                plan.popular ? 'ring-2 ring-purple-500' : ''
-              } ${isCurrentPlan ? 'ring-2 ring-green-500' : ''}`}
+                plan.popular ? "ring-2 ring-purple-500" : ""
+              } ${isCurrentPlan ? "ring-2 ring-green-500" : ""}`}
             >
               {plan.popular && (
                 <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-purple-600">
@@ -238,7 +279,9 @@ export function SubscriptionManager() {
                 <div className="space-y-1">
                   <p className="text-3xl font-bold">
                     ${plan.price}
-                    <span className="text-sm font-normal text-gray-400">/month</span>
+                    <span className="text-sm font-normal text-gray-400">
+                      /month
+                    </span>
                   </p>
                   <CardDescription>{plan.tier} Tier</CardDescription>
                 </div>
@@ -254,8 +297,8 @@ export function SubscriptionManager() {
                   ))}
                 </ul>
 
-                <Button 
-                  className="w-full" 
+                <Button
+                  className="w-full"
                   variant={isCurrentPlan ? "secondary" : "default"}
                   disabled={isCurrentPlan || upgradeMutation.isPending}
                   onClick={() => {
@@ -264,15 +307,13 @@ export function SubscriptionManager() {
                     }
                   }}
                 >
-                  {isCurrentPlan ? (
-                    "Current Plan"
-                  ) : upgradeMutation.isPending && selectedPlan === plan.id ? (
-                    "Upgrading..."
-                  ) : isUpgrade ? (
-                    "Upgrade"
-                  ) : (
-                    "Downgrade"
-                  )}
+                  {isCurrentPlan
+                    ? "Current Plan"
+                    : upgradeMutation.isPending && selectedPlan === plan.id
+                      ? "Upgrading..."
+                      : isUpgrade
+                        ? "Upgrade"
+                        : "Downgrade"}
                 </Button>
               </CardContent>
             </Card>
@@ -297,8 +338,10 @@ export function SubscriptionManager() {
               <thead>
                 <tr className="border-b border-slate-700">
                   <th className="text-left py-2">Feature</th>
-                  {SUBSCRIPTION_PLANS.map(plan => (
-                    <th key={plan.id} className="text-center py-2">{plan.name}</th>
+                  {SUBSCRIPTION_PLANS.map((plan) => (
+                    <th key={plan.id} className="text-center py-2">
+                      {plan.name}
+                    </th>
                   ))}
                 </tr>
               </thead>

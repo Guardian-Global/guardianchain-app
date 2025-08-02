@@ -21,7 +21,7 @@ export class ComplianceService {
   // KYC/AML compliance
   async performKYCCheck(
     userId: string,
-    userData: any
+    userData: any,
   ): Promise<ComplianceCheck> {
     const kycResult = {
       userId,
@@ -45,7 +45,7 @@ export class ComplianceService {
 
   async performAMLCheck(
     userId: string,
-    transactionData: any
+    transactionData: any,
   ): Promise<ComplianceCheck> {
     const amlResult = {
       userId,
@@ -70,7 +70,7 @@ export class ComplianceService {
   // GDPR/CCPA compliance
   async handleDataRequest(
     userId: string,
-    requestType: "access" | "deletion" | "portability"
+    requestType: "access" | "deletion" | "portability",
   ) {
     const request = {
       userId,

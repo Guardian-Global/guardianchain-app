@@ -121,11 +121,11 @@ const AdvancedAI: React.FC = () => {
         riskLevel: Math.random() > 0.8 ? "medium" : "low",
         confidenceScore: Math.min(
           100,
-          prev.confidenceScore + Math.random() * 3
+          prev.confidenceScore + Math.random() * 3,
         ),
         verificationTime: Math.max(
           0.1,
-          prev.verificationTime - Math.random() * 0.1
+          prev.verificationTime - Math.random() * 0.1,
         ),
       }));
     }, 2000);

@@ -53,7 +53,7 @@ export default function Explore() {
     sortBy: "recent",
     tier: "all",
     category: "all",
-    verificationStatus: "all"
+    verificationStatus: "all",
   });
 
   const { data: allCapsules, isLoading: allLoading } = useQuery({
@@ -85,24 +85,23 @@ export default function Explore() {
   const handleClearFilters = () => {
     setFilters({
       sortBy: "recent",
-      tier: "all", 
+      tier: "all",
       category: "all",
-      verificationStatus: "all"
+      verificationStatus: "all",
     });
     setSearchQuery("");
     setSelectedCategory("All");
   };
 
-  const activeFiltersCount = Object.values(filters).filter(value => value !== "all" && value !== "recent").length;
+  const activeFiltersCount = Object.values(filters).filter(
+    (value) => value !== "all" && value !== "recent",
+  ).length;
 
   const userLang = detectUserLanguage();
   const containerProps = getRTLContainerProps(userLang);
 
   return (
-    <div 
-      className="min-h-screen pt-20 pb-12"
-      dir={containerProps.dir}
-    >
+    <div className="min-h-screen pt-20 pb-12" dir={containerProps.dir}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 gradient-text">
@@ -115,8 +114,8 @@ export default function Explore() {
 
         {/* Search and Filter Components */}
         <CapsuleSearch onSearch={handleSearch} />
-        <FilterPanel 
-          filters={filters} 
+        <FilterPanel
+          filters={filters}
           setFilters={setFilters}
           activeFiltersCount={activeFiltersCount}
           onClearFilters={handleClearFilters}

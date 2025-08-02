@@ -26,7 +26,7 @@ export interface AssetProcessingResult {
 
 export async function processAssetsForUser(
   userId: string,
-  selectedAssetIds: string[]
+  selectedAssetIds: string[],
 ): Promise<AssetProcessingResult> {
   if (!supabaseServer) {
     throw new Error("Supabase not configured on server");
@@ -91,7 +91,7 @@ export async function processAssetsForUser(
           result.errors.push(
             `Error processing bucket ${bucket.name}: ${
               (error as Error).message
-            }`
+            }`,
           );
         }
       }
@@ -129,7 +129,7 @@ export async function processAssetsForUser(
 
         if (insertError) {
           result.errors.push(
-            `Failed to create capsule for ${asset.name}: ${insertError.message}`
+            `Failed to create capsule for ${asset.name}: ${insertError.message}`,
           );
           result.failed++;
         } else {
@@ -138,7 +138,7 @@ export async function processAssetsForUser(
         }
       } catch (error) {
         result.errors.push(
-          `Error processing asset ${asset.name}: ${(error as Error).message}`
+          `Error processing asset ${asset.name}: ${(error as Error).message}`,
         );
         result.failed++;
       }

@@ -52,7 +52,7 @@ interface Proposal {
 export default function Govern() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
-    null
+    null,
   );
   const [newProposal, setNewProposal] = useState({
     title: "",
@@ -72,7 +72,7 @@ export default function Govern() {
     functionName: "proposalCount",
     query: {
       enabled: !!daoAddress,
-    }
+    },
   });
 
   // Get user's GTT balance
@@ -83,7 +83,7 @@ export default function Govern() {
     args: [address],
     query: {
       enabled: !!gttAddress && !!address,
-    }
+    },
   });
 
   // Create proposal transaction
@@ -184,7 +184,7 @@ export default function Govern() {
   ];
 
   const allProposals = [...mockProposals].sort(
-    (a, b) => b.createdAt - a.createdAt
+    (a, b) => b.createdAt - a.createdAt,
   );
 
   const getProposalStatus = (proposal: Proposal) => {
@@ -249,7 +249,7 @@ export default function Govern() {
                     <p className="text-2xl font-bold text-white">
                       {
                         allProposals.filter(
-                          (p) => !p.executed && Date.now() < p.deadline * 1000
+                          (p) => !p.executed && Date.now() < p.deadline * 1000,
                         ).length
                       }
                     </p>
@@ -474,7 +474,7 @@ export default function Govern() {
                           <p className="text-sm text-slate-400">
                             Proposal #{proposal.id} • Created{" "}
                             {new Date(
-                              proposal.createdAt * 1000
+                              proposal.createdAt * 1000,
                             ).toLocaleDateString()}
                           </p>
                         </div>

@@ -1,0 +1,126 @@
+// pages/auction/[id].tsx
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { useFundAuction } from "@/hooks/useFundAuction";
+import { unlockDisclosure } from "@/utils/lit/unlockDisclosure";
+
+export default function AuctionViewPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const { address } = useAccount();
+  const [auction, setAuction] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [funding, setFunding] = useState(0);
+  const [unlocked, setUnlocked] = useState(false);
+  const [decrypted, setDecrypted] = useState("");
+  const [decryptedFileUrl, setDecryptedFileUrl] = useState(null);
+  const [contributionAmount, setContributionAmount] = useState(100);
+
+  const { fundAuction, isLoading: fundingTx } = useFundAuction(id, contributionAmount);
+
+  useEffect(() => {
+    if (!id) return;
+    fetch(`/api/auction/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAuction(data);
+        setFunding(data.funded || 0);
+        setUnlocked(data.unlocked);
+        setLoading(false);
+        if (data.unlocked && data.decryptedContent) setDecrypted(data.decryptedContent);
+      });
+  }, [id]);
+
+  const percent = Math.min(100, (funding / auction?.reservePrice) * 100);
+  const canUnlock = funding >= auction?.reservePrice;
+
+  const handleUnlock = async () => {
+    if (!auction?.encryptedSymmetricKey || !auction?.encryptedContent || !auction?.accessControlConditions) return;
+    const plainText = await unlockDisclosure({
+      encryptedSymmetricKey: auction.encryptedSymmetricKey,
+      encryptedContent: auction.encryptedContent,
+      accessControlConditions: auction.accessControlConditions
+    });
+
+    try {
+      const parsed = JSON.parse(plainText);
+      if (parsed?.mimeType && parsed?.base64File) {
+        const byteArray = Uint8Array.from(atob(parsed.base64File), c => c.charCodeAt(0));
+        const blob = new Blob([byteArray], { type: parsed.mimeType });
+        const url = URL.createObjectURL(blob);
+        setDecryptedFileUrl(url);
+      } else {
+        setDecrypted(plainText);
+      }
+    } catch {
+      setDecrypted(plainText);
+    }
+
+    await fetch(`/api/auction/${id}/unlock-log`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: address, timestamp: Date.now() })
+    });
+  };
+
+  return (
+    <main className="min-h-screen bg-slate-900 text-white px-6 py-16">
+      <Card className="bg-slate-800 p-8 max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold mb-2">{auction?.title}</h1>
+        <p className="text-slate-400 mb-6">{auction?.summary}</p>
+
+        <div className="mb-4">
+          <p className="text-sm text-slate-400 mb-1">Funding Progress ({funding} / {auction?.reservePrice} GTT)</p>
+          <Progress value={percent} />
+        </div>
+
+        {!canUnlock && (
+          <div className="mt-4">
+            <input
+              type="number"
+              className="bg-slate-700 text-white px-3 py-2 rounded mr-2"
+              value={contributionAmount}
+              onChange={(e) => setContributionAmount(parseFloat(e.target.value))}
+              min={1}
+            />
+            <Button onClick={() => fundAuction?.()} disabled={fundingTx || !address}>
+              {fundingTx ? "Funding..." : "Contribute GTT"}
+            </Button>
+          </div>
+        )}
+
+        {canUnlock && (
+          <div className="mt-6">
+            <p className="text-green-400 text-lg font-bold mb-4">✅ Reserve Met — Truth Ready for Unlock</p>
+            <Button onClick={handleUnlock} className="mb-4">Unlock & View Disclosure</Button>
+            {decryptedFileUrl ? (
+              <div className="mb-4">
+                <a
+                  href={decryptedFileUrl}
+                  download={`truth-${id}`}
+                  className="text-blue-400 underline"
+                >
+                  📥 Download Unlocked File
+                </a>
+              </div>
+            ) : decrypted && (
+              <div className="bg-slate-900 border border-slate-700 p-4 rounded text-sm whitespace-pre-wrap">
+                {decrypted}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="mt-8 text-sm text-slate-500">
+          <p><strong>Reserve:</strong> {auction?.reservePrice} GTT</p>
+          <p><strong>Beneficiaries:</strong> {(auction?.beneficiaries || []).join(", ")}</p>
+          <p><strong>ID:</strong> {auction?.id}</p>
+        </div>
+      </Card>
+    </main>
+  );
+}

@@ -45,7 +45,7 @@ ${JSON.stringify(context, null, 2)}
 export async function notifyAdminUserAction(
   action: string,
   userEmail: string,
-  details?: any
+  details?: any,
 ) {
   await sendGuardianEmail({
     to: ADMIN_EMAIL,
@@ -73,7 +73,7 @@ ${JSON.stringify(details, null, 2)}
 ---
 
 **[User Profile](https://guardianchain.app/admin/users?email=${encodeURIComponent(
-      userEmail
+      userEmail,
     )})** | **[Activity Log](https://guardianchain.app/admin/activity)**
 `,
   });

@@ -1,7 +1,7 @@
-import React from 'react';
-import { usePWA } from '@/hooks/usePWA';
-import { Badge } from '@/components/ui/badge';
-import { WifiOff, Wifi } from 'lucide-react';
+import React from "react";
+import { usePWA } from "@/hooks/usePWA";
+import { Badge } from "@/components/ui/badge";
+import { WifiOff, Wifi } from "lucide-react";
 
 export default function OfflineIndicator() {
   const { isOffline } = usePWA();

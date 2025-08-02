@@ -42,7 +42,7 @@ export default function VideoSection({
                   setIsPlaying(false);
                 }
               },
-              { once: true }
+              { once: true },
             );
           }
         }

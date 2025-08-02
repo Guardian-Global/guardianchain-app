@@ -1,14 +1,28 @@
 import { useState, useEffect } from "react";
 import { useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ReplayCapsule from "@/components/ReplayCapsule";
-import { ExternalLink, FileText, Calendar, User, Target, Coins, Eye } from "lucide-react";
+import {
+  ExternalLink,
+  FileText,
+  Calendar,
+  User,
+  Target,
+  Coins,
+  Eye,
+} from "lucide-react";
 
 interface CapsuleData {
   id: string;
@@ -31,7 +45,11 @@ export default function CapsuleReplayView() {
   const { toast } = useToast();
 
   // Fetch capsule data
-  const { data: capsule, isLoading, error } = useQuery({
+  const {
+    data: capsule,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["/api/capsules", capsuleId],
     queryFn: async () => {
       if (!capsuleId) throw new Error("No capsule ID provided");
@@ -49,13 +67,20 @@ export default function CapsuleReplayView() {
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'memory': return '🧠';
-      case 'legacy': return '👑';
-      case 'testimony': return '⚖️';
-      case 'historical': return '📜';
-      case 'tribute': return '🌟';
-      case 'wisdom': return '🦉';
-      default: return '📦';
+      case "memory":
+        return "🧠";
+      case "legacy":
+        return "👑";
+      case "testimony":
+        return "⚖️";
+      case "historical":
+        return "📜";
+      case "tribute":
+        return "🌟";
+      case "wisdom":
+        return "🦉";
+      default:
+        return "📦";
     }
   };
 
@@ -79,7 +104,9 @@ export default function CapsuleReplayView() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-red-50 border border-red-200 rounded-lg p-8">
             <FileText className="h-12 w-12 text-red-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-red-800 mb-2">Capsule Not Found</h2>
+            <h2 className="text-xl font-semibold text-red-800 mb-2">
+              Capsule Not Found
+            </h2>
             <p className="text-red-600 mb-4">
               The requested capsule could not be found or may have been removed.
             </p>
@@ -99,7 +126,9 @@ export default function CapsuleReplayView() {
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{getCategoryIcon(capsule.category)}</span>
+              <span className="text-2xl">
+                {getCategoryIcon(capsule.category)}
+              </span>
               <h1 className="text-3xl font-bold tracking-tight">
                 {capsule.title}
               </h1>
@@ -163,7 +192,8 @@ export default function CapsuleReplayView() {
                   Experience Capsule
                 </CardTitle>
                 <CardDescription>
-                  Replay this capsule to earn GTT yield based on emotional resonance
+                  Replay this capsule to earn GTT yield based on emotional
+                  resonance
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -187,12 +217,14 @@ export default function CapsuleReplayView() {
                       {capsule.griefTier}/5
                     </Badge>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Category</span>
-                    <span className="text-sm font-medium capitalize">{capsule.category}</span>
+                    <span className="text-sm font-medium capitalize">
+                      {capsule.category}
+                    </span>
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Status</span>
                     <Badge variant="outline" className="capitalize">
@@ -205,7 +237,9 @@ export default function CapsuleReplayView() {
                       <span className="text-sm text-gray-600">GTT Earned</span>
                       <div className="flex items-center gap-1">
                         <Coins className="h-3 w-3 text-yellow-500" />
-                        <span className="text-sm font-medium">{capsule.yieldEarned}</span>
+                        <span className="text-sm font-medium">
+                          {capsule.yieldEarned}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -233,13 +267,15 @@ export default function CapsuleReplayView() {
                 <CardContent className="space-y-3">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600">
-                      Token ID: <span className="font-mono">#{capsule.nftTokenId}</span>
+                      Token ID:{" "}
+                      <span className="font-mono">#{capsule.nftTokenId}</span>
                     </p>
                     {capsule.transactionHash && (
                       <p className="text-sm text-gray-600">
-                        Tx Hash: 
+                        Tx Hash:
                         <span className="font-mono text-xs block mt-1">
-                          {capsule.transactionHash.slice(0, 10)}...{capsule.transactionHash.slice(-8)}
+                          {capsule.transactionHash.slice(0, 10)}...
+                          {capsule.transactionHash.slice(-8)}
                         </span>
                       </p>
                     )}

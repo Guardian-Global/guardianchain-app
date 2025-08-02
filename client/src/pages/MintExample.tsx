@@ -22,7 +22,7 @@ export default function MintExample() {
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Design System", href: "/design-tokens" },
-          { label: "Mint Example" }
+          { label: "Mint Example" },
         ]}
       />
 
@@ -33,8 +33,8 @@ export default function MintExample() {
             GuardianChain Mint Experience
           </h1>
           <p className="text-lg font-sans text-brand-light/80 max-w-2xl mx-auto">
-            Experience the premium visual identity system with standardized design tokens
-            for consistent styling throughout the platform.
+            Experience the premium visual identity system with standardized
+            design tokens for consistent styling throughout the platform.
           </p>
         </div>
 
@@ -43,7 +43,7 @@ export default function MintExample() {
           {[
             { id: "capsule", label: "Truth Capsule", icon: Shield },
             { id: "vault", label: "Memory Vault", icon: Vault },
-            { id: "yield", label: "GTT Yield", icon: Coins }
+            { id: "yield", label: "GTT Yield", icon: Coins },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -52,9 +52,10 @@ export default function MintExample() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`
                   px-6 py-3 rounded-vault font-brand transition-all duration-300
-                  ${activeTab === tab.id 
-                    ? 'bg-brand-primary text-white shadow-brand' 
-                    : 'bg-brand-surface text-brand-light hover:bg-brand-primary/20'
+                  ${
+                    activeTab === tab.id
+                      ? "bg-brand-primary text-white shadow-brand"
+                      : "bg-brand-surface text-brand-light hover:bg-brand-primary/20"
                   }
                 `}
               >
@@ -72,11 +73,16 @@ export default function MintExample() {
             <CardHeader className="space-y-4">
               <CardTitle className="text-brand-light font-brand flex items-center">
                 <Zap className="w-5 h-5 mr-2 text-brand-accent" />
-                Create {activeTab === "capsule" ? "Truth Capsule" : activeTab === "vault" ? "Memory Vault" : "GTT Yield Position"}
+                Create{" "}
+                {activeTab === "capsule"
+                  ? "Truth Capsule"
+                  : activeTab === "vault"
+                    ? "Memory Vault"
+                    : "GTT Yield Position"}
               </CardTitle>
               <Separator className="bg-brand-surface" />
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               {/* Form Fields */}
               <div className="space-y-4">
@@ -84,17 +90,17 @@ export default function MintExample() {
                   <label className="text-sm font-medium text-brand-light/80 mb-2 block">
                     Title
                   </label>
-                  <Input 
+                  <Input
                     placeholder="Enter your truth capsule title..."
                     className="bg-brand-surface border-brand-primary/20 text-brand-light placeholder:text-brand-light/50 rounded-vault"
                   />
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium text-brand-light/80 mb-2 block">
                     Content
                   </label>
-                  <Textarea 
+                  <Textarea
                     placeholder="Share your truth, memory, or testimony..."
                     className="bg-brand-surface border-brand-primary/20 text-brand-light placeholder:text-brand-light/50 rounded-vault min-h-[120px]"
                   />
@@ -106,21 +112,23 @@ export default function MintExample() {
                     Tags
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {["Truth", "Memory", "Testimony", "Legacy", "Proof"].map((tag) => (
-                      <Badge 
-                        key={tag}
-                        className="bg-brand-accent/20 text-brand-accent border-brand-accent/30 hover:bg-brand-accent hover:text-white cursor-pointer transition-all duration-200 rounded-vault"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
+                    {["Truth", "Memory", "Testimony", "Legacy", "Proof"].map(
+                      (tag) => (
+                        <Badge
+                          key={tag}
+                          className="bg-brand-accent/20 text-brand-accent border-brand-accent/30 hover:bg-brand-accent hover:text-white cursor-pointer transition-all duration-200 rounded-vault"
+                        >
+                          {tag}
+                        </Badge>
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-col space-y-3">
-                <Button 
+                <Button
                   className="w-full guardian-pulse capsule-premium-hover bg-brand-primary hover:bg-brand-primary/90 text-white font-brand py-3 rounded-capsule shadow-brand-lg"
                   onMouseEnter={() => setIsHovering(true)}
                   onMouseLeave={() => setIsHovering(false)}
@@ -128,8 +136,8 @@ export default function MintExample() {
                   <Shield className="w-4 h-4 mr-2" />
                   Mint Truth Capsule
                 </Button>
-                
-                <Button 
+
+                <Button
                   variant="outline"
                   className="w-full border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white rounded-vault transition-all duration-300"
                 >
@@ -155,7 +163,8 @@ export default function MintExample() {
                       Your Truth Capsule
                     </h3>
                     <p className="text-brand-light/80 text-sm mb-3">
-                      This is a preview of your capsule with premium styling using design tokens.
+                      This is a preview of your capsule with premium styling
+                      using design tokens.
                     </p>
                     <div className="flex items-center justify-between">
                       <Badge className="bg-brand-accent text-white rounded-vault">
@@ -178,20 +187,16 @@ export default function MintExample() {
                   <div className="text-2xl font-bold text-brand-accent mb-1">
                     250
                   </div>
-                  <div className="text-sm text-brand-light/60">
-                    GTT Earned
-                  </div>
+                  <div className="text-sm text-brand-light/60">GTT Earned</div>
                 </CardContent>
               </Card>
-              
+
               <Card className="bg-brand-secondary border-brand-surface shadow-card">
                 <CardContent className="p-4 text-center">
                   <div className="text-2xl font-bold text-brand-warning mb-1">
                     4.8
                   </div>
-                  <div className="text-sm text-brand-light/60">
-                    Truth Score
-                  </div>
+                  <div className="text-sm text-brand-light/60">Truth Score</div>
                 </CardContent>
               </Card>
             </div>

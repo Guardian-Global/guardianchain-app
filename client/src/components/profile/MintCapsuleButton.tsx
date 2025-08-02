@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Loader2, 
-  Zap, 
-  CheckCircle, 
+import {
+  Loader2,
+  Zap,
+  CheckCircle,
   AlertCircle,
-  ExternalLink 
+  ExternalLink,
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -21,7 +21,7 @@ interface MintCapsuleButtonProps {
 }
 
 interface MintState {
-  step: 'ready' | 'uploading' | 'minting' | 'complete' | 'error';
+  step: "ready" | "uploading" | "minting" | "complete" | "error";
   ipfsHash?: string;
   tokenId?: number;
   transactionHash?: string;
@@ -33,41 +33,48 @@ export default function MintCapsuleButton({
   fileUrl,
   metadata,
   onMintComplete,
-  className = ""
+  className = "",
 }: MintCapsuleButtonProps) {
   const { toast } = useToast();
-  const [mintState, setMintState] = useState<MintState>({ step: 'ready' });
+  const [mintState, setMintState] = useState<MintState>({ step: "ready" });
 
   const uploadMetadataMutation = useMutation({
     mutationFn: async () => {
       const nftMetadata = {
         name: metadata?.title || `Truth Capsule #${capsuleId}`,
-        description: metadata?.summary || "A verified truth capsule preserved on GuardianChain",
-        image: fileUrl || `https://api.guardianchain.app/capsules/${capsuleId}/image`,
+        description:
+          metadata?.summary ||
+          "A verified truth capsule preserved on GuardianChain",
+        image:
+          fileUrl ||
+          `https://api.guardianchain.app/capsules/${capsuleId}/image`,
         attributes: [
           { trait_type: "Truth Score", value: metadata?.truthScore || 85 },
-          { trait_type: "Emotional Resonance", value: metadata?.emotionalResonance || 75 },
+          {
+            trait_type: "Emotional Resonance",
+            value: metadata?.emotionalResonance || 75,
+          },
           { trait_type: "Verification Level", value: "Verified" },
-          { trait_type: "Creation Date", value: new Date().toISOString() }
-        ]
+          { trait_type: "Creation Date", value: new Date().toISOString() },
+        ],
       };
 
       return await apiRequest("POST", "/api/nft/upload-metadata", {
         capsuleId,
-        metadata: nftMetadata
+        metadata: nftMetadata,
       });
     },
     onSuccess: (response: any) => {
-      setMintState({ 
-        step: 'minting', 
-        ipfsHash: response.ipfsHash 
+      setMintState({
+        step: "minting",
+        ipfsHash: response.ipfsHash,
       });
       mintNFTMutation.mutate(response);
     },
     onError: (error: any) => {
-      setMintState({ 
-        step: 'error', 
-        error: error.message || "Failed to upload metadata" 
+      setMintState({
+        step: "error",
+        error: error.message || "Failed to upload metadata",
       });
       toast({
         title: "Upload Failed",
@@ -82,27 +89,27 @@ export default function MintCapsuleButton({
       return await apiRequest("POST", "/api/nft/mint", {
         capsuleId,
         metadataUri: metadataResponse.metadataUri,
-        recipient: "0x1234567890123456789012345678901234567890" // Mock address
+        recipient: "0x1234567890123456789012345678901234567890", // Mock address
       });
     },
     onSuccess: (response: any) => {
-      setMintState({ 
-        step: 'complete',
+      setMintState({
+        step: "complete",
         tokenId: response.tokenId,
-        transactionHash: response.transactionHash
+        transactionHash: response.transactionHash,
       });
-      
+
       onMintComplete?.();
-      
+
       toast({
         title: "NFT Minted Successfully!",
         description: `Token ID: ${response.tokenId}`,
       });
     },
     onError: (error: any) => {
-      setMintState({ 
-        step: 'error', 
-        error: error.message || "Failed to mint NFT" 
+      setMintState({
+        step: "error",
+        error: error.message || "Failed to mint NFT",
       });
       toast({
         title: "Minting Failed",
@@ -113,41 +120,41 @@ export default function MintCapsuleButton({
   });
 
   const handleMint = () => {
-    setMintState({ step: 'uploading' });
+    setMintState({ step: "uploading" });
     uploadMetadataMutation.mutate();
   };
 
   const getButtonContent = () => {
     switch (mintState.step) {
-      case 'ready':
+      case "ready":
         return (
           <>
             <Zap className="w-4 h-4 mr-2" />
             Mint as NFT
           </>
         );
-      case 'uploading':
+      case "uploading":
         return (
           <>
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             Uploading Metadata...
           </>
         );
-      case 'minting':
+      case "minting":
         return (
           <>
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             Minting NFT...
           </>
         );
-      case 'complete':
+      case "complete":
         return (
           <>
             <CheckCircle className="w-4 h-4 mr-2" />
             NFT Minted!
           </>
         );
-      case 'error':
+      case "error":
         return (
           <>
             <AlertCircle className="w-4 h-4 mr-2" />
@@ -159,9 +166,10 @@ export default function MintCapsuleButton({
     }
   };
 
-  const isLoading = mintState.step === 'uploading' || mintState.step === 'minting';
-  const isComplete = mintState.step === 'complete';
-  const hasError = mintState.step === 'error';
+  const isLoading =
+    mintState.step === "uploading" || mintState.step === "minting";
+  const isComplete = mintState.step === "complete";
+  const hasError = mintState.step === "error";
 
   return (
     <div className="space-y-3">
@@ -174,7 +182,7 @@ export default function MintCapsuleButton({
         {getButtonContent()}
       </Button>
 
-      {mintState.step === 'complete' && mintState.tokenId && (
+      {mintState.step === "complete" && mintState.tokenId && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Badge variant="secondary">Token ID: {mintState.tokenId}</Badge>
           {mintState.transactionHash && (
@@ -189,9 +197,7 @@ export default function MintCapsuleButton({
       )}
 
       {mintState.error && (
-        <div className="text-xs text-destructive">
-          {mintState.error}
-        </div>
+        <div className="text-xs text-destructive">{mintState.error}</div>
       )}
     </div>
   );

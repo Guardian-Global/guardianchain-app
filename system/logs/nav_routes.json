@@ -8,14 +8,14 @@
     },
     "core_features": {
       "memory_vault": "/memory-vault",
-      "eternal_staking": "/eternal-staking", 
+      "eternal_staking": "/eternal-staking",
       "family_legacy": "/family-legacy",
       "time_messages": "/time-messages",
       "infinite_recovery": "/infinite-recovery"
     },
     "veritas_tools": {
       "veritas_seal": "/veritas-seal",
-      "truth_bounty": "/truth-bounty", 
+      "truth_bounty": "/truth-bounty",
       "truth_redemption": "/truth-redemption",
       "conspiracy_capsule": "/conspiracy-capsule",
       "whistleblower_sanctuary": "/whistleblower-sanctuary"
@@ -55,13 +55,13 @@
     },
     "testing_development": {
       "minting_test": "/minting-test",
-      "asset_test": "/asset-test", 
+      "asset_test": "/asset-test",
       "simple_test": "/simple-test",
       "responsive_demo": "/responsive-demo"
     },
     "legal": {
       "privacy": "/legal/privacy",
-      "terms": "/legal/terms", 
+      "terms": "/legal/terms",
       "security": "/legal/security"
     },
     "status": "✅ ROUTES_MAPPED",

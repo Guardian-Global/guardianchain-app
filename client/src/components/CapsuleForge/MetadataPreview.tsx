@@ -40,7 +40,7 @@ export default function MetadataPreview({ capsuleData }: MetadataPreviewProps) {
   const getContentLength = () => {
     return capsuleData.blocks.reduce(
       (total, block) => total + block.content.length,
-      0
+      0,
     );
   };
 
@@ -64,10 +64,10 @@ export default function MetadataPreview({ capsuleData }: MetadataPreviewProps) {
   const getEstimatedCredibility = () => {
     const contentLength = getContentLength();
     const hasVerification = capsuleData.blocks.some(
-      (block) => block.type === "seal"
+      (block) => block.type === "seal",
     );
     const hasEvidence = capsuleData.blocks.some(
-      (block) => block.type === "image" || block.type === "link"
+      (block) => block.type === "image" || block.type === "link",
     );
 
     let score = 60; // Base score
@@ -121,7 +121,7 @@ export default function MetadataPreview({ capsuleData }: MetadataPreviewProps) {
               <div className="text-center">
                 <div
                   className={`text-2xl font-bold ${getScoreColor(
-                    getEstimatedGriefScore()
+                    getEstimatedGriefScore(),
                   )}`}
                 >
                   {getEstimatedGriefScore()}
@@ -131,7 +131,7 @@ export default function MetadataPreview({ capsuleData }: MetadataPreviewProps) {
               <div className="text-center">
                 <div
                   className={`text-2xl font-bold ${getScoreColor(
-                    getEstimatedCredibility()
+                    getEstimatedCredibility(),
                   )}`}
                 >
                   {getEstimatedCredibility()}
@@ -263,8 +263,8 @@ export default function MetadataPreview({ capsuleData }: MetadataPreviewProps) {
                 {getEstimatedGriefScore() > 90
                   ? "Legendary"
                   : getEstimatedGriefScore() > 75
-                  ? "Rare"
-                  : "Common"}
+                    ? "Rare"
+                    : "Common"}
               </div>
             </div>
             <div className="bg-slate-600/50 rounded p-2">

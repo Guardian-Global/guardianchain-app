@@ -86,7 +86,7 @@ const TeamsUpgrades: React.FC = () => {
     console.log("Applying all Teams upgrades...");
     // Simulate upgrade process
     for (let i = 0; i <= totalUpgrades; i++) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setUpgradeApplied(i);
     }
   };
@@ -103,8 +103,9 @@ const TeamsUpgrades: React.FC = () => {
             </h1>
           </div>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Unlock the full potential of your GUARDIANCHAIN platform with Teams-exclusive enhancements, 
-            premium features, and enterprise-grade capabilities
+            Unlock the full potential of your GUARDIANCHAIN platform with
+            Teams-exclusive enhancements, premium features, and enterprise-grade
+            capabilities
           </p>
           <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2">
             <CheckCircle className="w-4 h-4 mr-2" />
@@ -129,14 +130,23 @@ const TeamsUpgrades: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {upgradeCategories.map((category) => (
                 <div key={category.id} className="text-center">
-                  <div className={`p-3 rounded-full bg-gradient-to-r ${category.gradient} inline-block mb-3`}>
+                  <div
+                    className={`p-3 rounded-full bg-gradient-to-r ${category.gradient} inline-block mb-3`}
+                  >
                     <category.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-white font-semibold mb-2">{category.name}</h3>
-                  <p className="text-slate-300 text-sm mb-3">{category.description}</p>
+                  <h3 className="text-white font-semibold mb-2">
+                    {category.name}
+                  </h3>
+                  <p className="text-slate-300 text-sm mb-3">
+                    {category.description}
+                  </p>
                   <div className="space-y-1">
                     {category.features.map((feature, index) => (
-                      <div key={index} className="flex items-center text-xs text-slate-400">
+                      <div
+                        key={index}
+                        className="flex items-center text-xs text-slate-400"
+                      >
                         <Star className="w-3 h-3 mr-1 text-yellow-400" />
                         {feature}
                       </div>
@@ -145,7 +155,7 @@ const TeamsUpgrades: React.FC = () => {
                 </div>
               ))}
             </div>
-            
+
             <div className="mt-8 text-center">
               <Button
                 onClick={applyAllUpgrades}
@@ -170,9 +180,11 @@ const TeamsUpgrades: React.FC = () => {
                     Applying upgrades... {upgradesApplied}/{totalUpgrades}
                   </div>
                   <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${(upgradesApplied / totalUpgrades) * 100}%` }}
+                      style={{
+                        width: `${(upgradesApplied / totalUpgrades) * 100}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -184,29 +196,29 @@ const TeamsUpgrades: React.FC = () => {
         {/* Upgrade Tabs */}
         <Tabs defaultValue="security" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 bg-slate-800 p-1">
-            <TabsTrigger 
-              value="security" 
+            <TabsTrigger
+              value="security"
               className="text-white data-[state=active]:bg-green-600 data-[state=active]:text-white"
             >
               <Shield className="w-4 h-4 mr-2" />
               Security
             </TabsTrigger>
-            <TabsTrigger 
-              value="visual" 
+            <TabsTrigger
+              value="visual"
               className="text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <Sparkles className="w-4 h-4 mr-2" />
               Visual
             </TabsTrigger>
-            <TabsTrigger 
-              value="auth" 
+            <TabsTrigger
+              value="auth"
               className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white"
             >
               <Shield className="w-4 h-4 mr-2" />
               Auth
             </TabsTrigger>
-            <TabsTrigger 
-              value="tiers" 
+            <TabsTrigger
+              value="tiers"
               className="text-white data-[state=active]:bg-yellow-600 data-[state=active]:text-white"
             >
               <Crown className="w-4 h-4 mr-2" />
@@ -222,8 +234,7 @@ const TeamsUpgrades: React.FC = () => {
             <TeamsVisualUpgrades />
           </TabsContent>
 
-          <TabsContent value="auth" className="space-y-6">
-          </TabsContent>
+          <TabsContent value="auth" className="space-y-6"></TabsContent>
 
           <TabsContent value="tiers" className="space-y-6">
             <TeamsEnhancedTiers />
@@ -239,7 +250,8 @@ const TeamsUpgrades: React.FC = () => {
                 Teams Upgrades Successfully Applied!
               </h2>
               <p className="text-green-200 mb-4">
-                Your GUARDIANCHAIN platform is now running with maximum Teams capabilities
+                Your GUARDIANCHAIN platform is now running with maximum Teams
+                capabilities
               </p>
               <div className="flex items-center justify-center space-x-4">
                 <Badge className="bg-green-600 text-white">
@@ -248,9 +260,7 @@ const TeamsUpgrades: React.FC = () => {
                 <Badge className="bg-purple-600 text-white">
                   Visual Upgraded
                 </Badge>
-                <Badge className="bg-blue-600 text-white">
-                  Auth Advanced
-                </Badge>
+                <Badge className="bg-blue-600 text-white">Auth Advanced</Badge>
                 <Badge className="bg-yellow-600 text-white">
                   Tiers Optimized
                 </Badge>

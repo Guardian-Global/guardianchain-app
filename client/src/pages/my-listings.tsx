@@ -52,7 +52,7 @@ export default function MyListings() {
       listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       listing.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       listing.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
+        tag.toLowerCase().includes(searchTerm.toLowerCase()),
       );
 
     const matchesStatus =
@@ -342,7 +342,7 @@ export default function MyListings() {
                       <div className="text-xs text-slate-500">
                         $
                         {(listing.price * (gttData?.priceUSD || 2.47)).toFixed(
-                          2
+                          2,
                         )}
                       </div>
                     </div>

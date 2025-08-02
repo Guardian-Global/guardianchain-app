@@ -252,7 +252,7 @@ export default function CapsuleYieldTracker({
                   <span className="text-white ml-2">
                     {capsuleData?.[2]
                       ? new Date(
-                          Number(capsuleData[2]) * 1000
+                          Number(capsuleData[2]) * 1000,
                         ).toLocaleDateString()
                       : "Unknown"}
                   </span>

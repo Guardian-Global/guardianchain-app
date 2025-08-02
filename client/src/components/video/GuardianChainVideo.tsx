@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX, 
-  Maximize, 
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
   RotateCcw,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
 interface GuardianChainVideoProps {
@@ -18,11 +18,11 @@ interface GuardianChainVideoProps {
   onVideoEnd?: () => void;
 }
 
-export default function GuardianChainVideo({ 
-  autoplay = false, 
-  showControls = true, 
+export default function GuardianChainVideo({
+  autoplay = false,
+  showControls = true,
   className = "",
-  onVideoEnd 
+  onVideoEnd,
 }: GuardianChainVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(autoplay);
@@ -42,9 +42,9 @@ export default function GuardianChainVideo({
       onVideoEnd?.();
     };
 
-    video.addEventListener('timeupdate', updateTime);
-    video.addEventListener('loadedmetadata', updateDuration);
-    video.addEventListener('ended', handleEnded);
+    video.addEventListener("timeupdate", updateTime);
+    video.addEventListener("loadedmetadata", updateDuration);
+    video.addEventListener("ended", handleEnded);
 
     // Auto-play if enabled
     if (autoplay) {
@@ -52,9 +52,9 @@ export default function GuardianChainVideo({
     }
 
     return () => {
-      video.removeEventListener('timeupdate', updateTime);
-      video.removeEventListener('loadedmetadata', updateDuration);
-      video.removeEventListener('ended', handleEnded);
+      video.removeEventListener("timeupdate", updateTime);
+      video.removeEventListener("loadedmetadata", updateDuration);
+      video.removeEventListener("ended", handleEnded);
     };
   }, [autoplay, onVideoEnd]);
 
@@ -102,13 +102,15 @@ export default function GuardianChainVideo({
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <Card className={`bg-slate-900/50 border-slate-600 overflow-hidden ${className}`}>
+    <Card
+      className={`bg-slate-900/50 border-slate-600 overflow-hidden ${className}`}
+    >
       <CardContent className="p-0">
         <div className="relative group">
           <video
@@ -119,16 +121,15 @@ export default function GuardianChainVideo({
             preload="metadata"
             poster="/assets/GUARDIANCHAIN_logo.png"
           >
-            <source 
-              src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4" 
-              type="video/mp4" 
+            <source
+              src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4"
+              type="video/mp4"
             />
             Your browser does not support the video tag.
           </video>
 
           {/* Video Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            
             {/* Play/Pause Overlay */}
             {!isPlaying && (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -145,7 +146,12 @@ export default function GuardianChainVideo({
             {/* Top Controls */}
             <div className="absolute top-4 right-4 flex gap-2">
               <Button
-                onClick={() => window.open('https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4', '_blank')}
+                onClick={() =>
+                  window.open(
+                    "https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets/GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4",
+                    "_blank",
+                  )
+                }
                 size="sm"
                 variant="ghost"
                 className="bg-black/50 hover:bg-black/70 text-white"
@@ -157,11 +163,10 @@ export default function GuardianChainVideo({
             {/* Bottom Controls */}
             {showControls && (
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                
                 {/* Progress Bar */}
                 <div className="mb-3">
                   <div className="w-full bg-slate-600 rounded-full h-1">
-                    <div 
+                    <div
                       className="bg-purple-500 h-1 rounded-full transition-all duration-300"
                       style={{ width: `${progress}%` }}
                     ></div>
@@ -177,7 +182,11 @@ export default function GuardianChainVideo({
                       variant="ghost"
                       className="text-white hover:bg-white/20"
                     >
-                      {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      {isPlaying ? (
+                        <Pause className="w-4 h-4" />
+                      ) : (
+                        <Play className="w-4 h-4" />
+                      )}
                     </Button>
 
                     <Button
@@ -195,7 +204,11 @@ export default function GuardianChainVideo({
                       variant="ghost"
                       className="text-white hover:bg-white/20"
                     >
-                      {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                      {isMuted ? (
+                        <VolumeX className="w-4 h-4" />
+                      ) : (
+                        <Volume2 className="w-4 h-4" />
+                      )}
                     </Button>
 
                     <div className="text-white text-sm">
@@ -232,9 +245,10 @@ export default function GuardianChainVideo({
             Welcome to GUARDIANCHAIN - Truth Verification Revolution
           </h4>
           <p className="text-slate-300 text-sm">
-            Discover how GUARDIANCHAIN is revolutionizing truth verification with GTT tokens, 
-            community governance, and blockchain-powered transparency. Learn about our 
-            viral launch mechanisms and $100K volume targets.
+            Discover how GUARDIANCHAIN is revolutionizing truth verification
+            with GTT tokens, community governance, and blockchain-powered
+            transparency. Learn about our viral launch mechanisms and $100K
+            volume targets.
           </p>
         </div>
       </CardContent>

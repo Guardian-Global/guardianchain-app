@@ -8,7 +8,7 @@ export async function fetchGTTPrice() {
       return Number(data.data.price);
     } else {
       console.warn(
-        "GTT price not available - token may not be publicly traded"
+        "GTT price not available - token may not be publicly traded",
       );
       return null; // Return null instead of fake price
     }
@@ -32,7 +32,7 @@ export async function fetchGTTPriceChange() {
       };
     } else {
       console.warn(
-        "GTT price change not available - token may not be publicly traded"
+        "GTT price change not available - token may not be publicly traded",
       );
       return null; // Return null instead of fake data
     }

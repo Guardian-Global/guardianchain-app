@@ -37,7 +37,11 @@ future_enhancements:
 <HeroBanner
   title={
     <>
-      <img src="/media/logo.png" alt="GuardianChain Logo" style={{ height: "36px", marginBottom: "10px" }} />
+      <img
+        src="/media/logo.png"
+        alt="GuardianChain Logo"
+        style={{ height: "36px", marginBottom: "10px" }}
+      />
       Sovereign Asset Ledger
     </>
   }
@@ -48,7 +52,7 @@ future_enhancements:
   cta={[
     { label: "View Live Ledger", url: "#ledger-dashboard", style: "primary" },
     { label: "Export Audit", url: "#export", style: "secondary" },
-    { label: "API Docs", url: "#api", style: "holo" }
+    { label: "API Docs", url: "#api", style: "holo" },
   ]}
 />
 
@@ -56,11 +60,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/asset-ledger" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -70,28 +78,37 @@ future_enhancements:
 ---
 
 ## <span id="executive-summary">Executive Summary <InfoIcon /></span>
+
 <Callout type="impact" icon="💎">
-  <b>GuardianChain’s Sovereign Asset Ledger is a fully public, DAO-audited, and quantum-certified registry for all digital memory, GTT, treasury, and protocol-controlled assets.</b>
+  <b>
+    GuardianChain’s Sovereign Asset Ledger is a fully public, DAO-audited, and
+    quantum-certified registry for all digital memory, GTT, treasury, and
+    protocol-controlled assets.
+  </b>
 </Callout>
-- Every movement, update, and audit event is verifiable on-chain and exportable to any regulatory or enterprise standard.
-- Interactive, AR/VR, and time-travel overlays let users explore the ledger from any angle.
+- Every movement, update, and audit event is verifiable on-chain and exportable
+to any regulatory or enterprise standard. - Interactive, AR/VR, and time-travel
+overlays let users explore the ledger from any angle.
 
 <AIExplain section="executive-summary" />
 
 ---
 
 ## <span id="ledger-dashboard">Live Ledger Dashboard <LedgerIcon /></span>
-<AssetLedgerDashboard interactive />
-- See real-time asset totals, allocations, and DAO treasury flows
-- Explore by asset type: GTT, stablecoins, IP/capsule rights, partnership tokens, reserve assets
+
+<AssetLedgerDashboard interactive />- See real-time asset totals, allocations,
+and DAO treasury flows - Explore by asset type: GTT, stablecoins, IP/capsule
+rights, partnership tokens, reserve assets
 
 <Callout type="pro" icon="📊">
-  Filter by type, jurisdiction, owner class, or DAO status — export as PDF, CSV, JSON, or XBRL for instant compliance.
+  Filter by type, jurisdiction, owner class, or DAO status — export as PDF, CSV,
+  JSON, or XBRL for instant compliance.
 </Callout>
 
 ---
 
 ## <span id="audit-history">Quantum & DAO Audits <AuditIcon /></span>
+
 - Every event is quantum-signed and timestamped with VeritasChain certification
 - Annual and real-time audits by independent, DAO, and AI-powered auditors
 - Download the full audit log or compare any two points in ledger history: <AuditTrail doc="asset-ledger" />
@@ -99,20 +116,22 @@ future_enhancements:
 ---
 
 ## <span id="wallet-view">Wallet Connect & Personalized View <WalletIcon /></span>
-<WalletConnect />
-- See your own assets, voting power, ledger history, and proof-of-authorship NFTs
-- Permissioned view for institutional/DAO treasurers
+
+<WalletConnect />- See your own assets, voting power, ledger history, and
+proof-of-authorship NFTs - Permissioned view for institutional/DAO treasurers
 
 ---
 
 ## <span id="api">API Explorer & Integrations <APIDocIcon /></span>
-<APIDocs baseUrl="https://api.guardian-global.com/v1/asset-ledger" />
-- OpenAPI, GraphQL, and real-time websocket streams
-- Prebuilt connectors for DeFi, enterprise, regulatory, and custody platforms
+
+<APIDocs baseUrl="https://api.guardian-global.com/v1/asset-ledger" />- OpenAPI,
+GraphQL, and real-time websocket streams - Prebuilt connectors for DeFi,
+enterprise, regulatory, and custody platforms
 
 ---
 
 ## <span id="disputes">Disputes, Challenges, & DAO Resolution <DisputeIcon /></span>
+
 - All disputes, asset freezes, or correction events are chain-logged, NFT-minted, and auditable
 - Community, validator, or institutional challenge overlays (open to all stakeholders)
 - Appeal process and arbitration tracked by the DAO in real time
@@ -120,6 +139,7 @@ future_enhancements:
 ---
 
 ## <span id="export">Export, Compliance, & Proof-of-Authorship NFT <ExportIcon /></span>
+
 - Download the live ledger or any audit snapshot as PDF, CSV, JSON, or XBRL
 - Mint “proof of authorship” NFT for any certified event, audit, or snapshot
 - Exportable for all major enterprise, regulatory, and legal frameworks
@@ -127,15 +147,25 @@ future_enhancements:
 ---
 
 ## <span id="faq">FAQ <HelpIcon /></span>
+
 <FAQ>
-  <Question q="Who can view the ledger?">Everyone—users, institutions, regulators, and the public (open data, no permission required).</Question>
-  <Question q="How do I verify an asset’s status?">Click any asset or event for its chain-linked, certified, and time-stamped record.</Question>
-  <Question q="Can I submit corrections or disputes?">Yes—via the DAO, dispute overlay, or open proposal process.</Question>
+  <Question q="Who can view the ledger?">
+    Everyone—users, institutions, regulators, and the public (open data, no
+    permission required).
+  </Question>
+  <Question q="How do I verify an asset’s status?">
+    Click any asset or event for its chain-linked, certified, and time-stamped
+    record.
+  </Question>
+  <Question q="Can I submit corrections or disputes?">
+    Yes—via the DAO, dispute overlay, or open proposal process.
+  </Question>
 </FAQ>
 
 ---
 
 ## <span id="audit">Audit Trail, Time Travel & Proof-of-Authorship NFT <AuditIcon /></span>
+
 - All changes, disputes, and audits are NFT-minted for authorship and certified by VeritasChain
 - <AuditTrail doc="asset-ledger" />
 

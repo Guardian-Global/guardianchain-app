@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { 
-  Play, 
-  Plus, 
-  Film, 
+import {
+  Play,
+  Plus,
+  Film,
   Star,
   Eye,
   Heart,
@@ -16,7 +16,7 @@ import {
   Trash2,
   Music,
   Languages,
-  Clock
+  Clock,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
@@ -60,55 +60,59 @@ export default function ReelsPage() {
 
   // Mock user capsules data
   const { data: userCapsules = [] } = useQuery<Capsule[]>({
-    queryKey: ['/api/capsules/owned'],
+    queryKey: ["/api/capsules/owned"],
     enabled: false,
     initialData: [
       {
         id: "cap-1",
         title: "Family Memories 2024",
         description: "Collection of precious family moments",
-        summary: "A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.",
+        summary:
+          "A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.",
         truthScore: 92,
         mediaType: "video",
         mediaUrl: "/placeholder-video.mp4",
-        createdAt: "2024-03-15T10:00:00Z"
+        createdAt: "2024-03-15T10:00:00Z",
       },
       {
-        id: "cap-2", 
+        id: "cap-2",
         title: "Truth About Corporate Fraud",
         description: "Whistleblower testimony exposing corporate misconduct",
-        summary: "Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.",
+        summary:
+          "Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.",
         truthScore: 96,
         mediaType: "document",
-        createdAt: "2024-02-20T14:30:00Z"
+        createdAt: "2024-02-20T14:30:00Z",
       },
       {
         id: "cap-3",
         title: "Climate Change Evidence",
         description: "Scientific observations and data collection",
-        summary: "Comprehensive documentation of local climate patterns, temperature changes, and environmental impact over the past decade.",
+        summary:
+          "Comprehensive documentation of local climate patterns, temperature changes, and environmental impact over the past decade.",
         truthScore: 89,
         mediaType: "image",
         mediaUrl: "/placeholder-chart.jpg",
-        createdAt: "2024-01-10T09:15:00Z"
+        createdAt: "2024-01-10T09:15:00Z",
       },
       {
         id: "cap-4",
         title: "Heritage Recipe Collection",
         description: "Grandmother's secret recipes and cooking traditions",
-        summary: "Traditional family recipes passed down through generations, including cooking techniques and cultural significance.",
+        summary:
+          "Traditional family recipes passed down through generations, including cooking techniques and cultural significance.",
         truthScore: 85,
         mediaType: "text",
-        createdAt: "2024-04-05T16:45:00Z"
-      }
-    ]
+        createdAt: "2024-04-05T16:45:00Z",
+      },
+    ],
   });
 
   useEffect(() => {
     // Detect user language on component mount
-    const language = navigator.language.split('-')[0] || 'en';
+    const language = navigator.language.split("-")[0] || "en";
     setUserLanguage(language);
-    
+
     // Load existing reels
     loadReels();
   }, []);
@@ -121,36 +125,36 @@ export default function ReelsPage() {
         name: "Family Legacy Collection",
         description: "Personal family stories and memories",
         capsuleIds: ["cap-1", "cap-4"],
-        capsules: userCapsules.filter(c => ["cap-1", "cap-4"].includes(c.id)),
+        capsules: userCapsules.filter((c) => ["cap-1", "cap-4"].includes(c.id)),
         createdAt: "2024-03-20T12:00:00Z",
         updatedAt: "2024-03-20T12:00:00Z",
         isPublic: true,
         playCount: 127,
         likeCount: 23,
-        language: "en"
+        language: "en",
       },
       {
-        id: "reel-2", 
+        id: "reel-2",
         name: "Truth Investigations",
         description: "Evidence-based exposures and investigations",
         capsuleIds: ["cap-2", "cap-3"],
-        capsules: userCapsules.filter(c => ["cap-2", "cap-3"].includes(c.id)),
-        createdAt: "2024-02-25T15:30:00Z", 
+        capsules: userCapsules.filter((c) => ["cap-2", "cap-3"].includes(c.id)),
+        createdAt: "2024-02-25T15:30:00Z",
         updatedAt: "2024-02-25T15:30:00Z",
         isPublic: false,
         playCount: 89,
         likeCount: 45,
-        language: "en"
-      }
+        language: "en",
+      },
     ];
     setReels(mockReels);
   };
 
   const handleCapsuleSelect = (capsuleId: string) => {
-    setSelectedCapsules(prev => 
+    setSelectedCapsules((prev) =>
       prev.includes(capsuleId)
-        ? prev.filter(id => id !== capsuleId)
-        : [...prev, capsuleId]
+        ? prev.filter((id) => id !== capsuleId)
+        : [...prev, capsuleId],
     );
   };
 
@@ -159,7 +163,7 @@ export default function ReelsPage() {
       toast({
         title: "Name Required",
         description: "Please enter a name for your reel",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -168,7 +172,7 @@ export default function ReelsPage() {
       toast({
         title: "Select Capsules",
         description: "Please select at least one capsule for your reel",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
@@ -181,16 +185,16 @@ export default function ReelsPage() {
         name: newReelName,
         description: `Custom reel containing ${selectedCapsules.length} truth capsules`,
         capsuleIds: selectedCapsules,
-        capsules: userCapsules.filter(c => selectedCapsules.includes(c.id)),
+        capsules: userCapsules.filter((c) => selectedCapsules.includes(c.id)),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         isPublic: true,
         playCount: 0,
         likeCount: 0,
-        language: userLanguage
+        language: userLanguage,
       };
 
-      setReels(prev => [newReel, ...prev]);
+      setReels((prev) => [newReel, ...prev]);
       setNewReelName("");
       setSelectedCapsules([]);
 
@@ -198,13 +202,12 @@ export default function ReelsPage() {
         title: getLabel("uploadSuccess", userLanguage),
         description: `Reel "${newReelName}" created successfully`,
       });
-
     } catch (error) {
-      console.error('Failed to create reel:', error);
+      console.error("Failed to create reel:", error);
       toast({
         title: "Creation Failed",
         description: "Unable to create reel. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsCreating(false);
@@ -213,28 +216,31 @@ export default function ReelsPage() {
 
   const playReel = (reelId: string) => {
     setPlayingReel(playingReel === reelId ? null : reelId);
-    
+
     // Increment play count
-    setReels(prev => prev.map(reel => 
-      reel.id === reelId 
-        ? { ...reel, playCount: reel.playCount + 1 }
-        : reel
-    ));
+    setReels((prev) =>
+      prev.map((reel) =>
+        reel.id === reelId ? { ...reel, playCount: reel.playCount + 1 } : reel,
+      ),
+    );
   };
 
   const deleteReel = (reelId: string) => {
-    setReels(prev => prev.filter(reel => reel.id !== reelId));
+    setReels((prev) => prev.filter((reel) => reel.id !== reelId));
     toast({
-      title: "Reel Deleted", 
+      title: "Reel Deleted",
       description: "Reel has been removed from your collection",
     });
   };
 
   const getMediaIcon = (mediaType: string) => {
     switch (mediaType) {
-      case 'video': return <Film className="w-4 h-4" />;
-      case 'audio': return <Music className="w-4 h-4" />;
-      default: return <Star className="w-4 h-4" />;
+      case "video":
+        return <Film className="w-4 h-4" />;
+      case "audio":
+        return <Music className="w-4 h-4" />;
+      default:
+        return <Star className="w-4 h-4" />;
     }
   };
 
@@ -246,7 +252,8 @@ export default function ReelsPage() {
             {getLabel("reels", userLanguage)}
           </h1>
           <p className="text-gray-600">
-            Create and share collections of your truth capsules as remixable reels
+            Create and share collections of your truth capsules as remixable
+            reels
           </p>
         </div>
 
@@ -266,8 +273,8 @@ export default function ReelsPage() {
                 onChange={(e) => setNewReelName(e.target.value)}
                 className="flex-1"
               />
-              <Button 
-                onClick={createReel} 
+              <Button
+                onClick={createReel}
                 disabled={isCreating || selectedCapsules.length === 0}
               >
                 {isCreating ? "Creating..." : getLabel("create", userLanguage)}
@@ -276,7 +283,8 @@ export default function ReelsPage() {
 
             <div>
               <h4 className="font-medium mb-3">
-                {getLabel("selectCapsules", userLanguage)} ({selectedCapsules.length} selected)
+                {getLabel("selectCapsules", userLanguage)} (
+                {selectedCapsules.length} selected)
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {userCapsules.map((capsule) => (
@@ -290,14 +298,16 @@ export default function ReelsPage() {
                     onClick={() => handleCapsuleSelect(capsule.id)}
                   >
                     <div className="flex items-center gap-3">
-                      <Checkbox 
+                      <Checkbox
                         checked={selectedCapsules.includes(capsule.id)}
                         onChange={() => handleCapsuleSelect(capsule.id)}
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           {getMediaIcon(capsule.mediaType)}
-                          <span className="font-medium text-sm">{capsule.title}</span>
+                          <span className="font-medium text-sm">
+                            {capsule.title}
+                          </span>
                           <Badge variant="outline" className="text-xs">
                             {capsule.truthScore}% truth
                           </Badge>
@@ -338,7 +348,7 @@ export default function ReelsPage() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4 text-sm text-gray-600">
                   <span className="flex items-center gap-1">
                     <Eye className="w-3 h-3" />
@@ -360,7 +370,7 @@ export default function ReelsPage() {
                   )}
                 </div>
               </CardHeader>
-              
+
               <CardContent className="space-y-3">
                 {/* Reel Capsules */}
                 {playingReel === reel.id ? (
@@ -371,16 +381,18 @@ export default function ReelsPage() {
                           <Badge variant="outline" className="text-xs">
                             {index + 1}
                           </Badge>
-                          <span className="font-medium text-sm">{capsule.title}</span>
+                          <span className="font-medium text-sm">
+                            {capsule.title}
+                          </span>
                           <Badge variant="secondary" className="text-xs">
                             {capsule.truthScore}%
                           </Badge>
                         </div>
-                        
+
                         <p className="text-xs text-gray-600 mb-2 line-clamp-2">
                           {capsule.summary}
                         </p>
-                        
+
                         <VoiceSummaryPlayer
                           text={capsule.summary}
                           language={reel.language}
@@ -393,10 +405,16 @@ export default function ReelsPage() {
                   </div>
                 ) : (
                   <div>
-                    <p className="text-sm text-gray-600 mb-3">{reel.description}</p>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {reel.description}
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       {reel.capsules.slice(0, 3).map((capsule) => (
-                        <Badge key={capsule.id} variant="outline" className="text-xs">
+                        <Badge
+                          key={capsule.id}
+                          variant="outline"
+                          className="text-xs"
+                        >
                           {getMediaIcon(capsule.mediaType)}
                           <span className="ml-1">{capsule.title}</span>
                         </Badge>
@@ -431,7 +449,8 @@ export default function ReelsPage() {
               <Film className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">No Reels Yet</h3>
               <p className="text-gray-600 mb-4">
-                Create your first reel to start sharing your truth capsule collections
+                Create your first reel to start sharing your truth capsule
+                collections
               </p>
               <Button>
                 <Plus className="w-4 h-4 mr-2" />

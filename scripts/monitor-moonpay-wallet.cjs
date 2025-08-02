@@ -3,11 +3,11 @@ const { ethers } = require("ethers");
 async function monitorMoonPayWallet() {
   console.log("🔍 MONITORING MOONPAY DELIVERY");
   console.log("=============================");
-  
+
   const provider = new ethers.JsonRpcProvider("https://polygon-rpc.com");
   const moonpayWallet = "0x26A61461802E74A265c7548Efb8CaDDf4c4a81Dc";
   const deploymentWallet = "0xD500A7fED4ef78c6d99888c8FeBDbA4BcB12ed38";
-  
+
   console.log("📍 MoonPay Wallet:", moonpayWallet);
   console.log("🎯 Deployment Wallet:", deploymentWallet);
   console.log("💰 Checking every 30 seconds for POL delivery...");
@@ -17,10 +17,12 @@ async function monitorMoonPayWallet() {
     try {
       const balance = await provider.getBalance(moonpayWallet);
       const balanceInPol = ethers.formatEther(balance);
-      
+
       const timestamp = new Date().toLocaleTimeString();
-      console.log(`⏰ ${timestamp} - MoonPay Wallet Balance: ${balanceInPol} POL`);
-      
+      console.log(
+        `⏰ ${timestamp} - MoonPay Wallet Balance: ${balanceInPol} POL`,
+      );
+
       if (parseFloat(balanceInPol) >= 0.1) {
         console.log("");
         console.log("🎉 POL DELIVERED TO MOONPAY WALLET!");
@@ -34,14 +36,19 @@ async function monitorMoonPayWallet() {
         console.log("   " + deploymentWallet);
         console.log("");
         console.log("4. Once sent, GTT token deploys automatically!");
-        console.log("   Target address: 0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C");
-        
+        console.log(
+          "   Target address: 0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C",
+        );
+
         return true;
       }
-      
+
       return false;
     } catch (error) {
-      console.log(`❌ ${new Date().toLocaleTimeString()} - Check failed:`, error.message);
+      console.log(
+        `❌ ${new Date().toLocaleTimeString()} - Check failed:`,
+        error.message,
+      );
       return false;
     }
   };

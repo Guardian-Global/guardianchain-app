@@ -21,7 +21,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
-  
+
   // Capsule operations
   getCapsule(id: string): Promise<Capsule | undefined>;
   getCapsulesByUser(userId: string): Promise<Capsule[]>;
@@ -29,14 +29,19 @@ export interface IStorage {
   createCapsule(capsule: InsertCapsule): Promise<Capsule>;
   updateCapsule(id: string, capsule: Partial<Capsule>): Promise<Capsule>;
   deleteCapsule(id: string): Promise<void>;
-  
+
   // Vote operations
   recordVote(vote: InsertCapsuleVote): Promise<CapsuleVote>;
   getVotesByCapsule(capsuleId: string): Promise<CapsuleVote[]>;
-  getUserVote(capsuleId: string, wallet: string): Promise<CapsuleVote | undefined>;
-  
+  getUserVote(
+    capsuleId: string,
+    wallet: string,
+  ): Promise<CapsuleVote | undefined>;
+
   // Newsletter operations
-  subscribeToNewsletter(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber>;
+  subscribeToNewsletter(
+    subscriber: InsertNewsletterSubscriber,
+  ): Promise<NewsletterSubscriber>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -68,7 +73,10 @@ export class DatabaseStorage implements IStorage {
 
   // Capsule operations
   async getCapsule(id: string): Promise<Capsule | undefined> {
-    const [capsule] = await db.select().from(capsules).where(eq(capsules.id, id));
+    const [capsule] = await db
+      .select()
+      .from(capsules)
+      .where(eq(capsules.id, id));
     return capsule;
   }
 
@@ -81,10 +89,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAllCapsules(): Promise<Capsule[]> {
-    return await db
-      .select()
-      .from(capsules)
-      .orderBy(desc(capsules.createdAt));
+    return await db.select().from(capsules).orderBy(desc(capsules.createdAt));
   }
 
   async createCapsule(capsuleData: InsertCapsule): Promise<Capsule> {
@@ -99,7 +104,10 @@ export class DatabaseStorage implements IStorage {
     return capsule;
   }
 
-  async updateCapsule(id: string, capsuleData: Partial<Capsule>): Promise<Capsule> {
+  async updateCapsule(
+    id: string,
+    capsuleData: Partial<Capsule>,
+  ): Promise<Capsule> {
     const [capsule] = await db
       .update(capsules)
       .set({
@@ -118,28 +126,30 @@ export class DatabaseStorage implements IStorage {
   // Vote operations
   async recordVote(voteData: InsertCapsuleVote): Promise<CapsuleVote> {
     // Check if user has already voted on this capsule
-    const existingVote = await this.getUserVote(voteData.capsuleId, voteData.voterWallet);
-    
+    const existingVote = await this.getUserVote(
+      voteData.capsuleId,
+      voteData.voterWallet,
+    );
+
     if (existingVote) {
       // Update existing vote
       const [vote] = await db
         .update(capsuleVotes)
         .set({
           voteType: voteData.voteType,
-          createdAt: new Date()
+          createdAt: new Date(),
         })
-        .where(and(
-          eq(capsuleVotes.capsuleId, voteData.capsuleId),
-          eq(capsuleVotes.voterWallet, voteData.voterWallet)
-        ))
+        .where(
+          and(
+            eq(capsuleVotes.capsuleId, voteData.capsuleId),
+            eq(capsuleVotes.voterWallet, voteData.voterWallet),
+          ),
+        )
         .returning();
       return vote;
     } else {
       // Create new vote
-      const [vote] = await db
-        .insert(capsuleVotes)
-        .values(voteData)
-        .returning();
+      const [vote] = await db.insert(capsuleVotes).values(voteData).returning();
       return vote;
     }
   }
@@ -152,19 +162,26 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(capsuleVotes.createdAt));
   }
 
-  async getUserVote(capsuleId: string, wallet: string): Promise<CapsuleVote | undefined> {
+  async getUserVote(
+    capsuleId: string,
+    wallet: string,
+  ): Promise<CapsuleVote | undefined> {
     const [vote] = await db
       .select()
       .from(capsuleVotes)
-      .where(and(
-        eq(capsuleVotes.capsuleId, capsuleId),
-        eq(capsuleVotes.voterWallet, wallet)
-      ));
+      .where(
+        and(
+          eq(capsuleVotes.capsuleId, capsuleId),
+          eq(capsuleVotes.voterWallet, wallet),
+        ),
+      );
     return vote;
   }
 
   // Newsletter operations
-  async subscribeToNewsletter(subscriberData: InsertNewsletterSubscriber): Promise<NewsletterSubscriber> {
+  async subscribeToNewsletter(
+    subscriberData: InsertNewsletterSubscriber,
+  ): Promise<NewsletterSubscriber> {
     const [subscriber] = await db
       .insert(newsletterSubscribers)
       .values({

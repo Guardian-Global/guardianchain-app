@@ -1,11 +1,25 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Play, Pause, RotateCcw, Coins, Heart, Loader2, Zap } from "lucide-react";
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Coins,
+  Heart,
+  Loader2,
+  Zap,
+} from "lucide-react";
 
 interface ReplayCapsuleProps {
   capsuleId: string;
@@ -16,7 +30,7 @@ interface ReplayState {
   progress: number;
   emotionalIntensity: number;
   yieldEarned: number;
-  stage: 'ready' | 'playing' | 'processing' | 'complete';
+  stage: "ready" | "playing" | "processing" | "complete";
 }
 
 export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
@@ -25,7 +39,7 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
     progress: 0,
     emotionalIntensity: 0,
     yieldEarned: 0,
-    stage: 'ready'
+    stage: "ready",
   });
 
   const { toast } = useToast();
@@ -33,25 +47,28 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
 
   // Replay mutation
   const replayMutation = useMutation({
-    mutationFn: async ({ capsuleId, emotionalResponse }: {
+    mutationFn: async ({
+      capsuleId,
+      emotionalResponse,
+    }: {
       capsuleId: string;
       emotionalResponse: number;
     }) => {
       return apiRequest("POST", "/api/capsules/replay", {
         capsuleId,
         emotionalResponse,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     },
     onSuccess: (data) => {
-      setReplayState(prev => ({
+      setReplayState((prev) => ({
         ...prev,
-        stage: 'complete',
-        yieldEarned: data.yieldAmount || 0
+        stage: "complete",
+        yieldEarned: data.yieldAmount || 0,
       }));
-      
+
       queryClient.invalidateQueries({ queryKey: ["/api/capsules", capsuleId] });
-      
+
       toast({
         title: "Capsule Replay Complete",
         description: `You earned ${data.yieldAmount || 0} GTT tokens!`,
@@ -59,8 +76,8 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
     },
     onError: (error: any) => {
       console.error("❌ Replay failed:", error);
-      setReplayState(prev => ({ ...prev, stage: 'ready', isPlaying: false }));
-      
+      setReplayState((prev) => ({ ...prev, stage: "ready", isPlaying: false }));
+
       toast({
         title: "Replay Failed",
         description: error.message || "Failed to process capsule replay",
@@ -70,42 +87,45 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
   });
 
   const startReplay = () => {
-    setReplayState(prev => ({
+    setReplayState((prev) => ({
       ...prev,
       isPlaying: true,
-      stage: 'playing',
+      stage: "playing",
       progress: 0,
-      emotionalIntensity: 0
+      emotionalIntensity: 0,
     }));
 
     // Simulate replay experience with increasing emotional intensity
     let progress = 0;
     let emotionalIntensity = 0;
-    
+
     const interval = setInterval(() => {
       progress += 2;
-      emotionalIntensity = Math.min(100, emotionalIntensity + Math.random() * 15);
-      
-      setReplayState(prev => ({
+      emotionalIntensity = Math.min(
+        100,
+        emotionalIntensity + Math.random() * 15,
+      );
+
+      setReplayState((prev) => ({
         ...prev,
         progress,
-        emotionalIntensity: Math.round(emotionalIntensity)
+        emotionalIntensity: Math.round(emotionalIntensity),
       }));
 
       if (progress >= 100) {
         clearInterval(interval);
-        setReplayState(prev => ({
+        setReplayState((prev) => ({
           ...prev,
-          stage: 'processing',
-          isPlaying: false
+          stage: "processing",
+          isPlaying: false,
         }));
-        
+
         // Process the replay
         setTimeout(() => {
           const finalEmotionalResponse = Math.round(emotionalIntensity);
           replayMutation.mutate({
             capsuleId,
-            emotionalResponse: finalEmotionalResponse
+            emotionalResponse: finalEmotionalResponse,
           });
         }, 1500);
       }
@@ -113,9 +133,9 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
   };
 
   const pauseReplay = () => {
-    setReplayState(prev => ({
+    setReplayState((prev) => ({
       ...prev,
-      isPlaying: false
+      isPlaying: false,
     }));
   };
 
@@ -125,7 +145,7 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
       progress: 0,
       emotionalIntensity: 0,
       yieldEarned: 0,
-      stage: 'ready'
+      stage: "ready",
     });
   };
 
@@ -139,16 +159,16 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
 
   const getStageDescription = () => {
     switch (replayState.stage) {
-      case 'ready':
-        return 'Ready to experience this capsule and earn GTT yield';
-      case 'playing':
-        return 'Experiencing capsule content and measuring emotional resonance...';
-      case 'processing':
-        return 'Processing emotional response and calculating GTT yield...';
-      case 'complete':
+      case "ready":
+        return "Ready to experience this capsule and earn GTT yield";
+      case "playing":
+        return "Experiencing capsule content and measuring emotional resonance...";
+      case "processing":
+        return "Processing emotional response and calculating GTT yield...";
+      case "complete":
         return `Replay complete! You earned ${replayState.yieldEarned} GTT tokens.`;
       default:
-        return '';
+        return "";
     }
   };
 
@@ -159,13 +179,11 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
           <Play className="h-5 w-5" />
           Capsule Replay Experience
         </CardTitle>
-        <CardDescription>
-          {getStageDescription()}
-        </CardDescription>
+        <CardDescription>{getStageDescription()}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Progress Bar */}
-        {replayState.stage !== 'ready' && (
+        {replayState.stage !== "ready" && (
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Progress</span>
@@ -176,29 +194,34 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
         )}
 
         {/* Emotional Intensity Meter */}
-        {replayState.stage === 'playing' && replayState.emotionalIntensity > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-red-500" />
-                <span>Emotional Resonance</span>
+        {replayState.stage === "playing" &&
+          replayState.emotionalIntensity > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-red-500" />
+                  <span>Emotional Resonance</span>
+                </div>
+                <span
+                  className={getEmotionalIntensityColor(
+                    replayState.emotionalIntensity,
+                  )}
+                >
+                  {replayState.emotionalIntensity}%
+                </span>
               </div>
-              <span className={getEmotionalIntensityColor(replayState.emotionalIntensity)}>
-                {replayState.emotionalIntensity}%
-              </span>
+              <Progress
+                value={replayState.emotionalIntensity}
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500">
+                Higher emotional resonance increases GTT yield potential
+              </p>
             </div>
-            <Progress 
-              value={replayState.emotionalIntensity} 
-              className="w-full"
-            />
-            <p className="text-xs text-gray-500">
-              Higher emotional resonance increases GTT yield potential
-            </p>
-          </div>
-        )}
+          )}
 
         {/* Yield Display */}
-        {replayState.stage === 'complete' && (
+        {replayState.stage === "complete" && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -220,7 +243,7 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
 
         {/* Controls */}
         <div className="flex items-center gap-3">
-          {replayState.stage === 'ready' && (
+          {replayState.stage === "ready" && (
             <Button
               onClick={startReplay}
               className="flex-1"
@@ -231,7 +254,7 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
             </Button>
           )}
 
-          {replayState.stage === 'playing' && (
+          {replayState.stage === "playing" && (
             <>
               {replayState.isPlaying ? (
                 <Button onClick={pauseReplay} variant="outline">
@@ -251,14 +274,14 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
             </>
           )}
 
-          {replayState.stage === 'processing' && (
+          {replayState.stage === "processing" && (
             <Button disabled className="flex-1">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Processing Replay...
             </Button>
           )}
 
-          {replayState.stage === 'complete' && (
+          {replayState.stage === "complete" && (
             <Button onClick={resetReplay} className="flex-1">
               <RotateCcw className="mr-2 h-4 w-4" />
               Replay Again
@@ -268,9 +291,18 @@ export default function ReplayCapsule({ capsuleId }: ReplayCapsuleProps) {
 
         {/* Info */}
         <div className="text-xs text-gray-500 space-y-1">
-          <p>• Capsule replay simulates the emotional experience of the preserved memory</p>
-          <p>• GTT yield is calculated based on grief tier and emotional resonance</p>
-          <p>• Each replay contributes to the capsule's verification and truth score</p>
+          <p>
+            • Capsule replay simulates the emotional experience of the preserved
+            memory
+          </p>
+          <p>
+            • GTT yield is calculated based on grief tier and emotional
+            resonance
+          </p>
+          <p>
+            • Each replay contributes to the capsule's verification and truth
+            score
+          </p>
         </div>
       </CardContent>
     </Card>

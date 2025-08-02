@@ -92,20 +92,20 @@ export class AuditAI {
       invoices: InvoiceData[];
       vendors: VendorData[];
     },
-    report: AuditReport
+    report: AuditReport,
   ): Promise<void> {
     const { treasury, invoices, vendors } = data;
 
     // Check vendor payout concentration
     const totalVendorPayouts = vendors.reduce(
       (sum, v) => sum + v.lifetimePayouts,
-      0
+      0,
     );
     const payoutRatio = totalVendorPayouts / treasury.balance;
 
     if (payoutRatio > this.RISK_THRESHOLDS.HIGH_VENDOR_PAYOUT_RATIO) {
       report.riskFlags.push(
-        `High vendor payout concentration: ${(payoutRatio * 100).toFixed(1)}%`
+        `High vendor payout concentration: ${(payoutRatio * 100).toFixed(1)}%`,
       );
       report.complianceScore -= 15;
     }
@@ -113,7 +113,7 @@ export class AuditAI {
     // Check pending invoice count
     if (report.pendingInvoices > this.RISK_THRESHOLDS.MAX_PENDING_INVOICES) {
       report.riskFlags.push(
-        `Excessive pending invoices: ${report.pendingInvoices}`
+        `Excessive pending invoices: ${report.pendingInvoices}`,
       );
       report.complianceScore -= 10;
     }
@@ -126,11 +126,11 @@ export class AuditAI {
 
     // Check vendor trust scores
     const lowTrustVendors = vendors.filter(
-      (v) => v.trustScore < this.RISK_THRESHOLDS.VENDOR_TRUST_THRESHOLD
+      (v) => v.trustScore < this.RISK_THRESHOLDS.VENDOR_TRUST_THRESHOLD,
     );
     if (lowTrustVendors.length > 0) {
       report.riskFlags.push(
-        `${lowTrustVendors.length} vendors below trust threshold`
+        `${lowTrustVendors.length} vendors below trust threshold`,
       );
       report.complianceScore -= 5;
     }
@@ -168,14 +168,14 @@ export class AuditAI {
       invoices: InvoiceData[];
       vendors: VendorData[];
     },
-    report: AuditReport
+    report: AuditReport,
   ): Promise<void> {
     const { treasury, invoices, vendors } = data;
 
     // Treasury management recommendations
     if (treasury.balance < this.RISK_THRESHOLDS.MIN_TREASURY_BUFFER * 2) {
       report.recommendations.push(
-        "Consider increasing GTT treasury reserves through protocol fees"
+        "Consider increasing GTT treasury reserves through protocol fees",
       );
     }
 
@@ -186,7 +186,7 @@ export class AuditAI {
 
     if (highPayoutVendors.length > 0) {
       report.recommendations.push(
-        `Review payment terms with top vendor: ${highPayoutVendors[0].name}`
+        `Review payment terms with top vendor: ${highPayoutVendors[0].name}`,
       );
     }
 
@@ -197,7 +197,7 @@ export class AuditAI {
 
     if (pendingAmount > treasury.balance * 0.1) {
       report.recommendations.push(
-        "Process pending invoices to maintain vendor relationships"
+        "Process pending invoices to maintain vendor relationships",
       );
     }
 
@@ -205,14 +205,14 @@ export class AuditAI {
     const vendorCount = vendors.length;
     if (vendorCount < 5) {
       report.recommendations.push(
-        "Consider diversifying vendor base to reduce dependency risk"
+        "Consider diversifying vendor base to reduce dependency risk",
       );
     }
 
     // Growth recommendations
     if (treasury.weeklyVolume > treasury.monthlyRevenue * 0.8) {
       report.recommendations.push(
-        "Strong volume growth detected - consider scaling infrastructure"
+        "Strong volume growth detected - consider scaling infrastructure",
       );
     }
   }
@@ -222,14 +222,14 @@ export class AuditAI {
    */
   private static async sendAuditReport(
     report: AuditReport,
-    data: any
+    data: any,
   ): Promise<void> {
     const riskLevel =
       report.complianceScore >= 90
         ? "LOW"
         : report.complianceScore >= 80
-        ? "MEDIUM"
-        : "HIGH";
+          ? "MEDIUM"
+          : "HIGH";
 
     const riskEmoji =
       riskLevel === "LOW" ? "🟢" : riskLevel === "MEDIUM" ? "🟡" : "🔴";
@@ -280,14 +280,14 @@ ${data.vendors
 - **Lifetime Payouts:** ${vendor.lifetimePayouts.toLocaleString()} GTT
 - **Trust Score:** ${(vendor.trustScore * 100).toFixed(1)}%
 - **Last Payment:** ${vendor.lastPayment}
-`
+`,
   )
   .join("\n")}
 
 ## 📈 Performance Metrics
 
 - **Treasury Growth:** ${((data.treasury.balance / 100000 - 1) * 100).toFixed(
-      1
+      1,
     )}% (vs baseline)
 - **Vendor Efficiency:** ${(
       (data.vendors.filter((v: VendorData) => v.trustScore > 0.8).length /

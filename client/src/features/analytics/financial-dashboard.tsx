@@ -105,10 +105,7 @@ export default function FinancialDashboard() {
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <DollarSign
-              className="w-6 h-6 mr-3"
-              style={{ color: "#10B981" }}
-            />
+            <DollarSign className="w-6 h-6 mr-3" style={{ color: "#10B981" }} />
             Treasury Summary
           </h2>
 
@@ -213,10 +210,7 @@ export default function FinancialDashboard() {
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <Zap
-              className="w-6 h-6 mr-3"
-              style={{ color: "#8B5CF6" }}
-            />
+            <Zap className="w-6 h-6 mr-3" style={{ color: "#8B5CF6" }} />
             AI Business Intelligence
           </h2>
 

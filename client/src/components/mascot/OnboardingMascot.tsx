@@ -37,69 +37,104 @@ const ONBOARDING_STEPS: MascotStep[] = [
   {
     id: "welcome",
     title: "Welcome to GUARDIANCHAIN! 🎉",
-    description: "Hi there! I'm Guardian, your friendly guide! I'm here to show you around this amazing truth verification platform. Ready for an adventure?",
+    description:
+      "Hi there! I'm Guardian, your friendly guide! I'm here to show you around this amazing truth verification platform. Ready for an adventure?",
     personality: "excited",
     icon: <Sparkles className="h-6 w-6" />,
-    tips: ["I'll be with you every step of the way!", "Feel free to ask questions anytime!", "Let's make verifying truth fun!"]
+    tips: [
+      "I'll be with you every step of the way!",
+      "Feel free to ask questions anytime!",
+      "Let's make verifying truth fun!",
+    ],
   },
   {
     id: "profile",
     title: "Let's Set Up Your Profile! ✨",
-    description: "First things first - let's create your digital identity! Your profile is how other truth seekers will recognize you.",
+    description:
+      "First things first - let's create your digital identity! Your profile is how other truth seekers will recognize you.",
     route: "/profile",
     action: "Complete your profile setup",
     personality: "encouraging",
     icon: <Users className="h-6 w-6" />,
-    tips: ["Add a profile picture if you like!", "Choose a tier that fits your needs", "Your reputation grows as you verify truth!"]
+    tips: [
+      "Add a profile picture if you like!",
+      "Choose a tier that fits your needs",
+      "Your reputation grows as you verify truth!",
+    ],
   },
   {
     id: "capsules",
     title: "Create Your First Truth Capsule! 🚀",
-    description: "This is where the magic happens! Truth capsules are how you submit content for verification. Think of them as digital truth containers!",
+    description:
+      "This is where the magic happens! Truth capsules are how you submit content for verification. Think of them as digital truth containers!",
     route: "/create-capsule",
     action: "Create your first capsule",
     personality: "excited",
     icon: <Shield className="h-6 w-6" />,
-    tips: ["Start with something simple", "Add evidence to strengthen your claim", "The community will help verify it!"]
+    tips: [
+      "Start with something simple",
+      "Add evidence to strengthen your claim",
+      "The community will help verify it!",
+    ],
   },
   {
     id: "verify",
     title: "Help Verify Other Capsules! 🔍",
-    description: "Now you get to be a truth detective! Review other people's submissions and help build our verified knowledge base.",
+    description:
+      "Now you get to be a truth detective! Review other people's submissions and help build our verified knowledge base.",
     route: "/verify",
     action: "Verify some capsules",
     personality: "curious",
     icon: <Target className="h-6 w-6" />,
-    tips: ["Look for evidence carefully", "Ask questions if something's unclear", "Your opinion matters to the community!"]
+    tips: [
+      "Look for evidence carefully",
+      "Ask questions if something's unclear",
+      "Your opinion matters to the community!",
+    ],
   },
   {
     id: "earn",
     title: "Earn GTT Tokens! 💰",
-    description: "The best part? You earn GTT tokens for contributing! Create verified capsules, help verify others, and watch your tokens grow!",
+    description:
+      "The best part? You earn GTT tokens for contributing! Create verified capsules, help verify others, and watch your tokens grow!",
     route: "/wallet",
     action: "Check your wallet",
     personality: "playful",
     icon: <Coins className="h-6 w-6" />,
-    tips: ["Tokens reward good contributions", "Quality over quantity always wins", "Stake tokens to unlock premium features!"]
+    tips: [
+      "Tokens reward good contributions",
+      "Quality over quantity always wins",
+      "Stake tokens to unlock premium features!",
+    ],
   },
   {
     id: "explore",
     title: "Explore Advanced Features! ⚡",
-    description: "Ready to level up? Discover AI assistance, analytics, viral tools, and so much more. The platform grows with you!",
+    description:
+      "Ready to level up? Discover AI assistance, analytics, viral tools, and so much more. The platform grows with you!",
     route: "/advanced-features",
     action: "Explore advanced tools",
     personality: "excited",
     icon: <Zap className="h-6 w-6" />,
-    tips: ["AI can help optimize your content", "Analytics show your impact", "Viral tools protect your ideas!"]
+    tips: [
+      "AI can help optimize your content",
+      "Analytics show your impact",
+      "Viral tools protect your ideas!",
+    ],
   },
   {
     id: "complete",
     title: "You're All Set! 🎊",
-    description: "Congratulations! You're now ready to be a truth guardian. Remember, every verified fact makes the world a little more trustworthy!",
+    description:
+      "Congratulations! You're now ready to be a truth guardian. Remember, every verified fact makes the world a little more trustworthy!",
     personality: "proud",
     icon: <CheckCircle2 className="h-6 w-6" />,
-    tips: ["You can always revisit this tour", "Help others get started too", "Welcome to the GUARDIANCHAIN family!"]
-  }
+    tips: [
+      "You can always revisit this tour",
+      "Help others get started too",
+      "Welcome to the GUARDIANCHAIN family!",
+    ],
+  },
 ];
 
 interface OnboardingMascotProps {
@@ -119,7 +154,9 @@ export default function OnboardingMascot({
   const [isOpen, setIsOpen] = useState(isVisible);
   const [isAnimating, setIsAnimating] = useState(false);
   const [location, setLocation] = useLocation();
-  const [mascotMood, setMascotMood] = useState<"happy" | "excited" | "thinking" | "celebrating">("happy");
+  const [mascotMood, setMascotMood] = useState<
+    "happy" | "excited" | "thinking" | "celebrating"
+  >("happy");
 
   const currentStepData = ONBOARDING_STEPS[currentStep];
   const progress = ((currentStep + 1) / ONBOARDING_STEPS.length) * 100;
@@ -196,13 +233,15 @@ export default function OnboardingMascot({
         <CardContent className="p-6">
           {/* Mascot Avatar */}
           <div className="flex items-start gap-4 mb-4">
-            <div className={cn(
-              "relative w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-green-400 flex items-center justify-center shadow-lg transition-all duration-300",
-              mascotMood === "excited" && "animate-bounce",
-              mascotMood === "celebrating" && "animate-pulse",
-              mascotMood === "thinking" && "animate-pulse",
-              isAnimating && "scale-110"
-            )}>
+            <div
+              className={cn(
+                "relative w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-green-400 flex items-center justify-center shadow-lg transition-all duration-300",
+                mascotMood === "excited" && "animate-bounce",
+                mascotMood === "celebrating" && "animate-pulse",
+                mascotMood === "thinking" && "animate-pulse",
+                isAnimating && "scale-110",
+              )}
+            >
               <Shield className="h-8 w-8 text-white" />
               {mascotMood === "excited" && (
                 <div className="absolute -top-1 -right-1">
@@ -230,22 +269,26 @@ export default function OnboardingMascot({
                 </Button>
               </div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium">Step {currentStep + 1} of {ONBOARDING_STEPS.length}</span>
+                <span className="text-sm font-medium">
+                  Step {currentStep + 1} of {ONBOARDING_STEPS.length}
+                </span>
                 <Progress value={progress} className="flex-1 h-2" />
               </div>
             </div>
           </div>
 
           {/* Step Content */}
-          <div className={cn(
-            "transition-all duration-200",
-            isAnimating && "opacity-50 scale-95"
-          )}>
+          <div
+            className={cn(
+              "transition-all duration-200",
+              isAnimating && "opacity-50 scale-95",
+            )}
+          >
             <div className="flex items-center gap-2 mb-3">
               {currentStepData.icon}
               <h3 className="font-semibold text-lg">{currentStepData.title}</h3>
             </div>
-            
+
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
               {currentStepData.description}
             </p>
@@ -280,7 +323,7 @@ export default function OnboardingMascot({
                   Back
                 </Button>
               )}
-              
+
               {currentStepData.route && (
                 <Button
                   variant="secondary"
@@ -292,7 +335,7 @@ export default function OnboardingMascot({
                   {currentStepData.action}
                 </Button>
               )}
-              
+
               <Button
                 onClick={handleNext}
                 size="sm"
@@ -319,10 +362,10 @@ export default function OnboardingMascot({
 }
 
 // Helper component for triggering the mascot
-export function MascotTrigger({ 
-  children, 
-  className 
-}: { 
+export function MascotTrigger({
+  children,
+  className,
+}: {
   children?: React.ReactNode;
   className?: string;
 }) {

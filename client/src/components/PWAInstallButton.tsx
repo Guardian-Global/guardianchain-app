@@ -10,14 +10,14 @@ export default function PWAInstallButton() {
   const handleInstallClick = async () => {
     const success = await installApp();
     if (!success) {
-      localStorage.setItem('pwa-install-dismissed', 'true');
+      localStorage.setItem("pwa-install-dismissed", "true");
     }
     setShowInstallBanner(false);
   };
 
   const dismissBanner = () => {
     setShowInstallBanner(false);
-    localStorage.setItem('pwa-install-dismissed', 'true');
+    localStorage.setItem("pwa-install-dismissed", "true");
   };
 
   // Show offline indicator if not online

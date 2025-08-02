@@ -29,7 +29,10 @@ interface Props {
   onSuggestionApply: (improvements: Partial<CapsuleData>) => void;
 }
 
-const CapsuleAIAssistant: React.FC<Props> = ({ capsuleData, onSuggestionApply }) => {
+const CapsuleAIAssistant: React.FC<Props> = ({
+  capsuleData,
+  onSuggestionApply,
+}) => {
   const [suggestions, setSuggestions] = useState<AISuggestion[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,42 +40,48 @@ const CapsuleAIAssistant: React.FC<Props> = ({ capsuleData, onSuggestionApply })
   const generateSuggestions = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Simulate AI analysis
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const mockSuggestions: AISuggestion[] = [
         {
           type: "optimization",
           title: "Enhance Title Structure",
-          description: "Consider adding specific keywords to improve discoverability",
+          description:
+            "Consider adding specific keywords to improve discoverability",
           confidence: 85,
-          action: () => onSuggestionApply({
-            title: `${capsuleData.title} | Truth Verified`,
-          }),
+          action: () =>
+            onSuggestionApply({
+              title: `${capsuleData.title} | Truth Verified`,
+            }),
         },
         {
-          type: "improvement", 
+          type: "improvement",
           title: "Add Relevant Tags",
-          description: "Based on content analysis, these tags would improve categorization",
+          description:
+            "Based on content analysis, these tags would improve categorization",
           confidence: 92,
-          action: () => onSuggestionApply({
-            tags: [...capsuleData.tags, "verified", "truth", "evidence"],
-          }),
+          action: () =>
+            onSuggestionApply({
+              tags: [...capsuleData.tags, "verified", "truth", "evidence"],
+            }),
         },
         {
           type: "enhancement",
           title: "Optimize Access Level",
-          description: "Content appears suitable for restricted access with authentication",
+          description:
+            "Content appears suitable for restricted access with authentication",
           confidence: 78,
-          action: () => onSuggestionApply({
-            accessLevel: "restricted",
-            requiresAuth: true,
-          }),
+          action: () =>
+            onSuggestionApply({
+              accessLevel: "restricted",
+              requiresAuth: true,
+            }),
         },
       ];
-      
+
       setSuggestions(mockSuggestions);
     } catch (err) {
       setError("Unable to generate AI suggestions. Please try again.");
@@ -85,7 +94,7 @@ const CapsuleAIAssistant: React.FC<Props> = ({ capsuleData, onSuggestionApply })
     if (suggestion.action) {
       suggestion.action();
       // Remove applied suggestion
-      setSuggestions(prev => prev.filter(s => s !== suggestion));
+      setSuggestions((prev) => prev.filter((s) => s !== suggestion));
     }
   };
 
@@ -141,8 +150,8 @@ const CapsuleAIAssistant: React.FC<Props> = ({ capsuleData, onSuggestionApply })
                         suggestion.type === "improvement"
                           ? "border-green-500 text-green-400"
                           : suggestion.type === "optimization"
-                          ? "border-blue-500 text-blue-400"
-                          : "border-purple-500 text-purple-400"
+                            ? "border-blue-500 text-blue-400"
+                            : "border-purple-500 text-purple-400"
                       }`}
                     >
                       {suggestion.confidence}% confident
@@ -167,7 +176,8 @@ const CapsuleAIAssistant: React.FC<Props> = ({ capsuleData, onSuggestionApply })
 
         {!loading && suggestions.length === 0 && (
           <div className="text-slate-400 text-sm text-center py-4">
-            Add content to your capsule to get AI-powered suggestions for optimization.
+            Add content to your capsule to get AI-powered suggestions for
+            optimization.
           </div>
         )}
       </CardContent>

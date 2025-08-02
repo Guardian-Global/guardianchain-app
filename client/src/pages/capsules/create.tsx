@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, 
-  Upload, 
-  Clock, 
-  Shield, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Plus,
+  Upload,
+  Clock,
+  Shield,
   Zap,
   FileText,
   Image,
   Video,
-  Mic
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+  Mic,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface CapsuleFormData {
   title: string;
@@ -26,7 +26,7 @@ interface CapsuleFormData {
   category: string;
   tags: string[];
   timelock?: Date;
-  verificationLevel: 'basic' | 'enhanced' | 'professional';
+  verificationLevel: "basic" | "enhanced" | "professional";
   mediaFiles: File[];
 }
 
@@ -34,50 +34,53 @@ export default function CreateCapsulePage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [formData, setFormData] = useState<CapsuleFormData>({
-    title: '',
-    content: '',
-    category: 'personal',
+    title: "",
+    content: "",
+    category: "personal",
     tags: [],
-    verificationLevel: 'basic',
-    mediaFiles: []
+    verificationLevel: "basic",
+    mediaFiles: [],
   });
-  const [currentTag, setCurrentTag] = useState('');
+  const [currentTag, setCurrentTag] = useState("");
 
   const createCapsuleMutation = useMutation({
     mutationFn: async (data: CapsuleFormData) => {
-      return apiRequest('POST', '/api/capsules/create', data);
+      return apiRequest("POST", "/api/capsules/create", data);
     },
     onSuccess: () => {
       toast({
-        title: 'Capsule Created',
-        description: 'Your truth capsule has been sealed and added to the vault.',
+        title: "Capsule Created",
+        description:
+          "Your truth capsule has been sealed and added to the vault.",
       });
       // Reset form
       setFormData({
-        title: '',
-        content: '',
-        category: 'personal',
+        title: "",
+        content: "",
+        category: "personal",
         tags: [],
-        verificationLevel: 'basic',
-        mediaFiles: []
+        verificationLevel: "basic",
+        mediaFiles: [],
       });
     },
     onError: (error) => {
       toast({
-        title: 'Creation Failed',
-        description: 'There was an error creating your capsule. Please try again.',
-        variant: 'destructive',
+        title: "Creation Failed",
+        description:
+          "There was an error creating your capsule. Please try again.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.content) {
       toast({
-        title: 'Incomplete Form',
-        description: 'Please provide both a title and content for your capsule.',
-        variant: 'destructive',
+        title: "Incomplete Form",
+        description:
+          "Please provide both a title and content for your capsule.",
+        variant: "destructive",
       });
       return;
     }
@@ -87,48 +90,48 @@ export default function CreateCapsulePage() {
 
   const addTag = () => {
     if (currentTag.trim() && !formData.tags.includes(currentTag.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        tags: [...prev.tags, currentTag.trim()]
+        tags: [...prev.tags, currentTag.trim()],
       }));
-      setCurrentTag('');
+      setCurrentTag("");
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
     }));
   };
 
   const categories = [
-    { value: 'personal', label: 'Personal Memory', icon: FileText },
-    { value: 'family', label: 'Family Legacy', icon: Shield },
-    { value: 'professional', label: 'Professional', icon: Zap },
-    { value: 'historical', label: 'Historical Record', icon: Clock },
-    { value: 'creative', label: 'Creative Work', icon: Image }
+    { value: "personal", label: "Personal Memory", icon: FileText },
+    { value: "family", label: "Family Legacy", icon: Shield },
+    { value: "professional", label: "Professional", icon: Zap },
+    { value: "historical", label: "Historical Record", icon: Clock },
+    { value: "creative", label: "Creative Work", icon: Image },
   ];
 
   const verificationLevels = [
     {
-      value: 'basic',
-      label: 'Basic Verification',
-      description: 'Standard blockchain sealing and timestamp',
-      cost: 'Free'
+      value: "basic",
+      label: "Basic Verification",
+      description: "Standard blockchain sealing and timestamp",
+      cost: "Free",
     },
     {
-      value: 'enhanced',
-      label: 'Enhanced Verification',
-      description: 'AI content analysis and community validation',
-      cost: '10 GTT'
+      value: "enhanced",
+      label: "Enhanced Verification",
+      description: "AI content analysis and community validation",
+      cost: "10 GTT",
     },
     {
-      value: 'professional',
-      label: 'Professional Verification',
-      description: 'Full audit trail with legal attestation',
-      cost: '50 GTT'
-    }
+      value: "professional",
+      label: "Professional Verification",
+      description: "Full audit trail with legal attestation",
+      cost: "50 GTT",
+    },
   ];
 
   return (
@@ -143,7 +146,8 @@ export default function CreateCapsulePage() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Preserve your memories, thoughts, and experiences in an immutable blockchain capsule.
+            Preserve your memories, thoughts, and experiences in an immutable
+            blockchain capsule.
           </p>
         </div>
 
@@ -164,7 +168,9 @@ export default function CreateCapsulePage() {
                 </label>
                 <Input
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, title: e.target.value }))
+                  }
                   placeholder="Give your capsule a memorable title"
                   className="w-full"
                 />
@@ -181,10 +187,15 @@ export default function CreateCapsulePage() {
                       key={category.value}
                       className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
                         formData.category === category.value
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                          : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
                       }`}
-                      onClick={() => setFormData(prev => ({ ...prev, category: category.value }))}
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          category: category.value,
+                        }))
+                      }
                     >
                       <div className="flex items-center">
                         <category.icon className="w-5 h-5 mr-2 text-blue-500" />
@@ -202,7 +213,12 @@ export default function CreateCapsulePage() {
                 </label>
                 <Textarea
                   value={formData.content}
-                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      content: e.target.value,
+                    }))
+                  }
                   placeholder="Share your story, memory, or message..."
                   rows={8}
                   className="w-full"
@@ -211,15 +227,15 @@ export default function CreateCapsulePage() {
 
               {/* Tags */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Tags
-                </label>
+                <label className="block text-sm font-medium mb-2">Tags</label>
                 <div className="flex gap-2 mb-2">
                   <Input
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
                     placeholder="Add a tag"
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addTag())
+                    }
                     className="flex-1"
                   />
                   <Button type="button" onClick={addTag} variant="outline">
@@ -257,10 +273,15 @@ export default function CreateCapsulePage() {
                     key={level.value}
                     className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                       formData.verificationLevel === level.value
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
                     }`}
-                    onClick={() => setFormData(prev => ({ ...prev, verificationLevel: level.value as any }))}
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        verificationLevel: level.value as any,
+                      }))
+                    }
                   >
                     <h3 className="font-semibold mb-2">{level.label}</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
@@ -311,14 +332,19 @@ export default function CreateCapsulePage() {
             <CardContent>
               <div className="space-y-4">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Set a future date when this capsule should be automatically revealed
+                  Set a future date when this capsule should be automatically
+                  revealed
                 </p>
                 <Input
                   type="datetime-local"
-                  onChange={(e) => setFormData(prev => ({ 
-                    ...prev, 
-                    timelock: e.target.value ? new Date(e.target.value) : undefined 
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      timelock: e.target.value
+                        ? new Date(e.target.value)
+                        : undefined,
+                    }))
+                  }
                   className="w-full md:w-auto"
                 />
               </div>

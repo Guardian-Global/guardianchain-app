@@ -14,36 +14,36 @@ const LogoSyncPage: React.FC = () => {
             Cross-Platform Logo Synchronization
           </h1>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Manage and synchronize GUARDIANCHAIN logos across all platforms with real-time monitoring, 
-            version control, and automated distribution.
+            Manage and synchronize GUARDIANCHAIN logos across all platforms with
+            real-time monitoring, version control, and automated distribution.
           </p>
         </div>
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="sync-manager" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 bg-slate-800/50 border border-slate-700">
-            <TabsTrigger 
-              value="sync-manager" 
+            <TabsTrigger
+              value="sync-manager"
               className="flex items-center gap-2 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <RefreshCw className="h-4 w-4" />
               Sync Manager
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="platform-status"
               className="flex items-center gap-2 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <Monitor className="h-4 w-4" />
               Platform Status
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="global-distribution"
               className="flex items-center gap-2 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <Globe className="h-4 w-4" />
               Global Distribution
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="settings"
               className="flex items-center gap-2 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
@@ -153,26 +153,36 @@ const LogoSyncPage: React.FC = () => {
           <TabsContent value="global-distribution">
             <Card className="bg-slate-800/50 border-slate-700">
               <CardHeader>
-                <CardTitle className="text-white">Global Logo Distribution Network</CardTitle>
+                <CardTitle className="text-white">
+                  Global Logo Distribution Network
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-slate-900/50 rounded-lg p-6 text-center">
-                    <div className="text-3xl font-bold text-purple-400 mb-2">147</div>
+                    <div className="text-3xl font-bold text-purple-400 mb-2">
+                      147
+                    </div>
                     <div className="text-slate-400">CDN Edge Locations</div>
                   </div>
                   <div className="bg-slate-900/50 rounded-lg p-6 text-center">
-                    <div className="text-3xl font-bold text-green-400 mb-2">99.9%</div>
+                    <div className="text-3xl font-bold text-green-400 mb-2">
+                      99.9%
+                    </div>
                     <div className="text-slate-400">Global Availability</div>
                   </div>
                   <div className="bg-slate-900/50 rounded-lg p-6 text-center">
-                    <div className="text-3xl font-bold text-blue-400 mb-2">50ms</div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">
+                      50ms
+                    </div>
                     <div className="text-slate-400">Avg Load Time</div>
                   </div>
                 </div>
 
                 <div className="bg-slate-900/30 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Regional Distribution</h3>
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Regional Distribution
+                  </h3>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-slate-300">North America</span>
@@ -220,11 +230,15 @@ const LogoSyncPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-white">Sync Configuration</CardTitle>
+                  <CardTitle className="text-white">
+                    Sync Configuration
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Auto-Sync Interval</label>
+                    <label className="text-sm font-medium text-slate-300">
+                      Auto-Sync Interval
+                    </label>
                     <select className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white">
                       <option>Every 5 minutes</option>
                       <option>Every 15 minutes</option>
@@ -233,7 +247,9 @@ const LogoSyncPage: React.FC = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Retry Attempts</label>
+                    <label className="text-sm font-medium text-slate-300">
+                      Retry Attempts
+                    </label>
                     <select className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white">
                       <option>3 attempts</option>
                       <option>5 attempts</option>
@@ -245,11 +261,15 @@ const LogoSyncPage: React.FC = () => {
 
               <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-white">Performance Settings</CardTitle>
+                  <CardTitle className="text-white">
+                    Performance Settings
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Cache Duration</label>
+                    <label className="text-sm font-medium text-slate-300">
+                      Cache Duration
+                    </label>
                     <select className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white">
                       <option>1 hour</option>
                       <option>24 hours</option>
@@ -258,7 +278,9 @@ const LogoSyncPage: React.FC = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Compression Level</label>
+                    <label className="text-sm font-medium text-slate-300">
+                      Compression Level
+                    </label>
                     <select className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white">
                       <option>Balanced</option>
                       <option>Maximum Quality</option>

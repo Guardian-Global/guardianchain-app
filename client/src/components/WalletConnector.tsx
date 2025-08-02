@@ -200,7 +200,7 @@ const WalletConnector: React.FC = () => {
               onClick={() =>
                 window.open(
                   `https://etherscan.io/address/${walletInfo.address}`,
-                  "_blank"
+                  "_blank",
                 )
               }
             >

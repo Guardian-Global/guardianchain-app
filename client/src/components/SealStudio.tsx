@@ -74,7 +74,7 @@ const SealStudio = () => {
 
   const handleShare = () => {
     navigator.clipboard.writeText(
-      window.location.origin + "/seal/" + Date.now()
+      window.location.origin + "/seal/" + Date.now(),
     );
     toast({
       title: "Share Link Copied",
@@ -191,7 +191,7 @@ const SealStudio = () => {
                     <div className="flex justify-center mb-3">
                       <div
                         className={`p-4 ${getSealTypeColor(
-                          sealType
+                          sealType,
                         )} rounded-full`}
                       >
                         <Shield className="w-8 h-8 text-white" />

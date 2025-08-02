@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { 
-  Shield, 
-  Lock, 
-  AlertTriangle, 
-  FileText, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import {
+  Shield,
+  Lock,
+  AlertTriangle,
+  FileText,
   Upload,
   Eye,
   UserX,
   Clock,
-  CheckCircle
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useMutation } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
+  CheckCircle,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface WhistleblowerSubmission {
   id: string;
   title: string;
   category: string;
-  status: 'submitted' | 'under_review' | 'verified' | 'sealed';
-  anonymityLevel: 'partial' | 'full' | 'witness_protection';
+  status: "submitted" | "under_review" | "verified" | "sealed";
+  anonymityLevel: "partial" | "full" | "witness_protection";
   timelock?: Date;
   evidence: {
     documents: File[];
@@ -38,97 +38,99 @@ export default function WhistleblowerSanctuary() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [submission, setSubmission] = useState({
-    title: '',
-    category: '',
-    description: '',
-    evidence: '',
-    anonymityLevel: 'partial',
-    timelock: '',
-    witnessProtection: false
+    title: "",
+    category: "",
+    description: "",
+    evidence: "",
+    anonymityLevel: "partial",
+    timelock: "",
+    witnessProtection: false,
   });
   const [files, setFiles] = useState<File[]>([]);
 
   const submitMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('POST', '/api/whistleblower/submit', data);
+      return apiRequest("POST", "/api/whistleblower/submit", data);
     },
     onSuccess: () => {
       toast({
-        title: 'Submission Secured',
-        description: 'Your whistleblower submission has been encrypted and sealed.',
+        title: "Submission Secured",
+        description:
+          "Your whistleblower submission has been encrypted and sealed.",
       });
       // Reset form
       setSubmission({
-        title: '',
-        category: '',
-        description: '',
-        evidence: '',
-        anonymityLevel: 'partial',
-        timelock: '',
-        witnessProtection: false
+        title: "",
+        category: "",
+        description: "",
+        evidence: "",
+        anonymityLevel: "partial",
+        timelock: "",
+        witnessProtection: false,
       });
     },
     onError: (error) => {
       toast({
-        title: 'Submission Failed',
-        description: 'There was an error securing your submission. Please try again.',
-        variant: 'destructive',
+        title: "Submission Failed",
+        description:
+          "There was an error securing your submission. Please try again.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   const handleSubmit = () => {
     if (!submission.title || !submission.description) {
       toast({
-        title: 'Incomplete Submission',
-        description: 'Please provide at least a title and description.',
-        variant: 'destructive',
+        title: "Incomplete Submission",
+        description: "Please provide at least a title and description.",
+        variant: "destructive",
       });
       return;
     }
 
     submitMutation.mutate({
       ...submission,
-      files: files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+      files: files.map((f) => ({ name: f.name, size: f.size, type: f.type })),
       submitterId: user?.id,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   };
 
   const protectionLevels = [
     {
-      level: 'partial',
-      title: 'Partial Anonymity',
-      description: 'Identity known to platform, anonymous to public',
+      level: "partial",
+      title: "Partial Anonymity",
+      description: "Identity known to platform, anonymous to public",
       icon: Eye,
-      color: 'yellow'
+      color: "yellow",
     },
     {
-      level: 'full',
-      title: 'Full Anonymity',
-      description: 'Complete identity protection and encryption',
+      level: "full",
+      title: "Full Anonymity",
+      description: "Complete identity protection and encryption",
       icon: UserX,
-      color: 'orange'
+      color: "orange",
     },
     {
-      level: 'witness_protection',
-      title: 'Witness Protection',
-      description: 'Maximum security with legal safeguards',
+      level: "witness_protection",
+      title: "Witness Protection",
+      description: "Maximum security with legal safeguards",
       icon: Shield,
-      color: 'red'
-    }
+      color: "red",
+    },
   ];
 
   const categories = [
-    'Corporate Misconduct',
-    'Government Corruption',
-    'Environmental Violations',
-    'Human Rights Abuse',
-    'Financial Fraud',
-    'Healthcare Violations',
-    'Academic Misconduct',
-    'Technology Ethics',
-    'Other'
+    "Corporate Misconduct",
+    "Government Corruption",
+    "Environmental Violations",
+    "Human Rights Abuse",
+    "Financial Fraud",
+    "Healthcare Violations",
+    "Academic Misconduct",
+    "Technology Ethics",
+    "Other",
   ];
 
   return (
@@ -143,7 +145,8 @@ export default function WhistleblowerSanctuary() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Secure platform for truth revelation with maximum protection and anonymity guarantees.
+            Secure platform for truth revelation with maximum protection and
+            anonymity guarantees.
           </p>
           <Badge variant="destructive" className="mt-2">
             <Lock className="w-4 h-4 mr-1" />
@@ -166,13 +169,20 @@ export default function WhistleblowerSanctuary() {
                   key={level.level}
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                     submission.anonymityLevel === level.level
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                      : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
                   }`}
-                  onClick={() => setSubmission(prev => ({ ...prev, anonymityLevel: level.level }))}
+                  onClick={() =>
+                    setSubmission((prev) => ({
+                      ...prev,
+                      anonymityLevel: level.level,
+                    }))
+                  }
                 >
                   <div className="flex items-center mb-2">
-                    <level.icon className={`w-6 h-6 mr-2 text-${level.color}-500`} />
+                    <level.icon
+                      className={`w-6 h-6 mr-2 text-${level.color}-500`}
+                    />
                     <h3 className="font-semibold">{level.title}</h3>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -200,7 +210,9 @@ export default function WhistleblowerSanctuary() {
               </label>
               <Input
                 value={submission.title}
-                onChange={(e) => setSubmission(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) =>
+                  setSubmission((prev) => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="Brief, descriptive title for your submission"
                 className="w-full"
               />
@@ -208,17 +220,22 @@ export default function WhistleblowerSanctuary() {
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Category
-              </label>
+              <label className="block text-sm font-medium mb-2">Category</label>
               <select
                 value={submission.category}
-                onChange={(e) => setSubmission(prev => ({ ...prev, category: e.target.value }))}
+                onChange={(e) =>
+                  setSubmission((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
+                }
                 className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
               >
                 <option value="">Select category...</option>
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
               </select>
             </div>
@@ -230,7 +247,12 @@ export default function WhistleblowerSanctuary() {
               </label>
               <Textarea
                 value={submission.description}
-                onChange={(e) => setSubmission(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setSubmission((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Provide detailed information about the misconduct, including dates, locations, people involved, and any other relevant details..."
                 rows={8}
                 className="w-full"
@@ -244,7 +266,12 @@ export default function WhistleblowerSanctuary() {
               </label>
               <Textarea
                 value={submission.evidence}
-                onChange={(e) => setSubmission(prev => ({ ...prev, evidence: e.target.value }))}
+                onChange={(e) =>
+                  setSubmission((prev) => ({
+                    ...prev,
+                    evidence: e.target.value,
+                  }))
+                }
                 placeholder="Describe any evidence you have: documents, recordings, communications, witness testimonies, etc."
                 rows={4}
                 className="w-full"
@@ -279,12 +306,18 @@ export default function WhistleblowerSanctuary() {
                 <Input
                   type="datetime-local"
                   value={submission.timelock}
-                  onChange={(e) => setSubmission(prev => ({ ...prev, timelock: e.target.value }))}
+                  onChange={(e) =>
+                    setSubmission((prev) => ({
+                      ...prev,
+                      timelock: e.target.value,
+                    }))
+                  }
                   className="flex-1"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Set a future date when this submission should be automatically revealed
+                Set a future date when this submission should be automatically
+                revealed
               </p>
             </div>
           </CardContent>
@@ -341,7 +374,8 @@ export default function WhistleblowerSanctuary() {
             )}
           </Button>
           <p className="text-xs text-gray-500 mt-2">
-            By submitting, you agree to the whistleblower protection terms and conditions
+            By submitting, you agree to the whistleblower protection terms and
+            conditions
           </p>
         </div>
       </div>

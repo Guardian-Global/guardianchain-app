@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 export const privacyCompliance = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Set privacy headers
   res.setHeader("X-Privacy-Policy", "https://guardianchain.replit.app/privacy");
@@ -18,7 +18,7 @@ export const privacyCompliance = (
 export const accessibilityHeaders = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   res.setHeader("X-Accessibility-Standard", "WCAG-2.1-AA");
   res.setHeader("X-Screen-Reader-Compatible", "true");
@@ -30,14 +30,14 @@ export const accessibilityHeaders = (
 export const complianceTracking = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Log compliance-relevant requests
   if (req.path.includes("/api/")) {
     console.log(
       `[COMPLIANCE] ${new Date().toISOString()} - ${req.method} ${
         req.path
-      } - IP: ${req.ip}`
+      } - IP: ${req.ip}`,
     );
   }
 
@@ -48,7 +48,7 @@ export const complianceTracking = (
 export const dataProcessingConsent = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Ensure data processing consent for relevant endpoints
   const dataProcessingEndpoints = [
@@ -70,7 +70,7 @@ export const dataProcessingConsent = (
 export const cookieConsent = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   res.setHeader("X-Cookie-Policy", "https://guardianchain.replit.app/cookies");
   res.setHeader("X-Essential-Cookies-Only", "session,csrf");
@@ -82,7 +82,7 @@ export const cookieConsent = (
 export const financialCompliance = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const financialEndpoints = ["/api/gtt", "/api/yield", "/api/rewards"];
 

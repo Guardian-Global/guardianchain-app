@@ -200,7 +200,7 @@ const VerifyCapsule = () => {
                           </label>
                           <Badge
                             className={`${getCategoryColor(
-                              verificationResult.capsuleData.category
+                              verificationResult.capsuleData.category,
                             )} text-white`}
                           >
                             {verificationResult.capsuleData.category}

@@ -1,11 +1,39 @@
-import { 
-  Home, Shield, Clock, Globe, TrendingUp, Users, 
-  Settings, Plus, Search, Trophy, Star, Lock,
-  Brain, Heart, FileText, Video, Image, Archive,
-  DollarSign, BarChart3, Gavel, Flag, Mail,
-  Map, Eye, Database, Code, Zap, Crown,
-  Target, Rocket, Gift, UserPlus, Coffee
-} from 'lucide-react';
+import {
+  Home,
+  Shield,
+  Clock,
+  Globe,
+  TrendingUp,
+  Users,
+  Settings,
+  Plus,
+  Search,
+  Trophy,
+  Star,
+  Lock,
+  Brain,
+  Heart,
+  FileText,
+  Video,
+  Image,
+  Archive,
+  DollarSign,
+  BarChart3,
+  Gavel,
+  Flag,
+  Mail,
+  Map,
+  Eye,
+  Database,
+  Code,
+  Zap,
+  Crown,
+  Target,
+  Rocket,
+  Gift,
+  UserPlus,
+  Coffee,
+} from "lucide-react";
 
 export interface NavigationItem {
   id: string;
@@ -26,263 +54,265 @@ export interface NavigationItem {
 export const navigationItems: NavigationItem[] = [
   // Core Platform
   {
-    id: 'dashboard',
-    title: 'Dashboard',
-    description: 'Your truth vault command center',
-    path: '/dashboard',
+    id: "dashboard",
+    title: "Dashboard",
+    description: "Your truth vault command center",
+    path: "/dashboard",
     icon: Home,
-    category: 'Core',
-    isPopular: true
+    category: "Core",
+    isPopular: true,
   },
   {
-    id: 'create-capsule',
-    title: 'Create Capsule',
-    description: 'Preserve your truth forever',
-    path: '/create',
+    id: "create-capsule",
+    title: "Create Capsule",
+    description: "Preserve your truth forever",
+    path: "/create",
     icon: Plus,
-    category: 'Creation',
-    isPopular: true
+    category: "Creation",
+    isPopular: true,
   },
   {
-    id: 'eternal-contracts',
-    title: 'Eternal Contracts',
-    description: 'Immutable declarations and wills',
-    path: '/eternal-contracts',
+    id: "eternal-contracts",
+    title: "Eternal Contracts",
+    description: "Immutable declarations and wills",
+    path: "/eternal-contracts",
     icon: Lock,
-    category: 'Creation',
-    tier: ['SEEKER', 'CREATOR', 'SOVEREIGN'],
-    isNew: true
+    category: "Creation",
+    tier: ["SEEKER", "CREATOR", "SOVEREIGN"],
+    isNew: true,
   },
   {
-    id: 'explorer',
-    title: 'Truth Explorer',
-    description: 'Discover verified capsules',
-    path: '/explorer',
+    id: "explorer",
+    title: "Truth Explorer",
+    description: "Discover verified capsules",
+    path: "/explorer",
     icon: Search,
-    category: 'Core'
+    category: "Core",
   },
   {
-    id: 'guardian-map',
-    title: 'Guardian Map',
-    description: 'Global network visualization',
-    path: '/guardian-map',
+    id: "guardian-map",
+    title: "Guardian Map",
+    description: "Global network visualization",
+    path: "/guardian-map",
     icon: Map,
-    category: 'Network',
-    isNew: true
+    category: "Network",
+    isNew: true,
   },
 
   // Capsule Types
   {
-    id: 'family-legacy',
-    title: 'Family Legacy',
-    description: 'Preserve family memories and stories',
-    path: '/family-legacy',
+    id: "family-legacy",
+    title: "Family Legacy",
+    description: "Preserve family memories and stories",
+    path: "/family-legacy",
     icon: Heart,
-    category: 'Capsules'
+    category: "Capsules",
   },
   {
-    id: 'whistleblower-sanctuary',
-    title: 'Whistleblower Sanctuary',
-    description: 'Protected truth revelation',
-    path: '/whistleblower-sanctuary',
+    id: "whistleblower-sanctuary",
+    title: "Whistleblower Sanctuary",
+    description: "Protected truth revelation",
+    path: "/whistleblower-sanctuary",
     icon: Flag,
-    category: 'Capsules',
-    tier: ['CREATOR', 'SOVEREIGN']
+    category: "Capsules",
+    tier: ["CREATOR", "SOVEREIGN"],
   },
   {
-    id: 'conspiracy-capsule',
-    title: 'Conspiracy Capsule',
-    description: 'Investigate and expose truth',
-    path: '/conspiracy-capsule',
+    id: "conspiracy-capsule",
+    title: "Conspiracy Capsule",
+    description: "Investigate and expose truth",
+    path: "/conspiracy-capsule",
     icon: Eye,
-    category: 'Capsules',
-    tier: ['SEEKER', 'CREATOR', 'SOVEREIGN']
+    category: "Capsules",
+    tier: ["SEEKER", "CREATOR", "SOVEREIGN"],
   },
   {
-    id: 'time-messages',
-    title: 'Time Messages',
-    description: 'Future-locked communications',
-    path: '/time-messages',
+    id: "time-messages",
+    title: "Time Messages",
+    description: "Future-locked communications",
+    path: "/time-messages",
     icon: Clock,
-    category: 'Capsules'
+    category: "Capsules",
   },
 
   // Governance & DAO
   {
-    id: 'dao-governance',
-    title: 'DAO Governance',
-    description: 'Participate in platform decisions',
-    path: '/dao',
+    id: "dao-governance",
+    title: "DAO Governance",
+    description: "Participate in platform decisions",
+    path: "/dao",
     icon: Gavel,
-    category: 'Governance',
-    daoOnly: true
-  },
-  {
-    id: 'dao-proposals',
-    title: 'Active Proposals',
-    description: 'Vote on community proposals',
-    path: '/dao/proposals',
-    icon: FileText,
-    category: 'Governance',
+    category: "Governance",
     daoOnly: true,
-    badges: ['new-proposal']
   },
   {
-    id: 'jury-voting',
-    title: 'Jury Panel',
-    description: 'Truth verification voting',
-    path: '/jury',
+    id: "dao-proposals",
+    title: "Active Proposals",
+    description: "Vote on community proposals",
+    path: "/dao/proposals",
+    icon: FileText,
+    category: "Governance",
+    daoOnly: true,
+    badges: ["new-proposal"],
+  },
+  {
+    id: "jury-voting",
+    title: "Jury Panel",
+    description: "Truth verification voting",
+    path: "/jury",
     icon: Users,
-    category: 'Governance',
-    tier: ['CREATOR', 'SOVEREIGN']
+    category: "Governance",
+    tier: ["CREATOR", "SOVEREIGN"],
   },
 
   // Analytics & Yield
   {
-    id: 'analytics',
-    title: 'Analytics Hub',
-    description: 'Truth impact and yield metrics',
-    path: '/analytics',
+    id: "analytics",
+    title: "Analytics Hub",
+    description: "Truth impact and yield metrics",
+    path: "/analytics",
     icon: BarChart3,
-    category: 'Analytics',
-    tier: ['SEEKER', 'CREATOR', 'SOVEREIGN']
+    category: "Analytics",
+    tier: ["SEEKER", "CREATOR", "SOVEREIGN"],
   },
   {
-    id: 'yield-calculator',
-    title: 'Yield Calculator',
-    description: 'GTT earnings and projections',
-    path: '/yield',
+    id: "yield-calculator",
+    title: "Yield Calculator",
+    description: "GTT earnings and projections",
+    path: "/yield",
     icon: TrendingUp,
-    category: 'Analytics',
-    badges: ['unclaimed-yield']
+    category: "Analytics",
+    badges: ["unclaimed-yield"],
   },
   {
-    id: 'smri-rankings',
-    title: 'SMRI Rankings',
-    description: 'Sovereign Memory Reputation Index',
-    path: '/smri',
+    id: "smri-rankings",
+    title: "SMRI Rankings",
+    description: "Sovereign Memory Reputation Index",
+    path: "/smri",
     icon: Trophy,
-    category: 'Analytics'
+    category: "Analytics",
   },
   {
-    id: 'treasury',
-    title: 'Treasury Monitor',
-    description: 'Platform treasury analytics',
-    path: '/treasury',
+    id: "treasury",
+    title: "Treasury Monitor",
+    description: "Platform treasury analytics",
+    path: "/treasury",
     icon: DollarSign,
-    category: 'Analytics',
-    tier: ['SOVEREIGN'],
-    adminOnly: true
+    category: "Analytics",
+    tier: ["SOVEREIGN"],
+    adminOnly: true,
   },
 
   // Validator & Admin Tools
   {
-    id: 'validator-dashboard',
-    title: 'Validator Dashboard',
-    description: 'Network validation tools',
-    path: '/validator',
+    id: "validator-dashboard",
+    title: "Validator Dashboard",
+    description: "Network validation tools",
+    path: "/validator",
     icon: Shield,
-    category: 'Tools',
+    category: "Tools",
     validatorOnly: true,
-    badges: ['pending-review']
+    badges: ["pending-review"],
   },
   {
-    id: 'admin-panel',
-    title: 'Admin Panel',
-    description: 'Platform administration',
-    path: '/admin',
+    id: "admin-panel",
+    title: "Admin Panel",
+    description: "Platform administration",
+    path: "/admin",
     icon: Settings,
-    category: 'Tools',
-    adminOnly: true
+    category: "Tools",
+    adminOnly: true,
   },
   {
-    id: 'system-validation',
-    title: 'System Validation',
-    description: 'Platform health monitoring',
-    path: '/system-validation',
+    id: "system-validation",
+    title: "System Validation",
+    description: "Platform health monitoring",
+    path: "/system-validation",
     icon: Database,
-    category: 'Tools',
-    adminOnly: true
+    category: "Tools",
+    adminOnly: true,
   },
 
   // Advanced Features
   {
-    id: 'lineage-graph',
-    title: 'Truth Lineage',
-    description: 'Capsule connection visualization',
-    path: '/lineage',
+    id: "lineage-graph",
+    title: "Truth Lineage",
+    description: "Capsule connection visualization",
+    path: "/lineage",
     icon: Globe,
-    category: 'Advanced',
-    tier: ['CREATOR', 'SOVEREIGN']
+    category: "Advanced",
+    tier: ["CREATOR", "SOVEREIGN"],
   },
   {
-    id: 'ai-advisor',
-    title: 'AI Advisor',
-    description: 'Intelligent content guidance',
-    path: '/ai-advisor',
+    id: "ai-advisor",
+    title: "AI Advisor",
+    description: "Intelligent content guidance",
+    path: "/ai-advisor",
     icon: Brain,
-    category: 'Advanced',
-    tier: ['SEEKER', 'CREATOR', 'SOVEREIGN'],
-    isNew: true
+    category: "Advanced",
+    tier: ["SEEKER", "CREATOR", "SOVEREIGN"],
+    isNew: true,
   },
   {
-    id: 'blockchain-playground',
-    title: 'Blockchain Playground',
-    description: 'Smart contract interaction',
-    path: '/blockchain-playground',
+    id: "blockchain-playground",
+    title: "Blockchain Playground",
+    description: "Smart contract interaction",
+    path: "/blockchain-playground",
     icon: Code,
-    category: 'Advanced',
-    tier: ['SOVEREIGN']
+    category: "Advanced",
+    tier: ["SOVEREIGN"],
   },
 
   // Platform Tools
   {
-    id: 'capsule-gallery',
-    title: 'NFT Gallery',
-    description: 'Your truth capsule collection',
-    path: '/capsules/gallery',
+    id: "capsule-gallery",
+    title: "NFT Gallery",
+    description: "Your truth capsule collection",
+    path: "/capsules/gallery",
     icon: Image,
-    category: 'Platform'
+    category: "Platform",
   },
   {
-    id: 'profile-dashboard',
-    title: 'Profile Center',
-    description: 'Manage your guardian profile',
-    path: '/profile',
+    id: "profile-dashboard",
+    title: "Profile Center",
+    description: "Manage your guardian profile",
+    path: "/profile",
     icon: Users,
-    category: 'Platform'
+    category: "Platform",
   },
   {
-    id: 'referral-program',
-    title: 'Referral Program',
-    description: 'Earn through community growth',
-    path: '/referral',
+    id: "referral-program",
+    title: "Referral Program",
+    description: "Earn through community growth",
+    path: "/referral",
     icon: UserPlus,
-    category: 'Platform'
+    category: "Platform",
   },
   {
-    id: 'whitepapers',
-    title: 'Documentation',
-    description: 'Technical papers and guides',
-    path: '/whitepapers',
+    id: "whitepapers",
+    title: "Documentation",
+    description: "Technical papers and guides",
+    path: "/whitepapers",
     icon: FileText,
-    category: 'Platform'
-  }
+    category: "Platform",
+  },
 ];
 
 // Helper function to get visible navigation based on user permissions
 export function getVisibleNavigation(user: any): NavigationItem[] {
-  if (!user) return navigationItems.filter(item => 
-    !item.tier && !item.adminOnly && !item.daoOnly && !item.validatorOnly
-  );
+  if (!user)
+    return navigationItems.filter(
+      (item) =>
+        !item.tier && !item.adminOnly && !item.daoOnly && !item.validatorOnly,
+    );
 
-  return navigationItems.filter(item => {
+  return navigationItems.filter((item) => {
     // Check tier requirements
     if (item.tier && item.tier.length > 0) {
-      const userTier = user.tier || 'EXPLORER';
-      const tierHierarchy = ['EXPLORER', 'SEEKER', 'CREATOR', 'SOVEREIGN'];
+      const userTier = user.tier || "EXPLORER";
+      const tierHierarchy = ["EXPLORER", "SEEKER", "CREATOR", "SOVEREIGN"];
       const userTierIndex = tierHierarchy.indexOf(userTier);
-      const hasRequiredTier = item.tier.some(requiredTier => {
+      const hasRequiredTier = item.tier.some((requiredTier) => {
         const requiredIndex = tierHierarchy.indexOf(requiredTier);
         return userTierIndex >= requiredIndex;
       });
@@ -291,25 +321,28 @@ export function getVisibleNavigation(user: any): NavigationItem[] {
 
     // Check admin permissions
     if (item.adminOnly) {
-      const isAdmin = user.email === 'founder@guardianchain.app' || 
-                     user.email === 'master@guardianchain.app' ||
-                     user.tier === 'ADMIN';
+      const isAdmin =
+        user.email === "founder@guardianchain.app" ||
+        user.email === "master@guardianchain.app" ||
+        user.tier === "ADMIN";
       if (!isAdmin) return false;
     }
 
     // Check DAO membership
     if (item.daoOnly) {
-      const isDaoMember = user.tier === 'CREATOR' || 
-                         user.tier === 'SOVEREIGN' ||
-                         user.gttBalance > 1000;
+      const isDaoMember =
+        user.tier === "CREATOR" ||
+        user.tier === "SOVEREIGN" ||
+        user.gttBalance > 1000;
       if (!isDaoMember) return false;
     }
 
     // Check validator status
     if (item.validatorOnly) {
-      const isValidator = user.email === 'founder@guardianchain.app' || 
-                         user.email === 'master@guardianchain.app' ||
-                         user.isValidator === true;
+      const isValidator =
+        user.email === "founder@guardianchain.app" ||
+        user.email === "master@guardianchain.app" ||
+        user.isValidator === true;
       if (!isValidator) return false;
     }
 
@@ -319,58 +352,58 @@ export function getVisibleNavigation(user: any): NavigationItem[] {
 
 // Category metadata
 export const categoryInfo = {
-  'Core': {
-    title: 'Core Platform',
-    description: 'Essential platform features',
+  Core: {
+    title: "Core Platform",
+    description: "Essential platform features",
     icon: Home,
-    color: 'blue'
+    color: "blue",
   },
-  'Creation': {
-    title: 'Content Creation',
-    description: 'Create and preserve truth',
+  Creation: {
+    title: "Content Creation",
+    description: "Create and preserve truth",
     icon: Plus,
-    color: 'green'
+    color: "green",
   },
-  'Capsules': {
-    title: 'Capsule Types',
-    description: 'Specialized truth containers',
+  Capsules: {
+    title: "Capsule Types",
+    description: "Specialized truth containers",
     icon: Archive,
-    color: 'purple'
+    color: "purple",
   },
-  'Governance': {
-    title: 'DAO Governance',
-    description: 'Community decision making',
+  Governance: {
+    title: "DAO Governance",
+    description: "Community decision making",
     icon: Gavel,
-    color: 'orange'
+    color: "orange",
   },
-  'Analytics': {
-    title: 'Analytics & Yield',
-    description: 'Performance and earnings',
+  Analytics: {
+    title: "Analytics & Yield",
+    description: "Performance and earnings",
     icon: BarChart3,
-    color: 'indigo'
+    color: "indigo",
   },
-  'Tools': {
-    title: 'Admin Tools',
-    description: 'Platform management',
+  Tools: {
+    title: "Admin Tools",
+    description: "Platform management",
     icon: Settings,
-    color: 'red'
+    color: "red",
   },
-  'Advanced': {
-    title: 'Advanced Features',
-    description: 'Power user capabilities',
+  Advanced: {
+    title: "Advanced Features",
+    description: "Power user capabilities",
     icon: Zap,
-    color: 'yellow'
+    color: "yellow",
   },
-  'Platform': {
-    title: 'Platform Features',
-    description: 'General platform tools',
+  Platform: {
+    title: "Platform Features",
+    description: "General platform tools",
     icon: Globe,
-    color: 'gray'
+    color: "gray",
   },
-  'Network': {
-    title: 'Network Tools',
-    description: 'Guardian network features',
+  Network: {
+    title: "Network Tools",
+    description: "Guardian network features",
     icon: Map,
-    color: 'teal'
-  }
+    color: "teal",
+  },
 };

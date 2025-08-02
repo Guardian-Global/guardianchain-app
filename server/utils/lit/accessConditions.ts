@@ -1,7 +1,9 @@
 import type { AccessControlCondition } from "./encryptCapsule";
 
 // Time-based access control conditions
-export function createTimeBasedCondition(unlockTimestamp: number): AccessControlCondition[] {
+export function createTimeBasedCondition(
+  unlockTimestamp: number,
+): AccessControlCondition[] {
   return [
     {
       contractAddress: "",
@@ -20,7 +22,7 @@ export function createTimeBasedCondition(unlockTimestamp: number): AccessControl
 // NFT ownership access control
 export function createNFTOwnershipCondition(
   contractAddress: string,
-  tokenId?: string
+  tokenId?: string,
 ): AccessControlCondition[] {
   return [
     {
@@ -40,7 +42,7 @@ export function createNFTOwnershipCondition(
 // Token balance access control
 export function createTokenBalanceCondition(
   contractAddress: string,
-  minimumBalance: string
+  minimumBalance: string,
 ): AccessControlCondition[] {
   return [
     {
@@ -59,9 +61,9 @@ export function createTokenBalanceCondition(
 
 // Wallet address whitelist
 export function createWalletWhitelistCondition(
-  allowedAddresses: string[]
+  allowedAddresses: string[],
 ): AccessControlCondition[] {
-  return allowedAddresses.map(address => ({
+  return allowedAddresses.map((address) => ({
     contractAddress: "",
     standardContractType: "",
     chain: "polygon",
@@ -77,7 +79,7 @@ export function createWalletWhitelistCondition(
 // Combined conditions (time + ownership)
 export function createTimedNFTCondition(
   unlockTimestamp: number,
-  nftContractAddress: string
+  nftContractAddress: string,
 ): AccessControlCondition[] {
   return [
     ...createTimeBasedCondition(unlockTimestamp),
@@ -88,7 +90,7 @@ export function createTimedNFTCondition(
 // Grief score based access (custom contract)
 export function createGriefScoreCondition(
   capsuleContractAddress: string,
-  minimumGriefScore: number
+  minimumGriefScore: number,
 ): AccessControlCondition[] {
   return [
     {

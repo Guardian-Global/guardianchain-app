@@ -15,7 +15,7 @@ export async function fetchUserAchievements(address: string) {
   try {
     const response = await apiRequest(
       "GET",
-      `/api/users/${address}/achievements`
+      `/api/users/${address}/achievements`,
     );
     return response.achievements || [];
   } catch (error) {
@@ -39,7 +39,7 @@ export async function fetchUserTransactions(address: string) {
   try {
     const response = await apiRequest(
       "GET",
-      `/api/users/${address}/transactions`
+      `/api/users/${address}/transactions`,
     );
     return response.transactions || [];
   } catch (error) {
@@ -52,7 +52,7 @@ export async function fetchUserXPData(address: string) {
   try {
     const response = await apiRequest(
       "GET",
-      `/api/users/${address}/xp-history`
+      `/api/users/${address}/xp-history`,
     );
     return response.xpHistory || [];
   } catch (error) {

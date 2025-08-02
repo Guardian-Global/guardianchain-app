@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Languages, Loader2 } from 'lucide-react';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Languages, Loader2 } from "lucide-react";
 
 interface TranslateToggleProps {
   text: string;
@@ -8,17 +8,17 @@ interface TranslateToggleProps {
   className?: string;
 }
 
-export default function TranslateToggle({ 
-  text, 
-  targetLanguage = 'en', 
-  className = '' 
+export default function TranslateToggle({
+  text,
+  targetLanguage = "en",
+  className = "",
 }: TranslateToggleProps) {
   const [isTranslating, setIsTranslating] = useState(false);
   const [isTranslated, setIsTranslated] = useState(false);
 
   const handleTranslate = async () => {
     setIsTranslating(true);
-    
+
     // Mock translation - replace with actual API call
     setTimeout(() => {
       setIsTranslating(false);
@@ -39,7 +39,7 @@ export default function TranslateToggle({
       ) : (
         <Languages className="w-3 h-3 mr-1" />
       )}
-      {isTranslated ? `Translated (${targetLanguage})` : 'Translate'}
+      {isTranslated ? `Translated (${targetLanguage})` : "Translate"}
     </Button>
   );
 }

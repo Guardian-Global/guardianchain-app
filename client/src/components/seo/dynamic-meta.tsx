@@ -45,7 +45,7 @@ export default function DynamicMeta({
     const updateMetaTag = (
       property: string,
       content: string,
-      isName = false
+      isName = false,
     ) => {
       const selector = isName
         ? `meta[name="${property}"]`
@@ -86,7 +86,7 @@ export default function DynamicMeta({
     updateMetaTag(
       "keywords",
       "blockchain, truth verification, NFT, Web3, decentralized, immutable proof, DocuSign",
-      true
+      true,
     );
     updateMetaTag("author", "GuardianChain", true);
 
@@ -95,11 +95,11 @@ export default function DynamicMeta({
       updateMetaTag("article:author", `Creator #${capsule.creatorId}`, true);
       updateMetaTag(
         "article:published_time",
-        capsule.createdAt || new Date().toISOString()
+        capsule.createdAt || new Date().toISOString(),
       );
       updateMetaTag(
         "article:modified_time",
-        capsule.updatedAt || capsule.createdAt || new Date().toISOString()
+        capsule.updatedAt || capsule.createdAt || new Date().toISOString(),
       );
       updateMetaTag("article:section", capsule.category);
       updateMetaTag("article:tag", `grief-score-${capsule.griefScore}`, true);

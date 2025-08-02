@@ -180,15 +180,15 @@ const ClaimNFT = () => {
                               claimResult.nftData.rarityScore > 80
                                 ? "bg-red-600"
                                 : claimResult.nftData.rarityScore > 60
-                                ? "bg-orange-600"
-                                : "bg-green-600"
+                                  ? "bg-orange-600"
+                                  : "bg-green-600"
                             } text-white`}
                           >
                             {claimResult.nftData.rarityScore > 80
                               ? "Legendary"
                               : claimResult.nftData.rarityScore > 60
-                              ? "Rare"
-                              : "Common"}
+                                ? "Rare"
+                                : "Common"}
                           </Badge>
                         </div>
                       </div>

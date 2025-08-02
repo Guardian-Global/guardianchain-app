@@ -38,7 +38,7 @@ export function getAllTiers(): Record<TierName, TierDetails> {
 export function hasFeatureAccess(userTier: string, feature: string): boolean {
   const tier = getTierDetails(userTier);
   return tier.features.some((f) =>
-    f.toLowerCase().includes(feature.toLowerCase())
+    f.toLowerCase().includes(feature.toLowerCase()),
   );
 }
 
@@ -51,7 +51,7 @@ export function checkUsageLimits(
     capsulesThisMonth?: number;
     storageUsedGB?: number;
     apiCallsToday?: number;
-  }
+  },
 ): {
   isWithinLimits: boolean;
   exceeded: string[];
@@ -105,7 +105,7 @@ export function checkUsageLimits(
  */
 export function getUpgradeBenefits(
   currentTier: string,
-  targetTier: string
+  targetTier: string,
 ): {
   additionalFeatures: string[];
   increasedLimits: Record<string, string>;
@@ -117,7 +117,7 @@ export function getUpgradeBenefits(
 
   // Find additional features
   const additionalFeatures = target.features.filter(
-    (feature) => !current.features.includes(feature)
+    (feature) => !current.features.includes(feature),
   );
 
   // Calculate limit increases
@@ -185,7 +185,7 @@ export function getRecommendedTier(usage: {
 export function validateTierUpgrade(
   currentTier: string,
   targetTier: string,
-  userGTTBalance: number
+  userGTTBalance: number,
 ): {
   isValid: boolean;
   errors: string[];
@@ -198,7 +198,7 @@ export function validateTierUpgrade(
   // Check GTT requirement
   if (userGTTBalance < target.gttRequired) {
     errors.push(
-      `Insufficient GTT balance. Required: ${target.gttRequired}, Current: ${userGTTBalance}`
+      `Insufficient GTT balance. Required: ${target.gttRequired}, Current: ${userGTTBalance}`,
     );
   }
 

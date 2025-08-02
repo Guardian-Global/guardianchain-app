@@ -217,8 +217,8 @@ export default function EnhancedLeaderboard() {
                     user.rank === 1
                       ? "md:order-2 transform md:scale-110"
                       : user.rank === 2
-                      ? "md:order-1"
-                      : "md:order-3"
+                        ? "md:order-1"
+                        : "md:order-3"
                   }`}
                 >
                   <CardContent className="bg-slate-800 rounded-lg p-6 text-center">

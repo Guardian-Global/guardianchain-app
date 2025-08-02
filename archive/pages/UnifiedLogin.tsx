@@ -20,7 +20,7 @@ export default function UnifiedLogin() {
   // Form states
   const [loginForm, setLoginForm] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const [registerForm, setRegisterForm] = useState({
@@ -28,29 +28,29 @@ export default function UnifiedLogin() {
     password: "",
     firstName: "",
     lastName: "",
-    agreedToTerms: false
+    agreedToTerms: false,
   });
 
   const [masterForm, setMasterForm] = useState({
     email: "",
     password: "",
     role: "",
-    masterKey: ""
+    masterKey: "",
   });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const validatedData = loginSchema.parse(loginForm);
       const result = await login(validatedData);
-      
+
       if (result.success) {
         toast({
           title: "Login Successful",
           description: "Welcome back to GUARDIANCHAIN",
         });
-        
+
         // Redirect based on user role/tier
         setLocation(result.redirectTo || "/dashboard");
       } else {
@@ -73,17 +73,17 @@ export default function UnifiedLogin() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const validatedData = registerSchema.parse(registerForm);
       const result = await register(validatedData);
-      
+
       if (result.success) {
         toast({
           title: "Registration Successful",
           description: "Welcome to GUARDIANCHAIN! Please complete onboarding.",
         });
-        
+
         setLocation(result.redirectTo || "/onboarding");
       } else {
         toast({
@@ -105,17 +105,17 @@ export default function UnifiedLogin() {
 
   const handleMasterLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const validatedData = masterLoginSchema.parse(masterForm);
       const result = await masterLogin(validatedData);
-      
+
       if (result.success) {
         toast({
           title: "Master Access Granted",
           description: "Welcome, Master Administrator",
         });
-        
+
         setLocation(result.redirectTo || "/master-admin");
       } else {
         toast({
@@ -155,9 +155,7 @@ export default function UnifiedLogin() {
           <CardTitle className="text-2xl font-bold">
             Access GUARDIANCHAIN
           </CardTitle>
-          <p className="text-slate-400">
-            Single entry point for all services
-          </p>
+          <p className="text-slate-400">Single entry point for all services</p>
         </CardHeader>
 
         <CardContent>
@@ -185,7 +183,12 @@ export default function UnifiedLogin() {
                     id="email"
                     type="email"
                     value={loginForm.email}
-                    onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setLoginForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     placeholder="Enter your email"
                     required
                   />
@@ -196,13 +199,18 @@ export default function UnifiedLogin() {
                     id="password"
                     type="password"
                     value={loginForm.password}
-                    onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                    onChange={(e) =>
+                      setLoginForm((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
                     placeholder="Enter your password"
                     required
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-purple-600 to-green-600 hover:from-purple-700 hover:to-green-700"
                   disabled={isLoading}
                 >
@@ -219,7 +227,12 @@ export default function UnifiedLogin() {
                     <Input
                       id="firstName"
                       value={registerForm.firstName}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, firstName: e.target.value }))}
+                      onChange={(e) =>
+                        setRegisterForm((prev) => ({
+                          ...prev,
+                          firstName: e.target.value,
+                        }))
+                      }
                       placeholder="First name"
                       required
                     />
@@ -229,7 +242,12 @@ export default function UnifiedLogin() {
                     <Input
                       id="lastName"
                       value={registerForm.lastName}
-                      onChange={(e) => setRegisterForm(prev => ({ ...prev, lastName: e.target.value }))}
+                      onChange={(e) =>
+                        setRegisterForm((prev) => ({
+                          ...prev,
+                          lastName: e.target.value,
+                        }))
+                      }
                       placeholder="Last name"
                       required
                     />
@@ -241,7 +259,12 @@ export default function UnifiedLogin() {
                     id="registerEmail"
                     type="email"
                     value={registerForm.email}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setRegisterForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     placeholder="Enter your email"
                     required
                   />
@@ -252,7 +275,12 @@ export default function UnifiedLogin() {
                     id="registerPassword"
                     type="password"
                     value={registerForm.password}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+                    onChange={(e) =>
+                      setRegisterForm((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
                     placeholder="Create a strong password"
                     required
                   />
@@ -261,16 +289,19 @@ export default function UnifiedLogin() {
                   <Checkbox
                     id="terms"
                     checked={registerForm.agreedToTerms}
-                    onCheckedChange={(checked) => 
-                      setRegisterForm(prev => ({ ...prev, agreedToTerms: !!checked }))
+                    onCheckedChange={(checked) =>
+                      setRegisterForm((prev) => ({
+                        ...prev,
+                        agreedToTerms: !!checked,
+                      }))
                     }
                   />
                   <Label htmlFor="terms" className="text-sm">
                     I agree to the Terms of Service and Privacy Policy
                   </Label>
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
                   disabled={isLoading || !registerForm.agreedToTerms}
                 >
@@ -287,7 +318,12 @@ export default function UnifiedLogin() {
                     id="masterEmail"
                     type="email"
                     value={masterForm.email}
-                    onChange={(e) => setMasterForm(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setMasterForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     placeholder="master@guardianchain.org"
                     required
                   />
@@ -298,7 +334,12 @@ export default function UnifiedLogin() {
                     id="masterPassword"
                     type="password"
                     value={masterForm.password}
-                    onChange={(e) => setMasterForm(prev => ({ ...prev, password: e.target.value }))}
+                    onChange={(e) =>
+                      setMasterForm((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
                     placeholder="Master password"
                     required
                   />
@@ -308,7 +349,12 @@ export default function UnifiedLogin() {
                   <Input
                     id="role"
                     value={masterForm.role}
-                    onChange={(e) => setMasterForm(prev => ({ ...prev, role: e.target.value }))}
+                    onChange={(e) =>
+                      setMasterForm((prev) => ({
+                        ...prev,
+                        role: e.target.value,
+                      }))
+                    }
                     placeholder="MASTER_ADMIN"
                     required
                   />
@@ -319,13 +365,18 @@ export default function UnifiedLogin() {
                     id="masterKey"
                     type="password"
                     value={masterForm.masterKey}
-                    onChange={(e) => setMasterForm(prev => ({ ...prev, masterKey: e.target.value }))}
+                    onChange={(e) =>
+                      setMasterForm((prev) => ({
+                        ...prev,
+                        masterKey: e.target.value,
+                      }))
+                    }
                     placeholder="Master authentication key"
                     required
                   />
                 </div>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-700 hover:to-purple-700"
                   disabled={isLoading}
                 >
@@ -347,7 +398,7 @@ export default function UnifiedLogin() {
                 </span>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-3 gap-3">
               <Button
                 variant="outline"
@@ -379,8 +430,9 @@ export default function UnifiedLogin() {
           {/* Information Section */}
           <div className="mt-6 pt-4 border-t border-slate-600">
             <p className="text-xs text-slate-400 text-center">
-              By signing in, you agree to our enterprise security standards and access controls.
-              Features available based on your subscription tier.
+              By signing in, you agree to our enterprise security standards and
+              access controls. Features available based on your subscription
+              tier.
             </p>
           </div>
         </CardContent>

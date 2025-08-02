@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Dna, 
-  Search, 
-  Megaphone, 
-  Eye, 
+import {
+  Dna,
+  Search,
+  Megaphone,
+  Eye,
   BookOpen,
   TrendingUp,
   TrendingDown,
   Minus,
   Award,
-  Target
+  Target,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -29,7 +29,7 @@ interface TruthGenomeData {
     visionary: number;
     historian: number;
   };
-  dominantTrait: 'seeker' | 'whistleblower' | 'visionary' | 'historian';
+  dominantTrait: "seeker" | "whistleblower" | "visionary" | "historian";
   evidenceCount: {
     researched: number;
     exposed: number;
@@ -39,7 +39,7 @@ interface TruthGenomeData {
   genomeScore: number;
   evolution: {
     lastMonth: number;
-    trend: 'rising' | 'stable' | 'declining';
+    trend: "rising" | "stable" | "declining";
   };
   achievements: string[];
   specializations: string[];
@@ -47,11 +47,12 @@ interface TruthGenomeData {
 
 export default function TruthGenomeCard({
   userId,
-  className = ""
+  className = "",
 }: TruthGenomeCardProps) {
   const { data: genomeData, isLoading } = useQuery({
     queryKey: ["/api/ai/truth-genome", userId],
-    queryFn: () => apiRequest("GET", `/api/ai/truth-genome/${userId || 'current'}`),
+    queryFn: () =>
+      apiRequest("GET", `/api/ai/truth-genome/${userId || "current"}`),
   });
 
   const traitConfig = {
@@ -60,44 +61,50 @@ export default function TruthGenomeCard({
       label: "Truth Seeker",
       description: "Relentlessly pursues hidden knowledge",
       color: "text-blue-600",
-      bgColor: "bg-blue-100"
+      bgColor: "bg-blue-100",
     },
     whistleblower: {
       icon: Megaphone,
       label: "Whistleblower",
       description: "Courageously exposes corruption",
       color: "text-red-600",
-      bgColor: "bg-red-100"
+      bgColor: "bg-red-100",
     },
     visionary: {
       icon: Eye,
       label: "Visionary",
       description: "Predicts future patterns and trends",
       color: "text-purple-600",
-      bgColor: "bg-purple-100"
+      bgColor: "bg-purple-100",
     },
     historian: {
       icon: BookOpen,
       label: "Historian",
       description: "Preserves important memories",
       color: "text-green-600",
-      bgColor: "bg-green-100"
-    }
+      bgColor: "bg-green-100",
+    },
   };
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'rising': return TrendingUp;
-      case 'declining': return TrendingDown;
-      default: return Minus;
+      case "rising":
+        return TrendingUp;
+      case "declining":
+        return TrendingDown;
+      default:
+        return Minus;
     }
   };
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case 'rising': return "text-green-600";
-      case 'declining': return "text-red-600";
-      default: return "text-gray-600";
+      case "rising":
+        return "text-green-600";
+      case "declining":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -137,13 +144,15 @@ export default function TruthGenomeCard({
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Dominant Trait */}
         <div className="space-y-3">
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-lg ${dominantConfig.bgColor}`}>
-              <dominantConfig.icon className={`w-5 h-5 ${dominantConfig.color}`} />
+              <dominantConfig.icon
+                className={`w-5 h-5 ${dominantConfig.color}`}
+              />
             </div>
             <div>
               <div className="font-semibold">{dominantConfig.label}</div>
@@ -210,11 +219,16 @@ export default function TruthGenomeCard({
           <div className="text-sm font-medium">Evolution Trend</div>
           <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
             <div className="flex items-center gap-2">
-              <TrendIcon className={`w-4 h-4 ${getTrendColor(data.evolution.trend)}`} />
+              <TrendIcon
+                className={`w-4 h-4 ${getTrendColor(data.evolution.trend)}`}
+              />
               <span className="text-sm capitalize">{data.evolution.trend}</span>
             </div>
-            <div className={`text-sm font-medium ${getTrendColor(data.evolution.trend)}`}>
-              {data.evolution.lastMonth > 0 ? '+' : ''}{data.evolution.lastMonth}
+            <div
+              className={`text-sm font-medium ${getTrendColor(data.evolution.trend)}`}
+            >
+              {data.evolution.lastMonth > 0 ? "+" : ""}
+              {data.evolution.lastMonth}
             </div>
           </div>
         </div>

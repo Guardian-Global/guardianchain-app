@@ -17,8 +17,12 @@ export interface User {
 }
 
 export function useAuth() {
-  const { data: user, isLoading, error } = useQuery({
-    queryKey: ['/api/auth/user'],
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["/api/auth/user"],
     queryFn: () => api.auth.getUser(),
     retry: false,
     staleTime: 30 * 60 * 1000, // 30 minutes

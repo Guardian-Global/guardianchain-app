@@ -1,5 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -21,9 +27,13 @@ interface Capsule {
 }
 
 export default function CapsuleList() {
-  const { data: capsules, isLoading, error } = useQuery({
+  const {
+    data: capsules,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["/api/capsules"],
-    queryFn: () => fetch("/api/capsules").then(res => res.json()),
+    queryFn: () => fetch("/api/capsules").then((res) => res.json()),
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
@@ -36,19 +46,26 @@ export default function CapsuleList() {
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'memory': return '🧠';
-      case 'legacy': return '👑';
-      case 'testimony': return '⚖️';
-      case 'historical': return '📜';
-      case 'tribute': return '🌟';
-      case 'wisdom': return '🦉';
-      default: return '📦';
+      case "memory":
+        return "🧠";
+      case "legacy":
+        return "👑";
+      case "testimony":
+        return "⚖️";
+      case "historical":
+        return "📜";
+      case "tribute":
+        return "🌟";
+      case "wisdom":
+        return "🦉";
+      default:
+        return "📦";
     }
   };
 
   const truncateContent = (content: string, maxLength: number = 120) => {
     if (content.length <= maxLength) return content;
-    return content.slice(0, maxLength) + '...';
+    return content.slice(0, maxLength) + "...";
   };
 
   if (isLoading) {
@@ -77,7 +94,9 @@ export default function CapsuleList() {
       <Card>
         <CardHeader>
           <CardTitle>Your Capsules</CardTitle>
-          <CardDescription>Unable to load capsules at this time</CardDescription>
+          <CardDescription>
+            Unable to load capsules at this time
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-gray-500 text-center py-4">
@@ -103,13 +122,14 @@ export default function CapsuleList() {
         {capsules.length === 0 ? (
           <div className="text-center py-8">
             <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No capsules yet</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No capsules yet
+            </h3>
             <p className="text-gray-500 mb-4">
-              Create your first truth capsule to start preserving memories on the blockchain
+              Create your first truth capsule to start preserving memories on
+              the blockchain
             </p>
-            <Button className="mx-auto">
-              Create First Capsule
-            </Button>
+            <Button className="mx-auto">Create First Capsule</Button>
           </div>
         ) : (
           <div className="space-y-4">
@@ -121,12 +141,14 @@ export default function CapsuleList() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-lg">{getCategoryIcon(capsule.category)}</span>
+                      <span className="text-lg">
+                        {getCategoryIcon(capsule.category)}
+                      </span>
                       <h4 className="font-medium text-lg text-gray-900">
                         {capsule.title}
                       </h4>
                     </div>
-                    
+
                     <p className="text-sm text-gray-600 mb-2 leading-relaxed">
                       {truncateContent(capsule.content)}
                     </p>
@@ -156,7 +178,9 @@ export default function CapsuleList() {
                       <Badge variant="outline" className="capitalize text-xs">
                         {capsule.category}
                       </Badge>
-                      <Badge className={`${getGriefTierColor(capsule.griefTier)} text-xs`}>
+                      <Badge
+                        className={`${getGriefTierColor(capsule.griefTier)} text-xs`}
+                      >
                         Tier {capsule.griefTier}
                       </Badge>
                     </div>
@@ -180,7 +204,7 @@ export default function CapsuleList() {
                           #{capsule.nftTokenId}
                         </code>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <Button
                           size="sm"
@@ -194,7 +218,7 @@ export default function CapsuleList() {
                           <FileText className="mr-1 h-3 w-3" />
                           Metadata
                         </Button>
-                        
+
                         <Button
                           size="sm"
                           variant="ghost"
@@ -213,7 +237,7 @@ export default function CapsuleList() {
                 )}
               </div>
             ))}
-            
+
             {capsules.length > 0 && (
               <div className="text-center pt-4">
                 <Button variant="outline" size="sm">

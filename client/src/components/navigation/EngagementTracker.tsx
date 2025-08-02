@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { apiRequest } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Star, 
-  Target, 
-  Trophy, 
-  Zap, 
-  Calendar, 
+import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import {
+  Star,
+  Target,
+  Trophy,
+  Zap,
+  Calendar,
   Award,
   TrendingUp,
   Gift,
   Crown,
-  Heart
-} from 'lucide-react';
+  Heart,
+} from "lucide-react";
 
 interface EngagementMetrics {
   sessionTime: number;
@@ -65,16 +65,20 @@ export default function EngagementTracker() {
 
     const trackSession = async () => {
       try {
-        const response = await apiRequest('POST', '/api/engagement/track-session', {
-          sessionId: `session_${sessionStartTime}`,
-          startTime: sessionStartTime,
-          userAgent: navigator.userAgent,
-          path: window.location.pathname
-        });
+        const response = await apiRequest(
+          "POST",
+          "/api/engagement/track-session",
+          {
+            sessionId: `session_${sessionStartTime}`,
+            startTime: sessionStartTime,
+            userAgent: navigator.userAgent,
+            path: window.location.pathname,
+          },
+        );
         const data = await response.json();
         setMetrics(data.metrics);
       } catch (error) {
-        console.error('Failed to track session:', error);
+        console.error("Failed to track session:", error);
       }
     };
 
@@ -91,11 +95,14 @@ export default function EngagementTracker() {
 
     const loadChallenges = async () => {
       try {
-        const response = await apiRequest('GET', '/api/engagement/daily-challenges');
+        const response = await apiRequest(
+          "GET",
+          "/api/engagement/daily-challenges",
+        );
         const data = await response.json();
         setDailyChallenges(data.challenges);
       } catch (error) {
-        console.error('Failed to load challenges:', error);
+        console.error("Failed to load challenges:", error);
       }
     };
 
@@ -103,60 +110,79 @@ export default function EngagementTracker() {
   }, [isAuthenticated]);
 
   // Show engagement popup for milestones
-  const checkMilestones = useCallback((newMetrics: EngagementMetrics) => {
-    if (!metrics) return;
+  const checkMilestones = useCallback(
+    (newMetrics: EngagementMetrics) => {
+      if (!metrics) return;
 
-    // Session time milestones
-    const sessionMinutes = (Date.now() - sessionStartTime) / 60000;
-    if (sessionMinutes >= 10 && metrics.sessionTime < 600) {
-      toast({
-        title: "Engagement Milestone! 🎉",
-        description: "10 minutes of exploring GuardianChain! Earn 5 bonus GTT.",
-      });
-    }
+      // Session time milestones
+      const sessionMinutes = (Date.now() - sessionStartTime) / 60000;
+      if (sessionMinutes >= 10 && metrics.sessionTime < 600) {
+        toast({
+          title: "Engagement Milestone! 🎉",
+          description:
+            "10 minutes of exploring GuardianChain! Earn 5 bonus GTT.",
+        });
+      }
 
-    // Page visit milestones
-    if (newMetrics.pagesVisited.length >= 5 && metrics.pagesVisited.length < 5) {
-      toast({
-        title: "Explorer Achievement! 🗺️",
-        description: "You've visited 5 different pages. Discovery bonus: 10 GTT!",
-      });
-    }
+      // Page visit milestones
+      if (
+        newMetrics.pagesVisited.length >= 5 &&
+        metrics.pagesVisited.length < 5
+      ) {
+        toast({
+          title: "Explorer Achievement! 🗺️",
+          description:
+            "You've visited 5 different pages. Discovery bonus: 10 GTT!",
+        });
+      }
 
-    // Streak milestones
-    if (newMetrics.streakDays > metrics.streakDays) {
-      toast({
-        title: `${newMetrics.streakDays} Day Streak! 🔥`,
-        description: `Keep coming back! Streak bonus: ${newMetrics.streakDays * 2} GTT`,
-      });
-    }
-  }, [metrics, sessionStartTime, toast]);
+      // Streak milestones
+      if (newMetrics.streakDays > metrics.streakDays) {
+        toast({
+          title: `${newMetrics.streakDays} Day Streak! 🔥`,
+          description: `Keep coming back! Streak bonus: ${newMetrics.streakDays * 2} GTT`,
+        });
+      }
+    },
+    [metrics, sessionStartTime, toast],
+  );
 
   const completeChallenge = async (challengeId: string) => {
     try {
-      const response = await apiRequest('POST', `/api/engagement/complete-challenge/${challengeId}`);
+      const response = await apiRequest(
+        "POST",
+        `/api/engagement/complete-challenge/${challengeId}`,
+      );
       const data = await response.json();
-      
+
       toast({
         title: "Challenge Complete! 🏆",
         description: `You earned ${data.reward}!`,
       });
 
       // Refresh challenges
-      const challengeResponse = await apiRequest('GET', '/api/engagement/daily-challenges');
+      const challengeResponse = await apiRequest(
+        "GET",
+        "/api/engagement/daily-challenges",
+      );
       const challengeData = await challengeResponse.json();
       setDailyChallenges(challengeData.challenges);
     } catch (error) {
-      console.error('Failed to complete challenge:', error);
+      console.error("Failed to complete challenge:", error);
     }
   };
 
   if (!isAuthenticated || !metrics) return null;
 
   const sessionMinutes = Math.floor((Date.now() - sessionStartTime) / 60000);
-  const engagementLevel = metrics.engagementScore >= 80 ? 'Expert' : 
-                         metrics.engagementScore >= 60 ? 'Advanced' : 
-                         metrics.engagementScore >= 40 ? 'Intermediate' : 'Beginner';
+  const engagementLevel =
+    metrics.engagementScore >= 80
+      ? "Expert"
+      : metrics.engagementScore >= 60
+        ? "Advanced"
+        : metrics.engagementScore >= 40
+          ? "Intermediate"
+          : "Beginner";
 
   return (
     <>
@@ -186,11 +212,15 @@ export default function EngagementTracker() {
             {/* Session stats */}
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="bg-slate-700/50 p-2 rounded">
-                <div className="text-brand-primary font-medium">{sessionMinutes}m</div>
+                <div className="text-brand-primary font-medium">
+                  {sessionMinutes}m
+                </div>
                 <div className="text-slate-400">This Session</div>
               </div>
               <div className="bg-slate-700/50 p-2 rounded">
-                <div className="text-brand-accent font-medium">{metrics.streakDays}</div>
+                <div className="text-brand-accent font-medium">
+                  {metrics.streakDays}
+                </div>
                 <div className="text-slate-400">Day Streak</div>
               </div>
             </div>
@@ -203,15 +233,20 @@ export default function EngagementTracker() {
               </h4>
               <div className="space-y-2">
                 {dailyChallenges.slice(0, 2).map((challenge) => (
-                  <div key={challenge.id} className="bg-slate-700/30 p-2 rounded">
+                  <div
+                    key={challenge.id}
+                    className="bg-slate-700/30 p-2 rounded"
+                  >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-white text-xs">{challenge.title}</span>
+                      <span className="text-white text-xs">
+                        {challenge.title}
+                      </span>
                       <Badge className="text-xs bg-brand-green/20 text-brand-green">
                         {challenge.reward}
                       </Badge>
                     </div>
-                    <Progress 
-                      value={(challenge.progress / challenge.maxProgress) * 100} 
+                    <Progress
+                      value={(challenge.progress / challenge.maxProgress) * 100}
                       className="h-1"
                     />
                     {challenge.progress >= challenge.maxProgress && (
@@ -239,16 +274,22 @@ export default function EngagementTracker() {
                   <div
                     key={achievement.id}
                     className={`w-8 h-8 rounded flex items-center justify-center text-xs ${
-                      achievement.unlocked 
-                        ? 'bg-brand-accent/20 text-brand-accent' 
-                        : 'bg-slate-700/50 text-slate-500'
+                      achievement.unlocked
+                        ? "bg-brand-accent/20 text-brand-accent"
+                        : "bg-slate-700/50 text-slate-500"
                     }`}
                     title={achievement.title}
                   >
-                    {achievement.icon === 'star' && <Star className="h-3 w-3" />}
-                    {achievement.icon === 'crown' && <Crown className="h-3 w-3" />}
-                    {achievement.icon === 'heart' && <Heart className="h-3 w-3" />}
-                    {achievement.icon === 'zap' && <Zap className="h-3 w-3" />}
+                    {achievement.icon === "star" && (
+                      <Star className="h-3 w-3" />
+                    )}
+                    {achievement.icon === "crown" && (
+                      <Crown className="h-3 w-3" />
+                    )}
+                    {achievement.icon === "heart" && (
+                      <Heart className="h-3 w-3" />
+                    )}
+                    {achievement.icon === "zap" && <Zap className="h-3 w-3" />}
                   </div>
                 ))}
               </div>
@@ -258,7 +299,9 @@ export default function EngagementTracker() {
             <div className="bg-gradient-to-r from-brand-primary/10 to-brand-accent/10 p-2 rounded">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-white text-xs">Engagement Score</span>
-                <span className="text-brand-primary font-medium text-xs">{metrics.engagementScore}/100</span>
+                <span className="text-brand-primary font-medium text-xs">
+                  {metrics.engagementScore}/100
+                </span>
               </div>
               <Progress value={metrics.engagementScore} className="h-1" />
             </div>

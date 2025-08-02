@@ -9,27 +9,25 @@ interface BreadcrumbItem {
 
 export function BreadcrumbNavigation() {
   const [location] = useLocation();
-  
+
   // Generate breadcrumb items based on current path
   const generateBreadcrumbs = (path: string): BreadcrumbItem[] => {
-    const segments = path.split('/').filter(Boolean);
-    const breadcrumbs: BreadcrumbItem[] = [
-      { label: 'Home', href: '/' }
-    ];
+    const segments = path.split("/").filter(Boolean);
+    const breadcrumbs: BreadcrumbItem[] = [{ label: "Home", href: "/" }];
 
-    let currentPath = '';
+    let currentPath = "";
     segments.forEach((segment, index) => {
       currentPath += `/${segment}`;
-      
+
       // Convert segment to readable label
       const label = segment
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+
       breadcrumbs.push({
         label,
-        href: currentPath
+        href: currentPath,
       });
     });
 
@@ -39,7 +37,7 @@ export function BreadcrumbNavigation() {
   const breadcrumbs = generateBreadcrumbs(location);
 
   // Don't show breadcrumbs on home page
-  if (location === '/' || breadcrumbs.length <= 1) {
+  if (location === "/" || breadcrumbs.length <= 1) {
     return null;
   }
 
@@ -63,7 +61,9 @@ export function BreadcrumbNavigation() {
             <>
               <ChevronRight className="h-4 w-4" />
               {index === breadcrumbs.length - 1 ? (
-                <span className="text-foreground font-medium">{item.label}</span>
+                <span className="text-foreground font-medium">
+                  {item.label}
+                </span>
               ) : (
                 <Link href={item.href}>
                   <a className="hover:text-foreground transition-colors">

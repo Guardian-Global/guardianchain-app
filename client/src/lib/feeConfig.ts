@@ -108,7 +108,7 @@ export function formatGTTAmount(amount: string): string {
 // Helper function to check if user has sufficient balance
 export function hasSufficientBalance(
   userBalance: string,
-  feeAmount: string
+  feeAmount: string,
 ): boolean {
   const balance = BigInt(userBalance);
   const fee = BigInt(feeAmount);

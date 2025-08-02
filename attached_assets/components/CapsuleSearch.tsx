@@ -8,7 +8,9 @@ export default function CapsuleSearch() {
   const [results, setResults] = useState([]);
 
   async function handleSearch() {
-    const res = await fetch(`/api/search-capsules?query=${encodeURIComponent(query)}`);
+    const res = await fetch(
+      `/api/search-capsules?query=${encodeURIComponent(query)}`,
+    );
     const data = await res.json();
     setResults(data.results || []);
   }
@@ -22,7 +24,12 @@ export default function CapsuleSearch() {
         onChange={(e) => setQuery(e.target.value)}
         className="border border-gray-300 p-2 rounded w-80"
       />
-      <button onClick={handleSearch} className="ml-2 px-4 py-2 bg-blue-600 text-white rounded">Search</button>
+      <button
+        onClick={handleSearch}
+        className="ml-2 px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        Search
+      </button>
 
       {results.length > 0 && (
         <>
@@ -34,10 +41,21 @@ export default function CapsuleSearch() {
       <ul className="mt-6 space-y-2">
         {results.map((r) => (
           <li key={r.id} className="border p-4 rounded shadow">
-            <p><strong>ID:</strong> {r.id}</p>
-            <p><strong>Grief Tier:</strong> {r.grief_tier}</p>
-            <p><strong>Tags:</strong> {r.tags?.join(", ")}</p>
-            <a href={`/capsule/${r.id}`} className="text-blue-500 text-sm mt-1 block">→ View Capsule</a>
+            <p>
+              <strong>ID:</strong> {r.id}
+            </p>
+            <p>
+              <strong>Grief Tier:</strong> {r.grief_tier}
+            </p>
+            <p>
+              <strong>Tags:</strong> {r.tags?.join(", ")}
+            </p>
+            <a
+              href={`/capsule/${r.id}`}
+              className="text-blue-500 text-sm mt-1 block"
+            >
+              → View Capsule
+            </a>
           </li>
         ))}
       </ul>

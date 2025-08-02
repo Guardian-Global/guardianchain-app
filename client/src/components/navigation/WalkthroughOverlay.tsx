@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  X, 
-  ArrowRight, 
-  ArrowLeft, 
-  CheckCircle2, 
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  X,
+  ArrowRight,
+  ArrowLeft,
+  CheckCircle2,
   PlayCircle,
   Lightbulb,
   Target,
   Compass,
-  Star
-} from 'lucide-react';
+  Star,
+} from "lucide-react";
 
 interface WalkthroughStep {
   target: string;
   title: string;
   description: string;
   action?: string;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  position?: "top" | "bottom" | "left" | "right";
   highlight?: boolean;
 }
 
@@ -45,31 +45,35 @@ export default function WalkthroughOverlay({
   onComplete,
   onSkip,
   title,
-  description
+  description,
 }: WalkthroughOverlayProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [highlightElement, setHighlightElement] = useState<Element | null>(null);
+  const [highlightElement, setHighlightElement] = useState<Element | null>(
+    null,
+  );
 
   useEffect(() => {
     if (isActive) {
       setIsVisible(true);
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
       setIsVisible(false);
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isActive]);
 
   useEffect(() => {
     if (isActive && steps[currentStep]) {
-      const targetElement = document.querySelector(`[data-walkthrough="${steps[currentStep].target}"]`);
+      const targetElement = document.querySelector(
+        `[data-walkthrough="${steps[currentStep].target}"]`,
+      );
       if (targetElement) {
         setHighlightElement(targetElement);
-        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [isActive, currentStep, steps]);
@@ -82,41 +86,42 @@ export default function WalkthroughOverlay({
   const isFirstStep = currentStep === 0;
 
   const getTooltipPosition = (element: Element | null) => {
-    if (!element) return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
-    
+    if (!element)
+      return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+
     const rect = element.getBoundingClientRect();
-    const position = currentStepData.position || 'bottom';
-    
+    const position = currentStepData.position || "bottom";
+
     switch (position) {
-      case 'top':
+      case "top":
         return {
           top: `${rect.top - 20}px`,
           left: `${rect.left + rect.width / 2}px`,
-          transform: 'translate(-50%, -100%)'
+          transform: "translate(-50%, -100%)",
         };
-      case 'bottom':
+      case "bottom":
         return {
           top: `${rect.bottom + 20}px`,
           left: `${rect.left + rect.width / 2}px`,
-          transform: 'translate(-50%, 0)'
+          transform: "translate(-50%, 0)",
         };
-      case 'left':
+      case "left":
         return {
           top: `${rect.top + rect.height / 2}px`,
           left: `${rect.left - 20}px`,
-          transform: 'translate(-100%, -50%)'
+          transform: "translate(-100%, -50%)",
         };
-      case 'right':
+      case "right":
         return {
           top: `${rect.top + rect.height / 2}px`,
           left: `${rect.right + 20}px`,
-          transform: 'translate(0, -50%)'
+          transform: "translate(0, -50%)",
         };
       default:
         return {
           top: `${rect.bottom + 20}px`,
           left: `${rect.left + rect.width / 2}px`,
-          transform: 'translate(-50%, 0)'
+          transform: "translate(-50%, 0)",
         };
     }
   };
@@ -125,7 +130,7 @@ export default function WalkthroughOverlay({
     <>
       {/* Backdrop Overlay */}
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40" />
-      
+
       {/* Highlight Spotlight */}
       {highlightElement && (
         <div
@@ -135,15 +140,16 @@ export default function WalkthroughOverlay({
             left: highlightElement.getBoundingClientRect().left - 8,
             width: highlightElement.getBoundingClientRect().width + 16,
             height: highlightElement.getBoundingClientRect().height + 16,
-            boxShadow: '0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.5)',
-            borderRadius: '12px',
-            animation: 'pulse 2s infinite'
+            boxShadow:
+              "0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.5)",
+            borderRadius: "12px",
+            animation: "pulse 2s infinite",
           }}
         />
       )}
 
       {/* Walkthrough Card */}
-      <Card 
+      <Card
         className="fixed z-50 w-96 bg-black/90 backdrop-blur-xl border-indigo-500/30 shadow-2xl"
         style={getTooltipPosition(highlightElement)}
       >
@@ -167,14 +173,17 @@ export default function WalkthroughOverlay({
               <X className="w-4 h-4" />
             </Button>
           </div>
-          
+
           {/* Progress */}
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-300">
                 Step {currentStep + 1} of {steps.length}
               </span>
-              <Badge variant="outline" className="border-indigo-400 text-indigo-300">
+              <Badge
+                variant="outline"
+                className="border-indigo-400 text-indigo-300"
+              >
                 {Math.round(progress)}%
               </Badge>
             </div>
@@ -190,7 +199,9 @@ export default function WalkthroughOverlay({
                 <Target className="w-3 h-3 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-white mb-2">{currentStepData.title}</h3>
+                <h3 className="font-semibold text-white mb-2">
+                  {currentStepData.title}
+                </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
                   {currentStepData.description}
                 </p>
@@ -230,7 +241,7 @@ export default function WalkthroughOverlay({
               >
                 Skip Tour
               </Button>
-              
+
               {isLastStep ? (
                 <Button
                   onClick={onComplete}
@@ -259,11 +270,12 @@ export default function WalkthroughOverlay({
                   key={index}
                   className={`
                     flex-shrink-0 w-3 h-3 rounded-full cursor-pointer transition-colors
-                    ${index < currentStep 
-                      ? 'bg-green-500' 
-                      : index === currentStep 
-                        ? 'bg-indigo-500' 
-                        : 'bg-gray-600'
+                    ${
+                      index < currentStep
+                        ? "bg-green-500"
+                        : index === currentStep
+                          ? "bg-indigo-500"
+                          : "bg-gray-600"
                     }
                   `}
                   onClick={() => {
@@ -290,7 +302,9 @@ export default function WalkthroughOverlay({
             <CardContent className="p-4">
               <div className="flex items-center">
                 <Star className="w-5 h-5 text-yellow-400 mr-2" />
-                <span className="text-green-300 font-medium">Almost there! One more step...</span>
+                <span className="text-green-300 font-medium">
+                  Almost there! One more step...
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -299,8 +313,17 @@ export default function WalkthroughOverlay({
 
       <style jsx>{`
         @keyframes pulse {
-          0%, 100% { box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.5); }
-          50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.8), 0 0 0 9999px rgba(0, 0, 0, 0.5); }
+          0%,
+          100% {
+            box-shadow:
+              0 0 0 4px rgba(99, 102, 241, 0.5),
+              0 0 0 9999px rgba(0, 0, 0, 0.5);
+          }
+          50% {
+            box-shadow:
+              0 0 0 8px rgba(99, 102, 241, 0.8),
+              0 0 0 9999px rgba(0, 0, 0, 0.5);
+          }
         }
       `}</style>
     </>

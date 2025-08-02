@@ -1,13 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { useReels } from '../../hooks/useReels';
-import { useCapsules } from '../../hooks/useCapsules';
-import { useSwipeable } from 'react-swipeable';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import VoiceSummaryPlayer from '../VoiceSummaryPlayer';
-import TranslateToggle from '../TranslateToggle';
-import { ChevronUp, ChevronDown, X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
-import { isRTL, getRTLContainerProps } from '../../utils/rtlSupport';
+import { useState, useEffect, useRef } from "react";
+import { useReels } from "../../hooks/useReels";
+import { useCapsules } from "../../hooks/useCapsules";
+import { useSwipeable } from "react-swipeable";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import VoiceSummaryPlayer from "../VoiceSummaryPlayer";
+import TranslateToggle from "../TranslateToggle";
+import {
+  ChevronUp,
+  ChevronDown,
+  X,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
+import { isRTL, getRTLContainerProps } from "../../utils/rtlSupport";
 
 interface FullScreenReelsViewerProps {
   isOpen: boolean;
@@ -15,16 +23,16 @@ interface FullScreenReelsViewerProps {
   initialReelIndex?: number;
 }
 
-export function FullScreenReelsViewer({ 
-  isOpen, 
-  onClose, 
-  initialReelIndex = 0 
+export function FullScreenReelsViewer({
+  isOpen,
+  onClose,
+  initialReelIndex = 0,
 }: FullScreenReelsViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialReelIndex);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
-  const [userLanguage, setUserLanguage] = useState('en');
-  
+  const [userLanguage, setUserLanguage] = useState("en");
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,17 +40,18 @@ export function FullScreenReelsViewer({
   const { data: capsules = [] } = useCapsules();
 
   const currentReel = reels?.[currentIndex];
-  const currentCapsule = currentReel?.capsuleIds?.[0] ? 
-    capsules?.find(c => c.id === currentReel.capsuleIds[0]) : null;
+  const currentCapsule = currentReel?.capsuleIds?.[0]
+    ? capsules?.find((c) => c.id === currentReel.capsuleIds[0])
+    : null;
 
   // Auto-detect user language
   useEffect(() => {
     const detectLanguage = () => {
-      const stored = localStorage.getItem('preferredLanguage');
+      const stored = localStorage.getItem("preferredLanguage");
       if (stored) return stored;
-      
-      const browserLang = navigator.language.split('-')[0];
-      return browserLang || 'en';
+
+      const browserLang = navigator.language.split("-")[0];
+      return browserLang || "en";
     };
     setUserLanguage(detectLanguage());
   }, []);
@@ -73,32 +82,32 @@ export function FullScreenReelsViewer({
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!isOpen) return;
-      
+
       switch (e.key) {
-        case 'ArrowUp':
+        case "ArrowUp":
           e.preventDefault();
           navigateNext();
           break;
-        case 'ArrowDown':
+        case "ArrowDown":
           e.preventDefault();
           navigatePrevious();
           break;
-        case ' ':
+        case " ":
           e.preventDefault();
           setIsPlaying(!isPlaying);
           break;
-        case 'Escape':
+        case "Escape":
           onClose();
           break;
-        case 'm':
-        case 'M':
+        case "m":
+        case "M":
           setIsMuted(!isMuted);
           break;
       }
     };
 
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
   }, [isOpen, isPlaying, isMuted, currentIndex]);
 
   // Auto-play management
@@ -126,7 +135,7 @@ export function FullScreenReelsViewer({
   const rtlProps = isRTL(userLanguage) ? getRTLContainerProps() : {};
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black z-50 flex items-center justify-center"
       {...swipeHandlers}
       ref={containerRef}
@@ -168,7 +177,7 @@ export function FullScreenReelsViewer({
                 {currentReel.name}
               </h3>
               <TranslateToggle
-                text={currentReel.name || ''}
+                text={currentReel.name || ""}
                 targetLanguage={userLanguage}
                 className="text-white"
               />
@@ -231,12 +240,12 @@ export function FullScreenReelsViewer({
                     <div
                       key={index}
                       className={`w-2 h-2 rounded-full ${
-                        index === currentIndex ? 'bg-white' : 'bg-white/50'
+                        index === currentIndex ? "bg-white" : "bg-white/50"
                       }`}
                     />
                   ))}
                 </div>
-                
+
                 {/* Voice Summary */}
                 {currentCapsule && (
                   <VoiceSummaryPlayer
@@ -278,9 +287,13 @@ export function FullScreenReelsViewer({
                     {currentCapsule.content}
                   </p>
                   <div className="flex items-center justify-between text-xs opacity-75">
-                    <span>Truth Score: {(currentCapsule.truthScore || 0.8) * 100}%</span>
+                    <span>
+                      Truth Score: {(currentCapsule.truthScore || 0.8) * 100}%
+                    </span>
                     <span>{currentCapsule.type}</span>
-                    <span>{new Date(currentCapsule.createdAt).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(currentCapsule.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               </Card>

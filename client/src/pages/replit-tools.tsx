@@ -1,8 +1,8 @@
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ReplitToolsIntegration from '@/components/replit/ReplitToolsIntegration';
-import ReplitEnhancementDashboard from '@/components/replit/ReplitEnhancementDashboard';
-import MaximumEnhancementSystem from '@/components/replit/MaximumEnhancementSystem';
+import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReplitToolsIntegration from "@/components/replit/ReplitToolsIntegration";
+import ReplitEnhancementDashboard from "@/components/replit/ReplitEnhancementDashboard";
+import MaximumEnhancementSystem from "@/components/replit/MaximumEnhancementSystem";
 
 export default function ReplitToolsPage() {
   return (

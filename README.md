@@ -10,6 +10,7 @@
 GUARDIANCHAIN is the world's first sovereign memory infrastructure built for high-integrity capsule authorship, immutable emotional yield, and decentralized witness validation. Our platform revolutionizes how truth is preserved, validated, and monetized in the digital age.
 
 ### 🚀 Live Platform
+
 - **Website**: https://guardianchain.app
 - **Status**: Mainnet launched and fully operational
 - **Explorer**: Public capsule discovery and verification available

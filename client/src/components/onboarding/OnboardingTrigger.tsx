@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Rocket, 
-  Target, 
-  Zap, 
-  Gift, 
+import {
+  Rocket,
+  Target,
+  Zap,
+  Gift,
   Star,
   ArrowRight,
   X,
-  Trophy
+  Trophy,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useOnboarding } from "./OnboardingProvider";
@@ -19,11 +25,11 @@ import { useTierContext } from "@/context/TierContext";
 export default function OnboardingTrigger() {
   const { user, isAuthenticated } = useAuth();
   const { userRole } = useTierContext();
-  const { 
-    showOnboarding, 
-    startOnboarding, 
-    isOnboardingCompleted, 
-    onboardingProgress 
+  const {
+    showOnboarding,
+    startOnboarding,
+    isOnboardingCompleted,
+    onboardingProgress,
   } = useOnboarding();
   const [showWelcomeCard, setShowWelcomeCard] = useState(false);
   const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
@@ -31,8 +37,8 @@ export default function OnboardingTrigger() {
   // Show welcome card for new users
   useEffect(() => {
     if (!isAuthenticated) return;
-    
-    const hasSeenCard = localStorage.getItem('onboarding-welcome-seen');
+
+    const hasSeenCard = localStorage.getItem("onboarding-welcome-seen");
     if (!hasSeenCard && !isOnboardingCompleted && userRole === "guest") {
       setShowWelcomeCard(true);
       setHasSeenWelcome(false);
@@ -43,13 +49,13 @@ export default function OnboardingTrigger() {
 
   const handleStartOnboarding = () => {
     setShowWelcomeCard(false);
-    localStorage.setItem('onboarding-welcome-seen', 'true');
+    localStorage.setItem("onboarding-welcome-seen", "true");
     startOnboarding();
   };
 
   const handleDismissWelcome = () => {
     setShowWelcomeCard(false);
-    localStorage.setItem('onboarding-welcome-seen', 'true');
+    localStorage.setItem("onboarding-welcome-seen", "true");
     setHasSeenWelcome(true);
   };
 
@@ -73,52 +79,61 @@ export default function OnboardingTrigger() {
               >
                 <X className="w-4 h-4" />
               </Button>
-              
+
               <div className="flex items-center justify-center mb-4">
                 <div className="p-4 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-full">
                   <Rocket className="w-12 h-12 text-purple-400" />
                 </div>
               </div>
-              
+
               <CardTitle className="text-2xl text-white mb-2">
                 Welcome to GUARDIANCHAIN! 🎉
               </CardTitle>
               <CardDescription className="text-slate-300">
-                You're about to join the future of truth verification. Let's get you started with a personalized tour!
+                You're about to join the future of truth verification. Let's get
+                you started with a personalized tour!
               </CardDescription>
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               {/* Onboarding Benefits */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-2 p-3 bg-slate-700/30 rounded-lg">
                   <Target className="w-5 h-5 text-blue-400" />
                   <div>
-                    <div className="text-sm font-medium text-white">Quick Tour</div>
+                    <div className="text-sm font-medium text-white">
+                      Quick Tour
+                    </div>
                     <div className="text-xs text-slate-400">5 minutes</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2 p-3 bg-slate-700/30 rounded-lg">
                   <Gift className="w-5 h-5 text-green-400" />
                   <div>
-                    <div className="text-sm font-medium text-white">Earn GTT</div>
+                    <div className="text-sm font-medium text-white">
+                      Earn GTT
+                    </div>
                     <div className="text-xs text-slate-400">40+ tokens</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2 p-3 bg-slate-700/30 rounded-lg">
                   <Zap className="w-5 h-5 text-yellow-400" />
                   <div>
-                    <div className="text-sm font-medium text-white">Learn Fast</div>
+                    <div className="text-sm font-medium text-white">
+                      Learn Fast
+                    </div>
                     <div className="text-xs text-slate-400">Interactive</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2 p-3 bg-slate-700/30 rounded-lg">
                   <Star className="w-5 h-5 text-purple-400" />
                   <div>
-                    <div className="text-sm font-medium text-white">Get Rewards</div>
+                    <div className="text-sm font-medium text-white">
+                      Get Rewards
+                    </div>
                     <div className="text-xs text-slate-400">Achievements</div>
                   </div>
                 </div>
@@ -126,7 +141,7 @@ export default function OnboardingTrigger() {
 
               {/* Call to Action */}
               <div className="space-y-3">
-                <Button 
+                <Button
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
                   onClick={handleStartOnboarding}
                 >
@@ -134,20 +149,22 @@ export default function OnboardingTrigger() {
                   Start Interactive Tour
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-                
+
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="flex-1"
-                    onClick={() => window.location.href = "/gamified-onboarding"}
+                    onClick={() =>
+                      (window.location.href = "/gamified-onboarding")
+                    }
                   >
                     <Trophy className="w-4 h-4 mr-1" />
                     Gamified Journey
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="flex-1 text-slate-400"
                     onClick={handleDismissWelcome}
                   >

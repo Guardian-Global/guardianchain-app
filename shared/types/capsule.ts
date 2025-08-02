@@ -4,42 +4,42 @@
  */
 
 export interface CapsuleData {
-  capsuleId: string;                    // UUID or numeric ID
-  veritasId: string;                    // Veritas certificate anchor (e.g., "VC-CAPSULE-00001")
-  author: string;                       // Capsule author wallet address (0x...)
-  griefScore: number;                   // Emotional weight (0–100)
-  sealedAt: string;                     // ISO seal date (2025-07-30T18:44:00Z)
-  yieldAmount: string;                  // GTT yield in decimals (e.g., "328.50")
-  validatorWitness: string[];           // Array of validator wallet addresses
-  metadataUri: string;                  // IPFS URI for capsule content
-  proofHash: string;                    // Combined authorship + grief hash (0xSHA256...)
-  minted: boolean;                      // NFT minting status
-  claimable: boolean;                   // Yield claim eligibility
+  capsuleId: string; // UUID or numeric ID
+  veritasId: string; // Veritas certificate anchor (e.g., "VC-CAPSULE-00001")
+  author: string; // Capsule author wallet address (0x...)
+  griefScore: number; // Emotional weight (0–100)
+  sealedAt: string; // ISO seal date (2025-07-30T18:44:00Z)
+  yieldAmount: string; // GTT yield in decimals (e.g., "328.50")
+  validatorWitness: string[]; // Array of validator wallet addresses
+  metadataUri: string; // IPFS URI for capsule content
+  proofHash: string; // Combined authorship + grief hash (0xSHA256...)
+  minted: boolean; // NFT minting status
+  claimable: boolean; // Yield claim eligibility
 }
 
 export interface ExtendedCapsuleData extends CapsuleData {
-  title?: string;                       // Human-readable title
-  description?: string;                 // Brief description
-  category: string;                     // Content category
-  verificationStatus: 'verified' | 'pending' | 'unverified';
+  title?: string; // Human-readable title
+  description?: string; // Brief description
+  category: string; // Content category
+  verificationStatus: "verified" | "pending" | "unverified";
   emotionalClassification?: {
     primary: string;
     confidence: number;
     therapeuticValue: number;
   };
-  createdAt: string;                    // Creation timestamp
-  updatedAt: string;                    // Last update timestamp
-  viewCount: number;                    // Public view counter
-  tags: string[];                       // Content tags
+  createdAt: string; // Creation timestamp
+  updatedAt: string; // Last update timestamp
+  viewCount: number; // Public view counter
+  tags: string[]; // Content tags
   location?: {
     country: string;
     region?: string;
-    coordinates?: [number, number];     // [lat, lng]
+    coordinates?: [number, number]; // [lat, lng]
   };
-  privacyLevel: 'public' | 'restricted' | 'private';
-  ancestryChain?: string[];             // Parent capsule IDs
+  privacyLevel: "public" | "restricted" | "private";
+  ancestryChain?: string[]; // Parent capsule IDs
   mediaAttachments: {
-    type: 'image' | 'video' | 'audio' | 'document';
+    type: "image" | "video" | "audio" | "document";
     ipfsHash: string;
     filename: string;
     size: number;
@@ -48,10 +48,10 @@ export interface ExtendedCapsuleData extends CapsuleData {
 
 export interface CapsuleValidation {
   validatorAddress: string;
-  validationLevel: 1 | 2 | 3;          // Community, Professional, Sovereign
+  validationLevel: 1 | 2 | 3; // Community, Professional, Sovereign
   validatedAt: string;
   validationHash: string;
-  consensusWeight: number;              // Validator reputation weight
+  consensusWeight: number; // Validator reputation weight
   validationNotes?: string;
 }
 
@@ -62,7 +62,7 @@ export interface YieldClaim {
   claimedAt: string;
   transactionHash: string;
   gasUsed: number;
-  status: 'pending' | 'confirmed' | 'failed';
+  status: "pending" | "confirmed" | "failed";
 }
 
 export interface CapsuleMetrics {
@@ -79,7 +79,7 @@ export interface CapsuleMetrics {
   validatorStats: {
     totalValidators: number;
     activeValidators: number;
-    averageValidationTime: number;      // in hours
+    averageValidationTime: number; // in hours
   };
   geographicDistribution: Array<{
     country: string;
@@ -90,7 +90,7 @@ export interface CapsuleMetrics {
 
 export interface CapsuleSearchFilters {
   category?: string;
-  verificationStatus?: 'verified' | 'pending' | 'unverified' | 'all';
+  verificationStatus?: "verified" | "pending" | "unverified" | "all";
   griefScoreRange?: [number, number];
   dateRange?: {
     start: string;
@@ -100,8 +100,8 @@ export interface CapsuleSearchFilters {
   location?: string;
   tags?: string[];
   minYieldAmount?: number;
-  sortBy: 'recent' | 'griefScore' | 'yieldAmount' | 'viewCount' | 'relevance';
-  sortOrder: 'asc' | 'desc';
+  sortBy: "recent" | "griefScore" | "yieldAmount" | "viewCount" | "relevance";
+  sortOrder: "asc" | "desc";
   limit: number;
   offset: number;
 }
@@ -109,7 +109,7 @@ export interface CapsuleSearchFilters {
 export interface CapsuleCreationRequest {
   title: string;
   description: string;
-  content: string;                      // Main text content
+  content: string; // Main text content
   category: string;
   tags: string[];
   location?: {
@@ -117,15 +117,15 @@ export interface CapsuleCreationRequest {
     region?: string;
     coordinates?: [number, number];
   };
-  privacyLevel: 'public' | 'restricted' | 'private';
-  parentCapsuleId?: string;             // For ancestry linking
+  privacyLevel: "public" | "restricted" | "private";
+  parentCapsuleId?: string; // For ancestry linking
   mediaFiles?: Array<{
     file: File | Buffer;
     filename: string;
-    type: 'image' | 'video' | 'audio' | 'document';
+    type: "image" | "video" | "audio" | "document";
   }>;
   authorWalletAddress: string;
-  expectedGriefScore?: number;          // Author's self-assessment
+  expectedGriefScore?: number; // Author's self-assessment
 }
 
 export interface BlockchainCapsuleData {
@@ -171,34 +171,35 @@ export type CapsuleListResponse = {
 
 // Constants
 export const CAPSULE_CATEGORIES = [
-  'personal-memory',
-  'historical-evidence',
-  'whistleblowing',
-  'environmental',
-  'social-justice',
-  'family-legacy',
-  'professional-testimony',
-  'artistic-expression',
-  'scientific-data',
-  'legal-documentation',
-  'cultural-preservation',
-  'trauma-healing',
-  'community-story',
-  'institutional-accountability'
+  "personal-memory",
+  "historical-evidence",
+  "whistleblowing",
+  "environmental",
+  "social-justice",
+  "family-legacy",
+  "professional-testimony",
+  "artistic-expression",
+  "scientific-data",
+  "legal-documentation",
+  "cultural-preservation",
+  "trauma-healing",
+  "community-story",
+  "institutional-accountability",
 ] as const;
 
 export const VERIFICATION_LEVELS = {
   COMMUNITY: 1,
   PROFESSIONAL: 2,
-  SOVEREIGN: 3
+  SOVEREIGN: 3,
 } as const;
 
 export const PRIVACY_LEVELS = {
-  PUBLIC: 'public',
-  RESTRICTED: 'restricted',
-  PRIVATE: 'private'
+  PUBLIC: "public",
+  RESTRICTED: "restricted",
+  PRIVATE: "private",
 } as const;
 
-export type CapsuleCategory = typeof CAPSULE_CATEGORIES[number];
-export type VerificationLevel = typeof VERIFICATION_LEVELS[keyof typeof VERIFICATION_LEVELS];
-export type PrivacyLevel = typeof PRIVACY_LEVELS[keyof typeof PRIVACY_LEVELS];
+export type CapsuleCategory = (typeof CAPSULE_CATEGORIES)[number];
+export type VerificationLevel =
+  (typeof VERIFICATION_LEVELS)[keyof typeof VERIFICATION_LEVELS];
+export type PrivacyLevel = (typeof PRIVACY_LEVELS)[keyof typeof PRIVACY_LEVELS];

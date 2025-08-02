@@ -106,7 +106,7 @@ export default function RecommendationEngine() {
     recommendations?.filter(
       (rec: RecommendationResult) =>
         selectedCategory === "all" ||
-        rec.category.toLowerCase() === selectedCategory.toLowerCase()
+        rec.category.toLowerCase() === selectedCategory.toLowerCase(),
     ) || [];
 
   const getCategoryColor = (category: string) => {
@@ -245,7 +245,7 @@ export default function RecommendationEngine() {
                           </h3>
                           <Badge
                             className={`${getCategoryColor(
-                              rec.category
+                              rec.category,
                             )} text-white`}
                           >
                             {rec.category}
@@ -357,7 +357,7 @@ export default function RecommendationEngine() {
                         <Badge key={index} className="bg-blue-600 text-white">
                           {interest}
                         </Badge>
-                      )
+                      ),
                     )}
                   </div>
                 </CardContent>
@@ -379,7 +379,7 @@ export default function RecommendationEngine() {
                         >
                           {category}
                         </Badge>
-                      )
+                      ),
                     )}
                   </div>
                 </CardContent>
@@ -411,7 +411,7 @@ export default function RecommendationEngine() {
                           <span className="w-2 h-2 bg-green-400 rounded-full" />
                           {suggestion}
                         </li>
-                      )
+                      ),
                     )}
                   </ul>
                 </CardContent>

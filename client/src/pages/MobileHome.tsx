@@ -10,7 +10,6 @@ import { Shield, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 
 export default function MobileHome() {
-
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-16">
@@ -229,15 +228,11 @@ export default function MobileHome() {
                 <div className="text-sm text-slate-400">GTT Balance</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-green-400">
-                  {0}
-                </div>
+                <div className="text-xl font-bold text-green-400">{0}</div>
                 <div className="text-sm text-slate-400">Capsules Created</div>
               </div>
               <div className="text-center">
-                <div className="text-xl font-bold text-blue-400">
-                  {0}
-                </div>
+                <div className="text-xl font-bold text-blue-400">{0}</div>
                 <div className="text-sm text-slate-400">Reputation</div>
               </div>
               <div className="text-center">

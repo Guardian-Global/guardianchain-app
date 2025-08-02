@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +17,7 @@ export default function ReferralsPage() {
   const { userRole } = useTierContext();
   const { toast } = useToast();
   const [referralCode] = useState("GUARDIAN2025");
-  
+
   const isPro = userRole === "pro" || userRole === "enterprise";
 
   const copyReferralLink = () => {
@@ -30,16 +36,21 @@ export default function ReferralsPage() {
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader className="text-center">
               <Gift className="w-16 h-16 mx-auto text-purple-400 mb-4" />
-              <CardTitle className="text-2xl text-white">Referral Program</CardTitle>
+              <CardTitle className="text-2xl text-white">
+                Referral Program
+              </CardTitle>
               <CardDescription className="text-slate-300">
                 Earn rewards by inviting friends to GUARDIANCHAIN
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center space-y-6">
               <div className="p-6 bg-slate-700/30 rounded-lg border border-purple-500/20">
-                <h3 className="text-lg font-semibold text-white mb-2">Pro Feature Required</h3>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Pro Feature Required
+                </h3>
                 <p className="text-slate-300 mb-4">
-                  Unlock the referral program with Pro membership and earn GTT tokens for every successful referral.
+                  Unlock the referral program with Pro membership and earn GTT
+                  tokens for every successful referral.
                 </p>
                 <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
                   <a href="/upgrade">Upgrade to Pro</a>
@@ -59,7 +70,9 @@ export default function ReferralsPage() {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader className="text-center">
             <Gift className="w-16 h-16 mx-auto text-purple-400 mb-4" />
-            <CardTitle className="text-3xl text-white">Referral Program</CardTitle>
+            <CardTitle className="text-3xl text-white">
+              Referral Program
+            </CardTitle>
             <CardDescription className="text-slate-300">
               Earn 50 GTT tokens for every Pro subscription you refer
             </CardDescription>
@@ -75,7 +88,7 @@ export default function ReferralsPage() {
               <div className="text-sm text-slate-400">Total Referrals</div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-6 text-center">
               <DollarSign className="w-8 h-8 mx-auto text-green-400 mb-2" />
@@ -83,7 +96,7 @@ export default function ReferralsPage() {
               <div className="text-sm text-slate-400">GTT Earned</div>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-6 text-center">
               <Gift className="w-8 h-8 mx-auto text-purple-400 mb-2" />
@@ -112,10 +125,13 @@ export default function ReferralsPage() {
                 <Copy className="w-4 h-4" />
               </Button>
             </div>
-            
+
             <div className="flex gap-2">
               <Badge variant="secondary">Your Code: {referralCode}</Badge>
-              <Badge variant="outline" className="text-green-400 border-green-400">
+              <Badge
+                variant="outline"
+                className="text-green-400 border-green-400"
+              >
                 50 GTT per Pro conversion
               </Badge>
             </div>
@@ -134,23 +150,29 @@ export default function ReferralsPage() {
                   <span className="text-white font-bold">1</span>
                 </div>
                 <h3 className="text-white font-semibold mb-1">Share Link</h3>
-                <p className="text-slate-400 text-sm">Send your referral link to friends</p>
+                <p className="text-slate-400 text-sm">
+                  Send your referral link to friends
+                </p>
               </div>
-              
+
               <div className="text-center p-4">
                 <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2">
                   <span className="text-white font-bold">2</span>
                 </div>
                 <h3 className="text-white font-semibold mb-1">They Upgrade</h3>
-                <p className="text-slate-400 text-sm">Friends sign up and upgrade to Pro</p>
+                <p className="text-slate-400 text-sm">
+                  Friends sign up and upgrade to Pro
+                </p>
               </div>
-              
+
               <div className="text-center p-4">
                 <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-2">
                   <span className="text-white font-bold">3</span>
                 </div>
                 <h3 className="text-white font-semibold mb-1">Earn GTT</h3>
-                <p className="text-slate-400 text-sm">Receive 50 GTT tokens instantly</p>
+                <p className="text-slate-400 text-sm">
+                  Receive 50 GTT tokens instantly
+                </p>
               </div>
             </div>
           </CardContent>

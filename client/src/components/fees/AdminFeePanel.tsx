@@ -53,7 +53,7 @@ export default function AdminFeePanel() {
         title: "Fee Reset Initiated",
         description: `Resetting ${selectedAction} fee for ${userAddress.slice(
           0,
-          6
+          6,
         )}...${userAddress.slice(-4)}`,
       });
     } catch (error: any) {
@@ -244,7 +244,7 @@ export default function AdminFeePanel() {
           Contract:{" "}
           {feeManagerAddress
             ? `${feeManagerAddress.slice(0, 6)}...${feeManagerAddress.slice(
-                -4
+                -4,
               )}`
             : "Not deployed"}
         </div>

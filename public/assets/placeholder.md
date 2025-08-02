@@ -8,7 +8,7 @@ This directory contains all the branding assets for GuardianChain:
 /assets/
 ├── video/
 │   ├── GUARDIANCHAIN_PROTOCOL_VIDEO.mp4
-│   ├── GUARDIANCHAIN_DASHBOARD_VIDEO.mp4  
+│   ├── GUARDIANCHAIN_DASHBOARD_VIDEO.mp4
 │   ├── GUARDIANCHAIN_CAPSULE_VIDEO.mp4
 │   ├── BLOCKCHAIN_BACKGROUND_VIDEO.mp4
 │   └── FIRST_TIME_UNLOCK_TRUTH.mp4
@@ -30,6 +30,7 @@ This directory contains all the branding assets for GuardianChain:
 ## Asset Integration
 
 All assets are integrated into:
+
 - EnhancedHomepage.tsx - Hero section with background video and branding
 - EnhancedDashboard.tsx - User dashboard with NFT avatar options and video banners
 - Layout.tsx - Favicon and manifest integration
@@ -37,6 +38,7 @@ All assets are integrated into:
 ## Video Assets
 
 The platform supports GPU-accelerated video backgrounds and overlays for:
+
 - Homepage hero section background
 - Dashboard banner videos
 - Floating video overlays
@@ -45,6 +47,7 @@ The platform supports GPU-accelerated video backgrounds and overlays for:
 ## Logo Assets
 
 Multiple logo variations for different contexts:
+
 - Primary GTT logo for branding
 - GuardianChain logo for favicon and app icon
 - Block icon for blockchain elements
@@ -52,6 +55,7 @@ Multiple logo variations for different contexts:
 ## NFT Assets
 
 Dynamic NFT icons used for:
+
 - User avatar customization options
 - Capsule gallery previews
 - Achievement badges

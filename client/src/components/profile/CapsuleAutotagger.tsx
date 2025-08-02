@@ -3,16 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Brain, 
-  Tag, 
-  Heart, 
-  TrendingUp, 
+import {
+  Brain,
+  Tag,
+  Heart,
+  TrendingUp,
   Lightbulb,
   Loader2,
   Sparkles,
   Target,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -54,11 +54,13 @@ export default function CapsuleAutotagger({
   title,
   onTagsGenerated,
   autoAnalyze = false,
-  className = ""
+  className = "",
 }: CapsuleAutotaggerProps) {
   const { toast } = useToast();
   const [insights, setInsights] = useState<AIInsights | null>(null);
-  const [analysisStep, setAnalysisStep] = useState<'ready' | 'analyzing' | 'complete'>('ready');
+  const [analysisStep, setAnalysisStep] = useState<
+    "ready" | "analyzing" | "complete"
+  >("ready");
 
   const analyzeContentMutation = useMutation({
     mutationFn: async () => {
@@ -68,21 +70,21 @@ export default function CapsuleAutotagger({
         title,
         includeEmotionalAnalysis: true,
         includeTruthAssessment: true,
-        generateTags: true
+        generateTags: true,
       });
     },
     onSuccess: (data: AIInsights) => {
       setInsights(data);
-      setAnalysisStep('complete');
+      setAnalysisStep("complete");
       onTagsGenerated?.(data);
-      
+
       toast({
         title: "Analysis Complete",
         description: `Generated ${data.tags.length} tags and insights`,
       });
     },
     onError: (error: any) => {
-      setAnalysisStep('ready');
+      setAnalysisStep("ready");
       toast({
         title: "Analysis Failed",
         description: error.message || "Failed to analyze content",
@@ -98,7 +100,7 @@ export default function CapsuleAutotagger({
   }, [autoAnalyze, content, title]);
 
   const handleAnalyze = () => {
-    setAnalysisStep('analyzing');
+    setAnalysisStep("analyzing");
     analyzeContentMutation.mutate();
   };
 
@@ -110,7 +112,7 @@ export default function CapsuleAutotagger({
       fear: "bg-purple-100 text-purple-800",
       trust: "bg-green-100 text-green-800",
       surprise: "bg-pink-100 text-pink-800",
-      neutral: "bg-gray-100 text-gray-800"
+      neutral: "bg-gray-100 text-gray-800",
     };
     return colors[emotion] || "bg-gray-100 text-gray-800";
   };
@@ -127,29 +129,26 @@ export default function CapsuleAutotagger({
         <CardTitle className="flex items-center gap-2">
           <Brain className="w-5 h-5" />
           AI Content Analysis
-          {analysisStep === 'complete' && (
+          {analysisStep === "complete" && (
             <CheckCircle className="w-4 h-4 text-green-600 ml-auto" />
           )}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
-        {analysisStep === 'ready' && (
+        {analysisStep === "ready" && (
           <div className="text-center space-y-4">
             <p className="text-muted-foreground">
               Get AI-powered insights, auto-generated tags, and content analysis
             </p>
-            <Button 
-              onClick={handleAnalyze}
-              disabled={!content || !title}
-            >
+            <Button onClick={handleAnalyze} disabled={!content || !title}>
               <Sparkles className="w-4 h-4 mr-2" />
               Analyze Content
             </Button>
           </div>
         )}
 
-        {analysisStep === 'analyzing' && (
+        {analysisStep === "analyzing" && (
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -162,7 +161,7 @@ export default function CapsuleAutotagger({
           </div>
         )}
 
-        {analysisStep === 'complete' && insights && (
+        {analysisStep === "complete" && insights && (
           <div className="space-y-6">
             {/* Auto-Generated Tags */}
             <div>
@@ -185,8 +184,8 @@ export default function CapsuleAutotagger({
               <div className="flex items-center gap-2 mb-3">
                 <Heart className="w-4 h-4" />
                 <span className="font-medium">Emotional Resonance</span>
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className={getScoreColor(insights.emotionalResonance.score)}
                 >
                   {insights.emotionalResonance.score}/100
@@ -194,14 +193,13 @@ export default function CapsuleAutotagger({
               </div>
               <div className="space-y-2">
                 <div className="flex flex-wrap gap-2">
-                  {insights.emotionalResonance.emotions.map((emotion, index) => (
-                    <Badge 
-                      key={index} 
-                      className={getEmotionColor(emotion)}
-                    >
-                      {emotion}
-                    </Badge>
-                  ))}
+                  {insights.emotionalResonance.emotions.map(
+                    (emotion, index) => (
+                      <Badge key={index} className={getEmotionColor(emotion)}>
+                        {emotion}
+                      </Badge>
+                    ),
+                  )}
                 </div>
                 <div className="text-xs text-muted-foreground">
                   Intensity: {insights.emotionalResonance.intensity}
@@ -214,7 +212,7 @@ export default function CapsuleAutotagger({
               <div className="flex items-center gap-2 mb-3">
                 <Target className="w-4 h-4" />
                 <span className="font-medium">Truth Likelihood</span>
-                <Badge 
+                <Badge
                   variant="secondary"
                   className={getScoreColor(insights.truthLikelihood.score)}
                 >
@@ -260,11 +258,15 @@ export default function CapsuleAutotagger({
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">Category:</span>
-                  <div className="font-medium">{insights.contentClassification.category}</div>
+                  <div className="font-medium">
+                    {insights.contentClassification.category}
+                  </div>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Type:</span>
-                  <div className="font-medium">{insights.contentClassification.subcategory}</div>
+                  <div className="font-medium">
+                    {insights.contentClassification.subcategory}
+                  </div>
                 </div>
               </div>
             </div>

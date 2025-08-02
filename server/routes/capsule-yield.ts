@@ -87,7 +87,7 @@ export async function getClaimableCapsules(req: Request, res: Response) {
     // Calculate total claimable yield
     const totalClaimable = capsules.reduce(
       (sum, capsule) => sum + (capsule.yieldAmount || 0),
-      0
+      0,
     );
 
     res.json({
@@ -176,7 +176,7 @@ export async function updateCapsuleYield(req: Request, res: Response) {
 export function calculateCapsuleYield(
   views: number,
   shares: number,
-  verifications: number
+  verifications: number,
 ): number {
   const BASE_YIELD = 100; // Base GTT yield
   const VIEW_MULTIPLIER = 0.1; // 0.1 GTT per view
@@ -214,7 +214,7 @@ export async function verifyCapsuleYield(req: Request, res: Response) {
     const yieldAmount = calculateCapsuleYield(
       capsule.views || 0,
       capsule.shares || 0,
-      capsule.verifications || 0
+      capsule.verifications || 0,
     );
 
     // Update capsule as verified with yield

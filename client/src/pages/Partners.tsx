@@ -2,37 +2,61 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const PARTNERS = [
-  { name: "Polygon", logo: "/assets/partners/polygon.svg", link: "https://polygon.technology", description: "Layer 2 scaling solution for Ethereum" },
-  { name: "Gitcoin", logo: "/assets/partners/gitcoin.svg", link: "https://gitcoin.co", description: "Community funding for public goods" },
-  { name: "OpenAI", logo: "/assets/partners/openai.svg", link: "https://openai.com", description: "AI-powered content analysis and verification" },
-  { name: "Arweave", logo: "/assets/partners/arweave.svg", link: "https://www.arweave.org/", description: "Permanent decentralized storage" }
+  {
+    name: "Polygon",
+    logo: "/assets/partners/polygon.svg",
+    link: "https://polygon.technology",
+    description: "Layer 2 scaling solution for Ethereum",
+  },
+  {
+    name: "Gitcoin",
+    logo: "/assets/partners/gitcoin.svg",
+    link: "https://gitcoin.co",
+    description: "Community funding for public goods",
+  },
+  {
+    name: "OpenAI",
+    logo: "/assets/partners/openai.svg",
+    link: "https://openai.com",
+    description: "AI-powered content analysis and verification",
+  },
+  {
+    name: "Arweave",
+    logo: "/assets/partners/arweave.svg",
+    link: "https://www.arweave.org/",
+    description: "Permanent decentralized storage",
+  },
 ];
 
 const TESTIMONIALS = [
   {
     name: "Gitcoin Reviewer",
-    quote: "GuardianChain stands out as a truth-preserving protocol with unmatched long-term utility. The grant was well-deserved.",
+    quote:
+      "GuardianChain stands out as a truth-preserving protocol with unmatched long-term utility. The grant was well-deserved.",
     role: "Ecosystem Grants Committee",
-    avatar: "🏛️"
+    avatar: "🏛️",
   },
   {
     name: "Polygon Village",
-    quote: "A next-gen use case for decentralized memory that fits directly into the sovereign stack.",
+    quote:
+      "A next-gen use case for decentralized memory that fits directly into the sovereign stack.",
     role: "Partner Ecosystem Manager",
-    avatar: "💜"
+    avatar: "💜",
   },
   {
     name: "Truth Validator Network",
-    quote: "GuardianChain represents the future of verifiable storytelling and permanent memory preservation.",
+    quote:
+      "GuardianChain represents the future of verifiable storytelling and permanent memory preservation.",
     role: "Validator Consortium Lead",
-    avatar: "🛡️"
+    avatar: "🛡️",
   },
   {
     name: "Web3 Foundation",
-    quote: "Revolutionary approach to combining AI verification with blockchain permanence for social good.",
+    quote:
+      "Revolutionary approach to combining AI verification with blockchain permanence for social good.",
     role: "Grants Evaluation Team",
-    avatar: "🌐"
-  }
+    avatar: "🌐",
+  },
 ];
 
 export default function PartnersPage() {
@@ -55,8 +79,9 @@ export default function PartnersPage() {
             🤝 Our Partners & Ecosystem
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Building the future of decentralized memory preservation with leading Web3 organizations, 
-            AI pioneers, and blockchain infrastructure partners.
+            Building the future of decentralized memory preservation with
+            leading Web3 organizations, AI pioneers, and blockchain
+            infrastructure partners.
           </p>
         </div>
 
@@ -67,7 +92,10 @@ export default function PartnersPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {PARTNERS.map((partner) => (
-              <Card key={partner.name} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700">
+              <Card
+                key={partner.name}
+                className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700"
+              >
                 <CardContent className="p-6 text-center">
                   <a
                     href={partner.link}
@@ -119,7 +147,7 @@ export default function PartnersPage() {
                   </div>
                 </div>
               </div>
-              
+
               {/* Testimonial Navigation Dots */}
               <div className="flex justify-center mt-8 space-x-2">
                 {TESTIMONIALS.map((_, index) => (
@@ -128,8 +156,8 @@ export default function PartnersPage() {
                     onClick={() => setActiveTestimonial(index)}
                     className={`w-3 h-3 rounded-full transition-all duration-300 ${
                       index === activeTestimonial
-                        ? 'bg-purple-600 dark:bg-purple-400'
-                        : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                        ? "bg-purple-600 dark:bg-purple-400"
+                        : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
                     }`}
                   />
                 ))}
@@ -142,20 +170,32 @@ export default function PartnersPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <Card className="text-center bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700">
             <CardContent className="p-6">
-              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">50+</div>
-              <div className="text-gray-600 dark:text-gray-400">Validator Partners</div>
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+                50+
+              </div>
+              <div className="text-gray-600 dark:text-gray-400">
+                Validator Partners
+              </div>
             </CardContent>
           </Card>
           <Card className="text-center bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700">
             <CardContent className="p-6">
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">$2.5M+</div>
-              <div className="text-gray-600 dark:text-gray-400">Grant Funding Secured</div>
+              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                $2.5M+
+              </div>
+              <div className="text-gray-600 dark:text-gray-400">
+                Grant Funding Secured
+              </div>
             </CardContent>
           </Card>
           <Card className="text-center bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700">
             <CardContent className="p-6">
-              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">15+</div>
-              <div className="text-gray-600 dark:text-gray-400">Ecosystem Integrations</div>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
+                15+
+              </div>
+              <div className="text-gray-600 dark:text-gray-400">
+                Ecosystem Integrations
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -168,8 +208,8 @@ export default function PartnersPage() {
                 Join the GuardianChain Ecosystem
               </h3>
               <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
-                Partner with us to build the future of decentralized memory preservation 
-                and truth verification infrastructure.
+                Partner with us to build the future of decentralized memory
+                preservation and truth verification infrastructure.
               </p>
               <div className="space-x-4">
                 <a

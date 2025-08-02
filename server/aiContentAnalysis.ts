@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from "@anthropic-ai/sdk";
 
 /*
 <important_code_snippet_instructions>
@@ -22,8 +22,8 @@ export interface ContentAnalysis {
   truthLikelihood: number; // 0-100 truth probability
   contentType: string; // personal, corporate, scientific, etc.
   themes: string[]; // extracted themes
-  sentiment: 'positive' | 'negative' | 'neutral' | 'mixed';
-  complexity: 'simple' | 'moderate' | 'complex';
+  sentiment: "positive" | "negative" | "neutral" | "mixed";
+  complexity: "simple" | "moderate" | "complex";
   suggestedTags: string[];
   moderationFlags: string[];
   summary: string;
@@ -32,17 +32,20 @@ export interface ContentAnalysis {
 export interface ModerationResult {
   approved: boolean;
   issues: string[];
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
   recommendations: string[];
 }
 
 export class AIContentAnalysisService {
   // Analyze capsule content for grief scoring and metadata
-  async analyzeCapsuleContent(content: string, title?: string): Promise<ContentAnalysis> {
+  async analyzeCapsuleContent(
+    content: string,
+    title?: string,
+  ): Promise<ContentAnalysis> {
     try {
       const prompt = `Analyze this truth capsule content for GuardianChain platform:
 
-Title: ${title || 'Untitled'}
+Title: ${title || "Untitled"}
 Content: ${content}
 
 Provide analysis in JSON format with these exact keys:
@@ -65,16 +68,19 @@ Consider: emotional weight, personal significance, societal impact, truth preser
         // "claude-sonnet-4-20250514"
         model: DEFAULT_MODEL_STR,
         max_tokens: 1500,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: "user", content: prompt }],
       });
 
       const analysisText = response.content[0].text;
       const analysis = JSON.parse(analysisText);
-      
-      console.log('🧠 AI Content Analysis completed for grief tier:', analysis.griefScore);
+
+      console.log(
+        "🧠 AI Content Analysis completed for grief tier:",
+        analysis.griefScore,
+      );
       return analysis;
     } catch (error) {
-      console.error('❌ AI Analysis failed:', error);
+      console.error("❌ AI Analysis failed:", error);
       return this.getFallbackAnalysis(content);
     }
   }
@@ -100,27 +106,33 @@ Respond in JSON format:
         // "claude-sonnet-4-20250514"
         model: DEFAULT_MODEL_STR,
         max_tokens: 800,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: "user", content: prompt }],
       });
 
       const moderationText = response.content[0].text;
       const moderation = JSON.parse(moderationText);
-      
-      console.log('🛡️ Content moderation completed:', moderation.approved ? 'APPROVED' : 'FLAGGED');
+
+      console.log(
+        "🛡️ Content moderation completed:",
+        moderation.approved ? "APPROVED" : "FLAGGED",
+      );
       return moderation;
     } catch (error) {
-      console.error('❌ Content moderation failed:', error);
+      console.error("❌ Content moderation failed:", error);
       return {
         approved: true,
         issues: [],
-        severity: 'low',
-        recommendations: ['Manual review recommended due to AI service error']
+        severity: "low",
+        recommendations: ["Manual review recommended due to AI service error"],
       };
     }
   }
 
   // Generate enhanced summaries for capsules
-  async generateSummary(content: string, maxLength: number = 200): Promise<string> {
+  async generateSummary(
+    content: string,
+    maxLength: number = 200,
+  ): Promise<string> {
     try {
       const prompt = `Create a compelling summary for this truth capsule content (max ${maxLength} characters):
 
@@ -132,16 +144,18 @@ Focus on: key themes, emotional significance, preservation value. Make it engagi
         // "claude-sonnet-4-20250514"
         model: DEFAULT_MODEL_STR,
         max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: "user", content: prompt }],
       });
 
       const summary = response.content[0].text.trim();
-      console.log('📝 AI Summary generated:', summary.slice(0, 50) + '...');
-      
-      return summary.length > maxLength ? summary.slice(0, maxLength - 3) + '...' : summary;
+      console.log("📝 AI Summary generated:", summary.slice(0, 50) + "...");
+
+      return summary.length > maxLength
+        ? summary.slice(0, maxLength - 3) + "..."
+        : summary;
     } catch (error) {
-      console.error('❌ Summary generation failed:', error);
-      return content.slice(0, maxLength - 3) + '...';
+      console.error("❌ Summary generation failed:", error);
+      return content.slice(0, maxLength - 3) + "...";
     }
   }
 
@@ -169,26 +183,29 @@ Respond in JSON format:
         // "claude-sonnet-4-20250514"
         model: DEFAULT_MODEL_STR,
         max_tokens: 800,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: "user", content: prompt }],
       });
 
       const analysis = JSON.parse(response.content[0].text);
-      console.log('💭 Emotional analysis completed:', analysis.primaryEmotion);
-      
+      console.log("💭 Emotional analysis completed:", analysis.primaryEmotion);
+
       return analysis;
     } catch (error) {
-      console.error('❌ Emotional analysis failed:', error);
+      console.error("❌ Emotional analysis failed:", error);
       return {
-        primaryEmotion: 'unknown',
+        primaryEmotion: "unknown",
         emotions: [],
         therapeuticValue: 0,
-        healingPotential: 0
+        healingPotential: 0,
       };
     }
   }
 
   // Generate NFT metadata descriptions
-  async generateNFTMetadata(content: string, griefTier: number): Promise<{
+  async generateNFTMetadata(
+    content: string,
+    griefTier: number,
+  ): Promise<{
     name: string;
     description: string;
     attributes: Array<{ trait_type: string; value: string | number }>;
@@ -210,42 +227,45 @@ Respond in JSON format:
         // "claude-sonnet-4-20250514"
         model: DEFAULT_MODEL_STR,
         max_tokens: 600,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: "user", content: prompt }],
       });
 
       const metadata = JSON.parse(response.content[0].text);
-      console.log('🎨 NFT Metadata generated:', metadata.name);
-      
+      console.log("🎨 NFT Metadata generated:", metadata.name);
+
       return metadata;
     } catch (error) {
-      console.error('❌ NFT metadata generation failed:', error);
+      console.error("❌ NFT metadata generation failed:", error);
       return {
         name: `Truth Capsule #${Date.now()}`,
-        description: 'A preserved truth capsule on the GuardianChain platform',
+        description: "A preserved truth capsule on the GuardianChain platform",
         attributes: [
-          { trait_type: 'Grief Tier', value: griefTier },
-          { trait_type: 'Platform', value: 'GuardianChain' }
-        ]
+          { trait_type: "Grief Tier", value: griefTier },
+          { trait_type: "Platform", value: "GuardianChain" },
+        ],
       };
     }
   }
 
   // Fallback analysis when AI services are unavailable
   private getFallbackAnalysis(content: string): ContentAnalysis {
-    const wordCount = content.split(' ').length;
-    const hasEmotionalWords = /\b(pain|grief|loss|trauma|death|suffering|healing|recovery|hope|love)\b/i.test(content);
-    
+    const wordCount = content.split(" ").length;
+    const hasEmotionalWords =
+      /\b(pain|grief|loss|trauma|death|suffering|healing|recovery|hope|love)\b/i.test(
+        content,
+      );
+
     return {
       griefScore: hasEmotionalWords ? 3 : 2,
       emotionalResonance: Math.min(wordCount * 2, 100),
       truthLikelihood: 75,
-      contentType: 'personal_memory',
-      themes: ['memory', 'preservation'],
-      sentiment: 'neutral',
-      complexity: wordCount > 200 ? 'complex' : 'simple',
-      suggestedTags: ['memory', 'truth', 'capsule'],
+      contentType: "personal_memory",
+      themes: ["memory", "preservation"],
+      sentiment: "neutral",
+      complexity: wordCount > 200 ? "complex" : "simple",
+      suggestedTags: ["memory", "truth", "capsule"],
       moderationFlags: [],
-      summary: content.slice(0, 97) + '...'
+      summary: content.slice(0, 97) + "...",
     };
   }
 }

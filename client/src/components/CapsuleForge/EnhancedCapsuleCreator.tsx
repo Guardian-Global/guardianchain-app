@@ -7,7 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 // import { DatePicker } from "@/components/ui/date-picker";
 import { Slider } from "@/components/ui/slider";
@@ -48,13 +54,13 @@ import CapsuleAIAssistant from "./CapsuleAIAssistant";
 import ProgressTracker from "./ProgressTracker";
 import IntelligentPreview from "./IntelligentPreview";
 import OneClickUpload from "./OneClickUpload";
-import { 
-  IPFSTooltip, 
-  ContentHashTooltip, 
-  AccessLevelTooltip, 
+import {
+  IPFSTooltip,
+  ContentHashTooltip,
+  AccessLevelTooltip,
   AIOptimizationTooltip,
   BlockchainTooltip,
-  GTTRewardsTooltip
+  GTTRewardsTooltip,
 } from "./ContextualTooltips";
 
 interface CapsuleFormData {
@@ -64,19 +70,19 @@ interface CapsuleFormData {
   category: string;
   tags: string[];
   type: string;
-  
+
   // Privacy & Access
   accessLevel: "public" | "private" | "restricted" | "premium";
   authorizedViewers: string[];
   viewingCost: number;
   requiresAuth: boolean;
   authLevel: "basic" | "enhanced" | "biometric";
-  
+
   // Time Capsule
   isTimeCapsule: boolean;
   revealDate: Date | null;
   requiredApprovals: number;
-  
+
   // Social Media
   autoShare: boolean;
   shareToFacebook: boolean;
@@ -89,7 +95,7 @@ interface CapsuleFormData {
   shareToDiscord: boolean;
   shareToTelegram: boolean;
   socialShareMessage: string;
-  
+
   // IPFS
   autoIpfs: boolean;
   ipfsProvider: "pinata" | "infura" | "web3storage";
@@ -127,7 +133,7 @@ const defaultFormData: CapsuleFormData = {
 const capsuleCategories = [
   "News & Journalism",
   "Whistleblowing",
-  "Legal Documentation", 
+  "Legal Documentation",
   "Personal Truth",
   "Business Intelligence",
   "Scientific Research",
@@ -149,14 +155,54 @@ const capsuleTypes = [
 ];
 
 const socialPlatforms = [
-  { key: "shareToFacebook", label: "Facebook", icon: Facebook, color: "text-blue-600" },
-  { key: "shareToTwitter", label: "Twitter/X", icon: Twitter, color: "text-blue-400" },
-  { key: "shareToLinkedIn", label: "LinkedIn", icon: Linkedin, color: "text-blue-700" },
-  { key: "shareToInstagram", label: "Instagram", icon: Instagram, color: "text-pink-500" },
-  { key: "shareToYouTube", label: "YouTube", icon: Youtube, color: "text-red-600" },
-  { key: "shareToReddit", label: "Reddit", icon: MessageCircle, color: "text-orange-600" },
-  { key: "shareToDiscord", label: "Discord", icon: MessageCircle, color: "text-indigo-600" },
-  { key: "shareToTelegram", label: "Telegram", icon: MessageCircle, color: "text-blue-500" },
+  {
+    key: "shareToFacebook",
+    label: "Facebook",
+    icon: Facebook,
+    color: "text-blue-600",
+  },
+  {
+    key: "shareToTwitter",
+    label: "Twitter/X",
+    icon: Twitter,
+    color: "text-blue-400",
+  },
+  {
+    key: "shareToLinkedIn",
+    label: "LinkedIn",
+    icon: Linkedin,
+    color: "text-blue-700",
+  },
+  {
+    key: "shareToInstagram",
+    label: "Instagram",
+    icon: Instagram,
+    color: "text-pink-500",
+  },
+  {
+    key: "shareToYouTube",
+    label: "YouTube",
+    icon: Youtube,
+    color: "text-red-600",
+  },
+  {
+    key: "shareToReddit",
+    label: "Reddit",
+    icon: MessageCircle,
+    color: "text-orange-600",
+  },
+  {
+    key: "shareToDiscord",
+    label: "Discord",
+    icon: MessageCircle,
+    color: "text-indigo-600",
+  },
+  {
+    key: "shareToTelegram",
+    label: "Telegram",
+    icon: MessageCircle,
+    color: "text-blue-500",
+  },
   { key: "shareToTikTok", label: "TikTok", icon: Video, color: "text-black" },
 ];
 
@@ -172,7 +218,7 @@ const EnhancedCapsuleCreator: React.FC = () => {
   const { toast } = useToast();
 
   const updateFormData = (updates: Partial<CapsuleFormData>) => {
-    setFormData(prev => ({ ...prev, ...updates }));
+    setFormData((prev) => ({ ...prev, ...updates }));
   };
 
   const handleTagAdd = (tag: string) => {
@@ -182,41 +228,48 @@ const EnhancedCapsuleCreator: React.FC = () => {
   };
 
   const handleTagRemove = (tagToRemove: string) => {
-    updateFormData({ tags: formData.tags.filter(tag => tag !== tagToRemove) });
+    updateFormData({
+      tags: formData.tags.filter((tag) => tag !== tagToRemove),
+    });
   };
 
   const handleViewerAdd = (viewer: string) => {
     if (viewer && !formData.authorizedViewers.includes(viewer)) {
-      updateFormData({ authorizedViewers: [...formData.authorizedViewers, viewer] });
+      updateFormData({
+        authorizedViewers: [...formData.authorizedViewers, viewer],
+      });
     }
   };
 
   const handleViewerRemove = (viewerToRemove: string) => {
-    updateFormData({ 
-      authorizedViewers: formData.authorizedViewers.filter(viewer => viewer !== viewerToRemove) 
+    updateFormData({
+      authorizedViewers: formData.authorizedViewers.filter(
+        (viewer) => viewer !== viewerToRemove,
+      ),
     });
   };
 
   const automaticIpfsUpload = async (content: string) => {
     if (!formData.autoIpfs) return null;
-    
+
     setUploading(true);
     try {
       // Simulate IPFS upload - in production this would upload to actual IPFS
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       const mockHash = `Qm${Math.random().toString(36).substr(2, 44)}`;
       setIpfsHash(mockHash);
-      
+
       toast({
         title: "IPFS Upload Successful",
         description: `Content uploaded to IPFS: ${mockHash.substr(0, 20)}...`,
       });
-      
+
       return mockHash;
     } catch (error) {
       toast({
         title: "IPFS Upload Failed",
-        description: "Using local storage instead. You can manually upload later.",
+        description:
+          "Using local storage instead. You can manually upload later.",
         variant: "destructive",
       });
       return null;
@@ -240,20 +293,24 @@ const EnhancedCapsuleCreator: React.FC = () => {
       });
 
       const suggestions = await response.json();
-      
+
       if (suggestions.suggestions) {
         // Apply AI suggestions
         updateFormData({
           category: suggestions.suggestions.category || formData.category,
           tags: [...formData.tags, ...(suggestions.suggestions.tags || [])],
-          accessLevel: suggestions.suggestions.accessLevel || formData.accessLevel,
-          requiresAuth: suggestions.suggestions.requiresAuth ?? formData.requiresAuth,
-          viewingCost: suggestions.suggestions.viewingCost || formData.viewingCost,
+          accessLevel:
+            suggestions.suggestions.accessLevel || formData.accessLevel,
+          requiresAuth:
+            suggestions.suggestions.requiresAuth ?? formData.requiresAuth,
+          viewingCost:
+            suggestions.suggestions.viewingCost || formData.viewingCost,
         });
 
         toast({
           title: "AI Suggestions Applied",
-          description: "Your capsule has been optimized with AI recommendations.",
+          description:
+            "Your capsule has been optimized with AI recommendations.",
         });
       }
     } catch (error) {
@@ -272,18 +329,23 @@ const EnhancedCapsuleCreator: React.FC = () => {
       setUploading(true);
       setUploadProgress(0);
       setCurrentStep("content-analysis");
-      
+
       // Progress tracking for advanced UX
-      const steps = ["content-analysis", "metadata-extraction", "ipfs-upload", "blockchain-mint"];
+      const steps = [
+        "content-analysis",
+        "metadata-extraction",
+        "ipfs-upload",
+        "blockchain-mint",
+      ];
       for (let i = 0; i < steps.length; i++) {
         setCurrentStep(steps[i]);
         setUploadProgress((i / steps.length) * 100);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-      
+
       // Auto-upload to IPFS if enabled
       const contentHash = await automaticIpfsUpload(formData.content);
-      
+
       // Create capsule with all enhanced features
       const capsuleData = {
         ...formData,
@@ -308,7 +370,7 @@ const EnhancedCapsuleCreator: React.FC = () => {
           title: "Capsule Created Successfully!",
           description: "Your truth capsule has been minted to the blockchain.",
         });
-        
+
         // Reset form
         setFormData(defaultFormData);
         setShowPreview(false);
@@ -338,9 +400,12 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
   // Handle content extraction from uploaded files
   const handleContentExtracted = (content: string, metadata: any) => {
-    updateFormData({ 
+    updateFormData({
       content: formData.content ? `${formData.content}\n\n${content}` : content,
-      tags: [...formData.tags, ...metadata.sources?.map((s: any) => s.name.split('.')[0]) || []]
+      tags: [
+        ...formData.tags,
+        ...(metadata.sources?.map((s: any) => s.name.split(".")[0]) || []),
+      ],
     });
     toast({
       title: "Content Extracted",
@@ -365,8 +430,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
           Enhanced Capsule Creator
         </h1>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          Create truth capsules with advanced privacy controls, social sharing, and automated IPFS storage. 
-          AI assistance available for optimal configuration.
+          Create truth capsules with advanced privacy controls, social sharing,
+          and automated IPFS storage. AI assistance available for optimal
+          configuration.
         </p>
       </div>
 
@@ -380,7 +446,8 @@ const EnhancedCapsuleCreator: React.FC = () => {
           metadata={{
             ipfsHash: ipfsHash,
             estimatedTime: uploading ? "~30 seconds" : "",
-            fileSize: uploadedFiles.length > 0 ? `${uploadedFiles.length} files` : ""
+            fileSize:
+              uploadedFiles.length > 0 ? `${uploadedFiles.length} files` : "",
           }}
         />
 
@@ -395,7 +462,15 @@ const EnhancedCapsuleCreator: React.FC = () => {
           onFilesUploaded={handleFilesUploaded}
           onContentExtracted={handleContentExtracted}
           maxFiles={5}
-          acceptedTypes={['text/plain', 'text/markdown', 'application/pdf', 'image/jpeg', 'image/png', 'video/mp4', 'application/json']}
+          acceptedTypes={[
+            "text/plain",
+            "text/markdown",
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "video/mp4",
+            "application/json",
+          ]}
         />
       </div>
 
@@ -423,12 +498,16 @@ const EnhancedCapsuleCreator: React.FC = () => {
                 <CardContent className="space-y-4">
                   <div>
                     <BlockchainTooltip>
-                      <Label htmlFor="title" className="text-slate-300">Capsule Title</Label>
+                      <Label htmlFor="title" className="text-slate-300">
+                        Capsule Title
+                      </Label>
                     </BlockchainTooltip>
                     <Input
                       id="title"
                       value={formData.title}
-                      onChange={(e) => updateFormData({ title: e.target.value })}
+                      onChange={(e) =>
+                        updateFormData({ title: e.target.value })
+                      }
                       placeholder="Enter your truth capsule title..."
                       className="bg-slate-900 border-slate-600 text-white"
                     />
@@ -436,12 +515,16 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
                   <div>
                     <IPFSTooltip>
-                      <Label htmlFor="content" className="text-slate-300">Truth Content</Label>
+                      <Label htmlFor="content" className="text-slate-300">
+                        Truth Content
+                      </Label>
                     </IPFSTooltip>
                     <Textarea
                       id="content"
                       value={formData.content}
-                      onChange={(e) => updateFormData({ content: e.target.value })}
+                      onChange={(e) =>
+                        updateFormData({ content: e.target.value })
+                      }
                       placeholder="Share your truth, evidence, or important information... (Automatically uploaded to IPFS)"
                       rows={8}
                       className="bg-slate-900 border-slate-600 text-white"
@@ -451,7 +534,12 @@ const EnhancedCapsuleCreator: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label className="text-slate-300">Category</Label>
-                      <Select value={formData.category} onValueChange={(value) => updateFormData({ category: value })}>
+                      <Select
+                        value={formData.category}
+                        onValueChange={(value) =>
+                          updateFormData({ category: value })
+                        }
+                      >
                         <SelectTrigger className="bg-slate-900 border-slate-600 text-white">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
@@ -467,7 +555,12 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
                     <div>
                       <Label className="text-slate-300">Type</Label>
-                      <Select value={formData.type} onValueChange={(value) => updateFormData({ type: value })}>
+                      <Select
+                        value={formData.type}
+                        onValueChange={(value) =>
+                          updateFormData({ type: value })
+                        }
+                      >
                         <SelectTrigger className="bg-slate-900 border-slate-600 text-white">
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
@@ -486,7 +579,11 @@ const EnhancedCapsuleCreator: React.FC = () => {
                     <Label className="text-slate-300">Tags</Label>
                     <div className="flex flex-wrap gap-2 mb-2">
                       {formData.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="bg-purple-900/50 text-purple-300">
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="bg-purple-900/50 text-purple-300"
+                        >
                           {tag}
                           <button
                             onClick={() => handleTagRemove(tag)}
@@ -526,7 +623,12 @@ const EnhancedCapsuleCreator: React.FC = () => {
                     <AccessLevelTooltip>
                       <Label className="text-slate-300">Access Level</Label>
                     </AccessLevelTooltip>
-                    <Select value={formData.accessLevel} onValueChange={(value: any) => updateFormData({ accessLevel: value })}>
+                    <Select
+                      value={formData.accessLevel}
+                      onValueChange={(value: any) =>
+                        updateFormData({ accessLevel: value })
+                      }
+                    >
                       <SelectTrigger className="bg-slate-900 border-slate-600 text-white">
                         <SelectValue />
                       </SelectTrigger>
@@ -561,10 +663,16 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
                   {formData.accessLevel === "restricted" && (
                     <div>
-                      <Label className="text-slate-300">Authorized Viewers</Label>
+                      <Label className="text-slate-300">
+                        Authorized Viewers
+                      </Label>
                       <div className="flex flex-wrap gap-2 mb-2">
                         {formData.authorizedViewers.map((viewer) => (
-                          <Badge key={viewer} variant="secondary" className="bg-blue-900/50 text-blue-300">
+                          <Badge
+                            key={viewer}
+                            variant="secondary"
+                            className="bg-blue-900/50 text-blue-300"
+                          >
                             {viewer}
                             <button
                               onClick={() => handleViewerRemove(viewer)}
@@ -590,11 +698,15 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
                   {formData.accessLevel === "premium" && (
                     <div>
-                      <Label className="text-slate-300">Viewing Cost (USD)</Label>
+                      <Label className="text-slate-300">
+                        Viewing Cost (USD)
+                      </Label>
                       <div className="space-y-2">
                         <Slider
                           value={[formData.viewingCost]}
-                          onValueChange={(value) => updateFormData({ viewingCost: value[0] })}
+                          onValueChange={(value) =>
+                            updateFormData({ viewingCost: value[0] })
+                          }
                           max={1000}
                           step={5}
                           className="w-full"
@@ -608,24 +720,41 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <Label className="text-slate-300">Require Authentication</Label>
+                      <Label className="text-slate-300">
+                        Require Authentication
+                      </Label>
                       <Switch
                         checked={formData.requiresAuth}
-                        onCheckedChange={(checked) => updateFormData({ requiresAuth: checked })}
+                        onCheckedChange={(checked) =>
+                          updateFormData({ requiresAuth: checked })
+                        }
                       />
                     </div>
 
                     {formData.requiresAuth && (
                       <div>
-                        <Label className="text-slate-300">Authentication Level</Label>
-                        <Select value={formData.authLevel} onValueChange={(value: any) => updateFormData({ authLevel: value })}>
+                        <Label className="text-slate-300">
+                          Authentication Level
+                        </Label>
+                        <Select
+                          value={formData.authLevel}
+                          onValueChange={(value: any) =>
+                            updateFormData({ authLevel: value })
+                          }
+                        >
                           <SelectTrigger className="bg-slate-900 border-slate-600 text-white">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="basic">Basic (Email/Password)</SelectItem>
-                            <SelectItem value="enhanced">Enhanced (2FA Required)</SelectItem>
-                            <SelectItem value="biometric">Biometric (Fingerprint/Face)</SelectItem>
+                            <SelectItem value="basic">
+                              Basic (Email/Password)
+                            </SelectItem>
+                            <SelectItem value="enhanced">
+                              Enhanced (2FA Required)
+                            </SelectItem>
+                            <SelectItem value="biometric">
+                              Biometric (Fingerprint/Face)
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -642,7 +771,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
                       </Label>
                       <Switch
                         checked={formData.isTimeCapsule}
-                        onCheckedChange={(checked) => updateFormData({ isTimeCapsule: checked })}
+                        onCheckedChange={(checked) =>
+                          updateFormData({ isTimeCapsule: checked })
+                        }
                       />
                     </div>
 
@@ -652,18 +783,35 @@ const EnhancedCapsuleCreator: React.FC = () => {
                           <Label className="text-slate-300">Reveal Date</Label>
                           <Input
                             type="datetime-local"
-                            value={formData.revealDate ? formData.revealDate.toISOString().slice(0, 16) : ""}
-                            onChange={(e) => updateFormData({ revealDate: e.target.value ? new Date(e.target.value) : null })}
+                            value={
+                              formData.revealDate
+                                ? formData.revealDate.toISOString().slice(0, 16)
+                                : ""
+                            }
+                            onChange={(e) =>
+                              updateFormData({
+                                revealDate: e.target.value
+                                  ? new Date(e.target.value)
+                                  : null,
+                              })
+                            }
                             className="bg-slate-900 border-slate-600 text-white"
                           />
                         </div>
-                        
+
                         <div>
-                          <Label className="text-slate-300">Required Approvals</Label>
+                          <Label className="text-slate-300">
+                            Required Approvals
+                          </Label>
                           <Input
                             type="number"
                             value={formData.requiredApprovals}
-                            onChange={(e) => updateFormData({ requiredApprovals: parseInt(e.target.value) || 0 })}
+                            onChange={(e) =>
+                              updateFormData({
+                                requiredApprovals:
+                                  parseInt(e.target.value) || 0,
+                              })
+                            }
                             className="bg-slate-900 border-slate-600 text-white"
                             placeholder="Number of people who must approve reveal"
                           />
@@ -686,26 +834,39 @@ const EnhancedCapsuleCreator: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <Label className="text-slate-300">Auto-Share After Minting</Label>
+                    <Label className="text-slate-300">
+                      Auto-Share After Minting
+                    </Label>
                     <Switch
                       checked={formData.autoShare}
-                      onCheckedChange={(checked) => updateFormData({ autoShare: checked })}
+                      onCheckedChange={(checked) =>
+                        updateFormData({ autoShare: checked })
+                      }
                     />
                   </div>
 
                   {formData.autoShare && (
                     <div className="space-y-4">
                       <div>
-                        <Label className="text-slate-300 mb-4 block">Select Platforms</Label>
+                        <Label className="text-slate-300 mb-4 block">
+                          Select Platforms
+                        </Label>
                         <div className="grid grid-cols-2 gap-3">
                           {socialPlatforms.map((platform) => {
                             const IconComponent = platform.icon;
                             return (
-                              <div key={platform.key} className="flex items-center space-x-2">
+                              <div
+                                key={platform.key}
+                                className="flex items-center space-x-2"
+                              >
                                 <Checkbox
                                   id={platform.key}
-                                  checked={formData[platform.key as keyof CapsuleFormData] as boolean}
-                                  onCheckedChange={(checked) => 
+                                  checked={
+                                    formData[
+                                      platform.key as keyof CapsuleFormData
+                                    ] as boolean
+                                  }
+                                  onCheckedChange={(checked) =>
                                     updateFormData({ [platform.key]: checked })
                                   }
                                 />
@@ -723,10 +884,16 @@ const EnhancedCapsuleCreator: React.FC = () => {
                       </div>
 
                       <div>
-                        <Label className="text-slate-300">Custom Share Message</Label>
+                        <Label className="text-slate-300">
+                          Custom Share Message
+                        </Label>
                         <Textarea
                           value={formData.socialShareMessage}
-                          onChange={(e) => updateFormData({ socialShareMessage: e.target.value })}
+                          onChange={(e) =>
+                            updateFormData({
+                              socialShareMessage: e.target.value,
+                            })
+                          }
                           placeholder="Custom message for social media posts..."
                           className="bg-slate-900 border-slate-600 text-white"
                           rows={3}
@@ -751,33 +918,49 @@ const EnhancedCapsuleCreator: React.FC = () => {
                   <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="h-5 w-5 text-green-400" />
-                      <h3 className="text-white font-semibold">Automated IPFS Upload</h3>
+                      <h3 className="text-white font-semibold">
+                        Automated IPFS Upload
+                      </h3>
                     </div>
                     <p className="text-slate-300 text-sm">
-                      No need to manually create IPFS hashes! We automatically upload your content 
-                      to decentralized storage when you mint your capsule.
+                      No need to manually create IPFS hashes! We automatically
+                      upload your content to decentralized storage when you mint
+                      your capsule.
                     </p>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <Label className="text-slate-300">Auto-Upload to IPFS</Label>
+                    <Label className="text-slate-300">
+                      Auto-Upload to IPFS
+                    </Label>
                     <Switch
                       checked={formData.autoIpfs}
-                      onCheckedChange={(checked) => updateFormData({ autoIpfs: checked })}
+                      onCheckedChange={(checked) =>
+                        updateFormData({ autoIpfs: checked })
+                      }
                     />
                   </div>
 
                   {formData.autoIpfs && (
                     <div>
                       <Label className="text-slate-300">IPFS Provider</Label>
-                      <Select value={formData.ipfsProvider} onValueChange={(value: any) => updateFormData({ ipfsProvider: value })}>
+                      <Select
+                        value={formData.ipfsProvider}
+                        onValueChange={(value: any) =>
+                          updateFormData({ ipfsProvider: value })
+                        }
+                      >
                         <SelectTrigger className="bg-slate-900 border-slate-600 text-white">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="pinata">Pinata (Recommended)</SelectItem>
+                          <SelectItem value="pinata">
+                            Pinata (Recommended)
+                          </SelectItem>
                           <SelectItem value="infura">Infura IPFS</SelectItem>
-                          <SelectItem value="web3storage">Web3.Storage</SelectItem>
+                          <SelectItem value="web3storage">
+                            Web3.Storage
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -787,7 +970,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
                     <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <Hash className="h-5 w-5 text-green-400" />
-                        <h3 className="text-white font-semibold">IPFS Hash Generated</h3>
+                        <h3 className="text-white font-semibold">
+                          IPFS Hash Generated
+                        </h3>
                       </div>
                       <p className="text-slate-300 text-sm font-mono break-all">
                         {ipfsHash}
@@ -799,11 +984,14 @@ const EnhancedCapsuleCreator: React.FC = () => {
                     <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
                       <div className="flex items-center gap-2 mb-2">
                         <AlertCircle className="h-5 w-5 text-yellow-400" />
-                        <h3 className="text-white font-semibold">Manual IPFS</h3>
+                        <h3 className="text-white font-semibold">
+                          Manual IPFS
+                        </h3>
                       </div>
                       <p className="text-slate-300 text-sm">
-                        You've disabled auto-upload. Your content will be stored locally until 
-                        you manually upload it to IPFS and update your capsule.
+                        You've disabled auto-upload. Your content will be stored
+                        locally until you manually upload it to IPFS and update
+                        your capsule.
                       </p>
                     </div>
                   )}
@@ -822,27 +1010,48 @@ const EnhancedCapsuleCreator: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="bg-slate-900/50 rounded-lg p-6 space-y-4">
-                    <h2 className="text-2xl font-bold text-white">{formData.title || "Untitled Capsule"}</h2>
-                    
+                    <h2 className="text-2xl font-bold text-white">
+                      {formData.title || "Untitled Capsule"}
+                    </h2>
+
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="border-purple-500 text-purple-300">
-                        {capsuleTypes.find(t => t.value === formData.type)?.label || "Standard"}
+                      <Badge
+                        variant="outline"
+                        className="border-purple-500 text-purple-300"
+                      >
+                        {capsuleTypes.find((t) => t.value === formData.type)
+                          ?.label || "Standard"}
                       </Badge>
                       {formData.category && (
-                        <Badge variant="outline" className="border-blue-500 text-blue-300">
+                        <Badge
+                          variant="outline"
+                          className="border-blue-500 text-blue-300"
+                        >
                           {formData.category}
                         </Badge>
                       )}
-                      <Badge variant="outline" className={`border-${
-                        formData.accessLevel === "public" ? "green" : 
-                        formData.accessLevel === "private" ? "red" : 
-                        formData.accessLevel === "restricted" ? "yellow" : "purple"
-                      }-500 text-${
-                        formData.accessLevel === "public" ? "green" : 
-                        formData.accessLevel === "private" ? "red" : 
-                        formData.accessLevel === "restricted" ? "yellow" : "purple"
-                      }-300`}>
-                        {formData.accessLevel.charAt(0).toUpperCase() + formData.accessLevel.slice(1)}
+                      <Badge
+                        variant="outline"
+                        className={`border-${
+                          formData.accessLevel === "public"
+                            ? "green"
+                            : formData.accessLevel === "private"
+                              ? "red"
+                              : formData.accessLevel === "restricted"
+                                ? "yellow"
+                                : "purple"
+                        }-500 text-${
+                          formData.accessLevel === "public"
+                            ? "green"
+                            : formData.accessLevel === "private"
+                              ? "red"
+                              : formData.accessLevel === "restricted"
+                                ? "yellow"
+                                : "purple"
+                        }-300`}
+                      >
+                        {formData.accessLevel.charAt(0).toUpperCase() +
+                          formData.accessLevel.slice(1)}
                       </Badge>
                     </div>
 
@@ -852,8 +1061,12 @@ const EnhancedCapsuleCreator: React.FC = () => {
 
                     {formData.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1">
-                        {formData.tags.map(tag => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
+                        {formData.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             #{tag}
                           </Badge>
                         ))}
@@ -909,9 +1122,10 @@ const EnhancedCapsuleCreator: React.FC = () => {
               >
                 {aiAssisting ? "Analyzing..." : "Get AI Suggestions"}
               </Button>
-              
+
               <div className="text-slate-400 text-sm">
-                AI assistant integration available for content optimization and enhancement suggestions.
+                AI assistant integration available for content optimization and
+                enhancement suggestions.
               </div>
             </CardContent>
           </Card>
@@ -928,7 +1142,9 @@ const EnhancedCapsuleCreator: React.FC = () => {
               </div>
               <div className="flex justify-between text-slate-300">
                 <span>Words:</span>
-                <span>{formData.content.split(/\s+/).filter(w => w).length}</span>
+                <span>
+                  {formData.content.split(/\s+/).filter((w) => w).length}
+                </span>
               </div>
               <div className="flex justify-between text-slate-300">
                 <span>Tags:</span>
@@ -937,7 +1153,11 @@ const EnhancedCapsuleCreator: React.FC = () => {
               <div className="flex justify-between text-slate-300">
                 <span>Social Platforms:</span>
                 <span>
-                  {socialPlatforms.filter(p => formData[p.key as keyof CapsuleFormData]).length}
+                  {
+                    socialPlatforms.filter(
+                      (p) => formData[p.key as keyof CapsuleFormData],
+                    ).length
+                  }
                 </span>
               </div>
             </CardContent>

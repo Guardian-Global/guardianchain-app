@@ -11,14 +11,14 @@ router.post("/save-changes", isDebugAuthenticated, async (req, res) => {
     const userId = req.user?.id;
 
     if (!changes || !Array.isArray(changes)) {
-      return res.status(400).json({ 
-        error: "Changes must be provided as an array" 
+      return res.status(400).json({
+        error: "Changes must be provided as an array",
       });
     }
 
     // Save each change
     const savedChanges = [];
-    
+
     for (const change of changes) {
       const changeData = {
         userId,
@@ -30,7 +30,7 @@ router.post("/save-changes", isDebugAuthenticated, async (req, res) => {
 
       // In a real implementation, this would use storage.createUserSavedChanges
       // const savedChange = await storage.createUserSavedChanges(changeData);
-      
+
       const savedChange = {
         id: `change-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         ...changeData,
@@ -41,10 +41,10 @@ router.post("/save-changes", isDebugAuthenticated, async (req, res) => {
       savedChanges.push(savedChange);
     }
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       message: "Changes saved successfully",
-      savedChanges 
+      savedChanges,
     });
   } catch (error) {
     console.error("Error saving user changes:", error);
@@ -72,21 +72,25 @@ router.get("/saved-changes/:userId", isDebugAuthenticated, async (req, res) => {
 });
 
 // Clear all saved changes for a user
-router.delete("/saved-changes/:userId", isDebugAuthenticated, async (req, res) => {
-  try {
-    const { userId } = req.params;
+router.delete(
+  "/saved-changes/:userId",
+  isDebugAuthenticated,
+  async (req, res) => {
+    try {
+      const { userId } = req.params;
 
-    // In a real implementation, this would use storage.clearSavedChanges
-    // await storage.clearSavedChanges(userId);
+      // In a real implementation, this would use storage.clearSavedChanges
+      // await storage.clearSavedChanges(userId);
 
-    res.json({ 
-      success: true, 
-      message: "All saved changes cleared" 
-    });
-  } catch (error) {
-    console.error("Error clearing saved changes:", error);
-    res.status(500).json({ error: "Failed to clear saved changes" });
-  }
-});
+      res.json({
+        success: true,
+        message: "All saved changes cleared",
+      });
+    } catch (error) {
+      console.error("Error clearing saved changes:", error);
+      res.status(500).json({ error: "Failed to clear saved changes" });
+    }
+  },
+);
 
 export default router;

@@ -89,7 +89,7 @@ export async function logExchange(tx: ExchangeTransaction) {
 
 export async function getTaxReport(
   userId: string,
-  year: number
+  year: number,
 ): Promise<TaxReport> {
   try {
     const transactions = await new Promise<ExchangeTransaction[]>((resolve) => {
@@ -156,7 +156,7 @@ export async function monitorLargeTransactions(threshold: number = 1000) {
 }
 
 export async function getExchangeAnalytics(
-  timeframe: "24h" | "7d" | "30d" = "24h"
+  timeframe: "24h" | "7d" | "30d" = "24h",
 ) {
   // Mock exchange analytics
   return {
@@ -197,7 +197,7 @@ export async function detectSuspiciousPatterns(userId: string) {
 
 export async function generateComplianceReport(
   startDate: string,
-  endDate: string
+  endDate: string,
 ) {
   return {
     reportPeriod: `${startDate} to ${endDate}`,

@@ -172,8 +172,8 @@ export default function SovereignAIAssistant({
       setSavedMemories((prev) => [...prev, { ...savedMessage, saved: true }]);
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === savedMessage.id ? { ...msg, saved: true } : msg
-        )
+          msg.id === savedMessage.id ? { ...msg, saved: true } : msg,
+        ),
       );
       toast({
         title: "Memory Saved",
@@ -241,7 +241,7 @@ export default function SovereignAIAssistant({
       id: "welcome",
       role: "assistant",
       content: `Welcome! I'm your Sovereign AI Assistant. I'm here to help you maximize your GUARDIANCHAIN experience with personalized insights and strategic guidance.\n\nAs a ${userTier} member, you have access to ${tierConfig.features.join(
-        ", "
+        ", ",
       )}.\n\nHow can I assist you today?`,
       timestamp: new Date(),
       importance: "medium",

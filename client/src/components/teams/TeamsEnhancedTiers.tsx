@@ -248,7 +248,7 @@ const TeamsEnhancedTiers: React.FC = () => {
   const upgradeTier = async (tierId: string) => {
     setIsUpgrading(true);
     // Simulate upgrade process
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setCurrentTier(tierId);
     setIsUpgrading(false);
     console.log(`Upgraded to tier: ${tierId}`);
@@ -259,7 +259,7 @@ const TeamsEnhancedTiers: React.FC = () => {
   };
 
   const getCurrentTierData = (): EnhancedTier | undefined => {
-    return enhancedTiers.find(tier => tier.id === currentTier);
+    return enhancedTiers.find((tier) => tier.id === currentTier);
   };
 
   return (
@@ -277,7 +277,8 @@ const TeamsEnhancedTiers: React.FC = () => {
             </Badge>
           </CardTitle>
           <p className="text-indigo-100">
-            Unlock maximum value with Teams-exclusive tier enhancements and premium features
+            Unlock maximum value with Teams-exclusive tier enhancements and
+            premium features
           </p>
         </CardHeader>
         <CardContent>
@@ -328,18 +329,22 @@ const TeamsEnhancedTiers: React.FC = () => {
         <TabsContent value="tiers" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {enhancedTiers.map((tier) => (
-              <Card 
-                key={tier.id} 
+              <Card
+                key={tier.id}
                 className={`bg-slate-800/50 border-slate-700 relative overflow-hidden ${
-                  currentTier === tier.id ? 'ring-2 ring-purple-500' : ''
+                  currentTier === tier.id ? "ring-2 ring-purple-500" : ""
                 }`}
               >
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tier.gradient}`} />
-                
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${tier.gradient}`}
+                />
+
                 <CardHeader>
                   <CardTitle className="text-white flex items-center justify-between">
                     <div className="flex items-center">
-                      <div className={`p-2 rounded-lg bg-gradient-to-r ${tier.gradient} mr-3`}>
+                      <div
+                        className={`p-2 rounded-lg bg-gradient-to-r ${tier.gradient} mr-3`}
+                      >
                         <tier.icon className="w-5 h-5 text-white" />
                       </div>
                       <div>
@@ -350,19 +355,22 @@ const TeamsEnhancedTiers: React.FC = () => {
                           )}
                         </div>
                         {currentTier === tier.id && (
-                          <Badge className="mt-1 bg-green-600 text-white">Current</Badge>
+                          <Badge className="mt-1 bg-green-600 text-white">
+                            Current
+                          </Badge>
                         )}
                       </div>
                     </div>
                   </CardTitle>
-                  
+
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-white">
                         ${tier.price}
                         {tier.teamsExclusive && (
                           <span className="text-lg font-normal text-green-400 ml-2">
-                            (+{Math.round((teamsMultiplier - 1) * 100)}% Teams Value)
+                            (+{Math.round((teamsMultiplier - 1) * 100)}% Teams
+                            Value)
                           </span>
                         )}
                       </span>
@@ -396,12 +404,16 @@ const TeamsEnhancedTiers: React.FC = () => {
                     <div className="bg-slate-700/50 rounded p-2 text-center">
                       <div className="text-slate-400">Capsules</div>
                       <div className="text-white font-bold">
-                        {tier.limits.capsules === -1 ? "∞" : tier.limits.capsules}
+                        {tier.limits.capsules === -1
+                          ? "∞"
+                          : tier.limits.capsules}
                       </div>
                     </div>
                     <div className="bg-slate-700/50 rounded p-2 text-center">
                       <div className="text-slate-400">Storage</div>
-                      <div className="text-white font-bold">{tier.limits.storage}</div>
+                      <div className="text-white font-bold">
+                        {tier.limits.storage}
+                      </div>
                     </div>
                   </div>
 
@@ -432,7 +444,10 @@ const TeamsEnhancedTiers: React.FC = () => {
                     ) : (
                       <>
                         <Lock className="w-4 h-4 mr-2" />
-                        Need {(tier.gttRequired - gttBalance).toLocaleString()} GTT
+                        Need {(
+                          tier.gttRequired - gttBalance
+                        ).toLocaleString()}{" "}
+                        GTT
                       </>
                     )}
                   </Button>
@@ -445,7 +460,10 @@ const TeamsEnhancedTiers: React.FC = () => {
         <TabsContent value="benefits" className="space-y-4">
           <div className="grid gap-4">
             {teamsBenefits.map((benefit) => (
-              <Card key={benefit.id} className="bg-slate-800/50 border-slate-700">
+              <Card
+                key={benefit.id}
+                className="bg-slate-800/50 border-slate-700"
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -499,7 +517,9 @@ const TeamsEnhancedTiers: React.FC = () => {
                     <span className="text-slate-300">Security Features</span>
                     <div className="text-right">
                       <div className="text-slate-400">Basic</div>
-                      <div className="text-purple-400 font-bold">Enterprise</div>
+                      <div className="text-purple-400 font-bold">
+                        Enterprise
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center justify-between">
@@ -560,12 +580,17 @@ const TeamsEnhancedTiers: React.FC = () => {
         <TabsContent value="upgrade" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {enhancedTiers
-              .filter(tier => tier.price > (getCurrentTierData()?.price || 0))
+              .filter((tier) => tier.price > (getCurrentTierData()?.price || 0))
               .map((tier, index) => (
-                <Card key={tier.id} className="bg-slate-800/50 border-slate-700">
+                <Card
+                  key={tier.id}
+                  className="bg-slate-800/50 border-slate-700"
+                >
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
-                      <div className={`p-2 rounded-lg bg-gradient-to-r ${tier.gradient} mr-3`}>
+                      <div
+                        className={`p-2 rounded-lg bg-gradient-to-r ${tier.gradient} mr-3`}
+                      >
                         <tier.icon className="w-5 h-5 text-white" />
                       </div>
                       {tier.name}
@@ -578,24 +603,33 @@ const TeamsEnhancedTiers: React.FC = () => {
                       </div>
                       <div className="text-slate-400 text-sm">Upgrade Cost</div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">GTT Required</span>
                         <span className={tier.color}>
-                          {(tier.gttRequired - (getCurrentTierData()?.gttRequired || 0)).toLocaleString()}
+                          {(
+                            tier.gttRequired -
+                            (getCurrentTierData()?.gttRequired || 0)
+                          ).toLocaleString()}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-400">Capsule Increase</span>
                         <span className="text-green-400">
-                          +{tier.limits.capsules - (getCurrentTierData()?.limits.capsules || 0)}
+                          +
+                          {tier.limits.capsules -
+                            (getCurrentTierData()?.limits.capsules || 0)}
                         </span>
                       </div>
                     </div>
 
-                    <Progress 
-                      value={canUpgrade(tier) ? 100 : (gttBalance / tier.gttRequired) * 100}
+                    <Progress
+                      value={
+                        canUpgrade(tier)
+                          ? 100
+                          : (gttBalance / tier.gttRequired) * 100
+                      }
                       className="h-2"
                     />
 

@@ -18,7 +18,7 @@ import {
   List,
   Zap,
   Copy,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 import { useSupabaseAssets } from "@/hooks/useSupabaseAssets";
 import { useToast } from "@/hooks/use-toast";
@@ -34,7 +34,7 @@ export function SupabaseAssetManager() {
     getAssetsByCategory,
     getAssetsByType,
     getHighestValueAssets,
-    getOptimizedUrl
+    getOptimizedUrl,
   } = useSupabaseAssets();
 
   const { toast } = useToast();
@@ -43,30 +43,42 @@ export function SupabaseAssetManager() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Filter assets based on search and category
-  const filteredAssets = assets.filter(asset => {
-    const matchesSearch = asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         asset.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || asset.category === selectedCategory;
+  const filteredAssets = assets.filter((asset) => {
+    const matchesSearch =
+      asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      asset.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || asset.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case "image": return Image;
-      case "video": return Video;
-      case "document": return FileText;
-      case "audio": return Music;
-      default: return FileText;
+      case "image":
+        return Image;
+      case "video":
+        return Video;
+      case "document":
+        return FileText;
+      case "audio":
+        return Music;
+      default:
+        return FileText;
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "image": return "text-blue-400";
-      case "video": return "text-purple-400";
-      case "document": return "text-green-400";
-      case "audio": return "text-yellow-400";
-      default: return "text-slate-400";
+      case "image":
+        return "text-blue-400";
+      case "video":
+        return "text-purple-400";
+      case "document":
+        return "text-green-400";
+      case "audio":
+        return "text-yellow-400";
+      default:
+        return "text-slate-400";
     }
   };
 
@@ -81,13 +93,13 @@ export function SupabaseAssetManager() {
       toast({
         title: "Copy Failed",
         description: "Failed to copy URL to clipboard",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
 
   const openAsset = (asset: any) => {
-    window.open(asset.url, '_blank');
+    window.open(asset.url, "_blank");
   };
 
   const implementAsset = async (asset: any, location: string) => {
@@ -112,13 +124,14 @@ export function SupabaseAssetManager() {
     return (
       <Card className="bg-red-900/20 border-red-500">
         <CardContent className="p-6 text-center">
-          <h3 className="text-red-400 font-semibold mb-2">Asset Discovery Failed</h3>
+          <h3 className="text-red-400 font-semibold mb-2">
+            Asset Discovery Failed
+          </h3>
           <p className="text-red-300 mb-4">
-            Unable to connect to Supabase storage. Please check your configuration.
+            Unable to connect to Supabase storage. Please check your
+            configuration.
           </p>
-          <p className="text-slate-400 text-sm">
-            Error: {error.message}
-          </p>
+          <p className="text-slate-400 text-sm">Error: {error.message}</p>
         </CardContent>
       </Card>
     );
@@ -130,7 +143,9 @@ export function SupabaseAssetManager() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-slate-800/50 border-slate-700">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-400">{totalAssets}</div>
+            <div className="text-2xl font-bold text-blue-400">
+              {totalAssets}
+            </div>
             <div className="text-sm text-slate-400">Total Assets</div>
           </CardContent>
         </Card>
@@ -170,10 +185,17 @@ export function SupabaseAssetManager() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {recommendations.immediate.map((rec, index) => (
-                <div key={index} className="p-4 rounded-lg bg-slate-700/50 space-y-3">
+                <div
+                  key={index}
+                  className="p-4 rounded-lg bg-slate-700/50 space-y-3"
+                >
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-white">{rec.location}</h3>
-                    <Badge variant={rec.priority === "high" ? "default" : "secondary"}>
+                    <Badge
+                      variant={
+                        rec.priority === "high" ? "default" : "secondary"
+                      }
+                    >
                       {rec.priority}
                     </Badge>
                   </div>
@@ -181,7 +203,9 @@ export function SupabaseAssetManager() {
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
                         <Image className="h-4 w-4 text-blue-400" />
-                        <span className="text-sm text-slate-300">{rec.asset.name}</span>
+                        <span className="text-sm text-slate-300">
+                          {rec.asset.name}
+                        </span>
                       </div>
                       <div className="flex space-x-2">
                         <Button
@@ -195,7 +219,9 @@ export function SupabaseAssetManager() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => implementAsset(rec.asset, rec.location)}
+                          onClick={() =>
+                            implementAsset(rec.asset, rec.location)
+                          }
                         >
                           <Zap className="h-3 w-3 mr-1" />
                           Implement
@@ -232,7 +258,7 @@ export function SupabaseAssetManager() {
               </Button>
             </div>
           </div>
-          
+
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
@@ -263,11 +289,21 @@ export function SupabaseAssetManager() {
         <CardContent>
           <Tabs defaultValue="all" className="space-y-4">
             <TabsList className="grid w-full grid-cols-5 bg-slate-700">
-              <TabsTrigger value="all" className="text-white">All Assets</TabsTrigger>
-              <TabsTrigger value="images" className="text-white">Images</TabsTrigger>
-              <TabsTrigger value="videos" className="text-white">Videos</TabsTrigger>
-              <TabsTrigger value="documents" className="text-white">Documents</TabsTrigger>
-              <TabsTrigger value="high-value" className="text-white">High Value</TabsTrigger>
+              <TabsTrigger value="all" className="text-white">
+                All Assets
+              </TabsTrigger>
+              <TabsTrigger value="images" className="text-white">
+                Images
+              </TabsTrigger>
+              <TabsTrigger value="videos" className="text-white">
+                Videos
+              </TabsTrigger>
+              <TabsTrigger value="documents" className="text-white">
+                Documents
+              </TabsTrigger>
+              <TabsTrigger value="high-value" className="text-white">
+                High Value
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="all">
@@ -338,12 +374,14 @@ function AssetGrid({
   onCopyUrl,
   onOpenAsset,
   getTypeIcon,
-  getTypeColor
+  getTypeColor,
 }: any) {
   if (assets.length === 0) {
     return (
       <div className="text-center py-8">
-        <div className="text-slate-400">No assets found matching your criteria</div>
+        <div className="text-slate-400">
+          No assets found matching your criteria
+        </div>
       </div>
     );
   }
@@ -354,7 +392,10 @@ function AssetGrid({
         {assets.map((asset: any) => {
           const TypeIcon = getTypeIcon(asset.type);
           return (
-            <Card key={asset.id} className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/70 transition-colors">
+            <Card
+              key={asset.id}
+              className="bg-slate-700/50 border-slate-600 hover:bg-slate-700/70 transition-colors"
+            >
               <CardContent className="p-4 space-y-3">
                 <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center overflow-hidden">
                   {asset.type === "image" ? (
@@ -363,23 +404,29 @@ function AssetGrid({
                       alt={asset.name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.style.display = "none";
                       }}
                     />
                   ) : (
-                    <TypeIcon className={`h-8 w-8 ${getTypeColor(asset.type)}`} />
+                    <TypeIcon
+                      className={`h-8 w-8 ${getTypeColor(asset.type)}`}
+                    />
                   )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-white truncate">{asset.name}</h3>
+                    <h3 className="text-sm font-medium text-white truncate">
+                      {asset.name}
+                    </h3>
                     <div className="flex items-center space-x-1">
                       <Star className="h-3 w-3 text-yellow-400" />
-                      <span className="text-xs text-yellow-400">{asset.value}</span>
+                      <span className="text-xs text-yellow-400">
+                        {asset.value}
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <Badge variant="outline" className="text-xs">
                       {asset.category}
@@ -388,13 +435,21 @@ function AssetGrid({
                       {(asset.size / 1024).toFixed(1)}KB
                     </span>
                   </div>
-                  
+
                   <div className="flex space-x-1">
-                    <Button size="sm" onClick={() => onCopyUrl(asset)} className="flex-1">
+                    <Button
+                      size="sm"
+                      onClick={() => onCopyUrl(asset)}
+                      className="flex-1"
+                    >
                       <Copy className="h-3 w-3 mr-1" />
                       Copy
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => onOpenAsset(asset)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onOpenAsset(asset)}
+                    >
                       <ExternalLink className="h-3 w-3" />
                     </Button>
                   </div>
@@ -426,7 +481,7 @@ function AssetGrid({
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <div className="flex items-center space-x-1">
                 <Star className="h-4 w-4 text-yellow-400" />
@@ -436,7 +491,11 @@ function AssetGrid({
                 <Copy className="h-3 w-3 mr-1" />
                 Copy URL
               </Button>
-              <Button size="sm" variant="outline" onClick={() => onOpenAsset(asset)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onOpenAsset(asset)}
+              >
                 <ExternalLink className="h-3 w-3" />
               </Button>
             </div>

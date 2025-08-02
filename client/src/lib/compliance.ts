@@ -11,7 +11,7 @@ export async function runComplianceCheck() {
     return data.status;
   } catch (error) {
     throw new Error(
-      "Compliance not configured: Connect compliance provider to activate"
+      "Compliance not configured: Connect compliance provider to activate",
     );
   }
 }

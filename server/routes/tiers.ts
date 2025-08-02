@@ -33,7 +33,7 @@ const mockUsers = new Map([
       totalYieldEarned: 45.25,
       subscriptionStatus: "active",
       subscriptionEndDate: new Date(
-        Date.now() + 30 * 24 * 60 * 60 * 1000
+        Date.now() + 30 * 24 * 60 * 60 * 1000,
       ).toISOString(),
     },
   ],
@@ -142,7 +142,7 @@ export function registerTierRoutes(app: Express) {
           message: error instanceof Error ? error.message : "Unknown error",
         });
       }
-    }
+    },
   );
 
   // Check user access permissions
@@ -160,7 +160,7 @@ export function registerTierRoutes(app: Express) {
         canMint: user.mintsThisPeriod < getTierMintLimit(user.tierId),
         remainingMints: Math.max(
           getTierMintLimit(user.tierId) - user.mintsThisPeriod,
-          0
+          0,
         ),
         canAccessAnalytics: user.tierId !== "explorer",
         canAccessMarketplace: ["creator", "sovereign"].includes(user.tierId),
@@ -183,7 +183,7 @@ export function registerTierRoutes(app: Express) {
     async (req: Request, res: Response) => {
       try {
         const { tierId, userId, billingPeriod } = TierUpgradeSchema.parse(
-          req.body
+          req.body,
         );
 
         // Mock Stripe integration - replace with actual Stripe API calls
@@ -215,7 +215,7 @@ export function registerTierRoutes(app: Express) {
           message: error instanceof Error ? error.message : "Unknown error",
         });
       }
-    }
+    },
   );
 }
 

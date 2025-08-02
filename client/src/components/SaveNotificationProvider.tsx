@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertTriangle, Save } from "lucide-react";
 
@@ -20,12 +20,16 @@ interface SaveNotificationContextType {
   setSaveFunction: (fn: () => Promise<void> | void) => void;
 }
 
-const SaveNotificationContext = createContext<SaveNotificationContextType | undefined>(undefined);
+const SaveNotificationContext = createContext<
+  SaveNotificationContextType | undefined
+>(undefined);
 
 export function useSaveNotification() {
   const context = useContext(SaveNotificationContext);
   if (context === undefined) {
-    throw new Error('useSaveNotification must be used within a SaveNotificationProvider');
+    throw new Error(
+      "useSaveNotification must be used within a SaveNotificationProvider",
+    );
   }
   return context;
 }
@@ -37,16 +41,20 @@ interface SaveNotificationProviderProps {
   className?: string;
 }
 
-export function SaveNotificationProvider({ 
-  children, 
+export function SaveNotificationProvider({
+  children,
   hasUnsavedChanges: externalUnsavedChanges,
   onSave,
-  className = ""
+  className = "",
 }: SaveNotificationProviderProps) {
   const [internalUnsavedChanges, setInternalUnsavedChanges] = useState(false);
-  const [saveFunction, setSaveFunction] = useState<(() => Promise<void> | void) | undefined>(() => onSave);
+  const [saveFunction, setSaveFunction] = useState<
+    (() => Promise<void> | void) | undefined
+  >(() => onSave);
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(
+    null,
+  );
   const { toast } = useToast();
 
   const hasUnsavedChanges = externalUnsavedChanges || internalUnsavedChanges;
@@ -56,14 +64,15 @@ export function SaveNotificationProvider({
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
-        e.returnValue = '';
-        return '';
+        e.returnValue = "";
+        return "";
       }
     };
 
     if (hasUnsavedChanges) {
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () =>
+        window.removeEventListener("beforeunload", handleBeforeUnload);
     }
   }, [hasUnsavedChanges]);
 
@@ -72,15 +81,15 @@ export function SaveNotificationProvider({
     const handlePopState = (e: PopStateEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
-        window.history.pushState(null, '', window.location.href);
+        window.history.pushState(null, "", window.location.href);
         setShowExitDialog(true);
         setPendingNavigation(window.location.pathname);
       }
     };
 
     if (hasUnsavedChanges) {
-      window.addEventListener('popstate', handlePopState);
-      return () => window.removeEventListener('popstate', handlePopState);
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
     }
   }, [hasUnsavedChanges]);
 
@@ -93,8 +102,8 @@ export function SaveNotificationProvider({
         title: "Unsaved Changes",
         description: "You have unsaved changes in your sovereign profile.",
         action: saveFunction ? (
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             onClick={() => {
               try {
                 saveFunction();
@@ -135,7 +144,7 @@ export function SaveNotificationProvider({
         await saveFunction();
         setInternalUnsavedChanges(false);
         setShowExitDialog(false);
-        
+
         toast({
           title: "Profile Saved",
           description: "Your changes have been saved permanently.",
@@ -173,8 +182,8 @@ export function SaveNotificationProvider({
               <AlertTriangle className="w-4 h-4" />
               <span className="text-sm font-medium">Unsaved Changes</span>
               {saveFunction && (
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   variant="secondary"
                   onClick={saveFunction}
                   className="ml-2 h-6 px-2"
@@ -198,22 +207,24 @@ export function SaveNotificationProvider({
                 Unsaved Changes Detected
               </AlertDialogTitle>
               <AlertDialogDescription>
-                You have unsaved changes to your sovereign profile. These changes will be lost if you leave without saving.
-                Your profile represents your permanent identity on the blockchain - would you like to save your changes first?
+                You have unsaved changes to your sovereign profile. These
+                changes will be lost if you leave without saving. Your profile
+                represents your permanent identity on the blockchain - would you
+                like to save your changes first?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setShowExitDialog(false)}>
                 Stay on Page
               </AlertDialogCancel>
-              <AlertDialogAction 
+              <AlertDialogAction
                 onClick={handleConfirmExit}
                 className="bg-red-600 hover:bg-red-700"
               >
                 Leave Without Saving
               </AlertDialogAction>
               {saveFunction && (
-                <AlertDialogAction 
+                <AlertDialogAction
                   onClick={handleSaveAndExit}
                   className="bg-green-600 hover:bg-green-700"
                 >

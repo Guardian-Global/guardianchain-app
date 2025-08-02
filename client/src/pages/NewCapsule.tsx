@@ -24,7 +24,7 @@ export default function NewCapsulePage() {
 
   const categories = [
     "Personal Truth",
-    "Scientific Truth", 
+    "Scientific Truth",
     "Truth Testimony",
     "Historical Archive",
     "Medical Truth",
@@ -32,7 +32,7 @@ export default function NewCapsulePage() {
     "Corporate Transparency",
     "Environmental Evidence",
     "Legal Documentation",
-    "Cultural Heritage"
+    "Cultural Heritage",
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,27 +41,30 @@ export default function NewCapsulePage() {
       setError("Title is required.");
       return;
     }
-    
+
     setError("");
     setLoading(true);
-    
+
     try {
       let capsuleData: any = {
         title: title.trim(),
         description: description.trim(),
         category: category,
         author: "CurrentUser", // This would come from auth context
-        tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+        tags: tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
       };
 
       // Handle client-side encryption if needed
       if (timeLocked || accessControl !== "public") {
         // Dynamic import of encryption utility
         const { encryptCapsule } = await import("../utils/lit/encryptCapsule");
-        
+
         // Create access control conditions
         let accessControlConditions = [];
-        
+
         if (timeLocked && unlockDate) {
           accessControlConditions.push({
             contractAddress: "",
@@ -75,7 +78,7 @@ export default function NewCapsulePage() {
             },
           });
         }
-        
+
         if (accessControl === "token_gated" && tokenAddress && minimumBalance) {
           accessControlConditions.push({
             contractAddress: tokenAddress,
@@ -111,7 +114,7 @@ export default function NewCapsulePage() {
         capsuleData.timelock = {
           enabled: true,
           unlockDate: unlockDate,
-          unlockTimestamp: new Date(unlockDate).getTime()
+          unlockTimestamp: new Date(unlockDate).getTime(),
         };
       }
 
@@ -120,8 +123,8 @@ export default function NewCapsulePage() {
         type: accessControl,
         ...(accessControl === "token_gated" && {
           tokenAddress: tokenAddress,
-          minimumBalance: minimumBalance
-        })
+          minimumBalance: minimumBalance,
+        }),
       };
 
       const response = await fetch("/api/capsules", {
@@ -129,9 +132,9 @@ export default function NewCapsulePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(capsuleData),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok && data.id) {
         setSuccess(true);
         setTimeout(() => {
@@ -148,7 +151,10 @@ export default function NewCapsulePage() {
     }
   };
 
-  const parsedTags = tags.split(",").map(t => t.trim()).filter(Boolean);
+  const parsedTags = tags
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
 
   if (success) {
     return (
@@ -160,7 +166,8 @@ export default function NewCapsulePage() {
               Capsule Created Successfully!
             </h1>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Your truth capsule has been minted and sealed. Redirecting to view...
+              Your truth capsule has been minted and sealed. Redirecting to
+              view...
             </p>
             <div className="animate-spin w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
           </CardContent>
@@ -181,10 +188,11 @@ export default function NewCapsulePage() {
               </CardTitle>
             </div>
             <p className="text-gray-600 dark:text-gray-300">
-              Your truth deserves a sovereign vault. Fill out the details below to mint a new capsule on the blockchain.
+              Your truth deserves a sovereign vault. Fill out the details below
+              to mint a new capsule on the blockchain.
             </p>
           </CardHeader>
-          
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -204,13 +212,15 @@ export default function NewCapsulePage() {
                 <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                   Category
                 </label>
-                <select 
+                <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -252,12 +262,20 @@ export default function NewCapsulePage() {
               {/* Time Lock & Encryption Settings */}
               <div className="border border-amber-200 dark:border-amber-600 rounded-lg p-4 bg-amber-50 dark:bg-amber-900/10">
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3 flex items-center">
-                  <svg className="w-4 h-4 mr-2 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  <svg
+                    className="w-4 h-4 mr-2 text-amber-600 dark:text-amber-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   Encryption & Access Control
                 </h4>
-                
+
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
                     <input
@@ -267,7 +285,10 @@ export default function NewCapsulePage() {
                       onChange={(e) => setTimeLocked(e.target.checked)}
                       className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
                     />
-                    <label htmlFor="timeLocked" className="text-sm text-gray-700 dark:text-gray-300">
+                    <label
+                      htmlFor="timeLocked"
+                      className="text-sm text-gray-700 dark:text-gray-300"
+                    >
                       Enable time-locked reveal (content will be encrypted)
                     </label>
                   </div>
@@ -284,7 +305,8 @@ export default function NewCapsulePage() {
                         className="w-full p-2 border border-amber-300 dark:border-amber-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
                       <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                        Content will be encrypted and only accessible after this time
+                        Content will be encrypted and only accessible after this
+                        time
                       </p>
                     </div>
                   )}
@@ -298,9 +320,13 @@ export default function NewCapsulePage() {
                       onChange={(e) => setAccessControl(e.target.value)}
                       className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
-                      <option value="public">Public (Anyone can view immediately)</option>
+                      <option value="public">
+                        Public (Anyone can view immediately)
+                      </option>
                       <option value="time_locked">Time Locked Only</option>
-                      <option value="token_gated">Token Gated (Requires specific tokens)</option>
+                      <option value="token_gated">
+                        Token Gated (Requires specific tokens)
+                      </option>
                     </select>
                   </div>
 
@@ -329,7 +355,8 @@ export default function NewCapsulePage() {
                         />
                       </div>
                       <p className="text-xs text-blue-600 dark:text-blue-400">
-                        Only wallets holding the specified tokens can decrypt this capsule
+                        Only wallets holding the specified tokens can decrypt
+                        this capsule
                       </p>
                     </div>
                   )}
@@ -337,8 +364,10 @@ export default function NewCapsulePage() {
                   {(timeLocked || accessControl !== "public") && (
                     <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-md">
                       <p className="text-xs text-gray-600 dark:text-gray-400">
-                        🔐 <strong>Encryption Active:</strong> Your content will be encrypted using blockchain-grade security. 
-                        Only users meeting the access conditions can decrypt and view the content.
+                        🔐 <strong>Encryption Active:</strong> Your content will
+                        be encrypted using blockchain-grade security. Only users
+                        meeting the access conditions can decrypt and view the
+                        content.
                       </p>
                     </div>
                   )}
@@ -348,13 +377,15 @@ export default function NewCapsulePage() {
               {error && (
                 <div className="flex items-center p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
                   <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
-                  <p className="text-red-700 dark:text-red-300 text-sm font-medium">{error}</p>
+                  <p className="text-red-700 dark:text-red-300 text-sm font-medium">
+                    {error}
+                  </p>
                 </div>
               )}
 
-              <Button 
-                type="submit" 
-                disabled={loading || !title.trim()} 
+              <Button
+                type="submit"
+                disabled={loading || !title.trim()}
                 className="w-full text-lg py-3"
               >
                 {loading ? (
@@ -376,9 +407,21 @@ export default function NewCapsulePage() {
                 What happens next?
               </h4>
               <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                <li>• Your capsule will be sealed with blockchain-grade encryption</li>
-                <li>• {timeLocked ? "Content will be time-locked until the specified date" : "Content will be immediately available"}</li>
-                <li>• {accessControl !== "public" ? "Access controls will be enforced via smart contracts" : "Public access allows anyone to view"}</li>
+                <li>
+                  • Your capsule will be sealed with blockchain-grade encryption
+                </li>
+                <li>
+                  •{" "}
+                  {timeLocked
+                    ? "Content will be time-locked until the specified date"
+                    : "Content will be immediately available"}
+                </li>
+                <li>
+                  •{" "}
+                  {accessControl !== "public"
+                    ? "Access controls will be enforced via smart contracts"
+                    : "Public access allows anyone to view"}
+                </li>
                 <li>• Community verification process begins automatically</li>
                 <li>• Earn GTT tokens based on engagement and verification</li>
               </ul>

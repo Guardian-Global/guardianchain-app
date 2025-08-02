@@ -12,7 +12,11 @@ interface LayoutProps {
   tier?: string;
 }
 
-export default function Layout({ children, title = "GuardianChain", tier = "guest" }: LayoutProps) {
+export default function Layout({
+  children,
+  title = "GuardianChain",
+  tier = "guest",
+}: LayoutProps) {
   return (
     <div className="min-h-screen bg-brand-secondary text-brand-light font-brand">
       <Helmet>
@@ -32,9 +36,7 @@ export default function Layout({ children, title = "GuardianChain", tier = "gues
               <PWAInstallButton />
             </div>
           </div>
-          <div className="px-6 pb-10">
-            {children}
-          </div>
+          <div className="px-6 pb-10">{children}</div>
         </main>
       </div>
     </div>

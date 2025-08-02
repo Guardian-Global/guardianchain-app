@@ -1,4 +1,5 @@
 # GUARDIANCHAIN TECHNICAL SPECIFICATION
+
 ## Platform Architecture & Implementation Guide
 
 **ENTERPRISE TECHNICAL DOCUMENTATION**  
@@ -32,6 +33,7 @@
 GUARDIANCHAIN represents a cutting-edge implementation of blockchain-based truth verification, combining modern web technologies with decentralized protocols to create a scalable, secure, and user-friendly platform for content verification and community governance.
 
 **Architecture Highlights**:
+
 - **Frontend**: React 18+ with TypeScript, Vite build system, Tailwind CSS
 - **Backend**: Node.js with Express, JWT authentication, rate limiting
 - **Database**: PostgreSQL with Drizzle ORM, connection pooling
@@ -54,7 +56,7 @@ GUARDIANCHAIN represents a cutting-edge implementation of blockchain-based truth
 **9. PERFORMANCE & SCALABILITY** ................................................. 20  
 **10. DEPLOYMENT & DEVOPS** ...................................................... 22  
 **11. MONITORING & OBSERVABILITY** ............................................... 24  
-**12. INTEGRATION GUIDES** ....................................................... 26  
+**12. INTEGRATION GUIDES** ....................................................... 26
 
 ---
 
@@ -63,6 +65,7 @@ GUARDIANCHAIN represents a cutting-edge implementation of blockchain-based truth
 ### 1.1 High-Level Architecture
 
 #### System Components
+
 ```
 GUARDIANCHAIN Platform Architecture:
 
@@ -122,6 +125,7 @@ GUARDIANCHAIN Platform Architecture:
 ### 1.2 Technology Stack
 
 #### Core Technologies
+
 ```typescript
 // Primary Technology Stack
 interface TechnologyStack {
@@ -134,7 +138,7 @@ interface TechnologyStack {
     routing: "Wouter";
     ui: "Radix UI + shadcn/ui";
   };
-  
+
   backend: {
     runtime: "Node.js 20+";
     framework: "Express.js 4.18+";
@@ -143,21 +147,21 @@ interface TechnologyStack {
     validation: "Zod";
     orm: "Drizzle ORM";
   };
-  
+
   database: {
     primary: "PostgreSQL 15+";
     cache: "Redis 7+";
     search: "ElasticSearch 8+";
     timeSeries: "InfluxDB 2.0+";
   };
-  
+
   blockchain: {
     primary: "Polygon (MATIC)";
     library: "ethers.js 6.0+";
     contracts: "Solidity 0.8.19+";
     standards: "OpenZeppelin 4.9+";
   };
-  
+
   infrastructure: {
     containers: "Docker + Kubernetes";
     monitoring: "Prometheus + Grafana";
@@ -170,6 +174,7 @@ interface TechnologyStack {
 ### 1.3 Microservices Architecture
 
 #### Service Decomposition
+
 ```yaml
 # Microservices Architecture
 services:
@@ -182,7 +187,7 @@ services:
       - "/auth/register"
       - "/auth/refresh"
       - "/auth/verify"
-    
+
   content-service:
     purpose: "Truth capsule management"
     tech_stack: "Node.js + IPFS + S3"
@@ -192,7 +197,7 @@ services:
       - "/content/upload"
       - "/content/metadata"
       - "/content/search"
-    
+
   verification-service:
     purpose: "Community verification engine"
     tech_stack: "Node.js + ML Pipeline"
@@ -202,7 +207,7 @@ services:
       - "/verification/vote"
       - "/verification/results"
       - "/verification/history"
-    
+
   blockchain-service:
     purpose: "Web3 integration and GTT management"
     tech_stack: "Node.js + ethers.js"
@@ -212,7 +217,7 @@ services:
       - "/blockchain/transactions"
       - "/blockchain/staking"
       - "/blockchain/governance"
-    
+
   notification-service:
     purpose: "Multi-channel notifications"
     tech_stack: "Node.js + Redis + WebSocket"
@@ -231,6 +236,7 @@ services:
 ### 2.1 React Application Structure
 
 #### Component Architecture
+
 ```typescript
 // Frontend Application Structure
 src/
@@ -268,17 +274,18 @@ src/
 ```
 
 #### Component Design System
+
 ```typescript
 // Design System Architecture
 interface DesignSystem {
   tokens: {
     colors: {
-      primary: "#1a365d";    // GUARDIANCHAIN blue
-      secondary: "#2d5aa0";  // Light blue
-      accent: "#63b3ed";     // Bright blue
-      success: "#48bb78";    // Green
-      warning: "#ed8936";    // Orange
-      error: "#e53e3e";      // Red
+      primary: "#1a365d"; // GUARDIANCHAIN blue
+      secondary: "#2d5aa0"; // Light blue
+      accent: "#63b3ed"; // Bright blue
+      success: "#48bb78"; // Green
+      warning: "#ed8936"; // Orange
+      error: "#e53e3e"; // Red
       neutral: {
         50: "#f7fafc";
         100: "#edf2f7";
@@ -286,7 +293,7 @@ interface DesignSystem {
         900: "#1a202c";
       };
     };
-    
+
     typography: {
       fonts: {
         sans: "Inter, system-ui, sans-serif";
@@ -294,26 +301,26 @@ interface DesignSystem {
         display: "Inter, sans-serif";
       };
       sizes: {
-        xs: "0.75rem";    // 12px
-        sm: "0.875rem";   // 14px
-        base: "1rem";     // 16px
-        lg: "1.125rem";   // 18px
-        xl: "1.25rem";    // 20px
-        "2xl": "1.5rem";  // 24px
+        xs: "0.75rem"; // 12px
+        sm: "0.875rem"; // 14px
+        base: "1rem"; // 16px
+        lg: "1.125rem"; // 18px
+        xl: "1.25rem"; // 20px
+        "2xl": "1.5rem"; // 24px
         "3xl": "1.875rem"; // 30px
         "4xl": "2.25rem"; // 36px
       };
     };
-    
+
     spacing: {
-      0: "0",
-      1: "0.25rem",    // 4px
-      2: "0.5rem",     // 8px
-      4: "1rem",       // 16px
-      8: "2rem",       // 32px
-      16: "4rem",      // 64px
+      0: "0";
+      1: "0.25rem"; // 4px
+      2: "0.5rem"; // 8px
+      4: "1rem"; // 16px
+      8: "2rem"; // 32px
+      16: "4rem"; // 64px
     };
-    
+
     breakpoints: {
       sm: "640px";
       md: "768px";
@@ -322,7 +329,7 @@ interface DesignSystem {
       "2xl": "1536px";
     };
   };
-  
+
   components: {
     button: ButtonComponent;
     input: InputComponent;
@@ -337,6 +344,7 @@ interface DesignSystem {
 ### 2.2 State Management
 
 #### Global State Architecture
+
 ```typescript
 // Global State Management with React Query + Context
 interface GlobalState {
@@ -346,7 +354,7 @@ interface GlobalState {
     isLoading: boolean;
     tier: UserTier;
   };
-  
+
   web3: {
     account: string | null;
     network: Network;
@@ -356,7 +364,7 @@ interface GlobalState {
     };
     isConnected: boolean;
   };
-  
+
   ui: {
     theme: "light" | "dark";
     sidebarOpen: boolean;
@@ -369,7 +377,7 @@ interface GlobalState {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,  // 5 minutes
+      staleTime: 5 * 60 * 1000, // 5 minutes
       cacheTime: 10 * 60 * 1000, // 10 minutes
       retry: 3,
       refetchOnWindowFocus: false,
@@ -387,10 +395,10 @@ const queryClient = new QueryClient({
 // Custom Hooks for State Management
 export const useAuth = () => {
   const { data: user, isLoading } = useQuery({
-    queryKey: ['/api/auth/user'],
+    queryKey: ["/api/auth/user"],
     retry: false,
   });
-  
+
   return {
     user,
     isLoading,
@@ -398,7 +406,7 @@ export const useAuth = () => {
     login: useMutation({
       mutationFn: loginUser,
       onSuccess: () => {
-        queryClient.invalidateQueries(['/api/auth/user']);
+        queryClient.invalidateQueries(["/api/auth/user"]);
       },
     }),
     logout: useMutation({
@@ -414,6 +422,7 @@ export const useAuth = () => {
 ### 2.3 Performance Optimization
 
 #### Frontend Performance Strategy
+
 ```typescript
 // Performance Optimization Techniques
 interface PerformanceOptimizations {
@@ -423,40 +432,40 @@ interface PerformanceOptimizations {
     chunkSplitting: "Vite automatic chunk optimization";
     dynamicImports: "Dynamic imports for heavy components";
   };
-  
+
   bundleOptimization: {
     treeShaking: "Automatic unused code elimination";
     minification: "Terser for production builds";
     compression: "Gzip/Brotli compression";
     assetOptimization: "Image optimization and lazy loading";
   };
-  
+
   runtimeOptimization: {
     memoization: "React.memo for expensive components";
     virtualization: "React Window for large lists";
     debouncing: "Input debouncing for API calls";
     caching: "React Query for data caching";
   };
-  
+
   webVitals: {
-    LCP: "<2.5s";  // Largest Contentful Paint
+    LCP: "<2.5s"; // Largest Contentful Paint
     FID: "<100ms"; // First Input Delay
-    CLS: "<0.1";   // Cumulative Layout Shift
-    FCP: "<1.8s";  // First Contentful Paint
-    TTI: "<3.8s";  // Time to Interactive
+    CLS: "<0.1"; // Cumulative Layout Shift
+    FCP: "<1.8s"; // First Contentful Paint
+    TTI: "<3.8s"; // Time to Interactive
   };
 }
 
 // Performance Monitoring
 const performanceMonitor = {
   webVitals: {
-    onLCP: (metric) => analytics.track('LCP', metric),
-    onFID: (metric) => analytics.track('FID', metric),
-    onCLS: (metric) => analytics.track('CLS', metric),
-    onFCP: (metric) => analytics.track('FCP', metric),
-    onTTFB: (metric) => analytics.track('TTFB', metric),
+    onLCP: (metric) => analytics.track("LCP", metric),
+    onFID: (metric) => analytics.track("FID", metric),
+    onCLS: (metric) => analytics.track("CLS", metric),
+    onFCP: (metric) => analytics.track("FCP", metric),
+    onTTFB: (metric) => analytics.track("TTFB", metric),
   },
-  
+
   customMetrics: {
     pageLoadTime: measurePageLoad,
     apiResponseTime: measureApiCalls,
@@ -473,40 +482,46 @@ const performanceMonitor = {
 ### 3.1 Express.js Application Architecture
 
 #### Server Configuration
+
 ```typescript
 // Express Application Setup
-import express, { Application } from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
-import compression from 'compression';
+import express, { Application } from "express";
+import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import compression from "compression";
 
 const app: Application = express();
 
 // Security Middleware
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      scriptSrc: ["'self'", "'unsafe-eval'"],
-      connectSrc: ["'self'", "wss:", "https:"],
-      imgSrc: ["'self'", "data:", "https:"],
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        scriptSrc: ["'self'", "'unsafe-eval'"],
+        connectSrc: ["'self'", "wss:", "https:"],
+        imgSrc: ["'self'", "data:", "https:"],
+      },
     },
-  },
-  crossOriginEmbedderPolicy: false,
-}));
+    crossOriginEmbedderPolicy: false,
+  }),
+);
 
 // CORS Configuration
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://guardianchain.app', 'https://www.guardianchain.app']
-    : ['http://localhost:3000', 'http://localhost:5173'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
-}));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["https://guardianchain.app", "https://www.guardianchain.app"]
+        : ["http://localhost:3000", "http://localhost:5173"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-csrf-token"],
+  }),
+);
 
 // Rate Limiting
 const limiter = rateLimit({
@@ -515,87 +530,91 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: {
-    error: 'Too many requests from this IP, please try again later.',
+    error: "Too many requests from this IP, please try again later.",
   },
 });
 
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 
 // Performance Middleware
 app.use(compression());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Request Logging
 app.use((req, res, next) => {
   const start = Date.now();
-  res.on('finish', () => {
+  res.on("finish", () => {
     const duration = Date.now() - start;
-    console.log(`${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`);
+    console.log(
+      `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`,
+    );
   });
   next();
 });
 ```
 
 #### API Route Structure
+
 ```typescript
 // API Route Organization
 interface APIRoutes {
-  '/api/auth': {
-    'POST /login': 'User authentication';
-    'POST /register': 'User registration';
-    'POST /refresh': 'Token refresh';
-    'POST /logout': 'User logout';
-    'GET /user': 'Current user info';
-    'PUT /user': 'Update user profile';
+  "/api/auth": {
+    "POST /login": "User authentication";
+    "POST /register": "User registration";
+    "POST /refresh": "Token refresh";
+    "POST /logout": "User logout";
+    "GET /user": "Current user info";
+    "PUT /user": "Update user profile";
   };
-  
-  '/api/content': {
-    'GET /capsules': 'List truth capsules';
-    'POST /capsules': 'Create truth capsule';
-    'GET /capsules/:id': 'Get specific capsule';
-    'PUT /capsules/:id': 'Update capsule';
-    'DELETE /capsules/:id': 'Delete capsule';
-    'POST /capsules/:id/verify': 'Submit verification';
+
+  "/api/content": {
+    "GET /capsules": "List truth capsules";
+    "POST /capsules": "Create truth capsule";
+    "GET /capsules/:id": "Get specific capsule";
+    "PUT /capsules/:id": "Update capsule";
+    "DELETE /capsules/:id": "Delete capsule";
+    "POST /capsules/:id/verify": "Submit verification";
   };
-  
-  '/api/verification': {
-    'GET /pending': 'Pending verifications';
-    'POST /submit': 'Submit verification';
-    'GET /history': 'User verification history';
-    'GET /stats': 'Verification statistics';
-    'POST /dispute': 'Dispute verification result';
+
+  "/api/verification": {
+    "GET /pending": "Pending verifications";
+    "POST /submit": "Submit verification";
+    "GET /history": "User verification history";
+    "GET /stats": "Verification statistics";
+    "POST /dispute": "Dispute verification result";
   };
-  
-  '/api/blockchain': {
-    'GET /balance/:address': 'GTT token balance';
-    'POST /stake': 'Stake GTT tokens';
-    'POST /unstake': 'Unstake GTT tokens';
-    'GET /transactions': 'Transaction history';
-    'POST /governance/vote': 'Cast governance vote';
+
+  "/api/blockchain": {
+    "GET /balance/:address": "GTT token balance";
+    "POST /stake": "Stake GTT tokens";
+    "POST /unstake": "Unstake GTT tokens";
+    "GET /transactions": "Transaction history";
+    "POST /governance/vote": "Cast governance vote";
   };
-  
-  '/api/admin': {
-    'GET /users': 'Admin user management';
-    'GET /metrics': 'Platform metrics';
-    'POST /moderate': 'Content moderation';
-    'GET /reports': 'System reports';
+
+  "/api/admin": {
+    "GET /users": "Admin user management";
+    "GET /metrics": "Platform metrics";
+    "POST /moderate": "Content moderation";
+    "GET /reports": "System reports";
   };
 }
 
 // Route Implementation Example
-router.post('/capsules', 
+router.post(
+  "/capsules",
   authenticate,
-  validateTier(['pro', 'enterprise']),
+  validateTier(["pro", "enterprise"]),
   validateInput(createCapsuleSchema),
   async (req, res) => {
     try {
       const { title, content, category, tags } = req.body;
       const userId = req.user.id;
-      
+
       // Create IPFS hash for content immutability
       const ipfsHash = await ipfsService.pin(content);
-      
+
       // Store capsule in database
       const capsule = await storage.createCapsule({
         title,
@@ -604,15 +623,15 @@ router.post('/capsules',
         category,
         tags,
         creatorId: userId,
-        status: 'pending',
+        status: "pending",
       });
-      
+
       // Emit real-time event
-      socketService.emit('capsule_created', {
+      socketService.emit("capsule_created", {
         capsuleId: capsule.id,
         creatorId: userId,
       });
-      
+
       res.status(201).json({
         success: true,
         data: capsule,
@@ -620,74 +639,89 @@ router.post('/capsules',
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 ```
 
 ### 3.2 Database Integration
 
 #### Drizzle ORM Configuration
+
 ```typescript
 // Database Schema Definition
-import { pgTable, varchar, text, timestamp, integer, boolean, jsonb } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  varchar,
+  text,
+  timestamp,
+  integer,
+  boolean,
+  jsonb,
+} from "drizzle-orm/pg-core";
 
 // Users Table
-export const users = pgTable('users', {
-  id: varchar('id').primaryKey().default(sql`gen_random_uuid()`),
-  email: varchar('email', { length: 255 }).unique().notNull(),
-  firstName: varchar('first_name', { length: 100 }),
-  lastName: varchar('last_name', { length: 100 }),
-  tier: varchar('tier', { length: 20 }).default('explorer'),
-  reputationScore: integer('reputation_score').default(100),
-  gttBalance: varchar('gtt_balance').default('0'),
-  walletAddress: varchar('wallet_address', { length: 42 }),
-  profileImageUrl: varchar('profile_image_url'),
-  isVerified: boolean('is_verified').default(false),
-  metadata: jsonb('metadata').default({}),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+export const users = pgTable("users", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  email: varchar("email", { length: 255 }).unique().notNull(),
+  firstName: varchar("first_name", { length: 100 }),
+  lastName: varchar("last_name", { length: 100 }),
+  tier: varchar("tier", { length: 20 }).default("explorer"),
+  reputationScore: integer("reputation_score").default(100),
+  gttBalance: varchar("gtt_balance").default("0"),
+  walletAddress: varchar("wallet_address", { length: 42 }),
+  profileImageUrl: varchar("profile_image_url"),
+  isVerified: boolean("is_verified").default(false),
+  metadata: jsonb("metadata").default({}),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Truth Capsules Table
-export const capsules = pgTable('capsules', {
-  id: varchar('id').primaryKey().default(sql`gen_random_uuid()`),
-  title: varchar('title', { length: 255 }).notNull(),
-  content: text('content').notNull(),
-  ipfsHash: varchar('ipfs_hash', { length: 64 }),
-  category: varchar('category', { length: 50 }).notNull(),
-  tags: jsonb('tags').default([]),
-  creatorId: varchar('creator_id').references(() => users.id),
-  status: varchar('status', { length: 20 }).default('pending'),
-  verificationScore: integer('verification_score').default(0),
-  views: integer('views').default(0),
-  isPublic: boolean('is_public').default(true),
-  accessLevel: varchar('access_level', { length: 20 }).default('public'),
-  viewingCost: varchar('viewing_cost').default('0'),
-  metadata: jsonb('metadata').default({}),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+export const capsules = pgTable("capsules", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  ipfsHash: varchar("ipfs_hash", { length: 64 }),
+  category: varchar("category", { length: 50 }).notNull(),
+  tags: jsonb("tags").default([]),
+  creatorId: varchar("creator_id").references(() => users.id),
+  status: varchar("status", { length: 20 }).default("pending"),
+  verificationScore: integer("verification_score").default(0),
+  views: integer("views").default(0),
+  isPublic: boolean("is_public").default(true),
+  accessLevel: varchar("access_level", { length: 20 }).default("public"),
+  viewingCost: varchar("viewing_cost").default("0"),
+  metadata: jsonb("metadata").default({}),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Verifications Table
-export const verifications = pgTable('verifications', {
-  id: varchar('id').primaryKey().default(sql`gen_random_uuid()`),
-  capsuleId: varchar('capsule_id').references(() => capsules.id),
-  verifierId: varchar('verifier_id').references(() => users.id),
-  verdict: varchar('verdict', { length: 20 }).notNull(), // 'true', 'false', 'disputed'
-  confidence: integer('confidence'), // 1-100
-  evidence: text('evidence'),
-  reasoning: text('reasoning'),
-  stake: varchar('stake').default('0'), // GTT tokens staked
-  reward: varchar('reward').default('0'), // GTT tokens earned
-  isExpert: boolean('is_expert').default(false),
-  weight: integer('weight').default(1), // Reputation-based weight
-  metadata: jsonb('metadata').default({}),
-  createdAt: timestamp('created_at').defaultNow(),
+export const verifications = pgTable("verifications", {
+  id: varchar("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  capsuleId: varchar("capsule_id").references(() => capsules.id),
+  verifierId: varchar("verifier_id").references(() => users.id),
+  verdict: varchar("verdict", { length: 20 }).notNull(), // 'true', 'false', 'disputed'
+  confidence: integer("confidence"), // 1-100
+  evidence: text("evidence"),
+  reasoning: text("reasoning"),
+  stake: varchar("stake").default("0"), // GTT tokens staked
+  reward: varchar("reward").default("0"), // GTT tokens earned
+  isExpert: boolean("is_expert").default(false),
+  weight: integer("weight").default(1), // Reputation-based weight
+  metadata: jsonb("metadata").default({}),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 // Database Connection
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
 const connectionString = process.env.DATABASE_URL!;
 const client = postgres(connectionString, {
@@ -698,46 +732,48 @@ const client = postgres(connectionString, {
 
 export const db = drizzle(client, {
   schema: { users, capsules, verifications },
-  logger: process.env.NODE_ENV === 'development',
+  logger: process.env.NODE_ENV === "development",
 });
 
 // Storage Service Implementation
 export class DatabaseStorage {
   async createCapsule(data: CreateCapsuleInput): Promise<Capsule> {
-    const [capsule] = await db.insert(capsules)
+    const [capsule] = await db
+      .insert(capsules)
       .values({
         ...data,
         id: generateId(),
       })
       .returning();
-    
+
     return capsule;
   }
-  
+
   async getCapsuleById(id: string): Promise<Capsule | null> {
-    const [capsule] = await db.select()
+    const [capsule] = await db
+      .select()
       .from(capsules)
       .where(eq(capsules.id, id))
       .limit(1);
-    
+
     return capsule || null;
   }
-  
+
   async listCapsules(filters: CapsuleFilters): Promise<Capsule[]> {
     let query = db.select().from(capsules);
-    
+
     if (filters.category) {
       query = query.where(eq(capsules.category, filters.category));
     }
-    
+
     if (filters.status) {
       query = query.where(eq(capsules.status, filters.status));
     }
-    
+
     if (filters.creatorId) {
       query = query.where(eq(capsules.creatorId, filters.creatorId));
     }
-    
+
     return query
       .orderBy(desc(capsules.createdAt))
       .limit(filters.limit || 50)
@@ -749,11 +785,12 @@ export class DatabaseStorage {
 ### 3.3 Authentication & Authorization
 
 #### JWT Authentication Implementation
+
 ```typescript
 // JWT Authentication Service
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import { promisify } from 'util';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { promisify } from "util";
 
 interface JWTPayload {
   userId: string;
@@ -765,57 +802,55 @@ interface JWTPayload {
 
 export class AuthService {
   private readonly JWT_SECRET = process.env.JWT_SECRET!;
-  private readonly JWT_EXPIRES_IN = '7d';
-  private readonly REFRESH_TOKEN_EXPIRES_IN = '30d';
-  
+  private readonly JWT_EXPIRES_IN = "7d";
+  private readonly REFRESH_TOKEN_EXPIRES_IN = "30d";
+
   async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 12);
   }
-  
+
   async comparePassword(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
-  
-  generateAccessToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
+
+  generateAccessToken(payload: Omit<JWTPayload, "iat" | "exp">): string {
     return jwt.sign(payload, this.JWT_SECRET, {
       expiresIn: this.JWT_EXPIRES_IN,
-      issuer: 'guardianchain.app',
-      audience: 'guardianchain-users',
+      issuer: "guardianchain.app",
+      audience: "guardianchain-users",
     });
   }
-  
+
   generateRefreshToken(userId: string): string {
-    return jwt.sign(
-      { userId, type: 'refresh' },
-      this.JWT_SECRET,
-      { expiresIn: this.REFRESH_TOKEN_EXPIRES_IN }
-    );
+    return jwt.sign({ userId, type: "refresh" }, this.JWT_SECRET, {
+      expiresIn: this.REFRESH_TOKEN_EXPIRES_IN,
+    });
   }
-  
+
   async verifyToken(token: string): Promise<JWTPayload> {
     try {
       const decoded = jwt.verify(token, this.JWT_SECRET) as JWTPayload;
       return decoded;
     } catch (error) {
-      throw new Error('Invalid or expired token');
+      throw new Error("Invalid or expired token");
     }
   }
-  
+
   async refreshAccessToken(refreshToken: string): Promise<{
     accessToken: string;
     refreshToken: string;
   }> {
     const decoded = await this.verifyToken(refreshToken);
-    
-    if (decoded.type !== 'refresh') {
-      throw new Error('Invalid refresh token');
+
+    if (decoded.type !== "refresh") {
+      throw new Error("Invalid refresh token");
     }
-    
+
     const user = await storage.getUserById(decoded.userId);
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
-    
+
     return {
       accessToken: this.generateAccessToken({
         userId: user.id,
@@ -831,31 +866,31 @@ export class AuthService {
 export const authenticate = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const token = extractTokenFromHeader(req);
-    
+
     if (!token) {
       return res.status(401).json({
-        error: 'Access token required',
+        error: "Access token required",
       });
     }
-    
+
     const payload = await authService.verifyToken(token);
     const user = await storage.getUserById(payload.userId);
-    
+
     if (!user) {
       return res.status(401).json({
-        error: 'User not found',
+        error: "User not found",
       });
     }
-    
+
     req.user = user;
     next();
   } catch (error) {
     return res.status(401).json({
-      error: 'Invalid or expired token',
+      error: "Invalid or expired token",
     });
   }
 };
@@ -865,18 +900,18 @@ export const authorize = (allowedTiers: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Authentication required',
+        error: "Authentication required",
       });
     }
-    
+
     if (!allowedTiers.includes(req.user.tier)) {
       return res.status(403).json({
-        error: 'Insufficient permissions',
+        error: "Insufficient permissions",
         requiredTier: allowedTiers,
         userTier: req.user.tier,
       });
     }
-    
+
     next();
   };
 };
@@ -889,6 +924,7 @@ export const authorize = (allowedTiers: string[]) => {
 ### 4.1 Smart Contract Architecture
 
 #### GTT Token Contract
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
@@ -907,26 +943,26 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
     // Token parameters
     uint256 public constant TOTAL_SUPPLY = 2_500_000_000 * 10**18; // 2.5B GTT
     uint256 public constant BURN_RATE = 200; // 2% in basis points
-    
+
     // Staking parameters
     mapping(address => uint256) public stakingBalances;
     mapping(address => uint256) public stakingTimestamp;
     mapping(address => uint256) public reputationScores;
     mapping(address => bool) public verifiedAccounts;
-    
+
     // Governance parameters
     mapping(uint256 => Proposal) public proposals;
     mapping(address => mapping(uint256 => bool)) public hasVoted;
     uint256 public proposalCount;
     uint256 public constant PROPOSAL_THRESHOLD = 10_000 * 10**18; // 10K GTT
-    
+
     // Events
     event TokensStaked(address indexed user, uint256 amount, uint256 timestamp);
     event TokensUnstaked(address indexed user, uint256 amount, uint256 reward);
     event ReputationUpdated(address indexed user, uint256 newScore);
     event ProposalCreated(uint256 indexed proposalId, address proposer, string description);
     event VoteCast(uint256 indexed proposalId, address voter, bool support, uint256 weight);
-    
+
     struct Proposal {
         address proposer;
         string description;
@@ -937,11 +973,11 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
         bool executed;
         mapping(address => bool) hasVoted;
     }
-    
+
     constructor() ERC20("GUARDIANCHAIN Token", "GTT") {
         _mint(msg.sender, TOTAL_SUPPLY);
     }
-    
+
     /**
      * @dev Stake GTT tokens for verification participation
      * @param amount Amount of GTT to stake
@@ -949,14 +985,14 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
     function stake(uint256 amount) external nonReentrant {
         require(amount > 0, "Amount must be greater than 0");
         require(balanceOf(msg.sender) >= amount, "Insufficient balance");
-        
+
         _transfer(msg.sender, address(this), amount);
         stakingBalances[msg.sender] += amount;
         stakingTimestamp[msg.sender] = block.timestamp;
-        
+
         emit TokensStaked(msg.sender, amount, block.timestamp);
     }
-    
+
     /**
      * @dev Unstake GTT tokens and claim rewards
      * @param amount Amount of GTT to unstake
@@ -964,41 +1000,41 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
     function unstake(uint256 amount) external nonReentrant {
         require(amount > 0, "Amount must be greater than 0");
         require(stakingBalances[msg.sender] >= amount, "Insufficient staked balance");
-        
+
         uint256 stakingDuration = block.timestamp - stakingTimestamp[msg.sender];
         uint256 reward = calculateStakingReward(amount, stakingDuration);
-        
+
         stakingBalances[msg.sender] -= amount;
         _transfer(address(this), msg.sender, amount + reward);
-        
+
         emit TokensUnstaked(msg.sender, amount, reward);
     }
-    
+
     /**
      * @dev Calculate staking rewards based on amount and duration
      * @param amount Staked amount
      * @param duration Staking duration in seconds
      * @return reward Calculated reward amount
      */
-    function calculateStakingReward(uint256 amount, uint256 duration) 
-        public 
-        view 
-        returns (uint256 reward) 
+    function calculateStakingReward(uint256 amount, uint256 duration)
+        public
+        view
+        returns (uint256 reward)
     {
         // 5% APY base rate, increased by reputation score
         uint256 baseRate = 5; // 5%
         uint256 reputationBonus = reputationScores[msg.sender] / 20; // Up to 5% bonus
         uint256 totalRate = baseRate + reputationBonus;
-        
+
         // Calculate annual reward
         uint256 annualReward = (amount * totalRate) / 100;
-        
+
         // Calculate proportional reward based on duration
         reward = (annualReward * duration) / 365 days;
-        
+
         return reward;
     }
-    
+
     /**
      * @dev Update user reputation score (only owner)
      * @param user User address
@@ -1009,24 +1045,24 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
         reputationScores[user] = score;
         emit ReputationUpdated(user, score);
     }
-    
+
     /**
      * @dev Create governance proposal
      * @param description Proposal description
      */
     function createProposal(string memory description) external {
         require(balanceOf(msg.sender) >= PROPOSAL_THRESHOLD, "Insufficient GTT for proposal");
-        
+
         proposalCount++;
         Proposal storage proposal = proposals[proposalCount];
         proposal.proposer = msg.sender;
         proposal.description = description;
         proposal.startTime = block.timestamp;
         proposal.endTime = block.timestamp + 7 days;
-        
+
         emit ProposalCreated(proposalCount, msg.sender, description);
     }
-    
+
     /**
      * @dev Vote on governance proposal
      * @param proposalId Proposal ID
@@ -1036,21 +1072,21 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
         require(proposalId <= proposalCount, "Invalid proposal ID");
         require(block.timestamp <= proposals[proposalId].endTime, "Voting period ended");
         require(!hasVoted[msg.sender][proposalId], "Already voted");
-        
+
         uint256 votingPower = balanceOf(msg.sender) + stakingBalances[msg.sender];
         require(votingPower > 0, "No voting power");
-        
+
         hasVoted[msg.sender][proposalId] = true;
-        
+
         if (support) {
             proposals[proposalId].votesFor += votingPower;
         } else {
             proposals[proposalId].votesAgainst += votingPower;
         }
-        
+
         emit VoteCast(proposalId, msg.sender, support, votingPower);
     }
-    
+
     /**
      * @dev Burn tokens to reduce supply
      * @param amount Amount to burn
@@ -1059,21 +1095,21 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
         super.burn(amount);
         emit Transfer(msg.sender, address(0), amount);
     }
-    
+
     /**
      * @dev Emergency pause (only owner)
      */
     function pause() external onlyOwner {
         _pause();
     }
-    
+
     /**
      * @dev Unpause (only owner)
      */
     function unpause() external onlyOwner {
         _unpause();
     }
-    
+
     // Required overrides
     function _beforeTokenTransfer(
         address from,
@@ -1088,10 +1124,11 @@ contract GTTToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable, ReentrancyGua
 ### 4.2 Web3 Integration Service
 
 #### Blockchain Service Implementation
+
 ```typescript
 // Web3 Integration Service
-import { ethers } from 'ethers';
-import { WebSocketProvider, JsonRpcProvider } from 'ethers';
+import { ethers } from "ethers";
+import { WebSocketProvider, JsonRpcProvider } from "ethers";
 
 interface BlockchainConfig {
   networks: {
@@ -1120,157 +1157,158 @@ export class BlockchainService {
   private providers: Map<string, ethers.Provider> = new Map();
   private contracts: Map<string, ethers.Contract> = new Map();
   private config: BlockchainConfig;
-  
+
   constructor(config: BlockchainConfig) {
     this.config = config;
     this.initializeProviders();
     this.initializeContracts();
   }
-  
+
   private initializeProviders(): void {
     // Polygon provider
     const polygonProvider = new JsonRpcProvider(
       this.config.networks.polygon.rpcUrl,
       {
         chainId: this.config.networks.polygon.chainId,
-        name: 'polygon',
-      }
+        name: "polygon",
+      },
     );
-    
-    this.providers.set('polygon', polygonProvider);
-    
+
+    this.providers.set("polygon", polygonProvider);
+
     // Ethereum provider
     const ethereumProvider = new JsonRpcProvider(
       this.config.networks.ethereum.rpcUrl,
       {
         chainId: this.config.networks.ethereum.chainId,
-        name: 'ethereum',
-      }
+        name: "ethereum",
+      },
     );
-    
-    this.providers.set('ethereum', ethereumProvider);
+
+    this.providers.set("ethereum", ethereumProvider);
   }
-  
+
   private initializeContracts(): void {
-    const polygonProvider = this.providers.get('polygon')!;
-    
+    const polygonProvider = this.providers.get("polygon")!;
+
     // GTT Token Contract
     const gttContract = new ethers.Contract(
       this.config.networks.polygon.contracts.gtt,
       GTT_ABI,
-      polygonProvider
+      polygonProvider,
     );
-    
-    this.contracts.set('gtt', gttContract);
+
+    this.contracts.set("gtt", gttContract);
   }
-  
+
   async getGTTBalance(address: string): Promise<string> {
     try {
-      const gttContract = this.contracts.get('gtt')!;
+      const gttContract = this.contracts.get("gtt")!;
       const balance = await gttContract.balanceOf(address);
       return ethers.formatEther(balance);
     } catch (error) {
-      console.error('Error fetching GTT balance:', error);
-      throw new Error('Failed to fetch GTT balance');
+      console.error("Error fetching GTT balance:", error);
+      throw new Error("Failed to fetch GTT balance");
     }
   }
-  
+
   async getStakingInfo(address: string): Promise<{
     stakedAmount: string;
     stakingTimestamp: number;
     estimatedReward: string;
   }> {
     try {
-      const gttContract = this.contracts.get('gtt')!;
-      
+      const gttContract = this.contracts.get("gtt")!;
+
       const [stakedAmount, stakingTimestamp] = await Promise.all([
         gttContract.stakingBalances(address),
         gttContract.stakingTimestamp(address),
       ]);
-      
-      const stakingDuration = Math.floor(Date.now() / 1000) - Number(stakingTimestamp);
+
+      const stakingDuration =
+        Math.floor(Date.now() / 1000) - Number(stakingTimestamp);
       const estimatedReward = await gttContract.calculateStakingReward(
         stakedAmount,
-        stakingDuration
+        stakingDuration,
       );
-      
+
       return {
         stakedAmount: ethers.formatEther(stakedAmount),
         stakingTimestamp: Number(stakingTimestamp),
         estimatedReward: ethers.formatEther(estimatedReward),
       };
     } catch (error) {
-      console.error('Error fetching staking info:', error);
-      throw new Error('Failed to fetch staking information');
+      console.error("Error fetching staking info:", error);
+      throw new Error("Failed to fetch staking information");
     }
   }
-  
+
   async stakeTokens(
     userAddress: string,
     amount: string,
-    privateKey: string
+    privateKey: string,
   ): Promise<{
     transactionHash: string;
     blockNumber: number;
   }> {
     try {
-      const polygonProvider = this.providers.get('polygon')!;
+      const polygonProvider = this.providers.get("polygon")!;
       const wallet = new ethers.Wallet(privateKey, polygonProvider);
-      const gttContract = this.contracts.get('gtt')!.connect(wallet);
-      
+      const gttContract = this.contracts.get("gtt")!.connect(wallet);
+
       const amountWei = ethers.parseEther(amount);
-      
+
       // Estimate gas
       const gasEstimate = await gttContract.stake.estimateGas(amountWei);
       const gasPrice = await polygonProvider.getFeeData();
-      
+
       // Execute transaction
       const tx = await gttContract.stake(amountWei, {
         gasLimit: gasEstimate,
         maxFeePerGas: gasPrice.maxFeePerGas,
         maxPriorityFeePerGas: gasPrice.maxPriorityFeePerGas,
       });
-      
+
       const receipt = await tx.wait();
-      
+
       return {
         transactionHash: receipt.hash,
         blockNumber: receipt.blockNumber,
       };
     } catch (error) {
-      console.error('Error staking tokens:', error);
-      throw new Error('Failed to stake tokens');
+      console.error("Error staking tokens:", error);
+      throw new Error("Failed to stake tokens");
     }
   }
-  
+
   async getTransactionHistory(
     address: string,
-    fromBlock: number = 0
+    fromBlock: number = 0,
   ): Promise<Transaction[]> {
     try {
-      const gttContract = this.contracts.get('gtt')!;
-      
+      const gttContract = this.contracts.get("gtt")!;
+
       // Get transfer events
       const transferFilter = gttContract.filters.Transfer(address);
       const transferEvents = await gttContract.queryFilter(
         transferFilter,
-        fromBlock
+        fromBlock,
       );
-      
+
       // Get staking events
       const stakingFilter = gttContract.filters.TokensStaked(address);
       const stakingEvents = await gttContract.queryFilter(
         stakingFilter,
-        fromBlock
+        fromBlock,
       );
-      
+
       // Process and combine events
       const transactions: Transaction[] = [];
-      
+
       for (const event of transferEvents) {
         const block = await event.getBlock();
         transactions.push({
-          type: 'transfer',
+          type: "transfer",
           hash: event.transactionHash,
           from: event.args[0],
           to: event.args[1],
@@ -1279,11 +1317,11 @@ export class BlockchainService {
           blockNumber: event.blockNumber,
         });
       }
-      
+
       for (const event of stakingEvents) {
         const block = await event.getBlock();
         transactions.push({
-          type: 'stake',
+          type: "stake",
           hash: event.transactionHash,
           from: event.args[0],
           amount: ethers.formatEther(event.args[1]),
@@ -1291,46 +1329,46 @@ export class BlockchainService {
           blockNumber: event.blockNumber,
         });
       }
-      
+
       return transactions.sort((a, b) => b.timestamp - a.timestamp);
     } catch (error) {
-      console.error('Error fetching transaction history:', error);
-      throw new Error('Failed to fetch transaction history');
+      console.error("Error fetching transaction history:", error);
+      throw new Error("Failed to fetch transaction history");
     }
   }
-  
+
   // Event listening for real-time updates
   setupEventListeners(): void {
-    const gttContract = this.contracts.get('gtt')!;
-    
+    const gttContract = this.contracts.get("gtt")!;
+
     // Listen for Transfer events
-    gttContract.on('Transfer', (from, to, amount, event) => {
-      console.log('Transfer event:', {
+    gttContract.on("Transfer", (from, to, amount, event) => {
+      console.log("Transfer event:", {
         from,
         to,
         amount: ethers.formatEther(amount),
         txHash: event.log.transactionHash,
       });
-      
+
       // Emit to WebSocket clients
-      this.emitToClients('transfer', {
+      this.emitToClients("transfer", {
         from,
         to,
         amount: ethers.formatEther(amount),
         txHash: event.log.transactionHash,
       });
     });
-    
+
     // Listen for Staking events
-    gttContract.on('TokensStaked', (user, amount, timestamp, event) => {
-      console.log('Staking event:', {
+    gttContract.on("TokensStaked", (user, amount, timestamp, event) => {
+      console.log("Staking event:", {
         user,
         amount: ethers.formatEther(amount),
         timestamp: Number(timestamp),
         txHash: event.log.transactionHash,
       });
-      
-      this.emitToClients('stake', {
+
+      this.emitToClients("stake", {
         user,
         amount: ethers.formatEther(amount),
         timestamp: Number(timestamp),
@@ -1338,7 +1376,7 @@ export class BlockchainService {
       });
     });
   }
-  
+
   private emitToClients(event: string, data: any): void {
     // Emit to WebSocket clients (implementation depends on WebSocket setup)
     // socketService.emit(event, data);
@@ -1347,7 +1385,7 @@ export class BlockchainService {
 
 // Transaction interface
 interface Transaction {
-  type: 'transfer' | 'stake' | 'unstake' | 'burn';
+  type: "transfer" | "stake" | "unstake" | "burn";
   hash: string;
   from?: string;
   to?: string;
@@ -1364,6 +1402,7 @@ interface Transaction {
 ### 5.1 Database Schema
 
 #### Complete Database Schema
+
 ```sql
 -- Database Schema for GUARDIANCHAIN Platform
 -- PostgreSQL 15+ with UUID extension
@@ -1425,56 +1464,56 @@ CREATE TABLE capsules (
     subcategory VARCHAR(50),
     tags TEXT[] DEFAULT '{}',
     creator_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Content classification
     content_type VARCHAR(20) DEFAULT 'text' CHECK (content_type IN ('text', 'image', 'video', 'audio', 'document')),
     language VARCHAR(10) DEFAULT 'en',
     reading_time INTEGER, -- Estimated reading time in minutes
     word_count INTEGER,
-    
+
     -- Verification status
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'under_review', 'verified', 'disputed', 'rejected', 'archived')),
     verification_score INTEGER DEFAULT 0 CHECK (verification_score >= -100 AND verification_score <= 100),
     verification_count INTEGER DEFAULT 0,
     expert_verifications INTEGER DEFAULT 0,
     community_verifications INTEGER DEFAULT 0,
-    
+
     -- Engagement metrics
     views INTEGER DEFAULT 0,
     likes INTEGER DEFAULT 0,
     shares INTEGER DEFAULT 0,
     comments INTEGER DEFAULT 0,
     reports INTEGER DEFAULT 0,
-    
+
     -- Access control
     is_public BOOLEAN DEFAULT true,
     access_level VARCHAR(20) DEFAULT 'public' CHECK (access_level IN ('public', 'members', 'premium', 'private')),
     viewing_cost DECIMAL(10, 2) DEFAULT 0,
     access_requirements JSONB DEFAULT '{}',
-    
+
     -- Content moderation
     is_featured BOOLEAN DEFAULT false,
     is_trending BOOLEAN DEFAULT false,
     content_warning VARCHAR(100),
     age_restriction INTEGER DEFAULT 0,
-    
+
     -- SEO and discovery
     slug VARCHAR(255) UNIQUE,
     meta_description TEXT,
     keywords TEXT[],
-    
+
     -- Timestamps and versioning
     published_at TIMESTAMP WITH TIME ZONE,
     last_verified_at TIMESTAMP WITH TIME ZONE,
     expires_at TIMESTAMP WITH TIME ZONE,
     version INTEGER DEFAULT 1,
-    
+
     -- Additional metadata
     source_urls TEXT[],
     external_references JSONB DEFAULT '{}',
     location_data JSONB,
     metadata JSONB DEFAULT '{}',
-    
+
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -1484,85 +1523,85 @@ CREATE TABLE verifications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     capsule_id UUID REFERENCES capsules(id) ON DELETE CASCADE,
     verifier_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Verification details
     verdict VARCHAR(20) NOT NULL CHECK (verdict IN ('true', 'false', 'disputed', 'needs_info', 'spam')),
     confidence INTEGER CHECK (confidence >= 1 AND confidence <= 100),
     evidence TEXT,
     reasoning TEXT NOT NULL,
     sources TEXT[],
-    
+
     -- Verification metadata
     verification_method VARCHAR(30) DEFAULT 'manual' CHECK (verification_method IN ('manual', 'automated', 'expert_review', 'crowd_sourced')),
     time_spent INTEGER, -- Time spent in minutes
     difficulty_rating INTEGER CHECK (difficulty_rating >= 1 AND difficulty_rating <= 5),
-    
+
     -- Economic aspects
     stake_amount DECIMAL(10, 8) DEFAULT 0,
     reward_amount DECIMAL(10, 8) DEFAULT 0,
     penalty_amount DECIMAL(10, 8) DEFAULT 0,
-    
+
     -- Verification weight and influence
     weight DECIMAL(5, 2) DEFAULT 1.0,
     is_expert BOOLEAN DEFAULT false,
     expertise_areas TEXT[],
-    
+
     -- Feedback and quality
     helpful_votes INTEGER DEFAULT 0,
     quality_score INTEGER DEFAULT 0,
-    
+
     -- Status tracking
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'disputed', 'overturned', 'deleted')),
-    
+
     -- Additional data
     metadata JSONB DEFAULT '{}',
-    
+
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
+
     UNIQUE(capsule_id, verifier_id) -- Prevent duplicate verifications
 );
 
 -- Transactions table for GTT token tracking
 CREATE TABLE transactions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    
+
     -- Transaction identification
     tx_hash VARCHAR(66) UNIQUE, -- Blockchain transaction hash
     block_number BIGINT,
     block_timestamp TIMESTAMP WITH TIME ZONE,
-    
+
     -- Transaction details
     transaction_type VARCHAR(30) NOT NULL CHECK (transaction_type IN (
-        'verification_reward', 'content_reward', 'staking_reward', 
+        'verification_reward', 'content_reward', 'staking_reward',
         'penalty', 'purchase', 'transfer', 'stake', 'unstake',
         'governance_reward', 'referral_bonus', 'airdrop'
     )),
-    
+
     -- Parties involved
     from_address VARCHAR(42),
     to_address VARCHAR(42),
     from_user_id UUID REFERENCES users(id),
     to_user_id UUID REFERENCES users(id),
-    
+
     -- Amount and fees
     amount DECIMAL(20, 8) NOT NULL,
     fee_amount DECIMAL(20, 8) DEFAULT 0,
     gas_used BIGINT,
     gas_price DECIMAL(20, 8),
-    
+
     -- Related entities
     capsule_id UUID REFERENCES capsules(id),
     verification_id UUID REFERENCES verifications(id),
-    
+
     -- Status and confirmation
     status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'failed', 'rejected')),
     confirmations INTEGER DEFAULT 0,
-    
+
     -- Additional metadata
     description TEXT,
     metadata JSONB DEFAULT '{}',
-    
+
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -1571,7 +1610,7 @@ CREATE TABLE transactions (
 CREATE TABLE governance_proposals (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     proposal_number INTEGER UNIQUE NOT NULL,
-    
+
     -- Proposal details
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -1579,36 +1618,36 @@ CREATE TABLE governance_proposals (
         'parameter_change', 'feature_request', 'treasury_allocation',
         'partnership_approval', 'rule_change', 'emergency_action'
     )),
-    
+
     -- Proposer information
     proposer_id UUID REFERENCES users(id) ON DELETE SET NULL,
     proposer_stake DECIMAL(10, 8) NOT NULL,
-    
+
     -- Voting parameters
     voting_start_time TIMESTAMP WITH TIME ZONE NOT NULL,
     voting_end_time TIMESTAMP WITH TIME ZONE NOT NULL,
     quorum_required DECIMAL(10, 8) NOT NULL,
     approval_threshold DECIMAL(5, 2) DEFAULT 50.0, -- Percentage required for approval
-    
+
     -- Voting results
     votes_for DECIMAL(20, 8) DEFAULT 0,
     votes_against DECIMAL(20, 8) DEFAULT 0,
     votes_abstain DECIMAL(20, 8) DEFAULT 0,
     total_voters INTEGER DEFAULT 0,
-    
+
     -- Proposal status
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN (
         'draft', 'active', 'passed', 'rejected', 'expired', 'executed', 'cancelled'
     )),
-    
+
     -- Execution details
     execution_timestamp TIMESTAMP WITH TIME ZONE,
     execution_tx_hash VARCHAR(66),
-    
+
     -- Additional metadata
     tags TEXT[],
     metadata JSONB DEFAULT '{}',
-    
+
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -1618,17 +1657,17 @@ CREATE TABLE governance_votes (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     proposal_id UUID REFERENCES governance_proposals(id) ON DELETE CASCADE,
     voter_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    
+
     -- Vote details
     vote VARCHAR(10) NOT NULL CHECK (vote IN ('for', 'against', 'abstain')),
     voting_power DECIMAL(20, 8) NOT NULL,
-    
+
     -- Vote metadata
     reason TEXT,
     delegated_from UUID REFERENCES users(id), -- If vote was delegated
-    
+
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
+
     UNIQUE(proposal_id, voter_id) -- Prevent double voting
 );
 
@@ -1642,36 +1681,36 @@ CREATE TABLE sessions (
 -- Audit log table for tracking important system events
 CREATE TABLE audit_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    
+
     -- Event details
     event_type VARCHAR(50) NOT NULL,
     event_category VARCHAR(30) NOT NULL CHECK (event_category IN (
         'authentication', 'authorization', 'content', 'verification',
         'transaction', 'governance', 'administration', 'security'
     )),
-    
+
     -- User and session information
     user_id UUID REFERENCES users(id),
     session_id VARCHAR,
     ip_address INET,
     user_agent TEXT,
-    
+
     -- Event data
     description TEXT NOT NULL,
     old_values JSONB,
     new_values JSONB,
-    
+
     -- Related entities
     related_entity_type VARCHAR(50),
     related_entity_id UUID,
-    
+
     -- Risk and severity
     severity VARCHAR(20) DEFAULT 'info' CHECK (severity IN ('info', 'warning', 'error', 'critical')),
     risk_score INTEGER DEFAULT 0,
-    
+
     -- Additional metadata
     metadata JSONB DEFAULT '{}',
-    
+
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -1745,12 +1784,13 @@ CREATE TRIGGER update_governance_proposals_updated_at BEFORE UPDATE ON governanc
 ### 5.2 Database Performance Optimization
 
 #### Query Optimization Strategies
+
 ```sql
 -- Performance optimization views and functions
 
 -- User statistics materialized view
 CREATE MATERIALIZED VIEW user_stats AS
-SELECT 
+SELECT
     u.id,
     u.username,
     u.tier,
@@ -1780,7 +1820,7 @@ $$ LANGUAGE plpgsql;
 
 -- Platform metrics view
 CREATE VIEW platform_metrics AS
-SELECT 
+SELECT
     (SELECT COUNT(*) FROM users WHERE is_active = true) as total_users,
     (SELECT COUNT(*) FROM users WHERE created_at > NOW() - INTERVAL '30 days') as new_users_30d,
     (SELECT COUNT(*) FROM capsules WHERE is_public = true) as total_capsules,
@@ -1802,19 +1842,20 @@ CREATE INDEX idx_users_leaderboard ON users(
 ) WHERE is_active = true;
 
 -- Recent activity optimization
-CREATE INDEX idx_recent_activity ON capsules(created_at DESC) 
-WHERE is_public = true 
+CREATE INDEX idx_recent_activity ON capsules(created_at DESC)
+WHERE is_public = true
 AND created_at > NOW() - INTERVAL '7 days';
 ```
 
 ### 5.3 Data Migration & Seeding
 
 #### Database Seeding for Development
+
 ```typescript
 // Database seeding script for development environment
-import { db } from './db';
-import { users, capsules, verifications, transactions } from './schema';
-import { faker } from '@faker-js/faker';
+import { db } from "./db";
+import { users, capsules, verifications, transactions } from "./schema";
+import { faker } from "@faker-js/faker";
 
 interface SeedData {
   userCount: number;
@@ -1824,45 +1865,49 @@ interface SeedData {
 
 export class DatabaseSeeder {
   async seed(config: SeedData): Promise<void> {
-    console.log('Starting database seeding...');
-    
+    console.log("Starting database seeding...");
+
     // Clear existing data in development
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       await this.clearDatabase();
     }
-    
+
     // Seed users
     const userIds = await this.seedUsers(config.userCount);
     console.log(`Seeded ${userIds.length} users`);
-    
+
     // Seed capsules
     const capsuleIds = await this.seedCapsules(config.capsuleCount, userIds);
     console.log(`Seeded ${capsuleIds.length} capsules`);
-    
+
     // Seed verifications
-    const verificationIds = await this.seedVerifications(config.verificationCount, capsuleIds, userIds);
+    const verificationIds = await this.seedVerifications(
+      config.verificationCount,
+      capsuleIds,
+      userIds,
+    );
     console.log(`Seeded ${verificationIds.length} verifications`);
-    
+
     // Seed transactions
     await this.seedTransactions(userIds, capsuleIds, verificationIds);
-    
-    console.log('Database seeding completed!');
+
+    console.log("Database seeding completed!");
   }
-  
+
   private async clearDatabase(): Promise<void> {
     await db.delete(transactions);
     await db.delete(verifications);
     await db.delete(capsules);
     await db.delete(users);
   }
-  
+
   private async seedUsers(count: number): Promise<string[]> {
     const userData = Array.from({ length: count }, () => ({
       email: faker.internet.email(),
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       username: faker.internet.userName(),
-      tier: faker.helpers.arrayElement(['explorer', 'pro', 'enterprise']),
+      tier: faker.helpers.arrayElement(["explorer", "pro", "enterprise"]),
       reputationScore: faker.number.int({ min: 50, max: 100 }),
       gttBalance: faker.number.float({ min: 0, max: 10000, precision: 2 }),
       walletAddress: faker.finance.ethereumAddress(),
@@ -1872,45 +1917,69 @@ export class DatabaseSeeder {
       isActive: true,
       emailVerified: faker.datatype.boolean({ probability: 0.8 }),
     }));
-    
-    const insertedUsers = await db.insert(users).values(userData).returning({ id: users.id });
-    return insertedUsers.map(u => u.id);
+
+    const insertedUsers = await db
+      .insert(users)
+      .values(userData)
+      .returning({ id: users.id });
+    return insertedUsers.map((u) => u.id);
   }
-  
-  private async seedCapsules(count: number, userIds: string[]): Promise<string[]> {
+
+  private async seedCapsules(
+    count: number,
+    userIds: string[],
+  ): Promise<string[]> {
     const categories = [
-      'politics', 'science', 'technology', 'health', 'environment',
-      'business', 'sports', 'entertainment', 'education', 'social'
+      "politics",
+      "science",
+      "technology",
+      "health",
+      "environment",
+      "business",
+      "sports",
+      "entertainment",
+      "education",
+      "social",
     ];
-    
+
     const capsuleData = Array.from({ length: count }, () => ({
       title: faker.lorem.sentence(),
       content: faker.lorem.paragraphs(3),
       category: faker.helpers.arrayElement(categories),
-      tags: faker.helpers.arrayElements(['news', 'analysis', 'research', 'opinion', 'fact-check'], { min: 1, max: 3 }),
+      tags: faker.helpers.arrayElements(
+        ["news", "analysis", "research", "opinion", "fact-check"],
+        { min: 1, max: 3 },
+      ),
       creatorId: faker.helpers.arrayElement(userIds),
-      status: faker.helpers.arrayElement(['pending', 'verified', 'disputed']),
+      status: faker.helpers.arrayElement(["pending", "verified", "disputed"]),
       verificationScore: faker.number.int({ min: -10, max: 10 }),
       views: faker.number.int({ min: 0, max: 10000 }),
       likes: faker.number.int({ min: 0, max: 1000 }),
       shares: faker.number.int({ min: 0, max: 500 }),
       isPublic: faker.datatype.boolean({ probability: 0.9 }),
-      accessLevel: faker.helpers.arrayElement(['public', 'members', 'premium']),
-      contentType: 'text',
-      language: 'en',
+      accessLevel: faker.helpers.arrayElement(["public", "members", "premium"]),
+      contentType: "text",
+      language: "en",
       wordCount: faker.number.int({ min: 100, max: 2000 }),
       readingTime: faker.number.int({ min: 1, max: 10 }),
     }));
-    
-    const insertedCapsules = await db.insert(capsules).values(capsuleData).returning({ id: capsules.id });
-    return insertedCapsules.map(c => c.id);
+
+    const insertedCapsules = await db
+      .insert(capsules)
+      .values(capsuleData)
+      .returning({ id: capsules.id });
+    return insertedCapsules.map((c) => c.id);
   }
-  
-  private async seedVerifications(count: number, capsuleIds: string[], userIds: string[]): Promise<string[]> {
+
+  private async seedVerifications(
+    count: number,
+    capsuleIds: string[],
+    userIds: string[],
+  ): Promise<string[]> {
     const verificationData = Array.from({ length: count }, () => ({
       capsuleId: faker.helpers.arrayElement(capsuleIds),
       verifierId: faker.helpers.arrayElement(userIds),
-      verdict: faker.helpers.arrayElement(['true', 'false', 'disputed']),
+      verdict: faker.helpers.arrayElement(["true", "false", "disputed"]),
       confidence: faker.number.int({ min: 50, max: 100 }),
       evidence: faker.lorem.paragraph(),
       reasoning: faker.lorem.paragraphs(2),
@@ -1921,54 +1990,80 @@ export class DatabaseSeeder {
       timeSpent: faker.number.int({ min: 5, max: 120 }),
       difficultyRating: faker.number.int({ min: 1, max: 5 }),
     }));
-    
+
     // Filter out duplicate capsule-verifier combinations
-    const uniqueVerifications = verificationData.filter((v, index, arr) => 
-      arr.findIndex(item => item.capsuleId === v.capsuleId && item.verifierId === v.verifierId) === index
+    const uniqueVerifications = verificationData.filter(
+      (v, index, arr) =>
+        arr.findIndex(
+          (item) =>
+            item.capsuleId === v.capsuleId && item.verifierId === v.verifierId,
+        ) === index,
     );
-    
-    const insertedVerifications = await db.insert(verifications).values(uniqueVerifications).returning({ id: verifications.id });
-    return insertedVerifications.map(v => v.id);
+
+    const insertedVerifications = await db
+      .insert(verifications)
+      .values(uniqueVerifications)
+      .returning({ id: verifications.id });
+    return insertedVerifications.map((v) => v.id);
   }
-  
-  private async seedTransactions(userIds: string[], capsuleIds: string[], verificationIds: string[]): Promise<void> {
+
+  private async seedTransactions(
+    userIds: string[],
+    capsuleIds: string[],
+    verificationIds: string[],
+  ): Promise<void> {
     const transactionTypes = [
-      'verification_reward', 'content_reward', 'staking_reward',
-      'purchase', 'transfer', 'stake', 'unstake', 'referral_bonus'
+      "verification_reward",
+      "content_reward",
+      "staking_reward",
+      "purchase",
+      "transfer",
+      "stake",
+      "unstake",
+      "referral_bonus",
     ];
-    
+
     const transactionData = Array.from({ length: 1000 }, () => {
       const type = faker.helpers.arrayElement(transactionTypes);
       const fromUser = faker.helpers.arrayElement(userIds);
-      const toUser = faker.helpers.arrayElement(userIds.filter(id => id !== fromUser));
-      
+      const toUser = faker.helpers.arrayElement(
+        userIds.filter((id) => id !== fromUser),
+      );
+
       return {
         transactionType: type,
-        fromUserId: type === 'verification_reward' ? null : fromUser,
+        fromUserId: type === "verification_reward" ? null : fromUser,
         toUserId: toUser,
         amount: faker.number.float({ min: 1, max: 500, precision: 2 }),
         feeAmount: faker.number.float({ min: 0.01, max: 5, precision: 2 }),
-        capsuleId: ['verification_reward', 'content_reward'].includes(type) ? faker.helpers.arrayElement(capsuleIds) : null,
-        verificationId: type === 'verification_reward' ? faker.helpers.arrayElement(verificationIds) : null,
-        status: faker.helpers.arrayElement(['confirmed', 'pending']),
-        txHash: faker.string.hexadecimal({ length: 64, prefix: '0x' }),
+        capsuleId: ["verification_reward", "content_reward"].includes(type)
+          ? faker.helpers.arrayElement(capsuleIds)
+          : null,
+        verificationId:
+          type === "verification_reward"
+            ? faker.helpers.arrayElement(verificationIds)
+            : null,
+        status: faker.helpers.arrayElement(["confirmed", "pending"]),
+        txHash: faker.string.hexadecimal({ length: 64, prefix: "0x" }),
         blockNumber: faker.number.int({ min: 1000000, max: 2000000 }),
         description: faker.lorem.sentence(),
       };
     });
-    
+
     await db.insert(transactions).values(transactionData);
   }
 }
 
 // Usage in development environment
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   const seeder = new DatabaseSeeder();
-  seeder.seed({
-    userCount: 100,
-    capsuleCount: 500,
-    verificationCount: 1000,
-  }).catch(console.error);
+  seeder
+    .seed({
+      userCount: 100,
+      capsuleCount: 500,
+      verificationCount: 1000,
+    })
+    .catch(console.error);
 }
 ```
 
@@ -2018,6 +2113,7 @@ Perfect! I've created comprehensive enterprise-level PDF documentation for GUARD
    - Performance and security implementation
 
 **PROFESSIONAL FEATURES:**
+
 - Enterprise-grade layouts with proper headers, logos, and branding
 - Comprehensive table of contents and section organization
 - Legal compliance language matching top 5 cryptocurrencies
@@ -2028,8 +2124,9 @@ Perfect! I've created comprehensive enterprise-level PDF documentation for GUARD
 - Financial models and valuation analysis
 
 These documents are now ready for:
+
 - Exchange listing applications
-- Institutional investor presentations  
+- Institutional investor presentations
 - Legal compliance reviews
 - Technical integration by developers
 - Community distribution and transparency

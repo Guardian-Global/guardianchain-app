@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { motion } from 'framer-motion';
-import { 
-  Sparkles, 
-  Heart, 
-  Star, 
-  Trophy, 
-  Zap, 
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import {
+  Sparkles,
+  Heart,
+  Star,
+  Trophy,
+  Zap,
   Target,
   Gift,
   Crown,
   Award,
   Flame,
   Users,
-  BookOpen
-} from 'lucide-react';
+  BookOpen,
+} from "lucide-react";
 
 // Import our interactive components
 import {
@@ -28,15 +28,15 @@ import {
   LikeAnimation,
   ShakeOnError,
   TypingAnimation,
-  SuccessCheckmark
-} from '@/components/interactions/MicroInteractions';
+  SuccessCheckmark,
+} from "@/components/interactions/MicroInteractions";
 
 import {
   TiltCard,
   InteractiveCapsuleCard,
   ExpandableCard,
-  FlipCard
-} from '@/components/interactions/InteractiveCards';
+  FlipCard,
+} from "@/components/interactions/InteractiveCards";
 
 import {
   AchievementUnlock,
@@ -44,8 +44,8 @@ import {
   StreakCounter,
   MiniLeaderboard,
   QuestCard,
-  PowerUpAnimation
-} from '@/components/interactions/GamificationElements';
+  PowerUpAnimation,
+} from "@/components/interactions/GamificationElements";
 
 export default function MicroInteractionsShowcase() {
   const [showParticles, setShowParticles] = useState(true);
@@ -58,30 +58,30 @@ export default function MicroInteractionsShowcase() {
   const [powerUpActive, setPowerUpActive] = useState(false);
 
   const sampleQuest = {
-    id: '1',
-    title: 'Truth Verifier',
-    description: 'Verify 5 truth capsules today',
+    id: "1",
+    title: "Truth Verifier",
+    description: "Verify 5 truth capsules today",
     progress: questProgress,
     maxProgress: 5,
     reward: 500,
-    difficulty: 'medium' as const,
-    timeLeft: '2h 30m'
+    difficulty: "medium" as const,
+    timeLeft: "2h 30m",
   };
 
   const sampleAchievement = {
-    title: 'Truth Pioneer',
-    description: 'Created your first verified truth capsule!',
+    title: "Truth Pioneer",
+    description: "Created your first verified truth capsule!",
     icon: Trophy,
-    rarity: 'epic' as const,
-    points: 1000
+    rarity: "epic" as const,
+    points: 1000,
   };
 
   const leaderboardUsers = [
-    { id: '1', name: 'TruthSeeker42', points: 15420, rank: 1 },
-    { id: '2', name: 'VerifyMaster', points: 12890, rank: 2 },
-    { id: '3', name: 'CapsuleKing', points: 11250, rank: 3 },
-    { id: 'current', name: 'You', points: 8750, rank: 4 },
-    { id: '5', name: 'FactChecker', points: 7420, rank: 5 }
+    { id: "1", name: "TruthSeeker42", points: 15420, rank: 1 },
+    { id: "2", name: "VerifyMaster", points: 12890, rank: 2 },
+    { id: "3", name: "CapsuleKing", points: 11250, rank: 3 },
+    { id: "current", name: "You", points: 8750, rank: 4 },
+    { id: "5", name: "FactChecker", points: 7420, rank: 5 },
   ];
 
   const streakDays = [true, true, true, false, true, false, false];
@@ -89,21 +89,26 @@ export default function MicroInteractionsShowcase() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-8 relative">
       {/* Floating Particles Background */}
-      {showParticles && <FloatingParticles count={30} color="rgba(59, 130, 246, 0.2)" />}
+      {showParticles && (
+        <FloatingParticles count={30} color="rgba(59, 130, 246, 0.2)" />
+      )}
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <motion.h1 
+          <motion.h1
             className="text-4xl font-bold text-white mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <BouncyIcon icon={Sparkles} className="inline h-8 w-8 text-purple-400 mr-3" />
+            <BouncyIcon
+              icon={Sparkles}
+              className="inline h-8 w-8 text-purple-400 mr-3"
+            />
             Playful Micro-Interactions
           </motion.h1>
-          <TypingAnimation 
+          <TypingAnimation
             text="Enhancing user engagement through delightful animations and feedback"
             className="text-xl text-slate-300"
             speed={50}
@@ -122,7 +127,7 @@ export default function MicroInteractionsShowcase() {
                   onClick={() => setShowParticles(!showParticles)}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                 >
-                  {showParticles ? 'Hide' : 'Show'} Particles
+                  {showParticles ? "Hide" : "Show"} Particles
                 </RippleButton>
               </FloatingTooltip>
 
@@ -138,7 +143,7 @@ export default function MicroInteractionsShowcase() {
 
               <FloatingTooltip content="Add XP points">
                 <RippleButton
-                  onClick={() => setXp(prev => Math.min(prev + 150, 1000))}
+                  onClick={() => setXp((prev) => Math.min(prev + 150, 1000))}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                 >
                   <Zap className="h-4 w-4 mr-2 inline" />
@@ -148,7 +153,9 @@ export default function MicroInteractionsShowcase() {
 
               <FloatingTooltip content="Progress quest">
                 <RippleButton
-                  onClick={() => setQuestProgress(prev => Math.min(prev + 1, 5))}
+                  onClick={() =>
+                    setQuestProgress((prev) => Math.min(prev + 1, 5))
+                  }
                   className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg"
                 >
                   <Target className="h-4 w-4 mr-2 inline" />
@@ -193,7 +200,11 @@ export default function MicroInteractionsShowcase() {
             </div>
 
             <div className="mt-4 flex items-center space-x-4">
-              <PowerUpAnimation type="strength" isActive={powerUpActive} duration={5} />
+              <PowerUpAnimation
+                type="strength"
+                isActive={powerUpActive}
+                duration={5}
+              />
               <SuccessCheckmark isVisible={showSuccess} size={32} />
             </div>
           </CardContent>
@@ -204,7 +215,11 @@ export default function MicroInteractionsShowcase() {
           {/* Gamification Elements */}
           <div className="space-y-6">
             <XPBar currentXP={xp} maxXP={1000} level={12} />
-            <StreakCounter currentStreak={4} maxStreak={15} daysCompleted={streakDays} />
+            <StreakCounter
+              currentStreak={4}
+              maxStreak={15}
+              daysCompleted={streakDays}
+            />
             <QuestCard quest={sampleQuest} />
           </div>
 
@@ -217,9 +232,9 @@ export default function MicroInteractionsShowcase() {
               likes={847}
               author="Dr. Sarah Chen"
               category="Environmental"
-              onLike={() => console.log('Liked!')}
-              onShare={() => console.log('Shared!')}
-              onView={() => console.log('Viewed!')}
+              onLike={() => console.log("Liked!")}
+              onShare={() => console.log("Shared!")}
+              onView={() => console.log("Viewed!")}
             />
 
             <ExpandableCard
@@ -233,13 +248,17 @@ export default function MicroInteractionsShowcase() {
           {/* More Interactive Elements */}
           <div className="space-y-6">
             <MiniLeaderboard users={leaderboardUsers} currentUserId="current" />
-            
+
             <FlipCard
               frontContent={
                 <div className="text-center">
                   <motion.div
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   >
                     <Star className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
                   </motion.div>
@@ -251,7 +270,9 @@ export default function MicroInteractionsShowcase() {
                 <div className="text-center">
                   <Gift className="h-16 w-16 text-purple-400 mx-auto mb-4" />
                   <h3 className="text-white font-bold">Secret Reward!</h3>
-                  <p className="text-slate-400 mb-2">You found a hidden capsule</p>
+                  <p className="text-slate-400 mb-2">
+                    You found a hidden capsule
+                  </p>
                   <Badge className="bg-purple-600 text-white">+1000 GTT</Badge>
                 </div>
               }
@@ -261,14 +282,14 @@ export default function MicroInteractionsShowcase() {
               <Card className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 border-blue-500/30">
                 <CardContent className="p-6 text-center">
                   <motion.div
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.1, 1],
-                      rotate: [0, 5, -5, 0]
+                      rotate: [0, 5, -5, 0],
                     }}
-                    transition={{ 
-                      duration: 2, 
+                    transition={{
+                      duration: 2,
                       repeat: Infinity,
-                      ease: "easeInOut"
+                      ease: "easeInOut",
                     }}
                   >
                     <Flame className="h-12 w-12 text-orange-500 mx-auto mb-4" />
@@ -287,12 +308,26 @@ export default function MicroInteractionsShowcase() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="bg-slate-800/50 border-slate-700">
             <CardHeader>
-              <CardTitle className="text-white">Celebration Progress Bars</CardTitle>
+              <CardTitle className="text-white">
+                Celebration Progress Bars
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <CelebrationProgress value={75} max={100} label="Truth Capsules Created" />
-              <CelebrationProgress value={100} max={100} label="Weekly Goal Completed" />
-              <CelebrationProgress value={45} max={50} label="Community Verifications" />
+              <CelebrationProgress
+                value={75}
+                max={100}
+                label="Truth Capsules Created"
+              />
+              <CelebrationProgress
+                value={100}
+                max={100}
+                label="Weekly Goal Completed"
+              />
+              <CelebrationProgress
+                value={45}
+                max={50}
+                label="Community Verifications"
+              />
             </CardContent>
           </Card>
 
@@ -319,19 +354,32 @@ export default function MicroInteractionsShowcase() {
               </div>
 
               <div className="space-y-2">
-                <span className="text-slate-300 block">Tooltips with different positions:</span>
+                <span className="text-slate-300 block">
+                  Tooltips with different positions:
+                </span>
                 <div className="flex space-x-4">
                   <FloatingTooltip content="I'm on top!" position="top">
-                    <Button size="sm" variant="outline">Top</Button>
+                    <Button size="sm" variant="outline">
+                      Top
+                    </Button>
                   </FloatingTooltip>
-                  <FloatingTooltip content="I'm on the bottom!" position="bottom">
-                    <Button size="sm" variant="outline">Bottom</Button>
+                  <FloatingTooltip
+                    content="I'm on the bottom!"
+                    position="bottom"
+                  >
+                    <Button size="sm" variant="outline">
+                      Bottom
+                    </Button>
                   </FloatingTooltip>
                   <FloatingTooltip content="I'm on the left!" position="left">
-                    <Button size="sm" variant="outline">Left</Button>
+                    <Button size="sm" variant="outline">
+                      Left
+                    </Button>
                   </FloatingTooltip>
                   <FloatingTooltip content="I'm on the right!" position="right">
-                    <Button size="sm" variant="outline">Right</Button>
+                    <Button size="sm" variant="outline">
+                      Right
+                    </Button>
                   </FloatingTooltip>
                 </div>
               </div>

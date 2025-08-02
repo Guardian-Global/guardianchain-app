@@ -1,23 +1,24 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { X, Download, Smartphone, Monitor } from 'lucide-react';
+import React from "react";
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { X, Download, Smartphone, Monitor } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 export default function PWAInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
     // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
       return;
     }
@@ -30,9 +31,9 @@ export default function PWAInstallPrompt() {
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      
+
       // Show prompt after a delay if user hasn't dismissed it
-      const hasBeenDismissed = localStorage.getItem('pwa-install-dismissed');
+      const hasBeenDismissed = localStorage.getItem("pwa-install-dismissed");
       if (!hasBeenDismissed) {
         setTimeout(() => setIsVisible(true), 3000);
       }
@@ -43,15 +44,21 @@ export default function PWAInstallPrompt() {
       setIsInstalled(true);
       setIsVisible(false);
       setDeferredPrompt(null);
-      localStorage.removeItem('pwa-install-dismissed');
+      localStorage.removeItem("pwa-install-dismissed");
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-    window.addEventListener('appinstalled', handleAppInstalled);
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt as EventListener,
+    );
+    window.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt as EventListener,
+      );
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
 
@@ -61,24 +68,24 @@ export default function PWAInstallPrompt() {
     try {
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        console.log('✅ User accepted PWA install');
+
+      if (outcome === "accepted") {
+        console.log("✅ User accepted PWA install");
       } else {
-        console.log('❌ User dismissed PWA install');
-        localStorage.setItem('pwa-install-dismissed', 'true');
+        console.log("❌ User dismissed PWA install");
+        localStorage.setItem("pwa-install-dismissed", "true");
       }
-      
+
       setDeferredPrompt(null);
       setIsVisible(false);
     } catch (error) {
-      console.error('❌ PWA install error:', error);
+      console.error("❌ PWA install error:", error);
     }
   };
 
   const handleDismiss = () => {
     setIsVisible(false);
-    localStorage.setItem('pwa-install-dismissed', 'true');
+    localStorage.setItem("pwa-install-dismissed", "true");
   };
 
   // Don't show if already installed or not visible
@@ -96,8 +103,12 @@ export default function PWAInstallPrompt() {
                 <Download className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h3 className="text-white font-semibold text-sm">Install GuardianChain</h3>
-                <p className="text-purple-200 text-xs">Get the app experience</p>
+                <h3 className="text-white font-semibold text-sm">
+                  Install GuardianChain
+                </h3>
+                <p className="text-purple-200 text-xs">
+                  Get the app experience
+                </p>
               </div>
             </div>
             <Button

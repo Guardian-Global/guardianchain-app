@@ -119,7 +119,10 @@ export default function AssetShowcase() {
               </Card>
             ))}
             {["main", "icon", "text", "full"].map((variant) => (
-              <Card key={`gtt-${variant}`} className="bg-slate-800/50 border-slate-700">
+              <Card
+                key={`gtt-${variant}`}
+                className="bg-slate-800/50 border-slate-700"
+              >
                 <CardContent className="p-6 text-center">
                   <LogoDisplay
                     size="xl"
@@ -195,7 +198,7 @@ export default function AssetShowcase() {
                       </p>
                     </CardContent>
                   </Card>
-                ))
+                )),
             )}
           </div>
         </section>
@@ -227,7 +230,7 @@ export default function AssetShowcase() {
                     </p>
                   </CardContent>
                 </Card>
-              )
+              ),
             )}
           </div>
         </section>

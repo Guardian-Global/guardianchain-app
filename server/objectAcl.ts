@@ -5,7 +5,7 @@ const ACL_POLICY_METADATA_KEY = "custom:aclPolicy";
 // The type of the access group.
 export enum ObjectAccessGroupType {
   USER_LIST = "USER_LIST",
-  EMAIL_DOMAIN = "EMAIL_DOMAIN", 
+  EMAIL_DOMAIN = "EMAIL_DOMAIN",
   GROUP_MEMBER = "GROUP_MEMBER",
   SUBSCRIBER = "SUBSCRIBER",
 }
@@ -73,7 +73,7 @@ class UserListAccessGroup extends BaseObjectAccessGroup {
   }
 }
 
-// Email domain access group implementation  
+// Email domain access group implementation
 class EmailDomainAccessGroup extends BaseObjectAccessGroup {
   constructor(id: string) {
     super(ObjectAccessGroupType.EMAIL_DOMAIN, id);

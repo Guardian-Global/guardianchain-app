@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useCapsules, useRecentCapsule } from '../hooks/useCapsules';
-import { useReels } from '../hooks/useReels';
-import { useAuth } from '../hooks/useAuth';
-import { useUserStats } from '../hooks/useUserStats';
+import { useEffect, useState } from "react";
+import { useCapsules, useRecentCapsule } from "../hooks/useCapsules";
+import { useReels } from "../hooks/useReels";
+import { useAuth } from "../hooks/useAuth";
+import { useUserStats } from "../hooks/useUserStats";
 
 /**
  * GuardianBootHook - Dynamic Capsule Loading System
  * Maps all loaded threads and provides centralized state management
  */
 export function GuardianBootHook() {
-  const [bootStatus, setBootStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [bootStatus, setBootStatus] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
   const [threadMap, setThreadMap] = useState<Map<string, any>>(new Map());
 
   const { user, isAuthenticated } = useAuth();
@@ -28,9 +30,9 @@ export function GuardianBootHook() {
     if (capsules) {
       capsules.forEach((capsule: any) => {
         newThreadMap.set(`capsule-${capsule.id}`, {
-          type: 'capsule',
+          type: "capsule",
           id: capsule.id,
-          status: 'loaded',
+          status: "loaded",
           data: capsule,
           connections: getConnectedThreads(capsule),
         });
@@ -41,21 +43,22 @@ export function GuardianBootHook() {
     if (reels) {
       reels.forEach((reel: any) => {
         newThreadMap.set(`reel-${reel.id}`, {
-          type: 'reel',
+          type: "reel",
           id: reel.id,
-          status: 'loaded',
+          status: "loaded",
           data: reel,
-          connections: reel.capsuleIds?.map((id: string) => `capsule-${id}`) || [],
+          connections:
+            reel.capsuleIds?.map((id: string) => `capsule-${id}`) || [],
         });
       });
     }
 
     // Map user stat threads
     if (userStats) {
-      newThreadMap.set('user-stats', {
-        type: 'stats',
-        id: 'user-stats',
-        status: 'loaded',
+      newThreadMap.set("user-stats", {
+        type: "stats",
+        id: "user-stats",
+        status: "loaded",
         data: userStats,
         connections: [],
       });
@@ -63,44 +66,44 @@ export function GuardianBootHook() {
 
     // Map recent capsule thread
     if (recentCapsule) {
-      newThreadMap.set('recent-capsule', {
-        type: 'recent',
-        id: 'recent-capsule',
-        status: 'loaded',
+      newThreadMap.set("recent-capsule", {
+        type: "recent",
+        id: "recent-capsule",
+        status: "loaded",
         data: recentCapsule,
         connections: [`capsule-${recentCapsule.id}`],
       });
     }
 
     setThreadMap(newThreadMap);
-    setBootStatus('ready');
+    setBootStatus("ready");
   }, [capsules, reels, userStats, recentCapsule, capsulesLoading]);
 
   // Get connected threads for a capsule
   const getConnectedThreads = (capsule: any) => {
     const connections = [];
-    
+
     // Add lineage connections
     if (capsule.parentId) {
       connections.push(`capsule-${capsule.parentId}`);
     }
-    
+
     // Add category connections
     if (capsule.type) {
       connections.push(`category-${capsule.type}`);
     }
-    
+
     // Add user connections
     if (capsule.userId) {
       connections.push(`user-${capsule.userId}`);
     }
-    
+
     return connections;
   };
 
   // Provide thread map to global context
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       (window as any).guardianThreadMap = threadMap;
       (window as any).guardianBootStatus = bootStatus;
     }
@@ -108,7 +111,7 @@ export function GuardianBootHook() {
 
   // Boot sequence logging
   useEffect(() => {
-    console.log('🔮 GuardianBootHook Status:', {
+    console.log("🔮 GuardianBootHook Status:", {
       status: bootStatus,
       threadsLoaded: threadMap.size,
       isAuthenticated,
@@ -127,7 +130,7 @@ export function useThreadMap() {
   const [threadMap, setThreadMap] = useState<Map<string, any>>(new Map());
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const updateThreadMap = () => {
         const map = (window as any).guardianThreadMap;
         if (map instanceof Map) {
@@ -136,7 +139,7 @@ export function useThreadMap() {
       };
 
       updateThreadMap();
-      
+
       // Listen for updates
       const interval = setInterval(updateThreadMap, 1000);
       return () => clearInterval(interval);
@@ -147,8 +150,8 @@ export function useThreadMap() {
     threadMap,
     getThread: (id: string) => threadMap.get(id),
     getAllThreads: () => Array.from(threadMap.values()),
-    getThreadsByType: (type: string) => 
-      Array.from(threadMap.values()).filter(thread => thread.type === type),
+    getThreadsByType: (type: string) =>
+      Array.from(threadMap.values()).filter((thread) => thread.type === type),
   };
 }
 

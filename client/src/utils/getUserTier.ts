@@ -19,7 +19,7 @@ export async function getUserTierProduction(userId: string): Promise<string> {
     // const { replitDb } = await import("@replit/extensions");
     // const tier = await replitDb.get(`tier-${userId}`);
     // return tier || "guest";
-    
+
     // Development fallback
     return getUserTierFromAuth(userId);
   } catch (error) {
@@ -36,13 +36,15 @@ export function hasAccess(userTier: string, requiredTiers: string[]): boolean {
 // Tier hierarchy for upgrades
 export const TIER_HIERARCHY = {
   guest: 0,
-  explorer: 1, 
+  explorer: 1,
   pro: 2,
   admin: 3,
-  enterprise: 4
+  enterprise: 4,
 };
 
 export function canUpgradeTo(currentTier: string, targetTier: string): boolean {
-  return TIER_HIERARCHY[currentTier as keyof typeof TIER_HIERARCHY] < 
-         TIER_HIERARCHY[targetTier as keyof typeof TIER_HIERARCHY];
+  return (
+    TIER_HIERARCHY[currentTier as keyof typeof TIER_HIERARCHY] <
+    TIER_HIERARCHY[targetTier as keyof typeof TIER_HIERARCHY]
+  );
 }

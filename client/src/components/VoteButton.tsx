@@ -12,7 +12,12 @@ interface VoteButtonProps {
   className?: string;
 }
 
-export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: VoteButtonProps) {
+export function VoteButton({
+  capsuleId,
+  wallet,
+  initialLikes = 0,
+  className,
+}: VoteButtonProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [likes, setLikes] = useState(initialLikes);
@@ -43,11 +48,11 @@ export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: V
       if (!wallet) {
         throw new Error("Wallet connection required to vote");
       }
-      
+
       return await apiRequest(`/api/capsules/${capsuleId}/vote`, {
         method: "POST",
         body: JSON.stringify({
-          wallet
+          wallet,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -59,11 +64,15 @@ export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: V
       if (data.updatedLikes !== undefined) {
         setLikes(data.updatedLikes);
       }
-      
+
       // Invalidate and refetch related queries
-      queryClient.invalidateQueries({ queryKey: [`/api/capsules/${capsuleId}/votes`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/capsules/${capsuleId}/user-vote/${wallet}`] });
-      
+      queryClient.invalidateQueries({
+        queryKey: [`/api/capsules/${capsuleId}/votes`],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [`/api/capsules/${capsuleId}/user-vote/${wallet}`],
+      });
+
       toast({
         title: "Vote recorded",
         description: "Your vote has been successfully recorded.",
@@ -73,7 +82,8 @@ export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: V
       console.error("Vote error:", error);
       toast({
         title: "Vote failed",
-        description: error.message || "Failed to record vote. Please try again.",
+        description:
+          error.message || "Failed to record vote. Please try again.",
         variant: "destructive",
       });
     },
@@ -90,7 +100,10 @@ export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: V
     }
 
     // Determine vote type based on current user vote status
-    const voteType = userVote?.hasVoted && userVote.voteType === "upvote" ? "downvote" : "upvote";
+    const voteType =
+      userVote?.hasVoted && userVote.voteType === "upvote"
+        ? "downvote"
+        : "upvote";
     voteMutation.mutate(voteType);
   };
 
@@ -113,14 +126,10 @@ export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: V
       ) : (
         <HeartOff className="w-4 h-4" />
       )}
-      
-      <span className="text-sm font-medium">
-        {isLoading ? "..." : likes}
-      </span>
-      
-      {isVoting && (
-        <span className="text-xs opacity-75">Voting...</span>
-      )}
+
+      <span className="text-sm font-medium">{isLoading ? "..." : likes}</span>
+
+      {isVoting && <span className="text-xs opacity-75">Voting...</span>}
     </Button>
   );
 }

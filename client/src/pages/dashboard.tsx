@@ -1,18 +1,27 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { BarChart3, Shield, Zap, Crown, TrendingUp, Users, FileText, Settings } from 'lucide-react';
-import CapsuleDrawer from '@/components/CapsuleDrawer';
-import CapsuleList from '@/components/CapsuleList';
-import LanguageSelector from '@/components/LanguageSelector';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  BarChart3,
+  Shield,
+  Zap,
+  Crown,
+  TrendingUp,
+  Users,
+  FileText,
+  Settings,
+} from "lucide-react";
+import CapsuleDrawer from "@/components/CapsuleDrawer";
+import CapsuleList from "@/components/CapsuleList";
+import LanguageSelector from "@/components/LanguageSelector";
 import { detectUserLanguage, getRTLContainerProps } from "@/lib/rtlSupport";
 
 export default function DashboardPage() {
   const userLang = detectUserLanguage();
   const containerProps = getRTLContainerProps(userLang);
-  
+
   return (
     <>
-      <div 
+      <div
         className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-8"
         dir={containerProps.dir}
       >
@@ -23,7 +32,8 @@ export default function DashboardPage() {
                 Pro Dashboard
               </h1>
               <p className="text-xl text-slate-300">
-                Welcome to your GUARDIANCHAIN dashboard. Access advanced tools and insights.
+                Welcome to your GUARDIANCHAIN dashboard. Access advanced tools
+                and insights.
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -89,25 +99,37 @@ export default function DashboardPage() {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
                   <span className="font-medium">Veritas Seal</span>
-                  <Badge variant="outline" className="border-green-500 text-green-400">
+                  <Badge
+                    variant="outline"
+                    className="border-green-500 text-green-400"
+                  >
                     Active
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
                   <span className="font-medium">Truth Bounty</span>
-                  <Badge variant="outline" className="border-green-500 text-green-400">
+                  <Badge
+                    variant="outline"
+                    className="border-green-500 text-green-400"
+                  >
                     Active
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
                   <span className="font-medium">Truth Redemption</span>
-                  <Badge variant="outline" className="border-green-500 text-green-400">
+                  <Badge
+                    variant="outline"
+                    className="border-green-500 text-green-400"
+                  >
                     Active
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
                   <span className="font-medium">Conspiracy Capsule</span>
-                  <Badge variant="outline" className="border-green-500 text-green-400">
+                  <Badge
+                    variant="outline"
+                    className="border-green-500 text-green-400"
+                  >
                     Active
                   </Badge>
                 </div>
@@ -130,29 +152,29 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button 
-                  onClick={() => window.location.href = '/create-capsule'}
+                <button
+                  onClick={() => (window.location.href = "/create-capsule")}
                   className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg text-center transition-all"
                 >
                   <FileText className="w-6 h-6 mx-auto mb-2" />
                   <span className="text-sm font-medium">Create Capsule</span>
                 </button>
-                <button 
-                  onClick={() => window.location.href = '/veritas-seal'}
+                <button
+                  onClick={() => (window.location.href = "/veritas-seal")}
                   className="p-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 rounded-lg text-center transition-all"
                 >
                   <Shield className="w-6 h-6 mx-auto mb-2" />
                   <span className="text-sm font-medium">Veritas Seal</span>
                 </button>
-                <button 
-                  onClick={() => window.location.href = '/truth-bounty'}
+                <button
+                  onClick={() => (window.location.href = "/truth-bounty")}
                   className="p-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg text-center transition-all"
                 >
                   <TrendingUp className="w-6 h-6 mx-auto mb-2" />
                   <span className="text-sm font-medium">Truth Bounty</span>
                 </button>
-                <button 
-                  onClick={() => window.location.href = '/analytics'}
+                <button
+                  onClick={() => (window.location.href = "/analytics")}
                   className="p-4 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-lg text-center transition-all"
                 >
                   <BarChart3 className="w-6 h-6 mx-auto mb-2" />
@@ -163,7 +185,7 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
-      
+
       {/* Enhanced Capsule Drawer */}
       <CapsuleDrawer />
     </>

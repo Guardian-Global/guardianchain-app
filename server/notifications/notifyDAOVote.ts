@@ -84,10 +84,10 @@ ${
   proposalType === "treasury"
     ? "This proposal involves treasury funds allocation and requires 66% approval."
     : proposalType === "protocol"
-    ? "This proposal modifies core protocol parameters and requires 75% approval."
-    : proposalType === "emergency"
-    ? "This emergency proposal requires immediate attention and 51% approval."
-    : "This governance proposal requires simple majority (51%) approval."
+      ? "This proposal modifies core protocol parameters and requires 75% approval."
+      : proposalType === "emergency"
+        ? "This emergency proposal requires immediate attention and 51% approval."
+        : "This governance proposal requires simple majority (51%) approval."
 }
 
 ## What Happens Next
@@ -104,11 +104,11 @@ ${
       votingPower > 10000
         ? "Elite Voter"
         : votingPower > 5000
-        ? "Active Participant"
-        : "Community Member"
+          ? "Active Participant"
+          : "Community Member"
     }
 - **Success Rate:** ${(Math.random() * 30 + 70).toFixed(
-      1
+      1,
     )}% (voted with majority)
 
 ---

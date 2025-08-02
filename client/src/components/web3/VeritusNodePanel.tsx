@@ -63,7 +63,7 @@ export default function VeritusNodePanel() {
     try {
       const factoryAddress = getContractAddress(
         chainId,
-        "factoryV2"
+        "factoryV2",
       ) as `0x${string}`;
 
       writeSeal({
@@ -100,7 +100,7 @@ export default function VeritusNodePanel() {
     try {
       const factoryAddress = getContractAddress(
         chainId,
-        "factoryV2"
+        "factoryV2",
       ) as `0x${string}`;
 
       writeYield({

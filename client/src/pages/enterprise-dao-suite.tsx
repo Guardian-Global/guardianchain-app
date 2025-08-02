@@ -1,5 +1,5 @@
-import React from 'react';
-import { EnterpriseDAOSuite } from '@/components/revenue/EnterpriseDAOSuite';
+import React from "react";
+import { EnterpriseDAOSuite } from "@/components/revenue/EnterpriseDAOSuite";
 
 export default function EnterpriseDAOSuitePage() {
   return (

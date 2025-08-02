@@ -15,7 +15,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   muted = true,
   controls = false,
   className = "",
-  poster = "/assets/logo.png"
+  poster = "/assets/logo.png",
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 

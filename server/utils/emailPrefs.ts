@@ -25,7 +25,7 @@ const emailPrefsDB: Record<string, EmailPreferences> = {
 };
 
 export async function getUserPreferences(
-  email: string
+  email: string,
 ): Promise<EmailPreferences> {
   // Fallback to enabled for all users (production ready)
   const defaultPrefs: EmailPreferences = {
@@ -79,7 +79,7 @@ export async function getUserPreferences(
 
 export async function setUserPreferences(
   email: string,
-  preferences: Partial<EmailPreferences>
+  preferences: Partial<EmailPreferences>,
 ): Promise<boolean> {
   try {
     // Update mock database
@@ -124,7 +124,7 @@ export async function setUserPreferences(
 
 export async function isEmailTypeEnabled(
   email: string,
-  type: keyof EmailPreferences
+  type: keyof EmailPreferences,
 ): Promise<boolean> {
   const prefs = await getUserPreferences(email);
 

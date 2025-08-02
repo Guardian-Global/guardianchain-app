@@ -6,8 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import VoteButton from "@/components/VoteButton";
-import { Loader2, Search as SearchIcon, Shield, Eye, Clock } from "lucide-react";
+import {
+  Loader2,
+  Search as SearchIcon,
+  Shield,
+  Eye,
+  Clock,
+} from "lucide-react";
 import { useAccount } from "wagmi";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 interface SearchResult {
   id: string;
@@ -28,10 +37,10 @@ interface SearchResult {
 
 export default function SearchPage() {
   const [location] = useLocation();
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const urlParams = new URLSearchParams(location.split("?")[1] || "");
   const query = urlParams.get("q") || "";
   const { address } = useAccount();
-  
+
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(query);
@@ -42,34 +51,40 @@ export default function SearchPage() {
   const [totalResults, setTotalResults] = useState(0);
   const [error, setError] = useState("");
 
-  const performSearch = async (searchTerm: string, pageNum: number = 1, append: boolean = false) => {
+  const performSearch = async (
+    searchTerm: string,
+    pageNum: number = 1,
+    append: boolean = false,
+  ) => {
     if (!searchTerm.trim()) {
       setResults([]);
       setHasMore(false);
       setTotalResults(0);
       return;
     }
-    
+
     setLoading(true);
     setError("");
-    
+
     try {
       const params = new URLSearchParams({
         q: searchTerm,
         sort: sortBy,
         page: pageNum.toString(),
-        limit: "10"
+        limit: "10",
       });
-      
+
       const response = await fetch(`/api/search?${params}`);
       const data = await response.json();
-      
+
       if (data.results) {
         // Filter results based on privacy setting
-        const filtered = onlyPublic ? data.results.filter((r: SearchResult) => !r.isPrivate) : data.results;
-        
+        const filtered = onlyPublic
+          ? data.results.filter((r: SearchResult) => !r.isPrivate)
+          : data.results;
+
         if (append && pageNum > 1) {
-          setResults(prev => [...prev, ...filtered]);
+          setResults((prev) => [...prev, ...filtered]);
         } else {
           setResults(filtered);
         }
@@ -131,45 +146,57 @@ export default function SearchPage() {
 
   const handleVote = async (capsuleId: string) => {
     if (!address) {
-      alert("Connect your wallet to vote");
+      toast.error("Connect your wallet to vote");
       return;
     }
-    
+
     try {
       const response = await fetch(`/api/capsules/${capsuleId}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ wallet: address })
+        body: JSON.stringify({ wallet: address }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.message || response.ok) {
-        alert("Vote counted!");
+        toast.success("🔥 Vote counted!");
         // Refresh the search results to show updated vote count
         if (query) {
           performSearch(query, 1, false);
         }
       } else {
-        alert(data.error || "Failed to vote");
+        toast.error(data.error || "Failed to vote");
       }
     } catch (error) {
       console.error("Vote error:", error);
-      alert("Network error. Please try again.");
+      toast.error("Network error. Please try again.");
     }
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6">
+    <main className="min-h-screen bg-slate-900 text-white py-12 px-6">
+      <ToastContainer position="bottom-right" autoClose={3000} />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            <SearchIcon className="w-8 h-8 inline-block mr-3" />
-            Search Truth Capsules
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Search Results for "{query}"
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Discover capsules, stories, and truth preserved on the blockchain
-          </p>
+          <div className="max-w-4xl mx-auto text-center text-slate-300 mb-10">
+            <p className="text-lg">
+              GuardianChain capsules are more than memories — they're
+              yield-generating, sovereign-authored, and permanently stored
+              truths.
+            </p>
+            <p className="mt-2">
+              Each verified capsule contributes to the Truth Vault economy,
+              earning GTT while preserving your legacy with full cryptographic
+              authorship.
+            </p>
+            <p className="mt-2 text-indigo-300">
+              Immutable. Monetizable. Yours forever.
+            </p>
+          </div>
         </div>
 
         {/* Search Form */}
@@ -179,9 +206,9 @@ export default function SearchPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search capsules, tags, or content..."
-              className="flex-1"
+              className="flex-1 bg-slate-800 border-slate-700 text-white"
             />
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700">
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -198,21 +225,23 @@ export default function SearchPage() {
 
           {/* Search Options */}
           <div className="flex flex-wrap items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <label className="flex items-center gap-2 text-sm text-slate-300">
               <input
                 type="checkbox"
                 checked={onlyPublic}
                 onChange={(e) => setOnlyPublic(e.target.checked)}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4"
               />
               Show only public capsules
             </label>
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-700 dark:text-gray-300">Sort by:</label>
+              <label className="text-sm text-slate-300">
+                Sort by:
+              </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                className="bg-slate-800 text-white px-2 py-1 rounded"
               >
                 <option value="recent">Most Recent</option>
                 <option value="popular">Most Popular</option>
@@ -231,11 +260,17 @@ export default function SearchPage() {
             {!loading && (
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Showing {results.length} of {totalResults} capsule{totalResults !== 1 ? 's' : ''}
+                  Showing {results.length} of {totalResults} capsule
+                  {totalResults !== 1 ? "s" : ""}
                 </p>
                 {sortBy && (
                   <p className="text-xs text-gray-500 dark:text-gray-500">
-                    Sorted by {sortBy === 'recent' ? 'most recent' : sortBy === 'popular' ? 'most popular' : 'relevance'}
+                    Sorted by{" "}
+                    {sortBy === "recent"
+                      ? "most recent"
+                      : sortBy === "popular"
+                        ? "most popular"
+                        : "relevance"}
                   </p>
                 )}
               </div>
@@ -253,25 +288,32 @@ export default function SearchPage() {
           {loading ? (
             <div className="text-center py-12">
               <Loader2 className="w-8 h-8 mx-auto mb-4 animate-spin text-blue-600" />
-              <p className="text-gray-600 dark:text-gray-400">Searching capsules...</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                Searching capsules...
+              </p>
             </div>
           ) : results.length === 0 && query ? (
             <div className="text-center py-12">
               <SearchIcon className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-400">No capsules found matching your search.</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                No capsules found matching your search.
+              </p>
               <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
                 Try different keywords or check your search filters.
               </p>
             </div>
           ) : (
             results.map((capsule) => (
-              <Card key={capsule.id} className="hover:shadow-lg transition-shadow">
+              <Card
+                key={capsule.id}
+                className="bg-slate-800 p-6 hover:shadow-lg transition-shadow"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      <h2 className="text-xl font-semibold text-white mb-1">
                         {capsule.title}
-                      </h3>
+                      </h2>
                       <div className="flex flex-wrap gap-2 mb-3">
                         {capsule.content?.minted && (
                           <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -281,8 +323,16 @@ export default function SearchPage() {
                         )}
                         {capsule.content?.encrypted && (
                           <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
-                            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                            <svg
+                              className="w-3 h-3 mr-1"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                clipRule="evenodd"
+                              />
                             </svg>
                             Encrypted
                           </Badge>
@@ -303,18 +353,14 @@ export default function SearchPage() {
                 </CardHeader>
 
                 <CardContent className="pt-0">
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                    {capsule.content?.encrypted && !capsule.description.includes("[ENCRYPTED]") 
-                      ? "🔒 Encrypted content - unlock required to view"
-                      : capsule.description?.slice(0, 200) + (capsule.description?.length > 200 ? "..." : "") || "No description available."
-                    }
+                  <p className="text-slate-300 mb-2">
+                    {capsule.description?.slice(0, 140) || "Encrypted capsule."}
                   </p>
 
-                  {/* Creator Info */}
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                    By {capsule.ens || capsule.creator || "Anonymous"} • {new Date(capsule.created_at).toLocaleDateString()}
+                  <p className="text-xs text-slate-400 mb-2">
+                    By {capsule.ens || capsule.creator || "Anonymous"}
                   </p>
-                  
+
                   {/* Vote Count */}
                   {capsule.vote_count !== undefined && (
                     <p className="text-sm text-orange-400 mb-2">
@@ -326,7 +372,11 @@ export default function SearchPage() {
                   {capsule.tags && capsule.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-4">
                       {capsule.tags.slice(0, 5).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
+                        <Badge
+                          key={tag}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           #{tag}
                         </Badge>
                       ))}
@@ -346,24 +396,23 @@ export default function SearchPage() {
                           View Capsule
                         </Button>
                       </Link>
-                      
+
                       <VoteButton
                         capsuleId={capsule.id}
                         wallet={address || ""}
                         initialLikes={capsule.vote_count || 0}
                         className="ml-2"
                       />
-                      
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
+
+                      <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
                         onClick={() => handleVote(capsule.id)}
-                        className="text-orange-400 hover:text-orange-300"
                       >
-                        🔥 Vote
-                      </Button>
+                        Vote
+                      </motion.button>
                     </div>
-                    
+
                     {capsule.content?.tx_hash && (
                       <a
                         href={`https://polygonscan.com/tx/${capsule.content.tx_hash}`}
@@ -382,13 +431,9 @@ export default function SearchPage() {
         </div>
 
         {/* Load More Button */}
-        {hasMore && !loading && results.length > 0 && (
-          <div className="text-center mt-8">
-            <Button 
-              onClick={handleLoadMore}
-              variant="outline"
-              className="min-w-[120px]"
-            >
+        {hasMore && !loading && (
+          <div className="text-center mt-10">
+            <Button onClick={handleLoadMore} className="bg-indigo-600 hover:bg-indigo-700">
               Load More
             </Button>
           </div>
@@ -398,7 +443,9 @@ export default function SearchPage() {
         {loading && page > 1 && (
           <div className="text-center py-4">
             <Loader2 className="w-6 h-6 mx-auto animate-spin text-blue-600" />
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Loading more results...</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              Loading more results...
+            </p>
           </div>
         )}
       </div>

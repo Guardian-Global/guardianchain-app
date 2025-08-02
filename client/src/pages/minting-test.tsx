@@ -15,7 +15,8 @@ export default function MintingTestPage() {
               GUARDIANCHAIN Minting Test Center
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Comprehensive testing suite for capsule minting and blockchain integration
+              Comprehensive testing suite for capsule minting and blockchain
+              integration
             </p>
           </div>
         </div>
@@ -52,7 +53,8 @@ export default function MintingTestPage() {
                 <span className="font-semibold">End-to-End Tests</span>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Complete workflow testing from capsule creation to blockchain minting
+                Complete workflow testing from capsule creation to blockchain
+                minting
               </p>
             </CardContent>
           </Card>
@@ -102,7 +104,8 @@ export default function MintingTestPage() {
             </Badge>
             <p className="text-gray-600 dark:text-gray-400">
               Test components have been moved to archive for production cleanup.
-              Test suite functionality preserved in archive_cleanup/unlinked_components/.
+              Test suite functionality preserved in
+              archive_cleanup/unlinked_components/.
             </p>
           </div>
         </CardContent>

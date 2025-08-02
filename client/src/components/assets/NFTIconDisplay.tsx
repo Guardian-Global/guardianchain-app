@@ -74,20 +74,20 @@ export const NFTIconDisplay: React.FC<NFTIconDisplayProps> = ({
 
   // Try to match by type first
   const typeMatches = nftIcons.filter((icon) =>
-    icon.name.toLowerCase().includes(type.toLowerCase())
+    icon.name.toLowerCase().includes(type.toLowerCase()),
   );
 
   if (typeMatches.length > 0) {
     // Try to match rarity within type matches
     selectedIcon =
       typeMatches.find((icon) =>
-        icon.name.toLowerCase().includes(rarity.toLowerCase())
+        icon.name.toLowerCase().includes(rarity.toLowerCase()),
       ) || typeMatches[0];
   } else {
     // Fallback to rarity match
     selectedIcon =
       nftIcons.find((icon) =>
-        icon.name.toLowerCase().includes(rarity.toLowerCase())
+        icon.name.toLowerCase().includes(rarity.toLowerCase()),
       ) || nftIcons[0];
   }
 

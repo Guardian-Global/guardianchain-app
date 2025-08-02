@@ -34,7 +34,7 @@ export default function ReferralPage() {
 
   const copyReferralCode = () => {
     navigator.clipboard.writeText(
-      `https://guardianchain.app/register?ref=${referralCode}`
+      `https://guardianchain.app/register?ref=${referralCode}`,
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -338,10 +338,10 @@ export default function ReferralPage() {
                             index === 0
                               ? "bg-yellow-600"
                               : index === 1
-                              ? "bg-gray-400"
-                              : index === 2
-                              ? "bg-orange-600"
-                              : "bg-slate-600"
+                                ? "bg-gray-400"
+                                : index === 2
+                                  ? "bg-orange-600"
+                                  : "bg-slate-600"
                           }`}
                         >
                           {user.rank}

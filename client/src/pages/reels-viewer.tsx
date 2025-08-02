@@ -7,11 +7,7 @@ export default function ReelsViewer() {
 
   return (
     <div className="min-h-screen">
-      <ReelSwiper 
-        reelId={reelId}
-        autoplay={true}
-        fullscreen={true}
-      />
+      <ReelSwiper reelId={reelId} autoplay={true} fullscreen={true} />
     </div>
   );
 }

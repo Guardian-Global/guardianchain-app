@@ -101,7 +101,7 @@ export function AuthButton() {
             </div>
             <div
               className={`text-xs flex items-center gap-1 ${getTierColor(
-                user?.tier || ""
+                user?.tier || "",
               )}`}
             >
               {getTierIcon(user?.tier || "")}
@@ -123,7 +123,7 @@ export function AuthButton() {
             <p className="text-xs text-gray-500">{user?.email}</p>
             <div
               className={`text-xs flex items-center gap-1 ${getTierColor(
-                user?.tier || ""
+                user?.tier || "",
               )}`}
             >
               {getTierIcon(user?.tier || "")}

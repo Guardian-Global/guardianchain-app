@@ -24,7 +24,7 @@ future_enhancements:
   cta={[
     { label: "View Commitments", url: "#commitments", style: "primary" },
     { label: "Upvote/Annotate", url: "#community", style: "secondary" },
-    { label: "Download Report", url: "#audit", style: "holo" }
+    { label: "Download Report", url: "#audit", style: "holo" },
   ]}
 />
 
@@ -32,11 +32,15 @@ future_enhancements:
   <SectionTOC sticky scrollSpy animation="fade-in" />
   <QuickActions>
     <CopyButton text="guardian-global.com/whitepaper/ethics" />
-    <ShareMenu platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]} />
+    <ShareMenu
+      platforms={["twitter", "linkedin", "telegram", "farcaster", "email"]}
+    />
     <PDFExport />
     <VoiceToggle />
     <ThemeToggle />
-    <TranslateMenu languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]} />
+    <TranslateMenu
+      languages={["en", "es", "zh", "de", "fr", "ar", "hi", "jp"]}
+    />
     <TextSizeToggle />
   </QuickActions>
 </UtilityBar>
@@ -44,21 +48,25 @@ future_enhancements:
 ---
 
 ## <span id="commitments">Public Commitments <HeartIcon /></span>
+
 <Callout type="impact" icon="🌱">
-  GuardianChain commits to transparency, privacy, non-censorship, open governance, and measurable positive impact.
+  GuardianChain commits to transparency, privacy, non-censorship, open
+  governance, and measurable positive impact.
 </Callout>
-- All commitments are upvoted, annotated, and DAO ratified
-- Users/NGOs can submit challenges, amendments, or new declarations
+- All commitments are upvoted, annotated, and DAO ratified - Users/NGOs can
+submit challenges, amendments, or new declarations
 
 ---
 
 ## <span id="community">Community/DAO Transparency & Impact <CommunityIcon /></span>
-<TransparencyOverlay />
-- See transparency scores, impact ratings, and recent challenges for any protocol action or partner
+
+<TransparencyOverlay />- See transparency scores, impact ratings, and recent
+challenges for any protocol action or partner
 
 ---
 
 ## <span id="audit">Annual Impact Audit & Report <AuditIcon /></span>
+
 <ImpactReportDownload />
 
 ---

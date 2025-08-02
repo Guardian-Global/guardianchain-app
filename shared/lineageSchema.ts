@@ -1,15 +1,24 @@
-import { pgTable, text, integer, numeric, uuid, timestamptz } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  integer,
+  numeric,
+  uuid,
+  timestamptz,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 // Lineage tracking table for capsule inheritance
 export const lineage = pgTable("lineage", {
-  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   parentId: text("parent_id"), // references capsules.id
-  childId: text("child_id"), // references capsules.id  
+  childId: text("child_id"), // references capsules.id
   triggeredBy: text("triggered_by"), // wallet address of user who created lineage
   timestamp: timestamptz("timestamp").defaultNow(),
   griefFlow: integer("grief_flow"), // grief score inherited from parent
-  influenceScore: numeric("influence_score") // calculated influence metric
+  influenceScore: numeric("influence_score"), // calculated influence metric
 });
 
 // Extended capsule fields for lineage support

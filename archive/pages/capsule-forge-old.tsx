@@ -103,23 +103,29 @@ export default function CapsuleForgePage() {
           {/* Sidebar */}
           <div className="space-y-6">
             <MetadataPreview capsuleData={capsuleData} />
-            <CapsuleAIAssistant 
+            <CapsuleAIAssistant
               capsuleData={capsuleData}
               onSuggestionApply={(improvements) => {
                 // Apply AI suggestions to capsule data
                 if (improvements.title) {
-                  setCapsuleData(prev => ({ ...prev, title: improvements.title }));
+                  setCapsuleData((prev) => ({
+                    ...prev,
+                    title: improvements.title,
+                  }));
                 }
                 if (improvements.tags) {
-                  setCapsuleData(prev => ({
+                  setCapsuleData((prev) => ({
                     ...prev,
-                    metadata: { ...prev.metadata, tags: improvements.tags }
+                    metadata: { ...prev.metadata, tags: improvements.tags },
                   }));
                 }
                 if (improvements.category) {
-                  setCapsuleData(prev => ({
+                  setCapsuleData((prev) => ({
                     ...prev,
-                    metadata: { ...prev.metadata, category: improvements.category }
+                    metadata: {
+                      ...prev.metadata,
+                      category: improvements.category,
+                    },
                   }));
                 }
               }}

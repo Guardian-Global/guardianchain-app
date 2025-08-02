@@ -54,8 +54,12 @@ export default function VoteModal({
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
-  const daoAddress = chainId ? getContractAddress(chainId.toString(), "dao") : undefined;
-  const gttAddress = chainId ? getContractAddress(chainId.toString(), "gtt") : undefined;
+  const daoAddress = chainId
+    ? getContractAddress(chainId.toString(), "dao")
+    : undefined;
+  const gttAddress = chainId
+    ? getContractAddress(chainId.toString(), "gtt")
+    : undefined;
 
   // Check if user has already voted (using basic ERC20 ABI as fallback)
   const { data: hasVoted } = useReadContract({
@@ -90,7 +94,9 @@ export default function VoteModal({
 
     try {
       // For development, simulate vote (TruthDAO ABI not available)
-      console.log(`Voting ${support ? 'FOR' : 'AGAINST'} proposal ${proposal.id}`);
+      console.log(
+        `Voting ${support ? "FOR" : "AGAINST"} proposal ${proposal.id}`,
+      );
 
       setVoteChoice(support);
     } catch (error: any) {
@@ -123,14 +129,18 @@ export default function VoteModal({
   const isVotingActive = Date.now() < proposal.deadline * 1000;
   const totalVotes = proposal.votesFor + proposal.votesAgainst;
   const forPercentage =
-    totalVotes > BigInt(0) ? Number((proposal.votesFor * BigInt(100)) / totalVotes) : 0;
+    totalVotes > BigInt(0)
+      ? Number((proposal.votesFor * BigInt(100)) / totalVotes)
+      : 0;
   const againstPercentage =
-    totalVotes > BigInt(0) ? Number((proposal.votesAgainst * BigInt(100)) / totalVotes) : 0;
+    totalVotes > BigInt(0)
+      ? Number((proposal.votesAgainst * BigInt(100)) / totalVotes)
+      : 0;
 
   const timeRemaining = Math.max(0, proposal.deadline * 1000 - Date.now());
   const hoursRemaining = Math.floor(timeRemaining / (1000 * 60 * 60));
   const minutesRemaining = Math.floor(
-    (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+    (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
   );
 
   return (
@@ -180,8 +190,8 @@ export default function VoteModal({
                   {isVotingActive
                     ? "Active"
                     : proposal.executed
-                    ? "Executed"
-                    : "Ended"}
+                      ? "Executed"
+                      : "Ended"}
                 </Badge>
               </div>
 

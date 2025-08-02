@@ -25,22 +25,22 @@ export default function OneClickSocialMediaShare() {
         case "twitter":
           window.open(
             `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-              shareData.text
+              shareData.text,
             )}&url=${encodeURIComponent(shareData.url)}`,
-            "_blank"
+            "_blank",
           );
           break;
         case "telegram":
           window.open(
             `https://t.me/share/url?url=${encodeURIComponent(
-              shareData.url
+              shareData.url,
             )}&text=${encodeURIComponent(shareData.text)}`,
-            "_blank"
+            "_blank",
           );
           break;
         case "copy":
           await navigator.clipboard.writeText(
-            `${shareData.text}\n\n${shareData.url}`
+            `${shareData.text}\n\n${shareData.url}`,
           );
           toast({
             title: "Copied!",

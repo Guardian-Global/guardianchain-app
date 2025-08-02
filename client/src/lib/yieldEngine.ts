@@ -63,7 +63,7 @@ export interface UserBalance {
 
 // Core yield calculation logic
 export async function calculateCapsuleYield(
-  capsuleId: number
+  capsuleId: number,
 ): Promise<number> {
   try {
     const engagement = await new Promise<CapsuleEngagement>((resolve) => {
@@ -81,7 +81,7 @@ export async function calculateCapsuleYield(
               resonance: 0,
               veritus_verified: false,
               pending_yield: 0,
-            }
+            },
           );
         });
     });
@@ -129,7 +129,7 @@ export async function distributeYield(): Promise<void> {
               user_id: capsule.user_id,
               gtt_balance: yieldAmount,
             },
-            { onConflict: ["user_id"] }
+            { onConflict: ["user_id"] },
           )
           .then(resolve);
       });
@@ -144,7 +144,7 @@ export async function distributeYield(): Promise<void> {
       });
 
       console.log(
-        `Distributed ${yieldAmount} GTT to user ${capsule.user_id} for capsule ${capsule.capsule_id}`
+        `Distributed ${yieldAmount} GTT to user ${capsule.user_id} for capsule ${capsule.capsule_id}`,
       );
     }
   } catch (error) {
@@ -176,7 +176,7 @@ export async function getUserYieldSummary(userId: string) {
 
 export async function calculateTierYieldBonus(
   userId: string,
-  baseYield: number
+  baseYield: number,
 ) {
   // Mock tier data - in production, fetch from user profile
   const userTier = "Creator"; // Mock tier
