@@ -141,6 +141,21 @@ export const assets = pgTable("assets", {
   uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
+// Replay logs table for tracking capsule replay activities
+export const replayLogs = pgTable("replay_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  capsuleId: varchar("capsule_id").references(() => capsules.id).notNull(),
+  userId: varchar("user_id").references(() => users.id),
+  replayType: varchar("replay_type").default("standard"), // 'standard', 'premium', 'veritas'
+  yieldAmount: integer("yield_amount").default(0),
+  transactionHash: varchar("transaction_hash"),
+  sessionId: varchar("session_id"),
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  metadata: jsonb("metadata"), // Additional replay data
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Type definitions
 export type User = typeof users.$inferSelect;
 
@@ -298,6 +313,8 @@ export type Transaction = typeof transactions.$inferSelect;
 export type NewTransaction = typeof transactions.$inferInsert;
 export type Achievement = typeof achievements.$inferSelect;
 export type NewAchievement = typeof achievements.$inferInsert;
+export type ReplayLog = typeof replayLogs.$inferSelect;
+export type NewReplayLog = typeof replayLogs.$inferInsert;
 
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users);
@@ -305,6 +322,7 @@ export const insertCapsuleSchema = createInsertSchema(capsules);
 export const insertVerificationSchema = createInsertSchema(verifications);
 export const insertTransactionSchema = createInsertSchema(transactions);
 export const insertAchievementSchema = createInsertSchema(achievements);
+export const insertReplayLogSchema = createInsertSchema(replayLogs);
 
 export type Asset = typeof assets.$inferSelect;
 export type NewAsset = typeof assets.$inferInsert;

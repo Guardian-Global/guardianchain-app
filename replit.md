@@ -12,6 +12,7 @@ Preferred communication style: Simple, everyday language.
 - **ENHANCED NAVIGATION SYSTEM:** Implemented LanguageSwitcher, improved Topbar with integrated notifications, and professional mobile-first responsive design across all components
 - **COMPREHENSIVE UI FOUNDATION:** Added essential components including Sheet, Separator, ScrollArea, and enhanced Breadcrumbs navigation with proper TypeScript integration
 - **PRODUCTION-READY PLATFORM:** Fixed component architecture, implemented tier-based access controls (guest → member → moderator → admin → dao-owner), and deployed institutional-grade user experience with keyboard shortcuts and real-time feedback
+- **DATABASE REPLAY TRACKING (2025-08-02):** Added replay_logs table with UUID primary key and timestamping for comprehensive capsule replay activity tracking, including user sessions, yield amounts, transaction hashes, and metadata
 - **Enhanced Navigation System (2025-08-02):** Implemented comprehensive sidebar, topbar, and command palette with tier-based access controls, keyboard shortcuts (⌘K), and mobile-responsive design
 - **Admin System Enhancement:** Added live configuration editor, tier-based access guards, and fallback configuration system with TanStack Query error resolution
 - **GUARDIANCHAIN_LAUNCHBOOST_V1 Completed (2025-08-02):** Implemented comprehensive platform optimization including CalloutCTA component, GriefScore documentation, onboarding flow, AI discovery integration, and enhanced monetization features

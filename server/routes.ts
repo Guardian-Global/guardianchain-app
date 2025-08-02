@@ -2,6 +2,33 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 
+// Get replay logs for analytics and tracking
+function getReplayLogs(filters: any = {}) {
+  // Mock replay logs data - in production this would query the database
+  const mockLogs = [
+    {
+      id: 'replay_1754135800_abc123',
+      capsuleId: 'cap_1754135000_xyz789',
+      userId: 'debug-user-456',
+      replayType: 'standard',
+      yieldAmount: 2.50,
+      transactionHash: '0x1234567890abcdef',
+      sessionId: 'session_1754135800',
+      ipAddress: '127.0.0.1',
+      userAgent: 'Mozilla/5.0',
+      metadata: { platform: 'GuardianChain' },
+      createdAt: new Date(Date.now() - 3600000).toISOString() // 1 hour ago
+    }
+  ];
+  
+  return mockLogs.filter(log => {
+    if (filters.capsuleId && log.capsuleId !== filters.capsuleId) return false;
+    if (filters.userId && log.userId !== filters.userId) return false;
+    if (filters.replayType && log.replayType !== filters.replayType) return false;
+    return true;
+  });
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
@@ -91,17 +118,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     console.log('🔵 DEBUG: Replaying capsule:', capsuleId, 'Yield:', yieldAmount);
 
+    // Create replay log entry
+    const replayLogId = `replay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+    
+    const replayLog = {
+      id: replayLogId,
+      capsuleId,
+      userId: req.user.id,
+      replayType: 'standard',
+      yieldAmount: yieldAmount || 2.50,
+      transactionHash,
+      sessionId: req.sessionID || `session_${Date.now()}`,
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('User-Agent') || 'unknown',
+      metadata: {
+        authorId,
+        requestTimestamp: new Date().toISOString(),
+        platform: 'GuardianChain'
+      },
+      createdAt: new Date().toISOString()
+    };
+
     const replayResult = {
       capsuleId,
       authorId,
       yieldAmount: yieldAmount || 2.50,
       replayCount: 1,
       timestamp: new Date().toISOString(),
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`
+      transactionHash,
+      replayLogId
     };
 
+    console.log('✅ DEBUG: Replay log created:', replayLog);
     console.log('✅ DEBUG: Capsule replay completed:', replayResult);
-    res.json({ success: true, replay: replayResult, message: 'Capsule replayed and yield distributed successfully' });
+    res.json({ success: true, replay: replayResult, replayLog, message: 'Capsule replayed and yield distributed successfully' });
   });
 
   app.post('/api/purchase-capsule-access', isDebugAuthenticated, async (req: any, res) => {
@@ -129,6 +180,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     console.log('✅ DEBUG: GTT yield distributed:', distribution);
     res.json({ success: true, distribution, message: 'GTT yield distributed successfully' });
+  });
+
+  // Get replay logs for analytics
+  app.get('/api/replay-logs', isDebugAuthenticated, async (req: any, res) => {
+    const { capsuleId, userId, replayType, limit = 50 } = req.query;
+    
+    console.log('🔵 DEBUG: Fetching replay logs with filters:', { capsuleId, userId, replayType, limit });
+    
+    const filters = { capsuleId, userId, replayType };
+    const logs = getReplayLogs(filters).slice(0, parseInt(limit));
+    
+    const analytics = {
+      totalReplays: logs.length,
+      totalYieldDistributed: logs.reduce((sum, log) => sum + log.yieldAmount, 0),
+      uniqueUsers: new Set(logs.map(log => log.userId)).size,
+      replayTypes: logs.reduce((acc, log) => {
+        acc[log.replayType] = (acc[log.replayType] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>)
+    };
+    
+    console.log('✅ DEBUG: Replay logs analytics:', analytics);
+    res.json({ success: true, logs, analytics, message: 'Replay logs retrieved successfully' });
+  });
+
+  // Get replay logs for specific capsule
+  app.get('/api/capsules/:capsuleId/replay-logs', isDebugAuthenticated, async (req: any, res) => {
+    const { capsuleId } = req.params;
+    const { limit = 20 } = req.query;
+    
+    console.log('🔵 DEBUG: Fetching replay logs for capsule:', capsuleId);
+    
+    const logs = getReplayLogs({ capsuleId }).slice(0, parseInt(limit));
+    
+    console.log('✅ DEBUG: Capsule replay logs retrieved:', logs.length, 'entries');
+    res.json({ success: true, logs, capsuleId, message: 'Capsule replay logs retrieved successfully' });
   });
 
   // Simple auth user endpoint - no database calls
