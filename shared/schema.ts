@@ -56,6 +56,7 @@ export const users = pgTable("users", {
   profileVideoUrl: varchar("profile_video_url"),
   backgroundImageUrl: varchar("background_image_url"),
   mediaPreferences: jsonb("media_preferences"), // Auto-mint, quality settings, etc.
+  language: varchar("language").default("en"), // User's preferred language for interface and voice
   lastLogin: timestamp("last_login"),
   lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),

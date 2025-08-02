@@ -516,6 +516,110 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Reels API endpoints
+  app.get('/api/reels', isDebugAuthenticated, (req: any, res) => {
+    console.log('🎬 User reels requested');
+    
+    // Mock user reels data
+    const mockReels = [
+      {
+        id: "reel-1",
+        name: "Family Legacy Collection",
+        description: "Personal family stories and memories",
+        capsuleIds: ["cap-1", "cap-4"],
+        createdAt: "2024-03-20T12:00:00Z",
+        updatedAt: "2024-03-20T12:00:00Z",
+        isPublic: true,
+        playCount: 127,
+        likeCount: 23,
+        language: "en"
+      },
+      {
+        id: "reel-2", 
+        name: "Truth Investigations",
+        description: "Evidence-based exposures and investigations",
+        capsuleIds: ["cap-2", "cap-3"],
+        createdAt: "2024-02-25T15:30:00Z", 
+        updatedAt: "2024-02-25T15:30:00Z",
+        isPublic: false,
+        playCount: 89,
+        likeCount: 45,
+        language: "en"
+      }
+    ];
+    
+    res.json(mockReels);
+  });
+
+  app.post('/api/reels', isDebugAuthenticated, (req: any, res) => {
+    console.log('🎬 Creating new reel:', req.body);
+    
+    const { name, description, capsuleIds, isPublic = true, language = 'en' } = req.body;
+    
+    const newReel = {
+      id: `reel-${Date.now()}`,
+      name,
+      description,
+      capsuleIds,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      isPublic,
+      playCount: 0,
+      likeCount: 0,
+      language
+    };
+    
+    res.json(newReel);
+  });
+
+  // Capsule collections for reels - get user's owned capsules
+  app.get('/api/capsules/owned', isDebugAuthenticated, (req: any, res) => {
+    console.log('📦 User owned capsules requested');
+    
+    const mockOwnedCapsules = [
+      {
+        id: "cap-1",
+        title: "Family Memories 2024",
+        description: "Collection of precious family moments",
+        summary: "A heartwarming collection capturing the essence of family bonds, laughter, and shared experiences throughout 2024.",
+        truthScore: 92,
+        mediaType: "video",
+        mediaUrl: "/placeholder-video.mp4",
+        createdAt: "2024-03-15T10:00:00Z"
+      },
+      {
+        id: "cap-2", 
+        title: "Truth About Corporate Fraud",
+        description: "Whistleblower testimony exposing corporate misconduct",
+        summary: "Detailed account of financial irregularities and ethical violations within a major corporation, backed by documented evidence.",
+        truthScore: 96,
+        mediaType: "document",
+        createdAt: "2024-02-20T14:30:00Z"
+      },
+      {
+        id: "cap-3",
+        title: "Climate Change Evidence",
+        description: "Scientific observations and data collection",
+        summary: "Comprehensive documentation of local climate patterns, temperature changes, and environmental impact over the past decade.",
+        truthScore: 89,
+        mediaType: "image",
+        mediaUrl: "/placeholder-chart.jpg",
+        createdAt: "2024-01-10T09:15:00Z"
+      },
+      {
+        id: "cap-4",
+        title: "Heritage Recipe Collection",
+        description: "Grandmother's secret recipes and cooking traditions",
+        summary: "Traditional family recipes passed down through generations, including cooking techniques and cultural significance.",
+        truthScore: 85,
+        mediaType: "text",
+        createdAt: "2024-04-05T16:45:00Z"
+      }
+    ];
+    
+    res.json(mockOwnedCapsules);
+  });
+
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
 

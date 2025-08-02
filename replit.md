@@ -7,6 +7,12 @@ GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-sc
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (August 2, 2025)
+- **Multilingual Voice Reels System Complete**: Implemented comprehensive multilingual support with VoiceSummaryPlayer integration
+- **Voice Summary Features**: Added "Listen to Summary" button to each capsule with auto-translation for non-English languages
+- **LABELS System**: Created multilingual interface with auto-switching text based on user language preference
+- **Reels API Complete**: Built full reels management system allowing users to name collections and curate from owned capsule IDs
+- **Language Support**: Added language field to user schema for personalized interface and voice preferences
+- **Auto-Translation**: Integrated auto-translate functionality for reel playback when user language !== "en"
 - **Enhanced Profile System Complete**: Implemented full sovereign social profile with comprehensive media management
 - **Profile Extension Components**: Created 5 new profile enhancement components - MintCapsuleButton, CapsuleAutotagger, CapsuleWallToggle, TruthGenomeCard, and CapsulePrivacyToggle
 - **AI-Powered Features**: Integrated GPT-powered content analysis with emotional resonance scoring, truth likelihood assessment, and automatic tag generation
@@ -66,6 +72,8 @@ Preferred communication style: Simple, everyday language.
 - **Asset Integration**: Comprehensive branding asset system with video backgrounds, NFT avatar options, logo strips, and GPU-accelerated visual effects.
 - **Navigation**: Advanced navigation system with dynamic badge indicators (🆕 New Proposal, ⚠️ Unclaimed Yield), role-based menu visibility (admin-only, DAO-only), comprehensive mobile responsiveness with collapsible sidebar, centralized navigation data with 100+ routes, and real-time notification system.
 - **Complete Page Coverage**: Comprehensive platform with all core functionality implemented including enhanced capsule creation/vault management, GTT yield claiming, truth verification, lineage tracking, Truth Genome NFT viewer, investor relations, contact system, and extensive documentation (how-it-works, grants, legal framework).
+- **Multilingual Voice Interface**: Complete voice summary system with VoiceSummaryPlayer component, auto-translation for multilingual users, and LABELS-based interface localization.
+- **Reels System**: Full reel curation functionality allowing users to create named collections from owned capsules with voice summaries and multilingual support.
 - **Sovereign Social Profiles**: Full-featured profile system with TruthGenomeCard showing personality traits (Seeker, Whistleblower, Visionary, Historian), CapsuleWallToggle for multiple view modes, and public sharing via `/u/[username]` routes. Includes comprehensive media upload with auto-categorization and blockchain minting.
 - **Guardian Map**: Interactive global network visualization featuring real-time guardian locations, reputation tiers, activity levels, advanced search and filtering capabilities, multiple map visualization modes (standard, heatmap, connections), comprehensive export tools (CSV, JSON, Excel, image, reports), and network analysis with connection tracking.
 - **Smart Contract Suite**: Production-ready ERC-721 implementation with yield mechanics and validation systems (CapsuleNFT and GTTYieldVault).

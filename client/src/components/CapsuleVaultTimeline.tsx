@@ -23,9 +23,13 @@ import {
 import { cn } from "@/lib/utils";
 import { apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
+import VoiceSummaryPlayer from "@/components/VoiceSummaryPlayer";
+import { getLabel, detectUserLanguage } from "@/lib/labels";
 
 interface CapsuleVaultTimelineProps {
   userId: string;
+  viewMode?: 'timeline' | 'grid' | 'calendar' | 'trending';
+  isPublicView?: boolean;
   className?: string;
 }
 
@@ -52,7 +56,12 @@ interface TimelineEntry {
   createdAt: string;
 }
 
-export function CapsuleVaultTimeline({ userId, className }: CapsuleVaultTimelineProps) {
+export function CapsuleVaultTimeline({ 
+  userId, 
+  viewMode = 'timeline',
+  isPublicView = false,
+  className 
+}: CapsuleVaultTimelineProps) {
   const [newPostContent, setNewPostContent] = useState("");
   const [selectedEntryType, setSelectedEntryType] = useState("post");
   const queryClient = useQueryClient();
@@ -305,14 +314,15 @@ export function CapsuleVaultTimeline({ userId, className }: CapsuleVaultTimeline
 
   return (
     <div className={cn("space-y-6", className)}>
-      {/* Create Post Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5" />
-            Create Timeline Entry
-          </CardTitle>
-        </CardHeader>
+      {/* Create Post Section - Hide for public view */}
+      {!isPublicView && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5" />
+              {getLabel("create", detectUserLanguage())} Timeline Entry
+            </CardTitle>
+          </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
             placeholder="Share your truth, upload media, or create a capsule..."
@@ -337,11 +347,12 @@ export function CapsuleVaultTimeline({ userId, className }: CapsuleVaultTimeline
               className="flex items-center gap-2"
             >
               <Shield className="w-4 h-4" />
-              Create Capsule
+              {getLabel("create", detectUserLanguage())} {getLabel("capsules", detectUserLanguage())}
             </Button>
           </div>
         </CardContent>
       </Card>
+      )}
 
       {/* Timeline Entries */}
       <div className="space-y-4">
@@ -406,6 +417,16 @@ export function CapsuleVaultTimeline({ userId, className }: CapsuleVaultTimeline
                 {/* Capsule Content */}
                 <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded">
                   <p className="text-sm">{entry.capsule.content}</p>
+                </div>
+
+                {/* Voice Summary Player */}
+                <div className="mt-3">
+                  <VoiceSummaryPlayer
+                    text={entry.capsule.content}
+                    language={detectUserLanguage()}
+                    autoTranslate={detectUserLanguage() !== "en"}
+                    showDownload={true}
+                  />
                 </div>
 
                 {/* Action Buttons */}
