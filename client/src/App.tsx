@@ -53,6 +53,11 @@ import LaunchpadPage from "@/pages/launchpad";
 // ReferralPage import removed - using direct import
 import AirdropPage from "@/pages/airdrop";
 import GuardianPassPage from "@/pages/guardian-pass";
+import EliteVault from "@/pages/EliteVault";
+import EliteMint from "@/pages/EliteMint";
+import EliteStats from "@/pages/EliteStats";
+import EliteTimeline from "@/pages/EliteTimeline";
+import EliteVeritasNode from "@/pages/EliteVeritasNode";
 import VaultDashboard from "@/components/VaultDashboard";
 import Govern from "@/pages/govern";
 import NotFound from "./pages/NotFound";
@@ -653,6 +658,8 @@ function Router() {
             <Route path="/airdrop" component={AirdropPage} />
             <Route path="/guardian-pass" component={GuardianPassPage} />
             <Route path="/vault" component={() => <VaultDashboard />} />
+            <Route path="/mint" component={EliteMint} />
+            <Route path="/stats" component={EliteStats} />
             <Route path="/auction-house" component={AuctionHousePage} />
             <Route path="/embed/capsule" component={EmbedCapsulePage} />
             <Route path="/yield-tracker" component={YieldTrackerPage} />
@@ -816,6 +823,13 @@ function Router() {
             <Route path="/legal/privacy" component={PrivacyPolicy} />
             <Route path="/legal/terms" component={TermsOfService} />
             <Route path="/legal/security" component={SecurityPolicy} />
+
+            {/* Elite Visual System Pages */}
+            <Route path="/elite-vault" component={EliteVault} />
+            <Route path="/elite-mint" component={EliteMint} />
+            <Route path="/elite-stats" component={EliteStats} />
+            <Route path="/timeline" component={EliteTimeline} />
+            <Route path="/veritas-node" component={EliteVeritasNode} />
 
               <Route component={NotFound} />
             </Switch>
