@@ -34,9 +34,14 @@ import {
   MessageSquare,
   Star,
   PlayCircle,
-  CheckCircle2
+  CheckCircle2,
+  Bell,
+  Brain
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import SmartNotifications from './SmartNotifications';
+import PersonalizationEngine from './PersonalizationEngine';
+import EngagementTracker from './EngagementTracker';
 
 interface NavigationItem {
   id: string;
@@ -460,14 +465,22 @@ export default function EnhancedNavigation({
                   <p className="text-xs text-gray-400">Truth Vault Protocol</p>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onToggleCollapse}
-                className="p-2"
-              >
-                <ChevronDown className="w-4 h-4 text-gray-400" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <SmartNotifications />
+                </div>
+                <div className="relative">
+                  <PersonalizationEngine />
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onToggleCollapse}
+                  className="p-2"
+                >
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                </Button>
+              </div>
             </div>
 
             {/* User Info */}
@@ -557,6 +570,9 @@ export default function EnhancedNavigation({
           </div>
         </div>
       )}
+
+      {/* Engagement Tracker - Global Component */}
+      <EngagementTracker />
     </div>
   );
 }

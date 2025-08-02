@@ -3453,6 +3453,141 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Engagement tracking routes
+  app.post('/api/engagement/track-session', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { sessionId, startTime, userAgent, path } = req.body;
+      
+      console.log(`📊 Tracking session for ${userId}:`, { sessionId, path, startTime });
+      
+      // Mock engagement metrics for demo
+      const metrics = {
+        sessionTime: Date.now() - startTime,
+        pagesVisited: [path],
+        actionsCompleted: [],
+        streakDays: 3,
+        totalSessions: 5,
+        lastActive: new Date().toISOString(),
+        engagementScore: 75,
+        achievements: [
+          {
+            id: 'first_session',
+            title: 'Welcome Guardian',
+            description: 'Complete your first session',
+            icon: 'star',
+            unlocked: true,
+            progress: 1,
+            maxProgress: 1,
+            reward: '10 GTT'
+          }
+        ]
+      };
+
+      res.json({ success: true, metrics });
+    } catch (error) {
+      console.error('Failed to track session:', error);
+      res.status(500).json({ error: 'Failed to track session' });
+    }
+  });
+
+  app.get('/api/engagement/daily-challenges', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      console.log(`🎯 Loading daily challenges for ${userId}`);
+      
+      const challenges = [
+        {
+          id: 'create_capsule_daily',
+          title: 'Truth Seeker',
+          description: 'Create your first capsule today',
+          progress: 0,
+          maxProgress: 1,
+          reward: '100 GTT',
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'explore_features',
+          title: 'Feature Explorer',
+          description: 'Visit 3 different feature pages',
+          progress: 1,
+          maxProgress: 3,
+          reward: '50 GTT',
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+
+      res.json({ challenges });
+    } catch (error) {
+      console.error('Failed to load challenges:', error);
+      res.status(500).json({ error: 'Failed to load challenges' });
+    }
+  });
+
+  app.post('/api/engagement/complete-challenge/:challengeId', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { challengeId } = req.params;
+      console.log(`🏆 Challenge completed by ${userId}:`, challengeId);
+
+      res.json({ 
+        success: true, 
+        reward: '100 GTT',
+        message: 'Congratulations! You earned 100 GTT!'
+      });
+    } catch (error) {
+      console.error('Failed to complete challenge:', error);
+      res.status(500).json({ error: 'Failed to complete challenge' });
+    }
+  });
+
+  app.get('/api/personalization/profile', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      console.log(`🧠 Loading personality profile for ${userId}`);
+      
+      const personality = {
+        traits: {
+          explorer: 75,
+          creator: 60,
+          social: 50,
+          analytical: 40,
+          collector: 30
+        },
+        preferences: {
+          contentTypes: ['personal_memory', 'wisdom'],
+          activityTimes: ['evening'],
+          engagementStyle: 'guided',
+          riskTolerance: 'moderate'
+        },
+        journey: {
+          stage: 'explorer',
+          completedActions: [],
+          skillLevels: {},
+          interests: []
+        }
+      };
+
+      res.json({ personality });
+    } catch (error) {
+      console.error('Failed to load profile:', error);
+      res.status(500).json({ error: 'Failed to load profile' });
+    }
+  });
+
+  app.post('/api/personalization/track', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { action, path, timestamp } = req.body;
+      console.log(`📈 Tracking behavior for ${userId}:`, { action, path, timestamp });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Failed to track behavior:', error);
+      res.status(500).json({ error: 'Failed to track behavior' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
