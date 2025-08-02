@@ -139,7 +139,7 @@ export default function EnhancedProfileDashboard() {
 
   // Fetch user profile
   const { data: profile, isLoading } = useQuery({
-    queryKey: ["/api/profile", user?.id],
+    queryKey: ["/api/profile", user?.id || "demo-1754024933907"],
     enabled: !!user?.id,
     retry: false,
   });

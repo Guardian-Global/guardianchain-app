@@ -429,6 +429,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ success: true, message: 'Profile updated successfully' });
   });
 
+  // Profile data endpoint
+  app.get('/api/profile/:userId', isDebugAuthenticated, (req: any, res) => {
+    console.log('🔵 DEBUG: Getting profile for user:', req.params.userId);
+    const userId = req.params.userId;
+    
+    // Mock profile data - replace with actual database lookup
+    const mockProfile = {
+      id: userId,
+      email: 'debug@guardianchain.app',
+      firstName: 'Debug',
+      lastName: 'User', 
+      displayName: 'Debug User',
+      bio: 'Guardian of truth and digital sovereignty',
+      profileImageUrl: '/assets/default-avatar.png',
+      coverImageUrl: '/assets/default-cover.jpg',
+      location: 'Global',
+      website: 'https://guardianchain.app',
+      occupation: 'Truth Seeker',
+      interests: ['Blockchain', 'Truth Verification', 'Digital Sovereignty'],
+      tier: 'EXPLORER',
+      roles: ['USER'],
+      isFounder: false,
+      isVerified: true,
+      stats: {
+        capsulesCreated: 3,
+        totalYieldEarned: 127.50,
+        verificationScore: 87,
+        followerCount: 42,
+        followingCount: 18,
+        gttBalance: 0
+      },
+      preferences: {
+        theme: 'dark',
+        emailNotifications: true,
+        pushNotifications: false,
+        aiAssistantEnabled: true,
+        publicProfile: true,
+        showStats: true,
+        allowMessages: true
+      },
+      createdAt: new Date().toISOString()
+    };
+    
+    res.json(mockProfile);
+  });
+
   app.get('/api/profile/featured-capsules', isDebugAuthenticated, (req: any, res) => {
     console.log('⭐ Featured capsules requested');
     res.json({
