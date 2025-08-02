@@ -28,7 +28,7 @@ export function useUserTier() {
         setIsLoading(true);
         
         // Get user ID from auth context  
-        const userId = user.id || (user as any).sub || user.email;
+        const userId = user?.id || (user as any)?.sub || user?.email;
         if (!userId) {
           // User ID validation removed for production
           setTier("guest");
@@ -36,7 +36,7 @@ export function useUserTier() {
         }
 
         // Onboard user if new
-        const onboardResult = await onboardUser(userId, user.email);
+        const onboardResult = await onboardUser(userId, user?.email || '');
         
         if (onboardResult.success) {
           setTier(onboardResult.tier || "guest");
@@ -62,7 +62,7 @@ export function useUserTier() {
   const upgradeTier = async (newTier: "guest" | "explorer" | "pro" | "enterprise") => {
     if (!user) return { success: false, error: "No authenticated user" };
 
-    const userId = user.id || (user as any).sub || user.email;
+    const userId = user?.id || (user as any)?.sub || user?.email;
     if (!userId) return { success: false, error: "No user ID available" };
 
     try {
@@ -84,7 +84,7 @@ export function useUserTier() {
   const refreshTier = async () => {
     if (!user) return;
 
-    const userId = user.id || (user as any).sub || user.email;
+    const userId = user?.id || (user as any)?.sub || user?.email;
     if (!userId) return;
 
     try {
