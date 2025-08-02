@@ -138,7 +138,7 @@ import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./features/payments/BillingDashboard";
-import Landing from "./pages/Landing";
+// Landing page removed - using UltimateHomepage
 import { useAuth } from "./hooks/useAuth";
 // Unified auth hooks removed - using simplified useAuth
 import { HelmetProvider } from "react-helmet-async";
@@ -189,8 +189,8 @@ import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
 import YieldDashboard from "./pages/dashboard/Yield";
-import ReferralDashboard from "./pages/Referral";
-import VaultExplorer from "./pages/Vault";
+import ReferralDashboard from "./pages/referral";
+import VaultExplorer from "./pages/vault";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
