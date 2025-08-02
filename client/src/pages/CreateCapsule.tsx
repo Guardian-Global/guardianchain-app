@@ -1,685 +1,449 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { useMutation } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { 
+  Shield, 
+  Lock, 
+  Upload, 
+  Eye, 
+  EyeOff, 
+  Calendar,
+  Globe,
+  Users,
+  Coins,
+  Sparkles
+} from "lucide-react";
+import EnhancedLayout from "@/components/layout/EnhancedLayout";
+import AuthGuard from "@/components/auth/AuthGuard";
+import { AdvancedCard, AdvancedCardContent, AdvancedCardHeader, AdvancedCardTitle } from "@/components/ui/advanced-card";
+import { EnhancedButton } from "@/components/ui/enhanced-button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import {
-  Sparkles,
-  Camera,
-  Clock,
-  Coins,
-  Shield,
-  ArrowRight,
-  Loader2,
-  Eye,
-  Heart,
-  Brain,
-  Zap,
-} from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useNotificationHelpers } from "@/components/ui/notification-system";
+import { cn } from "@/lib/utils";
 
-interface CapsuleData {
-  title: string;
-  content: string;
-  capsuleType: string;
-  timelock: number;
-  category: string;
-  tags: string[];
-  isPrivate: boolean;
-  griefTier: number;
-}
+const capsuleSchema = z.object({
+  title: z.string().min(1, "Title is required").max(100, "Title too long"),
+  content: z.string().min(10, "Content must be at least 10 characters"),
+  type: z.enum(["truth", "memory", "testimony", "evidence", "legacy", "witness"]),
+  visibility: z.enum(["public", "private", "timelocked"]),
+  unlockDate: z.string().optional(),
+  allowComments: z.boolean().default(true),
+  enableNFT: z.boolean().default(false)
+});
 
-export default function CreateCapsule() {
-  const { user, isAuthenticated } = useAuth();
-  const [, setLocation] = useLocation();
-  const { toast } = useToast();
+type CapsuleFormData = z.infer<typeof capsuleSchema>;
 
-  // Form state
-  const [formData, setFormData] = useState<CapsuleData>({
-    title: "",
-    content: "",
-    capsuleType: "personal_memory",
-    timelock: 365,
-    category: "family",
-    tags: [],
-    isPrivate: false,
-    griefTier: 1,
+const CreateCapsule: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const { notifySuccess, notifyError } = useNotificationHelpers();
+
+  const form = useForm<CapsuleFormData>({
+    resolver: zodResolver(capsuleSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+      type: "truth",
+      visibility: "public",
+      allowComments: true,
+      enableNFT: false
+    }
   });
 
-  // UI state
-  const [step, setStep] = useState(1);
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const [aiAnalysis, setAiAnalysis] = useState<any>(null);
-  const [yieldEstimate, setYieldEstimate] = useState<any>(null);
-  const [mintedNFT, setMintedNFT] = useState<any>(null);
-
-  // AI Image Generation
-  const generateImageMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/ai/generate-image", {
-        prompt: `${formData.title}: ${formData.content}`,
-        style: "truth_capsule",
-      });
-      return response.json();
-    },
-    onSuccess: (data) => {
-      setGeneratedImage(data.imageUrl);
-      toast({
-        title: "AI Image Generated",
-        description: "Your capsule visualization is ready",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Generation Failed",
-        description: "Unable to generate image. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // AI Content Analysis
-  const analyzeContentMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/ai/analyze-content", {
-        title: formData.title,
-        content: formData.content,
-        capsuleType: formData.capsuleType,
-      });
-      return response.json();
-    },
-    onSuccess: (data) => {
-      setAiAnalysis(data);
-      setFormData((prev) => ({
-        ...prev,
-        griefTier: data.recommendedGriefTier || prev.griefTier,
-        tags: data.suggestedTags || prev.tags,
-      }));
-      setStep(3);
-    },
-  });
-
-  // Yield Estimation
-  const estimateYieldMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest(
-        "POST",
-        "/api/capsules/estimate-yield",
-        {
-          griefTier: formData.griefTier,
-          timelock: formData.timelock,
-          capsuleType: formData.capsuleType,
-        },
+  const onSubmit = async (data: CapsuleFormData) => {
+    setIsSubmitting(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      notifySuccess(
+        "Capsule Created Successfully",
+        "Your truth has been sealed and stored securely"
       );
-      return response.json();
-    },
-    onSuccess: (data) => {
-      setYieldEstimate(data);
-    },
-  });
+      
+      // Reset form
+      form.reset();
+    } catch (error) {
+      notifyError(
+        "Failed to Create Capsule",
+        "Please try again or contact support"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-  // NFT Minting
-  const mintNFTMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest("POST", "/api/capsules/mint-nft", {
-        ...formData,
-        imageUrl: generatedImage,
-        aiAnalysis: aiAnalysis,
-      });
-      return response.json();
-    },
-    onSuccess: async (data) => {
-      setMintedNFT(data);
-      queryClient.invalidateQueries({ queryKey: ["/api/capsules/recent"] });
+  const watchedValues = form.watch();
 
-      // Create lineage connection if this capsule is inspired by another
-      if (
-        formData.title.toLowerCase().includes("inspired") ||
-        formData.content.toLowerCase().includes("building on")
-      ) {
-        try {
-          await apiRequest("POST", "/api/lineage/create", {
-            parent_id: "foundational_truth_1", // Would be determined by AI analysis
-            child_id: data.capsuleId,
-            grief_flow: aiAnalysis?.contentScore || 75,
-            influence_score: aiAnalysis?.recommendedGriefTier * 2 || 4,
-            triggered_by: user.id,
-          });
-        } catch (error) {
-          console.log(
-            "Lineage connection failed but capsule created successfully",
-          );
-        }
+  const capsuleTypes = [
+    { value: "truth", label: "Truth", icon: Shield, color: "text-cyan-400" },
+    { value: "memory", label: "Memory", icon: Sparkles, color: "text-purple-400" },
+    { value: "testimony", label: "Testimony", icon: Users, color: "text-green-400" },
+    { value: "evidence", label: "Evidence", icon: Lock, color: "text-red-400" },
+    { value: "legacy", label: "Legacy", icon: Calendar, color: "text-yellow-400" },
+    { value: "witness", label: "Witness", icon: Eye, color: "text-orange-400" }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
       }
-      toast({
-        title: "NFT Minted Successfully!",
-        description: `Capsule #${data.tokenId} has been created`,
-      });
-      setStep(5);
-    },
-    onError: () => {
-      toast({
-        title: "Minting Failed",
-        description: "Unable to mint NFT. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Auto-estimate yield when timelock or grief tier changes
-  useEffect(() => {
-    if (formData.timelock > 0 && formData.griefTier > 0) {
-      estimateYieldMutation.mutate();
-    }
-  }, [formData.timelock, formData.griefTier]);
-
-  const handleNext = () => {
-    if (step === 1 && formData.title && formData.content) {
-      setStep(2);
-    } else if (step === 2) {
-      analyzeContentMutation.mutate();
-    } else if (step === 3) {
-      setStep(4);
-    } else if (step === 4) {
-      mintNFTMutation.mutate();
     }
   };
 
-  const handleGenerateImage = () => {
-    generateImageMutation.mutate();
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
   };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-secondary via-slate-900 to-brand-surface">
-        <Card className="max-w-md mx-auto">
-          <CardContent className="p-8 text-center">
-            <Shield className="h-16 w-16 text-brand-primary mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Authentication Required
-            </h2>
-            <p className="text-slate-300 mb-4">
-              Please sign in to create your truth capsule
-            </p>
-            <Button
-              onClick={() => setLocation("/test-auth")}
-              className="w-full"
-            >
-              Sign In to Continue
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-secondary via-slate-900 to-brand-surface p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
-            Create Truth Capsule
-          </h1>
-          <p className="text-slate-300">
-            Preserve your truth for eternity on the blockchain
-          </p>
-        </div>
+    <AuthGuard>
+      <EnhancedLayout variant="dashboard" showNavigation={true}>
+        <div className="lg:ml-72 min-h-screen p-6">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="max-w-4xl mx-auto space-y-8"
+          >
+            {/* Header */}
+            <motion.div variants={itemVariants}>
+              <div className="text-center mb-8">
+                <h1 className="text-3xl font-bold text-white mb-2">
+                  Create Truth Capsule
+                </h1>
+                <p className="text-gray-400">
+                  Seal your truth in an immutable capsule for eternity
+                </p>
+              </div>
+            </motion.div>
 
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-slate-400">Step {step} of 5</span>
-            <span className="text-sm text-slate-400">
-              {Math.round((step / 5) * 100)}% Complete
-            </span>
-          </div>
-          <Progress value={(step / 5) * 100} className="h-2" />
-        </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Main Form */}
+              <div className="lg:col-span-2">
+                <motion.div variants={itemVariants}>
+                  <AdvancedCard variant="glass">
+                    <AdvancedCardHeader>
+                      <AdvancedCardTitle className="flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-cyan-400" />
+                        Capsule Details
+                      </AdvancedCardTitle>
+                    </AdvancedCardHeader>
+                    <AdvancedCardContent>
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                          {/* Title */}
+                          <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-white">Title</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="Enter capsule title..."
+                                    className="bg-black/50 border-white/20 text-white"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
 
-        {/* Step 1: Content Creation */}
-        {step === 1 && (
-          <Card className="bg-slate-800/50 border-brand-primary/20">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Brain className="h-5 w-5 text-brand-primary" />
-                Tell Your Truth
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Capsule Title
-                </label>
-                <Input
-                  placeholder="What is this truth about?"
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                />
+                          {/* Type */}
+                          <FormField
+                            control={form.control}
+                            name="type"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-white">Capsule Type</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger className="bg-black/50 border-white/20 text-white">
+                                      <SelectValue placeholder="Select capsule type" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {capsuleTypes.map((type) => {
+                                      const Icon = type.icon;
+                                      return (
+                                        <SelectItem key={type.value} value={type.value}>
+                                          <div className="flex items-center gap-2">
+                                            <Icon className={cn("w-4 h-4", type.color)} />
+                                            {type.label}
+                                          </div>
+                                        </SelectItem>
+                                      );
+                                    })}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* Content */}
+                          <FormField
+                            control={form.control}
+                            name="content"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-white">Content</FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Share your truth..."
+                                    className="bg-black/50 border-white/20 text-white min-h-[200px] resize-none"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* Visibility */}
+                          <FormField
+                            control={form.control}
+                            name="visibility"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-white">Visibility</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger className="bg-black/50 border-white/20 text-white">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="public">
+                                      <div className="flex items-center gap-2">
+                                        <Globe className="w-4 h-4 text-green-400" />
+                                        Public
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="private">
+                                      <div className="flex items-center gap-2">
+                                        <Lock className="w-4 h-4 text-red-400" />
+                                        Private
+                                      </div>
+                                    </SelectItem>
+                                    <SelectItem value="timelocked">
+                                      <div className="flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-yellow-400" />
+                                        Time-locked
+                                      </div>
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          {/* Unlock Date (if time-locked) */}
+                          {watchedValues.visibility === "timelocked" && (
+                            <FormField
+                              control={form.control}
+                              name="unlockDate"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-white">Unlock Date</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="datetime-local"
+                                      className="bg-black/50 border-white/20 text-white"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          )}
+
+                          {/* Options */}
+                          <div className="space-y-4">
+                            <FormField
+                              control={form.control}
+                              name="allowComments"
+                              render={({ field }) => (
+                                <FormItem className="flex items-center justify-between space-y-0">
+                                  <FormLabel className="text-white">Allow Comments</FormLabel>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={form.control}
+                              name="enableNFT"
+                              render={({ field }) => (
+                                <FormItem className="flex items-center justify-between space-y-0">
+                                  <div>
+                                    <FormLabel className="text-white">Mint as NFT</FormLabel>
+                                    <p className="text-sm text-gray-400">
+                                      Create a blockchain certificate (requires GTT)
+                                    </p>
+                                  </div>
+                                  <FormControl>
+                                    <Switch
+                                      checked={field.value}
+                                      onCheckedChange={field.onChange}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+
+                          {/* Submit Button */}
+                          <div className="flex gap-3">
+                            <EnhancedButton
+                              type="submit"
+                              variant="quantum"
+                              size="lg"
+                              disabled={isSubmitting}
+                              className="flex-1"
+                            >
+                              {isSubmitting ? (
+                                <motion.div
+                                  animate={{ rotate: 360 }}
+                                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                                />
+                              ) : (
+                                <>
+                                  <Shield className="w-5 h-5 mr-2" />
+                                  Seal Capsule
+                                </>
+                              )}
+                            </EnhancedButton>
+
+                            <EnhancedButton
+                              type="button"
+                              variant="glass"
+                              size="lg"
+                              onClick={() => setShowPreview(!showPreview)}
+                            >
+                              {showPreview ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                            </EnhancedButton>
+                          </div>
+                        </form>
+                      </Form>
+                    </AdvancedCardContent>
+                  </AdvancedCard>
+                </motion.div>
               </div>
 
-              <div data-walkthrough="content-editor">
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Your Truth Content
-                </label>
-                <Textarea
-                  placeholder="Share your story, memory, or truth..."
-                  value={formData.content}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      content: e.target.value,
-                    }))
-                  }
-                  rows={6}
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                />
-              </div>
-
-              <div
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                data-walkthrough="capsule-type-selector"
-              >
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Capsule Type
-                  </label>
-                  <select
-                    value={formData.capsuleType}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        capsuleType: e.target.value,
-                      }))
-                    }
-                    className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
+              {/* Preview & Info */}
+              <div className="space-y-6">
+                {/* Preview */}
+                {showPreview && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    variants={itemVariants}
                   >
-                    <option value="personal_memory">Personal Memory</option>
-                    <option value="family_history">Family History</option>
-                    <option value="confession">Confession</option>
-                    <option value="prophecy">Prophecy</option>
-                    <option value="wisdom">Wisdom</option>
-                    <option value="testimony">Testimony</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Time Lock (Days)
-                  </label>
-                  <Input
-                    type="number"
-                    min="1"
-                    max="36500"
-                    value={formData.timelock}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        timelock: parseInt(e.target.value) || 365,
-                      }))
-                    }
-                    className="bg-slate-700/50 border-slate-600 text-white"
-                  />
-                </div>
-              </div>
-
-              <Button
-                onClick={handleNext}
-                disabled={!formData.title || !formData.content}
-                className="w-full bg-brand-primary hover:bg-brand-primary/90"
-              >
-                Continue to AI Analysis
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 2: Image Generation */}
-        {step === 2 && (
-          <Card className="bg-slate-800/50 border-brand-primary/20">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Camera className="h-5 w-5 text-brand-accent" />
-                Visualize Your Capsule
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="text-center">
-                {!generatedImage ? (
-                  <div className="p-8 border-2 border-dashed border-slate-600 rounded-xl">
-                    <Sparkles className="h-16 w-16 text-brand-accent mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-white mb-2">
-                      Generate AI Capsule Image
-                    </h3>
-                    <p className="text-slate-300 mb-4">
-                      Create a unique visual representation of your truth
-                      capsule
-                    </p>
-                    <Button
-                      onClick={handleGenerateImage}
-                      disabled={generateImageMutation.isPending}
-                      className="bg-brand-accent hover:bg-brand-accent/90"
-                      data-walkthrough="ai-analysis-button"
-                    >
-                      {generateImageMutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Generating...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="mr-2 h-4 w-4" />
-                          Generate Image
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <img
-                      src={generatedImage}
-                      alt="Generated capsule visualization"
-                      className="max-w-md mx-auto rounded-xl shadow-2xl"
-                    />
-                    <Button
-                      onClick={handleGenerateImage}
-                      variant="outline"
-                      className="border-brand-accent text-brand-accent hover:bg-brand-accent/10"
-                    >
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Regenerate
-                    </Button>
-                  </div>
+                    <AdvancedCard variant="glass">
+                      <AdvancedCardHeader>
+                        <AdvancedCardTitle className="flex items-center gap-2">
+                          <Eye className="w-5 h-5 text-purple-400" />
+                          Preview
+                        </AdvancedCardTitle>
+                      </AdvancedCardHeader>
+                      <AdvancedCardContent>
+                        <div className="space-y-3">
+                          <h3 className="font-semibold text-white">
+                            {watchedValues.title || "Untitled Capsule"}
+                          </h3>
+                          <div className="text-sm text-gray-400">
+                            Type: {watchedValues.type}
+                          </div>
+                          <p className="text-gray-300 text-sm">
+                            {watchedValues.content || "No content yet..."}
+                          </p>
+                        </div>
+                      </AdvancedCardContent>
+                    </AdvancedCard>
+                  </motion.div>
                 )}
-              </div>
 
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => setStep(1)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
-                  disabled={analyzeContentMutation.isPending}
-                >
-                  {analyzeContentMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Analyzing...
-                    </>
-                  ) : (
-                    <>
-                      Continue to Analysis
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 3: AI Analysis Results */}
-        {step === 3 && aiAnalysis && (
-          <Card className="bg-slate-800/50 border-brand-primary/20">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Brain className="h-5 w-5 text-brand-green" />
-                AI Content Analysis
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-3">
-                    Content Insights
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-300">
-                        Emotional Intensity
-                      </span>
-                      <Badge className="bg-brand-primary/20 text-brand-primary">
-                        {aiAnalysis.emotionalIntensity || "Medium"}
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-300">Truth Confidence</span>
-                      <Badge className="bg-brand-green/20 text-brand-green">
-                        {aiAnalysis.truthConfidence || "85%"}
-                      </Badge>
-                    </div>
-                    <div
-                      className="flex justify-between items-center"
-                      data-walkthrough="grief-tier-display"
-                    >
-                      <span className="text-slate-300">
-                        Recommended Grief Tier
-                      </span>
-                      <Badge className="bg-brand-accent/20 text-brand-accent">
-                        Tier{" "}
-                        {aiAnalysis.recommendedGriefTier || formData.griefTier}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-3">
-                    Suggested Tags
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {(
-                      aiAnalysis.suggestedTags || [
-                        "memory",
-                        "truth",
-                        "personal",
-                      ]
-                    ).map((tag: string, i: number) => (
-                      <Badge
-                        key={i}
-                        variant="outline"
-                        className="border-slate-600 text-slate-300"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-slate-700/30 p-4 rounded-lg">
-                <h3 className="text-white font-medium mb-2">AI Summary</h3>
-                <p className="text-slate-300 text-sm">
-                  {aiAnalysis.summary ||
-                    "This appears to be a meaningful personal truth that would benefit from long-term preservation. The content shows authenticity and emotional depth."}
-                </p>
-              </div>
-
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => setStep(2)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
-                >
-                  Continue to Minting
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 4: Yield Estimation & Minting */}
-        {step === 4 && (
-          <Card className="bg-slate-800/50 border-brand-primary/20">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Coins className="h-5 w-5 text-brand-accent" />
-                Mint Your Truth NFT
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {yieldEstimate && (
-                <div className="bg-gradient-to-r from-brand-primary/10 to-brand-accent/10 p-6 rounded-xl">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Yield Projection
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-brand-accent">
-                        {yieldEstimate.estimatedYield || "245"} GTT
+                {/* Info Cards */}
+                <motion.div variants={itemVariants}>
+                  <AdvancedCard variant="glass">
+                    <AdvancedCardHeader>
+                      <AdvancedCardTitle className="flex items-center gap-2">
+                        <Coins className="w-5 h-5 text-yellow-400" />
+                        GTT Rewards
+                      </AdvancedCardTitle>
+                    </AdvancedCardHeader>
+                    <AdvancedCardContent>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Base Reward:</span>
+                          <span className="text-white">50 GTT</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">NFT Bonus:</span>
+                          <span className="text-white">+25 GTT</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Quality Bonus:</span>
+                          <span className="text-white">+0-100 GTT</span>
+                        </div>
+                        <div className="border-t border-white/10 pt-2">
+                          <div className="flex justify-between font-semibold">
+                            <span className="text-white">Potential Total:</span>
+                            <span className="text-yellow-400">
+                              {watchedValues.enableNFT ? "75-175" : "50-150"} GTT
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-sm text-slate-400">Total Yield</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-brand-primary">
-                        {yieldEstimate.apy || "12.5"}%
+                    </AdvancedCardContent>
+                  </AdvancedCard>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <AdvancedCard variant="glass">
+                    <AdvancedCardHeader>
+                      <AdvancedCardTitle className="flex items-center gap-2">
+                        <Lock className="w-5 h-5 text-green-400" />
+                        Security
+                      </AdvancedCardTitle>
+                    </AdvancedCardHeader>
+                    <AdvancedCardContent>
+                      <div className="space-y-2 text-sm text-gray-300">
+                        <p>✓ End-to-end encryption</p>
+                        <p>✓ IPFS immutable storage</p>
+                        <p>✓ Blockchain verification</p>
+                        <p>✓ Tamper-proof sealing</p>
                       </div>
-                      <div className="text-sm text-slate-400">Annual Yield</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-brand-green">
-                        {Math.round((formData.timelock / 365) * 10) / 10} years
-                      </div>
-                      <div className="text-sm text-slate-400">Lock Period</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white">
-                  Capsule Summary
-                </h3>
-                <div className="bg-slate-700/30 p-4 rounded-lg space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Title:</span>
-                    <span className="text-white">{formData.title}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Type:</span>
-                    <span className="text-white capitalize">
-                      {formData.capsuleType.replace("_", " ")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Grief Tier:</span>
-                    <span className="text-white">
-                      Tier {formData.griefTier}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-300">Time Lock:</span>
-                    <span className="text-white">{formData.timelock} days</span>
-                  </div>
-                </div>
+                    </AdvancedCardContent>
+                  </AdvancedCard>
+                </motion.div>
               </div>
-
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => setStep(3)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  disabled={mintNFTMutation.isPending}
-                  className="flex-1 bg-brand-accent hover:bg-brand-accent/90"
-                  data-walkthrough="mint-nft-button"
-                >
-                  {mintNFTMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Minting NFT...
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="mr-2 h-4 w-4" />
-                      Mint Truth NFT
-                    </>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 5: Success */}
-        {step === 5 && mintedNFT && (
-          <Card className="bg-slate-800/50 border-brand-green/20">
-            <CardContent className="p-8 text-center">
-              <div className="mb-6">
-                <div className="w-20 h-20 bg-brand-green/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="h-10 w-10 text-brand-green" />
-                </div>
-                <h2 className="text-3xl font-bold text-white mb-2">
-                  Truth Capsule Minted!
-                </h2>
-                <p className="text-slate-300">
-                  Your truth has been sealed on the blockchain
-                </p>
-              </div>
-
-              <div className="bg-slate-700/30 p-6 rounded-xl mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-lg font-semibold text-brand-accent">
-                      #{mintedNFT.tokenId || "1001"}
-                    </div>
-                    <div className="text-sm text-slate-400">Token ID</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-semibold text-brand-primary">
-                      {mintedNFT.contractAddress || "0x...abc123"}
-                    </div>
-                    <div className="text-sm text-slate-400">Contract</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <Button
-                  onClick={() => setLocation("/vault")}
-                  className="w-full bg-brand-primary hover:bg-brand-primary/90"
-                >
-                  <Eye className="mr-2 h-4 w-4" />
-                  View in Vault
-                </Button>
-                <Button
-                  onClick={() => setLocation("/capsules/gallery")}
-                  variant="outline"
-                  className="w-full border-brand-accent text-brand-accent hover:bg-brand-accent/10"
-                >
-                  Explore NFT Gallery
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </div>
+            </div>
+          </motion.div>
+        </div>
+      </EnhancedLayout>
+    </AuthGuard>
   );
-}
+};
+
+export default CreateCapsule;

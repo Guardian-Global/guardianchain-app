@@ -1,18 +1,14 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, AlertTriangle, Info, AlertCircle, Zap } from "lucide-react";
+import { X, CheckCircle, AlertTriangle, Info, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface Notification {
+interface Notification {
   id: string;
-  type: "success" | "error" | "warning" | "info" | "quantum";
+  type: "success" | "error" | "warning" | "info";
   title: string;
   message?: string;
   duration?: number;
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
   persistent?: boolean;
 }
 
@@ -23,141 +19,22 @@ interface NotificationContextType {
   clearAll: () => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | null>(null);
-
-export const useNotifications = () => {
-  const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error("useNotifications must be used within NotificationProvider");
-  }
-  return context;
-};
-
-const NotificationItem: React.FC<{
-  notification: Notification;
-  onRemove: (id: string) => void;
-}> = ({ notification, onRemove }) => {
-  const { id, type, title, message, action, persistent } = notification;
-
-  const icons = {
-    success: CheckCircle,
-    error: AlertCircle,
-    warning: AlertTriangle,
-    info: Info,
-    quantum: Zap
-  };
-
-  const styles = {
-    success: {
-      bg: "bg-gradient-to-r from-green-500/20 to-emerald-500/20",
-      border: "border-green-400/30",
-      icon: "text-green-400"
-    },
-    error: {
-      bg: "bg-gradient-to-r from-red-500/20 to-pink-500/20",
-      border: "border-red-400/30",
-      icon: "text-red-400"
-    },
-    warning: {
-      bg: "bg-gradient-to-r from-yellow-500/20 to-orange-500/20",
-      border: "border-yellow-400/30",
-      icon: "text-yellow-400"
-    },
-    info: {
-      bg: "bg-gradient-to-r from-blue-500/20 to-cyan-500/20",
-      border: "border-blue-400/30",
-      icon: "text-blue-400"
-    },
-    quantum: {
-      bg: "bg-gradient-to-r from-purple-500/20 via-cyan-500/20 to-yellow-500/20",
-      border: "border-purple-400/30",
-      icon: "text-purple-400"
-    }
-  };
-
-  const Icon = icons[type];
-  const style = styles[type];
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: -50, scale: 0.3 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -50, scale: 0.5 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className={cn(
-        "relative overflow-hidden rounded-lg border backdrop-blur-md shadow-lg max-w-sm w-full",
-        style.bg,
-        style.border
-      )}
-    >
-      {/* Quantum shimmer effect */}
-      {type === "quantum" && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-100%] animate-[shimmer_2s_infinite]" />
-      )}
-
-      <div className="p-4">
-        <div className="flex items-start gap-3">
-          <Icon className={cn("w-5 h-5 mt-0.5 flex-shrink-0", style.icon)} />
-          
-          <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-white">{title}</h4>
-            {message && (
-              <p className="mt-1 text-sm text-gray-300">{message}</p>
-            )}
-            
-            {action && (
-              <button
-                onClick={action.onClick}
-                className="mt-3 px-3 py-1 text-xs font-medium bg-white/10 hover:bg-white/20 rounded-md transition-colors text-white"
-              >
-                {action.label}
-              </button>
-            )}
-          </div>
-
-          {!persistent && (
-            <button
-              onClick={() => onRemove(id)}
-              className="p-1 hover:bg-white/10 rounded-md transition-colors text-gray-400 hover:text-white"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Progress bar for auto-dismiss */}
-      {!persistent && (
-        <motion.div
-          initial={{ scaleX: 1 }}
-          animate={{ scaleX: 0 }}
-          transition={{ duration: notification.duration || 5, ease: "linear" }}
-          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 origin-left"
-        />
-      )}
-    </motion.div>
-  );
-};
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const addNotification = useCallback((notification: Omit<Notification, "id">) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    const newNotification: Notification = {
-      id,
-      duration: 5000,
-      ...notification
-    };
+    const id = Math.random().toString(36).substr(2, 9);
+    const newNotification = { ...notification, id };
+    
+    setNotifications(prev => [...prev, newNotification]);
 
-    setNotifications(prev => [newNotification, ...prev]);
-
-    // Auto-remove after duration if not persistent
-    if (!newNotification.persistent) {
+    // Auto-remove after duration (default 5 seconds)
+    if (!notification.persistent) {
       setTimeout(() => {
         removeNotification(id);
-      }, newNotification.duration);
+      }, notification.duration || 5000);
     }
   }, []);
 
@@ -177,42 +54,137 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       clearAll
     }}>
       {children}
-      
-      {/* Notification Container */}
-      <div className="fixed top-4 right-4 z-[100] space-y-2 pointer-events-none">
-        <AnimatePresence mode="popLayout">
-          {notifications.map(notification => (
-            <div key={notification.id} className="pointer-events-auto">
-              <NotificationItem
-                notification={notification}
-                onRemove={removeNotification}
-              />
-            </div>
-          ))}
-        </AnimatePresence>
-      </div>
+      <NotificationContainer />
     </NotificationContext.Provider>
   );
 };
 
-// Convenience hooks for different notification types
+const NotificationContainer: React.FC = () => {
+  const context = useContext(NotificationContext);
+  if (!context) return null;
+
+  const { notifications, removeNotification } = context;
+
+  return (
+    <div className="fixed top-4 right-4 z-[9999] space-y-3 max-w-sm w-full">
+      <AnimatePresence>
+        {notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            notification={notification}
+            onRemove={removeNotification}
+          />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const NotificationItem: React.FC<{
+  notification: Notification;
+  onRemove: (id: string) => void;
+}> = ({ notification, onRemove }) => {
+  const getIcon = () => {
+    switch (notification.type) {
+      case "success":
+        return <CheckCircle className="w-5 h-5 text-green-400" />;
+      case "error":
+        return <AlertCircle className="w-5 h-5 text-red-400" />;
+      case "warning":
+        return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
+      case "info":
+        return <Info className="w-5 h-5 text-blue-400" />;
+      default:
+        return <Info className="w-5 h-5 text-gray-400" />;
+    }
+  };
+
+  const getColors = () => {
+    switch (notification.type) {
+      case "success":
+        return "border-green-500/30 bg-green-500/10";
+      case "error":
+        return "border-red-500/30 bg-red-500/10";
+      case "warning":
+        return "border-yellow-500/30 bg-yellow-500/10";
+      case "info":
+        return "border-blue-500/30 bg-blue-500/10";
+      default:
+        return "border-gray-500/30 bg-gray-500/10";
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 300, scale: 0.8 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, x: 300, scale: 0.8 }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      className={cn(
+        "relative p-4 rounded-lg border backdrop-blur-md shadow-lg",
+        "bg-black/80",
+        getColors()
+      )}
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0 mt-0.5">
+          {getIcon()}
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          <h4 className="text-sm font-medium text-white mb-1">
+            {notification.title}
+          </h4>
+          {notification.message && (
+            <p className="text-sm text-gray-300">
+              {notification.message}
+            </p>
+          )}
+        </div>
+
+        <button
+          onClick={() => onRemove(notification.id)}
+          className="flex-shrink-0 p-1 rounded-md hover:bg-white/10 transition-colors"
+        >
+          <X className="w-4 h-4 text-gray-400" />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+// Helper hooks
+export const useNotifications = () => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error("useNotifications must be used within NotificationProvider");
+  }
+  return context;
+};
+
 export const useNotificationHelpers = () => {
   const { addNotification } = useNotifications();
 
+  const notifySuccess = useCallback((title: string, message?: string) => {
+    addNotification({ type: "success", title, message });
+  }, [addNotification]);
+
+  const notifyError = useCallback((title: string, message?: string) => {
+    addNotification({ type: "error", title, message });
+  }, [addNotification]);
+
+  const notifyWarning = useCallback((title: string, message?: string) => {
+    addNotification({ type: "warning", title, message });
+  }, [addNotification]);
+
+  const notifyInfo = useCallback((title: string, message?: string) => {
+    addNotification({ type: "info", title, message });
+  }, [addNotification]);
+
   return {
-    notifySuccess: (title: string, message?: string) =>
-      addNotification({ type: "success", title, message }),
-    
-    notifyError: (title: string, message?: string) =>
-      addNotification({ type: "error", title, message }),
-    
-    notifyWarning: (title: string, message?: string) =>
-      addNotification({ type: "warning", title, message }),
-    
-    notifyInfo: (title: string, message?: string) =>
-      addNotification({ type: "info", title, message }),
-    
-    notifyQuantum: (title: string, message?: string) =>
-      addNotification({ type: "quantum", title, message }),
+    notifySuccess,
+    notifyError,
+    notifyWarning,
+    notifyInfo
   };
 };

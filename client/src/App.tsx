@@ -11,6 +11,7 @@ import { AssetProvider } from "@/components/assets/AssetProvider";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import EnhancedNavigation from "@/components/navigation/EnhancedNavigation";
 import NavigationProvider from "@/components/navigation/NavigationProvider";
+import FloatingActionMenu from "@/components/layout/FloatingActionMenu";
 import NavigationMenu from "@/components/NavigationMenu";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
@@ -25,6 +26,7 @@ import { GuardianBootHook } from "@/components/GuardianBootHook";
 // UltimateHomepage consolidated into EliteHomepage - archived
 import EliteHomepage from "@/pages/EliteHomepage";
 import CleanHomepage from "@/pages/CleanHomepage";
+import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import Partners from "@/pages/Partners";
 // MobileHome consolidated into responsive EliteHomepage - archived
 import CreateCapsule from "@/pages/CreateCapsule";
@@ -299,11 +301,11 @@ function Router() {
             <Switch>
               <Route
                 path="/legacy"
-                component={lazy(() => import("./pages/EnhancedDashboard"))}
+                component={EnhancedDashboard}
               />
               <Route
                 path="/dashboard"
-                component={lazy(() => import("./pages/EnhancedDashboard"))}
+                component={EnhancedDashboard}
               />
               <Route path="/dashboard/yield" component={YieldDashboard} />
               <Route path="/dashboard/analytics" component={Analytics} />
@@ -842,10 +844,14 @@ export default function App() {
                     <AssetProvider>
                       <TooltipProvider>
                         <NavigationProvider>
-                          <GuardianBootHook />
-                          <main className="flex-1">
-                            <Router />
-                          </main>
+                          <NotificationProvider>
+                            <GuardianBootHook />
+                            <main className="flex-1">
+                              <Router />
+                              <FloatingActionMenu />
+                              <LiveTokenTracker position="top-right" />
+                            </main>
+                          </NotificationProvider>
                         </NavigationProvider>
                         <Toaster />
                         <NavigationMenu />
