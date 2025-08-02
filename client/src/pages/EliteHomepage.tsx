@@ -37,6 +37,8 @@ import GlowButton from '@/components/ui/GlowButton';
 import CardGlass from '@/components/ui/CardGlass';
 import QuantumCard from '@/components/ui/QuantumCard';
 import Web3Button from '@/components/ui/Web3Button';
+import EnhancedButton from '@/components/ui/EnhancedButton';
+import AdvancedCard from '@/components/ui/AdvancedCard';
 
 // Platform Stats Component with Live Data
 function LivePlatformStats() {
@@ -171,6 +173,64 @@ function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+        <div className="text-center">
+          <Badge variant="secondary" className="mb-4 px-4 py-2 text-sm quantum-field text-black border-0 animate-morphic-pulse">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Revolutionary Web3 Truth Platform
+          </Badge>
+          <h1 className="text-6xl md:text-8xl font-display font-black mb-6 text-gradient-quantum leading-tight tracking-tight animate-prismatic-shift">
+            Guardian<span className="text-gradient-truth">Chain</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-cyan-300 mb-8 max-w-3xl mx-auto leading-relaxed font-web3">
+            Sovereign truth infrastructure for time-locked proof, 
+            grief-score yield, and capsule monetization
+          </p>
+
+          {/* Enhanced Action Buttons */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
+            <EnhancedButton
+              variant="quantum"
+              size="lg"
+              shimmer
+              glow
+              rightIcon={<ArrowRight className="w-5 h-5" />}
+            >
+              {isAuthenticated ? "Enter Dashboard" : "Start Journey"}
+            </EnhancedButton>
+            
+            <EnhancedButton
+              variant="neural"
+              size="lg"
+              pulse
+              rightIcon={<Play className="w-5 h-5" />}
+            >
+              Watch Demo
+            </EnhancedButton>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-cyan-300/80 mb-8">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-green-400" />
+              Blockchain Secured
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-blue-400" />
+              Community Verified
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-purple-400" />
+              10,000+ Guardians
+            </div>
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-yellow-400" />
+              #1 Truth Platform
+            </div>
+          </div>
+
+          {/* Live Platform Stats */}
+          <LivePlatformStats />
+        </div>
         {/* Quantum Logo with Enhanced Styling */}
         <div className="mb-8 quantum-field rounded-full w-24 h-24 mx-auto flex items-center justify-center">
           <img 
