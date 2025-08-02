@@ -22,6 +22,7 @@ export interface IStorage {
   // Capsule operations
   getCapsule(id: string): Promise<Capsule | undefined>;
   getCapsulesByUser(userId: string): Promise<Capsule[]>;
+  getAllCapsules(): Promise<Capsule[]>;
   createCapsule(capsule: InsertCapsule): Promise<Capsule>;
   updateCapsule(id: string, capsule: Partial<Capsule>): Promise<Capsule>;
   deleteCapsule(id: string): Promise<void>;
@@ -68,6 +69,13 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(capsules)
       .where(eq(capsules.authorId, userId))
+      .orderBy(desc(capsules.createdAt));
+  }
+
+  async getAllCapsules(): Promise<Capsule[]> {
+    return await db
+      .select()
+      .from(capsules)
       .orderBy(desc(capsules.createdAt));
   }
 

@@ -73,6 +73,7 @@ export async function decryptCapsule({
     }
   } catch (error) {
     console.error("Client decryption error:", error);
-    throw new Error(`Failed to decrypt capsule: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to decrypt capsule: ${errorMessage}`);
   }
 }

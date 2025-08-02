@@ -49,6 +49,7 @@ import GuardianPassPage from "@/pages/guardian-pass";
 import VaultDashboard from "@/components/VaultDashboard";
 import Govern from "@/pages/govern";
 import NotFound from "./pages/NotFound";
+import Search from "./pages/Search";
 
 // Veritas Tools Components
 import VeritasSealPage from "./pages/veritas-seal";
@@ -304,7 +305,7 @@ function Router() {
         <Route path="/smri" component={lazy(() => import("./pages/ReputationIndex"))} />
         <Route path="/smri-dashboard" component={lazy(() => import("./pages/SMRIDashboard"))} />
         <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
-        <Route path="/search" component={lazy(() => import("./pages/SearchPage"))} />
+        <Route path="/search" component={Search} />
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />

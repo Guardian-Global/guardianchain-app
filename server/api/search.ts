@@ -1,164 +1,115 @@
-import { Request, Response } from "express";
+import { Router } from "express";
+import { z } from "zod";
+import { storage } from "../storage";
 
-// Initialize Supabase client for server-side operations
-const createSupabaseClient = () => {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error("Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to environment variables.");
-  }
-  
-  return {
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    key: process.env.SUPABASE_SERVICE_ROLE_KEY
-  };
-};
+const router = Router();
 
-export async function searchCapsules(req: Request, res: Response) {
+const searchSchema = z.object({
+  q: z.string().min(1, "Search query is required"),
+  public_only: z.string().transform(val => val === "true").default("true"),
+  limit: z.string().transform(val => parseInt(val) || 20).default("20"),
+  offset: z.string().transform(val => parseInt(val) || 0).default("0")
+});
+
+// GET /api/search - Search for capsules
+router.get("/", async (req, res) => {
   try {
-    const query = req.query.q;
+    const validatedQuery = searchSchema.parse(req.query);
+    const { q, public_only, limit, offset } = validatedQuery;
+
+    console.log(`Search request: "${q}", public_only: ${public_only}, limit: ${limit}, offset: ${offset}`);
+
+    // Get all capsules from storage
+    const allCapsules = await storage.getAllCapsules();
     
-    if (!query || typeof query !== "string") {
-      return res.status(400).json({ error: "Missing or invalid query string" });
+    if (!allCapsules || allCapsules.length === 0) {
+      return res.json({
+        results: [],
+        total: 0,
+        query: q
+      });
     }
 
-    try {
-      const supabaseConfig = createSupabaseClient();
-      
-      // Make direct API call to Supabase for capsule search with enhanced filtering
-      const searchUrl = new URL(`${supabaseConfig.url}/rest/v1/capsules`);
-      searchUrl.searchParams.append('select', 'id,title,description,author,category,tags,verification_status,grief_score,views,likes,comments,shares,created_at');
-      
-      // Enhanced search with full-text search and multiple field matching
-      const searchTerms = query.toLowerCase().replace(/[^\w\s]/g, '').split(' ').filter(term => term.length > 0);
-      const searchConditions = searchTerms.map(term => 
-        `title.ilike.%${term}%,description.ilike.%${term}%,author.ilike.%${term}%,category.ilike.%${term}%`
-      ).join(',');
-      
-      searchUrl.searchParams.append('or', `(${searchConditions})`);
-      searchUrl.searchParams.append('order', 'created_at.desc');
-      searchUrl.searchParams.append('limit', '50');
-
-      const response = await fetch(searchUrl.toString(), {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("Supabase search error:", errorData);
-        return res.status(response.status).json({ error: "Search failed" });
+    // Filter capsules based on search criteria
+    let filteredCapsules = allCapsules.filter(capsule => {
+      // Filter by public/private if requested
+      if (public_only && capsule.content?.isPrivate) {
+        return false;
       }
 
-      const data = await response.json();
-      
-      res.json({ 
-        results: data,
-        query: query,
-        total: data.length
-      });
-    } catch (supabaseError) {
-      console.error("Supabase connection error:", supabaseError);
-      
-      // Fallback to realistic mock data for development
-      const mockCapsules = [
-        {
-          id: "cap_001",
-          title: "Climate Change Evidence Documentation",
-          description: "Comprehensive analysis of environmental data and research findings spanning three decades",
-          author: "EnvironmentalScientist",
-          category: "Scientific Truth",
-          tags: ["climate", "environment", "research", "data"],
-          verification_status: "verified",
-          grief_score: "92",
-          views: "4521",
-          likes: "387",
-          comments: "78",
-          shares: "42",
-          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: "cap_002", 
-          title: "Corporate Transparency Report",
-          description: "Internal documents revealing corporate practices and policies affecting employee welfare",
-          author: "CorporateWhistleblower",
-          category: "Truth Testimony",
-          tags: ["corporate", "transparency", "whistleblower", "policy"],
-          verification_status: "pending",
-          grief_score: "95",
-          views: "1247",
-          likes: "89",
-          comments: "23",
-          shares: "15",
-          created_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: "cap_003",
-          title: "Historical Family Archive",
-          description: "Personal family history and documentation spanning three generations of immigration",
-          author: "FamilyHistorian",
-          category: "Personal History",
-          tags: ["family", "history", "immigration", "heritage"],
-          verification_status: "verified",
-          grief_score: "78",
-          views: "2894",
-          likes: "156",
-          comments: "45",
-          shares: "28",
-          created_at: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: "cap_004",
-          title: "Medical Research Integrity Study",
-          description: "Analysis of research methodologies and data integrity in pharmaceutical studies",
-          author: "ResearchEthicist",
-          category: "Medical Truth",
-          tags: ["medical", "research", "ethics", "pharmaceutical"],
-          verification_status: "verified",
-          grief_score: "89",
-          views: "3762",
-          likes: "245",
-          comments: "67",
-          shares: "31",
-          created_at: new Date(Date.now() - 96 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: "cap_005",
-          title: "Educational Policy Impact Analysis",
-          description: "Comprehensive study of educational policies and their real-world impact on student development",
-          author: "EduAdvocate",
-          category: "Educational Truth",
-          tags: ["education", "policy", "students", "development"],
-          verification_status: "verified",
-          grief_score: "84",
-          views: "2156",
-          likes: "189",
-          comments: "34",
-          shares: "67",
-          created_at: new Date(Date.now() - 120 * 60 * 60 * 1000).toISOString()
-        }
-      ];
+      // Search in title, description, and tags
+      const searchTerm = q.toLowerCase();
+      const titleMatch = capsule.title?.toLowerCase().includes(searchTerm);
+      const descriptionMatch = capsule.description?.toLowerCase().includes(searchTerm);
+      const tagsMatch = capsule.tags?.some(tag => 
+        tag.toLowerCase().includes(searchTerm)
+      );
 
-      const filteredResults = mockCapsules.filter(item => {
-        const searchLower = query.toLowerCase();
-        return item.title.toLowerCase().includes(searchLower) ||
-               item.description.toLowerCase().includes(searchLower) ||
-               item.author.toLowerCase().includes(searchLower) ||
-               item.category.toLowerCase().includes(searchLower) ||
-               item.tags.some(tag => tag.toLowerCase().includes(searchLower));
-      });
+      return titleMatch || descriptionMatch || tagsMatch;
+    });
 
-      res.json({ 
-        results: filteredResults,
-        query: query,
-        total: filteredResults.length,
-        note: "Development mode - using realistic mock data"
+    // Sort by relevance (title matches first, then description, then tags)
+    filteredCapsules.sort((a, b) => {
+      const searchTerm = q.toLowerCase();
+      
+      const aScore = (
+        (a.title?.toLowerCase().includes(searchTerm) ? 3 : 0) +
+        (a.description?.toLowerCase().includes(searchTerm) ? 2 : 0) +
+        (a.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ? 1 : 0)
+      );
+      
+      const bScore = (
+        (b.title?.toLowerCase().includes(searchTerm) ? 3 : 0) +
+        (b.description?.toLowerCase().includes(searchTerm) ? 2 : 0) +
+        (b.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ? 1 : 0)
+      );
+      
+      return bScore - aScore;
+    });
+
+    // Apply pagination
+    const total = filteredCapsules.length;
+    const paginatedResults = filteredCapsules.slice(offset, offset + limit);
+
+    // Clean up results for client
+    const results = paginatedResults.map(capsule => ({
+      id: capsule.id,
+      title: capsule.title,
+      description: capsule.description,
+      tags: capsule.tags || [],
+      isPrivate: capsule.content?.isPrivate || false,
+      created_at: capsule.created_at || new Date().toISOString(),
+      content: {
+        encrypted: capsule.content?.encrypted || false,
+        minted: capsule.content?.minted || false,
+        tx_hash: capsule.content?.tx_hash
+      }
+    }));
+
+    res.json({
+      results,
+      total,
+      query: q,
+      showing: results.length,
+      offset,
+      limit
+    });
+
+  } catch (error) {
+    console.error("Search error:", error);
+    
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Invalid search parameters",
+        details: error.errors
       });
     }
-  } catch (error) {
-    console.error("Error processing search:", error);
-    res.status(500).json({ error: "Failed to process search request" });
+
+    res.status(500).json({
+      error: "Search failed",
+      message: error.message
+    });
   }
-}
+});
+
+export default router;

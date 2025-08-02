@@ -78,6 +78,24 @@ export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInse
 export type Capsule = typeof capsules.$inferSelect;
 export type InsertCapsule = typeof capsules.$inferInsert;
 
+// Extended types for UI compatibility
+export interface EnhancedCapsuleData extends Capsule {
+  isPrivate?: boolean;
+  content?: {
+    type: string;
+    data: string;
+    metadata?: any;
+    encrypted?: boolean;
+    encryptedContent?: string;
+    encryptedSymmetricKey?: string;
+    accessControlConditions?: any[];
+    minted?: boolean;
+    tx_hash?: string;
+    unlocked?: boolean;
+    isPrivate?: boolean;
+  };
+}
+
 // Validation schemas
 export const insertUserSchema = createInsertSchema(users);
 export const insertNewsletterSubscriberSchema = createInsertSchema(newsletterSubscribers);

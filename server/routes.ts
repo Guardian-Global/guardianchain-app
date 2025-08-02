@@ -4,7 +4,7 @@ import { getCapsuleStats } from "./api/capsule-stats";
 import { getCapsuleTimeline } from "./api/timeline";
 import { getValidatorBids } from "./api/validator-bids";
 import { subscribeEmail } from "./api/subscribe";
-import { searchCapsules } from "./api/search";
+// Search functionality is handled by /api/search route in server/index.ts
 import { createCapsule, getCapsuleById } from "./api/capsules";
 import { mintCapsule, likeCapsule, shareCapsule } from "./api/capsule-actions";
 import { unlockCapsule } from "./api/capsule-unlock";
@@ -52,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/capsules/timeline", getCapsuleTimeline);
   app.get("/api/validators/bids", getValidatorBids);
   app.post("/api/subscribe", subscribeEmail);
-  app.get("/api/search", searchCapsules);
+  // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
   app.post("/api/capsules/:id/mint", mintCapsule);

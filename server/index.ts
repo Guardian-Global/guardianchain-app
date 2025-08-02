@@ -144,6 +144,10 @@ app.use("/api/upload", uploadRoutes);
 import web3Routes from "./routes/web3.js";
 app.use("/api/web3", web3Routes);
 
+// Search routes
+import searchRoutes from "./api/search.js";
+app.use("/api/search", searchRoutes);
+
 // Capsule routes are integrated directly in routes.ts
 
 app.use((req, res, next) => {
