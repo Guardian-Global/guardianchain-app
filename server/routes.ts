@@ -1193,6 +1193,156 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     res.json(results);
   });
 
+  // Get minted capsules for gallery
+  app.get('/api/capsules/minted', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🖼️ Minted capsules requested for gallery');
+    
+    const mockMintedCapsules = [
+      {
+        id: 'cap_1754140001_abc123',
+        title: 'Family Legacy Documentation',
+        content: 'Important family documents and memories preserved for future generations, including historical photographs, family trees, and personal testimonies that tell the story of our heritage.',
+        griefTier: 4,
+        walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+        replayCount: 15,
+        mintedAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+        nftTokenId: '1001',
+        openseaUrl: 'https://opensea.io/assets/matic/0x123.../1001',
+        verificationStatus: 'verified',
+        truthScore: 92,
+        capsuleType: 'personal_memory',
+        tags: ['family', 'legacy', 'heritage']
+      },
+      {
+        id: 'cap_1754140002_def456',
+        title: 'Corporate Transparency Report Q4 2024',
+        content: 'Quarterly financial disclosures and governance updates for stakeholder transparency. Includes detailed financial statements, operational metrics, and strategic initiatives.',
+        griefTier: 3,
+        walletAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
+        replayCount: 8,
+        mintedAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        nftTokenId: '1002',
+        openseaUrl: 'https://opensea.io/assets/matic/0x123.../1002',
+        verificationStatus: 'verified',
+        truthScore: 88,
+        capsuleType: 'corporate_filing',
+        tags: ['corporate', 'financial', 'transparency']
+      },
+      {
+        id: 'cap_1754140003_ghi789',
+        title: 'Environmental Impact Study',
+        content: 'Comprehensive analysis of environmental changes in the local ecosystem over the past decade, including water quality assessments and biodiversity surveys.',
+        griefTier: 5,
+        walletAddress: '0x567890abcdef1234567890abcdef1234567890ab',
+        replayCount: 23,
+        mintedAt: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+        nftTokenId: '1003',
+        openseaUrl: 'https://opensea.io/assets/matic/0x123.../1003',
+        verificationStatus: 'verified',
+        truthScore: 95,
+        capsuleType: 'scientific_research',
+        tags: ['environment', 'research', 'sustainability']
+      },
+      {
+        id: 'cap_1754140004_jkl012',
+        title: 'Community Safety Initiative',
+        content: 'Documentation of local community safety measures and neighborhood watch programs implemented to enhance public security and wellbeing.',
+        griefTier: 2,
+        walletAddress: '0x234567890abcdef1234567890abcdef1234567890',
+        replayCount: 5,
+        mintedAt: new Date(Date.now() - 345600000).toISOString(), // 4 days ago
+        nftTokenId: '1004',
+        openseaUrl: 'https://opensea.io/assets/matic/0x123.../1004',
+        verificationStatus: 'pending',
+        truthScore: 76,
+        capsuleType: 'public_safety',
+        tags: ['community', 'safety', 'public']
+      }
+    ];
+    
+    res.json(mockMintedCapsules);
+  });
+
+  // Get individual capsule details
+  app.get('/api/capsules/:id', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔍 Capsule details requested for ID:', req.params.id);
+    const capsuleId = req.params.id;
+    
+    // Mock detailed capsule data
+    const mockCapsuleDetails = {
+      'cap_1754140001_abc123': {
+        id: 'cap_1754140001_abc123',
+        title: 'Family Legacy Documentation',
+        content: `Important family documents and memories preserved for future generations.
+
+This comprehensive collection includes:
+
+• Historical family photographs dating back to the 1920s
+• Detailed family tree with genealogical research spanning 4 generations  
+• Personal testimonies from grandparents about their immigration story
+• Original letters and documents from family members who served in WWII
+• Cultural traditions and recipes passed down through generations
+• Property deeds and important legal documents
+• Video recordings of family gatherings and celebrations
+
+These materials represent our family's journey through time and serve as a bridge between past and future generations. The collection has been carefully digitized and verified to ensure authenticity and preservation for decades to come.`,
+        griefTier: 4,
+        walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+        replayCount: 15,
+        mintedAt: new Date(Date.now() - 172800000).toISOString(),
+        nftTokenId: '1001',
+        openseaUrl: 'https://opensea.io/assets/matic/0x123.../1001',
+        verificationStatus: 'verified',
+        truthScore: 92,
+        capsuleType: 'personal_memory',
+        tags: ['family', 'legacy', 'heritage', 'genealogy', 'history']
+      },
+      'cap_1754140002_def456': {
+        id: 'cap_1754140002_def456',
+        title: 'Corporate Transparency Report Q4 2024',
+        content: `Quarterly financial disclosures and governance updates for stakeholder transparency.
+
+Financial Highlights:
+• Revenue: $2.4M (+15% YoY)
+• Operating Expenses: $1.8M 
+• Net Income: $600K
+• Cash Position: $3.2M
+
+Operational Metrics:
+• Customer Acquisition: 1,200 new customers
+• Customer Retention Rate: 94%
+• Employee Satisfaction: 8.7/10
+• Product Development: 3 major feature releases
+
+Governance Updates:
+• Board composition changes
+• Updated compliance policies
+• Enhanced data protection measures
+• Sustainability initiatives launched
+
+This report demonstrates our commitment to transparency and accountability to all stakeholders.`,
+        griefTier: 3,
+        walletAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
+        replayCount: 8,
+        mintedAt: new Date(Date.now() - 86400000).toISOString(),
+        nftTokenId: '1002',
+        openseaUrl: 'https://opensea.io/assets/matic/0x123.../1002',
+        verificationStatus: 'verified',
+        truthScore: 88,
+        capsuleType: 'corporate_filing',
+        tags: ['corporate', 'financial', 'transparency', 'governance', 'quarterly']
+      }
+    };
+    
+    const capsuleDetails = mockCapsuleDetails[capsuleId as keyof typeof mockCapsuleDetails];
+    
+    if (!capsuleDetails) {
+      return res.status(404).json({ error: 'Capsule not found' });
+    }
+    
+    res.json(capsuleDetails);
+  });
+
   // Get truth certificates
   app.get('/api/dao/certificates', isDebugAuthenticated, async (req: any, res) => {
     console.log('📜 Truth certificates requested');

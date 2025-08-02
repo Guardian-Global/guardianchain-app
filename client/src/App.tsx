@@ -250,6 +250,8 @@ function Router() {
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/dao/results/:id" component={lazy(() => import("./pages/dao/results"))} />
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
+            <Route path="/capsules/gallery" component={lazy(() => import("./pages/capsules/gallery"))} />
+            <Route path="/capsule-view/:id" component={lazy(() => import("./pages/capsule-view"))} />
             <Route path="/validator" component={lazy(() => import("./pages/validator"))} />
             <Route path="/validator-dashboard" component={lazy(() => import("./pages/validator"))} />
             <Route path="/jury" component={lazy(() => import("./pages/jury"))} />
