@@ -16,11 +16,14 @@ import OfflineIndicator from "@/components/OfflineIndicator";
 import { serviceWorkerManager } from "@/utils/serviceWorkerManager";
 import Footer from "@/components/layout/footer";
 import EnhancedLayout from "@/components/layout/EnhancedLayout";
+import EliteLayout from "@/components/layout/EliteLayout";
 import { LiveTokenTracker } from "@/components/live/LiveTokenTracker";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
 import { GuardianBootHook } from "@/components/GuardianBootHook";
 import UltimateHomepage from "@/pages/UltimateHomepage";
+import EliteHomepage from "@/pages/EliteHomepage";
+import Partners from "@/pages/Partners";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/CreateCapsule";
 import Explore from "@/pages/explore";
@@ -182,7 +185,6 @@ import { HelpProvider } from "@/components/help/HelpProvider";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
 
 // New pages for production deployment
-import Partners from "./pages/Partners";
 import Analytics from "./pages/dashboard/Analytics";
 import DemoKit from "./pages/investor/DemoKit";
 import ReplitToolsPage from "./pages/replit-tools";
@@ -258,26 +260,26 @@ function Router() {
   }
 
   return (
-    <EnhancedLayout>
+    <EliteLayout>
       <WelcomeTour />
       <LiveTokenTracker position="top" />
-      <div className="max-w-screen-xl mx-auto">
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              <div className="text-center">
-                <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p>Loading...</p>
-              </div>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <p>Loading...</p>
             </div>
-          }
-        >
-          <Switch>
-            {/* Core Routes */}
-            <Route
-              path="/"
-              component={lazy(() => import("./pages/EnhancedDashboard"))}
-            />
+          </div>
+        }
+      >
+        <Switch>
+          {/* Core Routes */}
+          <Route path="/" component={EliteHomepage} />
+          <Route
+            path="/legacy"
+            component={lazy(() => import("./pages/EnhancedDashboard"))}
+          />
             <Route
               path="/dashboard"
               component={lazy(() => import("./pages/EnhancedDashboard"))}
@@ -755,9 +757,7 @@ function Router() {
             <Route component={NotFound} />
           </Switch>
         </Suspense>
-      </div>
-      <Footer />
-    </EnhancedLayout>
+    </EliteLayout>
   );
 }
 

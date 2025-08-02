@@ -1,313 +1,203 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Play,
-  BarChart3,
-  Coins,
-  Link2,
-  Brain,
-  Shield,
-  Briefcase,
-  Globe,
-  Download,
-  ExternalLink,
-} from "lucide-react";
+import React from 'react';
+import { ExternalLink, Download, TrendingUp, Users, Shield, Zap } from 'lucide-react';
+import CardGlass from '@/components/ui/CardGlass';
+import GlowButton from '@/components/ui/GlowButton';
+import { Badge } from '@/components/ui/badge';
+
+const metrics = [
+  { label: 'Total Capsules', value: '2,847', icon: Zap },
+  { label: 'Active Users', value: '18.5K', icon: Users },
+  { label: 'GTT Distributed', value: '156.2K', icon: TrendingUp },
+  { label: 'Truth Verifications', value: '9,132', icon: Shield },
+];
+
+const features = [
+  {
+    title: 'AI-Powered Truth Verification',
+    description: 'GPT-4o engine for content analysis and verification',
+    status: 'Live'
+  },
+  {
+    title: 'Blockchain NFT Minting',
+    description: 'Real Polygon integration with authentic transactions',
+    status: 'Live'
+  },
+  {
+    title: 'Time-Locked Capsules',
+    description: 'Lit Protocol encryption for secure time-based reveals',
+    status: 'Live'
+  },
+  {
+    title: 'Truth Auction System',
+    description: 'Crowdfunded disclosure mechanisms with GTT rewards',
+    status: 'Live'
+  },
+  {
+    title: 'Grief Score Yield',
+    description: 'Novel tokenomics based on emotional resonance',
+    status: 'Beta'
+  },
+  {
+    title: 'Global Network',
+    description: 'Multi-language support with 29 RTL languages',
+    status: 'Live'
+  }
+];
+
+const useCases = [
+  {
+    title: 'Whistleblower Protection',
+    description: 'Secure, time-locked evidence submission with legal protection',
+    impact: 'High'
+  },
+  {
+    title: 'Eternal Declarations',
+    description: 'Immutable personal and institutional legacy preservation',
+    impact: 'Medium'
+  },
+  {
+    title: 'Sovereign Social Profiles',
+    description: 'Blockchain-verified identity and truth sharing',
+    impact: 'High'
+  },
+  {
+    title: 'Corporate Transparency',
+    description: 'Internal disclosure and compliance documentation',
+    impact: 'High'
+  }
+];
 
 export default function DemoKit() {
-  const demoSections = [
-    {
-      title: "Hero Video & Mission Statement",
-      icon: Play,
-      description:
-        "Watch our 2-minute explainer video showcasing the GuardianChain vision",
-      link: "/",
-      status: "Live",
-    },
-    {
-      title: "Real-time Metrics Dashboard",
-      icon: BarChart3,
-      description:
-        "Live analytics showing platform growth, user engagement, and truth verification rates",
-      link: "/dashboard/analytics",
-      status: "Live",
-    },
-    {
-      title: "GTT Token Summary & Supply Chart",
-      icon: Coins,
-      description:
-        "Complete tokenomics overview with real-time price data and yield mechanics",
-      link: "/token",
-      status: "Live",
-    },
-    {
-      title: "Public Capsule Feed & Reels",
-      icon: Link2,
-      description:
-        "Interactive demo of our TikTok-style truth preservation experience",
-      link: "/explore",
-      status: "Live",
-    },
-    {
-      title: "AI Features Showcase",
-      icon: Brain,
-      description:
-        "GPT-powered title suggestions, voice summaries, and content verification",
-      link: "/ai-features",
-      status: "Demo",
-    },
-    {
-      title: "Use Cases & Applications",
-      icon: Shield,
-      description:
-        "Whistleblower protection, eternal declarations, and sovereign social profiles",
-      link: "/use-cases",
-      status: "Live",
-    },
-  ];
-
-  const documentLinks = [
-    {
-      title: "Grant Eligibility PDF",
-      description: "Complete technical specifications and funding requirements",
-      url: "/assets/pdf/GuardianChain_GrantKit.pdf",
-      type: "PDF",
-    },
-    {
-      title: "Pitch Deck",
-      description:
-        "Investor-ready presentation with market analysis and projections",
-      url: "/assets/pdf/GuardianChain_PitchDeck.pdf",
-      type: "PDF",
-    },
-    {
-      title: "Technical Whitepaper",
-      description:
-        "Deep dive into our truth verification and blockchain architecture",
-      url: "/whitepaper",
-      type: "Web",
-    },
-    {
-      title: "Roadmap & Milestones",
-      description: "Quarterly development timeline and key deliverables",
-      url: "/roadmap",
-      type: "Web",
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-blue-950 dark:via-slate-900 dark:to-purple-950">
-      <div className="container mx-auto px-6 py-12 max-w-6xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-blue-600 dark:text-blue-400 mb-4">
-            🧾 GuardianChain Grant & Investor Demo Kit
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Comprehensive demonstration package showcasing our truth
-            preservation platform, AI capabilities, and investment opportunity
-            for grants and ecosystem partners.
-          </p>
-        </div>
-
-        {/* Demo Sections */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
-            🎬 Interactive Demo Sections
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {demoSections.map((section) => (
-              <Card
-                key={section.title}
-                className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                        <section.icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-sm font-medium">
-                          {section.title}
-                        </CardTitle>
-                        <Badge
-                          variant={
-                            section.status === "Live" ? "default" : "secondary"
-                          }
-                          className="mt-1"
-                        >
-                          {section.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {section.description}
-                  </p>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                  >
-                    <a
-                      href={section.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Demo
-                    </a>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Key Metrics */}
-        <Card className="mb-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">
-              📊 Platform Metrics
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div>
-                <div className="text-3xl font-bold">139</div>
-                <div className="text-blue-100 text-sm">
-                  Truth Capsules Created
-                </div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold">58</div>
-                <div className="text-blue-100 text-sm">NFTs Minted</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold">87%</div>
-                <div className="text-blue-100 text-sm">
-                  Truth Verification Rate
-                </div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold">6</div>
-                <div className="text-blue-100 text-sm">Languages Supported</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Documentation Downloads */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
-            📋 Documentation & Resources
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {documentLinks.map((doc) => (
-              <Card
-                key={doc.title}
-                className="hover:shadow-lg transition-shadow duration-300"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-lg">{doc.title}</h3>
-                        <Badge variant="outline">{doc.type}</Badge>
-                      </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        {doc.description}
-                      </p>
-                      <Button asChild variant="outline" size="sm">
-                        <a
-                          href={doc.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          {doc.type === "PDF" ? "Download PDF" : "View Online"}
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Grant Eligibility Highlights */}
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Briefcase className="w-6 h-6" />
-              Grant Eligibility Highlights
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold mb-3 text-green-600 dark:text-green-400">
-                  ✅ Qualifications Met
-                </h4>
-                <ul className="space-y-2 text-sm">
-                  <li>• Open source core protocol components</li>
-                  <li>• Public goods focus (truth preservation)</li>
-                  <li>• Novel blockchain use case implementation</li>
-                  <li>• AI integration for social benefit</li>
-                  <li>• Multilingual accessibility features</li>
-                  <li>• Community governance structure</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-3 text-blue-600 dark:text-blue-400">
-                  🎯 Grant Categories
-                </h4>
-                <ul className="space-y-2 text-sm">
-                  <li>• Web3 Social Impact Grants</li>
-                  <li>• AI for Good Initiatives</li>
-                  <li>• Blockchain Infrastructure Grants</li>
-                  <li>• Digital Human Rights Programs</li>
-                  <li>• Decentralized Storage Solutions</li>
-                  <li>• Community Building Funds</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Contact Information */}
-        <Card className="text-center">
-          <CardContent className="p-8">
-            <h3 className="text-2xl font-bold mb-4">
-              Ready to Partner With Us?
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
-              We're actively seeking strategic partnerships, grant
-              opportunities, and investment to scale our truth preservation
-              infrastructure globally.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg">
-                <a href="/contact">
-                  <Briefcase className="w-5 h-5 mr-2" />
-                  Schedule Demo Call
-                </a>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="mailto:grants@guardianchain.app">
-                  <Globe className="w-5 h-5 mr-2" />
-                  Contact Grants Team
-                </a>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
+          <TrendingUp className="w-4 h-4 mr-1" />
+          Live Production Platform
+        </Badge>
+        
+        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+          GuardianChain Investor Demo Kit
+        </h1>
+        
+        <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+          Complete truth preservation infrastructure with real blockchain integration, 
+          AI verification, and sovereign data ownership
+        </p>
       </div>
+
+      {/* Live Metrics */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-white">Live Platform Metrics</h2>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {metrics.map((metric) => {
+            const Icon = metric.icon;
+            return (
+              <CardGlass key={metric.label} className="text-center">
+                <Icon className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                <div className="text-2xl font-bold text-white">{metric.value}</div>
+                <div className="text-sm text-slate-400">{metric.label}</div>
+              </CardGlass>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Core Features */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-white">Core Technology Stack</h2>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          {features.map((feature) => (
+            <CardGlass key={feature.title} hover>
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="font-semibold text-white">{feature.title}</h3>
+                <Badge variant={feature.status === 'Live' ? 'default' : 'secondary'}>
+                  {feature.status}
+                </Badge>
+              </div>
+              <p className="text-slate-300 text-sm">{feature.description}</p>
+            </CardGlass>
+          ))}
+        </div>
+      </section>
+
+      {/* Use Cases */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-white">Market Applications</h2>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          {useCases.map((useCase) => (
+            <CardGlass key={useCase.title} gradient>
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="font-semibold text-white">{useCase.title}</h3>
+                <Badge variant={useCase.impact === 'High' ? 'default' : 'secondary'}>
+                  {useCase.impact} Impact
+                </Badge>
+              </div>
+              <p className="text-slate-300 text-sm">{useCase.description}</p>
+            </CardGlass>
+          ))}
+        </div>
+      </section>
+
+      {/* Investment Highlights */}
+      <CardGlass gradient className="text-center">
+        <h3 className="text-xl font-semibold text-white mb-4">Investment Highlights</h3>
+        
+        <div className="grid md:grid-cols-3 gap-6 text-left">
+          <div>
+            <h4 className="font-semibold text-blue-400 mb-2">Novel Tokenomics</h4>
+            <p className="text-sm text-slate-300">
+              Grief Score Yield creates sustainable value through emotional truth resonance
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-green-400 mb-2">Real Utility</h4>
+            <p className="text-sm text-slate-300">
+              Live platform with authentic blockchain transactions and user adoption
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-purple-400 mb-2">Market Timing</h4>
+            <p className="text-sm text-slate-300">
+              Perfect intersection of AI verification, Web3 sovereignty, and truth preservation
+            </p>
+          </div>
+        </div>
+      </CardGlass>
+
+      {/* Download Section */}
+      <CardGlass className="text-center">
+        <h3 className="text-xl font-semibold text-white mb-4">Complete Documentation</h3>
+        
+        <div className="space-y-4">
+          <p className="text-slate-300">
+            Access comprehensive technical documentation, tokenomics analysis, 
+            and market research in our investor package.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/assets/pdf/GuardianChain_GrantKit.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GlowButton variant="primary">
+                <Download className="w-4 h-4 mr-2" />
+                Download Full Kit
+              </GlowButton>
+            </a>
+            
+            <GlowButton variant="secondary">
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Schedule Demo Call
+            </GlowButton>
+          </div>
+        </div>
+      </CardGlass>
     </div>
   );
 }
