@@ -77,6 +77,7 @@ import AssetShowcase from "./pages/asset-showcase";
 
 // Design System
 import DesignTokenShowcase from "./components/design/DesignTokenShowcase";
+import FigmaIntegrationGuide from "./components/design/FigmaIntegrationGuide";
 
 // Trading & Institutional Features
 const WhaleTracker = lazy(() => import("@/pages/whale-tracker"));
@@ -407,6 +408,7 @@ function Router() {
 
         <Route path="/asset-integration" component={AssetIntegrationPage} />
         <Route path="/design-tokens" component={DesignTokenShowcase} />
+        <Route path="/figma-integration" component={FigmaIntegrationGuide} />
         <Route path="/mint-example" component={lazy(() => import("./pages/MintExample"))} />
         <Route path="/protocol-strategy" component={ProtocolStrategy} />
         <Route path="/enterprise-suite" component={EnterpriseSuite} />

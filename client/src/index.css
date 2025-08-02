@@ -359,9 +359,14 @@
     --brand-light: #f1f5f9;       /* Text light token */
     --brand-dark: #1e293b;        /* Text dark token */
     
-    /* Design Token Radius */
-    --radius-capsule: 2rem;       /* Capsule radius token */
-    --radius-vault: 1.5rem;       /* Vault radius token */
+    /* Design Token Radius (Figma-aligned) */
+    --radius-capsule: 2rem;       /* Capsule radius token (32px) */
+    --radius-vault: 1.5rem;       /* Vault radius token (24px) */
+    
+    /* Layout Tokens */
+    --layout-sidebar-width: 256px;      /* Sidebar width token */
+    --layout-card-padding: 1.5rem;      /* Card padding token (24px) */
+    --layout-page-gutter: 1.5rem;       /* Page gutter token (24px) */
     
     /* Design Token Shadows */
     --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.15);         /* Card shadow token */
@@ -411,6 +416,35 @@
 .shadow-brand { box-shadow: var(--shadow-brand); }
 .shadow-brand-lg { box-shadow: var(--shadow-brand-lg); }
 .shadow-card { box-shadow: var(--shadow-card); }
+
+/* Layout Token Utilities */
+.sidebar-width { width: var(--layout-sidebar-width); }
+.card-padding { padding: var(--layout-card-padding); }
+.page-gutter { padding-left: var(--layout-page-gutter); padding-right: var(--layout-page-gutter); }
+
+/* Figma Component Tokens */
+.primary-button {
+  background-color: var(--brand-primary);
+  color: white;
+  border-radius: 0.5rem;
+  font-family: var(--font-brand);
+  transition: all 0.3s ease;
+}
+
+.surface-card {
+  background-color: var(--brand-surface);
+  color: var(--brand-light);
+  border-radius: var(--radius-vault);
+  padding: var(--layout-card-padding);
+}
+
+.install-button {
+  background-color: var(--brand-primary);
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  border-radius: 0.5rem;
+  font-family: var(--font-brand);
+}
 
 /* Premium Brand Animations */
 .guardian-pulse {

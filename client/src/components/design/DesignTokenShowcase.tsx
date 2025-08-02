@@ -14,8 +14,9 @@ export default function DesignTokenShowcase() {
   ];
 
   const radiusTokens = [
-    { name: "Capsule", value: "2rem", css: "rounded-capsule", description: "Capsule radius token" },
-    { name: "Vault", value: "1.5rem", css: "rounded-vault", description: "Vault radius token" },
+    { name: "Capsule", value: "2rem (32px)", css: "rounded-capsule", description: "Capsule radius token" },
+    { name: "Vault", value: "1.5rem (24px)", css: "rounded-vault", description: "Vault radius token" },
+    { name: "Button", value: "0.5rem (8px)", css: "rounded-button", description: "Standard button radius" },
   ];
 
   const shadowTokens = [
@@ -144,32 +145,56 @@ export default function DesignTokenShowcase() {
         </CardContent>
       </Card>
 
-      {/* Interactive Examples */}
+      {/* Figma Component Examples */}
       <Card className="bg-brand-secondary border-brand-surface">
         <CardHeader>
-          <CardTitle className="text-brand-light font-brand">Interactive Examples</CardTitle>
+          <CardTitle className="text-brand-light font-brand">Figma Component Tokens</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-wrap gap-3">
-            <Button className="guardian-hover bg-brand-primary hover:bg-brand-primary/90">
-              Guardian Button
-            </Button>
-            <Button className="capsule-premium-hover bg-brand-accent hover:bg-brand-accent/90">
-              Veritas Button
-            </Button>
-            <Button className="bg-brand-warning hover:bg-brand-warning/90">
-              Signal Button
-            </Button>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h4 className="text-brand-light font-medium">Button Components</h4>
+            <div className="flex flex-wrap gap-3">
+              <button className="primary-button px-6 py-3 hover:opacity-90">
+                Primary Button
+              </button>
+              <button className="install-button px-6 py-3 hover:opacity-90">
+                Install Button
+              </button>
+              <Button className="capsule-premium-hover bg-brand-accent hover:bg-brand-accent/90 rounded-button">
+                Veritas Button
+              </Button>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-capsule bg-gradient-to-r from-brand-primary/10 to-brand-accent/10 border border-brand-primary/20">
-              <h4 className="font-brand text-brand-light mb-2">Capsule Card</h4>
-              <p className="text-brand-light/80 text-sm">Premium capsule radius with gradient background</p>
+          <div className="space-y-4">
+            <h4 className="text-brand-light font-medium">Card Components</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="surface-card">
+                <h4 className="font-brand text-brand-light mb-2">Surface Card</h4>
+                <p className="text-brand-light/80 text-sm">Figma-aligned surface card component</p>
+              </div>
+              <div className="p-4 rounded-capsule bg-gradient-to-r from-brand-primary/10 to-brand-accent/10 border border-brand-primary/20">
+                <h4 className="font-brand text-brand-light mb-2">Capsule Card</h4>
+                <p className="text-brand-light/80 text-sm">Premium capsule radius (32px)</p>
+              </div>
             </div>
-            <div className="p-4 rounded-vault bg-brand-surface shadow-brand-lg border border-brand-surface">
-              <h4 className="font-brand text-brand-light mb-2">Vault Card</h4>
-              <p className="text-brand-light/80 text-sm">Vault radius with brand shadow</p>
+          </div>
+          
+          <div className="space-y-4">
+            <h4 className="text-brand-light font-medium">Layout Tokens</h4>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="text-center">
+                <div className="text-brand-accent font-mono">256px</div>
+                <div className="text-brand-light/60">Sidebar Width</div>
+              </div>
+              <div className="text-center">
+                <div className="text-brand-accent font-mono">24px</div>
+                <div className="text-brand-light/60">Card Padding</div>
+              </div>
+              <div className="text-center">
+                <div className="text-brand-accent font-mono">24px</div>
+                <div className="text-brand-light/60">Page Gutter</div>
+              </div>
             </div>
           </div>
         </CardContent>
