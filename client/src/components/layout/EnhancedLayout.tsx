@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import Sidebar from "./Sidebar";
-import Topbar from "./Topbar";
+import Breadcrumbs from "./Breadcrumbs";
+import TopbarCommandMenu from "./TopbarCommandMenu";
+import MobileDrawer from "./MobileDrawer";
 import CommandPalette from "./CommandPalette";
 import MobileNav from "./MobileNav";
-import Breadcrumbs from "./Breadcrumbs";
 import CapsuleDrawer from "@/components/ui/CapsuleDrawer";
 import QuickActions from "./QuickActions";
 import StatusIndicator from "./StatusIndicator";
@@ -57,7 +58,12 @@ const EnhancedLayout = ({
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col min-h-screen">
-            <Topbar onMobileMenuToggle={() => setMobileMenuOpen(true)} />
+            {/* Top Header with Command Menu */}
+            <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
+              <div className="flex-1">
+                <TopbarCommandMenu />
+              </div>
+            </div>
             
             {/* Breadcrumbs */}
             {showBreadcrumbs && <Breadcrumbs />}

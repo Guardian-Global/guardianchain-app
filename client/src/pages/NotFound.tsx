@@ -1,41 +1,51 @@
-import React from "react";
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, Home, ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function NotFound() {
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    const tier = user?.tier?.toLowerCase() || "guest";
+    
+    // Role-aware redirect fallback
+    setTimeout(() => {
+      if (tier === "admin" || tier === "dao-owner") {
+        setLocation("/admin");
+      } else if (tier === "member" || tier === "moderator") {
+        setLocation("/vault");
+      } else {
+        setLocation("/");
+      }
+    }, 2000);
+  }, [user, setLocation]);
+
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
-      <Card className="max-w-md w-full text-center bg-slate-800 border-slate-700">
-        <CardHeader>
-          <div className="mx-auto w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mb-4">
-            <AlertTriangle className="w-8 h-8 text-orange-500" />
-          </div>
-          <CardTitle className="text-2xl text-white">404 Page Not Found</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-slate-400">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full text-center">
+        <div className="mb-8">
+          <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">Page Not Found</h2>
+          <p className="text-gray-500">
             The page you're looking for doesn't exist or has been moved.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/">
-              <Button className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700">
-                <Home className="w-4 h-4 mr-2" />
-                Go Home
-              </Button>
-            </Link>
-            <Button 
-              variant="outline" 
-              onClick={() => window.history.back()}
-              className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-700"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Go Back
-            </Button>
+        </div>
+        
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+          <div className="flex items-center justify-center mb-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-        </CardContent>
-      </Card>
+          <p className="text-sm text-gray-600">
+            Redirecting you to the appropriate page based on your access level...
+          </p>
+        </div>
+        
+        <div className="text-xs text-gray-400">
+          <p>GuardianChain • Truth Vault Platform</p>
+          <p className="mt-1">Sovereign Memory Infrastructure</p>
+        </div>
+      </div>
     </div>
   );
 }
