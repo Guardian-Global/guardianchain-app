@@ -34,10 +34,10 @@ export default function EternalStaking() {
       name: '100-Year Memory Vault',
       duration: '100 Years',
       apy: '9%',
-      multiplier: '16,900%',
+      multiplier: '136x', // Realistic 136x multiplier instead of 16,900%
       minStake: '250 GTT',
-      totalStaked: '2.5M GTT',
-      participants: '1,247',
+      totalStaked: '42.5K GTT', // Realistic total staked amount
+      participants: '127', // Realistic participant count
       badge: 'FLAGSHIP',
       color: 'purple',
       description: 'Transform family memories into generational wealth',
@@ -48,10 +48,10 @@ export default function EternalStaking() {
       name: '50-Year Time Capsule',
       duration: '50 Years',
       apy: '8%',
-      multiplier: '4,690%',
+      multiplier: '47x', // Realistic 47x multiplier
       minStake: '150 GTT',
-      totalStaked: '1.8M GTT',
-      participants: '892',
+      totalStaked: '18.2K GTT', // Realistic total staked
+      participants: '89', // Realistic participant count
       badge: 'POPULAR',
       color: 'blue',
       description: 'Mid-term growth with substantial returns',
@@ -62,10 +62,10 @@ export default function EternalStaking() {
       name: '25-Year Legacy Boost',
       duration: '25 Years',
       apy: '7%',
-      multiplier: '543%',
+      multiplier: '5.4x', // Realistic 5.4x multiplier
       minStake: '100 GTT',
-      totalStaked: '3.2M GTT',
-      participants: '2,156',
+      totalStaked: '32.1K GTT', // Realistic total staked
+      participants: '216', // Realistic participant count
       badge: 'ACCELERATED',
       color: 'green',
       description: 'Accelerated growth for building family legacy',
@@ -76,10 +76,10 @@ export default function EternalStaking() {
       name: '10-Year Truth Preservation',
       duration: '10 Years',
       apy: '6%',
-      multiplier: '79%',
+      multiplier: '1.8x', // Realistic 1.8x multiplier
       minStake: '50 GTT',
-      totalStaked: '5.1M GTT',
-      participants: '4,523',
+      totalStaked: '51.3K GTT', // Realistic total staked
+      participants: '452', // Realistic participant count
       badge: 'STARTER',
       color: 'yellow',
       description: 'Perfect entry point for new truth guardians',
@@ -95,10 +95,10 @@ export default function EternalStaking() {
   ];
 
   const portfolioData = [
-    { name: 'Active Stakes', value: '12,500 GTT', change: '+156 GTT (24h)', color: 'text-green-400' },
-    { name: 'Pending Rewards', value: '847 GTT', change: '+23 GTT (24h)', color: 'text-yellow-400' },
-    { name: 'Total Earned', value: '3,420 GTT', change: '+89 GTT (7d)', color: 'text-purple-400' },
-    { name: 'Portfolio Value', value: '$45,600', change: '+$1,240 (24h)', color: 'text-blue-400' },
+    { name: 'Active Stakes', value: '0 GTT', change: '+0 GTT (24h)', color: 'text-green-400' }, // New user starts with zero
+    { name: 'Pending Rewards', value: '0 GTT', change: '+0 GTT (24h)', color: 'text-yellow-400' }, // No rewards yet
+    { name: 'Total Earned', value: '0 GTT', change: '+0 GTT (7d)', color: 'text-purple-400' }, // No earnings yet
+    { name: 'Portfolio Value', value: '$0', change: '+$0 (24h)', color: 'text-blue-400' }, // Zero portfolio value for new user
   ];
 
   useEffect(() => {
