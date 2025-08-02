@@ -68,6 +68,8 @@ export const BRAND_TAGLINE = "Sovereign Truth Preservation Protocol";
 
 // Protocol configuration
 export const PROTOCOL_CONFIG = {
+  NAME: "GuardianChain",
+  TAGLINE: "Sovereign Truth Infrastructure",
   version: "2.0",
   network: "polygon",
   chainId: 137,
@@ -78,6 +80,12 @@ export const PROTOCOL_CONFIG = {
     capsuleMinting: true,
     yieldDistribution: true,
     verificationEngine: true,
+  },
+  SOCIAL: {
+    TWITTER: "@GuardianChain",
+    DISCORD: "discord.gg/guardianchain",
+    GITHUB: "guardianchain",
+    TELEGRAM: "@guardianchain_official",
   },
 };
 
@@ -90,5 +98,46 @@ export const VERITUS_NODE = {
     consensusVoting: true,
     reputationScoring: true,
     liveBroadcast: true,
+  },
+};
+
+// Early adopter rewards configuration
+export const EARLY_ADOPTER_REWARDS = {
+  multiplier: 2.5,
+  bonusTokens: 1000,
+  exclusiveFeatures: [
+    "premiumVerification",
+    "advancedAnalytics",
+    "prioritySupport",
+    "betaAccess"
+  ],
+  nftRewards: {
+    founderBadge: true,
+    limitedEdition: true,
+    specialAccess: true,
+  },
+};
+
+// Staking tier configuration
+export const STAKING_TIERS = {
+  explorer: {
+    minStake: 0,
+    multiplier: 1.0,
+    features: ["basicAccess", "standardYield"],
+  },
+  seeker: {
+    minStake: 1000,
+    multiplier: 1.5,
+    features: ["enhancedAccess", "bonusYield", "prioritySupport"],
+  },
+  creator: {
+    minStake: 5000,
+    multiplier: 2.0,
+    features: ["premiumAccess", "maxYield", "exclusiveFeatures"],
+  },
+  sovereign: {
+    minStake: 25000,
+    multiplier: 3.0,
+    features: ["sovereignAccess", "maxYield", "governanceRights", "foundersClub"],
   },
 };

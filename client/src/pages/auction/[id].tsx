@@ -105,10 +105,34 @@ export default function AuctionViewPage() {
       const data = await res.json();
       
       if (res.ok) {
-        setDisclosureContent(data.content);
+        // Check if content is encrypted with Lit Protocol
+        if (data.encrypted && data.encryptedContent && data.encryptedSymmetricKey) {
+          try {
+            const { unlockDisclosureWithRetry } = await import('@/utils/lit/unlockDisclosure');
+            
+            const decryptedContent = await unlockDisclosureWithRetry({
+              encryptedSymmetricKey: data.encryptedSymmetricKey,
+              encryptedContent: data.encryptedContent,
+              accessControlConditions: data.accessControlConditions || [],
+              chain: "polygon",
+            });
+            
+            setDisclosureContent(decryptedContent);
+            toast.success("🔓 Disclosure decrypted successfully!");
+          } catch (decryptError) {
+            console.error("Decryption failed:", decryptError);
+            // Fallback to encrypted content preview
+            setDisclosureContent("🔒 Encrypted disclosure content - decryption in progress...");
+            toast.warning("Content is encrypted - unlock in progress");
+          }
+        } else {
+          // Standard non-encrypted content
+          setDisclosureContent(data.content);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch disclosure content:", error);
+      toast.error("Failed to load disclosure content");
     }
   };
 
