@@ -1,6 +1,8 @@
 import { useAuth } from "@/hooks/useAuth";
 import { TierGate } from "@/components/auth/TierGate";
 import { SubscriptionManager } from "@/components/subscription/SubscriptionManager";
+import { AIAdvisorPanel } from "@/components/dashboard/AIAdvisorPanel";
+import { NFTAvatarSystem } from "@/components/dashboard/NFTAvatarSystem";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +23,9 @@ import {
   Crown,
   Star,
   Zap,
-  Brain
+  Brain,
+  BarChart3,
+  Wallet
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -49,7 +53,7 @@ export default function Dashboard() {
     );
   }
 
-  const userTier = user.tier || 'EXPLORER';
+  const userTier = (user as any)?.tier || 'EXPLORER';
   const getTierIcon = (tier: string) => {
     switch (tier) {
       case 'SEEKER': return Star;
@@ -70,48 +74,59 @@ export default function Dashboard() {
 
   const TierIcon = getTierIcon(userTier);
   const tierColor = getTierColor(userTier);
+  const currentUser = user as any;
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
-      {/* Header */}
-      <div className="border-b border-slate-800 bg-slate-800/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white">
+      {/* Enhanced Header with Glass Effect */}
+      <div className="border-b border-slate-800/50 bg-slate-800/30 backdrop-blur-xl">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Veritas Dashboard
-              </h1>
-              <Badge variant="secondary" className="bg-green-600/20 text-green-400">
-                Truth Network
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/assets/logo/GUARDIANCHAIN_logo.png" 
+                  alt="GuardianChain" 
+                  className="h-8 w-auto"
+                />
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  Truth Vault
+                </h1>
+              </div>
+              <Badge variant="secondary" className="bg-emerald-600/20 text-emerald-400 border-emerald-500/30">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse" />
+                Live Network
               </Badge>
             </div>
             
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.profileImageUrl} />
-                  <AvatarFallback className="bg-blue-600">
-                    {user.firstName?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
+              {/* Enhanced Profile Panel */}
+              <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-2xl px-4 py-2 border border-white/10">
+                <Avatar className="h-10 w-10 ring-2 ring-purple-400/50">
+                  <AvatarImage src={currentUser?.profileImageUrl} />
+                  <AvatarFallback className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold">
+                    {currentUser?.firstName?.[0] || currentUser?.email?.[0]?.toUpperCase() || 'G'}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium">
-                  {user.firstName || user.email?.split('@')[0] || 'User'}
-                </span>
-                <Badge variant="outline" className={`text-xs ${tierColor}`}>
-                  <TierIcon className="h-3 w-3 mr-1" />
-                  {userTier}
-                </Badge>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold">
+                    {currentUser?.firstName || currentUser?.email?.split('@')[0] || 'Guardian'}
+                  </span>
+                  <Badge variant="outline" className={`text-xs ${tierColor} w-fit border-current/30`}>
+                    <TierIcon className="h-3 w-3 mr-1" />
+                    {userTier}
+                  </Badge>
+                </div>
               </div>
               
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/settings">
-                  <Settings className="h-4 w-4" />
-                </Link>
+              <Button variant="ghost" size="sm" className="rounded-xl">
+                <Settings className="h-4 w-4" />
               </Button>
               
               <Button
                 variant="ghost"
                 size="sm"
+                className="rounded-xl"
                 onClick={() => window.location.href = '/api/logout'}
               >
                 <LogOut className="h-4 w-4" />
@@ -122,14 +137,57 @@ export default function Dashboard() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">
-            Welcome back, {user.firstName || 'Truth Seeker'}!
+        {/* Enhanced Welcome Section */}
+        <div className="mb-8 text-center">
+          <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+            Welcome back, {currentUser?.firstName || 'Truth Guardian'}!
           </h2>
-          <p className="text-gray-400">
-            Ready to verify truth and earn GTT rewards?
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Your sovereign memory protocol awaits. Ready to preserve truth for digital immortality?
           </p>
+        </div>
+
+        {/* Navigation Shortcuts */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Button
+            asChild
+            className="h-20 bg-gradient-to-br from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-2xl hover:scale-105 transition-all duration-200"
+          >
+            <Link href="/create-truth-capsule" className="flex flex-col items-center gap-2">
+              <Shield className="h-6 w-6 text-purple-400" />
+              <span className="text-sm font-medium">Create Capsule</span>
+            </Link>
+          </Button>
+          
+          <Button
+            asChild
+            className="h-20 bg-gradient-to-br from-blue-600/20 to-cyan-600/20 border border-blue-500/30 rounded-2xl hover:scale-105 transition-all duration-200"
+          >
+            <Link href="/validator" className="flex flex-col items-center gap-2">
+              <Users className="h-6 w-6 text-blue-400" />
+              <span className="text-sm font-medium">Validator Panel</span>
+            </Link>
+          </Button>
+          
+          <Button
+            asChild
+            className="h-20 bg-gradient-to-br from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-2xl hover:scale-105 transition-all duration-200"
+          >
+            <Link href="/dashboard/yield" className="flex flex-col items-center gap-2">
+              <Coins className="h-6 w-6 text-green-400" />
+              <span className="text-sm font-medium">Capsule Yield</span>
+            </Link>
+          </Button>
+          
+          <Button
+            asChild
+            className="h-20 bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-2xl hover:scale-105 transition-all duration-200"
+          >
+            <Link href="/referral" className="flex flex-col items-center gap-2">
+              <Award className="h-6 w-6 text-yellow-400" />
+              <span className="text-sm font-medium">Refer + Earn</span>
+            </Link>
+          </Button>
         </div>
 
         {/* Main Dashboard Tabs */}
@@ -263,89 +321,77 @@ export default function Dashboard() {
               </Card>
             </div>
 
-            {/* Quick Actions */}
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Plus className="h-5 w-5" />
-                  Quick Actions
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <Button className="h-20 flex-col gap-2" asChild>
-                    <Link href="/create-capsule">
-                      <Plus className="h-6 w-6" />
-                      Create Capsule
-                    </Link>
-                  </Button>
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <Link href="/verify">
-                      <Shield className="h-6 w-6" />
-                      Verify Truth
-                    </Link>
-                  </Button>
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <Link href="/earn">
-                      <Coins className="h-6 w-6" />
-                      Earn GTT
-                    </Link>
-                  </Button>
-                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                    <Link href="/memory-features">
-                      <Brain className="h-6 w-6" />
-                      Memory Features
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {/* AI Advisor & NFT System */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <AIAdvisorPanel />
+              <NFTAvatarSystem />
+            </div>
           </TabsContent>
 
           {/* Subscription Tab */}
-          <TabsContent value="subscription">
-            <SubscriptionManager />
+          <TabsContent value="subscription" className="space-y-6">
+            <TierGate requiredTier="EXPLORER">
+              <SubscriptionManager />
+            </TierGate>
           </TabsContent>
 
           {/* Creator Tools Tab */}
-          <TabsContent value="creator">
+          <TabsContent value="creator" className="space-y-6">
             <TierGate requiredTier="CREATOR">
-              <div className="space-y-6">
-                <Card className="bg-slate-800/50 border-slate-700">
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card className="bg-gradient-to-br from-slate-800/50 to-green-900/20 border-slate-700/50">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Zap className="h-5 w-5 text-green-400" />
-                      Creator Dashboard
+                      <BarChart3 className="h-5 w-5 text-green-400" />
+                      Creator Analytics
                     </CardTitle>
-                    <CardDescription>
-                      Advanced tools for professional truth verification
-                    </CardDescription>
+                    <CardDescription>Monitor your content performance</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <Button className="h-20 flex-col gap-2" asChild>
-                        <Link href="/api-access">
-                          <TrendingUp className="h-6 w-6" />
-                          API Access
-                        </Link>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span>Total Capsules</span>
+                        <span className="font-semibold">23</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Total Views</span>
+                        <span className="font-semibold">15,420</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>GTT Earned</span>
+                        <span className="font-semibold text-green-400">1,250</span>
+                      </div>
+                      <Button className="w-full bg-green-600 hover:bg-green-700">
+                        View Detailed Analytics
                       </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                        <Link href="/analytics">
-                          <Eye className="h-6 w-6" />
-                          Analytics
-                        </Link>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                        <Link href="/truth-bounty">
-                          <Coins className="h-6 w-6" />
-                          Truth Bounties
-                        </Link>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                        <Link href="/custom-branding">
-                          <Star className="h-6 w-6" />
-                          Custom Branding
-                        </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-slate-800/50 to-purple-900/20 border-slate-700/50">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Wallet className="h-5 w-5 text-purple-400" />
+                      Revenue Streams
+                    </CardTitle>
+                    <CardDescription>Monetization dashboard</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span>Verification Rewards</span>
+                        <span className="font-semibold text-green-400">450 GTT</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Staking Returns</span>
+                        <span className="font-semibold text-blue-400">320 GTT</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Premium Access</span>
+                        <span className="font-semibold text-purple-400">480 GTT</span>
+                      </div>
+                      <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                        Withdraw Earnings
                       </Button>
                     </div>
                   </CardContent>
@@ -355,70 +401,17 @@ export default function Dashboard() {
           </TabsContent>
 
           {/* Sovereign Tab */}
-          <TabsContent value="sovereign">
+          <TabsContent value="sovereign" className="space-y-6">
             <TierGate requiredTier="SOVEREIGN">
-              <div className="space-y-6">
-                <Card className="bg-slate-800/50 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Crown className="h-5 w-5 text-yellow-400" />
-                      Sovereign Control Center
-                    </CardTitle>
-                    <CardDescription>
-                      Enterprise-grade governance and revenue tools
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <Button className="h-20 flex-col gap-2" asChild>
-                        <Link href="/governance">
-                          <Users className="h-6 w-6" />
-                          Governance
-                        </Link>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                        <Link href="/revenue-sharing">
-                          <Coins className="h-6 w-6" />
-                          Revenue Sharing
-                        </Link>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                        <Link href="/white-label">
-                          <Star className="h-6 w-6" />
-                          White Label
-                        </Link>
-                      </Button>
-                      <Button variant="outline" className="h-20 flex-col gap-2" asChild>
-                        <Link href="/enterprise-support">
-                          <Shield className="h-6 w-6" />
-                          Enterprise Support
-                        </Link>
-                      </Button>
-                    </div>
-
-                    <Card className="bg-slate-700/50 border-slate-600">
-                      <CardHeader>
-                        <CardTitle className="text-lg">Revenue Analytics</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-3 gap-4 text-center">
-                          <div>
-                            <p className="text-2xl font-bold text-green-400">$2,450</p>
-                            <p className="text-sm text-gray-400">This Month</p>
-                          </div>
-                          <div>
-                            <p className="text-2xl font-bold text-blue-400">15.2%</p>
-                            <p className="text-sm text-gray-400">Revenue Share</p>
-                          </div>
-                          <div>
-                            <p className="text-2xl font-bold text-purple-400">$28,900</p>
-                            <p className="text-sm text-gray-400">Total Earned</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </CardContent>
-                </Card>
+              <div className="text-center py-12">
+                <Crown className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold mb-2">Sovereign Features</h3>
+                <p className="text-gray-400 mb-6">
+                  Advanced governance and enterprise tools for truth verification leaders.
+                </p>
+                <Button className="bg-yellow-600 hover:bg-yellow-700">
+                  Access Sovereign Dashboard
+                </Button>
               </div>
             </TierGate>
           </TabsContent>

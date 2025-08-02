@@ -1,0 +1,17 @@
+Directory,File
+public/assets/video,GUARDIANCHAIN_LOGO_VIDEO.mp4
+public/assets/logo,GUARDIANCHAIN_logo.png
+public/assets/logo,gtt-favicon.ico
+public/assets/images,blockchain-image-bg.png
+public/assets/images,global-communication-bg.jpg
+public/assets/images,guardian-og-cover.jpg
+public/assets/icons/capsule,icon1.png
+public/assets/icons/capsule,icon2.png
+public/assets/icons/nft-avatar,avatar1.png
+public/assets/icons/nft-avatar,avatar2.png
+pages,create-capsule.tsx
+pages,dashboard/yield.tsx
+pages,referral.tsx
+pages,vault.tsx
+api/ai,summarize-capsule.ts
+api/ai,user-insights.ts
