@@ -1,14 +1,14 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { setupSimpleAuth, isSimpleAuthenticated } from "./simpleAuth";
+import { setupWorkingAuth, isWorkingAuthenticated } from "./workingAuth";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware - Setup Simple Auth for development
-  setupSimpleAuth(app);
+  // Auth middleware - Setup Working Auth for immediate testing
+  setupWorkingAuth(app);
 
   // Add subscription management routes
-  app.get('/api/subscription/status', isSimpleAuthenticated, async (req: any, res) => {
+  app.get('/api/subscription/status', isWorkingAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user?.id;
       const user = await storage.getUser(userId);
@@ -24,7 +24,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/subscription/upgrade', isSimpleAuthenticated, async (req: any, res) => {
+  app.post('/api/subscription/upgrade', isWorkingAuthenticated, async (req: any, res) => {
     try {
       const { planId } = req.body;
       const userId = req.user?.id;
@@ -39,7 +39,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Simple Auth routes
-  app.get('/api/auth/user', isSimpleAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', isWorkingAuthenticated, async (req: any, res) => {
     try {
       const sessionUser = req.user;
       const userId = sessionUser.id;

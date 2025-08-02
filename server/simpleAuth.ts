@@ -17,12 +17,14 @@ export function setupSimpleAuth(app: Express) {
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true, // Changed to true for development
     cookie: {
       httpOnly: true,
       secure: false, // Set to true in production with HTTPS
       maxAge: sessionTtl,
+      sameSite: 'lax' // Add sameSite for better compatibility
     },
+    name: 'guardianchain.sid' // Custom session name
   }));
 
   // Mock login endpoint for development
@@ -35,7 +37,16 @@ export function setupSimpleAuth(app: Express) {
       lastName: "User",
       tier: "EXPLORER"
     };
-    res.redirect("/");
+    
+    // Save the session explicitly
+    req.session.save((err: any) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).json({ error: 'Session save failed' });
+      }
+      console.log('✓ User session created:', req.session.user);
+      res.redirect("/");
+    });
   });
 
   app.get("/api/logout", (req: any, res) => {
@@ -46,9 +57,15 @@ export function setupSimpleAuth(app: Express) {
 }
 
 export const isSimpleAuthenticated: RequestHandler = (req: any, res, next) => {
+  console.log('Auth check - Session ID:', req.sessionID);
+  console.log('Auth check - Session user:', req.session?.user);
+  
   if (req.session?.user) {
     req.user = req.session.user;
+    console.log('✓ Authentication successful for user:', req.user.id);
     return next();
   }
+  
+  console.log('❌ Authentication failed - no session user');
   return res.status(401).json({ message: "Unauthorized" });
 };

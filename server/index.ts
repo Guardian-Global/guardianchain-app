@@ -1,6 +1,7 @@
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import session from "express-session";
+import cookieParser from 'cookie-parser';
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 // Temporarily disabled middleware imports to fix startup
@@ -42,6 +43,9 @@ app.use(session({
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+
+// Add cookie parser for working authentication
+app.use(cookieParser());
 
 // Serve static assets with proper MIME types
 app.use('/assets', express.static('public/assets', {
