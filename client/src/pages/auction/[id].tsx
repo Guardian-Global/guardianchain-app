@@ -17,6 +17,7 @@ export default function AuctionViewPage() {
   const [funding, setFunding] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
   const [decrypted, setDecrypted] = useState("");
+  const [decryptedFileUrl, setDecryptedFileUrl] = useState(null);
   const [contributionAmount, setContributionAmount] = useState(100);
 
   const { fundAuction, isLoading: fundingTx } = useFundAuction(id, contributionAmount);
@@ -30,6 +31,7 @@ export default function AuctionViewPage() {
         setFunding(data.funded || 0);
         setUnlocked(data.unlocked);
         setLoading(false);
+        if (data.unlocked && data.decryptedContent) setDecrypted(data.decryptedContent);
       });
   }, [id]);
 
@@ -43,7 +45,26 @@ export default function AuctionViewPage() {
       encryptedContent: auction.encryptedContent,
       accessControlConditions: auction.accessControlConditions
     });
-    setDecrypted(plainText);
+
+    try {
+      const parsed = JSON.parse(plainText);
+      if (parsed?.mimeType && parsed?.base64File) {
+        const byteArray = Uint8Array.from(atob(parsed.base64File), c => c.charCodeAt(0));
+        const blob = new Blob([byteArray], { type: parsed.mimeType });
+        const url = URL.createObjectURL(blob);
+        setDecryptedFileUrl(url);
+      } else {
+        setDecrypted(plainText);
+      }
+    } catch {
+      setDecrypted(plainText);
+    }
+
+    await fetch(`/api/auction/${id}/unlock-log`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: address, timestamp: Date.now() })
+    });
   };
 
   return (
@@ -76,7 +97,17 @@ export default function AuctionViewPage() {
           <div className="mt-6">
             <p className="text-green-400 text-lg font-bold mb-4">✅ Reserve Met — Truth Ready for Unlock</p>
             <Button onClick={handleUnlock} className="mb-4">Unlock & View Disclosure</Button>
-            {decrypted && (
+            {decryptedFileUrl ? (
+              <div className="mb-4">
+                <a
+                  href={decryptedFileUrl}
+                  download={`truth-${id}`}
+                  className="text-blue-400 underline"
+                >
+                  📥 Download Unlocked File
+                </a>
+              </div>
+            ) : decrypted && (
               <div className="bg-slate-900 border border-slate-700 p-4 rounded text-sm whitespace-pre-wrap">
                 {decrypted}
               </div>

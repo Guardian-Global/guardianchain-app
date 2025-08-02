@@ -1890,6 +1890,45 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     },
   );
 
+  // Auction unlock logging endpoint
+  app.post("/api/auction/:id/unlock-log", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const auctionId = req.params.id;
+      const { wallet, timestamp } = req.body;
+      
+      console.log("🔓 Auction unlock event logged:", {
+        auctionId,
+        wallet,
+        timestamp,
+        user: req.user.id
+      });
+
+      const unlockEvent = {
+        id: `unlock_${Date.now()}`,
+        auctionId,
+        wallet,
+        userId: req.user.id,
+        timestamp: timestamp || Date.now(),
+        loggedAt: new Date().toISOString()
+      };
+
+      // In production, this would be saved to database
+      // await storage.logAuctionUnlock(unlockEvent);
+
+      res.json({
+        success: true,
+        unlockEvent,
+        message: "Unlock event logged successfully"
+      });
+    } catch (error) {
+      console.error("❌ Failed to log unlock event:", error);
+      res.status(500).json({
+        error: "Failed to log unlock event",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Simple auth user endpoint - no database calls
   app.get("/api/auth/user", isDebugAuthenticated, async (req: any, res) => {
     console.log("🔵 DEBUG: /api/auth/user called");
