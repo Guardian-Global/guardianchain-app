@@ -1989,33 +1989,45 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
         process.env.SUPABASE_SERVICE_ROLE_KEY!
       );
 
-      // Fetch unlock events with auction details
-      const { data: unlocks, error } = await supabase
+      // First fetch unlock events
+      const { data: unlocks, error: unlocksError } = await supabase
         .from('auction_unlocks')
-        .select(`
-          *,
-          auctions (
-            title,
-            summary
-          )
-        `)
+        .select('*')
         .order('unlocked_at', { ascending: false })
         .limit(100);
 
-      if (error) {
-        console.error("❌ Failed to fetch unlock events:", error);
+      if (unlocksError) {
+        console.error("❌ Failed to fetch unlock events:", unlocksError);
         return res.status(500).json({ 
           error: 'Failed to fetch unlock events',
-          details: error.message 
+          details: unlocksError.message 
         });
+      }
+
+      // Then fetch auction details separately and merge
+      const auctionIds = [...new Set((unlocks || []).map(unlock => unlock.auction_id))];
+      
+      let auctionsMap = {};
+      if (auctionIds.length > 0) {
+        const { data: auctions, error: auctionsError } = await supabase
+          .from('auctions')
+          .select('id, title, summary')
+          .in('id', auctionIds);
+
+        if (!auctionsError && auctions) {
+          auctionsMap = auctions.reduce((acc, auction) => {
+            acc[auction.id] = auction;
+            return acc;
+          }, {});
+        }
       }
 
       // Format response for frontend
       const formattedUnlocks = (unlocks || []).map(unlock => ({
         id: unlock.id,
         auction_id: unlock.auction_id,
-        auction_title: unlock.auctions?.title,
-        auction_summary: unlock.auctions?.summary,
+        auction_title: auctionsMap[unlock.auction_id]?.title || 'Unknown Auction',
+        auction_summary: auctionsMap[unlock.auction_id]?.summary || null,
         wallet_address: unlock.wallet_address,
         user_id: unlock.user_id,
         unlocked_at: unlock.unlocked_at,
