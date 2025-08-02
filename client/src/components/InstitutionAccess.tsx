@@ -40,7 +40,7 @@ export default function InstitutionAccess({ user }: InstitutionAccessProps) {
     refetchInterval: 60000, // Refresh every minute
   });
 
-  const institutionalRoles: InstitutionalRole[] = roles || [];
+  const institutionalRoles: InstitutionalRole[] = (roles as InstitutionalRole[]) || [];
 
   const getInstitutionIcon = (type: string) => {
     switch (type) {

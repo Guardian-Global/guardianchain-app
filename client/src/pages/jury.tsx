@@ -142,8 +142,12 @@ function JuryPage() {
       </Card>
 
       {/* Institutional Access */}
-      {user && (
-        <InstitutionAccess user={user} />
+      {user && user.id && user.email && user.tier && (
+        <InstitutionAccess user={{
+          id: user.id,
+          email: user.email,
+          tier: user.tier
+        }} />
       )}
 
       {/* Jury Guidelines */}
