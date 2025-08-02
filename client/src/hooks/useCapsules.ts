@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../../../lib/apiClient";
+import { api } from "@/lib/queryClient";
 
 export interface Capsule {
   id: string;

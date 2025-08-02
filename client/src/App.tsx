@@ -91,7 +91,7 @@ import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
 import TreasuryDashboard from "./pages/treasury";
 import UnlocksDashboard from "./pages/dashboard/unlocks";
-import YieldDashboard from "./pages/dashboard/yield";
+import YieldDashboard from "./pages/dashboard/Yield";
 import FundingDashboard from "./pages/dashboard/funding";
 import AIAdvisorPanel from "./pages/ai-advisor";
 import CompliancePanel from "./pages/compliance";
@@ -148,7 +148,7 @@ import Referrals from "./pages/referrals";
 import Earnings from "./pages/earnings";
 import GameifiedOnboardingPage from "./pages/gamified-onboarding";
 import OnboardingProvider from "./components/onboarding/OnboardingProvider";
-import Vault from "./pages/vault";
+import Vault from "./pages/Vault";
 
 import MintingTestPage from "./pages/minting-test";
 // LogoTestPage moved to archive
@@ -178,7 +178,7 @@ import SimpleTokenLaunch from "@/pages/simple-token-launch";
 import EnhancedProfileDashboard from "@/components/profile/EnhancedProfileDashboard";
 // StripeCheckout moved to features/payments/components/
 // AdminLogin and AdminDashboard moved to archive - using unified auth
-import AdminDashboardPage from "./pages/admin";
+import AdminDashboardPage from "./pages/Admin";
 
 import BlockchainPlayground from "./pages/blockchain-playground";
 import Whitepapers from "./pages/whitepapers";
@@ -219,8 +219,8 @@ import TruthVaultDashboard from "./pages/truth-vault-dashboard";
 import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
-import ReferralDashboard from "./pages/referral";
-import VaultExplorer from "./pages/vault";
+import ReferralDashboard from "./pages/Referral";
+import VaultExplorer from "./pages/Vault";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
