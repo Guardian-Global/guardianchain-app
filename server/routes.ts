@@ -591,6 +591,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Capsule creation endpoint
+  app.post('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { title, content, griefTier, category, nftTokenId, transactionHash } = req.body;
+      
+      if (!title || !content) {
+        return res.status(400).json({ error: 'Title and content are required' });
+      }
+
+      // In production, this would create a capsule in the database
+      const capsule = {
+        id: `cap_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
+        title,
+        content,
+        griefTier: griefTier || 3,
+        category: category || 'memory',
+        nftTokenId,
+        transactionHash,
+        author: req.user.id,
+        createdAt: new Date().toISOString(),
+        status: 'active'
+      };
+      
+      console.log('📦 Capsule created:', { 
+        id: capsule.id, 
+        title, 
+        griefTier: capsule.griefTier,
+        category,
+        nftTokenId 
+      });
+      
+      res.json(capsule);
+    } catch (error) {
+      console.error('❌ Capsule creation failed:', error);
+      res.status(500).json({ 
+        error: 'Failed to create capsule',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Get user capsules endpoint
+  app.get('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      // Mock user capsules - in production this would query the database
+      const mockCapsules = [
+        {
+          id: 'cap_1754140001_abc123',
+          title: 'Family Memories from the 1980s',
+          content: 'Growing up in a small town...',
+          griefTier: 2,
+          category: 'memory',
+          nftTokenId: '1234',
+          author: req.user.id,
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+          status: 'active',
+          replays: 12,
+          yieldEarned: 24
+        },
+        {
+          id: 'cap_1754140002_def456',
+          title: 'A Message to Future Generations',
+          content: 'The wisdom I want to pass down...',
+          griefTier: 3,
+          category: 'legacy',
+          nftTokenId: '1235',
+          author: req.user.id,
+          createdAt: new Date(Date.now() - 172800000).toISOString(),
+          status: 'active',
+          replays: 8,
+          yieldEarned: 24
+        }
+      ];
+      
+      console.log('📋 User capsules requested');
+      res.json(mockCapsules);
+    } catch (error) {
+      console.error('❌ Failed to fetch capsules:', error);
+      res.status(500).json({ error: 'Failed to fetch capsules' });
+    }
+  });
+
   // Content moderation endpoint
   app.post('/api/moderate-content', isDebugAuthenticated, async (req: any, res) => {
     try {

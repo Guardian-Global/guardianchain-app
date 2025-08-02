@@ -237,8 +237,8 @@ function Router() {
         }>
           <Switch>
             {/* Core Routes */}
-            <Route path="/" component={Dashboard} />
-            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/" component={lazy(() => import("./pages/dashboard"))} />
+            <Route path="/dashboard" component={lazy(() => import("./pages/dashboard"))} />
             <Route path="/vault" component={Vault} />
           <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />

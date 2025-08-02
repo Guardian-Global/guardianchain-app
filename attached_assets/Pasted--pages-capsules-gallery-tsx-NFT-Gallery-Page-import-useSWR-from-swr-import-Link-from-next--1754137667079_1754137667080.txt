@@ -1,0 +1,69 @@
+// pages/capsules/gallery.tsx — NFT Gallery Page
+import useSWR from "swr";
+import Link from "next/link";
+import Layout from "@/components/layout/Layout";
+import PageHeader from "@/components/layout/PageHeader";
+
+export default function CapsuleGallery() {
+  const { data, error } = useSWR("/api/capsules/minted", (u) => fetch(u).then(r => r.json()));
+  if (error) return <p className="p-6 text-brand-danger">Failed to load capsules.</p>;
+  if (!data) return <p className="p-6">Loading capsules...</p>;
+
+  return (
+    <Layout title="Minted Capsules" tier="guest">
+      <PageHeader title="🖼 Capsule Gallery" subtitle="Explore permanently minted memory NFTs" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+        {data.map((c) => (
+          <Link key={c.id} href={`/capsule/${c.id}`}>
+            <div className="bg-brand-surface p-4 rounded-vault shadow-card text-brand-textLight hover:ring-2 hover:ring-brand-accent">
+              <p className="text-sm truncate">{c.content}</p>
+              <p className="text-xs text-gray-400 mt-1">Grief Tier: {c.grief_tier}</p>
+              <p className="text-xs italic text-brand-highlight">Minted by: {c.wallet_address}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </Layout>
+  );
+}
+
+
+// pages/capsule/[id].tsx — Capsule Vault Page
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Layout from "@/components/layout/Layout";
+import PageHeader from "@/components/layout/PageHeader";
+import CertificateDownloadButton from "@/components/CertificateDownloadButton";
+
+export default function CapsulePage() {
+  const { query } = useRouter();
+  const [capsule, setCapsule] = useState<any>(null);
+
+  useEffect(() => {
+    if (!query.id) return;
+    fetch(`/api/capsules/${query.id}`).then((r) => r.json()).then(setCapsule);
+  }, [query.id]);
+
+  if (!capsule) return <p className="p-6">Loading capsule...</p>;
+
+  return (
+    <Layout title="Capsule Vault" tier="guest">
+      <PageHeader title={`🔐 Capsule #${capsule.id}`} subtitle={capsule.content.slice(0, 60) + "..."} />
+      <div className="bg-brand-surface p-6 rounded-vault shadow-card text-brand-textLight">
+        <p className="whitespace-pre-wrap text-sm mb-4">{capsule.content}</p>
+        <p className="text-xs text-gray-400">Created by: {capsule.wallet_address}</p>
+        <p className="text-xs">Grief Tier: {capsule.grief_tier}</p>
+        <p className="text-xs mb-3">Replay Count: {capsule.replay_count}</p>
+        <CertificateDownloadButton capsuleId={capsule.id} content={capsule.content} wallet={capsule.wallet_address} />
+        <a
+          href={`https://opensea.io/assets/matic/${process.env.NEXT_PUBLIC_NFT_CONTRACT}/${capsule.id}`}
+          className="mt-3 block text-sm text-brand-accent hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          🌐 View on OpenSea
+        </a>
+      </div>
+    </Layout>
+  );
+}
