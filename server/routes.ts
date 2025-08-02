@@ -426,6 +426,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
 
+  // Analytics dashboard endpoint
+  app.get('/api/analytics/dashboard', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      // Mock analytics data - in production this would query the database
+      const analyticsData = {
+        dailyReplays: {
+          labels: Array.from({ length: 14 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            return date.toISOString().split('T')[0];
+          }).reverse(),
+          counts: [12, 19, 8, 15, 23, 18, 27, 31, 22, 16, 25, 29, 34, 28]
+        },
+        griefTierDistribution: {
+          labels: ["Tier 1", "Tier 2", "Tier 3", "Tier 4", "Tier 5"],
+          data: [45, 32, 28, 18, 12]
+        },
+        yieldDistribution: {
+          total: 2850,
+          byTier: [450, 640, 840, 720, 600]
+        },
+        topCapsules: [
+          {
+            id: 'cap_1754140000_abc123',
+            title: 'A Message from the Past',
+            replays: 156,
+            yield: 312
+          },
+          {
+            id: 'cap_1754139000_def456',
+            title: 'Family Legacy',
+            replays: 134,
+            yield: 268
+          },
+          {
+            id: 'cap_1754138000_ghi789',
+            title: 'The Truth About...',
+            replays: 98,
+            yield: 196
+          },
+          {
+            id: 'cap_1754137000_jkl012',
+            title: 'War Stories',
+            replays: 87,
+            yield: 174
+          },
+          {
+            id: 'cap_1754136000_mno345',
+            title: 'Lost Memories',
+            replays: 76,
+            yield: 152
+          }
+        ]
+      };
+
+      console.log('📊 Analytics dashboard data requested');
+      res.json(analyticsData);
+    } catch (error) {
+      console.error('❌ Analytics dashboard error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch analytics data',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Content moderation endpoint
+  app.post('/api/moderate-content', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { content } = req.body;
+      
+      if (!content) {
+        return res.status(400).json({ error: 'Content is required' });
+      }
+
+      // Import moderation function
+      const { moderateCapsule, calculateGriefScore } = await import('./lib/moderation');
+      
+      const moderationResult = await moderateCapsule(content);
+      const griefScore = await calculateGriefScore(content);
+      
+      console.log('🔍 Content moderated:', { 
+        isAllowed: moderationResult.isAllowed, 
+        griefScore,
+        flags: moderationResult.flags 
+      });
+      
+      res.json({
+        moderation: moderationResult,
+        griefScore,
+        timestamp: new Date().toISOString()
+      });
+      
+    } catch (error) {
+      console.error('❌ Content moderation failed:', error);
+      res.status(500).json({ 
+        error: 'Content moderation failed',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
   // Simple auth user endpoint - no database calls
   app.get('/api/auth/user', isDebugAuthenticated, async (req: any, res) => {
     console.log('🔵 DEBUG: /api/auth/user called');
