@@ -8,6 +8,7 @@ import ValidatorBids from "./pages/ValidatorBids";
 import Search from "./pages/Search";
 import NewCapsule from "./pages/NewCapsule";
 import CapsuleDetail from "./pages/CapsuleDetail";
+import NewTruthAuctionPage from "./pages/auction/new";
 
 // Create minimal UI components to avoid dependency issues
 function Button({ children, size, variant, className, type, ...props }: any) {
@@ -373,6 +374,11 @@ function Navigation() {
               Create Capsule
             </span>
           </Link>
+          <Link href="/auction/new">
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">
+              Truth Auction
+            </span>
+          </Link>
         </div>
       </div>
     </nav>
@@ -403,6 +409,10 @@ export default function App() {
         <Route path="/capsules/new">
           <Navigation />
           <NewCapsule />
+        </Route>
+        <Route path="/auction/new">
+          <Navigation />
+          <NewTruthAuctionPage />
         </Route>
         <Route path="/capsule/:id">
           <Navigation />
