@@ -73,6 +73,7 @@ import FinancialDashboard from "./features/analytics/financial-dashboard";
 import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
 import TreasuryDashboard from "./pages/treasury";
+import UnlocksDashboard from "./pages/dashboard/unlocks";
 import AIAdvisorPanel from "./pages/ai-advisor";
 import CompliancePanel from "./pages/compliance";
 import YieldDistributionPage from "./pages/yield-distribution";
@@ -604,6 +605,7 @@ function Router() {
             <Route path="/tiers" component={TiersPage} />
             <Route path="/donate-access" component={DonateAccessPage} />
             <Route path="/treasury" component={TreasuryDashboard} />
+            <Route path="/dashboard/unlocks" component={UnlocksDashboard} />
             <Route path="/ai-advisor" component={AIAdvisorPanel} />
             <Route path="/compliance" component={CompliancePanel} />
             <Route

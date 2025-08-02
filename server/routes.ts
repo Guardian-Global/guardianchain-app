@@ -1977,6 +1977,62 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     res.json(responseUser);
   });
 
+  // Get all unlock events endpoint
+  app.get("/api/unlocks", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📜 Fetching all unlock events");
+
+      // Import Supabase client
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      // Fetch unlock events with auction details
+      const { data: unlocks, error } = await supabase
+        .from('auction_unlocks')
+        .select(`
+          *,
+          auctions (
+            title,
+            summary
+          )
+        `)
+        .order('unlocked_at', { ascending: false })
+        .limit(100);
+
+      if (error) {
+        console.error("❌ Failed to fetch unlock events:", error);
+        return res.status(500).json({ 
+          error: 'Failed to fetch unlock events',
+          details: error.message 
+        });
+      }
+
+      // Format response for frontend
+      const formattedUnlocks = (unlocks || []).map(unlock => ({
+        id: unlock.id,
+        auction_id: unlock.auction_id,
+        auction_title: unlock.auctions?.title,
+        auction_summary: unlock.auctions?.summary,
+        wallet_address: unlock.wallet_address,
+        user_id: unlock.user_id,
+        unlocked_at: unlock.unlocked_at,
+        created_at: unlock.created_at
+      }));
+
+      console.log("✅ Fetched unlock events:", formattedUnlocks.length);
+      res.json(formattedUnlocks);
+    } catch (error) {
+      console.error("❌ Failed to fetch unlock events:", error);
+      res.status(500).json({
+        error: "Failed to fetch unlock events",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Get auction details endpoint with Supabase integration
   app.get("/api/auction/:id", isDebugAuthenticated, async (req: any, res) => {
     try {
