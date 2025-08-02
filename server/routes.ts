@@ -2833,6 +2833,186 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Capsule Search API endpoints
+  app.get('/api/capsules/search', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔍 Capsule search requested');
+    
+    try {
+      const {
+        query,
+        grief_tier,
+        verification_status,
+        region,
+        category,
+        truth_score_min,
+        date_range,
+        tags
+      } = req.query;
+
+      // Generate mock capsule data for search
+      const mockCapsules = [
+        {
+          id: 'cap_001',
+          title: 'Family Memories from Christmas 1995',
+          content: 'I remember the snow falling gently as we gathered around the tree...',
+          grief_tier: 'tier_2',
+          tags: ['family', 'memory', 'nostalgia'],
+          guardian_id: 'guardian_1',
+          created_at: '2025-07-15T00:00:00Z',
+          verification_status: 'verified',
+          truth_score: 85,
+          interaction_count: 45,
+          region: 'north_america',
+          category: 'memory'
+        },
+        {
+          id: 'cap_002',
+          title: 'Testimony of Corporate Fraud',
+          content: 'During my time at the corporation, I witnessed systematic financial irregularities...',
+          grief_tier: 'tier_4',
+          tags: ['testimony', 'fraud', 'corporate'],
+          guardian_id: 'guardian_2',
+          created_at: '2025-07-20T00:00:00Z',
+          verification_status: 'pending',
+          truth_score: 72,
+          interaction_count: 123,
+          region: 'europe',
+          category: 'testimony'
+        },
+        {
+          id: 'cap_003',
+          title: 'Legacy of My Grandmother',
+          content: 'My grandmother taught me the importance of preserving truth for future generations...',
+          grief_tier: 'tier_3',
+          tags: ['legacy', 'wisdom', 'family'],
+          guardian_id: 'guardian_3',
+          created_at: '2025-07-25T00:00:00Z',
+          verification_status: 'verified',
+          truth_score: 92,
+          interaction_count: 67,
+          region: 'asia',
+          category: 'legacy'
+        },
+        {
+          id: 'cap_004',
+          title: 'Truth About Medical Research',
+          content: 'The study results were deliberately suppressed to protect pharmaceutical interests...',
+          grief_tier: 'tier_4',
+          tags: ['truth', 'medical', 'research'],
+          guardian_id: 'guardian_4',
+          created_at: '2025-08-01T00:00:00Z',
+          verification_status: 'disputed',
+          truth_score: 65,
+          interaction_count: 234,
+          region: 'europe',
+          category: 'truth'
+        },
+        {
+          id: 'cap_005',
+          title: 'Trauma from Natural Disaster',
+          content: 'The earthquake changed everything in our small community...',
+          grief_tier: 'tier_3',
+          tags: ['trauma', 'disaster', 'community'],
+          guardian_id: 'guardian_5',
+          created_at: '2025-06-10T00:00:00Z',
+          verification_status: 'verified',
+          truth_score: 88,
+          interaction_count: 89,
+          region: 'oceania',
+          category: 'trauma'
+        }
+      ];
+      
+      let filteredCapsules = mockCapsules.filter(capsule => {
+        // Search query filter
+        if (query) {
+          const searchTerm = query.toString().toLowerCase();
+          const matches = capsule.title.toLowerCase().includes(searchTerm) ||
+                         capsule.content.toLowerCase().includes(searchTerm) ||
+                         capsule.guardian_id.toLowerCase().includes(searchTerm);
+          if (!matches) return false;
+        }
+
+        // Grief tier filter
+        if (grief_tier && grief_tier !== 'all' && capsule.grief_tier !== grief_tier) return false;
+
+        // Verification status filter
+        if (verification_status && verification_status !== 'all' && capsule.verification_status !== verification_status) return false;
+
+        // Region filter
+        if (region && region !== 'all' && capsule.region !== region) return false;
+
+        // Category filter
+        if (category && category !== 'all' && capsule.category !== category) return false;
+
+        // Truth score filter
+        if (truth_score_min && capsule.truth_score < parseInt(truth_score_min.toString())) return false;
+
+        // Date range filter
+        if (date_range && date_range !== 'all') {
+          const now = new Date();
+          const capsuleDate = new Date(capsule.created_at);
+          const diffDays = Math.floor((now.getTime() - capsuleDate.getTime()) / (1000 * 60 * 60 * 24));
+          
+          switch (date_range) {
+            case '24h': if (diffDays > 1) return false; break;
+            case '7d': if (diffDays > 7) return false; break;
+            case '30d': if (diffDays > 30) return false; break;
+            case '90d': if (diffDays > 90) return false; break;
+          }
+        }
+
+        // Tags filter
+        if (tags) {
+          const tagList = tags.toString().split(',');
+          const hasMatchingTag = tagList.some(tag => capsule.tags.includes(tag.trim()));
+          if (!hasMatchingTag) return false;
+        }
+
+        return true;
+      });
+
+      console.log('✅ Capsule search completed:', {
+        total_capsules: mockCapsules.length,
+        filtered_results: filteredCapsules.length,
+        filters_applied: Object.keys(req.query).length
+      });
+
+      res.json({
+        capsules: filteredCapsules,
+        total: filteredCapsules.length,
+        query_info: {
+          filters_applied: Object.keys(req.query).length,
+          search_time: Date.now()
+        }
+      });
+    } catch (error) {
+      console.error('❌ Error searching capsules:', error);
+      res.status(500).json({ error: 'Failed to search capsules' });
+    }
+  });
+
+  app.get('/api/capsules/tags', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🏷️ Capsule tags requested');
+    
+    try {
+      // Mock available tags
+      const tags = [
+        'memory', 'testimony', 'legacy', 'truth', 'trauma', 'wisdom',
+        'family', 'personal', 'historical', 'political', 'spiritual',
+        'scientific', 'artistic', 'cultural', 'environmental', 'social',
+        'fraud', 'corporate', 'medical', 'research', 'disaster', 
+        'community', 'nostalgia'
+      ];
+
+      console.log('✅ Tags retrieved:', tags.length);
+      res.json({ tags });
+    } catch (error) {
+      console.error('❌ Error fetching tags:', error);
+      res.status(500).json({ error: 'Failed to fetch tags' });
+    }
+  });
+
   // Get lineage graph data
   app.get('/api/lineage/graph', isDebugAuthenticated, async (req: any, res) => {
     console.log('🌳 Lineage graph requested');

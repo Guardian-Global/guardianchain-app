@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import GuardianSearch from '@/components/guardian-map/GuardianSearch';
 import MapExportTools from '@/components/guardian-map/MapExportTools';
+import CapsuleSearch from '@/components/guardian-map/CapsuleSearch';
 
 interface GuardianNode {
   id: string;
@@ -538,12 +539,24 @@ export default function GuardianMap() {
         {/* Search and Controls */}
         <div className="max-w-7xl mx-auto mb-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
           
-          {/* Guardian Search */}
-          <div className="lg:col-span-2">
+          {/* Search Components */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Guardian Search */}
             <GuardianSearch
               guardians={mapData?.guardians || []}
               onFiltersChange={handleFiltersChange}
               onExport={handleExportData}
+            />
+            
+            {/* Capsule Search */}
+            <CapsuleSearch
+              onResultsChange={(capsules) => {
+                // Handle capsule search results if needed
+                console.log('Capsule search results:', capsules.length);
+              }}
+              onExport={(capsules, format) => {
+                console.log('Export capsules:', capsules.length, format);
+              }}
             />
           </div>
 

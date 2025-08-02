@@ -1,0 +1,67 @@
+// GUARDIANCHAIN FULL LEGACY FIX + ULTIMATE HOMEPAGE UPGRADE
+// Navigation-integrated. Investor-ready. All legacy issues repaired.
+
+// 🧠 OBJECTIVE:
+Use the new MegaSidebar + WalkthroughNav system to:
+1. Traverse every route listed in ROUTES.ts
+2. Inject or restore all missing features, logic, capsule types, and IP components
+3. Repair or completely rewrite broken/incomplete legacy pages
+4. Connect missing AI/metrics/yield/token logic
+5. Use updated layout and walkthrough system site-wide
+
+// 🔍 HOMEPAGE TASK (HIGH PRIORITY):
+A. Crawl all existing homepage and landing files (`/index.tsx`, `/pages/home.tsx`, etc.)
+B. Compare them to industry-standard landing pages from:
+   - Ethereum.org
+   - Mirror.xyz
+   - Arweave
+   - OpenSea
+   - Vercel
+C. Identify the top 5 layouts that are:
+   - Visually powerful
+   - User onboarding-friendly
+   - High-converting
+   - Investor-attractive
+D. Merge the top UX patterns into one elite homepage:
+   - Includes hero section with video
+   - Clear explanation of capsules, GTT, and permanence
+   - AI-powered call-to-actions
+   - Trust signals (VC-backed, on-chain verified)
+   - Testimonials or user examples
+   - Social share CTA
+E. Permanently remove unused legacy homepage files to avoid fallback or routing errors (especially `/home.tsx`, `/landing.tsx`, `/welcome.tsx`)
+
+// ✅ CAPSULE + TOKEN FIX INSTRUCTIONS:
+- Fill in all missing capsule types (time-lock, death-switch, contract seal, whistleblower)
+- Enable the Eternal Contract capsule flow to be publicly shareable and unlockable by ENS
+- Inject token yield logic from `GTTYieldVault.sol` into the dashboard
+- Fill `/tokenomics`, `/tokens`, `/metrics`, `/dashboard/yield` with live data and connect API
+- Migrate/merge old token docs into `/whitepapers` if not yet imported
+
+// 📂 FILE SOURCES TO RESPECT:
+- `guardian_registry.json` → lists all declared capsules/stacks
+- `veritus_feature_sync.sh` → all expected enabled features
+- `fullstack.txt`, `token logicrrr.txt`, `VC-GSAL`, `Phase15` docs → all IP
+- `WalkthroughContext.tsx` → use to highlight CTA flow: Create → Lock → Yield
+
+// 🚫 DO NOT:
+- Leave placeholder or incomplete files (delete or complete them)
+- Create new pages if existing legacy files exist (prefer to rewrite)
+- Allow multiple homepages to co-exist (finalize one)
+
+// ✅ DO:
+- Inject all restored content using the new layout: AppLayout.tsx + MegaSidebar
+- Apply WalkthroughStepper to `/create`, `/eternal-contracts`, `/dashboard/yield`
+- Enable multilingual support from `locales/en.json`, `es.json`, and tooltip hooks
+- Use Breadcrumbs and TopbarCommandMenu site-wide for UX clarity
+- Match Ethereum.org-level frontend clarity, code quality, and style
+
+// ✅ OUTPUT GOAL:
+- Fully merged homepage based on best 5 options
+- All dead legacy home files deleted
+- Every route functional
+- All missing capsule types and token logic wired in
+- Entire app uses upgraded layout + walkthrough
+- Ready to pitch investors or receive grant/VC review
+
+🚀 LAUNCH FIX NOW

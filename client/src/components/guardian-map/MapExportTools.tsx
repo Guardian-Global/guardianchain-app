@@ -15,6 +15,7 @@ import {
   Camera,
   Share2
 } from 'lucide-react';
+import GuardianPDFExport from './GuardianPDFExport';
 
 interface GuardianNode {
   id: string;
@@ -246,15 +247,10 @@ export default function MapExportTools({
         <div>
           <Label className="text-sm text-gray-300 mb-3 block">Report Export</Label>
           <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onExportReport('pdf', exportOptions)}
-              className="flex-1 border-indigo-500/30"
-            >
-              <FileText className="w-4 h-4 mr-1" />
-              PDF Report
-            </Button>
+            <GuardianPDFExport
+              guardians={guardians}
+              options={exportOptions}
+            />
             <Button
               variant="outline"
               size="sm"
