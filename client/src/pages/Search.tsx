@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import VoteButton from "@/components/VoteButton";
 import { Loader2, Search as SearchIcon, Shield, Eye, Clock } from "lucide-react";
 
 interface SearchResult {
@@ -35,6 +36,7 @@ export default function SearchPage() {
   const [hasMore, setHasMore] = useState(true);
   const [totalResults, setTotalResults] = useState(0);
   const [error, setError] = useState("");
+  const [userWallet, setUserWallet] = useState<string>("");
 
   const performSearch = async (searchTerm: string, pageNum: number = 1, append: boolean = false) => {
     if (!searchTerm.trim()) {
@@ -101,6 +103,21 @@ export default function SearchPage() {
       setSearchQuery(query);
       performSearch(query, 1, false);
     }
+    
+    // Check for user wallet
+    const checkWallet = async () => {
+      if (typeof window !== "undefined" && window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            setUserWallet(accounts[0]);
+          }
+        } catch (error) {
+          console.log("No wallet connected");
+        }
+      }
+    };
+    checkWallet();
   }, [query, onlyPublic, sortBy]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -294,12 +311,21 @@ export default function SearchPage() {
                   )}
 
                   <div className="flex items-center justify-between">
-                    <Link href={`/capsule/${capsule.id}`}>
-                      <Button variant="outline" size="sm">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Capsule
-                      </Button>
-                    </Link>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/capsule/${capsule.id}`}>
+                        <Button variant="outline" size="sm">
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Capsule
+                        </Button>
+                      </Link>
+                      
+                      <VoteButton
+                        capsuleId={capsule.id}
+                        wallet={userWallet}
+                        initialLikes={0}
+                        className="ml-2"
+                      />
+                    </div>
                     
                     {capsule.content?.tx_hash && (
                       <a

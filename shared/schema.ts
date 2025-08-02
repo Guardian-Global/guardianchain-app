@@ -41,6 +41,21 @@ export const newsletterSubscribers = pgTable("newsletter_subscribers", {
   status: varchar("status").default("active"),
 });
 
+// Capsule Votes table - For community verification and engagement
+export const capsuleVotes = pgTable("capsule_votes", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id").notNull().references(() => capsules.id, { onDelete: "cascade" }),
+  voterWallet: varchar("voter_wallet").notNull(),
+  voteType: varchar("vote_type").notNull().default("upvote"), // upvote, downvote
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  // Ensure one vote per wallet per capsule
+  index("idx_capsule_votes_unique").on(table.capsuleId, table.voterWallet),
+  // Performance indexes
+  index("idx_capsule_votes_capsule").on(table.capsuleId),
+  index("idx_capsule_votes_wallet").on(table.voterWallet),
+]);
+
 // Capsules table for truth capsule storage and search
 export const capsules = pgTable("capsules", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -77,6 +92,8 @@ export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
 export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
 export type Capsule = typeof capsules.$inferSelect;
 export type InsertCapsule = typeof capsules.$inferInsert;
+export type CapsuleVote = typeof capsuleVotes.$inferSelect;
+export type InsertCapsuleVote = typeof capsuleVotes.$inferInsert;
 
 // Extended types for UI compatibility
 export interface EnhancedCapsuleData extends Capsule {
@@ -100,7 +117,9 @@ export interface EnhancedCapsuleData extends Capsule {
 export const insertUserSchema = createInsertSchema(users);
 export const insertNewsletterSubscriberSchema = createInsertSchema(newsletterSubscribers);
 export const insertCapsuleSchema = createInsertSchema(capsules);
+export const insertCapsuleVoteSchema = createInsertSchema(capsuleVotes);
 
 export type InsertUserType = z.infer<typeof insertUserSchema>;
 export type InsertNewsletterSubscriberType = z.infer<typeof insertNewsletterSubscriberSchema>;
 export type InsertCapsuleType = z.infer<typeof insertCapsuleSchema>;
+export type InsertCapsuleVoteType = z.infer<typeof insertCapsuleVoteSchema>;

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Heart, MessageCircle, Share2, Calendar, User, Tag, Shield, Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import VoteButton from "@/components/VoteButton";
 
 interface CapsuleData {
   id: string;
@@ -39,11 +40,26 @@ export default function CapsuleDetailPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [userWallet, setUserWallet] = useState<string>("");
 
   useEffect(() => {
     if (match && params?.id) {
       fetchCapsule(params.id);
     }
+    // Try to get wallet address from localStorage or window.ethereum
+    const checkWallet = async () => {
+      if (typeof window !== "undefined" && window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            setUserWallet(accounts[0]);
+          }
+        } catch (error) {
+          console.log("No wallet connected");
+        }
+      }
+    };
+    checkWallet();
   }, [match, params]);
 
   const fetchCapsule = async (id: string) => {
@@ -379,7 +395,7 @@ export default function CapsuleDetailPage() {
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <Heart className={`w-5 h-5 mr-1 ${liked ? 'text-red-500 fill-current' : 'text-gray-500'}`} />
+                    <Heart className="w-5 h-5 mr-1 text-gray-500" />
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {likeCount.toLocaleString()}
                     </span>
@@ -413,15 +429,11 @@ export default function CapsuleDetailPage() {
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Interact</h4>
                   <div className="flex flex-wrap gap-2">
-                    <Button 
-                      onClick={handleLike}
-                      variant={liked ? "default" : "outline"}
-                      size="sm"
-                      className="flex items-center"
-                    >
-                      <Heart className={`w-4 h-4 mr-2 ${liked ? 'fill-current' : ''}`} />
-                      {liked ? 'Liked' : 'Like'}
-                    </Button>
+                    <VoteButton
+                      capsuleId={capsule.id}
+                      wallet={userWallet}
+                      initialLikes={parseInt(capsule.likes || "0")}
+                    />
                     <Button variant="outline" size="sm" className="flex items-center">
                       <MessageCircle className="w-4 h-4 mr-2" />
                       Comment

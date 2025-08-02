@@ -2,15 +2,18 @@ import {
   users,
   capsules,
   newsletterSubscribers,
+  capsuleVotes,
   type User,
   type UpsertUser,
   type Capsule,
   type InsertCapsule,
   type NewsletterSubscriber,
   type InsertNewsletterSubscriber,
+  type CapsuleVote,
+  type InsertCapsuleVote,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
@@ -26,6 +29,11 @@ export interface IStorage {
   createCapsule(capsule: InsertCapsule): Promise<Capsule>;
   updateCapsule(id: string, capsule: Partial<Capsule>): Promise<Capsule>;
   deleteCapsule(id: string): Promise<void>;
+  
+  // Vote operations
+  recordVote(vote: InsertCapsuleVote): Promise<CapsuleVote>;
+  getVotesByCapsule(capsuleId: string): Promise<CapsuleVote[]>;
+  getUserVote(capsuleId: string, wallet: string): Promise<CapsuleVote | undefined>;
   
   // Newsletter operations
   subscribeToNewsletter(subscriber: InsertNewsletterSubscriber): Promise<NewsletterSubscriber>;
@@ -105,6 +113,54 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCapsule(id: string): Promise<void> {
     await db.delete(capsules).where(eq(capsules.id, id));
+  }
+
+  // Vote operations
+  async recordVote(voteData: InsertCapsuleVote): Promise<CapsuleVote> {
+    // Check if user has already voted on this capsule
+    const existingVote = await this.getUserVote(voteData.capsuleId, voteData.voterWallet);
+    
+    if (existingVote) {
+      // Update existing vote
+      const [vote] = await db
+        .update(capsuleVotes)
+        .set({
+          voteType: voteData.voteType,
+          createdAt: new Date()
+        })
+        .where(and(
+          eq(capsuleVotes.capsuleId, voteData.capsuleId),
+          eq(capsuleVotes.voterWallet, voteData.voterWallet)
+        ))
+        .returning();
+      return vote;
+    } else {
+      // Create new vote
+      const [vote] = await db
+        .insert(capsuleVotes)
+        .values(voteData)
+        .returning();
+      return vote;
+    }
+  }
+
+  async getVotesByCapsule(capsuleId: string): Promise<CapsuleVote[]> {
+    return await db
+      .select()
+      .from(capsuleVotes)
+      .where(eq(capsuleVotes.capsuleId, capsuleId))
+      .orderBy(desc(capsuleVotes.createdAt));
+  }
+
+  async getUserVote(capsuleId: string, wallet: string): Promise<CapsuleVote | undefined> {
+    const [vote] = await db
+      .select()
+      .from(capsuleVotes)
+      .where(and(
+        eq(capsuleVotes.capsuleId, capsuleId),
+        eq(capsuleVotes.voterWallet, wallet)
+      ));
+    return vote;
   }
 
   // Newsletter operations

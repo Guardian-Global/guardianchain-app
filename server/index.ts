@@ -148,6 +148,10 @@ app.use("/api/web3", web3Routes);
 import searchRoutes from "./api/search.js";
 app.use("/api/search", searchRoutes);
 
+// Capsule vote routes
+import capsuleVoteRouter from "./api/capsule-vote.js";
+app.use("/api/capsules", capsuleVoteRouter);
+
 // Capsule routes are integrated directly in routes.ts
 
 app.use((req, res, next) => {
