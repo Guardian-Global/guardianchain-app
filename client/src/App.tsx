@@ -148,6 +148,7 @@ import MyListings from "./pages/my-listings";
 import TokenListings from "./pages/token-listings";
 import MascotSettingsPage from "./pages/mascot-settings";
 import GTTLaunch from "./pages/gtt-launch";
+import GTTDemo from "./pages/GTTDemo";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
@@ -257,6 +258,7 @@ function Router() {
             <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
         <Route path="/asset-showcase" component={ProfessionalHomepage} />
         <Route path="/gtt-launch" component={GTTLaunch} />
+        <Route path="/gtt-demo" component={GTTDemo} />
 
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />

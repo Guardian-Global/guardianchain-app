@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { triggerGTTYield } from "@/lib/gtt";
+import { GTTYieldButton } from "@/components/gtt/GTTYieldButton";
 import { 
   FileText, 
   Calendar, 
@@ -533,6 +535,18 @@ const CapsuleDrawer = ({
                     <Button variant="outline" size="sm">
                       <Download className="h-4 w-4" />
                     </Button>
+                  </div>
+                  
+                  {/* GTT Yield Distribution */}
+                  <Separator className="my-4 bg-slate-700" />
+                  <div className="space-y-2">
+                    <div className="text-sm text-slate-400 mb-2">GTT Yield Distribution</div>
+                    <GTTYieldButton 
+                      authorAddress="0x1234567890123456789012345678901234567890"
+                      griefTier={Math.min(5, Math.max(1, Math.floor(capsule.truthScore / 20)))}
+                      className="w-full bg-orange-600 hover:bg-orange-700"
+                      size="sm"
+                    />
                   </div>
                 </div>
               </>

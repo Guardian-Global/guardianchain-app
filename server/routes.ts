@@ -338,6 +338,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Direct GTT yield distribution endpoint
+  app.post('/api/gtt/distribute-yield', isDebugAuthenticated, async (req: any, res) => {
+    const { authorAddress, griefTier } = req.body;
+    
+    if (!authorAddress || !griefTier) {
+      return res.status(400).json({ error: 'Missing authorAddress or griefTier' });
+    }
+
+    try {
+      console.log('🔵 DEBUG: Direct GTT yield distribution:', { authorAddress, griefTier });
+      
+      // Calculate yield amount: 10 GTT per grief tier
+      const yieldAmount = griefTier * 10;
+      
+      // Mock transaction hash for development
+      const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+      
+      const distribution = {
+        authorAddress,
+        griefTier,
+        yieldAmount,
+        transactionHash,
+        timestamp: new Date().toISOString(),
+        status: 'completed',
+        network: 'Polygon',
+        blockNumber: Math.floor(Math.random() * 1000000) + 50000000
+      };
+
+      console.log('✅ GTT yield distributed:', distribution);
+      res.json({ success: true, distribution, transactionHash, message: 'GTT yield distributed successfully' });
+    } catch (error) {
+      console.error('❌ GTT yield distribution failed:', error);
+      res.status(500).json({ 
+        error: 'GTT yield distribution failed', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
+  // GTT balance endpoint
+  app.get('/api/gtt/balance/:address', isDebugAuthenticated, async (req: any, res) => {
+    const { address } = req.params;
+    
+    try {
+      console.log('🔵 DEBUG: Getting GTT balance for:', address);
+      
+      // Mock balance for development
+      const mockBalance = "125.50";
+      
+      res.json({ success: true, balance: mockBalance, address });
+    } catch (error) {
+      console.error('❌ Failed to get GTT balance:', error);
+      res.status(500).json({ 
+        error: 'Failed to get GTT balance', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
+  // GTT contract info endpoint
+  app.get('/api/gtt/contract-info', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log('🔵 DEBUG: Getting GTT contract info');
+      
+      const contractInfo = {
+        name: 'GuardianChain Truth Token',
+        symbol: 'GTT',
+        totalSupply: '1000000000',
+        decimals: 18,
+        contractAddress: '0x0000000000000000000000000000000000000000',
+        network: 'Polygon',
+        status: 'development'
+      };
+      
+      res.json({ success: true, contract: contractInfo });
+    } catch (error) {
+      console.error('❌ Failed to get contract info:', error);
+      res.status(500).json({ 
+        error: 'Failed to get contract info', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
   // Simple auth user endpoint - no database calls
   app.get('/api/auth/user', isDebugAuthenticated, async (req: any, res) => {
     console.log('🔵 DEBUG: /api/auth/user called');
