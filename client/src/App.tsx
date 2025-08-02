@@ -348,7 +348,7 @@ function Router() {
         <Route path="/referrals" component={Referrals} />
         <Route path="/earnings" component={Earnings} />
         <Route path="/gamified-onboarding" component={GameifiedOnboardingPage} />
-        <Route path="/login" component={lazy(() => import("./pages/login"))} />
+
         <Route path="/login-success" component={lazy(() => import("./pages/login-success"))} />
         <Route path="/terms" component={lazy(() => import("./pages/terms"))} />
         <Route path="/privacy" component={lazy(() => import("./pages/privacy"))} />

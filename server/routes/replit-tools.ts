@@ -31,7 +31,7 @@ router.get('/tools/status', async (req, res) => {
         samlSSO: { active: false, available: true }
       },
       security: {
-        replitAuth: { active: true, configured: true },
+        debugAuth: { active: true, configured: true },
         securityScanner: { active: false, available: true },
         secretsManagement: { active: true, configured: true }
       },
