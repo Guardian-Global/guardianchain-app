@@ -34,7 +34,12 @@ const createCapsuleSchema = z.object({
     tokenAddress: z.string().optional(),
     minimumBalance: z.string().optional(),
     nftContractAddress: z.string().optional()
-  }).optional()
+  }).optional(),
+  // Client-side encryption fields
+  clientEncrypted: z.boolean().optional(),
+  encryptedContent: z.string().optional(),
+  encryptedSymmetricKey: z.string().optional(),
+  accessControlConditions: z.array(z.any()).optional()
 });
 
 export async function createCapsule(req: Request, res: Response) {
@@ -55,8 +60,20 @@ export async function createCapsule(req: Request, res: Response) {
         }
       };
 
-      // Handle time-locked or access-controlled capsules
-      if (validatedData.timelock?.enabled || validatedData.accessControl?.type !== "public") {
+      // Handle client-side encrypted content
+      if (validatedData.clientEncrypted && validatedData.encryptedContent) {
+        contentData = {
+          ...contentData,
+          encrypted: true,
+          encryptedContent: validatedData.encryptedContent,
+          encryptedSymmetricKey: validatedData.encryptedSymmetricKey,
+          accessControlConditions: validatedData.accessControlConditions,
+          originalData: null, // Hide original data when encrypted
+          encryptionMethod: "client_side"
+        };
+      }
+      // Handle server-side encryption for time-locked or access-controlled capsules
+      else if (validatedData.timelock?.enabled || validatedData.accessControl?.type !== "public") {
         try {
           let accessConditions = [];
 
@@ -85,7 +102,8 @@ export async function createCapsule(req: Request, res: Response) {
               encryptedContent: encryptionResult.encryptedContent,
               encryptedSymmetricKey: encryptionResult.encryptedSymmetricKey,
               accessControlConditions: encryptionResult.accessControlConditions,
-              originalData: null // Hide original data when encrypted
+              originalData: null, // Hide original data when encrypted
+              encryptionMethod: "server_side"
             };
           }
         } catch (encryptionError) {

@@ -46,13 +46,65 @@ export default function NewCapsulePage() {
     setLoading(true);
     
     try {
-      const capsuleData: any = {
+      let capsuleData: any = {
         title: title.trim(),
         description: description.trim(),
         category: category,
         author: "CurrentUser", // This would come from auth context
         tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       };
+
+      // Handle client-side encryption if needed
+      if (timeLocked || accessControl !== "public") {
+        // Dynamic import of encryption utility
+        const { encryptCapsule } = await import("../utils/lit/encryptCapsule");
+        
+        // Create access control conditions
+        let accessControlConditions = [];
+        
+        if (timeLocked && unlockDate) {
+          accessControlConditions.push({
+            contractAddress: "",
+            standardContractType: "",
+            chain: "polygon",
+            method: "eth_getBlockByNumber",
+            parameters: ["latest", false],
+            returnValueTest: {
+              comparator: ">=",
+              value: new Date(unlockDate).getTime().toString(),
+            },
+          });
+        }
+        
+        if (accessControl === "token_gated" && tokenAddress && minimumBalance) {
+          accessControlConditions.push({
+            contractAddress: tokenAddress,
+            standardContractType: "ERC20",
+            chain: "polygon",
+            method: "balanceOf",
+            parameters: [":userAddress"],
+            returnValueTest: {
+              comparator: ">=",
+              value: minimumBalance,
+            },
+          });
+        }
+
+        // Encrypt content on client side
+        const encrypted = await encryptCapsule({
+          content: description.trim(),
+          accessControlConditions,
+        });
+
+        capsuleData = {
+          ...capsuleData,
+          description: "[ENCRYPTED]", // Placeholder for encrypted content
+          clientEncrypted: true,
+          encryptedContent: encrypted.encryptedContent,
+          encryptedSymmetricKey: encrypted.encryptedSymmetricKey,
+          accessControlConditions: encrypted.accessControlConditions,
+        };
+      }
 
       // Add time lock settings if enabled
       if (timeLocked && unlockDate) {
@@ -197,10 +249,13 @@ export default function NewCapsulePage() {
                 )}
               </div>
 
-              {/* Time Lock Settings */}
-              <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
-                  🔒 Time Lock & Access Control
+              {/* Time Lock & Encryption Settings */}
+              <div className="border border-amber-200 dark:border-amber-600 rounded-lg p-4 bg-amber-50 dark:bg-amber-900/10">
+                <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3 flex items-center">
+                  <svg className="w-4 h-4 mr-2 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  Encryption & Access Control
                 </h4>
                 
                 <div className="space-y-4">
@@ -210,15 +265,15 @@ export default function NewCapsulePage() {
                       id="timeLocked"
                       checked={timeLocked}
                       onChange={(e) => setTimeLocked(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
                     />
                     <label htmlFor="timeLocked" className="text-sm text-gray-700 dark:text-gray-300">
-                      Enable time-locked reveal
+                      Enable time-locked reveal (content will be encrypted)
                     </label>
                   </div>
 
                   {timeLocked && (
-                    <div>
+                    <div className="ml-6 p-3 bg-amber-100 dark:bg-amber-900/20 rounded-md">
                       <label className="block mb-1 text-sm text-gray-700 dark:text-gray-300">
                         Unlock Date & Time
                       </label>
@@ -226,8 +281,11 @@ export default function NewCapsulePage() {
                         type="datetime-local"
                         value={unlockDate}
                         onChange={(e) => setUnlockDate(e.target.value)}
-                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full p-2 border border-amber-300 dark:border-amber-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
+                      <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                        Content will be encrypted and only accessible after this time
+                      </p>
                     </div>
                   )}
 
@@ -240,14 +298,14 @@ export default function NewCapsulePage() {
                       onChange={(e) => setAccessControl(e.target.value)}
                       className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
-                      <option value="public">Public (Anyone can view)</option>
+                      <option value="public">Public (Anyone can view immediately)</option>
                       <option value="time_locked">Time Locked Only</option>
                       <option value="token_gated">Token Gated (Requires specific tokens)</option>
                     </select>
                   </div>
 
                   {accessControl === "token_gated" && (
-                    <div className="space-y-3">
+                    <div className="ml-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md space-y-3">
                       <div>
                         <label className="block mb-1 text-sm text-gray-700 dark:text-gray-300">
                           Token Contract Address
@@ -270,6 +328,18 @@ export default function NewCapsulePage() {
                           className="w-full"
                         />
                       </div>
+                      <p className="text-xs text-blue-600 dark:text-blue-400">
+                        Only wallets holding the specified tokens can decrypt this capsule
+                      </p>
+                    </div>
+                  )}
+
+                  {(timeLocked || accessControl !== "public") && (
+                    <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-md">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        🔐 <strong>Encryption Active:</strong> Your content will be encrypted using blockchain-grade security. 
+                        Only users meeting the access conditions can decrypt and view the content.
+                      </p>
                     </div>
                   )}
                 </div>
