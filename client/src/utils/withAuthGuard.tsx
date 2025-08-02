@@ -17,7 +17,7 @@ export function AuthGuard({ allowedRoles = [], children }: AuthGuardProps) {
       return;
     }
 
-    if (!isLoading && isAuthenticated && allowedRoles.length > 0) {
+    if (!isLoading && isAuthenticated && Array.isArray(allowedRoles) && allowedRoles.length > 0) {
       const hasRequiredRole = allowedRoles.some(role => 
         user?.tier?.toLowerCase() === role.toLowerCase()
       );
@@ -40,10 +40,20 @@ export function AuthGuard({ allowedRoles = [], children }: AuthGuardProps) {
     );
   }
 
-  if (!isAuthenticated || (allowedRoles.length > 0 && !allowedRoles.some(role => 
-    user?.tier?.toLowerCase() === role.toLowerCase()
-  ))) {
+  // Check if user is authenticated and has required role
+  if (!isAuthenticated) {
     return null;
+  }
+
+  // If roles are specified, check if user has one of them
+  if (Array.isArray(allowedRoles) && allowedRoles.length > 0) {
+    const hasRequiredRole = allowedRoles.some(role => 
+      user?.tier?.toLowerCase() === role.toLowerCase()
+    );
+    
+    if (!hasRequiredRole) {
+      return null;
+    }
   }
 
   return <>{children}</>;
