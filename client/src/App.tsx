@@ -260,22 +260,39 @@ function Router() {
   }
 
   return (
-    <EliteLayout>
-      <WelcomeTour />
-      <LiveTokenTracker position="top" />
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p>Loading...</p>
-            </div>
-          </div>
-        }
-      >
-        <Switch>
-          {/* Core Routes */}
-          <Route path="/" component={EliteHomepage} />
+    <Switch>
+      {/* Homepage - Full screen without layout */}
+      <Route path="/" component={EliteHomepage} />
+      
+      {/* All other routes get the layout wrapper */}
+      <Route>
+        <EliteLayout>
+          <WelcomeTour />
+          <LiveTokenTracker position="top" />
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                  <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                  <p>Loading...</p>
+                </div>
+              </div>
+            }
+          >
+            <Switch>
+              <Route
+                path="/legacy"
+                component={lazy(() => import("./pages/EnhancedDashboard"))}
+              />
+              <Route
+                path="/dashboard"
+                component={lazy(() => import("./pages/EnhancedDashboard"))}
+              />
+              <Route path="/dashboard/yield" component={YieldDashboard} />
+              <Route path="/dashboard/analytics" component={Analytics} />
+              <Route path="/partners" component={Partners} />
+              <Route path="/investor/demo-kit" component={DemoKit} />
+              <Route path="/create" component={CreateCapsule} />
           <Route
             path="/legacy"
             component={lazy(() => import("./pages/EnhancedDashboard"))}
@@ -754,10 +771,12 @@ function Router() {
             <Route path="/legal/terms" component={TermsOfService} />
             <Route path="/legal/security" component={SecurityPolicy} />
 
-            <Route component={NotFound} />
-          </Switch>
-        </Suspense>
-    </EliteLayout>
+              <Route component={NotFound} />
+            </Switch>
+          </Suspense>
+        </EliteLayout>
+      </Route>
+    </Switch>
   );
 }
 
