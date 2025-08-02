@@ -12,6 +12,7 @@ Preferred communication style: Simple, everyday language.
 - **Frameworks & Libraries**: React with TypeScript, Wouter for routing, Tailwind CSS (with custom design system, Radix UI, shadcn/ui) for styling, React Query for server state, React Hook Form with Zod for forms, Framer Motion for micro-interactions.
 - **Build Tool**: Vite.
 - **UI/UX**: Supports dark/light mode, incorporates playful micro-interactions and gamification elements, professional branding, responsive design, and enterprise-grade UI/UX standards. Features a comprehensive design token system integrated with Figma style guides, premium visual identity, and PWA offline capabilities.
+- **Enhanced Pages**: EnhancedHomepage.tsx with video backgrounds and investor-grade presentation, EnhancedDashboard.tsx with NFT avatar customization and tier progress tracking.
 
 ### Backend
 - **Runtime & Language**: Node.js with Express.js, TypeScript.
@@ -26,6 +27,7 @@ Preferred communication style: Simple, everyday language.
 - **ORM**: Drizzle ORM.
 - **Schema Management**: Drizzle Kit.
 - **Connection**: Neon serverless database adapter.
+- **Lineage Infrastructure**: Complete capsule inheritance tracking with lineage table, grief flow, and influence scoring system.
 
 ### Core Entities & Features
 - **Users**: Streamlined debug authentication with comprehensive tier-based access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN), subscription management, and optimized API endpoints for user data and tier management.
@@ -40,7 +42,8 @@ Preferred communication style: Simple, everyday language.
 - **Financial Engine**: Tier management, real-time treasury monitoring, AI business intelligence, compliance oversight, and a donation platform.
 - **Analytics**: Dynamic capsule analytics dashboard with yield tracking, emotional resonance scoring, embeddable widgets, and AI-powered insights.
 - **AI Integration**: GPT-4o powered recommendation engine, AI-assisted onboarding, financial intelligence, emotional content classification, and hallucination guard for content verification. Includes comprehensive AI-powered content analysis with emotion detection and contextual summary generation.
-- **PWA Capabilities**: Full Progressive Web App functionality with service worker, offline support, install button, and enhanced manifest.
+- **PWA Capabilities**: Full Progressive Web App functionality with service worker, offline support, install button, and enhanced manifest with GuardianChain branding.
+- **Asset Integration**: Comprehensive branding asset system with video backgrounds, NFT avatar options, logo strips, and GPU-accelerated visual effects.
 - **Navigation**: Comprehensive navigation system including a centralized ROUTES schema with role-based filtering, professional sidebar, command palette, breadcrumb navigation, and mobile drawer.
 - **Smart Contract Suite**: Production-ready ERC-721 implementation with yield mechanics and validation systems (CapsuleNFT and GTTYieldVault).
 

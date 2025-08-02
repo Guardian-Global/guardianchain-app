@@ -27,12 +27,14 @@ export default function EnhancedDashboard() {
   // Fetch user stats
   const { data: userStats } = useQuery({
     queryKey: ['/api/user/stats'],
+    queryFn: () => fetch('/api/user/stats').then(res => res.json()),
     enabled: !!user
   });
 
   // Fetch recent capsules
   const { data: recentCapsules } = useQuery({
     queryKey: ['/api/capsules/recent'],
+    queryFn: () => fetch('/api/capsules/recent').then(res => res.json()),
     enabled: !!user
   });
 
