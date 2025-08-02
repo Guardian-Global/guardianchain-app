@@ -184,16 +184,19 @@ export default function SearchPage() {
           </h1>
           <div className="max-w-4xl mx-auto text-center text-slate-300 mb-10 space-y-4">
             <p className="text-lg">
-              GuardianChain capsules redefine digital permanence — every capsule is sealed for eternity, immune to deletion, censorship, or erasure.
+              GuardianChain protects the sovereignty of those who live by truth — journalists, comedians, whistleblowers, writers, podcasters, artists, developers, researchers, skeptics, musicians, truth seekers and speakers.
             </p>
             <p>
-              Your <span className="text-indigo-300 font-semibold">memories become currency</span>, and your <span className="text-emerald-300 font-semibold">truth earns yield</span>. When you mint grief, joy, history, or identity — you're contributing to the first economy of human-authored reality.
+              Each capsule is your personal vault, your public disclosure, your family legacy, or your encrypted future — with full control over <span className="text-indigo-300 font-semibold">who sees, when they see, and who benefits</span> from the truth you hold.
+            </p>
+            <p className="text-emerald-300 font-semibold">
+              Truth as yield. Memories as assets. Culture, grief, history, innovation — stored permanently, immune to erasure.
             </p>
             <p className="text-sm text-slate-400 italic">
-              From ancestral stories to modern grief, from art to journalism, GuardianChain records the human journey — past, present, and future — permanently.
+              Create truth auctions and sealed disclosures. Set reserves. Crowd-fund investigations. Reward victims, whistleblowers, and legacy holders directly — governed by Veritas and sealed forever on chain.
             </p>
             <p className="text-indigo-200 font-bold">
-              GTT and Truth Vault are the lifeblood of this new civilization — rewarding verified reality with economic power and sovereign authorship.
+              GuardianChain is your personal Library of Alexandria — indestructible, peer-to-peer, and verifiable by all.
             </p>
           </div>
         </div>
