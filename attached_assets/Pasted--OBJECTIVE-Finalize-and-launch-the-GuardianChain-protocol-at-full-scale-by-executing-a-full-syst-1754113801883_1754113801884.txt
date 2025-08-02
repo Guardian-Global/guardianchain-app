@@ -1,0 +1,56 @@
+🎯 OBJECTIVE:
+Finalize and launch the GuardianChain protocol at full scale by executing a full-system sync, token deployment sequence, pricing feed activation, and post-deployment observability setup.
+
+🧩 EXECUTION SCOPE:
+
+STEP 1: Token Deployment
+- Deploy OPTIMAL_GTT_CONTRACT_V2.sol to Polygon mainnet
+- Use deployer wallet: 0x8c7C0A644Cc4C72EBD55b24b43c1290e90fF0a73
+- Confirm contract verification on Polygonscan
+- Save deployed address to environment file (.env) and app config
+
+STEP 2: Token API & Live Pricing Activation
+- Enable /api/token/live-data endpoint to fetch real-time GTT price
+- Sync with LiveTokenTracker.tsx component for frontend display
+- Update useTokenData.ts hook with new contract address
+
+STEP 3: GTT Revenue Flow Sync
+- Route 5% of all GTT transfers to founder wallet
+- Send 2% to burn address (0x000...dEaD)
+- Send 1% to community reward wallet (assign if not already set)
+- Verify all routing logic from smart contract to frontend logs
+
+STEP 4: Yield + Vault Logic Activation
+- Activate TruthVault.sol integration (staking + compound rewards)
+- Enable time-lock bonus tiers (1yr = +1%, 5yr = +3%)
+- Connect frontend components (Vault, Memory Calculator, Yield Tracker)
+
+STEP 5: Subscription & Storage Billing Sync
+- Ensure GTT accepted for tier upgrades, capsule uploads, and premium tools
+- Stripe fallback live for fiat tiers (Explorer → Sovereign)
+- Enforce access limits per tier as defined in tierAccess.ts
+
+STEP 6: Governance Preparation
+- Ensure DAO, leaderboard, jury, and bounty routes operational
+- Wire GTT token to DAO voting module (if active)
+- Prepare validator dashboard metrics for staking reward visibility
+
+STEP 7: Observability + Audit Trail Setup
+- Add Sentry or logging middleware to capture:
+  - Token API failures
+  - Smart contract errors
+  - Subscription/payment processing issues
+- Implement status ping route /api/health and show on /admin dashboard
+
+🛡️ SAFETY & COMPLIANCE:
+- Do not remove any test, backup, or legacy components
+- Archive all changed contract files into /contracts/archive-deploy
+- Test all routes post-deployment using test user + founder login
+
+📁 OUTPUT DELIVERABLES:
+- /logs/deployment_log.md
+- /logs/token_integration_report.md
+- /logs/price_feed_sync.md
+- /logs/yield_activation_log.md
+- /logs/observability_log.md
+- /.env (updated with contract address)
