@@ -19,6 +19,7 @@ import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
+import { GuardianBootHook } from "@/components/GuardianBootHook";
 import UltimateHomepage from "@/pages/UltimateHomepage";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/CreateCapsule";
@@ -561,6 +562,7 @@ export default function App() {
                     <AssetProvider>
                       <TooltipProvider>
                         <NavigationProvider>
+                          <GuardianBootHook />
                           <main className="flex-1">
                             <Router />
                           </main>

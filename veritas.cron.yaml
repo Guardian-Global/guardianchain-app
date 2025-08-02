@@ -1,0 +1,89 @@
+# GuardianChain Veritas Monitoring Cron Configuration
+# Server monitoring and maintenance tasks
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: veritas-server-monitor
+  namespace: guardianchain
+spec:
+  schedule: "*/5 * * * *"  # Every 5 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: server-monitor
+            image: guardianchain/monitor:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "🔍 Veritas Server Monitor - $(date)"
+              
+              # Check server health
+              if curl -s http://localhost:5000/api/health > /dev/null; then
+                echo "✅ Server healthy"
+              else
+                echo "⚠️ Server health check failed"
+                # Restart server if needed
+                systemctl restart guardianchain.service
+              fi
+              
+              # Check database connection
+              if curl -s http://localhost:5000/api/auth/user > /dev/null; then
+                echo "✅ Database connected"
+              else
+                echo "⚠️ Database connection issue"
+              fi
+              
+              # Check GTT token data freshness
+              TOKEN_AGE=$(curl -s http://localhost:5000/api/token/live-data | jq -r '.lastUpdated // empty')
+              if [ -n "$TOKEN_AGE" ]; then
+                echo "✅ Token data fresh: $TOKEN_AGE"
+              else
+                echo "⚠️ Token data stale"
+              fi
+              
+              # Check capsule system
+              CAPSULE_COUNT=$(curl -s http://localhost:5000/api/capsules | jq -r 'length // 0')
+              echo "📊 Active capsules: $CAPSULE_COUNT"
+              
+              # Memory and CPU check
+              echo "💾 Memory usage: $(free -h | awk '/^Mem:/ {print $3"/"$2}')"
+              echo "🔥 CPU usage: $(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)%"
+              
+              echo "✨ Monitor check complete"
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: CronJob  
+metadata:
+  name: veritas-cleanup
+  namespace: guardianchain
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup
+            image: guardianchain/monitor:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "🧹 Veritas Cleanup - $(date)"
+              
+              # Clean old logs
+              find /var/log/guardianchain -name "*.log" -mtime +7 -delete
+              
+              # Clean temporary files
+              rm -rf /tmp/capsule-*
+              
+              # Optimize database
+              curl -X POST http://localhost:5000/api/admin/optimize-db
+              
+              echo "✨ Cleanup complete"
+          restartPolicy: OnFailure

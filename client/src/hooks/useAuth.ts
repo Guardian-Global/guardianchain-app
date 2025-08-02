@@ -1,22 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
-import { getQueryFn } from "@/lib/queryClient";
+import { api } from "../../../lib/apiClient";
+
+export interface User {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  tier: string;
+  usage?: {
+    capsulesCreated: number;
+    capsulesLimit: number;
+  };
+  subscription?: any;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export function useAuth() {
   const { data: user, isLoading, error } = useQuery({
-    queryKey: ["/api/auth/user"],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    queryKey: ['/api/auth/user'],
+    queryFn: () => api.auth.getUser(),
     retry: false,
-    staleTime: 30 * 60 * 1000, // 30 minutes - aggressive caching
-    gcTime: 60 * 60 * 1000, // 1 hour garbage collection
-    refetchOnWindowFocus: false, // Prevent refetch on focus
-    refetchOnMount: false, // Prevent refetch on mount if data exists
-    refetchOnReconnect: false, // Prevent refetch on reconnect
-    refetchInterval: false, // No automatic refetching
+    staleTime: 30 * 60 * 1000, // 30 minutes
+    gcTime: 60 * 60 * 1000, // 1 hour
   });
 
   return {
-    user,
+    user: user as User | undefined,
     isLoading,
     isAuthenticated: !!user && !error,
+    error,
   };
 }

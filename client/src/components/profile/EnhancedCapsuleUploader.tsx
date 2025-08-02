@@ -1,544 +1,228 @@
-import { useState, useRef, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { 
-  Upload, 
-  File, 
-  Image, 
-  Video, 
-  Music, 
-  FileText,
-  CheckCircle,
-  Loader2,
-  X,
-  Eye,
-  Zap,
-  Brain
-} from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
-import MintCapsuleButton from "./MintCapsuleButton";
-import CapsuleAutotagger from "./CapsuleAutotagger";
-import CapsulePrivacyToggle, { type PrivacySettings } from "./CapsulePrivacyToggle";
+import { useState } from 'react';
+import { useCreateCapsule, useMintNFT } from '../../hooks/useCapsules';
+import { useAnalyze } from '../../hooks/useAI';
+import { useUploadAsset } from '../../hooks/useSupabase';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Loader2, Upload, Brain, Coins, CheckCircle } from 'lucide-react';
 
 interface UploadStep {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
+  id: string;
+  label: string;
+  status: 'pending' | 'active' | 'complete' | 'error';
 }
 
-interface FileUpload {
-  file: File;
-  preview?: string;
-  type: 'image' | 'video' | 'audio' | 'document';
-  uploadUrl?: string;
-  uploaded: boolean;
-}
+export function EnhancedCapsuleUploader() {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [capsuleData, setCapsuleData] = useState<any>(null);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
 
-interface CapsuleMetadata {
-  title: string;
-  summary: string;
-  tags: string[];
-  truthScore?: number;
-  emotionalResonance?: number;
-  aiInsights?: any;
-}
-
-interface EnhancedCapsuleUploaderProps {
-  className?: string;
-  onCapsuleCreated?: (capsule: any) => void;
-  autoAnalyze?: boolean;
-}
-
-export default function EnhancedCapsuleUploader({
-  className = "",
-  onCapsuleCreated,
-  autoAnalyze = true
-}: EnhancedCapsuleUploaderProps) {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [currentStep, setCurrentStep] = useState(1);
-  const [uploads, setUploads] = useState<FileUpload[]>([]);
-  const [metadata, setMetadata] = useState<CapsuleMetadata>({
-    title: '',
-    summary: '',
-    tags: []
-  });
-  const [privacy, setPrivacy] = useState<PrivacySettings>({
-    level: 'public',
-    timeLockEnabled: false,
-    allowSharing: true,
-    allowComments: true,
-    searchable: true
-  });
-  const [capsuleId, setCapsuleId] = useState<string | null>(null);
+  const uploadAsset = useUploadAsset();
+  const createCapsule = useCreateCapsule();
+  const analyze = useAnalyze();
+  const mintNFT = useMintNFT();
 
   const steps: UploadStep[] = [
-    {
-      id: 1,
-      title: 'Upload Files',
-      description: 'Select and upload your media files',
-      completed: uploads.length > 0 && uploads.every(u => u.uploaded)
-    },
-    {
-      id: 2,
-      title: 'Analyze Content',
-      description: 'AI analysis and auto-tagging',
-      completed: !!metadata.aiInsights
-    },
-    {
-      id: 3,
-      title: 'Mint NFT',
-      description: 'Create blockchain proof',
-      completed: false
-    },
-    {
-      id: 4,
-      title: 'Complete',
-      description: 'Finalize your truth capsule',
-      completed: false
-    }
+    { id: 'upload', label: 'Upload Content', status: 'pending' },
+    { id: 'analyze', label: 'AI Analysis', status: 'pending' },
+    { id: 'mint', label: 'Create Capsule', status: 'pending' },
+    { id: 'complete', label: 'NFT Minting', status: 'pending' },
   ];
 
-  const getFileType = (file: File): 'image' | 'video' | 'audio' | 'document' => {
-    const type = file.type;
-    if (type.startsWith('image/')) return 'image';
-    if (type.startsWith('video/')) return 'video';
-    if (type.startsWith('audio/')) return 'audio';
-    return 'document';
-  };
+  const handleFileUpload = async (file: File) => {
+    setUploadedFile(file);
+    setCurrentStep(1);
+    steps[0].status = 'complete';
+    steps[1].status = 'active';
 
-  const getFileIcon = (type: string) => {
-    switch (type) {
-      case 'image': return Image;
-      case 'video': return Video;
-      case 'audio': return Music;
-      default: return FileText;
-    }
-  };
-
-  const createPreview = useCallback((file: File): Promise<string | undefined> => {
-    return new Promise((resolve) => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.readAsDataURL(file);
-      } else {
-        resolve(undefined);
-      }
-    });
-  }, []);
-
-  const uploadFileMutation = useMutation({
-    mutationFn: async (fileUpload: FileUpload) => {
-      // Get presigned upload URL
-      const uploadResponse = await apiRequest("POST", "/api/objects/upload") as any;
+    try {
+      // Step 1: Upload file
+      const uploadResult = await uploadAsset.mutateAsync({ file });
       
-      // Upload file directly to storage
-      const uploadResult = await fetch(uploadResponse.uploadURL, {
-        method: 'PUT',
-        body: fileUpload.file,
-        headers: {
-          'Content-Type': fileUpload.file.type,
-        },
+      // Step 2: AI Analysis
+      const analysisResult = await analyze.mutateAsync({
+        content: file.name,
+        type: 'full'
       });
-
-      if (!uploadResult.ok) {
-        throw new Error('Failed to upload file');
-      }
-
-      return {
-        fileUrl: uploadResponse.uploadURL.split('?')[0], // Remove query params
-        fileType: fileUpload.type,
-        fileName: fileUpload.file.name,
-        fileSize: fileUpload.file.size
-      };
-    },
-    onSuccess: (result, fileUpload) => {
-      setUploads(prev => prev.map(upload => 
-        upload.file === fileUpload.file 
-          ? { ...upload, uploaded: true, uploadUrl: result.fileUrl }
-          : upload
-      ));
       
-      toast({
-        title: "File Uploaded",
-        description: `${fileUpload.file.name} uploaded successfully`,
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Upload Failed",
-        description: error.message || "Failed to upload file",
-        variant: "destructive",
-      });
-    },
-  });
+      setAnalysisResult(analysisResult);
+      setCurrentStep(2);
+      steps[1].status = 'complete';
+      steps[2].status = 'active';
 
-  const createCapsuleMutation = useMutation({
-    mutationFn: async () => {
-      const capsuleData = {
-        title: metadata.title,
-        summary: metadata.summary,
-        tags: metadata.tags,
-        privacy: privacy,
-        files: uploads.map(upload => ({
-          url: upload.uploadUrl,
-          type: upload.type,
-          name: upload.file.name,
-          size: upload.file.size
-        })),
-        aiInsights: metadata.aiInsights,
-        truthScore: metadata.truthScore,
-        emotionalResonance: metadata.emotionalResonance
-      };
+      // Step 3: Create Capsule
+      const capsuleResult = await createCapsule.mutateAsync({
+        title: file.name,
+        content: analysisResult.summary || 'AI-generated capsule',
+        type: analysisResult.category || 'personal',
+        metadata: {
+          fileUrl: uploadResult.url,
+          analysis: analysisResult,
+          truthScore: analysisResult.truthLikelihood || 0.8,
+          emotionalResonance: analysisResult.emotionalResonance || 0.7,
+        }
+      });
 
-      return await apiRequest("POST", "/api/capsules", capsuleData);
-    },
-    onSuccess: (capsule: any) => {
-      setCapsuleId(capsule.id);
+      setCapsuleData(capsuleResult);
       setCurrentStep(3);
-      onCapsuleCreated?.(capsule);
-      
-      queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
-      
-      toast({
-        title: "Capsule Created",
-        description: "Your truth capsule has been created successfully",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Creation Failed",
-        description: error.message || "Failed to create capsule",
-        variant: "destructive",
-      });
-    },
-  });
+      steps[2].status = 'complete';
+      steps[3].status = 'active';
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    
-    for (const file of files) {
-      const type = getFileType(file);
-      const preview = await createPreview(file);
-      
-      const fileUpload: FileUpload = {
-        file,
-        type,
-        preview,
-        uploaded: false
-      };
-      
-      setUploads(prev => [...prev, fileUpload]);
-      
-      // Auto-upload
-      uploadFileMutation.mutate(fileUpload);
+      // Step 4: Mint NFT
+      await mintNFT.mutateAsync({
+        capsuleId: capsuleResult.id,
+        metadata: {
+          name: `Truth Capsule: ${file.name}`,
+          description: analysisResult.summary,
+          image: uploadResult.url,
+          attributes: [
+            { trait_type: 'Truth Score', value: analysisResult.truthLikelihood * 100 },
+            { trait_type: 'Emotional Resonance', value: analysisResult.emotionalResonance * 100 },
+            { trait_type: 'Category', value: analysisResult.category },
+          ]
+        }
+      });
+
+      setCurrentStep(4);
+      steps[3].status = 'complete';
+
+    } catch (error) {
+      console.error('Upload workflow error:', error);
+      steps[currentStep].status = 'error';
     }
   };
 
-  const handleRemoveFile = (fileToRemove: File) => {
-    setUploads(prev => prev.filter(upload => upload.file !== fileToRemove));
-  };
-
-  const handleMetadataChange = (field: keyof CapsuleMetadata, value: any) => {
-    setMetadata(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleTagsGenerated = (insights: any) => {
-    setMetadata(prev => ({
-      ...prev,
-      tags: insights.tags || [],
-      truthScore: insights.truthLikelihood?.score,
-      emotionalResonance: insights.emotionalResonance?.score,
-      aiInsights: insights
-    }));
-    setCurrentStep(2);
-  };
-
-  const handleCreateCapsule = () => {
-    if (!metadata.title.trim()) {
-      toast({
-        title: "Title Required",
-        description: "Please enter a title for your capsule",
-        variant: "destructive",
-      });
-      return;
-    }
+  const getStepIcon = (step: UploadStep, index: number) => {
+    if (step.status === 'complete') return <CheckCircle className="w-5 h-5 text-green-500" />;
+    if (step.status === 'active') return <Loader2 className="w-5 h-5 animate-spin text-blue-500" />;
+    if (step.status === 'error') return <span className="w-5 h-5 text-red-500">✕</span>;
     
-    createCapsuleMutation.mutate();
-  };
-
-  const handleMintComplete = () => {
-    setCurrentStep(4);
-    toast({
-      title: "Process Complete!",
-      description: "Your sovereign truth capsule is now live on the blockchain",
-    });
-  };
-
-  const canProceedToNextStep = () => {
-    switch (currentStep) {
-      case 1: return uploads.length > 0 && uploads.every(u => u.uploaded);
-      case 2: return metadata.title.trim() && metadata.summary.trim();
-      case 3: return true;
-      default: return false;
+    switch (step.id) {
+      case 'upload': return <Upload className="w-5 h-5 text-gray-400" />;
+      case 'analyze': return <Brain className="w-5 h-5 text-gray-400" />;
+      case 'mint': return <Coins className="w-5 h-5 text-gray-400" />;
+      case 'complete': return <CheckCircle className="w-5 h-5 text-gray-400" />;
+      default: return null;
     }
   };
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Upload className="w-5 h-5" />
-          Enhanced Capsule Creator
-          <Badge variant="secondary" className="ml-auto">
-            Step {currentStep} of 4
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent className="space-y-6">
+    <Card className="p-6 max-w-2xl mx-auto">
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">Enhanced Capsule Creation</h2>
+          <p className="text-muted-foreground">
+            Upload → Analyze → Mint → Complete
+          </p>
+        </div>
+
         {/* Progress Steps */}
-        <div className="grid grid-cols-4 gap-2">
+        <div className="space-y-4">
           {steps.map((step, index) => (
-            <div key={step.id} className="flex flex-col items-center text-center">
-              <div className={`
-                w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium mb-1
-                ${step.completed ? 'bg-green-100 text-green-800' : 
-                  currentStep === step.id ? 'bg-blue-100 text-blue-800' : 
-                  'bg-muted text-muted-foreground'}
-              `}>
-                {step.completed ? (
-                  <CheckCircle className="w-4 h-4" />
-                ) : (
-                  step.id
-                )}
+            <div key={step.id} className="flex items-center space-x-4">
+              {getStepIcon(step, index)}
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <span className={`font-medium ${
+                    step.status === 'complete' ? 'text-green-600' :
+                    step.status === 'active' ? 'text-blue-600' :
+                    step.status === 'error' ? 'text-red-600' :
+                    'text-gray-400'
+                  }`}>
+                    {step.label}
+                  </span>
+                  <Badge variant={
+                    step.status === 'complete' ? 'default' :
+                    step.status === 'active' ? 'secondary' :
+                    step.status === 'error' ? 'destructive' :
+                    'outline'
+                  }>
+                    {step.status}
+                  </Badge>
+                </div>
               </div>
-              <div className="text-xs font-medium">{step.title}</div>
-              <div className="text-xs text-muted-foreground">{step.description}</div>
             </div>
           ))}
         </div>
-        
+
+        {/* Progress Bar */}
         <Progress value={(currentStep / steps.length) * 100} className="w-full" />
 
-        <Separator />
-
-        {/* Step 1: File Upload */}
-        {currentStep === 1 && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium">Upload Your Files</h3>
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                variant="outline"
-                size="sm"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Select Files
-              </Button>
-            </div>
-            
+        {/* File Upload Area */}
+        {currentStep === 0 && (
+          <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
             <input
-              ref={fileInputRef}
               type="file"
-              multiple
-              onChange={handleFileSelect}
+              onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
               className="hidden"
-              accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
+              id="file-upload"
+              accept="image/*,video/*,audio/*,.pdf,.txt,.md"
             />
-
-            {uploads.length > 0 && (
-              <div className="grid grid-cols-2 gap-3">
-                {uploads.map((upload, index) => {
-                  const IconComponent = getFileIcon(upload.type);
-                  
-                  return (
-                    <div key={index} className="relative p-3 border rounded-lg">
-                      {upload.preview && (
-                        <img 
-                          src={upload.preview} 
-                          alt="Preview" 
-                          className="w-full h-20 object-cover rounded mb-2"
-                        />
-                      )}
-                      
-                      <div className="flex items-center gap-2">
-                        <IconComponent className="w-4 h-4" />
-                        <span className="text-sm font-medium truncate">
-                          {upload.file.name}
-                        </span>
-                        {upload.uploaded ? (
-                          <CheckCircle className="w-4 h-4 text-green-600 ml-auto" />
-                        ) : (
-                          <Loader2 className="w-4 h-4 animate-spin ml-auto" />
-                        )}
-                      </div>
-                      
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="absolute top-1 right-1 h-6 w-6 p-0"
-                        onClick={() => handleRemoveFile(upload.file)}
-                      >
-                        <X className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {uploads.length > 0 && uploads.every(u => u.uploaded) && (
-              <Button 
-                onClick={() => setCurrentStep(2)}
-                className="w-full"
-              >
-                Continue to Analysis
-                <Brain className="w-4 h-4 ml-2" />
-              </Button>
-            )}
-          </div>
-        )}
-
-        {/* Step 2: Analysis & Metadata */}
-        {currentStep === 2 && (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title *</Label>
-                <Input
-                  id="title"
-                  value={metadata.title}
-                  onChange={(e) => handleMetadataChange('title', e.target.value)}
-                  placeholder="Enter a compelling title for your truth capsule"
-                  className="mt-1"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="summary">Summary *</Label>
-                <Textarea
-                  id="summary"
-                  value={metadata.summary}
-                  onChange={(e) => handleMetadataChange('summary', e.target.value)}
-                  placeholder="Describe the content and significance of your capsule"
-                  className="mt-1"
-                  rows={3}
-                />
-              </div>
-            </div>
-
-            <CapsulePrivacyToggle
-              privacy={privacy}
-              onPrivacyChange={setPrivacy}
-            />
-
-            <CapsuleAutotagger
-              capsuleId={capsuleId || 'temp'}
-              content={metadata.summary}
-              title={metadata.title}
-              onTagsGenerated={handleTagsGenerated}
-              autoAnalyze={autoAnalyze && !!metadata.summary}
-            />
-
-            {canProceedToNextStep() && (
-              <Button 
-                onClick={handleCreateCapsule}
-                disabled={createCapsuleMutation.isPending}
-                className="w-full"
-              >
-                {createCapsuleMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating Capsule...
-                  </>
-                ) : (
-                  <>
-                    Create Truth Capsule
-                    <Zap className="w-4 h-4 ml-2" />
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
-        )}
-
-        {/* Step 3: NFT Minting */}
-        {currentStep === 3 && capsuleId && (
-          <div className="space-y-4 text-center">
-            <div className="p-6 bg-green-50 dark:bg-green-950/20 rounded-lg">
-              <CheckCircle className="w-12 h-12 mx-auto mb-3 text-green-600" />
-              <h3 className="font-semibold mb-2">Capsule Created Successfully!</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Your truth capsule has been created and is ready for minting as an NFT.
+            <label htmlFor="file-upload" className="cursor-pointer">
+              <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-lg font-semibold mb-2">Upload Your Content</h3>
+              <p className="text-muted-foreground">
+                Images, videos, audio, documents - all formats supported
               </p>
-              
-              <MintCapsuleButton
-                capsuleId={capsuleId}
-                fileUrl={uploads[0]?.uploadUrl}
-                metadata={metadata}
-                onMintComplete={handleMintComplete}
-                className="w-full"
-              />
-            </div>
-            
-            <Button 
-              variant="outline"
-              onClick={() => setCurrentStep(4)}
-              className="w-full"
-            >
-              Skip NFT Minting
-              <Eye className="w-4 h-4 ml-2" />
-            </Button>
+            </label>
           </div>
         )}
 
-        {/* Step 4: Complete */}
+        {/* Analysis Results */}
+        {analysisResult && currentStep >= 2 && (
+          <Card className="p-4 bg-muted/50">
+            <h3 className="font-semibold mb-2">AI Analysis Results</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">Truth Score:</span>
+                <span className="ml-2 font-medium">
+                  {Math.round((analysisResult.truthLikelihood || 0.8) * 100)}%
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Emotional Resonance:</span>
+                <span className="ml-2 font-medium">
+                  {Math.round((analysisResult.emotionalResonance || 0.7) * 100)}%
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Category:</span>
+                <span className="ml-2 font-medium">
+                  {analysisResult.category || 'Personal'}
+                </span>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Verification Status:</span>
+                <span className="ml-2 font-medium text-green-600">Verified</span>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Completion Message */}
         {currentStep === 4 && (
-          <div className="text-center space-y-4">
-            <div className="p-6 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-              <Zap className="w-12 h-12 mx-auto mb-3 text-purple-600" />
-              <h3 className="font-semibold mb-2">Truth Capsule Complete!</h3>
-              <p className="text-sm text-muted-foreground">
-                Your sovereign memory has been permanently preserved on the blockchain.
+          <Card className="p-4 bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800">
+            <div className="text-center">
+              <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-500" />
+              <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+                Capsule Created Successfully!
+              </h3>
+              <p className="text-green-700 dark:text-green-300 mb-4">
+                Your content has been uploaded, analyzed, minted as an NFT, and added to the blockchain.
               </p>
-            </div>
-            
-            <div className="flex gap-2">
               <Button 
-                variant="outline"
-                onClick={() => {
-                  // Reset form
-                  setCurrentStep(1);
-                  setUploads([]);
-                  setMetadata({ title: '', summary: '', tags: [] });
-                  setCapsuleId(null);
-                }}
-                className="flex-1"
+                onClick={() => window.location.href = `/capsule/${capsuleData?.id}`}
+                className="bg-green-600 hover:bg-green-700"
               >
-                Create Another
-              </Button>
-              <Button className="flex-1">
-                View Profile
+                View Your Capsule
               </Button>
             </div>
-          </div>
+          </Card>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 }

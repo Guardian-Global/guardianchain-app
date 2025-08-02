@@ -1,0 +1,43 @@
+[Unit]
+Description=GuardianChain Veritas Node Service
+Documentation=https://guardianchain.org/docs
+After=network.target postgresql.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=guardianchain
+WorkingDirectory=/opt/guardianchain
+Environment=NODE_ENV=production
+Environment=PORT=5000
+ExecStart=/usr/bin/node server/index.js
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/guardianchain/logs
+ReadWritePaths=/opt/guardianchain/data
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=guardianchain
+
+# Health monitoring
+ExecStartPre=/bin/bash -c 'echo "🚀 Starting GuardianChain Veritas Node..."'
+ExecStartPost=/bin/bash -c 'sleep 5 && curl -f http://localhost:5000/api/health || exit 1'
+
+[Install]
+WantedBy=multi-user.target

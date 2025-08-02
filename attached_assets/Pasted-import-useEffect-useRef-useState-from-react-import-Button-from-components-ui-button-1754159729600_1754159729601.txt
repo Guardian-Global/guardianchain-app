@@ -1,0 +1,130 @@
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import Link from "next/link";
+
+export default function Home() {
+  const heroVideoRef = useRef(null);
+  const [email, setEmail] = useState("");
+  const [lang, setLang] = useState("en");
+
+  useEffect(() => {
+    if (heroVideoRef.current) {
+      heroVideoRef.current.play();
+    }
+  }, []);
+
+  const handleSubscribe = () => {
+    if (!email) return;
+    fetch("/api/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    setEmail("");
+  };
+
+  return (
+    <main className="min-h-screen bg-slate-900 text-white">
+      {/* Language Switch */}
+      <div className="absolute top-4 right-4 z-20">
+        <select
+          className="bg-slate-800 text-white px-4 py-2 rounded"
+          value={lang}
+          onChange={(e) => setLang(e.target.value)}
+        >
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="ar">🇸🇦 عربي</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-indigo-900 to-indigo-600 py-20 px-6 text-center overflow-hidden">
+        <video
+          ref={heroVideoRef}
+          src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4"
+          className="w-full max-h-[80vh] object-cover rounded-2xl shadow-xl border border-indigo-700"
+          autoPlay
+          muted
+          loop
+        />
+        <div className="absolute inset-0 bg-black/40 rounded-2xl" />
+        <div className="absolute inset-0 flex flex-col justify-center items-center z-10 px-6">
+          <motion.img
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            src="/assets/GUARDIANCHAIN_logo.png"
+            alt="GuardianChain Logo"
+            className="w-40 h-auto mb-4"
+          />
+          <motion.h1
+            className="text-5xl md:text-7xl font-extrabold drop-shadow-xl tracking-tight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            GuardianChain
+          </motion.h1>
+          <motion.p
+            className="mt-4 max-w-2xl text-lg text-slate-200"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+          >
+            The world's first sovereign memory infrastructure. Own your truth. Seal your story. Yield from your lived experiences.
+          </motion.p>
+          <motion.div
+            className="mt-6 flex flex-col md:flex-row gap-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+          >
+            <Link href="/capsules"><Button size="lg">Explore Capsules</Button></Link>
+            <Link href="/app"><Button size="lg" variant="outline">Launch App</Button></Link>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubscribe();
+              }}
+              className="flex items-center gap-2 mt-4 md:mt-0"
+            >
+              <Input
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white text-black"
+              />
+              <Button type="submit" className="bg-indigo-500 text-white">
+                Subscribe
+              </Button>
+            </form>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Search Bar */}
+      <section className="bg-slate-800 py-12 px-6 text-center">
+        <h2 className="text-3xl font-bold mb-6">Search Truth Capsules</h2>
+        <form action="/search" method="GET" className="flex justify-center gap-2 max-w-lg mx-auto">
+          <Input
+            type="text"
+            name="q"
+            placeholder="Search by title, tags, author..."
+            className="w-full bg-white text-black"
+          />
+          <Button type="submit" className="bg-indigo-600">Search</Button>
+        </form>
+      </section>
+
+      {/* [Rest of your homepage remains unchanged] */}
+
+      <footer className="bg-slate-950 py-10 text-center text-slate-400">
+        <p>© {new Date().getFullYear()} GuardianChain. All rights reserved.</p>
+      </footer>
+    </main>
+  );
+}

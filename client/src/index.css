@@ -5,6 +5,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --border: hsl(214.3 31.8% 91.4%);
+  }
+  .dark {
+    --border: hsl(217.2 32.6% 17.5%);
+  }
+}
+
 /* Tour highlight styles */
 .tour-highlight {
   position: relative;
