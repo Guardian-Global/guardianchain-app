@@ -159,17 +159,36 @@ const CapsuleDrawer = ({
   const handleReplay = async () => {
     setReplayLoading(true);
     try {
+      console.log('🔄 Triggering advanced capsule replay for:', capsule.id);
+      
+      // Mock wallet addresses for development - in production these would come from wallet connection
+      const authorWalletAddress = '0x1234567890123456789012345678901234567890';
+      const viewerWalletAddress = '0x0987654321098765432109876543210987654321';
+      
       const response = await apiRequest("POST", `/api/replay-capsule`, {
-        capsuleId: capsule.id
+        capsuleId: capsule.id,
+        authorId: capsule.author,
+        authorWalletAddress,
+        viewerWalletAddress,
+        truthScore: capsule.truthScore || 75,
+        verificationCount: 1,
+        capsuleAge: Date.now() - new Date(capsule.createdAt).getTime()
       });
 
       if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Advanced capsule replay successful:', result);
+        
+        const isWeb3 = result.replay.isWeb3Verified;
+        const yieldDetails = result.replay.yieldCalculation;
+        
         toast({
-          title: "Capsule Replayed",
-          description: "GTT yield has been issued to the author. Truth value confirmed.",
+          title: isWeb3 ? "Web3 Replay Successful!" : "Capsule Replayed Successfully!",
+          description: `GTT yield of ${yieldDetails.totalYield} calculated with grief score. ${isWeb3 ? 'Blockchain verified!' : 'Development mode.'}`
         });
       }
     } catch (error) {
+      console.error('❌ Replay failed:', error);
       toast({
         title: "Replay Failed",
         description: "Unable to replay capsule. Please try again.",

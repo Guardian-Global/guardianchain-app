@@ -1,6 +1,12 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
+import { 
+  distributeReplayYield, 
+  calculateGriefYield, 
+  getGTTBalance, 
+  getContractInfo 
+} from "./web3/gttYield";
 
 // Get replay logs for analytics and tracking
 function getReplayLogs(filters: any = {}) {
@@ -110,49 +116,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post('/api/replay-capsule', isDebugAuthenticated, async (req: any, res) => {
-    const { capsuleId, authorId, yieldAmount } = req.body;
+    const { 
+      capsuleId, 
+      authorId, 
+      authorWalletAddress,
+      viewerWalletAddress,
+      truthScore = 75,
+      verificationCount = 1,
+      capsuleAge = Date.now() - 86400000 // 1 day old default
+    } = req.body;
     
     if (!capsuleId) {
       return res.status(400).json({ error: 'Missing capsuleId' });
     }
 
-    console.log('🔵 DEBUG: Replaying capsule:', capsuleId, 'Yield:', yieldAmount);
+    console.log('🔵 DEBUG: Processing capsule replay with Web3 yield distribution');
 
-    // Create replay log entry
-    const replayLogId = `replay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
-    
-    const replayLog = {
-      id: replayLogId,
-      capsuleId,
-      userId: req.user.id,
-      replayType: 'standard',
-      yieldAmount: yieldAmount || 2.50,
-      transactionHash,
-      sessionId: req.sessionID || `session_${Date.now()}`,
-      ipAddress: req.ip || 'unknown',
-      userAgent: req.get('User-Agent') || 'unknown',
-      metadata: {
+    try {
+      // Calculate advanced grief-based yield
+      const yieldCalculation = await calculateGriefYield(truthScore, verificationCount, capsuleAge);
+      console.log('📊 Grief yield calculation:', yieldCalculation);
+
+      // Create replay log entry
+      const replayLogId = `replay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      let web3Result = null;
+      let transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`; // Fallback
+
+      // Attempt Web3 yield distribution if wallet addresses provided
+      if (authorWalletAddress && viewerWalletAddress) {
+        try {
+          web3Result = await distributeReplayYield(
+            authorWalletAddress,
+            viewerWalletAddress,
+            capsuleId,
+            yieldCalculation.totalYield
+          );
+          transactionHash = web3Result.authorTxHash;
+          console.log('⛓️ Web3 yield distribution successful:', web3Result);
+        } catch (web3Error) {
+          console.warn('⚠️ Web3 yield distribution failed, continuing with mock:', web3Error);
+          // Continue with mock data for development
+        }
+      }
+      
+      const replayLog = {
+        id: replayLogId,
+        capsuleId,
+        userId: req.user.id,
+        replayType: web3Result ? 'web3_verified' : 'standard',
+        yieldAmount: Math.round(yieldCalculation.totalYield * 100),
+        transactionHash,
+        sessionId: req.sessionID || `session_${Date.now()}`,
+        ipAddress: req.ip || 'unknown',
+        userAgent: req.get('User-Agent') || 'unknown',
+        metadata: {
+          authorId,
+          authorWalletAddress,
+          viewerWalletAddress,
+          yieldCalculation,
+          web3Result,
+          requestTimestamp: new Date().toISOString(),
+          platform: 'GuardianChain'
+        },
+        createdAt: new Date().toISOString()
+      };
+
+      const replayResult = {
+        capsuleId,
         authorId,
-        requestTimestamp: new Date().toISOString(),
-        platform: 'GuardianChain'
-      },
-      createdAt: new Date().toISOString()
-    };
+        yieldAmount: yieldCalculation.totalYield,
+        yieldCalculation,
+        web3Distribution: web3Result,
+        replayCount: 1,
+        timestamp: new Date().toISOString(),
+        transactionHash,
+        replayLogId,
+        isWeb3Verified: !!web3Result
+      };
 
-    const replayResult = {
-      capsuleId,
-      authorId,
-      yieldAmount: yieldAmount || 2.50,
-      replayCount: 1,
-      timestamp: new Date().toISOString(),
-      transactionHash,
-      replayLogId
-    };
+      console.log('✅ Advanced replay completed with grief-based yield');
+      res.json({ 
+        success: true, 
+        replay: replayResult, 
+        replayLog, 
+        message: 'Capsule replayed with advanced grief-based yield distribution' 
+      });
 
-    console.log('✅ DEBUG: Replay log created:', replayLog);
-    console.log('✅ DEBUG: Capsule replay completed:', replayResult);
-    res.json({ success: true, replay: replayResult, replayLog, message: 'Capsule replayed and yield distributed successfully' });
+    } catch (error) {
+      console.error('❌ Replay processing failed:', error);
+      res.status(500).json({ 
+        error: 'Replay processing failed', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
   });
 
   app.post('/api/purchase-capsule-access', isDebugAuthenticated, async (req: any, res) => {
@@ -216,6 +273,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     console.log('✅ DEBUG: Capsule replay logs retrieved:', logs.length, 'entries');
     res.json({ success: true, logs, capsuleId, message: 'Capsule replay logs retrieved successfully' });
+  });
+
+  // Get GTT balance for user wallet
+  app.get('/api/gtt/balance/:address', isDebugAuthenticated, async (req: any, res) => {
+    const { address } = req.params;
+    
+    try {
+      console.log('🔵 DEBUG: Fetching GTT balance for address:', address);
+      const balance = await getGTTBalance(address);
+      
+      console.log('✅ GTT balance retrieved:', balance);
+      res.json({ success: true, address, balance, symbol: 'GTT' });
+    } catch (error) {
+      console.error('❌ Failed to get GTT balance:', error);
+      res.status(500).json({ 
+        error: 'Failed to get GTT balance', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
+  // Get GTT contract information
+  app.get('/api/gtt/contract-info', async (req, res) => {
+    try {
+      console.log('🔵 DEBUG: Fetching GTT contract information');
+      const contractInfo = await getContractInfo();
+      
+      if (contractInfo) {
+        console.log('✅ GTT contract info retrieved');
+        res.json({ success: true, contract: contractInfo });
+      } else {
+        res.status(500).json({ error: 'Failed to retrieve contract information' });
+      }
+    } catch (error) {
+      console.error('❌ Failed to get contract info:', error);
+      res.status(500).json({ 
+        error: 'Failed to get contract info', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
+  // Calculate grief-based yield for capsule
+  app.post('/api/gtt/calculate-yield', isDebugAuthenticated, async (req: any, res) => {
+    const { truthScore, verificationCount, capsuleAge } = req.body;
+    
+    try {
+      console.log('🔵 DEBUG: Calculating grief-based yield');
+      const yieldCalculation = await calculateGriefYield(
+        truthScore || 75,
+        verificationCount || 1,
+        capsuleAge || Date.now() - 86400000
+      );
+      
+      console.log('✅ Yield calculation completed:', yieldCalculation);
+      res.json({ success: true, yieldCalculation, message: 'Grief-based yield calculated successfully' });
+    } catch (error) {
+      console.error('❌ Yield calculation failed:', error);
+      res.status(500).json({ 
+        error: 'Yield calculation failed', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
   });
 
   // Simple auth user endpoint - no database calls
