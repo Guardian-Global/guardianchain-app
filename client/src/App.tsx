@@ -277,8 +277,7 @@ function Router() {
             <Route path="/system-validation" component={lazy(() => import("./pages/system-validation"))} />
             <Route path="/launch" component={lazy(() => import("./pages/launch-announcement"))} />
             <Route path="/launch-enhancements" component={lazy(() => import("./pages/launch-enhancements"))} />
-            <Route path="/profile-dashboard" component={lazy(() => import("./pages/profile-dashboard"))} />
-            <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
+
 
         <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/u/:username" component={lazy(() => import("./pages/u/[username]"))} />
@@ -336,18 +335,13 @@ function Router() {
         <Route path="/micro-interactions" component={MicroInteractionsShowcase} />
         <Route path="/explore" component={Explore} />
         <Route path="/leaderboard" component={Leaderboard} />
-        <Route
-          path="/profile/:id?"
-          component={() => <EnhancedProfileDashboard />}
-        />
-        <Route
-          path="/profile"
-          component={() => <EnhancedProfileDashboard />}
-        />
-        <Route
-          path="/profile-dashboard"
-          component={() => <EnhancedProfileDashboard />}
-        />
+        
+        {/* Profile Routes - Prioritized to prevent 404 conflicts */}
+        <Route path="/profile/:id" component={() => <EnhancedProfileDashboard />} />
+        <Route path="/profile" component={() => <EnhancedProfileDashboard />} />
+        <Route path="/profile-dashboard" component={() => <EnhancedProfileDashboard />} />
+        <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
+        
         <Route path="/my-listings" component={MyListings} />
         <Route path="/token-listings" component={TokenListings} />
         <Route path="/mascot-settings" component={MascotSettingsPage} />
