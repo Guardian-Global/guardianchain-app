@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Clock, Users, ThumbsUp, ThumbsDown, Minus, Calendar } from "lucide-react";
+import { Clock, Users, ThumbsUp, ThumbsDown, Minus, Calendar, BarChart3 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { Proposal, Vote } from "@shared/schema";
 
@@ -173,36 +173,48 @@ export default function ProposalList({ onVote, userAddress }: ProposalListProps)
                   </div>
 
                   {/* Voting Actions */}
-                  {isActive && onVote && !userVoted && (
-                    <div className="flex gap-2 pt-4 border-t border-brand-surface">
-                      <Button
-                        size="sm"
-                        className="flex-1 bg-brand-accent hover:bg-brand-accent/90 text-white"
-                        onClick={() => onVote(proposal.id, 'support')}
-                      >
-                        <ThumbsUp className="w-4 h-4 mr-1" />
-                        Support
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="flex-1"
-                        onClick={() => onVote(proposal.id, 'reject')}
-                      >
-                        <ThumbsDown className="w-4 h-4 mr-1" />
-                        Reject
-                      </Button>
+                  <div className="flex gap-2 pt-4 border-t border-brand-surface">
+                    {isActive && onVote && !userVoted ? (
+                      <>
+                        <Button
+                          size="sm"
+                          className="flex-1 bg-brand-accent hover:bg-brand-accent/90 text-white"
+                          onClick={() => onVote(proposal.id, 'support')}
+                        >
+                          <ThumbsUp className="w-4 h-4 mr-1" />
+                          Support
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="flex-1"
+                          onClick={() => onVote(proposal.id, 'reject')}
+                        >
+                          <ThumbsDown className="w-4 h-4 mr-1" />
+                          Reject
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-brand-surface text-brand-light hover:bg-brand-surface"
+                          onClick={() => onVote(proposal.id, 'abstain')}
+                        >
+                          <Minus className="w-4 h-4 mr-1" />
+                          Abstain
+                        </Button>
+                      </>
+                    ) : (
                       <Button
                         size="sm"
                         variant="outline"
                         className="flex-1 border-brand-surface text-brand-light hover:bg-brand-surface"
-                        onClick={() => onVote(proposal.id, 'abstain')}
+                        onClick={() => window.location.href = `/dao/results/${proposal.id}`}
                       >
-                        <Minus className="w-4 h-4 mr-1" />
-                        Abstain
+                        <BarChart3 className="w-4 h-4 mr-1" />
+                        View Results
                       </Button>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {userVoted && (
                     <div className="pt-4 border-t border-brand-surface">

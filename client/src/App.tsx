@@ -248,6 +248,7 @@ function Router() {
           <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
+            <Route path="/dao/results/:id" component={lazy(() => import("./pages/dao/results"))} />
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
             <Route path="/validator" component={lazy(() => import("./pages/validator"))} />
             <Route path="/validator-dashboard" component={lazy(() => import("./pages/validator"))} />

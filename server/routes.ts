@@ -1134,6 +1134,65 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     res.status(201).json(vote);
   });
 
+  // Get vote results for a specific proposal
+  app.get('/api/dao/results/:id', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 Vote results requested for proposal:', req.params.id);
+    const proposalId = req.params.id;
+    
+    // Mock vote data calculation (in production this would query the database)
+    const mockVoteData = {
+      'prop_1754140100_gov001': {
+        title: 'Increase GTT Yield Rewards for Truth Verification',
+        votes: [
+          { choice: 'support', weight: 1000 },
+          { choice: 'support', weight: 750 },
+          { choice: 'reject', weight: 500 },
+          { choice: 'abstain', weight: 200 }
+        ]
+      },
+      'prop_1754140200_gov002': {
+        title: 'Implement Tiered Access for Premium Capsule Features',
+        votes: [
+          { choice: 'support', weight: 1500 },
+          { choice: 'abstain', weight: 300 },
+          { choice: 'reject', weight: 200 }
+        ]
+      }
+    };
+    
+    const proposalData = mockVoteData[proposalId as keyof typeof mockVoteData];
+    
+    if (!proposalData) {
+      return res.status(404).json({ error: 'Proposal not found' });
+    }
+    
+    // Calculate vote tallies
+    let total = 0, support = 0, reject = 0, abstain = 0;
+    proposalData.votes.forEach(vote => {
+      const weight = Number(vote.weight);
+      total += weight;
+      if (vote.choice === 'support') support += weight;
+      if (vote.choice === 'reject') reject += weight;
+      if (vote.choice === 'abstain') abstain += weight;
+    });
+    
+    const results = {
+      title: proposalData.title,
+      total,
+      support,
+      reject,
+      abstain,
+      supportPct: total ? ((support / total) * 100).toFixed(1) : '0',
+      rejectPct: total ? ((reject / total) * 100).toFixed(1) : '0',
+      abstainPct: total ? ((abstain / total) * 100).toFixed(1) : '0',
+      result: support > reject ? 'Accepted' : 'Rejected',
+      status: support > (total * 0.6) ? 'Passed' : support > reject ? 'Accepted' : 'Rejected'
+    };
+    
+    console.log('✅ Vote results calculated:', results);
+    res.json(results);
+  });
+
   // Get truth certificates
   app.get('/api/dao/certificates', isDebugAuthenticated, async (req: any, res) => {
     console.log('📜 Truth certificates requested');
