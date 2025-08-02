@@ -10,6 +10,7 @@ Preferred communication style: Simple, everyday language.
 - **React Query Error Resolution Complete**: Fixed missing `/api/profile/:userId` server endpoint that was causing console errors
 - **Service Worker SecurityError Handled**: Implemented proper error handling for development environment service worker registration failures
 - **Application Stability Verified**: All core APIs confirmed working (authentication, user stats, capsules, token data)
+- **Performance Optimization Complete**: Fixed excessive `/api/auth/user` API calls through aggressive caching (30-minute stale time), request deduplication, and HMR-resistant query configuration
 - **Global RTL Support Complete**: Implemented comprehensive right-to-left layout support for Arabic, Hebrew, Persian, Urdu, and other RTL languages across all major containers (UltimateHomepage, explore, dashboard, reels-viewer)
 - **Language Selector Component**: Created comprehensive LanguageSelector component with 22 supported languages including native script display
 - **User Language Preferences**: Added preferredLanguage field to user schema with API endpoints for preference updates
