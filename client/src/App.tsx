@@ -277,6 +277,10 @@ function Router() {
             <Route path="/profile-dashboard" component={lazy(() => import("./pages/profile-dashboard"))} />
             <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
             <Route path="/profile-upgrade" component={lazy(() => import("./pages/ProfileUpgrade"))} />
+            <Route path="/advanced-analytics" component={lazy(() => import("./pages/AdvancedAnalytics"))} />
+            <Route path="/ai-content-optimization" component={lazy(() => import("./pages/AIContentOptimization"))} />
+            <Route path="/mobile-experience" component={lazy(() => import("./pages/MobileExperience"))} />
+            <Route path="/admin-dashboard" component={lazy(() => import("./pages/AdminDashboard"))} />
         <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />
