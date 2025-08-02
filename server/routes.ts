@@ -433,6 +433,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register profile routes
   const profileRoutes = await import('./routes/profile');
   app.use('/api/profile', profileRoutes.default);
+  
+  // Register engagement routes
+  const { registerEngagementRoutes } = await import('./routes/engagement');
+  registerEngagementRoutes(app);
 
   // Analytics dashboard endpoint
   app.get('/api/analytics/dashboard', isDebugAuthenticated, async (req: any, res) => {

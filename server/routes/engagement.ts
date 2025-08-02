@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { isDebugAuthenticated } from "../auth";
+import { isDebugAuthenticated } from "../debugAuth";
 
 interface SessionData {
   sessionId: string;

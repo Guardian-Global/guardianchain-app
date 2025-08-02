@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -88,12 +88,21 @@ export default function ProfileUpgradePage() {
   });
 
   const { data: profile, isLoading, refetch } = useQuery<UserProfile>({
-    queryKey: ['/api/profile/detailed', user?.id],
-    enabled: !!user?.id
+    queryKey: ['/api/profile/detailed', (user as any)?.id],
+    enabled: !!(user as any)?.id,
+    queryFn: async () => {
+      const response = await fetch(`/api/profile/detailed/${(user as any)?.id}`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      return response.json();
+    }
   });
 
   // Update form data when profile data changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (profile) {
       setFormData({
         firstName: profile.firstName || '',
@@ -131,8 +140,8 @@ export default function ProfileUpgradePage() {
 
   // Default profile data for display
   const defaultProfile: UserProfile = {
-    id: user?.id || 'debug-user',
-    email: user?.email || 'debug@guardianchain.app',
+    id: (user as any)?.id || 'debug-user',
+    email: (user as any)?.email || 'debug@guardianchain.app',
     firstName: 'Debug',
     lastName: 'User',
     username: 'debuguser',
