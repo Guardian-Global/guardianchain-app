@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -11,41 +10,51 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  CAPSULE_TYPES, 
-  VERITAS_SEAL_TYPES, 
-  URGENCY_LEVELS, 
-  SENSITIVITY_LEVELS, 
-  LEGAL_IMPORTANCE, 
-  EVIDENCE_TYPES, 
-  SUBMISSION_METHODS 
-} from "@shared/schema";
-import { Shield, Scale, Eye, Clock, FileText, Users, Lock, Zap } from "lucide-react";
+  Shield, 
+  FileText, 
+  Image, 
+  Video, 
+  Mic, 
+  Globe, 
+  Briefcase, 
+  Heart,
+  AlertTriangle,
+  Zap,
+  Brain,
+  Upload
+} from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 const createCapsuleSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters").max(200, "Title too long"),
-  content: z.string().min(20, "Content must be at least 20 characters").max(10000, "Content too long"),
-  capsuleType: z.string().min(1, "Please select a capsule type"),
-  category: z.string().optional(),
-  veritasSealType: z.string().optional(),
-  urgencyLevel: z.string().default("normal"),
-  sensitivityLevel: z.string().default("public"),
-  jurisdictionRegion: z.string().optional(),
-  legalImportance: z.string().default("standard"),
-  evidenceType: z.string().optional(),
-  submissionMethod: z.string().default("standard"),
+  title: z.string().min(1, "Title is required").max(200, "Title must be under 200 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters").max(2000, "Description must be under 2000 characters"),
+  content: z.string().min(1, "Content is required"),
+  type: z.string().min(1, "Capsule type is required"),
   tags: z.string().optional(),
-  isPrivate: z.boolean().default(false),
-  accessCost: z.number().min(0).default(0),
+  isPublic: z.boolean().default(true),
+  veritasLevel: z.enum(["standard", "verified", "sealed"]).default("standard")
 });
 
 type CreateCapsuleForm = z.infer<typeof createCapsuleSchema>;
 
+const capsuleTypes = [
+  { id: "personal-memory", label: "Personal Memory", icon: Heart, color: "text-pink-400", description: "Preserve personal moments and experiences" },
+  { id: "news-report", label: "News Report", icon: Globe, color: "text-blue-400", description: "Document breaking news and events" },
+  { id: "document-archive", label: "Document Archive", icon: FileText, color: "text-green-400", description: "Store important documents" },
+  { id: "media-evidence", label: "Media Evidence", icon: Image, color: "text-purple-400", description: "Visual proof and documentation" },
+  { id: "video-testimony", label: "Video Testimony", icon: Video, color: "text-red-400", description: "First-hand accounts and testimonies" },
+  { id: "audio-recording", label: "Audio Recording", icon: Mic, color: "text-yellow-400", description: "Voice recordings and audio evidence" },
+  { id: "business-record", label: "Business Record", icon: Briefcase, color: "text-cyan-400", description: "Corporate and business documentation" },
+  { id: "whistleblower", label: "Whistleblower", icon: AlertTriangle, color: "text-orange-400", description: "Protected disclosure reports" },
+];
+
 export default function CreateCapsule() {
+  const { user, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -55,242 +64,197 @@ export default function CreateCapsule() {
     resolver: zodResolver(createCapsuleSchema),
     defaultValues: {
       title: "",
+      description: "",
       content: "",
-      capsuleType: "",
-      urgencyLevel: "normal",
-      sensitivityLevel: "public",
-      legalImportance: "standard",
-      submissionMethod: "standard",
-      isPrivate: false,
-      accessCost: 0,
+      type: "",
+      tags: "",
+      isPublic: true,
+      veritasLevel: "standard"
     },
   });
 
   const createCapsuleMutation = useMutation({
     mutationFn: async (data: CreateCapsuleForm) => {
-      const payload = {
-        ...data,
-        tags: data.tags ? data.tags.split(",").map(tag => tag.trim()) : [],
-      };
-      return apiRequest("POST", "/api/capsules", payload);
+      return apiRequest("POST", "/api/capsules", data);
     },
     onSuccess: () => {
       toast({
         title: "Capsule Created",
-        description: "Your truth capsule has been submitted for verification.",
+        description: "Your truth capsule has been successfully created and submitted for verification.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/capsules"] });
       setLocation("/dashboard");
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Creation Failed",
+        description: error.message || "Failed to create capsule. Please try again.",
         variant: "destructive",
       });
     },
   });
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+        <Card className="bg-slate-800/50 border-slate-700 max-w-md">
+          <CardHeader className="text-center">
+            <Shield className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+            <CardTitle>Authentication Required</CardTitle>
+            <CardDescription>Please log in to create truth capsules.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full">
+              <Link href="/api/login">Login to Continue</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   const onSubmit = (data: CreateCapsuleForm) => {
     createCapsuleMutation.mutate(data);
   };
 
-  const getCapsuleTypeInfo = (type: string) => {
-    const typeConfig: Record<string, { icon: any; color: string; description: string }> = {
-      [CAPSULE_TYPES.NEWS_VERIFICATION]: { icon: FileText, color: "bg-blue-500", description: "Verify news articles and media reports" },
-      [CAPSULE_TYPES.VERITAS_SEAL]: { icon: Shield, color: "bg-gold-500", description: "Professional court-admissible verification" },
-      [CAPSULE_TYPES.WHISTLEBLOWER_REPORT]: { icon: Lock, color: "bg-red-500", description: "Secure anonymous reporting system" },
-      [CAPSULE_TYPES.LEGAL_DOCUMENT]: { icon: Scale, color: "bg-purple-500", description: "Legal documentation and compliance" },
-      [CAPSULE_TYPES.SCIENTIFIC_DATA]: { icon: Zap, color: "bg-green-500", description: "Research data and scientific findings" },
-      [CAPSULE_TYPES.HISTORICAL_RECORD]: { icon: Clock, color: "bg-amber-500", description: "Historical documentation and archives" },
-      [CAPSULE_TYPES.PERSONAL_TESTIMONY]: { icon: Users, color: "bg-cyan-500", description: "Personal witness statements" },
-    };
-    return typeConfig[type] || { icon: FileText, color: "bg-gray-500", description: "Standard truth capsule" };
+  const handleTypeSelect = (typeId: string) => {
+    setSelectedType(typeId);
+    form.setValue("type", typeId);
   };
 
-  const isVeritasSealRequired = selectedType === CAPSULE_TYPES.VERITAS_SEAL;
-
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold gradient-text">Create Truth Capsule</h1>
-        <p className="text-muted-foreground">Submit information for verification and preservation</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-white">
+      {/* Header */}
+      <div className="border-b border-slate-800/50 bg-slate-800/30 backdrop-blur-xl">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img 
+                src="/assets/logo/GUARDIANCHAIN_logo.png" 
+                alt="GuardianChain" 
+                className="h-8 w-auto"
+              />
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Create Truth Capsule
+              </h1>
+            </div>
+            <Button variant="ghost" asChild>
+              <Link href="/dashboard">Back to Dashboard</Link>
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Truth Capsule Details</CardTitle>
-              <CardDescription>
-                Provide comprehensive information about your truth submission
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Welcome Section */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+              Preserve Your Truth Forever
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Create an immutable truth capsule that will be verified by our community and preserved on-chain for digital immortality.
+            </p>
+          </div>
+
+          <Tabs defaultValue="type" className="space-y-6">
+            <TabsList className="bg-slate-800/50 border border-slate-700/50">
+              <TabsTrigger value="type">Choose Type</TabsTrigger>
+              <TabsTrigger value="content" disabled={!selectedType}>Add Content</TabsTrigger>
+              <TabsTrigger value="verification" disabled={!selectedType}>Verification</TabsTrigger>
+            </TabsList>
+
+            {/* Type Selection */}
+            <TabsContent value="type" className="space-y-6">
+              <Card className="bg-slate-800/50 border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-yellow-400" />
+                    Select Capsule Type
+                  </CardTitle>
+                  <CardDescription>
+                    Choose the type that best describes your truth capsule
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {capsuleTypes.map((type) => {
+                      const Icon = type.icon;
+                      const isSelected = selectedType === type.id;
+                      
+                      return (
+                        <div
+                          key={type.id}
+                          onClick={() => handleTypeSelect(type.id)}
+                          className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:scale-105 ${
+                            isSelected
+                              ? 'bg-white/10 border-white/30 ring-2 ring-blue-400'
+                              : 'bg-white/5 border-white/10 hover:bg-white/10'
+                          }`}
+                        >
+                          <div className="flex flex-col items-center text-center space-y-3">
+                            <div className="p-3 bg-slate-800/50 rounded-lg">
+                              <Icon className={`h-6 w-6 ${type.color}`} />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-white">{type.label}</h3>
+                              <p className="text-sm text-gray-400 mt-1">{type.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {selectedType && (
+                <div className="text-center">
+                  <Button 
+                    onClick={() => {
+                      form.setValue("type", selectedType);
+                      const contentTab = document.querySelector('[value="content"]') as HTMLElement;
+                      contentTab?.click();
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Continue to Content
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Content Creation */}
+            <TabsContent value="content" className="space-y-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Basic Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Basic Information</h3>
-                    
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter capsule title..." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="content"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Content</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Provide detailed information..."
-                              className="min-h-32"
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <Separator />
-
-                  {/* Capsule Type Selection */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Capsule Type</h3>
-                    
-                    <FormField
-                      control={form.control}
-                      name="capsuleType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Primary Type</FormLabel>
-                          <FormControl>
-                            <Select 
-                              value={field.value} 
-                              onValueChange={(value) => {
-                                field.onChange(value);
-                                setSelectedType(value);
-                              }}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select capsule type..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value={CAPSULE_TYPES.NEWS_VERIFICATION}>📰 News Verification</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.HISTORICAL_RECORD}>📚 Historical Record</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.PERSONAL_TESTIMONY}>👤 Personal Testimony</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.SCIENTIFIC_DATA}>🔬 Scientific Data</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.LEGAL_DOCUMENT}>⚖️ Legal Document</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.VERITAS_SEAL}>🛡️ Veritas Seal</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.TRUTH_BOUNTY}>💰 Truth Bounty</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.WHISTLEBLOWER_REPORT}>🔒 Whistleblower Report</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.GOVERNMENT_RECORD}>🏛️ Government Record</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.CORPORATE_FILING}>🏢 Corporate Filing</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.ACADEMIC_RESEARCH}>🎓 Academic Research</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.MEDICAL_RECORD}>🏥 Medical Record</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.FINANCIAL_DISCLOSURE}>💵 Financial Disclosure</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.ENVIRONMENTAL_REPORT}>🌍 Environmental Report</SelectItem>
-                                <SelectItem value={CAPSULE_TYPES.ELECTION_INTEGRITY}>🗳️ Election Integrity</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {selectedType && (
-                      <Alert>
-                        <FileText className="h-4 w-4" />
-                        <AlertDescription>
-                          {getCapsuleTypeInfo(selectedType).description}
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                  </div>
-
-                  {/* Veritas Seal Options */}
-                  {isVeritasSealRequired && (
-                    <>
-                      <Separator />
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <Shield className="h-5 w-5 text-gold-500" />
-                          Veritas Seal Certification
-                        </h3>
-                        
-                        <FormField
-                          control={form.control}
-                          name="veritasSealType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Seal Type</FormLabel>
-                              <FormControl>
-                                <Select value={field.value} onValueChange={field.onChange}>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select Veritas seal type..." />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.LEGAL_AFFIDAVIT}>⚖️ Legal Affidavit</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.SWORN_TESTIMONY}>🤝 Sworn Testimony</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.NOTARIZED_STATEMENT}>📋 Notarized Statement</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.COURT_EVIDENCE}>🏛️ Court Evidence</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.EXPERT_WITNESS}>👨‍⚖️ Expert Witness</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.PROFESSIONAL_AUDIT}>📊 Professional Audit</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.INVESTIGATIVE_REPORT}>🔍 Investigative Report</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.PEER_REVIEWED}>🎓 Peer Reviewed</SelectItem>
-                                    <SelectItem value={VERITAS_SEAL_TYPES.CRYPTOGRAPHICALLY_SIGNED}>🔐 Cryptographically Signed</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  <Separator />
-
-                  {/* Advanced Options */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">Advanced Options</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="bg-slate-800/50 border-slate-700/50">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Brain className="h-5 w-5 text-purple-400" />
+                        Capsule Content
+                      </CardTitle>
+                      <CardDescription>
+                        Provide detailed information about your truth capsule
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
                       <FormField
                         control={form.control}
-                        name="urgencyLevel"
+                        name="title"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Urgency Level</FormLabel>
+                            <FormLabel>Title</FormLabel>
                             <FormControl>
-                              <Select value={field.value} onValueChange={field.onChange}>
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value={URGENCY_LEVELS.CRITICAL}>🚨 Critical</SelectItem>
-                                  <SelectItem value={URGENCY_LEVELS.HIGH}>⚡ High</SelectItem>
-                                  <SelectItem value={URGENCY_LEVELS.NORMAL}>📋 Normal</SelectItem>
-                                  <SelectItem value={URGENCY_LEVELS.LOW}>⏳ Low</SelectItem>
-                                </SelectContent>
-                              </Select>
+                              <Input
+                                placeholder="Enter a descriptive title for your truth capsule"
+                                className="bg-slate-700 border-slate-600"
+                                {...field}
+                              />
                             </FormControl>
+                            <FormDescription>
+                              A clear, concise title that describes your truth capsule
+                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -298,114 +262,178 @@ export default function CreateCapsule() {
 
                       <FormField
                         control={form.control}
-                        name="sensitivityLevel"
+                        name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Sensitivity Level</FormLabel>
+                            <FormLabel>Description</FormLabel>
                             <FormControl>
-                              <Select value={field.value} onValueChange={field.onChange}>
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value={SENSITIVITY_LEVELS.PUBLIC}>🌐 Public</SelectItem>
-                                  <SelectItem value={SENSITIVITY_LEVELS.RESTRICTED}>🔒 Restricted</SelectItem>
-                                  <SelectItem value={SENSITIVITY_LEVELS.CONFIDENTIAL}>🔐 Confidential</SelectItem>
-                                  <SelectItem value={SENSITIVITY_LEVELS.SECRET}>🛡️ Secret</SelectItem>
-                                </SelectContent>
-                              </Select>
+                              <Textarea
+                                placeholder="Provide a detailed description of your truth capsule..."
+                                className="bg-slate-700 border-slate-600 min-h-[100px]"
+                                {...field}
+                              />
                             </FormControl>
+                            <FormDescription>
+                              Explain the context, importance, and details of your truth capsule
+                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </div>
 
-                    <FormField
-                      control={form.control}
-                      name="tags"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Tags</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="tag1, tag2, tag3..."
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Separate tags with commas
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                      <FormField
+                        control={form.control}
+                        name="content"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Main Content</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="Enter the main content of your truth capsule..."
+                                className="bg-slate-700 border-slate-600 min-h-[200px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              The primary content that will be verified and preserved
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <Separator />
+                      <FormField
+                        control={form.control}
+                        name="tags"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tags (Optional)</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="blockchain, verification, truth (comma-separated)"
+                                className="bg-slate-700 border-slate-600"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Add relevant tags to help others discover your capsule
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
 
-                  <div className="flex justify-end space-x-4">
+                  <div className="text-center">
                     <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setLocation("/dashboard")}
+                      type="button"
+                      onClick={() => {
+                        const verificationTab = document.querySelector('[value="verification"]') as HTMLElement;
+                        verificationTab?.click();
+                      }}
+                      className="bg-purple-600 hover:bg-purple-700"
                     >
-                      Cancel
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={createCapsuleMutation.isPending}
-                      className="gradient-primary"
-                    >
-                      {createCapsuleMutation.isPending ? "Creating..." : "Create Capsule"}
+                      Continue to Verification
                     </Button>
                   </div>
                 </form>
               </Form>
-            </CardContent>
-          </Card>
-        </div>
+            </TabsContent>
 
-        {/* Sidebar Info */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Capsule Types Guide</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="space-y-2">
-                <Badge variant="secondary" className="w-full justify-start">
-                  <Shield className="h-3 w-3 mr-1" />
-                  Veritas Seal: Court-admissible
-                </Badge>
-                <Badge variant="secondary" className="w-full justify-start">
-                  <Eye className="h-3 w-3 mr-1" />
-                  News: Media verification
-                </Badge>
-                <Badge variant="secondary" className="w-full justify-start">
-                  <Lock className="h-3 w-3 mr-1" />
-                  Whistleblower: Anonymous tips
-                </Badge>
-                <Badge variant="secondary" className="w-full justify-start">
-                  <Scale className="h-3 w-3 mr-1" />
-                  Legal: Official documents
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+            {/* Verification Options */}
+            <TabsContent value="verification" className="space-y-6">
+              <Card className="bg-slate-800/50 border-slate-700/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-green-400" />
+                    Verification Level
+                  </CardTitle>
+                  <CardDescription>
+                    Choose your verification level and submit your truth capsule
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="veritasLevel"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Veritas Level</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="bg-slate-700 border-slate-600">
+                              <SelectValue placeholder="Select verification level" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="standard">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-blue-400">Standard</Badge>
+                                <span>Community verification</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="verified">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-green-400">Verified</Badge>
+                                <span>Professional validation</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="sealed">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-yellow-400">Sealed</Badge>
+                                <span>Veritas sealed guarantee</span>
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Higher verification levels provide stronger truth guarantees
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Verification Process</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>1. Submit your capsule</p>
-              <p>2. Community verification</p>
-              <p>3. Professional review (if needed)</p>
-              <p>4. Truth score calculation</p>
-              <p>5. GTT token rewards</p>
-            </CardContent>
-          </Card>
+                  <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600/50">
+                    <h3 className="font-semibold mb-3 text-green-400">✨ AI Enhancement Available</h3>
+                    <p className="text-gray-300 mb-4">
+                      Our AI can help optimize your title, suggest relevant tags, and estimate potential GTT rewards based on your content.
+                    </p>
+                    <Button variant="outline" className="border-green-500/30 text-green-400 hover:bg-green-600/20">
+                      <Brain className="h-4 w-4 mr-2" />
+                      Enhance with AI
+                    </Button>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <Button
+                      type="submit"
+                      onClick={form.handleSubmit(onSubmit)}
+                      disabled={createCapsuleMutation.isPending}
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    >
+                      {createCapsuleMutation.isPending ? (
+                        <>
+                          <Upload className="h-4 w-4 mr-2 animate-spin" />
+                          Creating Capsule...
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="h-4 w-4 mr-2" />
+                          Create Truth Capsule
+                        </>
+                      )}
+                    </Button>
+                    
+                    <Button variant="outline" asChild>
+                      <Link href="/dashboard">Cancel</Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

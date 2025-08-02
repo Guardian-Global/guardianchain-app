@@ -173,6 +173,12 @@ import AssetIntegration from "./pages/asset-integration";
 import TopRevenueDrivers from "./pages/top-revenue-drivers";
 import TruthVaultDashboard from "./pages/truth-vault-dashboard";
 import CrossTradingPage from "./pages/cross-trading";
+
+// Enhanced UI Pages
+import CreateCapsuleEnhanced from "./pages/CreateCapsule";
+import YieldDashboard from "./pages/dashboard/Yield";
+import ReferralDashboard from "./pages/Referral";
+import VaultExplorer from "./pages/Vault";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
@@ -254,7 +260,12 @@ function Router() {
         <Route path="/create" component={CreateCapsule} />
         <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/create-with-help" component={CreateCapsule} />
-        <Route path="/create-truth-capsule" component={CreateCapsuleNew} />
+        <Route path="/create-truth-capsule" component={CreateCapsuleEnhanced} />
+        
+        {/* Enhanced UI Routes */}
+        <Route path="/yield" component={YieldDashboard} />
+        <Route path="/referral-earn" component={ReferralDashboard} />
+        <Route path="/truth-vault" component={VaultExplorer} />
         
         {/* Memory Vault System Routes */}
         <Route path="/memory-vault" component={MemoryVault} />
