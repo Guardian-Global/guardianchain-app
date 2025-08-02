@@ -7,17 +7,19 @@ const router = Router();
 const searchSchema = z.object({
   q: z.string().min(1, "Search query is required"),
   public_only: z.string().transform(val => val === "true").default("true"),
-  limit: z.string().transform(val => parseInt(val) || 20).default("20"),
-  offset: z.string().transform(val => parseInt(val) || 0).default("0")
+  sort: z.string().default("recent"),
+  page: z.string().transform(val => parseInt(val) || 1).default("1"),
+  limit: z.string().transform(val => parseInt(val) || 10).default("10")
 });
 
 // GET /api/search - Search for capsules
 router.get("/", async (req, res) => {
   try {
     const validatedQuery = searchSchema.parse(req.query);
-    const { q, public_only, limit, offset } = validatedQuery;
+    const { q, public_only, sort, page, limit } = validatedQuery;
+    const offset = (page - 1) * limit;
 
-    console.log(`Search request: "${q}", public_only: ${public_only}, limit: ${limit}, offset: ${offset}`);
+    console.log(`Search request: "${q}", public_only: ${public_only}, sort: ${sort}, page: ${page}, limit: ${limit}`);
 
     // Get all capsules from storage
     const allCapsules = await storage.getAllCapsules();
@@ -48,23 +50,35 @@ router.get("/", async (req, res) => {
       return titleMatch || descriptionMatch || tagsMatch;
     });
 
-    // Sort by relevance (title matches first, then description, then tags)
+    // Sort results based on the sort parameter
     filteredCapsules.sort((a, b) => {
       const searchTerm = q.toLowerCase();
       
-      const aScore = (
-        (a.title?.toLowerCase().includes(searchTerm) ? 3 : 0) +
-        (a.description?.toLowerCase().includes(searchTerm) ? 2 : 0) +
-        (a.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ? 1 : 0)
-      );
-      
-      const bScore = (
-        (b.title?.toLowerCase().includes(searchTerm) ? 3 : 0) +
-        (b.description?.toLowerCase().includes(searchTerm) ? 2 : 0) +
-        (b.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ? 1 : 0)
-      );
-      
-      return bScore - aScore;
+      if (sort === "relevant") {
+        const aScore = (
+          (a.title?.toLowerCase().includes(searchTerm) ? 3 : 0) +
+          (a.description?.toLowerCase().includes(searchTerm) ? 2 : 0) +
+          (a.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ? 1 : 0)
+        );
+        
+        const bScore = (
+          (b.title?.toLowerCase().includes(searchTerm) ? 3 : 0) +
+          (b.description?.toLowerCase().includes(searchTerm) ? 2 : 0) +
+          (b.tags?.some(tag => tag.toLowerCase().includes(searchTerm)) ? 1 : 0)
+        );
+        
+        return bScore - aScore;
+      } else if (sort === "popular") {
+        // Sort by likes, views, or shares (mock popularity for now)
+        const aPopularity = parseInt(a.likes || "0") + parseInt(a.views || "0") + parseInt(a.shares || "0");
+        const bPopularity = parseInt(b.likes || "0") + parseInt(b.views || "0") + parseInt(b.shares || "0");
+        return bPopularity - aPopularity;
+      } else {
+        // Default: sort by most recent (created_at)
+        const aDate = new Date(a.createdAt || a.created_at || 0).getTime();
+        const bDate = new Date(b.createdAt || b.created_at || 0).getTime();
+        return bDate - aDate;
+      }
     });
 
     // Apply pagination
@@ -90,9 +104,12 @@ router.get("/", async (req, res) => {
       results,
       total,
       query: q,
+      sort,
+      page,
       showing: results.length,
       offset,
-      limit
+      limit,
+      hasMore: (offset + limit) < total
     });
 
   } catch (error) {

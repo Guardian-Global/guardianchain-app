@@ -30,11 +30,17 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(query);
   const [onlyPublic, setOnlyPublic] = useState(true);
+  const [sortBy, setSortBy] = useState("recent");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalResults, setTotalResults] = useState(0);
   const [error, setError] = useState("");
 
-  const performSearch = async (searchTerm: string) => {
+  const performSearch = async (searchTerm: string, pageNum: number = 1, append: boolean = false) => {
     if (!searchTerm.trim()) {
       setResults([]);
+      setHasMore(false);
+      setTotalResults(0);
       return;
     }
     
@@ -42,37 +48,76 @@ export default function SearchPage() {
     setError("");
     
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchTerm)}&public_only=${onlyPublic}`);
+      const params = new URLSearchParams({
+        q: searchTerm,
+        public_only: onlyPublic.toString(),
+        sort: sortBy,
+        page: pageNum.toString(),
+        limit: "10"
+      });
+      
+      const response = await fetch(`/api/search?${params}`);
       const data = await response.json();
       
       if (data.results) {
-        setResults(data.results);
+        if (append && pageNum > 1) {
+          setResults(prev => [...prev, ...data.results]);
+        } else {
+          setResults(data.results);
+        }
+        setTotalResults(data.total || 0);
+        setHasMore(data.results.length >= 10);
       } else {
         setError(data.error || "Search failed");
-        setResults([]);
+        if (!append) {
+          setResults([]);
+          setTotalResults(0);
+        }
+        setHasMore(false);
       }
     } catch (err) {
       console.error("Search error:", err);
       setError("Network error occurred. Please try again.");
-      setResults([]);
+      if (!append) {
+        setResults([]);
+        setTotalResults(0);
+      }
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
 
+  // Reset search when filters change
+  useEffect(() => {
+    setPage(1);
+    setResults([]);
+    setHasMore(true);
+  }, [query, sortBy, onlyPublic]);
+
+  // Perform search when query or filters change
   useEffect(() => {
     if (query) {
       setSearchQuery(query);
-      performSearch(query);
+      performSearch(query, 1, false);
     }
-  }, [query, onlyPublic]);
+  }, [query, onlyPublic, sortBy]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       const newUrl = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
       window.history.pushState({}, "", newUrl);
-      performSearch(searchQuery.trim());
+      setPage(1);
+      performSearch(searchQuery.trim(), 1, false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (hasMore && !loading && query) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      performSearch(query, nextPage, true);
     }
   };
 
@@ -114,7 +159,7 @@ export default function SearchPage() {
           </div>
 
           {/* Search Options */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
               <input
                 type="checkbox"
@@ -124,19 +169,38 @@ export default function SearchPage() {
               />
               Show only public capsules
             </label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-700 dark:text-gray-300">Sort by:</label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+              >
+                <option value="recent">Most Recent</option>
+                <option value="popular">Most Popular</option>
+                <option value="relevant">Most Relevant</option>
+              </select>
+            </div>
           </div>
         </form>
 
-        {/* Search Results */}
+        {/* Search Results Header */}
         {query && (
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Results for "{query}"
             </h2>
             {!loading && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Found {results.length} capsule{results.length !== 1 ? 's' : ''}
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Showing {results.length} of {totalResults} capsule{totalResults !== 1 ? 's' : ''}
+                </p>
+                {sortBy && (
+                  <p className="text-xs text-gray-500 dark:text-gray-500">
+                    Sorted by {sortBy === 'recent' ? 'most recent' : sortBy === 'popular' ? 'most popular' : 'relevance'}
+                  </p>
+                )}
+              </div>
             )}
           </div>
         )}
@@ -208,6 +272,11 @@ export default function SearchPage() {
                     }
                   </p>
 
+                  {/* Creator Info */}
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    By {capsule.author || "Anonymous"} • {new Date(capsule.created_at).toLocaleDateString()}
+                  </p>
+
                   {/* Tags */}
                   {capsule.tags && capsule.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-4">
@@ -248,6 +317,27 @@ export default function SearchPage() {
             ))
           )}
         </div>
+
+        {/* Load More Button */}
+        {hasMore && !loading && results.length > 0 && (
+          <div className="text-center mt-8">
+            <Button 
+              onClick={handleLoadMore}
+              variant="outline"
+              className="min-w-[120px]"
+            >
+              Load More
+            </Button>
+          </div>
+        )}
+
+        {/* Loading indicator for pagination */}
+        {loading && page > 1 && (
+          <div className="text-center py-4">
+            <Loader2 className="w-6 h-6 mx-auto animate-spin text-blue-600" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">Loading more results...</p>
+          </div>
+        )}
       </div>
     </main>
   );
