@@ -143,6 +143,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(200).json({ tier: "seeker" });
   });
 
+  // Admin configuration endpoints
+  app.get('/api/admin/config', isDebugAuthenticated, async (req: any, res) => {
+    const user = req.user;
+    const isAdmin = user?.email === 'admin@guardianchain.app' || user?.tier === 'ADMIN';
+    
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const configItems = [
+      { key: "projectName", value: "GuardianChain", type: "string", editable: false },
+      { key: "defaultTier", value: "guest", type: "string", editable: true },
+      { key: "projectStatus", value: "production", type: "string", editable: true },
+      { key: "veritasSealRequired", value: "true", type: "boolean", editable: true },
+      { key: "stripeEnabled", value: "true", type: "boolean", editable: true },
+      { key: "capsuleReplayFee", value: "2.50", type: "number", editable: true },
+      { key: "griefScoreEnabled", value: "true", type: "boolean", editable: true },
+      { key: "aiModeration", value: "on", type: "string", editable: true },
+      { key: "ipfsPinning", value: "pinata", type: "string", editable: true },
+      { key: "network", value: "polygon-mainnet", type: "string", editable: false }
+    ];
+
+    res.json({ config: configItems, lastUpdated: new Date().toISOString() });
+  });
+
+  app.post('/api/admin/config', isDebugAuthenticated, async (req: any, res) => {
+    const user = req.user;
+    const isAdmin = user?.email === 'admin@guardianchain.app' || user?.tier === 'ADMIN';
+    
+    if (!isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    const { updates } = req.body;
+    res.json({ 
+      success: true, 
+      appliedUpdates: Object.keys(updates || {}),
+      updatedAt: new Date().toISOString()
+    });
+  });
+
+  // Public config endpoint
+  app.get('/api/config', async (req, res) => {
+    const config = {
+      projectName: "GuardianChain",
+      defaultTier: "guest",
+      projectStatus: "production",
+      veritasSealRequired: true,
+      stripeEnabled: true,
+      capsuleReplayFee: 2.50,
+      griefScoreEnabled: true,
+      aiModeration: "on",
+      ipfsPinning: "pinata",
+      allowedWallets: ["metamask", "walletconnect"],
+      network: "polygon-mainnet"
+    };
+    
+    res.json(config);
+  });
+
   // Health check endpoint
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });

@@ -1,0 +1,112 @@
+// CapsuleNFT.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract CapsuleNFT is ERC721URIStorage, Ownable {
+    uint256 public nextId = 1;
+
+    constructor() ERC721("GuardianCapsule", "GCSL") {}
+
+    function mint(string memory tokenURI) public returns (uint256) {
+        uint256 tokenId = nextId;
+        _safeMint(msg.sender, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+        nextId++;
+        return tokenId;
+    }
+}
+
+
+// lib/moderation.ts
+export async function moderateCapsule(content: string) {
+  const res = await fetch("https://api.openai.com/v1/moderations", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ input: content })
+  });
+
+  const json = await res.json();
+  if (json.results[0].flagged) {
+    throw new Error("🚫 Capsule content violates moderation policies.");
+  }
+  return true;
+}
+
+
+// components/AnalyticsDashboard.tsx
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js";
+
+ChartJS.register(BarElement, CategoryScale, LinearScale);
+
+export default function AnalyticsDashboard() {
+  const [data, setData] = useState<any>({ labels: [], counts: [] });
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((json) => setData(json));
+  }, []);
+
+  const chartData = {
+    labels: data.labels,
+    datasets: [
+      {
+        label: "Capsule Replays per Day",
+        data: data.counts,
+        backgroundColor: "#6366f1",
+      },
+    ],
+  };
+
+  return (
+    <div className="bg-white p-6 rounded shadow">
+      <h2 className="text-lg font-bold mb-2">📊 Capsule Activity</h2>
+      <Bar data={chartData} />
+    </div>
+  );
+}
+
+
+// pages/api/stats.ts
+import { createClient } from "@supabase/supabase-js";
+import { NextApiRequest, NextApiResponse } from "next";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { data, error } = await supabase.rpc("daily_capsule_replays");
+
+  if (error) return res.status(500).json({ error });
+
+  const labels = data.map((row: any) => row.date);
+  const counts = data.map((row: any) => row.count);
+
+  res.status(200).json({ labels, counts });
+}
+
+
+// SQL: Supabase function to return daily replays
+-- Run in Supabase SQL editor
+CREATE OR REPLACE FUNCTION daily_capsule_replays()
+RETURNS TABLE(date DATE, count INT)
+LANGUAGE SQL
+AS $$
+  SELECT
+    DATE_TRUNC('day', created_at) AS date,
+    COUNT(*) AS count
+  FROM replay_logs
+  GROUP BY 1
+  ORDER BY 1 DESC
+  LIMIT 14;
+$$;

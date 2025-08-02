@@ -1,175 +1,176 @@
-import type { Express } from "express";
-import { isDebugAuthenticated } from "../debugAuth"";
+import { Router } from "express";
+import { isAuthenticated } from "../auth/middleware";
 
-// Master admin access with comprehensive security
-const MASTER_ADMIN_ADDRESSES = [
-  "0xYourMasterWalletAddress", // Replace with your actual wallet
-  "0xBackupMasterAddress", // Replace with backup wallet
+const router = Router();
+
+// Mock configuration data - in production this would come from database
+const configItems = [
+  {
+    key: "projectName",
+    value: "GuardianChain",
+    type: "string" as const,
+    editable: false
+  },
+  {
+    key: "defaultTier",
+    value: "guest",
+    type: "string" as const,
+    editable: true
+  },
+  {
+    key: "projectStatus",
+    value: "production",
+    type: "string" as const,
+    editable: true
+  },
+  {
+    key: "veritasSealRequired",
+    value: "true",
+    type: "boolean" as const,
+    editable: true
+  },
+  {
+    key: "stripeEnabled",
+    value: "true",
+    type: "boolean" as const,
+    editable: true
+  },
+  {
+    key: "capsuleReplayFee",
+    value: "2.50",
+    type: "number" as const,
+    editable: true
+  },
+  {
+    key: "griefScoreEnabled",
+    value: "true",
+    type: "boolean" as const,
+    editable: true
+  },
+  {
+    key: "aiModeration",
+    value: "on",
+    type: "string" as const,
+    editable: true
+  },
+  {
+    key: "ipfsPinning",
+    value: "pinata",
+    type: "string" as const,
+    editable: true
+  },
+  {
+    key: "network",
+    value: "polygon-mainnet",
+    type: "string" as const,
+    editable: false
+  }
 ];
 
-export function registerAdminRoutes(app: Express) {
-  // Simple admin middleware - master admin bypasses checks
-  const authMiddleware = (req: any, res: any, next: any) => {
-    // For master admin, allow access
-    if (req.user?.role === "MASTER_ADMIN" || req.user?.id === "master-admin") {
-      return next();
+// Store for dynamic config changes (in production, use database)
+let runtimeConfig = new Map(configItems.map(item => [item.key, item.value]));
+
+// Middleware to check admin access
+const requireAdmin = (req: any, res: any, next: any) => {
+  const user = req.user;
+  const isAdmin = user?.email === 'admin@guardianchain.app' || 
+                  user?.tier === 'ADMIN' ||
+                  user?.tier === 'DAO_OWNER';
+  
+  if (!isAdmin) {
+    return res.status(403).json({ 
+      error: "Admin access required",
+      userTier: user?.tier || 'guest'
+    });
+  }
+  
+  next();
+};
+
+// Get configuration
+router.get("/config", isAuthenticated, requireAdmin, (req, res) => {
+  try {
+    const enrichedConfig = configItems.map(item => ({
+      ...item,
+      value: runtimeConfig.get(item.key) || item.value
+    }));
+
+    res.json({
+      config: enrichedConfig,
+      lastUpdated: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error("Error fetching admin config:", error);
+    res.status(500).json({ error: "Failed to fetch configuration" });
+  }
+});
+
+// Update configuration
+router.post("/config", isAuthenticated, requireAdmin, (req, res) => {
+  try {
+    const { updates } = req.body;
+
+    if (!updates || typeof updates !== 'object') {
+      return res.status(400).json({ error: "Invalid updates format" });
     }
-    // For development, allow all admin routes
-    next();
-  };
 
-  // System health and oversight
-  app.get("/api/admin/system-health", authMiddleware, (req, res) => {
-    res.json({
-      status: "operational",
-      timestamp: new Date().toISOString(),
-      services: {
-        database: "healthy",
-        blockchain: "healthy",
-        storage: "healthy",
-        ai: "healthy",
-        email: "healthy",
-      },
-      metrics: {
-        totalUsers: 1247,
-        activeUsers: 892,
-        totalCapsules: 5674,
-        gttSupply: 10000000,
-        treasuryBalance: 2847593.45,
-      },
-    });
-  });
+    // Validate and apply updates
+    const appliedUpdates: string[] = [];
+    const errors: string[] = [];
 
-  // Financial monitoring
-  app.get("/api/admin/financial-overview", authMiddleware, (req, res) => {
-    res.json({
-      revenue: {
-        monthly: 124750.0,
-        yearly: 1497000.0,
-        growth: 23.5,
-      },
-      expenses: {
-        infrastructure: 8450.0,
-        compliance: 12000.0,
-        security: 15000.0,
-      },
-      treasury: {
-        gttHoldings: 2500000,
-        usdcReserves: 847593.45,
-        stakingRewards: 125000.0,
-      },
-      compliance: {
-        kycRate: 98.7,
-        amlChecks: "passing",
-        taxReporting: "current",
-        licenses: "valid",
-      },
-    });
-  });
+    for (const [key, value] of Object.entries(updates)) {
+      const configItem = configItems.find(item => item.key === key);
+      
+      if (!configItem) {
+        errors.push(`Unknown config key: ${key}`);
+        continue;
+      }
 
-  // User oversight (privacy-compliant)
-  app.get("/api/admin/user-overview", authMiddleware, (req, res) => {
-    res.json({
-      totalUsers: 1247,
-      tierDistribution: {
-        explorer: 892,
-        seeker: 234,
-        creator: 89,
-        sovereign: 32,
-      },
-      flaggedAccounts: [],
-      kycStatus: {
-        verified: 1186,
-        pending: 47,
-        rejected: 14,
-      },
-      complianceAlerts: [],
-    });
-  });
+      if (!configItem.editable) {
+        errors.push(`Config key '${key}' is read-only`);
+        continue;
+      }
 
-  // Security monitoring
-  app.get("/api/admin/security-status", authMiddleware, (req, res) => {
-    res.json({
-      threatLevel: "low",
-      activeIncidents: 0,
-      securityScans: {
-        lastScan: new Date().toISOString(),
-        vulnerabilities: 0,
-        status: "secure",
-      },
-      accessLogs: {
-        adminLogins: 5,
-        failedAttempts: 0,
-        suspiciousActivity: 0,
-      },
-      backups: {
-        lastBackup: new Date().toISOString(),
-        status: "successful",
-        retention: "90 days",
-      },
-    });
-  });
+      // Type validation
+      if (configItem.type === 'boolean') {
+        if (value !== 'true' && value !== 'false') {
+          errors.push(`Config key '${key}' must be 'true' or 'false'`);
+          continue;
+        }
+      } else if (configItem.type === 'number') {
+        if (isNaN(Number(value))) {
+          errors.push(`Config key '${key}' must be a valid number`);
+          continue;
+        }
+      }
 
-  // Legal compliance status
-  app.get("/api/admin/compliance-status", authMiddleware, (req, res) => {
-    res.json({
-      gdpr: {
-        status: "compliant",
-        dataRequests: 0,
-        deletionRequests: 0,
-      },
-      ccpa: {
-        status: "compliant",
-        optOuts: 0,
-      },
-      kyc: {
-        provider: "Jumio",
-        status: "active",
-        completionRate: 98.7,
-      },
-      aml: {
-        status: "monitoring",
-        alerts: 0,
-        riskScore: "low",
-      },
-      licensing: {
-        jurisdiction: "Delaware, USA",
-        status: "active",
-        renewal: "2025-12-31",
-      },
-    });
-  });
+      // Apply update
+      runtimeConfig.set(key, value as string);
+      appliedUpdates.push(key);
+    }
 
-  // Emergency controls
-  app.post("/api/admin/emergency-pause", authMiddleware, (req, res) => {
-    // Emergency pause functionality
     res.json({
-      status: "paused",
-      timestamp: new Date().toISOString(),
-      reason: req.body.reason || "Manual emergency pause",
+      success: true,
+      appliedUpdates,
+      errors,
+      updatedAt: new Date().toISOString()
     });
-  });
 
-  // Revenue management
-  app.get("/api/admin/revenue-streams", authMiddleware, (req, res) => {
-    res.json({
-      subscriptions: {
-        monthly: 89750.0,
-        annual: 234000.0,
-      },
-      transactionFees: {
-        gtt: 15000.0,
-        nft: 8750.0,
-      },
-      premiumFeatures: {
-        aiAssistant: 12000.0,
-        enterpriseApi: 45000.0,
-      },
-      routing: {
-        operationalAccount: "secure",
-        treasuryAccount: "secure",
-        taxReserve: "allocated",
-      },
-    });
-  });
-}
+  } catch (error) {
+    console.error("Error updating admin config:", error);
+    res.status(500).json({ error: "Failed to update configuration" });
+  }
+});
+
+// Get current configuration as JSON (public endpoint for fallback)
+router.get("/config/public", (req, res) => {
+  try {
+    const publicConfig = Object.fromEntries(runtimeConfig.entries());
+    res.json(publicConfig);
+  } catch (error) {
+    console.error("Error fetching public config:", error);
+    res.status(500).json({ error: "Failed to fetch configuration" });
+  }
+});
+
+export default router;

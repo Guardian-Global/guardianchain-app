@@ -1,0 +1,13 @@
+{
+  "projectName": "GuardianChain",
+  "defaultTier": "guest",
+  "projectStatus": "production",
+  "veritasSealRequired": true,
+  "stripeEnabled": true,
+  "capsuleReplayFee": 2.50,
+  "griefScoreEnabled": true,
+  "aiModeration": "on",
+  "ipfsPinning": "pinata",
+  "allowedWallets": ["metamask", "walletconnect"],
+  "network": "polygon-mainnet"
+}
