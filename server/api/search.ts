@@ -23,12 +23,19 @@ export async function searchCapsules(req: Request, res: Response) {
     try {
       const supabaseConfig = createSupabaseClient();
       
-      // Make direct API call to Supabase for capsule search
+      // Make direct API call to Supabase for capsule search with enhanced filtering
       const searchUrl = new URL(`${supabaseConfig.url}/rest/v1/capsules`);
-      searchUrl.searchParams.append('select', 'id,title,description,author,category,created_at');
-      searchUrl.searchParams.append('or', `title.ilike.%${query}%,description.ilike.%${query}%,author.ilike.%${query}%`);
+      searchUrl.searchParams.append('select', 'id,title,description,author,category,tags,verification_status,grief_score,views,likes,comments,shares,created_at');
+      
+      // Enhanced search with full-text search and multiple field matching
+      const searchTerms = query.toLowerCase().replace(/[^\w\s]/g, '').split(' ').filter(term => term.length > 0);
+      const searchConditions = searchTerms.map(term => 
+        `title.ilike.%${term}%,description.ilike.%${term}%,author.ilike.%${term}%,category.ilike.%${term}%`
+      ).join(',');
+      
+      searchUrl.searchParams.append('or', `(${searchConditions})`);
       searchUrl.searchParams.append('order', 'created_at.desc');
-      searchUrl.searchParams.append('limit', '20');
+      searchUrl.searchParams.append('limit', '50');
 
       const response = await fetch(searchUrl.toString(), {
         method: 'GET',
@@ -55,43 +62,99 @@ export async function searchCapsules(req: Request, res: Response) {
     } catch (supabaseError) {
       console.error("Supabase connection error:", supabaseError);
       
-      // Fallback to mock data for development
-      const mockResults = [
+      // Fallback to realistic mock data for development
+      const mockCapsules = [
         {
           id: "cap_001",
           title: "Climate Change Evidence Documentation",
-          description: "Comprehensive analysis of environmental data and research findings",
+          description: "Comprehensive analysis of environmental data and research findings spanning three decades",
           author: "EnvironmentalScientist",
           category: "Scientific Truth",
+          tags: ["climate", "environment", "research", "data"],
+          verification_status: "verified",
+          grief_score: "92",
+          views: "4521",
+          likes: "387",
+          comments: "78",
+          shares: "42",
           created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
         },
         {
           id: "cap_002", 
           title: "Corporate Transparency Report",
-          description: "Internal documents revealing corporate practices and policies",
+          description: "Internal documents revealing corporate practices and policies affecting employee welfare",
           author: "CorporateWhistleblower",
           category: "Truth Testimony",
+          tags: ["corporate", "transparency", "whistleblower", "policy"],
+          verification_status: "pending",
+          grief_score: "95",
+          views: "1247",
+          likes: "89",
+          comments: "23",
+          shares: "15",
           created_at: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()
         },
         {
           id: "cap_003",
           title: "Historical Family Archive",
-          description: "Personal family history and documentation spanning three generations",
+          description: "Personal family history and documentation spanning three generations of immigration",
           author: "FamilyHistorian",
           category: "Personal History",
+          tags: ["family", "history", "immigration", "heritage"],
+          verification_status: "verified",
+          grief_score: "78",
+          views: "2894",
+          likes: "156",
+          comments: "45",
+          shares: "28",
           created_at: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: "cap_004",
+          title: "Medical Research Integrity Study",
+          description: "Analysis of research methodologies and data integrity in pharmaceutical studies",
+          author: "ResearchEthicist",
+          category: "Medical Truth",
+          tags: ["medical", "research", "ethics", "pharmaceutical"],
+          verification_status: "verified",
+          grief_score: "89",
+          views: "3762",
+          likes: "245",
+          comments: "67",
+          shares: "31",
+          created_at: new Date(Date.now() - 96 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: "cap_005",
+          title: "Educational Policy Impact Analysis",
+          description: "Comprehensive study of educational policies and their real-world impact on student development",
+          author: "EduAdvocate",
+          category: "Educational Truth",
+          tags: ["education", "policy", "students", "development"],
+          verification_status: "verified",
+          grief_score: "84",
+          views: "2156",
+          likes: "189",
+          comments: "34",
+          shares: "67",
+          created_at: new Date(Date.now() - 120 * 60 * 60 * 1000).toISOString()
         }
-      ].filter(item => 
-        item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.description.toLowerCase().includes(query.toLowerCase()) ||
-        item.author.toLowerCase().includes(query.toLowerCase())
-      );
+      ];
+
+      const filteredResults = mockCapsules.filter(item => {
+        const searchLower = query.toLowerCase();
+        return item.title.toLowerCase().includes(searchLower) ||
+               item.description.toLowerCase().includes(searchLower) ||
+               item.author.toLowerCase().includes(searchLower) ||
+               item.category.toLowerCase().includes(searchLower) ||
+               item.tags.some(tag => tag.toLowerCase().includes(searchLower));
+      });
 
       res.json({ 
-        results: mockResults,
+        results: filteredResults,
         query: query,
-        total: mockResults.length,
-        note: "Development mode - using mock data"
+        total: filteredResults.length,
+        note: "Development mode - using realistic mock data"
       });
     }
   } catch (error) {

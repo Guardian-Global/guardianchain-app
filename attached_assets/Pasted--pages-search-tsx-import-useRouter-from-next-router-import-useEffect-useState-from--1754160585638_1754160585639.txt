@@ -1,0 +1,61 @@
+// pages/search.tsx
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+export default function SearchPage() {
+  const router = useRouter();
+  const { q } = router.query;
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [onlyPublic, setOnlyPublic] = useState(true);
+
+  useEffect(() => {
+    if (!q) return;
+    const fetchResults = async () => {
+      setLoading(true);
+      const res = await fetch(`/api/search?q=${q}`);
+      const json = await res.json();
+      setLoading(false);
+      const filtered = onlyPublic ? json.results.filter(r => !r.isPrivate) : json.results;
+      setResults(filtered);
+    };
+    fetchResults();
+  }, [q, onlyPublic]);
+
+  return (
+    <main className="min-h-screen bg-slate-900 text-white py-12 px-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Search Results for "{q}"</h1>
+
+      <div className="flex items-center justify-center gap-3 mb-6">
+        <label className="text-sm">Show only public capsules:</label>
+        <input
+          type="checkbox"
+          checked={onlyPublic}
+          onChange={() => setOnlyPublic(!onlyPublic)}
+          className="w-4 h-4"
+        />
+      </div>
+
+      <div className="grid gap-6 max-w-5xl mx-auto">
+        {loading ? (
+          <p className="text-center text-slate-400">Searching...</p>
+        ) : results.length === 0 ? (
+          <p className="text-center text-slate-400">No capsules found.</p>
+        ) : (
+          results.map((capsule) => (
+            <Card key={capsule.id} className="bg-slate-800 p-6">
+              <h2 className="text-xl font-semibold mb-1">{capsule.title}</h2>
+              {capsule.isPrivate && <Badge className="bg-red-700 text-white mb-2">🔒 Private</Badge>}
+              <p className="text-slate-300 mb-2">{capsule.description?.slice(0, 140) || "Encrypted capsule."}</p>
+              <Button variant="link" className="mt-2" href={`/capsule/${capsule.id}`}>View Capsule</Button>
+            </Card>
+          ))
+        )}
+      </div>
+    </main>
+  );
+}

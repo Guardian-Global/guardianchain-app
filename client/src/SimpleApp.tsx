@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import CapsuleStats from "./pages/CapsuleStats";
 import Timeline from "./pages/Timeline";
 import ValidatorBids from "./pages/ValidatorBids";
+import SearchResults from "./pages/SearchResults";
 
 // Create minimal UI components to avoid dependency issues
 function Button({ children, size, variant, className, type, ...props }: any) {
@@ -195,20 +196,12 @@ function HomePage() {
       <section className="bg-slate-800 py-12 px-6 text-center">
         <h2 className="text-3xl font-bold mb-6">{t.search_title}</h2>
         <form 
-          onSubmit={async (e) => {
+          onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target as HTMLFormElement);
             const searchQuery = formData.get('q') as string;
             if (searchQuery) {
-              try {
-                const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
-                const data = await response.json();
-                console.log('Search results:', data);
-                alert(`Found ${data.total} results for "${searchQuery}"`);
-              } catch (error) {
-                console.error('Search failed:', error);
-                alert('Search failed. Please try again.');
-              }
+              window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
             }
           }}
           className="flex justify-center gap-2 max-w-lg mx-auto"
@@ -319,6 +312,9 @@ function Navigation() {
           <Link href="/validator-bids">
             <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Validator Bids</span>
           </Link>
+          <Link href="/search">
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Search</span>
+          </Link>
         </div>
       </div>
     </nav>
@@ -341,6 +337,10 @@ export default function App() {
         <Route path="/validator-bids">
           <Navigation />
           <ValidatorBids />
+        </Route>
+        <Route path="/search">
+          <Navigation />
+          <SearchResults />
         </Route>
         <Route>
           <Navigation />
