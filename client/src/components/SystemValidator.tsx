@@ -292,7 +292,7 @@ export default function SystemValidator() {
     if (isAuthenticated && user) {
       updateTest('auth-flows', { 
         status: 'passed', 
-        result: `Authenticated as user: ${(user as any)?.email || (user as any)?.id}` 
+        result: `Authenticated as user: ${user.email || user.id}` 
       });
     } else {
       updateTest('auth-flows', { 

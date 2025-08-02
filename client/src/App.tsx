@@ -138,7 +138,7 @@ import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./features/payments/BillingDashboard";
-// Landing page removed - using UltimateHomepage
+import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
 // Unified auth hooks removed - using simplified useAuth
 import { HelmetProvider } from "react-helmet-async";
@@ -189,8 +189,8 @@ import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
 import YieldDashboard from "./pages/dashboard/Yield";
-import ReferralDashboard from "./pages/referral";
-import VaultExplorer from "./pages/vault";
+import ReferralDashboard from "./pages/Referral";
+import VaultExplorer from "./pages/Vault";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
@@ -255,7 +255,7 @@ function Router() {
             <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
             <Route path="/vault" component={Vault} />
             <Route path="/capsule/:id" component={lazy(() => import("./components/CapsuleReplayView"))} />
-          <Route path="/admin" component={lazy(() => import("./pages/admin"))} />
+          <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/dao/results/:id" component={lazy(() => import("./pages/dao/results"))} />
@@ -277,11 +277,6 @@ function Router() {
             <Route path="/profile-dashboard" component={lazy(() => import("./pages/profile-dashboard"))} />
             <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
             <Route path="/profile-upgrade" component={lazy(() => import("./pages/ProfileUpgrade"))} />
-            <Route path="/advanced-analytics" component={lazy(() => import("./pages/AdvancedAnalytics"))} />
-            <Route path="/ai-content-optimization" component={lazy(() => import("./pages/AIContentOptimization"))} />
-            <Route path="/mobile-experience" component={lazy(() => import("./pages/MobileExperience"))} />
-            <Route path="/admin-dashboard" component={lazy(() => import("./pages/AdminDashboard"))} />
-            <Route path="/social-sharing" component={lazy(() => import("./pages/SocialSharingFeatures"))} />
         <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />

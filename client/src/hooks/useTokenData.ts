@@ -35,8 +35,8 @@ export function useTokenData() {
       }
       return response.json();
     },
-    refetchInterval: 120000, // Refetch every 2 minutes instead of 30 seconds
-    staleTime: 100000, // Consider data stale after 100 seconds
+    refetchInterval: 30000, // Refetch every 30 seconds for live data
+    staleTime: 25000, // Consider data stale after 25 seconds
   });
 
   const { data: historicalData } = useQuery({

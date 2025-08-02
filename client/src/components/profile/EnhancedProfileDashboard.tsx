@@ -140,11 +140,6 @@ export default function EnhancedProfileDashboard() {
   // Fetch user profile
   const { data: profile, isLoading } = useQuery({
     queryKey: ["/api/profile", user?.id],
-    queryFn: async () => {
-      if (!user?.id) throw new Error("User ID not found");
-      const response = await apiRequest("GET", `/api/profile/${user.id}`);
-      return response.json();
-    },
     enabled: !!user?.id,
     retry: false,
   });

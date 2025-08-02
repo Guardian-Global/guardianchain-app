@@ -6,17 +6,8 @@ import InstitutionAccess from '@/components/InstitutionAccess';
 import { Scale, Users, Shield, Clock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
-interface User {
-  id: string;
-  email: string;
-  tier: string;
-  firstName?: string;
-  lastName?: string;
-}
-
 function JuryPage() {
   const { user } = useAuth();
-  const typedUser = user as User | null;
 
   // Mock data for demonstration
   const mockCapsule = {
@@ -151,12 +142,8 @@ function JuryPage() {
       </Card>
 
       {/* Institutional Access */}
-      {typedUser && typedUser.id && typedUser.email && typedUser.tier && (
-        <InstitutionAccess user={{
-          id: typedUser.id,
-          email: typedUser.email,
-          tier: typedUser.tier
-        }} />
+      {user && (
+        <InstitutionAccess user={user} />
       )}
 
       {/* Jury Guidelines */}
@@ -201,7 +188,5 @@ function JuryPage() {
     </div>
   );
 }
-
-export default JuryPage;
 
 // Protect this route - only Seekers and above can access jury duty

@@ -434,112 +434,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const profileRoutes = await import('./routes/profile');
   app.use('/api/profile', profileRoutes.default);
 
-  // Missing API endpoints - Add them here
-  app.get('/api/users/:userId/institutional-roles', isDebugAuthenticated, async (req: any, res) => {
-    const { userId } = req.params;
-    console.log('🔵 DEBUG: Getting institutional roles for user:', userId);
-    
-    // Mock institutional roles for development
-    const mockRoles = [
-      {
-        id: 'role_001',
-        institution: 'Harvard University',
-        role: 'Research Associate',
-        permissions: ['view_classified', 'submit_papers'],
-        status: 'active',
-        grantedAt: '2024-01-15T00:00:00Z',
-        institutionType: 'academic'
-      },
-      {
-        id: 'role_002',
-        institution: 'EPA Environmental Division',
-        role: 'Senior Analyst',
-        permissions: ['access_environmental_data', 'review_reports'],
-        status: 'active',
-        grantedAt: '2024-02-01T00:00:00Z',
-        expiresAt: '2025-02-01T00:00:00Z',
-        institutionType: 'government'
-      }
-    ];
-    
-    res.json(mockRoles);
-  });
-
-  app.get('/api/recommendations', isDebugAuthenticated, async (req: any, res) => {
-    console.log('🔵 DEBUG: Getting AI recommendations');
-    
-    // Mock recommendations for development
-    const mockRecommendations = [
-      {
-        capsuleId: 1,
-        score: 95,
-        reasoning: 'High relevance based on your interest in environmental topics',
-        category: 'Environment',
-        relevanceFactors: ['environmental interest', 'research background'],
-        capsule: {
-          id: 1,
-          title: 'Climate Change Evidence from Arctic Research',
-          content: 'Comprehensive analysis of ice core samples...',
-          category: 'Environment',
-          tags: ['climate', 'research', 'arctic'],
-          verificationScore: 92,
-          engagement: {
-            views: 1240,
-            shares: 87,
-            verifications: 23
-          },
-          createdAt: '2024-01-15T00:00:00Z'
-        }
-      },
-      {
-        capsuleId: 2,
-        score: 89,
-        reasoning: 'Matches your academic research profile',
-        category: 'Science',
-        relevanceFactors: ['academic background', 'research experience'],
-        capsule: {
-          id: 2,
-          title: 'Breakthrough in Renewable Energy Storage',
-          content: 'New battery technology breakthrough...',
-          category: 'Technology',
-          tags: ['energy', 'technology', 'breakthrough'],
-          verificationScore: 88,
-          engagement: {
-            views: 956,
-            shares: 64,
-            verifications: 18
-          },
-          createdAt: '2024-01-20T00:00:00Z'
-        }
-      }
-    ];
-    
-    res.json(mockRecommendations);
-  });
-
-  app.get('/api/user-profile', isDebugAuthenticated, async (req: any, res) => {
-    console.log('🔵 DEBUG: Getting user AI profile');
-    
-    // Mock user profile for development
-    const mockProfile = {
-      interests: ['Environment', 'Climate Change', 'Research', 'Technology'],
-      preferredCategories: ['Environment', 'Science', 'Technology'],
-      behaviorPattern: 'Academic researcher with strong focus on environmental issues and emerging technologies',
-      recommendations: [
-        'Consider following climate research capsules',
-        'Engage with environmental policy discussions',
-        'Explore renewable energy innovations',
-        'Connect with other researchers in your field'
-      ]
-    };
-    
-    res.json(mockProfile);
-  });
-  
-  // Register social sharing routes
-  const socialRoutes = await import('./routes/social');
-  app.use('/api/social', socialRoutes.default);
-
   // Analytics dashboard endpoint
   app.get('/api/analytics/dashboard', isDebugAuthenticated, async (req: any, res) => {
     try {
@@ -1740,18 +1634,12 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json(mockCertificates);
   });
 
-  // Fix token data API with proper JSON response and caching
+  // Fix token data API with proper JSON response
   app.get('/api/token/live-data', (req, res) => {
-    // Set cache headers to reduce repeated requests
-    res.set('Cache-Control', 'public, max-age=60'); // Cache for 60 seconds
-    res.set('ETag', '"token-data-v1"'); // Simple ETag for consistency
-    
     res.status(200).json({
       price: 0.0075,
       priceChange: 0.0001,
-      marketCap: 7500000,
-      lastUpdated: new Date().toISOString(),
-      source: 'static'
+      marketCap: 7500000
     });
   });
 
@@ -3081,7 +2969,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
         // Tags filter
         if (tags) {
           const tagList = tags.toString().split(',');
-          const hasMatchingTag = tagList.some((tag: string) => capsule.tags.includes(tag.trim()));
+          const hasMatchingTag = tagList.some(tag => capsule.tags.includes(tag.trim()));
           if (!hasMatchingTag) return false;
         }
 
