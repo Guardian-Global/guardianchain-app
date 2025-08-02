@@ -89,20 +89,24 @@ export default function ProfileUpgradePage() {
 
   const { data: profile, isLoading, refetch } = useQuery<UserProfile>({
     queryKey: ['/api/profile/detailed', user?.id],
-    enabled: !!user?.id,
-    onSuccess: (data) => {
+    enabled: !!user?.id
+  });
+
+  // Update form data when profile data changes
+  React.useEffect(() => {
+    if (profile) {
       setFormData({
-        firstName: data.firstName || '',
-        lastName: data.lastName || '',
-        username: data.username || '',
-        bio: data.bio || '',
-        location: data.location || '',
-        website: data.website || '',
-        twitter: data.twitter || '',
-        linkedin: data.linkedin || ''
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
+        username: profile.username || '',
+        bio: profile.bio || '',
+        location: profile.location || '',
+        website: profile.website || '',
+        twitter: profile.twitter || '',
+        linkedin: profile.linkedin || ''
       });
     }
-  });
+  }, [profile]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
