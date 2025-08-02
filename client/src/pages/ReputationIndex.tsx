@@ -42,6 +42,10 @@ export default function ReputationIndex() {
   // Fetch SMRI data for searched wallet
   const { data: smriData, isLoading: smriLoading } = useQuery({
     queryKey: ['/api/smri', activeWallet],
+    queryFn: async () => {
+      const response = await apiRequest('GET', `/api/smri/${activeWallet}`);
+      return response.json();
+    },
     enabled: !!activeWallet,
     refetchInterval: 60000
   });
@@ -49,6 +53,11 @@ export default function ReputationIndex() {
   // Auto-load user's own SMRI if authenticated
   const { data: userSMRI } = useQuery({
     queryKey: ['/api/smri', (user as any)?.email || 'debug@guardianchain.app'],
+    queryFn: async () => {
+      const wallet = (user as any)?.email || 'debug@guardianchain.app';
+      const response = await apiRequest('GET', `/api/smri/${wallet}`);
+      return response.json();
+    },
     enabled: isAuthenticated,
     refetchInterval: 60000
   });

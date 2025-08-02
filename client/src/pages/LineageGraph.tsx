@@ -51,6 +51,11 @@ export default function LineageGraph() {
   // Fetch lineage tree
   const { data: lineageTree, isLoading: treeLoading } = useQuery({
     queryKey: ['/api/lineage/tree', searchId || 'root'],
+    queryFn: async () => {
+      const id = searchId || 'root';
+      const response = await apiRequest('GET', `/api/lineage/tree/${id}`);
+      return response.json();
+    },
     enabled: !!searchId || true,
     refetchInterval: 30000
   });
@@ -58,6 +63,10 @@ export default function LineageGraph() {
   // Fetch lineage analytics
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: ['/api/lineage/analytics'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/lineage/analytics');
+      return response.json();
+    },
     refetchInterval: 30000
   });
 
@@ -193,7 +202,7 @@ export default function LineageGraph() {
                   </div>
                 ) : lineageTree ? (
                   <div className="max-h-96 overflow-y-auto">
-                    {renderLineageNode(lineageTree)}
+                    {renderLineageNode(lineageTree as LineageNode)}
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-400">
@@ -288,7 +297,7 @@ export default function LineageGraph() {
               <CardContent>
                 {analytics?.topInfluencers ? (
                   <div className="space-y-3">
-                    {analytics.topInfluencers.slice(0, 5).map((influencer, index) => (
+                    {analytics.topInfluencers.slice(0, 5).map((influencer: any, index: number) => (
                       <div key={influencer.capsuleId} className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${

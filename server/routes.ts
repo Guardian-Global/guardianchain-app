@@ -2126,7 +2126,98 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
-  // Get grief flow analytics
+  // Get lineage tree data
+  app.get('/api/lineage/tree/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🌳 Lineage tree requested for:', req.params.capsuleId);
+    
+    try {
+      const { capsuleId } = req.params;
+      
+      // Mock lineage tree data
+      const mockLineageTree: any = {
+        capsuleId: capsuleId === 'root' ? 'root_capsule' : capsuleId,
+        title: capsuleId === 'root' ? 'Origin Truth Capsule' : `Capsule ${capsuleId}`,
+        griefTier: 4,
+        influence: 85,
+        depth: 0,
+        children: [
+          {
+            capsuleId: 'child_1',
+            title: 'Inspired Memory Capsule',
+            griefTier: 3,
+            influence: 72,
+            depth: 1,
+            children: [
+              {
+                capsuleId: 'grandchild_1',
+                title: 'Third Generation Truth',
+                griefTier: 2,
+                influence: 45,
+                depth: 2,
+                children: []
+              }
+            ]
+          },
+          {
+            capsuleId: 'child_2',
+            title: 'Legacy Testimony',
+            griefTier: 5,
+            influence: 95,
+            depth: 1,
+            children: []
+          }
+        ]
+      };
+      
+      console.log('✅ Lineage tree data generated');
+      res.json(mockLineageTree);
+      
+    } catch (error) {
+      console.error('❌ Failed to get lineage tree:', error);
+      res.status(500).json({ error: 'Failed to get lineage tree' });
+    }
+  });
+
+  // Get lineage analytics
+  app.get('/api/lineage/analytics', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 Lineage analytics requested');
+    
+    try {
+      const mockAnalytics = {
+        totalLineages: 42,
+        avgGriefFlow: 3.7,
+        topInfluencers: [
+          {
+            capsuleId: 'cap_veritas_1',
+            title: 'The Truth About Truth',
+            influenceScore: 95,
+            descendantCount: 12
+          },
+          {
+            capsuleId: 'cap_memory_2',
+            title: 'Generational Trauma Archive',
+            influenceScore: 88,
+            descendantCount: 8
+          },
+          {
+            capsuleId: 'cap_wisdom_3',
+            title: 'Ancient Wisdom Preserved',
+            influenceScore: 82,
+            descendantCount: 6
+          }
+        ]
+      };
+      
+      console.log('✅ Analytics data generated');
+      res.json(mockAnalytics);
+      
+    } catch (error) {
+      console.error('❌ Failed to get analytics:', error);
+      res.status(500).json({ error: 'Failed to get lineage analytics' });
+    }
+  });
+
+  // Get grief flow analytics (legacy endpoint)
   app.get('/api/lineage/analytics/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
     console.log('📊 Grief flow analytics requested for:', req.params.capsuleId);
     
