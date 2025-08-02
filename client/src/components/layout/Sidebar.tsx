@@ -23,49 +23,68 @@ interface Route {
 
 const routes: Route[] = [
   { 
-    name: "Dashboard", 
-    href: "/dashboard", 
+    name: "🧭 Dashboard", 
+    href: "/", 
     icon: LayoutDashboard,
     roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
   },
   { 
-    name: "Admin Panel", 
-    href: "/admin", 
-    icon: Settings,
-    roles: ["admin", "dao-owner"],
-    badge: "ADMIN" 
-  },
-  { 
-    name: "Capsules", 
+    name: "📦 Capsules", 
     href: "/vault", 
     icon: FileText,
     roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
   },
   { 
-    name: "Create", 
-    href: "/create", 
+    name: "🔁 Replay Capsule", 
+    href: "/replay", 
+    icon: Play,
+    roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
+  },
+  { 
+    name: "🧬 Mint NFT", 
+    href: "/mint", 
     icon: Zap,
     roles: ["member", "moderator", "admin", "dao-owner"] 
   },
   { 
-    name: "Staking", 
-    href: "/staking", 
+    name: "📈 Analytics", 
+    href: "/analytics", 
     icon: TrendingUp,
-    roles: ["member", "moderator", "admin", "dao-owner"] 
+    roles: ["admin", "dao-owner"],
+    badge: "ADMIN" 
   },
   { 
-    name: "DAO Governance", 
+    name: "🚨 Moderation", 
+    href: "/moderation", 
+    icon: Shield,
+    roles: ["moderator", "admin", "dao-owner"],
+    badge: "MOD+" 
+  },
+  { 
+    name: "🧪 AI Insights", 
+    href: "/insights", 
+    icon: Settings,
+    roles: ["admin", "member"] 
+  },
+  { 
+    name: "🎁 Earn GTT", 
+    href: "/earn", 
+    icon: Crown,
+    roles: ["member", "guest"] 
+  },
+  { 
+    name: "🏛 DAO Governance", 
     href: "/dao", 
     icon: Crown,
     roles: ["dao-owner"],
     badge: "DAO" 
   },
   { 
-    name: "Validator", 
-    href: "/validator", 
-    icon: Shield,
-    roles: ["moderator", "admin", "dao-owner"],
-    badge: "MOD+" 
+    name: "🛡️ Admin Panel", 
+    href: "/admin", 
+    icon: Settings,
+    roles: ["admin", "dao-owner"],
+    badge: "ADMIN" 
   }
 ];
 

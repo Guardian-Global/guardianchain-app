@@ -768,6 +768,79 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     }
   });
 
+  // AI Summary endpoint
+  app.post('/api/ai-summary', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { content, capsule_id } = req.body;
+      
+      if (!content) {
+        return res.status(400).json({ error: 'Content is required' });
+      }
+
+      const summaryPrompt = `Summarize the following memory as 1 sentence and classify the primary emotion (joy, sadness, fear, anger, nostalgia, hope, grief):\n\n"${content}"`;
+
+      // In production, this would use the actual OpenAI API
+      // For now, we'll simulate the AI summary generation
+      const mockSummary = generateMockSummary(content);
+      
+      console.log('🤖 AI Summary generated:', { 
+        capsule_id, 
+        summary: mockSummary.substring(0, 50) + '...' 
+      });
+
+      // In production, this would update the database
+      // await storage.updateCapsuleSummary(capsule_id, mockSummary);
+
+      res.status(200).json({ 
+        summary: mockSummary,
+        capsule_id,
+        emotions_detected: extractEmotions(content)
+      });
+    } catch (error) {
+      console.error('❌ AI Summary failed:', error);
+      res.status(500).json({ 
+        error: 'Failed to generate AI summary',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // ROI Analysis endpoint
+  app.get('/api/roi/:id', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const capsuleId = req.params.id;
+      
+      if (!capsuleId) {
+        return res.status(400).json({ error: 'Capsule ID is required' });
+      }
+
+      // Mock replay data - in production this would query the database
+      const mockReplays = Math.floor(Math.random() * 50) + 5; // 5-55 replays
+      const gttEarned = mockReplays * 10; // 10 GTT per replay
+      
+      const roiData = {
+        capsuleId,
+        replays: mockReplays,
+        gttEarned,
+        averageEmotionalResponse: Math.floor(Math.random() * 40) + 60, // 60-100%
+        totalViews: mockReplays + Math.floor(Math.random() * 20),
+        yieldPerReplay: 10,
+        creationCost: 0, // Free creation
+        netProfit: gttEarned,
+        roi: gttEarned > 0 ? '∞%' : '0%' // Infinite ROI since creation is free
+      };
+
+      console.log('📊 ROI Analysis requested:', { capsuleId, gttEarned });
+      res.status(200).json(roiData);
+    } catch (error) {
+      console.error('❌ ROI Analysis failed:', error);
+      res.status(500).json({ 
+        error: 'Failed to generate ROI analysis',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
   // Content moderation endpoint
   app.post('/api/moderate-content', isDebugAuthenticated, async (req: any, res) => {
     try {
@@ -980,4 +1053,60 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
 
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Helper functions for AI summary generation
+function generateMockSummary(content: string): string {
+  const emotions = ['joy', 'nostalgia', 'hope', 'sadness', 'grief', 'fear', 'anger'];
+  const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+  
+  // Generate a contextual summary based on content length and keywords
+  const contentLength = content.length;
+  const hasFamily = /family|mother|father|parent|child|sibling/i.test(content);
+  const hasMemory = /remember|memory|childhood|past|ago/i.test(content);
+  const hasLove = /love|heart|dear|cherish/i.test(content);
+  
+  let summary = "A ";
+  
+  if (hasMemory) summary += "cherished memory ";
+  else if (hasFamily) summary += "family story ";
+  else summary += "personal experience ";
+  
+  if (hasLove) summary += "filled with love and ";
+  else summary += "marked by ";
+  
+  summary += randomEmotion;
+  
+  if (contentLength > 500) {
+    summary += ", capturing significant life moments and deep emotional resonance.";
+  } else if (contentLength > 200) {
+    summary += ", reflecting on meaningful experiences and personal growth.";
+  } else {
+    summary += ", preserving important thoughts and feelings.";
+  }
+  
+  return `${summary} Primary emotion: ${randomEmotion}.`;
+}
+
+function extractEmotions(content: string): string[] {
+  const emotionKeywords = {
+    joy: ['happy', 'joy', 'celebration', 'laughter', 'smile', 'delight'],
+    sadness: ['sad', 'cry', 'tears', 'sorrow', 'loss', 'missing'],
+    nostalgia: ['remember', 'childhood', 'past', 'used to', 'back then'],
+    hope: ['hope', 'future', 'dream', 'wish', 'possibility', 'tomorrow'],
+    grief: ['grief', 'death', 'gone', 'passed away', 'funeral', 'mourning'],
+    fear: ['scared', 'afraid', 'worry', 'anxiety', 'nervous', 'frightened'],
+    anger: ['angry', 'mad', 'frustration', 'rage', 'upset', 'irritated']
+  };
+  
+  const detectedEmotions: string[] = [];
+  const lowerContent = content.toLowerCase();
+  
+  for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
+    if (keywords.some(keyword => lowerContent.includes(keyword))) {
+      detectedEmotions.push(emotion);
+    }
+  }
+  
+  return detectedEmotions.length > 0 ? detectedEmotions : ['neutral'];
 }
