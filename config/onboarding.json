@@ -1,0 +1,263 @@
+{
+  "onboardingFlow": {
+    "version": "1.0.0",
+    "steps": [
+      {
+        "id": "welcome",
+        "title": "Welcome to GuardianChain",
+        "description": "The sovereign truth verification platform",
+        "content": {
+          "headline": "Veritas Sealed. Truth Tokenized.",
+          "subheadline": "Transform your memories into immutable digital assets",
+          "highlights": [
+            "🔒 Immutable truth capsules",
+            "💰 Earn GTT for verified content",
+            "🛡️ Veritas-proof authorship",
+            "🧠 AI-assisted creation"
+          ],
+          "action": {
+            "text": "Begin Your Journey",
+            "href": "/onboarding/connect"
+          }
+        },
+        "duration": 30
+      },
+      {
+        "id": "connect",
+        "title": "Connect Your Wallet",
+        "description": "Secure your identity and earnings",
+        "content": {
+          "headline": "Connect to Start Earning",
+          "subheadline": "Your wallet secures your GTT rewards and capsule ownership",
+          "benefits": [
+            "Secure capsule ownership",
+            "Direct GTT earning to your wallet",
+            "Participate in DAO governance",
+            "Access tier-based features"
+          ],
+          "supportedWallets": ["MetaMask", "WalletConnect", "Coinbase Wallet"],
+          "action": {
+            "text": "Connect Wallet",
+            "type": "wallet-connect"
+          }
+        },
+        "duration": 45
+      },
+      {
+        "id": "understand-griefscore",
+        "title": "Understanding GriefScore",
+        "description": "How your truth earns GTT rewards",
+        "content": {
+          "headline": "Your Truth Has Value",
+          "subheadline": "GriefScore measures emotional significance and determines GTT yield",
+          "tiers": [
+            {
+              "name": "Truth Seeker",
+              "score": "0-30",
+              "multiplier": "1x",
+              "yield": "$25-50/month",
+              "examples": ["Daily memories", "General observations", "Life updates"]
+            },
+            {
+              "name": "Memory Guardian", 
+              "score": "31-70",
+              "multiplier": "2x",
+              "yield": "$75-125/month",
+              "examples": ["Significant events", "Relationship memories", "Personal growth"]
+            },
+            {
+              "name": "Veritas Holder",
+              "score": "71-100", 
+              "multiplier": "3x",
+              "yield": "$150-200+/month",
+              "examples": ["Trauma recovery", "Whistleblowing", "Legal testimony"]
+            }
+          ],
+          "action": {
+            "text": "Learn More About GriefScore",
+            "href": "/docs/griefscore"
+          }
+        },
+        "duration": 60
+      },
+      {
+        "id": "create-first-capsule",
+        "title": "Create Your First Capsule",
+        "description": "Submit your truth to the vault",
+        "content": {
+          "headline": "Share Your Truth",
+          "subheadline": "Create your first truth capsule with AI assistance",
+          "steps": [
+            "Choose your memory type",
+            "Write or speak your truth", 
+            "Add supporting evidence",
+            "Set privacy preferences",
+            "Submit for verification"
+          ],
+          "aiAssistance": {
+            "enabled": true,
+            "features": [
+              "Title suggestions based on emotion",
+              "Content organization help",
+              "Privacy recommendations",
+              "GriefScore estimation"
+            ]
+          },
+          "action": {
+            "text": "Create First Capsule",
+            "href": "/create-with-help"
+          }
+        },
+        "duration": 120
+      },
+      {
+        "id": "verification-process",
+        "title": "Verification & Rewards",
+        "description": "How your capsule gets verified",
+        "content": {
+          "headline": "Truth Verification Process",
+          "subheadline": "Community-driven verification ensures authenticity",
+          "process": [
+            {
+              "step": 1,
+              "title": "AI Analysis",
+              "description": "Initial content analysis and authenticity scoring"
+            },
+            {
+              "step": 2,
+              "title": "Community Review",
+              "description": "Guardian network validates content and assigns initial GriefScore"
+            },
+            {
+              "step": 3,
+              "title": "Professional Validation",
+              "description": "For high-tier capsules, professional validators provide final approval"
+            },
+            {
+              "step": 4,
+              "title": "GTT Distribution",
+              "description": "Verified capsules begin earning GTT based on views and engagement"
+            }
+          ],
+          "timeline": "24-72 hours for standard verification",
+          "action": {
+            "text": "View Verification Status",
+            "href": "/dashboard/capsules"
+          }
+        },
+        "duration": 90
+      },
+      {
+        "id": "explore-features",
+        "title": "Explore Platform Features",
+        "description": "Discover all GuardianChain capabilities",
+        "content": {
+          "headline": "Platform Features",
+          "subheadline": "Explore all the ways to engage with GuardianChain",
+          "features": [
+            {
+              "title": "Truth Vault",
+              "description": "Browse and unlock verified truth capsules",
+              "href": "/truth-vault",
+              "icon": "vault"
+            },
+            {
+              "title": "Yield Dashboard", 
+              "description": "Track your GTT earnings and staking opportunities",
+              "href": "/yield",
+              "icon": "chart"
+            },
+            {
+              "title": "Referral System",
+              "description": "Earn commissions by inviting new guardians",
+              "href": "/referral-earn",
+              "icon": "users"
+            },
+            {
+              "title": "DAO Governance",
+              "description": "Vote on platform decisions and proposals",
+              "href": "/governance",
+              "icon": "vote"
+            },
+            {
+              "title": "Validator Panel",
+              "description": "Participate in truth verification and earn rewards",
+              "href": "/validator",
+              "icon": "shield"
+            }
+          ],
+          "action": {
+            "text": "Explore Platform",
+            "href": "/dashboard"
+          }
+        },
+        "duration": 60
+      },
+      {
+        "id": "complete",
+        "title": "Welcome to the Guardian Network",
+        "description": "You're ready to preserve truth",
+        "content": {
+          "headline": "Onboarding Complete!",
+          "subheadline": "You're now part of the sovereign truth preservation network",
+          "achievements": [
+            "✅ Wallet connected and verified",
+            "✅ GriefScore system understood", 
+            "✅ First capsule created",
+            "✅ Platform features explored"
+          ],
+          "nextSteps": [
+            {
+              "title": "Create More Capsules",
+              "description": "Build your truth portfolio and increase earnings",
+              "href": "/create-truth-capsule"
+            },
+            {
+              "title": "Join the Community",
+              "description": "Connect with other guardians on Discord",
+              "href": "https://discord.gg/guardianchain"
+            },
+            {
+              "title": "Follow Updates",
+              "description": "Stay informed about platform developments",
+              "href": "https://twitter.com/GuardianChain"
+            }
+          ],
+          "rewards": {
+            "gttBonus": 10,
+            "tierPoints": 100,
+            "achievementBadge": "First Guardian"
+          },
+          "action": {
+            "text": "Go to Dashboard",
+            "href": "/dashboard"
+          }
+        },
+        "duration": 45
+      }
+    ],
+    "settings": {
+      "allowSkip": true,
+      "saveProgress": true,
+      "showProgressBar": true,
+      "estimatedTotalTime": "8-12 minutes",
+      "completionRewards": {
+        "gtt": 10,
+        "badge": "onboarding-complete",
+        "tierBonus": 100
+      }
+    },
+    "aiAssistance": {
+      "enabled": true,
+      "chatSupport": true,
+      "contextualHelp": true,
+      "voiceGuidance": false
+    },
+    "analytics": {
+      "trackStepCompletion": true,
+      "trackTimeSpent": true,
+      "trackDropOffPoints": true,
+      "optimizeForConversion": true
+    }
+  }
+}

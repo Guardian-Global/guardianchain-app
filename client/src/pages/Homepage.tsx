@@ -16,6 +16,7 @@ import { Link } from "wouter";
 import GuardianAssistant from "@/components/ai/GuardianAssistant";
 import HeroSection from "@/components/homepage/HeroSection";
 import LiveStats from "@/components/homepage/LiveStats";
+import CalloutCTA from "@/components/homepage/CalloutCTA";
 
 export default function Homepage() {
   const { isAuthenticated } = useAuth();
@@ -24,6 +25,9 @@ export default function Homepage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 text-white">
       {/* Hero Section */}
       <HeroSection />
+      
+      {/* Enhanced CTA Section */}
+      <CalloutCTA />
 
         <div className="container mx-auto px-4">
         {/* Video Preview */}

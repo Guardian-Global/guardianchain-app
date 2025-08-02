@@ -1,0 +1,160 @@
+{
+  "project": {
+    "name": "GuardianChain: Truth Vault Capsule dApp",
+    "description": "Mint Veritas Capsules. Earn $GTT for verified memory. GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization.",
+    "version": "1.0.0",
+    "launchDate": "2025-08-05",
+    "status": "🟢 Production - Mainnet Deployed",
+    "license": "IP Sealed via Veritas Cert VC-GSAL–0001",
+    "visibility": "public",
+    "discoverability": true
+  },
+  "branding": {
+    "tagline": "Veritas Sealed. Truth Tokenized.",
+    "slogan": "Truth belongs to everyone. Now it belongs on-chain.",
+    "logo": "/assets/logo/GUARDIANCHAIN_logo.png",
+    "favicon": "/assets/logo/gtt-favicon.ico",
+    "themeColor": "#6324E2",
+    "badges": [
+      "🟢 Production Ready",
+      "🔒 Veritas Certified", 
+      "💎 Institutional Grade",
+      "🚀 Launch Ready"
+    ]
+  },
+  "links": {
+    "website": "https://guardianchain.app",
+    "twitter": "https://twitter.com/GuardianChain",
+    "github": "https://github.com/Guardian-Global",
+    "docs": "https://guardianchain.app/docs",
+    "reports": "https://guardianchain.app/reports",
+    "discord": "https://discord.gg/guardianchain",
+    "contact": "contact@guardianchain.io"
+  },
+  "blockchain": {
+    "protocolID": "guardian-mainnet",
+    "network": "Polygon",
+    "token": {
+      "symbol": "GTT",
+      "name": "Guardian Truth Token",
+      "contract": "0x...",
+      "decimals": 18
+    },
+    "ens": "guardianchain.eth"
+  },
+  "features": {
+    "tags": [
+      "web3", "blockchain", "nextjs", "supabase", "openai", 
+      "veritas", "capsules", "truth", "GTT", "sovereign-app"
+    ],
+    "searchKeywords": [
+      "truth capsule", "memory protocol", "veritas sealed",
+      "grief score", "blockchain truth", "digital memory",
+      "truth verification", "GTT token", "guardian chain"
+    ],
+    "capsuleFilters": [
+      "Mint", "Unlock", "Replay", "Audit", "Verify", "Claim $GTT", "DAO View"
+    ],
+    "userTiers": [
+      {
+        "name": "Guest",
+        "access": "View public capsules, explore GriefScore"
+      },
+      {
+        "name": "Wallet-Connected",
+        "access": "Submit capsule, replay memory, earn GTT"
+      },
+      {
+        "name": "DAO Moderator", 
+        "access": "Assign grief tiers, approve Veritas claim"
+      },
+      {
+        "name": "Master Admin",
+        "access": "Full capsule intake + payment gateway logic"
+      }
+    ]
+  },
+  "monetization": {
+    "enabled": true,
+    "stripeIntegration": true,
+    "gttUtility": {
+      "vaultYield": "GTT claimable per grief tier",
+      "replayFeeSplit": "25% to author",
+      "daoGrants": "Powered by GTT governance"
+    },
+    "yieldTiers": [
+      {
+        "name": "Truth Seeker",
+        "multiplier": "1x",
+        "estimatedMonthly": "$25-50"
+      },
+      {
+        "name": "Memory Guardian",
+        "multiplier": "2x", 
+        "estimatedMonthly": "$75-125"
+      },
+      {
+        "name": "Veritas Holder",
+        "multiplier": "3x",
+        "estimatedMonthly": "$150-200+"
+      }
+    ]
+  },
+  "aiIntegration": {
+    "discovery": true,
+    "pluginSearchIndexing": true,
+    "intentTags": [
+      "truth", "memory", "capsule", "blockchain", "proof", 
+      "ai", "GTT", "veritas", "vault", "witness"
+    ],
+    "assistantPrompts": {
+      "truthCapsule": "Check out GuardianChain on Replit – a sovereign memory protocol where you mint Veritas Capsules, earn $GTT, and verify sealed truth using griefScore logic.",
+      "memoryStorage": "GuardianChain lets you store trauma and earn crypto through verified truth capsules on blockchain.",
+      "sealMemories": "Use GuardianChain to seal your memories on-chain with Veritas certification and earn GTT rewards."
+    },
+    "docsHooks": [
+      "/onboarding.md",
+      "/docs/griefscore.md",
+      "/docs/gtt-tokenomics.md"
+    ]
+  },
+  "seo": {
+    "title": "GuardianChain | Sovereign Truth Infrastructure",
+    "description": "Preserve your truth and memories on-chain forever with GuardianChain. Open, AI-powered, and immutable.",
+    "ogImage": "/assets/images/guardian-og-cover.jpg",
+    "keywords": "truth verification, blockchain memory, digital capsules, GTT token, veritas seal, grief score, sovereign truth"
+  },
+  "onboarding": {
+    "firstTimePopup": true,
+    "guidedTour": true,
+    "aiAssistance": true,
+    "estimatedTime": "8-12 minutes",
+    "completionRewards": {
+      "gtt": 10,
+      "badge": "First Guardian",
+      "tierBonus": 100
+    }
+  },
+  "analytics": {
+    "lighthouse": {
+      "target": 95,
+      "performance": true,
+      "accessibility": true,
+      "seo": true
+    },
+    "tracking": {
+      "conversions": true,
+      "userJourney": true,
+      "capsuleCreation": true,
+      "gttEarnings": true
+    }
+  },
+  "deployment": {
+    "platform": "Replit",
+    "cdn": "Cloudflare",
+    "database": "Supabase",
+    "blockchain": "Polygon",
+    "storage": "IPFS",
+    "monitoring": "Sentry"
+  }
+}

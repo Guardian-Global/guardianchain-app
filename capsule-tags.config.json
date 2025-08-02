@@ -1,0 +1,326 @@
+{
+  "capsuleTags": {
+    "version": "1.0.0",
+    "categories": {
+      "primary": [
+        {
+          "id": "mint",
+          "label": "Mint",
+          "description": "Create new truth capsules",
+          "icon": "plus-circle",
+          "color": "blue",
+          "action": "/create-truth-capsule"
+        },
+        {
+          "id": "unlock",
+          "label": "Unlock", 
+          "description": "Access premium sealed content",
+          "icon": "unlock",
+          "color": "green",
+          "action": "/truth-vault?filter=premium"
+        },
+        {
+          "id": "replay",
+          "label": "Replay",
+          "description": "Experience verified memories",
+          "icon": "play-circle",
+          "color": "purple",
+          "action": "/truth-vault?view=replay"
+        },
+        {
+          "id": "audit",
+          "label": "Audit",
+          "description": "Review verification evidence",
+          "icon": "search",
+          "color": "orange",
+          "action": "/audit"
+        },
+        {
+          "id": "verify",
+          "label": "Verify",
+          "description": "Participate in truth validation",
+          "icon": "shield-check",
+          "color": "emerald",
+          "action": "/validator"
+        },
+        {
+          "id": "claim-gtt",
+          "label": "Claim $GTT",
+          "description": "Collect your earnings",
+          "icon": "coins",
+          "color": "yellow",
+          "action": "/yield?tab=claim"
+        },
+        {
+          "id": "dao-view",
+          "label": "DAO View",
+          "description": "Governance and voting",
+          "icon": "vote",
+          "color": "indigo",
+          "action": "/governance"
+        }
+      ],
+      "content": [
+        {
+          "id": "personal-testimony",
+          "label": "Personal Testimony",
+          "description": "Life experiences and personal stories",
+          "griefScoreRange": "10-70",
+          "examples": ["Relationships", "Career changes", "Personal growth"]
+        },
+        {
+          "id": "trauma-recovery",
+          "label": "Trauma Recovery", 
+          "description": "Healing journeys and therapeutic breakthroughs",
+          "griefScoreRange": "50-100",
+          "examples": ["Abuse survival", "Addiction recovery", "Loss and grief"]
+        },
+        {
+          "id": "legacy-memory",
+          "label": "Legacy Memory",
+          "description": "Family history and cultural preservation",
+          "griefScoreRange": "20-80",
+          "examples": ["Family stories", "Cultural traditions", "Historical events"]
+        },
+        {
+          "id": "news-report",
+          "label": "News Report",
+          "description": "First-hand witness accounts",
+          "griefScoreRange": "30-90",
+          "examples": ["Breaking news", "Historical events", "Social movements"]
+        },
+        {
+          "id": "whistleblower",
+          "label": "Whistleblower",
+          "description": "Exposing corruption or wrongdoing",
+          "griefScoreRange": "70-100",
+          "examples": ["Corporate fraud", "Government corruption", "Safety violations"]
+        },
+        {
+          "id": "document-evidence",
+          "label": "Document Evidence",
+          "description": "Legal and official documentation",
+          "griefScoreRange": "40-100",
+          "examples": ["Contracts", "Official records", "Legal proceedings"]
+        },
+        {
+          "id": "scientific-data",
+          "label": "Scientific Data",
+          "description": "Research findings and experimental results",
+          "griefScoreRange": "30-80",
+          "examples": ["Research data", "Experimental results", "Clinical trials"]
+        },
+        {
+          "id": "financial-record",
+          "label": "Financial Record",
+          "description": "Financial transactions and records",
+          "griefScoreRange": "25-75",
+          "examples": ["Investment records", "Transaction logs", "Financial statements"]
+        }
+      ],
+      "verification": [
+        {
+          "id": "community-verified",
+          "label": "Community Verified",
+          "description": "Validated by Guardian network",
+          "icon": "users",
+          "color": "blue",
+          "threshold": "60% approval"
+        },
+        {
+          "id": "professional-grade",
+          "label": "Professional Grade", 
+          "description": "Expert validator approval",
+          "icon": "award",
+          "color": "green",
+          "threshold": "Professional validator + 70% community"
+        },
+        {
+          "id": "veritas-sealed",
+          "label": "Veritas Sealed",
+          "description": "Highest certification level",
+          "icon": "shield-check",
+          "color": "gold",
+          "threshold": "Professional + Legal + 80% community"
+        },
+        {
+          "id": "ai-verified",
+          "label": "AI Verified",
+          "description": "Passed automated authenticity checks",
+          "icon": "cpu",
+          "color": "purple",
+          "threshold": "95% AI confidence score"
+        }
+      ],
+      "privacy": [
+        {
+          "id": "public",
+          "label": "Public",
+          "description": "Visible to all users",
+          "icon": "globe",
+          "color": "green"
+        },
+        {
+          "id": "members-only",
+          "label": "Members Only",
+          "description": "Accessible to connected wallet users",
+          "icon": "users",
+          "color": "blue"
+        },
+        {
+          "id": "premium",
+          "label": "Premium",
+          "description": "Requires GTT payment to unlock",
+          "icon": "star",
+          "color": "yellow"
+        },
+        {
+          "id": "time-locked",
+          "label": "Time Locked",
+          "description": "Reveals content at specified time",
+          "icon": "clock",
+          "color": "orange"
+        },
+        {
+          "id": "private",
+          "label": "Private",
+          "description": "Visible only to author",
+          "icon": "lock",
+          "color": "red"
+        }
+      ],
+      "emotional": [
+        {
+          "id": "joy",
+          "label": "Joy",
+          "emoji": "😊",
+          "color": "yellow"
+        },
+        {
+          "id": "sadness",
+          "label": "Sadness", 
+          "emoji": "😢",
+          "color": "blue"
+        },
+        {
+          "id": "anger",
+          "label": "Anger",
+          "emoji": "😠", 
+          "color": "red"
+        },
+        {
+          "id": "fear",
+          "label": "Fear",
+          "emoji": "😨",
+          "color": "purple"
+        },
+        {
+          "id": "love",
+          "label": "Love",
+          "emoji": "❤️",
+          "color": "pink"
+        },
+        {
+          "id": "hope",
+          "label": "Hope",
+          "emoji": "🌟",
+          "color": "orange"
+        },
+        {
+          "id": "healing",
+          "label": "Healing",
+          "emoji": "🌱",
+          "color": "green"
+        },
+        {
+          "id": "courage",
+          "label": "Courage",
+          "emoji": "🦁",
+          "color": "gold"
+        }
+      ]
+    },
+    "filters": {
+      "search": {
+        "enabled": true,
+        "placeholder": "Search truth capsules...",
+        "fields": ["title", "content", "tags", "author"]
+      },
+      "sort": {
+        "options": [
+          {
+            "id": "recent",
+            "label": "Most Recent",
+            "field": "createdAt",
+            "order": "desc"
+          },
+          {
+            "id": "griefscore",
+            "label": "Highest GriefScore",
+            "field": "griefScore", 
+            "order": "desc"
+          },
+          {
+            "id": "gtt-rewards",
+            "label": "Highest GTT Rewards",
+            "field": "totalGTT",
+            "order": "desc"
+          },
+          {
+            "id": "most-verified",
+            "label": "Most Verified",
+            "field": "verificationCount",
+            "order": "desc"
+          },
+          {
+            "id": "trending",
+            "label": "Trending Now",
+            "field": "engagementScore",
+            "order": "desc"
+          }
+        ]
+      },
+      "dateRange": {
+        "enabled": true,
+        "options": [
+          "Today",
+          "This Week", 
+          "This Month",
+          "This Year",
+          "All Time"
+        ]
+      },
+      "griefScore": {
+        "enabled": true,
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "ranges": [
+          {"label": "Any", "min": 0, "max": 100},
+          {"label": "Truth Seeker (0-30)", "min": 0, "max": 30},
+          {"label": "Memory Guardian (31-70)", "min": 31, "max": 70}, 
+          {"label": "Veritas Holder (71-100)", "min": 71, "max": 100}
+        ]
+      }
+    },
+    "search": {
+      "suggestions": [
+        "trauma recovery stories",
+        "family legacy memories",
+        "whistleblower evidence",
+        "healing journeys",
+        "historical witnesses",
+        "love and relationships",
+        "courage and hope",
+        "personal transformation"
+      ],
+      "trending": [
+        "social justice",
+        "climate change",
+        "mental health",
+        "family stories",
+        "workplace ethics"
+      ]
+    }
+  }
+}
