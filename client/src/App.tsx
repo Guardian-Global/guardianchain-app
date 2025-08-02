@@ -273,6 +273,8 @@ function Router() {
         <Route path="/create-streamlined" component={lazy(() => import("./pages/CreateCapsuleStreamlined"))} />
         <Route path="/create-with-help" component={CreateCapsule} />
         <Route path="/create-truth-capsule" component={CreateCapsule} />
+        <Route path="/eternal-contracts" component={lazy(() => import("./pages/EternalContracts"))} />
+        <Route path="/lineage" component={lazy(() => import("./pages/LineageGraph"))} />
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />

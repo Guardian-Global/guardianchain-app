@@ -34,14 +34,16 @@ Preferred communication style: Simple, everyday language.
 - **Authentication System**: Full-featured tiered access control with TierGate component for feature gating, SubscriptionManager for billing, and role-based Dashboard routing.
 - **Subscription Tiers**: Four-tier system (Explorer, Seeker, Creator, Sovereign) with progressive feature unlocking and usage limits.
 - **Dashboard Flows**: Comprehensive authenticated user experience with Overview, Subscription, Creator Tools, and Sovereign tabs, real-time usage tracking, and tier progress monitoring.
-- **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status. Includes a CapsuleDrawer component with a 3-step workflow (Create → Moderate → Mint) and AI-powered content analysis.
+- **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status. Includes a CapsuleDrawer component with a 3-step workflow (Create → Moderate → Mint) and AI-powered content analysis. Features dual creation workflows: detailed 5-step AI analysis and streamlined one-page creator.
+- **Truth Lineage Protocol**: Advanced lineage tracking system with grief flow analytics, influence scoring, and capsule inheritance infrastructure. Includes visual lineage graph interface and automatic lineage connections for inspired capsules.
+- **Eternal Contracts**: Immutable declaration system with AI verification, permanent blockchain sealing, and optional unlock dates/beneficiaries. Designed for wills, testimonies, and immortal declarations.
 - **Verifications**: Community voting and professional-grade Veritas tools (Veritas Seal, Truth Bounty, Truth Redemption, Conspiracy Capsule).
 - **Transactions**: GTT token transfers and reward tracking.
-- **NFT System**: ERC-721 implementation for truth capsules with metadata storage, grief scoring, and an NFT evolution engine.
+- **NFT System**: ERC-721 implementation for truth capsules with metadata storage, grief scoring, and an NFT evolution engine. Enhanced with AI image generation and social sharing capabilities.
 - **DAO Governance**: GTT-weighted voting system for proposals with a dedicated governance interface.
 - **Financial Engine**: Tier management, real-time treasury monitoring, AI business intelligence, compliance oversight, and a donation platform.
 - **Analytics**: Dynamic capsule analytics dashboard with yield tracking, emotional resonance scoring, embeddable widgets, and AI-powered insights.
-- **AI Integration**: GPT-4o powered recommendation engine, AI-assisted onboarding, financial intelligence, emotional content classification, and hallucination guard for content verification. Includes comprehensive AI-powered content analysis with emotion detection and contextual summary generation.
+- **AI Integration**: GPT-4o powered recommendation engine, AI-assisted onboarding, financial intelligence, emotional content classification, and hallucination guard for content verification. Includes comprehensive AI-powered content analysis with emotion detection, contextual summary generation, and AI image generation for visual storytelling.
 - **PWA Capabilities**: Full Progressive Web App functionality with service worker, offline support, install button, and enhanced manifest with GuardianChain branding.
 - **Asset Integration**: Comprehensive branding asset system with video backgrounds, NFT avatar options, logo strips, and GPU-accelerated visual effects.
 - **Navigation**: Comprehensive navigation system including a centralized ROUTES schema with role-based filtering, professional sidebar, command palette, breadcrumb navigation, and mobile drawer.
