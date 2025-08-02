@@ -23,6 +23,7 @@ import WelcomeTour from "@/components/WelcomeTour";
 import { GuardianBootHook } from "@/components/GuardianBootHook";
 // UltimateHomepage consolidated into EliteHomepage - archived
 import EliteHomepage from "@/pages/EliteHomepage";
+import CleanHomepage from "@/pages/CleanHomepage";
 import Partners from "@/pages/Partners";
 // MobileHome consolidated into responsive EliteHomepage - archived
 import CreateCapsule from "@/pages/CreateCapsule";
@@ -247,7 +248,8 @@ function Router() {
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={EliteHomepage} />
+        <Route path="/" component={CleanHomepage} />
+        <Route path="/elite" component={EliteHomepage} />
         <Route
           path="/test-auth"
           component={lazy(() => import("./pages/TestAuth"))}
@@ -255,7 +257,7 @@ function Router() {
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
-        <Route component={EliteHomepage} />
+        <Route component={CleanHomepage} />
       </Switch>
     );
   }
@@ -275,7 +277,8 @@ function Router() {
   return (
     <Switch>
       {/* Homepage - Full screen without layout */}
-      <Route path="/" component={EliteHomepage} />
+      <Route path="/" component={CleanHomepage} />
+      <Route path="/elite" component={EliteHomepage} />
       
       {/* All other routes get the layout wrapper */}
       <Route>
