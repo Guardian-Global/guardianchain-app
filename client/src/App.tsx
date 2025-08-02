@@ -281,6 +281,7 @@ function Router() {
             <Route path="/ai-content-optimization" component={lazy(() => import("./pages/AIContentOptimization"))} />
             <Route path="/mobile-experience" component={lazy(() => import("./pages/MobileExperience"))} />
             <Route path="/admin-dashboard" component={lazy(() => import("./pages/AdminDashboard"))} />
+            <Route path="/social-sharing" component={lazy(() => import("./pages/SocialSharingFeatures"))} />
         <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />
