@@ -1,232 +1,320 @@
 import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
 import { 
-  Globe, 
+  Shield, 
+  Eye, 
   Lock, 
   Users, 
-  Eye,
-  EyeOff,
-  Shield,
-  Info,
-  Settings
+  Clock,
+  Globe,
+  Calendar,
+  Key,
+  AlertTriangle,
+  Info
 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-export type PrivacyLevel = 'public' | 'private' | 'family' | 'sealed';
+export type PrivacyLevel = 'public' | 'family' | 'private' | 'sealed';
 
 interface CapsulePrivacyToggleProps {
-  initialPrivacy?: PrivacyLevel;
   capsuleId?: string;
-  onPrivacyChange?: (privacy: PrivacyLevel) => void;
-  disabled?: boolean;
-  showDetails?: boolean;
+  currentPrivacy: PrivacyLevel;
+  onPrivacyChange: (privacy: PrivacyLevel, unlockDate?: Date) => void;
   className?: string;
 }
 
-interface PrivacyOption {
+interface PrivacySettings {
   level: PrivacyLevel;
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-  color: string;
-  bgColor: string;
-  features: string[];
+  unlockDate?: Date;
+  allowedUsers?: string[];
+  requiresPassword?: boolean;
+  password?: string;
 }
 
 export default function CapsulePrivacyToggle({
-  initialPrivacy = 'public',
   capsuleId,
+  currentPrivacy,
   onPrivacyChange,
-  disabled = false,
-  showDetails = true,
   className = ""
 }: CapsulePrivacyToggleProps) {
-  const [currentPrivacy, setCurrentPrivacy] = useState<PrivacyLevel>(initialPrivacy);
-  const [showInfo, setShowInfo] = useState(false);
   const { toast } = useToast();
+  const [privacy, setPrivacy] = useState<PrivacyLevel>(currentPrivacy);
+  const [unlockDate, setUnlockDate] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [allowedEmails, setAllowedEmails] = useState<string>('');
 
-  const privacyOptions: PrivacyOption[] = [
+  const updatePrivacyMutation = useMutation({
+    mutationFn: async (settings: PrivacySettings) => {
+      if (!capsuleId) throw new Error('Capsule ID required');
+      
+      return await apiRequest("PATCH", `/api/capsules/${capsuleId}/privacy`, {
+        privacyLevel: settings.level,
+        unlockDate: settings.unlockDate,
+        allowedUsers: settings.allowedUsers,
+        requiresPassword: settings.requiresPassword,
+        password: settings.password
+      });
+    },
+    onSuccess: (data) => {
+      onPrivacyChange(privacy, unlockDate ? new Date(unlockDate) : undefined);
+      toast({
+        title: "Privacy Updated",
+        description: `Capsule privacy set to ${privacy}`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update privacy settings",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const privacyOptions = [
     {
-      level: 'public',
-      icon: <Globe className="w-4 h-4" />,
+      value: 'public' as const,
       label: 'Public',
-      description: 'Visible to everyone, discoverable, shareable',
+      icon: Globe,
+      description: 'Anyone can view this capsule',
+      details: 'Visible on your public profile and searchable by others',
       color: 'text-green-600',
-      bgColor: 'bg-green-50 dark:bg-green-950',
-      features: [
-        'Visible in public feeds',
-        'Search engine indexable',
-        'Shareable links',
-        'Higher truth score weight'
-      ]
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-200'
     },
     {
-      level: 'family',
-      icon: <Users className="w-4 h-4" />,
-      label: 'Family',
-      description: 'Only family members and trusted connections',
+      value: 'family' as const,
+      label: 'Family & Friends',
+      icon: Users,
+      description: 'Only people you specify can view',
+      details: 'Share with specific email addresses or trusted contacts',
       color: 'text-blue-600',
-      bgColor: 'bg-blue-50 dark:bg-blue-950',
-      features: [
-        'Family circle only',
-        'Inherited access rights',
-        'Protected sharing',
-        'Legacy preservation'
-      ]
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200'
     },
     {
-      level: 'private',
-      icon: <Lock className="w-4 h-4" />,
+      value: 'private' as const,
       label: 'Private',
-      description: 'Only you can access this capsule',
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-950',
-      features: [
-        'Personal access only',
-        'No public visibility',
-        'Secure storage',
-        'Can upgrade later'
-      ]
+      icon: Lock,
+      description: 'Only you can view this capsule',
+      details: 'Completely private, not visible to anyone else',
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
+      borderColor: 'border-purple-200'
     },
     {
-      level: 'sealed',
-      icon: <Shield className="w-4 h-4" />,
-      label: 'Sealed',
-      description: 'Time-locked, blockchain-secured, immutable',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50 dark:bg-purple-950',
-      features: [
-        'Blockchain immutability',
-        'Time-lock mechanism',
-        'Cryptographic sealing',
-        'Maximum security'
-      ]
+      value: 'sealed' as const,
+      label: 'Time-Sealed',
+      icon: Clock,
+      description: 'Locked until a specific date',
+      details: 'Permanently sealed on blockchain until unlock date',
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-50',
+      borderColor: 'border-orange-200'
     }
   ];
 
-  const handlePrivacyChange = (newPrivacy: PrivacyLevel) => {
-    if (disabled) return;
-    
-    setCurrentPrivacy(newPrivacy);
-    onPrivacyChange?.(newPrivacy);
-    
-    toast({
-      title: "Privacy Updated",
-      description: `Capsule privacy set to ${newPrivacy}`,
-      variant: "default"
-    });
+  const selectedOption = privacyOptions.find(option => option.value === privacy);
+
+  const handleSaveSettings = () => {
+    const settings: PrivacySettings = {
+      level: privacy,
+      unlockDate: unlockDate ? new Date(unlockDate) : undefined,
+      allowedUsers: allowedEmails ? allowedEmails.split(',').map(email => email.trim()) : undefined,
+      requiresPassword: !!password,
+      password: password || undefined
+    };
+
+    updatePrivacyMutation.mutate(settings);
   };
 
-  const currentOption = privacyOptions.find(opt => opt.level === currentPrivacy) || privacyOptions[0];
+  const hasChanges = privacy !== currentPrivacy || unlockDate || password || allowedEmails;
 
   return (
-    <div className={`space-y-3 ${className}`}>
-      {/* Current Privacy Display */}
-      <Card className={currentOption.bgColor}>
-        <CardContent className="p-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className={currentOption.color}>
-                {currentOption.icon}
-              </div>
-              <div>
-                <p className="text-sm font-medium">{currentOption.label}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  {currentOption.description}
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowInfo(!showInfo)}
-                className="h-8 w-8 p-0"
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="w-5 h-5" />
+          Privacy & Access Control
+          {selectedOption && (
+            <Badge 
+              variant="secondary" 
+              className={`${selectedOption.color} ${selectedOption.bgColor}`}
+            >
+              {selectedOption.label}
+            </Badge>
+          )}
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="space-y-6">
+        {/* Privacy Level Selection */}
+        <div className="space-y-4">
+          <Label className="text-sm font-medium">Choose Privacy Level</Label>
+          <RadioGroup
+            value={privacy}
+            onValueChange={(value) => setPrivacy(value as PrivacyLevel)}
+            className="space-y-3"
+          >
+            {privacyOptions.map((option) => (
+              <div 
+                key={option.value}
+                className={`border rounded-lg p-4 ${
+                  privacy === option.value 
+                    ? `${option.borderColor} ${option.bgColor}` 
+                    : 'border-gray-200'
+                }`}
               >
-                <Info className="w-3 h-3" />
-              </Button>
-              {!disabled && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs h-8"
-                >
-                  <Settings className="w-3 h-3 mr-1" />
-                  Change
-                </Button>
-              )}
+                <div className="flex items-start space-x-3">
+                  <RadioGroupItem value={option.value} id={option.value} className="mt-1" />
+                  <div className="flex-1">
+                    <Label 
+                      htmlFor={option.value} 
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <option.icon className={`w-4 h-4 ${option.color}`} />
+                      <span className="font-medium">{option.label}</span>
+                    </Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {option.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {option.details}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </RadioGroup>
+        </div>
+
+        {/* Additional Settings Based on Privacy Level */}
+        {privacy === 'family' && (
+          <div className="space-y-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-blue-600" />
+              <Label className="text-sm font-medium">Allowed Viewers</Label>
+            </div>
+            <Input
+              placeholder="Enter email addresses separated by commas"
+              value={allowedEmails}
+              onChange={(e) => setAllowedEmails(e.target.value)}
+              className="w-full"
+            />
+            <div className="text-xs text-blue-600">
+              Example: family@example.com, friend@example.com
             </div>
           </div>
-        </CardContent>
-      </Card>
+        )}
 
-      {/* Privacy Options Grid */}
-      {showDetails && (
-        <div className="grid grid-cols-2 gap-2">
-          {privacyOptions.map((option) => (
-            <Button
-              key={option.level}
-              variant={currentPrivacy === option.level ? "default" : "outline"}
-              className={`h-auto p-3 flex-col gap-1 ${
-                disabled ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              onClick={() => handlePrivacyChange(option.level)}
-              disabled={disabled}
-            >
-              <div className={option.color}>
-                {option.icon}
+        {privacy === 'sealed' && (
+          <div className="space-y-3 p-4 bg-orange-50 rounded-lg border border-orange-200">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-orange-600" />
+              <Label className="text-sm font-medium">Unlock Date</Label>
+            </div>
+            <Input
+              type="datetime-local"
+              value={unlockDate}
+              onChange={(e) => setUnlockDate(e.target.value)}
+              min={new Date().toISOString().slice(0, 16)}
+              className="w-full"
+            />
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-orange-600 mt-0.5" />
+              <div className="text-xs text-orange-600">
+                Once sealed, this capsule cannot be accessed until the unlock date. 
+                This action is permanent and recorded on the blockchain.
               </div>
-              <span className="text-xs font-medium">{option.label}</span>
-              {currentPrivacy === option.level && (
-                <Badge variant="secondary" className="text-xs mt-1">
-                  <Eye className="w-2 h-2 mr-1" />
-                  Active
-                </Badge>
-              )}
-            </Button>
-          ))}
-        </div>
-      )}
+            </div>
+          </div>
+        )}
 
-      {/* Detailed Info Panel */}
-      {showInfo && (
-        <Card className="border-gray-200">
-          <CardContent className="p-3">
-            <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-              {currentOption.icon}
-              {currentOption.label} Privacy Features
-            </h4>
-            <ul className="space-y-1">
-              {currentOption.features.map((feature, index) => (
-                <li key={index} className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                  <div className="w-1 h-1 bg-gray-400 rounded-full" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            
-            {currentPrivacy === 'sealed' && (
-              <div className="mt-2 p-2 bg-purple-50 dark:bg-purple-900/20 rounded text-xs">
-                <p className="font-medium text-purple-800 dark:text-purple-200">
-                  Blockchain Sealing
-                </p>
-                <p className="text-purple-600 dark:text-purple-400">
-                  Once sealed, this capsule becomes permanently immutable and time-locked on the blockchain.
-                </p>
-              </div>
+        {(privacy === 'private' || privacy === 'sealed') && (
+          <div className="space-y-3 p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-center gap-2">
+              <Key className="w-4 h-4 text-purple-600" />
+              <Label className="text-sm font-medium">Additional Password (Optional)</Label>
+            </div>
+            <Input
+              type="password"
+              placeholder="Enter additional password protection"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full"
+            />
+            <div className="text-xs text-purple-600">
+              Add an extra layer of security with a custom password
+            </div>
+          </div>
+        )}
+
+        {/* Privacy Impact Summary */}
+        <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-2">
+            <Info className="w-4 h-4 text-gray-600" />
+            <span className="text-sm font-medium">Privacy Impact</span>
+          </div>
+          <div className="text-xs space-y-1">
+            {privacy === 'public' && (
+              <>
+                <div>• Appears on your public profile at /u/[username]</div>
+                <div>• Searchable by other users</div>
+                <div>• Can be shared on social media</div>
+                <div>• Contributes to your Truth Genome score</div>
+              </>
             )}
-          </CardContent>
-        </Card>
-      )}
+            {privacy === 'family' && (
+              <>
+                <div>• Only visible to specified email addresses</div>
+                <div>• Not searchable by public</div>
+                <div>• Can be shared with invitation links</div>
+                <div>• Limited Truth Genome contribution</div>
+              </>
+            )}
+            {privacy === 'private' && (
+              <>
+                <div>• Only you can view this capsule</div>
+                <div>• Not searchable or visible to anyone</div>
+                <div>• Cannot be shared publicly</div>
+                <div>• No Truth Genome contribution</div>
+              </>
+            )}
+            {privacy === 'sealed' && (
+              <>
+                <div>• Completely locked until unlock date</div>
+                <div>• Recorded permanently on blockchain</div>
+                <div>• Cannot be modified after sealing</div>
+                <div>• Full Truth Genome contribution when unsealed</div>
+              </>
+            )}
+          </div>
+        </div>
 
-      {/* Quick Stats */}
-      <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-        <span>Capsule ID: {capsuleId || 'pending'}</span>
-        <span>{currentPrivacy} mode</span>
-      </div>
-    </div>
+        {/* Save Button */}
+        {hasChanges && (
+          <Button 
+            onClick={handleSaveSettings}
+            disabled={updatePrivacyMutation.isPending}
+            className="w-full"
+          >
+            {updatePrivacyMutation.isPending ? 'Updating...' : 'Save Privacy Settings'}
+          </Button>
+        )}
+
+        {!hasChanges && (
+          <div className="text-center text-sm text-muted-foreground">
+            No changes to save
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

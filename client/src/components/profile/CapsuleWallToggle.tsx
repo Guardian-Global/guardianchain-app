@@ -1,143 +1,284 @@
 import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { 
   Grid3X3, 
-  List, 
-  Calendar,
-  Heart,
+  Calendar, 
+  Timeline, 
   TrendingUp,
-  Clock,
+  Filter,
+  Search,
+  SortAsc,
   Eye,
-  Filter
+  Lock,
+  Users,
+  Clock
 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 export type ViewMode = 'grid' | 'timeline' | 'calendar' | 'trending';
+export type SortBy = 'newest' | 'oldest' | 'most-viewed' | 'trending' | 'name';
+export type FilterBy = 'all' | 'public' | 'private' | 'family' | 'sealed';
 
 interface CapsuleWallToggleProps {
-  currentView: ViewMode;
-  onViewChange: (view: ViewMode) => void;
-  capsuleCount?: number;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  sortBy: SortBy;
+  onSortChange: (sort: SortBy) => void;
+  filterBy: FilterBy;
+  onFilterChange: (filter: FilterBy) => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  totalCapsules: number;
   className?: string;
 }
 
 export default function CapsuleWallToggle({
-  currentView,
-  onViewChange,
-  capsuleCount = 0,
+  viewMode,
+  onViewModeChange,
+  sortBy,
+  onSortChange,
+  filterBy,
+  onFilterChange,
+  searchQuery,
+  onSearchChange,
+  totalCapsules,
   className = ""
 }: CapsuleWallToggleProps) {
-  const [showFilters, setShowFilters] = useState(false);
-
-  const viewOptions: Array<{
-    mode: ViewMode;
-    icon: React.ReactNode;
-    label: string;
-    description: string;
-  }> = [
+  const viewModes = [
     {
-      mode: 'grid',
-      icon: <Grid3X3 className="w-4 h-4" />,
+      value: 'grid' as const,
       label: 'Grid',
-      description: 'Instagram-style grid view'
+      icon: Grid3X3,
+      description: 'Card-based layout'
     },
     {
-      mode: 'timeline',
-      icon: <List className="w-4 h-4" />,
+      value: 'timeline' as const,
       label: 'Timeline',
-      description: 'Facebook-style timeline'
+      icon: Timeline,
+      description: 'Chronological flow'
     },
     {
-      mode: 'calendar',
-      icon: <Calendar className="w-4 h-4" />,
+      value: 'calendar' as const,
       label: 'Calendar',
-      description: 'Date-based organization'
+      icon: Calendar,
+      description: 'Date-based view'
     },
     {
-      mode: 'trending',
-      icon: <TrendingUp className="w-4 h-4" />,
+      value: 'trending' as const,
       label: 'Trending',
-      description: 'Most viewed and liked'
+      icon: TrendingUp,
+      description: 'Popularity-based'
     }
   ];
 
+  const sortOptions = [
+    { value: 'newest' as const, label: 'Newest First' },
+    { value: 'oldest' as const, label: 'Oldest First' },
+    { value: 'most-viewed' as const, label: 'Most Viewed' },
+    { value: 'trending' as const, label: 'Trending' },
+    { value: 'name' as const, label: 'Name A-Z' }
+  ];
+
+  const filterOptions = [
+    { 
+      value: 'all' as const, 
+      label: 'All Capsules', 
+      icon: Eye,
+      description: 'Show everything'
+    },
+    { 
+      value: 'public' as const, 
+      label: 'Public', 
+      icon: Eye,
+      description: 'Visible to everyone'
+    },
+    { 
+      value: 'family' as const, 
+      label: 'Family & Friends', 
+      icon: Users,
+      description: 'Close connections only'
+    },
+    { 
+      value: 'private' as const, 
+      label: 'Private', 
+      icon: Lock,
+      description: 'Only you can view'
+    },
+    { 
+      value: 'sealed' as const, 
+      label: 'Time-Sealed', 
+      icon: Clock,
+      description: 'Locked until date'
+    }
+  ];
+
+  const selectedFilter = filterOptions.find(option => option.value === filterBy);
+
   return (
-    <div className={`space-y-3 ${className}`}>
-      {/* Header with Stats */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h3 className="text-lg font-semibold">Capsule Wall</h3>
-          <Badge variant="secondary" className="text-xs">
-            {capsuleCount} capsules
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            Memory Wall Controls
+          </div>
+          <Badge variant="secondary">
+            {totalCapsules} {totalCapsules === 1 ? 'Capsule' : 'Capsules'}
           </Badge>
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="space-y-6">
+        {/* Search */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4" />
+            <span className="text-sm font-medium">Search Memories</span>
+          </div>
+          <Input
+            placeholder="Search by title, content, or tags..."
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="w-full"
+          />
         </div>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowFilters(!showFilters)}
-          className="text-xs"
-        >
-          <Filter className="w-3 h-3 mr-1" />
-          Filters
-        </Button>
-      </div>
 
-      {/* View Toggle Buttons */}
-      <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
-        {viewOptions.map((option) => (
-          <Button
-            key={option.mode}
-            variant={currentView === option.mode ? "default" : "ghost"}
-            size="sm"
-            onClick={() => onViewChange(option.mode)}
-            className="flex-1 text-xs gap-1"
-            title={option.description}
+        {/* View Mode */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Grid3X3 className="w-4 h-4" />
+            <span className="text-sm font-medium">View Mode</span>
+          </div>
+          <ToggleGroup
+            type="single"
+            value={viewMode}
+            onValueChange={(value) => value && onViewModeChange(value as ViewMode)}
+            className="justify-start"
           >
-            {option.icon}
-            <span className="hidden sm:inline">{option.label}</span>
-          </Button>
-        ))}
-      </div>
-
-      {/* Quick Stats Bar */}
-      <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-        <div className="flex items-center gap-1">
-          <Eye className="w-3 h-3" />
-          <span>2.1k views</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Heart className="w-3 h-3" />
-          <span>184 likes</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Clock className="w-3 h-3" />
-          <span>Last updated 2h ago</span>
-        </div>
-      </div>
-
-      {/* Filters Panel (Collapsible) */}
-      {showFilters && (
-        <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg space-y-2">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-              All Time
-            </Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-              This Year
-            </Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-              Family
-            </Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-              Public
-            </Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700">
-              NFT Minted
-            </Badge>
+            {viewModes.map((mode) => (
+              <ToggleGroupItem
+                key={mode.value}
+                value={mode.value}
+                aria-label={mode.label}
+                className="flex items-center gap-2"
+              >
+                <mode.icon className="w-4 h-4" />
+                <span className="hidden sm:inline">{mode.label}</span>
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+          <div className="text-xs text-muted-foreground">
+            {viewModes.find(mode => mode.value === viewMode)?.description}
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Sort and Filter */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Sort By */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <SortAsc className="w-4 h-4" />
+              <span className="text-sm font-medium">Sort By</span>
+            </div>
+            <Select value={sortBy} onValueChange={(value) => onSortChange(value as SortBy)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose sorting" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Filter By Privacy */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4" />
+              <span className="text-sm font-medium">Filter By Privacy</span>
+            </div>
+            <Select value={filterBy} onValueChange={(value) => onFilterChange(value as FilterBy)}>
+              <SelectTrigger>
+                <SelectValue>
+                  {selectedFilter && (
+                    <div className="flex items-center gap-2">
+                      <selectedFilter.icon className="w-4 h-4" />
+                      <span>{selectedFilter.label}</span>
+                    </div>
+                  )}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {filterOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    <div className="flex items-center gap-2">
+                      <option.icon className="w-4 h-4" />
+                      <div>
+                        <div className="font-medium">{option.label}</div>
+                        <div className="text-xs text-muted-foreground">{option.description}</div>
+                      </div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Active Filters Summary */}
+        {(searchQuery || filterBy !== 'all' || sortBy !== 'newest') && (
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Active Filters:</div>
+            <div className="flex flex-wrap gap-2">
+              {searchQuery && (
+                <Badge variant="secondary" className="text-xs">
+                  Search: "{searchQuery}"
+                </Badge>
+              )}
+              {filterBy !== 'all' && (
+                <Badge variant="secondary" className="text-xs">
+                  Privacy: {selectedFilter?.label}
+                </Badge>
+              )}
+              {sortBy !== 'newest' && (
+                <Badge variant="secondary" className="text-xs">
+                  Sort: {sortOptions.find(s => s.value === sortBy)?.label}
+                </Badge>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  onSearchChange('');
+                  onFilterChange('all');
+                  onSortChange('newest');
+                }}
+                className="h-6 px-2 text-xs"
+              >
+                Clear All
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* View Mode Specific Info */}
+        <div className="p-3 bg-muted/50 rounded-lg">
+          <div className="text-sm font-medium mb-1">View Details</div>
+          <div className="text-xs text-muted-foreground">
+            {viewMode === 'grid' && "Card-based layout with rich previews and quick actions"}
+            {viewMode === 'timeline' && "Chronological timeline showing your memory journey"}
+            {viewMode === 'calendar' && "Calendar view organized by creation or event dates"}
+            {viewMode === 'trending' && "Sorted by popularity, views, and community engagement"}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

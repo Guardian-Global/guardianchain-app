@@ -1,148 +1,198 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { 
+  Loader2, 
   Zap, 
-  Coins, 
   CheckCircle, 
-  Loader2,
-  Sparkles,
-  ShieldCheck
+  AlertCircle,
+  ExternalLink 
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface MintCapsuleButtonProps {
   capsuleId: string;
-  fileUrl: string;
-  fileName: string;
-  fileType: string;
-  truthScore?: number;
-  onMintComplete?: (result: MintResult) => void;
+  fileUrl?: string;
+  metadata?: any;
+  onMintComplete?: () => void;
   className?: string;
 }
 
-interface MintResult {
-  success: boolean;
-  tokenId: string;
-  transactionHash: string;
-  ipfsHash: string;
-  contractAddress?: string;
-  gasUsed?: string;
+interface MintState {
+  step: 'ready' | 'uploading' | 'minting' | 'complete' | 'error';
+  ipfsHash?: string;
+  tokenId?: number;
+  transactionHash?: string;
+  error?: string;
 }
 
 export default function MintCapsuleButton({
   capsuleId,
   fileUrl,
-  fileName,
-  fileType,
-  truthScore = 85,
+  metadata,
   onMintComplete,
   className = ""
 }: MintCapsuleButtonProps) {
-  const [isMinting, setIsMinting] = useState(false);
-  const [mintResult, setMintResult] = useState<MintResult | null>(null);
   const { toast } = useToast();
+  const [mintState, setMintState] = useState<MintState>({ step: 'ready' });
 
-  const handleMint = async () => {
-    setIsMinting(true);
-    
-    try {
-      const result = await apiRequest('/api/nft/auto-mint', {
-        method: 'POST',
-        body: JSON.stringify({
-          capsuleId,
-          fileUrl,
-          fileName,
-          fileType,
-          truthScore,
-          metadata: {
-            name: `Capsule: ${fileName}`,
-            description: `Sovereign memory capsule with Truth Score: ${truthScore}`,
-            attributes: [
-              { trait_type: "Truth Score", value: truthScore },
-              { trait_type: "File Type", value: fileType },
-              { trait_type: "Capsule ID", value: capsuleId }
-            ]
-          }
-        }),
-        headers: { 'Content-Type': 'application/json' }
+  const uploadMetadataMutation = useMutation({
+    mutationFn: async () => {
+      const nftMetadata = {
+        name: metadata?.title || `Truth Capsule #${capsuleId}`,
+        description: metadata?.summary || "A verified truth capsule preserved on GuardianChain",
+        image: fileUrl || `https://api.guardianchain.app/capsules/${capsuleId}/image`,
+        attributes: [
+          { trait_type: "Truth Score", value: metadata?.truthScore || 85 },
+          { trait_type: "Emotional Resonance", value: metadata?.emotionalResonance || 75 },
+          { trait_type: "Verification Level", value: "Verified" },
+          { trait_type: "Creation Date", value: new Date().toISOString() }
+        ]
+      };
+
+      return await apiRequest("POST", "/api/nft/upload-metadata", {
+        capsuleId,
+        metadata: nftMetadata
       });
+    },
+    onSuccess: (response: any) => {
+      setMintState({ 
+        step: 'minting', 
+        ipfsHash: response.ipfsHash 
+      });
+      mintNFTMutation.mutate(response);
+    },
+    onError: (error: any) => {
+      setMintState({ 
+        step: 'error', 
+        error: error.message || "Failed to upload metadata" 
+      });
+      toast({
+        title: "Upload Failed",
+        description: error.message || "Failed to upload NFT metadata",
+        variant: "destructive",
+      });
+    },
+  });
 
-      setMintResult(result);
-      onMintComplete?.(result);
+  const mintNFTMutation = useMutation({
+    mutationFn: async (metadataResponse: any) => {
+      return await apiRequest("POST", "/api/nft/mint", {
+        capsuleId,
+        metadataUri: metadataResponse.metadataUri,
+        recipient: "0x1234567890123456789012345678901234567890" // Mock address
+      });
+    },
+    onSuccess: (response: any) => {
+      setMintState({ 
+        step: 'complete',
+        tokenId: response.tokenId,
+        transactionHash: response.transactionHash
+      });
+      
+      onMintComplete?.();
       
       toast({
         title: "NFT Minted Successfully!",
-        description: `Token ID: ${result.tokenId} - Your capsule is now immortalized on the blockchain.`,
-        variant: "default"
+        description: `Token ID: ${response.tokenId}`,
       });
-
-    } catch (error) {
-      console.error('Minting failed:', error);
+    },
+    onError: (error: any) => {
+      setMintState({ 
+        step: 'error', 
+        error: error.message || "Failed to mint NFT" 
+      });
       toast({
         title: "Minting Failed",
-        description: "Unable to mint NFT. Please try again.",
-        variant: "destructive"
+        description: error.message || "Failed to mint NFT",
+        variant: "destructive",
       });
-    } finally {
-      setIsMinting(false);
+    },
+  });
+
+  const handleMint = () => {
+    setMintState({ step: 'uploading' });
+    uploadMetadataMutation.mutate();
+  };
+
+  const getButtonContent = () => {
+    switch (mintState.step) {
+      case 'ready':
+        return (
+          <>
+            <Zap className="w-4 h-4 mr-2" />
+            Mint as NFT
+          </>
+        );
+      case 'uploading':
+        return (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Uploading Metadata...
+          </>
+        );
+      case 'minting':
+        return (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Minting NFT...
+          </>
+        );
+      case 'complete':
+        return (
+          <>
+            <CheckCircle className="w-4 h-4 mr-2" />
+            NFT Minted!
+          </>
+        );
+      case 'error':
+        return (
+          <>
+            <AlertCircle className="w-4 h-4 mr-2" />
+            Retry Minting
+          </>
+        );
+      default:
+        return "Mint NFT";
     }
   };
 
-  if (mintResult) {
-    return (
-      <Card className={`border-green-200 bg-green-50 dark:bg-green-950 ${className}`}>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                NFT Minted Successfully
-              </p>
-              <p className="text-xs text-green-600 dark:text-green-400">
-                Token ID: {mintResult.tokenId}
-              </p>
-            </div>
-            <Badge variant="secondary" className="text-xs">
-              <Sparkles className="w-3 h-3 mr-1" />
-              Immortalized
-            </Badge>
-          </div>
-          
-          <div className="mt-3 flex gap-2 text-xs">
-            <Badge variant="outline" className="text-green-700">
-              <ShieldCheck className="w-3 h-3 mr-1" />
-              Verified
-            </Badge>
-            <Badge variant="outline" className="text-blue-700">
-              Truth Score: {truthScore}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  const isLoading = mintState.step === 'uploading' || mintState.step === 'minting';
+  const isComplete = mintState.step === 'complete';
+  const hasError = mintState.step === 'error';
 
   return (
-    <Button
-      onClick={handleMint}
-      disabled={isMinting}
-      className={`bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white ${className}`}
-    >
-      {isMinting ? (
-        <>
-          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          Minting NFT...
-        </>
-      ) : (
-        <>
-          <Zap className="w-4 h-4 mr-2" />
-          Mint as NFT
-          <Coins className="w-4 h-4 ml-2" />
-        </>
+    <div className="space-y-3">
+      <Button
+        onClick={handleMint}
+        disabled={isLoading || isComplete}
+        variant={hasError ? "destructive" : isComplete ? "default" : "default"}
+        className={className}
+      >
+        {getButtonContent()}
+      </Button>
+
+      {mintState.step === 'complete' && mintState.tokenId && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Badge variant="secondary">Token ID: {mintState.tokenId}</Badge>
+          {mintState.transactionHash && (
+            <div className="flex items-center gap-1">
+              <ExternalLink className="w-3 h-3" />
+              <span className="truncate">
+                {mintState.transactionHash.slice(0, 10)}...
+              </span>
+            </div>
+          )}
+        </div>
       )}
-    </Button>
+
+      {mintState.error && (
+        <div className="text-xs text-destructive">
+          {mintState.error}
+        </div>
+      )}
+    </div>
   );
 }

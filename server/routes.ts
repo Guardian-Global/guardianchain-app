@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { registerGTTContractRoutes } from './routes/gttContract';
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
+import aiRoutes from './routes/ai';
+import nftRoutes from './routes/nft';
 import { 
   distributeReplayYield, 
   calculateGriefYield, 
@@ -4363,6 +4365,10 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
       res.status(500).json({ error: 'Failed to load received messages' });
     }
   });
+
+  // Register AI and NFT routes
+  app.use('/api/ai', aiRoutes);
+  app.use('/api/nft', nftRoutes);
 
   const httpServer = createServer(app);
   return httpServer;
