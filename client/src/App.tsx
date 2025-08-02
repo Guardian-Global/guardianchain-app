@@ -9,6 +9,8 @@ import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import NavigationMenu from "@/components/NavigationMenu";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import OfflineIndicator from "@/components/OfflineIndicator";
 import Footer from "@/components/layout/footer";
 import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
@@ -545,6 +547,8 @@ export default function App() {
                         </main>
                         <Toaster />
                         <NavigationMenu />
+                        <PWAInstallPrompt />
+                        <OfflineIndicator />
                       </TooltipProvider>
                     </AssetProvider>
                   </ThemeProvider>

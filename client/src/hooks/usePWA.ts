@@ -1,50 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+interface PWAHook {
+  isInstallable: boolean;
+  isInstalled: boolean;
+  isOffline: boolean;
+  installApp: () => Promise<void>;
+  isLoading: boolean;
 }
 
-export function usePWA() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+export function usePWA(): PWAHook {
+  const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isLoading, setIsLoading] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   useEffect(() => {
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('✅ Service Worker registered:', registration);
-        })
-        .catch((error) => {
-          console.error('❌ Service Worker registration failed:', error);
-        });
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
     }
 
-    // Check if app is already installed
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    const isInApp = (window.navigator as any).standalone === true;
-    setIsInstalled(isStandalone || isInApp);
-
-    // Listen for beforeinstallprompt event
+    // Listen for install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
-      const event = e as BeforeInstallPromptEvent;
-      event.preventDefault();
-      setDeferredPrompt(event);
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
     };
 
-    // Listen for app installed event
+    // Listen for app installed
     const handleAppInstalled = () => {
-      console.log('🎉 GuardianChain PWA installed successfully');
       setIsInstalled(true);
+      setIsInstallable(false);
       setDeferredPrompt(null);
     };
 
     // Listen for online/offline events
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
@@ -59,32 +52,39 @@ export function usePWA() {
     };
   }, []);
 
-  const installApp = async () => {
-    if (!deferredPrompt) return false;
+  const installApp = async (): Promise<void> => {
+    if (!deferredPrompt) {
+      throw new Error('App installation not available');
+    }
 
+    setIsLoading(true);
+    
     try {
       await deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
+      const { outcome } = await deferredPrompt.userChoice;
       
-      if (choiceResult.outcome === 'accepted') {
-        console.log('✅ User accepted PWA installation');
-        return true;
+      if (outcome === 'accepted') {
+        console.log('✅ User accepted PWA install');
+        setIsInstalled(true);
       } else {
-        console.log('❌ User dismissed PWA installation');
-        return false;
+        console.log('❌ User dismissed PWA install');
       }
-    } catch (error) {
-      console.error('🔄 Error during PWA installation:', error);
-      return false;
-    } finally {
+      
       setDeferredPrompt(null);
+      setIsInstallable(false);
+    } catch (error) {
+      console.error('❌ PWA installation error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
-    canInstall: !!deferredPrompt && !isInstalled,
+    isInstallable,
     isInstalled,
-    isOnline,
-    installApp
+    isOffline,
+    installApp,
+    isLoading
   };
 }
