@@ -1977,6 +1977,61 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     res.json(responseUser);
   });
 
+  // Get auction details endpoint with Supabase integration
+  app.get("/api/auction/:id", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const auctionId = req.params.id;
+      
+      console.log("🏛️ Fetching auction details for:", auctionId);
+
+      // Import Supabase client
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      // Fetch auction from database
+      const { data: auction, error } = await supabase
+        .from('auctions')
+        .select('*')
+        .eq('id', auctionId)
+        .single();
+
+      if (error || !auction) {
+        console.error("❌ Auction not found:", auctionId, error);
+        return res.status(404).json({ 
+          error: 'Auction not found',
+          details: error?.message 
+        });
+      }
+
+      // Format response for frontend
+      const auctionResponse = {
+        id: auction.id,
+        title: auction.title,
+        summary: auction.summary,
+        reservePrice: auction.reserve_price,
+        funded: auction.funded_amount,
+        unlocked: auction.unlocked,
+        beneficiaries: auction.beneficiaries || [],
+        encryptedContent: auction.encrypted_content,
+        encryptedSymmetricKey: auction.encrypted_symmetric_key,
+        accessControlConditions: auction.access_control_conditions,
+        createdAt: auction.created_at
+      };
+
+      console.log("✅ Auction details fetched:", { id: auctionId, title: auction.title });
+      res.json(auctionResponse);
+    } catch (error) {
+      console.error("❌ Failed to fetch auction:", error);
+      res.status(500).json({
+        error: "Failed to fetch auction details",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Login route for debug authentication - simulates successful login
   app.get("/api/login", (req, res) => {
     console.log("🔵 DEBUG: Login route accessed");
