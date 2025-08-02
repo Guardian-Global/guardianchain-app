@@ -135,6 +135,7 @@ import BillingDashboard from "./features/payments/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
 // Unified auth hooks removed - using simplified useAuth
+import { HelmetProvider } from "react-helmet-async";
 import PrivacyPolicy from "./pages/legal/privacy";
 // Removed duplicate AuthProvider import
 import TermsOfService from "./pages/legal/terms";
@@ -252,6 +253,8 @@ function Router() {
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
             <Route path="/capsules/gallery" component={lazy(() => import("./pages/capsules/gallery"))} />
             <Route path="/capsule-view/:id" component={lazy(() => import("./pages/capsule-view"))} />
+            <Route path="/create-capsule" component={lazy(() => import("./pages/create-capsule"))} />
+            <Route path="/gtt-yield" component={lazy(() => import("./pages/gtt-yield"))} />
             <Route path="/validator" component={lazy(() => import("./pages/validator"))} />
             <Route path="/validator-dashboard" component={lazy(() => import("./pages/validator"))} />
             <Route path="/jury" component={lazy(() => import("./pages/jury"))} />
@@ -522,27 +525,29 @@ export default function App() {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-        <TierProvider>
-          <OnboardingProvider>
-              <HelpProvider>
-                <MascotProvider>
-              <WalletProvider>
-                <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                  <AssetProvider>
-                    <TooltipProvider>
-                      <main className="flex-1">
-                        <Router />
-                      </main>
-                      <Toaster />
-                    </TooltipProvider>
-                  </AssetProvider>
-                </ThemeProvider>
-              </WalletProvider>
-                </MascotProvider>
-              </HelpProvider>
-          </OnboardingProvider>
-        </TierProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+          <TierProvider>
+            <OnboardingProvider>
+                <HelpProvider>
+                  <MascotProvider>
+                <WalletProvider>
+                  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                    <AssetProvider>
+                      <TooltipProvider>
+                        <main className="flex-1">
+                          <Router />
+                        </main>
+                        <Toaster />
+                      </TooltipProvider>
+                    </AssetProvider>
+                  </ThemeProvider>
+                </WalletProvider>
+                  </MascotProvider>
+                </HelpProvider>
+            </OnboardingProvider>
+          </TierProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }

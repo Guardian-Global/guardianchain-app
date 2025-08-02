@@ -31,6 +31,9 @@ const getIconForRoute = (path: string): React.ComponentType<{ className?: string
     "/vault": FileText,
     "/replay": Play,
     "/mint": Zap,
+    "/create-capsule": FileText,
+    "/capsules/gallery": Image,
+    "/gtt-yield": TrendingUp,
     "/dao": Crown,
     "/admin": Shield,
     "/analytics": BarChart3,
@@ -57,6 +60,7 @@ const getBadgeForRoute = (path: string): string | undefined => {
     "/moderation": "MOD",
     "/analytics": "ADMIN",
     "/yield": "ADMIN",
+    "/gtt-yield": "GTT",
     "/veritas": "LEGAL"
   };
   return badgeMap[path];

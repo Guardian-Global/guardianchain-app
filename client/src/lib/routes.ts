@@ -25,6 +25,24 @@ export const ROUTES = [
     description: "Turn capsules into Veritas-certified NFTs tradable on OpenSea"
   },
   {
+    path: "/create-capsule",
+    label: "📝 Create Capsule",
+    roles: ["member", "admin", "dao-owner"],
+    description: "Create and mint new truth capsules with AI analysis"
+  },
+  {
+    path: "/capsules/gallery",
+    label: "🖼️ Capsule Gallery",
+    roles: ["guest", "member", "admin", "dao-owner"],
+    description: "Browse and view minted truth capsule NFTs"
+  },
+  {
+    path: "/gtt-yield",
+    label: "💰 GTT Yield",
+    roles: ["member", "admin", "dao-owner"],
+    description: "Claim GTT token yields based on grief tier contributions"
+  },
+  {
     path: "/dao",
     label: "🏛 DAO Governance",
     roles: ["dao-owner"],
