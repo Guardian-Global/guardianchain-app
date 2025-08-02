@@ -83,20 +83,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Fix get-user-tier API with debug authentication
   app.get('/api/get-user-tier', isDebugAuthenticated, (req: any, res) => {
-    const user = req.user;
-    res.json({
-      tier: user?.tier || "EXPLORER",
-      authenticated: true,
-      userId: user?.id,
-      username: user?.firstName + ' ' + user?.lastName,
-      email: user?.email,
-      capabilities: {
-        createCapsules: true,
-        verifyContent: true,
-        earnGTT: true,
-        accessPremiumFeatures: user?.tier !== 'EXPLORER'
-      }
-    });
+    res.status(200).json({ tier: "seeker" });
   });
 
   // Health check endpoint
