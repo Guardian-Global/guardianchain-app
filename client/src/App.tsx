@@ -8,6 +8,8 @@ import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
+import EnhancedNavigation from "@/components/navigation/EnhancedNavigation";
+import NavigationProvider from "@/components/navigation/NavigationProvider";
 import NavigationMenu from "@/components/NavigationMenu";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
@@ -245,6 +247,10 @@ function Router() {
             {/* Core Routes */}
             <Route path="/" component={lazy(() => import("./pages/EnhancedDashboard"))} />
             <Route path="/dashboard" component={lazy(() => import("./pages/EnhancedDashboard"))} />
+            <Route path="/dashboard/yield" component={YieldDashboard} />
+            <Route path="/create" component={CreateCapsule} />
+            <Route path="/eternal-contracts" component={lazy(() => import("./pages/EternalContracts"))} />
+            <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
             <Route path="/vault" component={Vault} />
             <Route path="/capsule/:id" component={lazy(() => import("./components/CapsuleReplayView"))} />
           <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
@@ -542,9 +548,11 @@ export default function App() {
                   <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                     <AssetProvider>
                       <TooltipProvider>
-                        <main className="flex-1">
-                          <Router />
-                        </main>
+                        <NavigationProvider>
+                          <main className="flex-1">
+                            <Router />
+                          </main>
+                        </NavigationProvider>
                         <Toaster />
                         <NavigationMenu />
                         <PWAInstallPrompt />

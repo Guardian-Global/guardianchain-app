@@ -244,7 +244,7 @@ export default function CreateCapsule() {
                 />
               </div>
 
-              <div>
+              <div data-walkthrough="content-editor">
                 <label className="block text-sm font-medium text-slate-300 mb-2">
                   Your Truth Content
                 </label>
@@ -257,7 +257,7 @@ export default function CreateCapsule() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-walkthrough="capsule-type-selector">
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">
                     Capsule Type
@@ -327,6 +327,7 @@ export default function CreateCapsule() {
                       onClick={handleGenerateImage}
                       disabled={generateImageMutation.isPending}
                       className="bg-brand-accent hover:bg-brand-accent/90"
+                      data-walkthrough="ai-analysis-button"
                     >
                       {generateImageMutation.isPending ? (
                         <>
@@ -416,7 +417,7 @@ export default function CreateCapsule() {
                         {aiAnalysis.truthConfidence || '85%'}
                       </Badge>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center" data-walkthrough="grief-tier-display">
                       <span className="text-slate-300">Recommended Grief Tier</span>
                       <Badge className="bg-brand-accent/20 text-brand-accent">
                         Tier {aiAnalysis.recommendedGriefTier || formData.griefTier}
@@ -534,6 +535,7 @@ export default function CreateCapsule() {
                   onClick={handleNext} 
                   disabled={mintNFTMutation.isPending}
                   className="flex-1 bg-brand-accent hover:bg-brand-accent/90"
+                  data-walkthrough="mint-nft-button"
                 >
                   {mintNFTMutation.isPending ? (
                     <>
