@@ -1,10 +1,8 @@
 import React from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { useLocation } from "wouter";
 import EnterpriseOnboarding from "@/components/onboarding/EnterpriseOnboarding";
 
 export default function OnboardingPage() {
-  const { user } = useUnifiedAuth();
   const [, setLocation] = useLocation();
 
   // Redirect completed users to their appropriate dashboard

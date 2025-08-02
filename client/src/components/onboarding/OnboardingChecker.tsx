@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import AIAssistedOnboarding from "./AIAssistedOnboarding";
 
-interface OnboardingCheckerProps {
   children: React.ReactNode;
 }
 
-export const OnboardingChecker: React.FC<OnboardingCheckerProps> = ({ children }) => {
-  const { user, isAuthenticated } = useUnifiedAuth();
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
@@ -43,4 +39,3 @@ export const OnboardingChecker: React.FC<OnboardingCheckerProps> = ({ children }
   return <>{children}</>;
 };
 
-export default OnboardingChecker;

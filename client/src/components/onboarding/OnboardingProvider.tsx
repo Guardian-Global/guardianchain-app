@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { useTierContext } from "@/context/TierContext";
 import InteractiveTooltip, { useTooltipTour } from "./InteractiveTooltip";
 import OnboardingTrigger from "./OnboardingTrigger";
@@ -34,7 +33,6 @@ interface OnboardingProviderProps {
 }
 
 export default function OnboardingProvider({ children }: OnboardingProviderProps) {
-  const { isAuthenticated, user } = useUnifiedAuth();
   const { userRole } = useTierContext();
   const { toast } = useToast();
   const { isActive, currentTour, startTour, endTour } = useTooltipTour();

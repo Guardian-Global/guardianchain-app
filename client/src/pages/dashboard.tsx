@@ -1,11 +1,9 @@
-import AuthGate from "@/components/auth/AuthGate";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BarChart3, Shield, Zap, Crown, TrendingUp, Users, FileText, Settings } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
-    <AuthGate allowedRoles={["pro", "admin"]}>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-8">
         <div className="max-w-6xl mx-auto p-6">
           <div className="flex items-center justify-between mb-8">
@@ -179,6 +177,5 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
-    </AuthGate>
   );
 }

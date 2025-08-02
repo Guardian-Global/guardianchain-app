@@ -14,10 +14,8 @@ import {
 } from "lucide-react";
 import { useOnboarding } from "./OnboardingProvider";
 import { useTierContext } from "@/context/TierContext";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 
 export default function OnboardingTrigger() {
-  const { isAuthenticated } = useUnifiedAuth();
   const { userRole } = useTierContext();
   const { 
     showOnboarding, 

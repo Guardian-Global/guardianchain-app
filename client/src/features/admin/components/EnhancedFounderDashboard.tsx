@@ -17,13 +17,10 @@ import {
   PieChart,
   Activity
 } from "lucide-react";
-import { useCompleteAuth } from "@/hooks/useCompleteAuth";
 import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
 import SupabaseHeroBackground from "@/components/assets/SupabaseHeroBackground";
-import AuthGuard from "@/components/auth/AuthGuard";
 
 export function EnhancedFounderDashboard() {
-  const { user } = useCompleteAuth();
 
   const businessMetrics = {
     monthlyRevenue: "$127,850",
@@ -51,7 +48,6 @@ export function EnhancedFounderDashboard() {
   ];
 
   return (
-    <AuthGuard requiredRoles={["founder", "master"]}>
       <SupabaseHeroBackground overlay={true} className="min-h-screen">
         <div className="p-6">
         <div className="max-w-7xl mx-auto space-y-8">
@@ -400,7 +396,6 @@ export function EnhancedFounderDashboard() {
           </div>
         </div>
       </SupabaseHeroBackground>
-    </AuthGuard>
   );
 }
 

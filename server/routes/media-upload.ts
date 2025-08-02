@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { authenticateToken } from "../unified-auth-routes";
+import { isDebugAuthenticated } from "../debugAuth"-routes";
 
 const router = Router();
 

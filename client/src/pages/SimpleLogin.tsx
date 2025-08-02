@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 
-export default function SimpleLogin() {
   const { isAuthenticated, isLoading, user } = useAuth();
   const [authTest, setAuthTest] = useState<string>("Waiting...");
 

@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { authenticateToken } from "../middleware/auth";
+import { isDebugAuthenticated } from "../debugAuth"";
 
 // Master admin access with comprehensive security
 const MASTER_ADMIN_ADDRESSES = [

@@ -17,7 +17,6 @@ import {
 // Import the new Teams components
 import TeamsEnhancedSecurity from "@/components/teams/TeamsEnhancedSecurity";
 import TeamsVisualUpgrades from "@/components/teams/TeamsVisualUpgrades";
-import TeamsAdvancedAuth from "@/components/teams/TeamsAdvancedAuth";
 import TeamsEnhancedTiers from "@/components/teams/TeamsEnhancedTiers";
 
 const TeamsUpgrades: React.FC = () => {
@@ -224,7 +223,6 @@ const TeamsUpgrades: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="auth" className="space-y-6">
-            <TeamsAdvancedAuth />
           </TabsContent>
 
           <TabsContent value="tiers" className="space-y-6">

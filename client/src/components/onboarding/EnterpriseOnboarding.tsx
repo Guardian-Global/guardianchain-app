@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -25,7 +24,6 @@ interface OnboardingStep {
 }
 
 export default function EnterpriseOnboarding() {
-  const { user, updateProfile } = useUnifiedAuth();
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState({

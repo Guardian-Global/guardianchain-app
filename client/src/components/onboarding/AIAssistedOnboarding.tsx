@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 // Note: Progress component will be created if missing
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { 
   User, 
   Camera, 
@@ -628,7 +627,6 @@ const MediaStep: React.FC<{ form: any }> = ({ form }) => {
 
 export const AIAssistedOnboarding: React.FC<AIAssistedOnboardingProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const { updateProfile, user } = useUnifiedAuth();
   const { toast } = useToast();
 
   const steps: OnboardingStep[] = [

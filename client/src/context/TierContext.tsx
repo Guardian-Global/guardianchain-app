@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 
 interface TierContextType {
   userRole: string;
@@ -20,7 +19,6 @@ interface TierProviderProps {
 }
 
 export function TierProvider({ children }: TierProviderProps) {
-  const { user, isAuthenticated } = useUnifiedAuth();
   const [userRole, setUserRole] = useState("guest");
   const [isLoading, setIsLoading] = useState(true);
 

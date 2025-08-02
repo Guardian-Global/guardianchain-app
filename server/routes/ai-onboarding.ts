@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateToken } from "../unified-auth-routes";
+import { isDebugAuthenticated } from "../debugAuth"-routes";
 
 const router = Router();
 

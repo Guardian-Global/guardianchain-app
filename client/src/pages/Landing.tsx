@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Users, Coins, Award } from "lucide-react";
-import { SimpleAuthButton } from "@/components/SimpleAuthButton";
-import { AuthTest } from "@/components/AuthTest";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Landing() {
+  const { isAuthenticated } = useAuth();
+  
+  if (isAuthenticated) {
+    window.location.href = '/dashboard';
+    return null;
+  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
       {/* Hero Section */}
@@ -23,15 +29,17 @@ export default function Landing() {
           
           {/* Login Button */}
           <div className="pt-8 space-y-4">
-            <AuthTest />
-            <SimpleAuthButton 
-              text="Sign in with Replit"
+            <Button 
+              size="lg"
+              onClick={() => window.location.href = '/dashboard'}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg"
-            />
-            <div className="flex gap-2">
+            >
+              Enter Veritas Platform
+            </Button>
+            <div className="flex gap-2 justify-center">
               <Button 
                 size="sm"
-                onClick={() => window.location.href = '/simple-login'}
+                onClick={() => window.location.href = '/dashboard'}
                 className="bg-green-700 hover:bg-green-600 text-white px-4 py-2"
               >
                 Simple Login Test

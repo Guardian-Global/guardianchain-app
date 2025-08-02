@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { isAuthenticated } from '../replitAuth';
+import { isDebugAuthenticated } from '../debugAuth';
 import { storage } from '../storage';
 
 const router = Router();
 
 // Get subscription status
-router.get('/status', isAuthenticated, async (req: any, res) => {
+router.get('/status', isDebugAuthenticated, async (req: any, res) => {
   try {
     const userId = req.user.claims?.sub || req.user.id;
     const user = await storage.getUser(userId);
@@ -34,7 +34,7 @@ router.get('/status', isAuthenticated, async (req: any, res) => {
 });
 
 // Upgrade subscription
-router.post('/upgrade', isAuthenticated, async (req: any, res) => {
+router.post('/upgrade', isDebugAuthenticated, async (req: any, res) => {
   try {
     const { planId } = req.body;
     const userId = req.user.claims?.sub || req.user.id;

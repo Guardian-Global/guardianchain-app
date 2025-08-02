@@ -94,9 +94,7 @@ app.post('/api/auth/demo-login', (req, res) => {
   });
 });
 
-// Import and use authentication routes
-import authRoutes from "./auth";
-app.use("/api/auth", authRoutes);
+// Authentication routes are handled in registerRoutes()
 
 // Replit Auth Integration
 const REPLIT_DOMAINS = process.env.REPLIT_DOMAINS || 'localhost:5000';

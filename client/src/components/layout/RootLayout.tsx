@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import Footer from "@/components/layout/footer";
 
@@ -8,7 +7,6 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  const { user, isAuthenticated } = useUnifiedAuth();
   
   // Determine user role for navigation
   const userRole = isAuthenticated && user ? user.role : "guest";

@@ -1,4 +1,3 @@
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +10,6 @@ import { Shield, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 
 export default function MobileHome() {
-  const { isAuthenticated, user } = useUnifiedAuth();
 
   if (!isAuthenticated) {
     return (

@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import OnboardingMascot from "./OnboardingMascot";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 
 interface MascotContextType {
   showMascot: boolean;
@@ -28,7 +27,6 @@ interface MascotProviderProps {
 export function MascotProvider({ children }: MascotProviderProps) {
   const [showMascot, setShowMascot] = useState(false);
   const [mascotEnabled, setMascotEnabled] = useState(true);
-  const { isAuthenticated, user } = useUnifiedAuth();
 
   const isOnboardingComplete = localStorage.getItem("onboarding_completed") === "true";
 

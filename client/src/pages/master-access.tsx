@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-// MasterLogin moved to archive - using UnifiedAuthModal
-import { UnifiedAuthModal } from "@/components/auth/UnifiedAuthModal";
 import { useLocation } from "wouter";
+import { Button } from "@/components/ui/button";
 
 export default function MasterAccess() {
   const [location, setLocation] = useLocation();
@@ -34,5 +33,13 @@ export default function MasterAccess() {
     }
   };
 
-  return <UnifiedAuthModal isOpen={true} onClose={() => setLocation("/")} />;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="p-8 rounded-lg border bg-card">
+        <h2 className="text-2xl font-bold mb-4">Master Access</h2>
+        <p className="mb-4">Access restricted to authenticated users.</p>
+        <Button onClick={() => setLocation("/dashboard")}>Go to Dashboard</Button>
+      </div>
+    </div>
+  );
 }

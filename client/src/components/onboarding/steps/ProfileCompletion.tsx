@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,7 +30,6 @@ interface ProfileCompletionProps {
 }
 
 export default function ProfileCompletion({ onComplete }: ProfileCompletionProps) {
-  const { user, updateProfile } = useUnifiedAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);

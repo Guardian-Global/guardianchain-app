@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { isAuthenticated } from "../replitAuth";
+import { isDebugAuthenticated } from "../debugAuth";
 import { storage } from "../storage";
 
 const router = Router();
@@ -7,7 +7,7 @@ const router = Router();
 // Get user profile
 router.get(
   "/api/profile/:userId",
-  isAuthenticated,
+  isDebugAuthenticated,
   async (req: any, res: Response) => {
     try {
       const { userId } = req.params;
@@ -58,7 +58,7 @@ router.get(
 // Update user profile
 router.put(
   "/api/profile/:userId",
-  isAuthenticated,
+  isDebugAuthenticated,
   async (req: any, res: Response) => {
     try {
       const { userId } = req.params;
@@ -111,7 +111,7 @@ router.put(
 // AI Chat endpoint
 router.post(
   "/api/ai/chat",
-  isAuthenticated,
+  isDebugAuthenticated,
   async (req: any, res: Response) => {
     try {
       const { message, context } = req.body;
@@ -143,7 +143,7 @@ router.post(
 // Save AI memory
 router.post(
   "/api/ai/save-memory",
-  isAuthenticated,
+  isDebugAuthenticated,
   async (req: any, res: Response) => {
     try {
       const { messageId, content, importance } = req.body;

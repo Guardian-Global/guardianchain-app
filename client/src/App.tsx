@@ -7,7 +7,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
-// Removed duplicate UnifiedAuthProvider import
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import Footer from "@/components/layout/footer";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
@@ -23,7 +22,6 @@ import Governance from "@/pages/governance";
 import PrivateFeed from "@/pages/private";
 // Dashboard moved to archive - using role-based dashboards
 import Commander from "@/pages/commander";
-// AuthenticationHub moved to archive - using UnifiedAuthModal
 import OnboardingPage from "@/pages/onboarding";
 import MintNFT from "@/pages/mint-nft";
 import RecommendationsPage from "@/pages/recommendations";
@@ -130,8 +128,7 @@ import Notifications from "./pages/Notifications";
 import BillingDashboard from "./features/payments/BillingDashboard";
 import Landing from "./pages/Landing";
 import { useAuth } from "./hooks/useAuth";
-import { useUnifiedAuth } from "./hooks/useUnifiedAuth";
-import SimpleLogin from "./components/auth/SimpleLogin";
+// Unified auth hooks removed - using simplified useAuth
 import PrivacyPolicy from "./pages/legal/privacy";
 // Removed duplicate AuthProvider import
 import TermsOfService from "./pages/legal/terms";
@@ -152,13 +149,9 @@ import GTTLaunch from "./pages/gtt-launch";
 import SupabaseSecurity from "./pages/supabase-security";
 import TeamsUpgrades from "./pages/teams-upgrades";
 import ApiStatus from "./pages/api-status";
-// Login page moved to archive - using UnifiedAuthModal
-import { UnifiedAuthProvider } from "./hooks/useUnifiedAuth";
 import { TierProvider } from "./context/TierContext";
-import { OnboardingChecker } from "./components/onboarding/OnboardingChecker";
 import { MascotProvider } from "./components/mascot/MascotProvider";
 import { HelpProvider } from "@/components/help/HelpProvider";
-import RoleBasedDashboard from "./components/auth/RoleBasedDashboard";
 // Admin components temporarily using role-based dashboard
 // import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
 // import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
@@ -185,7 +178,6 @@ import ExchangeListings from "./pages/exchange-listings";
 import MicroInteractionsShowcase from "./pages/micro-interactions-showcase";
 import MemoryFeaturesPage from "./pages/memory-features";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
-// OnboardingChecker moved to different import location
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -205,7 +197,6 @@ function Router() {
       <Switch>
         <Route path="/" component={Landing} />
         <Route path="/test-auth" component={lazy(() => import("./pages/TestAuth"))} />
-        <Route path="/simple-login" component={lazy(() => import("./pages/SimpleLogin"))} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
@@ -333,7 +324,6 @@ function Router() {
         <Route path="/capsule/:id" component={CapsuleDetail} />
         <Route path="/governance" component={Governance} />
         <Route path="/private" component={PrivateFeed} />
-        <Route path="/dashboard" component={RoleBasedDashboard} />
         <Route path="/capsules" component={Explore} />
         <Route path="/analytics" component={CapsuleAnalyticsPage} />
         <Route path="/dao" component={Governance} />
@@ -426,12 +416,8 @@ function Router() {
         <Route path="/asset-debug" component={AssetDebugPage} />
         <Route path="/professional-homepage" component={ProfessionalHomepage} />
         <Route path="/supabase-assets" component={() => <ProfessionalHomepage />} />
-        <Route path="/unified-login" component={RoleBasedDashboard} />
-        <Route path="/auth-dashboard" component={RoleBasedDashboard} />
-        <Route path="/commander" component={RoleBasedDashboard} />
         <Route path="/founder-dashboard">
           <FounderRoute>
-            <RoleBasedDashboard />
           </FounderRoute>
         </Route>
         <Route path="/asset-manager" component={SupabaseAssetManager} />
@@ -506,10 +492,8 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UnifiedAuthProvider>
         <TierProvider>
           <OnboardingProvider>
-            <OnboardingChecker>
               <HelpProvider>
                 <MascotProvider>
               <WalletProvider>
@@ -526,10 +510,8 @@ export default function App() {
               </WalletProvider>
                 </MascotProvider>
               </HelpProvider>
-            </OnboardingChecker>
           </OnboardingProvider>
         </TierProvider>
-      </UnifiedAuthProvider>
     </QueryClientProvider>
   );
 }

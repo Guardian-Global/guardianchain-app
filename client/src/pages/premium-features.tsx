@@ -1,6 +1,5 @@
 import React from "react";
 import PremiumFeatures from "@/components/PremiumFeatures";
-// EnhancedAuth moved to archive - using UnifiedAuthModal
 import AdvancedAI from "@/components/AdvancedAI";
 import CrossChainHub from "@/components/CrossChainHub";
 import MetaMaskTest from "@/components/MetaMaskTest";

@@ -20,14 +20,11 @@ import {
   Lock,
   Globe
 } from "lucide-react";
-import { useCompleteAuth } from "@/hooks/useCompleteAuth";
 import EnhancedLogoDisplay from "@/components/assets/EnhancedLogoDisplay";
 import SupabaseHeroBackground from "@/components/assets/SupabaseHeroBackground";
 import SupabaseImageGallery from "@/components/assets/SupabaseImageGallery";
-import AuthGuard from "@/components/auth/AuthGuard";
 
 export function EnhancedCommanderDashboard() {
-  const { user } = useCompleteAuth();
 
   const systemStats = {
     totalUsers: 15247,
@@ -71,7 +68,6 @@ export function EnhancedCommanderDashboard() {
   };
 
   return (
-    <AuthGuard requiredRoles={["commander", "master"]}>
       <SupabaseHeroBackground overlay={true} className="min-h-screen">
         <div className="p-6">
         <div className="max-w-7xl mx-auto space-y-8">
@@ -377,7 +373,6 @@ export function EnhancedCommanderDashboard() {
           </div>
         </div>
       </SupabaseHeroBackground>
-    </AuthGuard>
   );
 }
 

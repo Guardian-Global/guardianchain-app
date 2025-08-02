@@ -1,5 +1,4 @@
 import React from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,7 +21,6 @@ export default function ProtectedRoute({
   fallbackPath = "/login",
   showUpgradeOption = true
 }: ProtectedRouteProps) {
-  const { isAuthenticated, user, hasRole, hasTier, hasPermission } = useUnifiedAuth();
   const [, setLocation] = useLocation();
 
   // Not authenticated - redirect to login

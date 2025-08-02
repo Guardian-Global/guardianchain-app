@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { CapsuleService } from '../services/CapsuleService';
 import { CapsuleCreationRequest, CapsuleSearchFilters } from '@shared/types/capsule';
-import { isAuthenticated } from '../replitAuth';
+import { isDebugAuthenticated } from '../debugAuth';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ const router = Router();
  * POST /api/capsules
  * Creates a new truth capsule
  */
-router.post('/', isAuthenticated, async (req: any, res) => {
+router.post('/', isDebugAuthenticated, async (req: any, res) => {
   try {
     const userId = req.user?.claims?.sub;
     if (!userId) {
@@ -225,7 +225,7 @@ router.get('/:id', async (req, res) => {
  * POST /api/capsules/:id/validate
  * Validates a capsule (validators only)
  */
-router.post('/:id/validate', isAuthenticated, async (req: any, res) => {
+router.post('/:id/validate', isDebugAuthenticated, async (req: any, res) => {
   try {
     const capsuleId = req.params.id;
     const userId = req.user?.claims?.sub;
@@ -263,7 +263,7 @@ router.post('/:id/validate', isAuthenticated, async (req: any, res) => {
  * POST /api/capsules/:id/vote
  * Records jury vote for capsule validation  
  */
-router.post('/:id/vote', isAuthenticated, async (req: any, res) => {
+router.post('/:id/vote', isDebugAuthenticated, async (req: any, res) => {
   try {
     const capsuleId = req.params.id;
     const userId = req.user?.claims?.sub;
@@ -338,7 +338,7 @@ router.get('/:id/votes', async (req, res) => {
  * POST /api/capsules/:id/claim-yield
  * Claims yield for a capsule
  */
-router.post('/:id/claim-yield', isAuthenticated, async (req: any, res) => {
+router.post('/:id/claim-yield', isDebugAuthenticated, async (req: any, res) => {
   try {
     const capsuleId = req.params.id;
     const userId = req.user?.claims?.sub;

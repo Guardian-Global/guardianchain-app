@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { onboardUser, getUserTier, updateUserTier, getUserOnboardingStatus } from '@/utils/onboardUser';
-import { useUnifiedAuth } from './useUnifiedAuth';
+import { useAuth } from './useAuth';
 
 export function useUserTier() {
-  const { user, isAuthenticated } = useUnifiedAuth();
+  const { user, isAuthenticated } = useAuth();
   const [tier, setTier] = useState<string>("guest");
   const [isLoading, setIsLoading] = useState(true);
   const [onboardingStatus, setOnboardingStatus] = useState<{

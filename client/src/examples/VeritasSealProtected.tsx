@@ -1,9 +1,6 @@
-// Example usage of AuthGate with Veritas Seal
-import AuthGate from "@/components/auth/AuthGate";
 
 export default function VeritasSealPage() {
   return (
-    <AuthGate allowedRoles={["pro", "admin"]}>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-8">
         <div className="max-w-6xl mx-auto p-6">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-8">
@@ -20,11 +17,9 @@ export default function VeritasSealPage() {
             </h2>
             <p className="text-slate-300">
               This feature is only available to Pro and Admin users.
-              The AuthGate component ensures proper access control.
             </p>
           </div>
         </div>
       </div>
-    </AuthGate>
   );
 }

@@ -20,10 +20,8 @@ import {
 } from "lucide-react";
 import { FloatingParticles, BouncyIcon, RippleButton, TypingAnimation } from '@/components/interactions/MicroInteractions';
 import { useUserTier } from "@/hooks/useUserTier";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 
 export default function VaultPage() {
-  const { user, isAuthenticated } = useUnifiedAuth();
   const { tier, tierDisplayName, isPremium, canAccessVeritasTools, gttLimit } = useUserTier();
   
   const [liveData, setLiveData] = useState({
