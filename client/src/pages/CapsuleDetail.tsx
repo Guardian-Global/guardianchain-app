@@ -33,6 +33,10 @@ export default function CapsuleDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [minting, setMinting] = useState(false);
+  const [minted, setMinted] = useState(false);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [unlocking, setUnlocking] = useState(false);
+  const [unlocked, setUnlocked] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
@@ -54,6 +58,12 @@ export default function CapsuleDetailPage() {
       const data = await response.json();
       setCapsule(data.capsule);
       setLikeCount(parseInt(data.capsule.likes || "0"));
+      
+      // Check if capsule is already minted
+      if (data.capsule.content?.minted && data.capsule.content?.tx_hash) {
+        setMinted(true);
+        setTxHash(data.capsule.content.tx_hash);
+      }
     } catch (err) {
       console.error("Error fetching capsule:", err);
       setError("Failed to load capsule. Please try again.");
@@ -93,6 +103,8 @@ export default function CapsuleDetailPage() {
       const data = await response.json();
       
       if (data.txHash) {
+        setTxHash(data.txHash);
+        setMinted(true);
         alert(`Capsule minted on-chain! Transaction: ${data.txHash}`);
       } else {
         alert(data.error || "Minting failed. Please try again.");
@@ -136,8 +148,27 @@ export default function CapsuleDetailPage() {
     }
   };
 
-  const handleUnlock = () => {
-    alert("Capsule unlock flow coming soon! This will allow time-locked content to be revealed.");
+  const handleUnlock = async () => {
+    if (!capsule) return;
+    
+    setUnlocking(true);
+    try {
+      const response = await fetch(`/api/capsules/${capsule.id}/unlock`);
+      const data = await response.json();
+      
+      if (data.capsule) {
+        setCapsule(data.capsule);
+        setUnlocked(true);
+        alert("Capsule unlocked successfully! Hidden content is now visible.");
+      } else {
+        alert(data.error || "Unlock failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Unlock error:", error);
+      alert("Network error. Please check your connection and try again.");
+    } finally {
+      setUnlocking(false);
+    }
   };
 
   if (!match) {
@@ -202,6 +233,17 @@ export default function CapsuleDetailPage() {
                 <CardTitle className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
                   {capsule.title}
                 </CardTitle>
+                {minted && txHash && (
+                  <a
+                    href={`https://polygonscan.com/tx/${txHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-green-600 dark:text-green-400 text-sm hover:underline mb-2"
+                  >
+                    <Shield className="w-4 h-4 mr-1" />
+                    ✅ Minted on Polygon - View Transaction
+                  </a>
+                )}
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center">
                     <User className="w-4 h-4 mr-1" />
@@ -236,7 +278,7 @@ export default function CapsuleDetailPage() {
                 Description
               </h3>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                {capsule.description || "No description provided."}
+                {capsule.description || (unlocked ? "No description provided." : "🔒 Capsule is locked. Unlock required to view content.")}
               </p>
             </div>
 
@@ -346,31 +388,57 @@ export default function CapsuleDetailPage() {
                 <div className="space-y-3">
                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Blockchain Actions</h4>
                   <div className="flex flex-wrap gap-2">
-                    <Button 
-                      onClick={handleMint}
-                      disabled={minting}
-                      className="flex items-center"
-                    >
-                      {minting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Minting...
-                        </>
-                      ) : (
-                        <>
-                          <Shield className="w-4 h-4 mr-2" />
-                          Mint On-Chain
-                        </>
-                      )}
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={handleUnlock}
-                      className="flex items-center"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Unlock
-                    </Button>
+                    {!minted && (
+                      <Button 
+                        onClick={handleMint}
+                        disabled={minting}
+                        className="flex items-center"
+                      >
+                        {minting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Minting...
+                          </>
+                        ) : (
+                          <>
+                            <Shield className="w-4 h-4 mr-2" />
+                            Mint On-Chain
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    {!unlocked && (
+                      <Button 
+                        variant="outline" 
+                        onClick={handleUnlock}
+                        disabled={unlocking}
+                        className="flex items-center"
+                      >
+                        {unlocking ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Unlocking...
+                          </>
+                        ) : (
+                          <>
+                            <Eye className="w-4 h-4 mr-2" />
+                            🔓 Unlock Capsule
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    {minted && (
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <Shield className="w-3 h-3 mr-1" />
+                        Minted on Blockchain
+                      </Badge>
+                    )}
+                    {unlocked && (
+                      <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        <Eye className="w-3 h-3 mr-1" />
+                        Content Unlocked
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
