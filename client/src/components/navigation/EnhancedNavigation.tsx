@@ -42,6 +42,10 @@ import { useAuth } from '@/hooks/useAuth';
 import SmartNotifications from './SmartNotifications';
 import PersonalizationEngine from './PersonalizationEngine';
 import EngagementTracker from './EngagementTracker';
+import { DynamicBadge } from "./DynamicBadgeSystem";
+import { RoleBasedAccess } from "./RoleBasedAccess";
+import { MobileHeader } from "./MobileNavigation";
+import { getVisibleNavigation } from "./NavigationData";
 
 interface NavigationItem {
   id: string;

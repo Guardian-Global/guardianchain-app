@@ -3588,8 +3588,122 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Dynamic Badge System API
+  app.get('/api/navigation/badges/:routeId', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { routeId } = req.params;
+      const userId = req.user.id;
+      
+      console.log(`🏷️ Loading badges for route ${routeId} for user ${userId}`);
+      
+      // Mock dynamic badges based on route and user state
+      const badges = generateBadgesForRoute(routeId, userId);
+      
+      res.json(badges);
+    } catch (error) {
+      console.error('Failed to load badges:', error);
+      res.status(500).json({ error: 'Failed to load badges' });
+    }
+  });
+
+  app.get('/api/navigation/global-badges', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      console.log(`🌐 Loading global badges for user ${userId}`);
+      
+      const globalBadges = [
+        {
+          id: 'dao-governance-new-proposal',
+          type: 'new',
+          text: '🆕 New Proposal',
+          count: 2,
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: 'yield-calculator-unclaimed',
+          type: 'warning',
+          text: '⚠️ Unclaimed Yield',
+          count: 1
+        },
+        {
+          id: 'validator-dashboard-pending',
+          type: 'urgent',
+          text: '🔥 Pending Review',
+          count: 3
+        },
+        {
+          id: 'analytics-milestone',
+          type: 'success',
+          text: '🎉 Milestone Reached'
+        }
+      ];
+      
+      res.json(globalBadges);
+    } catch (error) {
+      console.error('Failed to load global badges:', error);
+      res.status(500).json({ error: 'Failed to load global badges' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Badge generation helper function
+function generateBadgesForRoute(routeId: string, userId: string) {
+  const badges: any[] = [];
+  
+  switch (routeId) {
+    case 'dao-governance':
+    case 'dao-proposals':
+      badges.push({
+        id: `${routeId}-new-proposal`,
+        type: 'new',
+        text: '🆕 New',
+        count: 2
+      });
+      break;
+      
+    case 'yield-calculator':
+      badges.push({
+        id: `${routeId}-unclaimed`,
+        type: 'warning',
+        text: '⚠️ Unclaimed',
+        count: 1
+      });
+      break;
+      
+    case 'validator-dashboard':
+      badges.push({
+        id: `${routeId}-pending`,
+        type: 'urgent',
+        text: '🔥 Pending',
+        count: 3
+      });
+      break;
+      
+    case 'analytics':
+      badges.push({
+        id: `${routeId}-milestone`,
+        type: 'success',
+        text: '🎉 Milestone'
+      });
+      break;
+      
+    case 'create-capsule':
+      badges.push({
+        id: `${routeId}-tutorial`,
+        type: 'info',
+        text: '💡 Tutorial'
+      });
+      break;
+      
+    default:
+      // No badges for this route
+      break;
+  }
+  
+  return badges;
 }
 
 // Helper functions for AI summary generation
