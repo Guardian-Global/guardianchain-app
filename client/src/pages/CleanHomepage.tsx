@@ -7,6 +7,8 @@ import { Shield, Play, TrendingUp, Users, CheckCircle, Coins, Globe, Award, Rock
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { AdvancedCard, AdvancedCardContent, AdvancedCardHeader, AdvancedCardTitle } from "@/components/ui/advanced-card";
 import OptimizedImage from "@/components/layout/OptimizedImage";
+import InteractiveBackground from "@/components/ui/interactive-background";
+import FloatingActionMenu from "@/components/layout/FloatingActionMenu";
 
 export default function CleanHomepage() {
   const { isAuthenticated } = useAuth();
@@ -25,7 +27,14 @@ export default function CleanHomepage() {
 
       <main className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-slate-900 via-purple-900 to-black text-white overflow-hidden">
         {/* Hero Section with Advanced Animations */}
-        <section className="relative px-6 py-20 text-center">
+        <section className="relative px-6 py-20 text-center overflow-hidden">
+          {/* Interactive Background */}
+          <InteractiveBackground 
+            variant="quantum" 
+            particleCount={80}
+            colors={["#06b6d4", "#8b5cf6", "#f59e0b", "#ef4444"]}
+          />
+          
           {/* Animated Background Elements */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-cyan-500/20 to-yellow-500/20" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.3),transparent)] animate-pulse" />
@@ -212,6 +221,9 @@ export default function CleanHomepage() {
             </motion.p>
           </motion.div>
         </section>
+
+        {/* Floating Action Menu */}
+        <FloatingActionMenu />
       </main>
     </>
   );
