@@ -64,6 +64,11 @@ export default function CapsuleDetailPage() {
         setMinted(true);
         setTxHash(data.capsule.content.tx_hash);
       }
+      
+      // Check if capsule is already unlocked
+      if (data.capsule.content?.unlocked) {
+        setUnlocked(true);
+      }
     } catch (err) {
       console.error("Error fetching capsule:", err);
       setError("Failed to load capsule. Please try again.");
@@ -157,7 +162,15 @@ export default function CapsuleDetailPage() {
       const data = await response.json();
       
       if (data.capsule) {
-        setCapsule(data.capsule);
+        let updatedCapsule = data.capsule;
+        
+        // If the capsule was encrypted, the server has already decrypted it
+        // For client-side verification, we could add additional checks here
+        if (data.unlock_method === "lit_protocol_decrypt") {
+          console.log("Capsule was decrypted using Lit Protocol on server");
+        }
+        
+        setCapsule(updatedCapsule);
         setUnlocked(true);
         alert("Capsule unlocked successfully! Hidden content is now visible.");
       } else {
@@ -277,9 +290,23 @@ export default function CapsuleDetailPage() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                 Description
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                {capsule.description || (unlocked ? "No description provided." : "🔒 Capsule is locked. Unlock required to view content.")}
-              </p>
+              <div className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                {capsule.content?.encrypted && !unlocked ? (
+                  <div className="flex items-center p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                    <svg className="w-5 h-5 mr-3 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                    <div>
+                      <p className="font-medium text-amber-800 dark:text-amber-200">Encrypted Content</p>
+                      <p className="text-sm text-amber-600 dark:text-amber-400">
+                        This capsule is encrypted and time-locked. Unlock required to view content.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <p>{capsule.description || "No description provided."}</p>
+                )}
+              </div>
             </div>
 
             {/* Content */}
@@ -407,22 +434,24 @@ export default function CapsuleDetailPage() {
                         )}
                       </Button>
                     )}
-                    {!unlocked && (
+                    {!unlocked && capsule.content?.encrypted && (
                       <Button 
                         variant="outline" 
                         onClick={handleUnlock}
                         disabled={unlocking}
-                        className="flex items-center"
+                        className="flex items-center border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-900/20"
                       >
                         {unlocking ? (
                           <>
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Unlocking...
+                            Decrypting...
                           </>
                         ) : (
                           <>
-                            <Eye className="w-4 h-4 mr-2" />
-                            🔓 Unlock Capsule
+                            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clipRule="evenodd" />
+                            </svg>
+                            Decrypt Content
                           </>
                         )}
                       </Button>
@@ -437,6 +466,14 @@ export default function CapsuleDetailPage() {
                       <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                         <Eye className="w-3 h-3 mr-1" />
                         Content Unlocked
+                      </Badge>
+                    )}
+                    {capsule.content?.encrypted && !unlocked && (
+                      <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        Encrypted
                       </Badge>
                     )}
                   </div>
