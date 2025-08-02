@@ -58,6 +58,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(responseUser);
   });
 
+  // Login route for debug authentication - simulates successful login
+  app.get('/api/login', (req, res) => {
+    console.log('🔵 DEBUG: Login route accessed');
+    // Simulate successful login and redirect to home
+    res.redirect('/');
+  });
+
+  // Logout route for debug authentication
+  app.get('/api/logout', (req, res) => {
+    console.log('🔵 DEBUG: Logout route accessed');
+    // Simply redirect to home (debug auth will show landing page)
+    res.redirect('/');
+  });
+
   // Health check endpoint
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });

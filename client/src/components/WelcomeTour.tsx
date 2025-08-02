@@ -16,6 +16,8 @@ export default function WelcomeTour() {
   const handleComplete = () => {
     localStorage.setItem('seenWelcome', 'true');
     setShow(false);
+    // Redirect to login for authentication
+    window.location.href = '/api/login';
   };
 
   const steps = [
