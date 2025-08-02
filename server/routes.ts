@@ -1890,35 +1890,59 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     },
   );
 
-  // Auction unlock logging endpoint
+  // Auction unlock logging endpoint with Supabase integration
   app.post("/api/auction/:id/unlock-log", isDebugAuthenticated, async (req: any, res) => {
     try {
       const auctionId = req.params.id;
       const { wallet, timestamp } = req.body;
       
-      console.log("🔓 Auction unlock event logged:", {
+      if (!auctionId || !wallet || !timestamp) {
+        return res.status(400).json({ error: 'Missing required fields: auctionId, wallet, or timestamp' });
+      }
+
+      console.log("🔓 Auction unlock event logging to Supabase:", {
         auctionId,
         wallet,
         timestamp,
         user: req.user.id
       });
 
-      const unlockEvent = {
-        id: `unlock_${Date.now()}`,
-        auctionId,
-        wallet,
-        userId: req.user.id,
-        timestamp: timestamp || Date.now(),
-        loggedAt: new Date().toISOString()
+      // Import Supabase client
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      // Insert unlock event into Supabase
+      const { data, error } = await supabase.from('auction_unlocks').insert({
+        auction_id: auctionId,
+        wallet_address: wallet,
+        user_id: req.user.id,
+        unlocked_at: new Date(timestamp).toISOString()
+      }).select();
+
+      if (error) {
+        console.error("❌ Supabase unlock logging error:", error);
+        return res.status(500).json({ 
+          error: 'Failed to log unlock event to database',
+          details: error.message 
+        });
+      }
+
+      const unlockEvent = data?.[0] || {
+        auction_id: auctionId,
+        wallet_address: wallet,
+        user_id: req.user.id,
+        unlocked_at: new Date(timestamp).toISOString()
       };
 
-      // In production, this would be saved to database
-      // await storage.logAuctionUnlock(unlockEvent);
+      console.log("✅ Auction unlock event successfully logged to Supabase:", unlockEvent);
 
       res.json({
         success: true,
         unlockEvent,
-        message: "Unlock event logged successfully"
+        message: "Unlock event logged successfully to database"
       });
     } catch (error) {
       console.error("❌ Failed to log unlock event:", error);
