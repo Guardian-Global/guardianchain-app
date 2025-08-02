@@ -426,6 +426,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
 
+  // Register metadata routes
+  const { registerMetadataRoutes } = await import('./routes/metadata');
+  registerMetadataRoutes(app);
+
   // Analytics dashboard endpoint
   app.get('/api/analytics/dashboard', isDebugAuthenticated, async (req: any, res) => {
     try {
@@ -489,6 +493,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: 'Failed to fetch analytics data',
         details: error instanceof Error ? error.message : 'Unknown error'
       });
+    }
+  });
+
+  // Moderation logs endpoint
+  app.get('/api/moderation/logs', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      // Mock moderation logs - in production this would query the database
+      const mockLogs = [
+        {
+          id: 'mod_1754140001',
+          content: 'This capsule contains family memories from the 1980s...',
+          user: 'user_abc123',
+          reason: 'Content approved after review',
+          severity: 1,
+          flags: [],
+          status: 'approved',
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+          reviewed_at: new Date(Date.now() - 3600000).toISOString(),
+          reviewer: 'admin_def456'
+        },
+        {
+          id: 'mod_1754140002', 
+          content: 'A story about overcoming challenges in life...',
+          user: 'user_xyz789',
+          reason: 'Flagged for emotional content review',
+          severity: 3,
+          flags: ['emotional_content'],
+          status: 'pending',
+          created_at: new Date(Date.now() - 7200000).toISOString()
+        },
+        {
+          id: 'mod_1754140003',
+          content: 'Historical account of family immigration...',
+          user: 'user_hist001',
+          reason: 'Content contains sensitive historical information',
+          severity: 2,
+          flags: ['historical_content'],
+          status: 'approved',
+          created_at: new Date(Date.now() - 14400000).toISOString(),
+          reviewed_at: new Date(Date.now() - 1800000).toISOString(),
+          reviewer: 'admin_def456'
+        }
+      ];
+      
+      console.log('📋 Moderation logs requested');
+      res.json(mockLogs);
+    } catch (error) {
+      console.error('❌ Moderation logs error:', error);
+      res.status(500).json({ error: 'Failed to fetch moderation logs' });
+    }
+  });
+
+  // Moderation statistics endpoint
+  app.get('/api/moderation/stats', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const mockStats = {
+        total: 156,
+        pending: 8,
+        approved: 132,
+        rejected: 16,
+        todayTotal: 12
+      };
+      
+      console.log('📊 Moderation stats requested');
+      res.json(mockStats);
+    } catch (error) {
+      console.error('❌ Moderation stats error:', error);
+      res.status(500).json({ error: 'Failed to fetch moderation statistics' });
+    }
+  });
+
+  // Moderation review action endpoint
+  app.post('/api/moderation/review', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { logId, action, reviewerNotes } = req.body;
+      
+      if (!logId || !action) {
+        return res.status(400).json({ error: 'Missing required fields: logId, action' });
+      }
+      
+      // In production, this would update the database
+      const reviewResult = {
+        logId,
+        action,
+        reviewerNotes,
+        reviewedBy: req.user.id,
+        reviewedAt: new Date().toISOString(),
+        status: 'completed'
+      };
+      
+      console.log('✅ Moderation review completed:', reviewResult);
+      res.json(reviewResult);
+    } catch (error) {
+      console.error('❌ Moderation review failed:', error);
+      res.status(500).json({ error: 'Failed to process moderation review' });
     }
   });
 

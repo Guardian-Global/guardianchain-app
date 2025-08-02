@@ -240,6 +240,7 @@ function Router() {
             <Route path="/" component={Dashboard} />
             <Route path="/dashboard" component={Dashboard} />
             <Route path="/vault" component={Vault} />
+          <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
