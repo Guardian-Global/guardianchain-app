@@ -173,6 +173,11 @@ import { HelpProvider } from "@/components/help/HelpProvider";
 // import EnhancedCommanderDashboard from "./components/admin/EnhancedCommanderDashboard";
 // import EnhancedFounderDashboard from "./components/admin/EnhancedFounderDashboard";
 import SupabaseAssetManager from "./components/assets/SupabaseAssetManager";
+
+// New pages for production deployment
+import Partners from "./pages/Partners";
+import Analytics from "./pages/dashboard/Analytics";
+import DemoKit from "./pages/investor/DemoKit";
 import ReplitToolsPage from "./pages/replit-tools";
 import AdvancedFeaturesPage from "./pages/advanced-features";
 import AdminVisualsPage from "./pages/admin-visuals";
@@ -253,6 +258,9 @@ function Router() {
             <Route path="/" component={lazy(() => import("./pages/EnhancedDashboard"))} />
             <Route path="/dashboard" component={lazy(() => import("./pages/EnhancedDashboard"))} />
             <Route path="/dashboard/yield" component={YieldDashboard} />
+            <Route path="/dashboard/analytics" component={Analytics} />
+            <Route path="/partners" component={Partners} />
+            <Route path="/investor/demo-kit" component={DemoKit} />
             <Route path="/create" component={CreateCapsule} />
             <Route path="/eternal-contracts" component={lazy(() => import("./pages/EternalContracts"))} />
             <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />

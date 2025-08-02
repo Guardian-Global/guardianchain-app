@@ -4366,6 +4366,36 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Analytics endpoint for dashboard
+  app.get('/api/analytics/capsules', isDebugAuthenticated, async (req, res) => {
+    try {
+      // Mock analytics data - replace with real metrics when available
+      const analyticsData = {
+        total: 139,
+        minted: 58,
+        sealed: 47,
+        languages: ["en", "es", "fr", "ar", "zh", "ja"],
+        truthScore: 87,
+        gttEarned: 12547,
+        verificationRate: 94,
+        growthRate: 23,
+        activeValidators: 156,
+        topCategories: [
+          { name: "Personal Stories", count: 45, percentage: 32 },
+          { name: "Whistleblower", count: 38, percentage: 27 },
+          { name: "Family Legacy", count: 29, percentage: 21 },
+          { name: "Historical Events", count: 18, percentage: 13 },
+          { name: "Creative Works", count: 9, percentage: 7 }
+        ]
+      };
+      
+      res.json(analyticsData);
+    } catch (error) {
+      console.error('Failed to load analytics:', error);
+      res.status(500).json({ error: 'Failed to load analytics data' });
+    }
+  });
+
   // Register AI and NFT routes
   app.use('/api/ai', aiRoutes);
   app.use('/api/nft', nftRoutes);
