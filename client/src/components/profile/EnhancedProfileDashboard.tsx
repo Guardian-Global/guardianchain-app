@@ -140,6 +140,16 @@ export default function EnhancedProfileDashboard() {
   // Fetch user profile
   const { data: profile, isLoading } = useQuery({
     queryKey: ["/api/profile", user?.id || "demo-1754024933907"],
+    queryFn: async () => {
+      const userId = user?.id || "demo-1754024933907";
+      const response = await fetch(`/api/profile/${userId}`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch profile: ${response.status}`);
+      }
+      return response.json();
+    },
     enabled: !!user?.id,
     retry: false,
   });
