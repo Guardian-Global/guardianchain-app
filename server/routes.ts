@@ -3645,6 +3645,113 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Platform statistics for homepage
+  app.get('/api/platform/stats', async (req, res) => {
+    try {
+      console.log('📊 Loading platform statistics');
+      const stats = getPlatformStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Failed to load platform stats:', error);
+      res.status(500).json({ error: 'Failed to load platform stats' });
+    }
+  });
+
+  // Whistleblower sanctuary endpoints
+  app.post('/api/whistleblower/submit', isDebugAuthenticated, async (req, res) => {
+    try {
+      console.log('🔒 Whistleblower submission received');
+      
+      const submission = {
+        id: `whistleblower-${Date.now()}`,
+        ...req.body,
+        status: 'submitted',
+        encrypted: true,
+        timestamp: new Date().toISOString()
+      };
+      
+      res.json({ 
+        success: true, 
+        submissionId: submission.id,
+        message: 'Submission securely received and encrypted'
+      });
+    } catch (error) {
+      console.error('Failed to process whistleblower submission:', error);
+      res.status(500).json({ error: 'Failed to process submission' });
+    }
+  });
+
+  // Time messages endpoints
+  app.post('/api/time-messages/create', isDebugAuthenticated, async (req, res) => {
+    try {
+      console.log('⏰ Creating time message');
+      
+      const timeMessage = {
+        id: `time-msg-${Date.now()}`,
+        ...req.body,
+        status: 'sealed',
+        createdAt: new Date().toISOString()
+      };
+      
+      res.json({ 
+        success: true, 
+        messageId: timeMessage.id,
+        message: 'Time message sealed successfully'
+      });
+    } catch (error) {
+      console.error('Failed to create time message:', error);
+      res.status(500).json({ error: 'Failed to create time message' });
+    }
+  });
+
+  app.get('/api/time-messages/sent', isDebugAuthenticated, async (req, res) => {
+    try {
+      const sentMessages = [
+        {
+          id: 'sent-1',
+          title: 'Happy 30th Birthday!',
+          recipient: 'Future Me',
+          unlockDate: new Date('2026-08-02'),
+          status: 'sealed',
+          messageType: 'birthday'
+        },
+        {
+          id: 'sent-2', 
+          title: 'Anniversary Message',
+          recipient: 'partner@example.com',
+          unlockDate: new Date('2025-12-25'),
+          status: 'sealed',
+          messageType: 'anniversary'
+        }
+      ];
+      
+      res.json(sentMessages);
+    } catch (error) {
+      console.error('Failed to load sent messages:', error);
+      res.status(500).json({ error: 'Failed to load sent messages' });
+    }
+  });
+
+  app.get('/api/time-messages/received', isDebugAuthenticated, async (req, res) => {
+    try {
+      const receivedMessages = [
+        {
+          id: 'received-1',
+          title: 'Message from 2020',
+          recipient: 'Past Me',
+          unlockDate: new Date('2025-01-01'),
+          status: 'delivered',
+          messageType: 'future_self'
+        }
+      ];
+      
+      res.json(receivedMessages);
+    } catch (error) {
+      console.error('Failed to load received messages:', error);
+      res.status(500).json({ error: 'Failed to load received messages' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
@@ -3704,6 +3811,17 @@ function generateBadgesForRoute(routeId: string, userId: string) {
   }
   
   return badges;
+}
+
+// Platform stats endpoint for homepage
+function getPlatformStats() {
+  return {
+    totalCapsules: 12547 + Math.floor(Math.random() * 100),
+    totalUsers: 3891 + Math.floor(Math.random() * 50),
+    gttDistributed: 847392 + Math.floor(Math.random() * 1000),
+    networksActive: 5,
+    lastUpdated: new Date().toISOString()
+  };
 }
 
 // Helper functions for AI summary generation

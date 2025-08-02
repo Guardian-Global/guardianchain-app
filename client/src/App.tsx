@@ -18,6 +18,7 @@ import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
+import EliteHomepage from "@/pages/EliteHomepage";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/CreateCapsule";
 import Explore from "@/pages/explore";
@@ -53,7 +54,8 @@ import TruthRedemptionPage from "./pages/truth-redemption";
 import ConspiracyCapsulePage from "./pages/conspiracy-capsule";
 
 // Specialized Portal Components
-import WhistleblowerSanctuary from "./pages/whistleblower-sanctuary";
+import WhistleblowerSanctuary from "./pages/WhistleblowerSanctuary";
+import TimeMessages from "./pages/TimeMessages";
 import SpecializedIntake from "./pages/specialized-intake";
 import CategoryDiscoveryPage from "./pages/category-discovery";
 
@@ -113,7 +115,7 @@ import Dashboard from "./pages/auth/Dashboard";
 import MemoryVault from "./pages/memory-vault";
 import EternalStaking from "./pages/eternal-staking";
 import FamilyLegacy from "./pages/family-legacy";
-import TimeMessages from "./pages/time-messages";
+// Removed duplicate - using new TimeMessages.tsx
 import InfiniteRecovery from "./pages/infinite-recovery";
 import Referrals from "./pages/referrals";
 import Earnings from "./pages/earnings";
@@ -208,16 +210,16 @@ function Router() {
     );
   }
 
-  // Show enhanced landing page for unauthenticated users
+  // Show elite landing page for unauthenticated users
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={lazy(() => import("./pages/EnhancedHomepage"))} />
+        <Route path="/" component={EliteHomepage} />
         <Route path="/test-auth" component={lazy(() => import("./pages/TestAuth"))} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
-        <Route component={lazy(() => import("./pages/EnhancedHomepage"))} />
+        <Route component={EliteHomepage} />
       </Switch>
     );
   }
