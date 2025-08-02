@@ -2191,6 +2191,123 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     }
   });
 
+  // Auction funding endpoint
+  app.post("/api/auction/:id/fund", isDebugAuthenticated, async (req: any, res) => {
+    const { id } = req.params;
+    const { amount, wallet, transactionHash, blockNumber } = req.body;
+
+    if (!id || !amount || !wallet) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: auction_id, amount, wallet' 
+      });
+    }
+
+    try {
+      console.log('💰 Logging auction funding:', { auction_id: id, amount, wallet });
+
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      // Check if auction exists
+      const { data: auction, error: auctionError } = await supabase
+        .from('auctions')
+        .select('id, title')
+        .eq('id', id)
+        .single();
+
+      if (auctionError || !auction) {
+        return res.status(404).json({ error: 'Auction not found' });
+      }
+
+      // Insert funding record
+      const { data, error } = await supabase
+        .from('auction_funding')
+        .insert({
+          auction_id: id,
+          amount: parseFloat(amount),
+          wallet_address: wallet,
+          transaction_hash: transactionHash || null,
+          block_number: blockNumber || null,
+          funded_at: new Date(),
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ Failed to log funding:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      console.log('✅ Auction funding logged successfully:', data.id);
+      return res.status(200).json({ 
+        success: true,
+        funding_id: data.id,
+        message: 'Funding logged successfully'
+      });
+
+    } catch (error) {
+      console.error('❌ Funding logging error:', error);
+      return res.status(500).json({ 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Auction funding analytics endpoint
+  app.get("/api/funding/analytics", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("💰 Fetching auction funding analytics");
+
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      // Fetch funding data with auction details
+      const { data: funding, error } = await supabase
+        .from('auction_funding')
+        .select('*, auctions(title)')
+        .order('funded_at', { ascending: false })
+        .limit(100);
+
+      if (error) {
+        console.error("❌ Failed to fetch funding data:", error);
+        return res.status(500).json({ 
+          error: 'Failed to fetch funding analytics',
+          details: error.message 
+        });
+      }
+
+      // Calculate analytics
+      const totalFunding = funding?.reduce((sum, f) => sum + Number(f.amount), 0) || 0;
+      const totalContributions = funding?.length || 0;
+      const uniqueContributors = new Set(funding?.map(f => f.wallet_address)).size;
+      const avgContribution = totalContributions > 0 ? totalFunding / totalContributions : 0;
+
+      const analytics = {
+        totalFunding,
+        totalContributions,
+        uniqueContributors,
+        avgContribution,
+        recentFunding: funding?.slice(0, 10) || []
+      };
+
+      console.log("✅ Funding analytics calculated");
+      res.json(analytics);
+    } catch (error) {
+      console.error("❌ Failed to fetch funding analytics:", error);
+      res.status(500).json({
+        error: "Failed to fetch funding analytics",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Get auction details endpoint with Supabase integration
   app.get("/api/auction/:id", isDebugAuthenticated, async (req: any, res) => {
     try {
