@@ -225,7 +225,7 @@ function Router() {
     <EnhancedLayout>
       <WelcomeTour />
       <LiveTokenTracker position="top" />
-      <main className="px-4 max-w-screen-xl mx-auto">
+      <div className="max-w-screen-xl mx-auto">
         <Suspense fallback={
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
@@ -495,7 +495,7 @@ function Router() {
           <Route component={NotFound} />
         </Switch>
         </Suspense>
-      </main>
+      </div>
       <Footer />
     </EnhancedLayout>
   );

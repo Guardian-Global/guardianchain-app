@@ -3,6 +3,9 @@ import { useAuth } from "@/hooks/useAuth";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import CommandPalette from "./CommandPalette";
+import MobileNav from "./MobileNav";
+import Breadcrumbs from "./Breadcrumbs";
+import CapsuleDrawer from "@/components/ui/CapsuleDrawer";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
@@ -10,12 +13,16 @@ interface EnhancedLayoutProps {
   children: React.ReactNode;
   showSidebar?: boolean;
   showCommandPalette?: boolean;
+  showBreadcrumbs?: boolean;
+  showCapsuleDrawer?: boolean;
 }
 
 const EnhancedLayout = ({ 
   children, 
   showSidebar = true, 
-  showCommandPalette = true 
+  showCommandPalette = true,
+  showBreadcrumbs = true,
+  showCapsuleDrawer = true
 }: EnhancedLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
@@ -26,47 +33,40 @@ const EnhancedLayout = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
-      <div className="flex">
-        {/* Desktop Sidebar */}
-        {showSidebar && <Sidebar />}
+    <>
+      {/* SEO Meta Tags */}
+      <title>GuardianChain - Sovereign Memory Infrastructure</title>
+      <meta name="description" content="Store, verify, and yield from your most important memories. Powered by SealChain and Veritas." />
+      <meta property="og:title" content="GuardianChain" />
+      <meta property="og:image" content="/og-image.png" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900">
+        <div className="flex">
+          {/* Desktop Sidebar */}
+          {showSidebar && <Sidebar />}
 
-        {/* Mobile Sidebar Overlay */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 md:hidden">
-            <div className="fixed inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
-            <div className="fixed left-0 top-0 h-full w-64 bg-slate-800 border-r border-slate-700">
-              <div className="flex items-center justify-between p-4 border-b border-slate-700">
-                <h1 className="font-bold text-xl text-white">GuardianChain</h1>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-slate-400 hover:text-white"
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
-              <div className="overflow-y-auto">
-                <Sidebar />
-              </div>
-            </div>
+          {/* Mobile Navigation */}
+          <MobileNav />
+
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col min-h-screen">
+            <Topbar onMobileMenuToggle={() => setMobileMenuOpen(true)} />
+            
+            {/* Breadcrumbs */}
+            {showBreadcrumbs && <Breadcrumbs />}
+            
+            <main className="flex-1 overflow-x-hidden p-6">
+              {children}
+            </main>
           </div>
-        )}
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen">
-          <Topbar onMobileMenuToggle={() => setMobileMenuOpen(true)} />
-          
-          <main className="flex-1 overflow-x-hidden">
-            {children}
-          </main>
         </div>
-      </div>
 
-      {/* Command Palette */}
-      {showCommandPalette && <CommandPalette />}
-    </div>
+        {/* Floating Components */}
+        {showCommandPalette && <CommandPalette />}
+        {showCapsuleDrawer && <CapsuleDrawer />}
+      </div>
+    </>
   );
 };
 
