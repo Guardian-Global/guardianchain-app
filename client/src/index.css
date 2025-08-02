@@ -160,6 +160,239 @@
   animation: glow-pulse 2s ease-in-out infinite;
 }
 
+/* Quantum Field Effect */
+.quantum-field {
+  background: linear-gradient(135deg, 
+    hsla(51 100% 50% / 0.95) 0%, 
+    hsla(45 100% 60% / 0.9) 25%,
+    hsla(39 100% 70% / 0.95) 50%,
+    hsla(35 100% 80% / 0.9) 75%,
+    hsla(51 100% 50% / 0.95) 100%
+  );
+  border: 2px solid hsla(51 100% 50% / 0.6);
+  box-shadow: 
+    0 0 40px hsla(51 100% 50% / 0.8),
+    0 0 80px hsla(51 100% 50% / 0.4),
+    inset 0 2px 0 hsla(51 100% 70% / 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: quantum-pulse 3s ease-in-out infinite;
+}
+
+@keyframes quantum-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 40px hsla(51 100% 50% / 0.8),
+      0 0 80px hsla(51 100% 50% / 0.4),
+      inset 0 2px 0 hsla(51 100% 70% / 0.5),
+      0 8px 32px rgba(0, 0, 0, 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 
+      0 0 60px hsla(51 100% 50% / 1),
+      0 0 120px hsla(51 100% 50% / 0.6),
+      inset 0 2px 0 hsla(51 100% 70% / 0.7),
+      0 12px 48px rgba(0, 0, 0, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+/* Holographic Glass Morphism */
+.holographic-glass {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Neural Pulse Effect */
+.neural-pulse {
+  animation: neural-pulse 2s ease-in-out infinite;
+}
+
+@keyframes neural-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+    filter: hue-rotate(90deg) brightness(1.2);
+  }
+}
+
+/* Advanced Animation Suite */
+@keyframes morphic-pulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+  }
+  33% {
+    transform: scale(1.02) rotate(1deg);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
+  }
+  66% {
+    transform: scale(0.98) rotate(-1deg);
+    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.animate-morphic-pulse {
+  animation: morphic-pulse 4s ease-in-out infinite;
+}
+
+@keyframes prismatic-shift {
+  0% { filter: hue-rotate(0deg) saturate(1) brightness(1); }
+  25% { filter: hue-rotate(90deg) saturate(1.2) brightness(1.1); }
+  50% { filter: hue-rotate(180deg) saturate(1.4) brightness(1.2); }
+  75% { filter: hue-rotate(270deg) saturate(1.2) brightness(1.1); }
+  100% { filter: hue-rotate(360deg) saturate(1) brightness(1); }
+}
+
+.animate-prismatic-shift {
+  animation: prismatic-shift 6s linear infinite;
+}
+
+@keyframes data-stream {
+  0% { 
+    background-position: 0% 0%;
+    opacity: 0.3;
+  }
+  50% { 
+    background-position: 100% 100%;
+    opacity: 0.8;
+  }
+  100% { 
+    background-position: 200% 200%;
+    opacity: 0.3;
+  }
+}
+
+.animate-data-stream {
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(0, 255, 255, 0.1) 50%, 
+    transparent 70%);
+  background-size: 200% 200%;
+  animation: data-stream 3s linear infinite;
+}
+
+/* Epic Glow Effects */
+@keyframes epic-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 30px currentColor;
+  }
+  50% {
+    box-shadow: 
+      0 0 20px currentColor,
+      0 0 40px currentColor,
+      0 0 60px currentColor,
+      0 0 80px currentColor;
+  }
+}
+
+.animate-epic-glow {
+  animation: epic-glow 2s ease-in-out infinite;
+}
+
+@keyframes rainbow-glow {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.animate-rainbow-glow {
+  animation: rainbow-glow 3s linear infinite;
+}
+
+/* Particle and Digital Effects */
+@keyframes particle-float {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.6;
+  }
+  25% { 
+    transform: translateY(-20px) translateX(10px) scale(1.1);
+    opacity: 0.9;
+  }
+  50% { 
+    transform: translateY(-40px) translateX(-5px) scale(1.2);
+    opacity: 1;
+  }
+  75% { 
+    transform: translateY(-30px) translateX(-10px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.animate-particle-float {
+  animation: particle-float 8s ease-in-out infinite;
+}
+
+@keyframes digital-rain {
+  0% { 
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% { 
+    opacity: 1;
+  }
+  90% { 
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.animate-digital-rain {
+  animation: digital-rain 4s linear infinite;
+}
+
+@keyframes cyber-grid {
+  0% { 
+    transform: translate(0, 0);
+    opacity: 0.1;
+  }
+  50% { 
+    transform: translate(-30px, -30px);
+    opacity: 0.3;
+  }
+  100% { 
+    transform: translate(-60px, -60px);
+    opacity: 0.1;
+  }
+}
+
+.animate-cyber-grid {
+  animation: cyber-grid 10s linear infinite;
+}
+
+/* Animation Delays */
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-800 { animation-delay: 800ms; }
+.animation-delay-1000 { animation-delay: 1000ms; }
+.animation-delay-1200 { animation-delay: 1200ms; }
+.animation-delay-1500 { animation-delay: 1500ms; }
+.animation-delay-2000 { animation-delay: 2000ms; }
+
 .text-gradient-truth {
   background: linear-gradient(90deg, hsl(51 100% 50%), hsl(45 100% 60%), hsl(39 100% 50%));
   -webkit-background-clip: text;
