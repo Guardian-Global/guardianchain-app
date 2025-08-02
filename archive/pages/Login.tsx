@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { z } from "zod";
 
 // Simple login schemas
@@ -32,7 +31,6 @@ const masterSchema = z.object({
 export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const { login, register, masterLogin, isLoading } = useUnifiedAuth();
   
   // Form states
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });

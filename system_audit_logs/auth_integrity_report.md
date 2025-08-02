@@ -47,7 +47,6 @@
 
 ### Authentication Hooks
 - `useAuth()` - Primary authentication state management ✅
-- `useUnifiedAuth()` - Unified authentication system ✅  
 - `useUserTier()` - Tier-based access control ✅
 - `useCompleteAuth()` - Complete authentication flow ✅
 

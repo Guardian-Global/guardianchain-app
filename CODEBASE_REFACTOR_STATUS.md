@@ -56,10 +56,8 @@
 ## UNIFIED COMPONENTS IN USE
 
 ### ✅ Core Authentication
-- `components/auth/UnifiedAuthModal.tsx` - Single auth entry point
 - `components/onboarding/AIAssistedOnboarding.tsx` - AI-powered onboarding
 - `components/auth/ProtectedRoute.tsx` - Role-based access control
-- `hooks/useUnifiedAuth.ts` - Unified auth state management
 
 ### ✅ Core Dashboards
 - `components/profile/EnhancedProfileDashboard.tsx` - Primary user dashboard

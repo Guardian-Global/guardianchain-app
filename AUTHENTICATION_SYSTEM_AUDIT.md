@@ -39,12 +39,10 @@
 3. Resolve all LSP diagnostics
 
 ### Phase 2: Unified Authentication System
-1. Create single `useUnifiedAuth.ts` hook
 2. Consolidate all authentication methods
 3. Implement enterprise JWT/OPA standards
 
 ### Phase 3: Streamlined UI Components
-1. Create single `UnifiedAuthenticationModal.tsx`
 2. Support multiple authentication methods
 3. Remove duplicate login pages
 

@@ -236,8 +236,6 @@ rm -f client/src/pages/dev-only.tsx
 bash
 Copy
 Edit
-grep -rl "replit.com/auth/oauth2" . | xargs sed -i '/replit.com\/auth\/oauth2/d'
-grep -rl "UnifiedAuth" . | xargs sed -i '/UnifiedAuth/d'
 🔧 4. Fix Token Pricing API & User Tier Route to Return Safe Defaults
 Edit server/routes.ts or server/routes/token.ts:
 

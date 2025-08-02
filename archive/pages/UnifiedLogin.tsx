@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useLocation } from "wouter";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,7 +14,6 @@ import { loginSchema, registerSchema, masterLoginSchema } from "@shared/schema";
 
 export default function UnifiedLogin() {
   const [, setLocation] = useLocation();
-  const { login, register, masterLogin, isLoading } = useUnifiedAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("login");
 

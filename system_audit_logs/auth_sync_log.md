@@ -138,7 +138,6 @@ SESSION PERSISTENCE:
 ```typescript
 AUTHENTICATION HOOKS STATUS:
 ├── useAuth(): ✅ Primary authentication state
-├── useUnifiedAuth(): ✅ Unified system integration
 ├── useUserTier(): ✅ Tier-based access control
 └── useCompleteAuth(): ✅ Complete authentication flow
 

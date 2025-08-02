@@ -24,7 +24,6 @@ The above error occurred in the <Governance> component:
     at AuthProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/hooks/useAuth.ts:56:32)
     at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5T6ZDHJF.js?v=c333126d:2805:3)
     at CompleteAuthProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/hooks/useCompleteAuth.ts:5:40)
-    at UnifiedAuthProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/hooks/useUnifiedAuth.ts:11:39)
     at App
 
 Consider adding an error boundary to your tree to customize error handling behavior.

@@ -17,6 +17,5 @@ Warning: Cannot update a component (&#x60;ForwardRef&#x60;) while rendering a di
     at MascotProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/mascot/MascotProvider.tsx:31:34)
     at HelpProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/help/HelpProvider.tsx:29:32)
     at OnboardingChecker (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/onboarding/OnboardingChecker.tsx:21:37)
-    at UnifiedAuthProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/hooks/useUnifiedAuth.ts:29:39)
     at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5T6ZDHJF.js?v=6baae5a4:2805:3)
     at App

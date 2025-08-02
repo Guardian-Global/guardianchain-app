@@ -12,8 +12,6 @@
 
 ### 🔴 CRITICAL DUPLICATES (DELETE AFTER MERGE)
 **Authentication Components (15+ duplicates):**
-- `components/EnhancedAuth.tsx` - DUPLICATE (keep UnifiedAuthModal)
-- `components/MasterLogin.tsx` - DUPLICATE (integrated into UnifiedAuthModal)
 - `pages/AdminLogin.tsx` - DUPLICATE (use unified auth)
 - `pages/Login.tsx` - DUPLICATE (use unified auth)
 - `pages/UnifiedLogin.tsx` - DUPLICATE (use unified auth)
@@ -35,10 +33,8 @@
 
 ### 🟢 CORE COMPONENTS (KEEP)
 **Essential Authentication:**
-- `components/auth/UnifiedAuthModal.tsx` - ✅ CORE
 - `components/onboarding/AIAssistedOnboarding.tsx` - ✅ CORE
 - `components/auth/ProtectedRoute.tsx` - ✅ CORE
-- `hooks/useUnifiedAuth.ts` - ✅ CORE
 
 **Essential UI Framework:**
 - `components/ui/*` - ✅ CORE (shadcn/ui components)
@@ -77,7 +73,6 @@
 ```
 /components/
 ├── auth/                    # Single unified auth system
-│   ├── UnifiedAuthModal.tsx
 │   ├── ProtectedRoute.tsx
 │   └── OnboardingChecker.tsx
 ├── dashboard/               # Role-based dashboards
@@ -99,7 +94,6 @@
 ## CLEANUP STRATEGY
 
 ### Phase 1: Authentication Unification
-1. Keep `UnifiedAuthModal.tsx` as single auth entry point
 2. Archive all duplicate auth components
 3. Update all routes to use unified auth
 4. Test all user roles (user/admin/founder/master)

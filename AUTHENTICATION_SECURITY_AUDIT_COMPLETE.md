@@ -28,7 +28,6 @@
 ```bash
 ✓ client/src/pages/UnifiedLogin.tsx - Single login portal created
 ✓ client/src/components/auth/ProtectedRoute.tsx - Enterprise access control
-✓ client/src/hooks/useUnifiedAuth.ts - Consolidated authentication
 ✓ client/src/components/layout/footer.tsx - Removed enterprise links
 ✓ client/src/components/layout/EnhancedMegaNavigation.tsx - Secured navigation
 ✓ server/middleware/enterpriseAuth.ts - JWT/RBAC middleware

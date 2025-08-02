@@ -21,6 +21,5 @@ Warning: Maximum update depth exceeded. This can happen when a component calls s
     at OnboardingChecker (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/onboarding/OnboardingChecker.tsx:21:37)
     at OnboardingProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/onboarding/OnboardingProvider.tsx:42:46)
     at TierProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/context/TierContext.tsx:31:32)
-    at UnifiedAuthProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/hooks/useUnifiedAuth.ts:29:39)
     at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5T6ZDHJF.js?v=50e7c959:2805:3)
     at App

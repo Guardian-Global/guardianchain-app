@@ -272,7 +272,6 @@ Split
 App.tsx
 client/src
 Modified
-UnifiedAuthModal.tsx
 client/src/components/auth
 Modified
 AIAssistedOnboarding.tsx

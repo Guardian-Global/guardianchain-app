@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { AuthModal } from "./AuthModal";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +20,6 @@ import {
 } from "lucide-react";
 
 export function AuthButton() {
-  const { user, isAuthenticated, logout } = useUnifiedAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
 

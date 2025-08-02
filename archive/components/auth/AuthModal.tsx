@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useUnifiedAuth } from "@/hooks/useUnifiedAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +27,6 @@ export function AuthModal({
   onClose,
   initialMode = "login",
 }: AuthModalProps) {
-  const { login, register, error, isLoading } = useUnifiedAuth();
   const [activeTab, setActiveTab] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({
