@@ -1876,8 +1876,136 @@ This report demonstrates our commitment to transparency and accountability to al
 
   // --- LINEAGE TRACKING ENDPOINTS ---
   
-  // Create lineage relationship between capsules
+  // Get lineage for a capsule
+  app.get('/api/lineage/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📈 Lineage requested for capsule:', req.params.capsuleId);
+    
+    try {
+      const { capsuleId } = req.params;
+      
+      // Mock lineage data for now - would connect to database in production
+      const mockLineage = {
+        capsuleId,
+        parents: [
+          {
+            id: 'parent_1',
+            title: 'Founding Memory',
+            griefFlow: 85,
+            influenceScore: 7.5,
+            createdAt: '2024-01-15T00:00:00Z'
+          }
+        ],
+        children: [
+          {
+            id: 'child_1',
+            title: 'Inherited Wisdom',
+            griefFlow: 92,
+            influenceScore: 8.2,
+            createdAt: '2024-06-20T00:00:00Z'
+          }
+        ],
+        totalGriefFlow: 177,
+        lineageDepth: 3,
+        influenceNetwork: 15
+      };
+      
+      console.log('✅ Lineage retrieved:', mockLineage);
+      res.json(mockLineage);
+      
+    } catch (error) {
+      console.error('❌ Failed to get lineage:', error);
+      res.status(500).json({ error: 'Failed to retrieve lineage' });
+    }
+  });
+  
+  // Create lineage connection (compatible with Next.js API format)
   app.post('/api/lineage/create', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔗 Creating lineage connection');
+    
+    try {
+      const { parent_id, child_id, grief_flow, influence_score, triggered_by } = req.body;
+      const userId = triggered_by || req.user.id;
+      
+      if (!parent_id || !child_id) {
+        return res.status(400).json({ error: 'parent_id and child_id are required' });
+      }
+      
+      // Create lineage entry (this would insert into database in production)
+      const lineageEntry = {
+        id: `lineage_${Date.now()}`,
+        parent_id,
+        child_id,
+        triggered_by: userId,
+        timestamp: new Date().toISOString(),
+        grief_flow: grief_flow || 0,
+        influence_score: influence_score || 0
+      };
+      
+      console.log('✅ Lineage created:', lineageEntry);
+      
+      // Update capsules with inherited values
+      const inheritanceUpdate = {
+        child_capsule: {
+          id: child_id,
+          inspired_by: parent_id,
+          grief_inherited: grief_flow,
+          influence_score: influence_score
+        }
+      };
+      
+      res.json({ 
+        success: true, 
+        lineage: lineageEntry,
+        inheritance: inheritanceUpdate
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to create lineage:', error);
+      res.status(500).json({ error: 'Failed to create lineage' });
+    }
+  });
+  
+  // Get grief flow analytics
+  app.get('/api/lineage/analytics/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 Grief flow analytics requested for:', req.params.capsuleId);
+    
+    try {
+      const { capsuleId } = req.params;
+      
+      // Mock analytics data
+      const analytics = {
+        capsuleId,
+        griefFlowMetrics: {
+          totalInherited: 245,
+          totalPassed: 189,
+          netGriefFlow: 56,
+          generationalImpact: 8.7
+        },
+        influenceMetrics: {
+          directInfluence: 12,
+          cascadingInfluence: 34,
+          networkReach: 67,
+          truthResonance: 94.5
+        },
+        lineageStats: {
+          ancestorCount: 7,
+          descendantCount: 23,
+          maxDepth: 5,
+          branchingFactor: 3.2
+        }
+      };
+      
+      console.log('✅ Analytics generated:', analytics);
+      res.json(analytics);
+      
+    } catch (error) {
+      console.error('❌ Failed to generate analytics:', error);
+      res.status(500).json({ error: 'Failed to generate analytics' });
+    }
+  });
+  
+  // Legacy lineage endpoint (keeping for compatibility)
+  app.post('/api/lineage/legacy', isDebugAuthenticated, async (req: any, res) => {
     console.log('🔗 Creating capsule lineage');
     
     try {

@@ -130,9 +130,25 @@ export default function CreateCapsule() {
       });
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setMintedNFT(data);
       queryClient.invalidateQueries({ queryKey: ['/api/capsules/recent'] });
+      
+      // Create lineage connection if this capsule is inspired by another
+      if (formData.title.toLowerCase().includes('inspired') || 
+          formData.content.toLowerCase().includes('building on')) {
+        try {
+          await apiRequest('POST', '/api/lineage/create', {
+            parent_id: 'foundational_truth_1', // Would be determined by AI analysis
+            child_id: data.capsuleId,
+            grief_flow: aiAnalysis?.contentScore || 75,
+            influence_score: aiAnalysis?.recommendedGriefTier * 2 || 4,
+            triggered_by: user.id
+          });
+        } catch (error) {
+          console.log('Lineage connection failed but capsule created successfully');
+        }
+      }
       toast({
         title: "NFT Minted Successfully!",
         description: `Capsule #${data.tokenId} has been created`,
