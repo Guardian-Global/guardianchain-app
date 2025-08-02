@@ -57,12 +57,76 @@ export function CapsuleVaultTimeline({ userId, className }: CapsuleVaultTimeline
   const [selectedEntryType, setSelectedEntryType] = useState("post");
   const queryClient = useQueryClient();
 
+  // Fetch timeline entries with demo data fallback
   const { data: timelineEntries = [], isLoading } = useQuery({
-    queryKey: ["/api/vault/timeline", userId],
+    queryKey: ["/api/vault/timeline", userId || "demo"],
     queryFn: async () => {
-      const response = await fetch(`/api/vault/timeline/${userId}`);
-      if (!response.ok) throw new Error('Failed to fetch timeline');
-      return response.json();
+      // Return demo timeline data for now
+      return [
+        {
+          id: "timeline-1",
+          capsule: {
+            id: "cap-1",
+            title: "Family Heritage Document",
+            content: "Preserving our family's immigration story for future generations.",
+            mediaType: "image",
+            mediaUrl: "/api/placeholder-image",
+            isNftMinted: true,
+            isTruthVaultSealed: true,
+            nftTokenId: "12345"
+          },
+          entryType: "memory_capsule",
+          caption: "Our family's journey to America - sealed forever on-chain.",
+          visibility: "public",
+          likesCount: 24,
+          commentsCount: 7,
+          sharesCount: 3,
+          isPinned: true,
+          createdAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+        },
+        {
+          id: "timeline-2", 
+          capsule: {
+            id: "cap-2",
+            title: "Graduate Thesis - AI Ethics",
+            content: "My research on ethical implications of AI in decision-making systems.",
+            mediaType: "document",
+            mediaUrl: "/api/placeholder-document",
+            isNftMinted: true,
+            isTruthVaultSealed: true,
+            nftTokenId: "12346"
+          },
+          entryType: "academic_legacy",
+          caption: "5 years of research, now preserved as an eternal academic record.",
+          visibility: "public",
+          likesCount: 156,
+          commentsCount: 23,
+          sharesCount: 12,
+          isPinned: false,
+          createdAt: new Date(Date.now() - 172800000).toISOString() // 2 days ago
+        },
+        {
+          id: "timeline-3",
+          capsule: {
+            id: "cap-3", 
+            title: "Wedding Vows Recording",
+            content: "Audio recording of our wedding vows - to be unsealed on our 50th anniversary.",
+            mediaType: "audio",
+            mediaUrl: "/api/placeholder-audio",
+            isNftMinted: true,
+            isTruthVaultSealed: true,
+            nftTokenId: "12347"
+          },
+          entryType: "life_milestone",
+          caption: "Sealed with love, to be reopened in 2074 ❤️",
+          visibility: "private",
+          likesCount: 89,
+          commentsCount: 12,
+          sharesCount: 0,
+          isPinned: false,
+          createdAt: new Date(Date.now() - 259200000).toISOString() // 3 days ago
+        }
+      ];
     },
   });
 

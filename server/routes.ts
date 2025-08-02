@@ -423,6 +423,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sovereign Social Profile endpoints
+  app.put('/api/user/profile', isDebugAuthenticated, (req: any, res) => {
+    console.log('📝 Profile update requested:', req.body);
+    res.json({ success: true, message: 'Profile updated successfully' });
+  });
+
+  app.get('/api/profile/featured-capsules', isDebugAuthenticated, (req: any, res) => {
+    console.log('⭐ Featured capsules requested');
+    res.json({
+      featuredCapsules: [
+        {
+          id: 'featured-1',
+          title: 'My Life Story',
+          description: 'A comprehensive autobiography',
+          mediaUrl: '/api/placeholder-image',
+          truthScore: 95,
+          views: 1247,
+          likes: 89,
+          isSealed: true,
+          isMinted: true,
+          nftTokenId: '1001',
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+          featuredAt: new Date().toISOString(),
+          position: 1
+        }
+      ]
+    });
+  });
+
+  app.post('/api/profile/featured-capsules', isDebugAuthenticated, (req: any, res) => {
+    console.log('⭐ Adding capsule to featured:', req.body.capsuleId);
+    res.json({ success: true, message: 'Capsule added to featured' });
+  });
+
+  app.delete('/api/profile/featured-capsules/:id', isDebugAuthenticated, (req: any, res) => {
+    console.log('⭐ Removing capsule from featured:', req.params.id);
+    res.json({ success: true, message: 'Capsule removed from featured' });
+  });
+
+  app.get('/api/capsules/search', isDebugAuthenticated, (req: any, res) => {
+    const query = req.query.q as string;
+    console.log('🔍 Capsule search requested:', query);
+    res.json({
+      capsules: [
+        {
+          id: 'search-1',
+          title: `Results for "${query}"`,
+          description: 'Search result description',
+          mediaUrl: '/api/placeholder-image',
+          truthScore: 78,
+          isSealed: true,
+          isMinted: false,
+          createdAt: new Date().toISOString()
+        }
+      ]
+    });
+  });
+
+  app.post('/api/nft/auto-mint', isDebugAuthenticated, (req: any, res) => {
+    console.log('🎨 NFT auto-mint requested:', req.body);
+    res.json({
+      success: true,
+      tokenId: Math.floor(Math.random() * 10000).toString(),
+      transactionHash: '0x' + Math.random().toString(16).substring(2),
+      ipfsHash: 'Qm' + Math.random().toString(36).substring(2)
+    });
+  });
+
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
 

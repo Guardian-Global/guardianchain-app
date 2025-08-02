@@ -1,5 +1,5 @@
-import ProfileDashboard from "@/components/profile/ProfileDashboard";
+import SovereignSocialProfile from "@/components/profile/SovereignSocialProfile";
 
 export default function Profile() {
-  return <ProfileDashboard />;
+  return <SovereignSocialProfile />;
 }

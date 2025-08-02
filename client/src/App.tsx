@@ -33,7 +33,7 @@ import OnboardingPage from "@/pages/onboarding";
 import MintNFT from "@/pages/mint-nft";
 import RecommendationsPage from "@/pages/recommendations";
 import EnhancedProfile from "@/pages/enhanced-profile";
-import EnhancedProfileUpgrade from "@/pages/EnhancedProfileUpgrade";
+
 import EnhancedLeaderboard from "@/pages/enhanced-leaderboard";
 import Explorer from "@/pages/explorer";
 import Certify from "@/pages/certify";
@@ -277,8 +277,7 @@ function Router() {
             <Route path="/launch-enhancements" component={lazy(() => import("./pages/launch-enhancements"))} />
             <Route path="/profile-dashboard" component={lazy(() => import("./pages/profile-dashboard"))} />
             <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
-            <Route path="/profile-upgrade" component={lazy(() => import("./pages/ProfileUpgrade"))} />
-            <Route path="/enhanced-profile-upgrade" component={EnhancedProfileUpgrade} />
+
         <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />
