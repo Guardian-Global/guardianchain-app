@@ -1,0 +1,29 @@
+// design-tokens.guardianchain.json — GuardianChain Design Token Schema
+{
+  "$schema": "https://design-tokens.org/schemas/cti.schema.json",
+  "source": "GuardianChain UI System",
+  "tokens": {
+    "color": {
+      "primary": { "value": "#3b82f6" },
+      "secondary": { "value": "#0f172a" },
+      "accent": { "value": "#22c55e" },
+      "surface": { "value": "#1e293b" },
+      "danger": { "value": "#ef4444" },
+      "warning": { "value": "#f97316" },
+      "highlight": { "value": "#e0f2fe" },
+      "textLight": { "value": "#f1f5f9" },
+      "textDark": { "value": "#1e293b" }
+    },
+    "radius": {
+      "capsule": { "value": "2rem" },
+      "vault": { "value": "1.5rem" }
+    },
+    "shadow": {
+      "card": { "value": "0 10px 40px rgba(0, 0, 0, 0.15)" }
+    },
+    "font": {
+      "brand": { "value": "Space Grotesk" },
+      "sans": { "value": "Inter" }
+    }
+  }
+}

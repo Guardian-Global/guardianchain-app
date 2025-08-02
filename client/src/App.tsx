@@ -75,6 +75,9 @@ import ReportingDashboard from "./pages/reporting";
 import AssetIntegrationPage from "./pages/asset-integration";
 import AssetShowcase from "./pages/asset-showcase";
 
+// Design System
+import DesignTokenShowcase from "./components/design/DesignTokenShowcase";
+
 // Trading & Institutional Features
 const WhaleTracker = lazy(() => import("@/pages/whale-tracker"));
 const TradingBots = lazy(() => import("@/pages/trading-bots"));
@@ -403,6 +406,8 @@ function Router() {
         {/* Duplicate dashboard route removed */}
 
         <Route path="/asset-integration" component={AssetIntegrationPage} />
+        <Route path="/design-tokens" component={DesignTokenShowcase} />
+        <Route path="/mint-example" component={lazy(() => import("./pages/MintExample"))} />
         <Route path="/protocol-strategy" component={ProtocolStrategy} />
         <Route path="/enterprise-suite" component={EnterpriseSuite} />
         <Route path="/premium-features" component={PremiumFeaturesPage} />

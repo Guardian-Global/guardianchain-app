@@ -10,27 +10,30 @@ export default {
         brand: ["Space Grotesk", "Inter", "sans-serif"]
       },
       boxShadow: {
-        card: "0 8px 30px rgba(0, 0, 0, 0.12)"
+        card: "var(--shadow-card)",
+        brand: "var(--shadow-brand)",
+        "brand-lg": "var(--shadow-brand-lg)"
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
         xl: "1.25rem",
-        capsule: "2rem"
+        capsule: "var(--radius-capsule)",
+        vault: "var(--radius-vault)"
       },
       colors: {
-        // GuardianChain Brand Colors
+        // GuardianChain Design Token Colors
         brand: {
-          primary: "#3b82f6",     // Guardian Blue — trust + tech
-          secondary: "#0f172a",   // Vault Black — memory permanence
-          accent: "#22c55e",      // Veritas Green — proof and yield
-          surface: "#1e293b",     // Capsule card dark
-          warning: "#f97316",     // Signal Orange — moderation warning
-          danger: "#ef4444",      // Censorship red
-          highlight: "#e0f2fe",   // Truth light
-          textLight: "#f1f5f9",   // Readable on dark
-          textDark: "#1e293b"     // Clean on white
+          primary: "var(--brand-primary)",
+          secondary: "var(--brand-secondary)",
+          accent: "var(--brand-accent)",
+          surface: "var(--brand-surface)",
+          warning: "var(--brand-warning)",
+          danger: "var(--brand-danger)",
+          highlight: "var(--brand-highlight)",
+          light: "var(--brand-light)",
+          dark: "var(--brand-dark)"
         },
         background: "var(--background)",
         foreground: "var(--foreground)",
