@@ -3,6 +3,7 @@ import EliteTopbar from './EliteTopbar';
 import EliteSidebar from './EliteSidebar';
 import CommandPalette from '@/components/ui/CommandPalette';
 import { Toaster } from '@/components/ui/toaster';
+import '@/styles/animations.css';
 
 interface EliteLayoutProps {
   children: React.ReactNode;
@@ -76,30 +77,7 @@ export default function EliteLayout({ children }: EliteLayoutProps) {
       />
       <Toaster />
 
-      {/* Global Styles */}
-      <style jsx global>{`
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-          background: rgba(15, 23, 42, 0.1);
-        }
-        ::-webkit-scrollbar-thumb {
-          background: rgba(100, 116, 139, 0.3);
-          border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(100, 116, 139, 0.5);
-        }
-      `}</style>
+
     </div>
   );
 }

@@ -41,7 +41,18 @@ function LivePlatformStats() {
   const { data: stats } = useQuery({
     queryKey: ["/api/platform/live-stats"],
     refetchInterval: 30000, // Refresh every 30 seconds
-    queryFn: () => fetch("/api/platform/live-stats").then(res => res.json()),
+    queryFn: async () => {
+      try {
+        const response = await fetch("/api/platform/live-stats");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.warn("Platform stats fetch failed:", error);
+        return null;
+      }
+    },
     retry: false
   });
 

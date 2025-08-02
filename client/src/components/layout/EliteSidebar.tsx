@@ -72,10 +72,10 @@ export default function EliteSidebar({ isOpen, onClose }: EliteSidebarProps) {
           
           return (
             <Link key={item.href} href={item.href}>
-              <a
+              <div
                 onClick={() => onClose()}
                 className={cn(
-                  "group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200",
+                  "group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer",
                   isActive
                     ? "bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-r-2 border-blue-500"
                     : "text-slate-300 hover:text-white hover:bg-white/5"
@@ -101,7 +101,7 @@ export default function EliteSidebar({ isOpen, onClose }: EliteSidebarProps) {
                     <Star className="w-3 h-3 text-yellow-400" />
                   </div>
                 )}
-              </a>
+              </div>
             </Link>
           );
         })}
