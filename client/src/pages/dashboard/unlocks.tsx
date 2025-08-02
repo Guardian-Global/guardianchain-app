@@ -4,7 +4,30 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { unparse } from "papaparse";
-import { Download, Filter, FileText, FileJson } from "lucide-react";
+import { Download, Filter, FileText, FileJson, TrendingUp, BarChart3 } from "lucide-react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default function UnlocksDashboard() {
   const [unlocks, setUnlocks] = useState([]);
@@ -12,13 +35,45 @@ export default function UnlocksDashboard() {
   const [loading, setLoading] = useState(true);
   const [auctionId, setAuctionId] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
+  const [totalUnlocks, setTotalUnlocks] = useState(0);
+  const [dailyTrends, setDailyTrends] = useState([]);
+  const [auctionStats, setAuctionStats] = useState([]);
+  const [showAnalytics, setShowAnalytics] = useState(true);
 
   useEffect(() => {
     fetch("/api/unlocks")
       .then((res) => res.json())
       .then((data) => {
-        setUnlocks(data);
-        setFiltered(data);
+        if (Array.isArray(data)) {
+          setUnlocks(data);
+          setFiltered(data);
+          setTotalUnlocks(data.length);
+          
+          // Calculate daily trends
+          const trends = data.reduce((acc, unlock) => {
+            const date = format(new Date(unlock.unlocked_at), 'yyyy-MM-dd');
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+          }, {});
+          
+          const sortedTrends = Object.entries(trends)
+            .map(([date, count]) => ({ date, count }))
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+          setDailyTrends(sortedTrends);
+          
+          // Calculate auction stats
+          const auctionCounts = data.reduce((acc, unlock) => {
+            const auctionTitle = unlock.auction_title || 'Unknown Auction';
+            acc[auctionTitle] = (acc[auctionTitle] || 0) + 1;
+            return acc;
+          }, {});
+          
+          const sortedAuctionStats = Object.entries(auctionCounts)
+            .map(([auction, count]) => ({ auction, count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 10); // Top 10 auctions
+          setAuctionStats(sortedAuctionStats);
+        }
         setLoading(false);
       })
       .catch((error) => {
@@ -95,9 +150,32 @@ export default function UnlocksDashboard() {
             <p className="text-slate-400">
               Monitor and analyze auction unlock events with advanced filtering and export capabilities
             </p>
+            <div className="flex items-center gap-6 mt-4">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-400">{totalUnlocks}</p>
+                <p className="text-sm text-slate-400">Total Unlocks</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-blue-400">{dailyTrends.length}</p>
+                <p className="text-sm text-slate-400">Active Days</p>
+              </div>
+              <div className="text-center">
+                <p className="text-2xl font-bold text-purple-400">{auctionStats.length}</p>
+                <p className="text-sm text-slate-400">Unique Auctions</p>
+              </div>
+            </div>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              variant="outline"
+              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              size="sm"
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              {showAnalytics ? 'Hide' : 'Show'} Analytics
+            </Button>
             <Button
               onClick={handleExportCSV}
               disabled={filtered.length === 0}
@@ -118,6 +196,101 @@ export default function UnlocksDashboard() {
             </Button>
           </div>
         </div>
+
+        {/* Analytics Section */}
+        {showAnalytics && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* Daily Trends Chart */}
+            <Card className="bg-slate-800 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="w-5 h-5 text-blue-400" />
+                <h3 className="text-lg font-semibold">Daily Unlock Trends</h3>
+              </div>
+              {dailyTrends.length > 0 ? (
+                <Line
+                  data={{
+                    labels: dailyTrends.map(t => format(new Date(t.date), 'MMM dd')),
+                    datasets: [{
+                      label: 'Unlocks per day',
+                      data: dailyTrends.map(t => t.count),
+                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                      borderColor: 'rgba(59, 130, 246, 1)',
+                      borderWidth: 2,
+                      fill: true,
+                      tension: 0.4,
+                    }],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        labels: { color: '#e2e8f0' }
+                      }
+                    },
+                    scales: {
+                      x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#475569' }
+                      },
+                      y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#475569' }
+                      }
+                    }
+                  }}
+                  height={200}
+                />
+              ) : (
+                <p className="text-slate-400 text-center py-8">No trend data available</p>
+              )}
+            </Card>
+
+            {/* Top Auctions Chart */}
+            <Card className="bg-slate-800 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="w-5 h-5 text-purple-400" />
+                <h3 className="text-lg font-semibold">Top Auctions by Unlocks</h3>
+              </div>
+              {auctionStats.length > 0 ? (
+                <Bar
+                  data={{
+                    labels: auctionStats.map(s => s.auction.length > 20 ? s.auction.substring(0, 20) + '...' : s.auction),
+                    datasets: [{
+                      label: 'Unlock count',
+                      data: auctionStats.map(s => s.count),
+                      backgroundColor: 'rgba(168, 85, 247, 0.6)',
+                      borderColor: 'rgba(168, 85, 247, 1)',
+                      borderWidth: 1,
+                    }],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        labels: { color: '#e2e8f0' }
+                      }
+                    },
+                    scales: {
+                      x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#475569' }
+                      },
+                      y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#475569' }
+                      }
+                    }
+                  }}
+                  height={200}
+                />
+              ) : (
+                <p className="text-slate-400 text-center py-8">No auction data available</p>
+              )}
+            </Card>
+          </div>
+        )}
 
         {/* Advanced Filtering */}
         <Card className="bg-slate-800 p-6 mb-6">
