@@ -21,10 +21,10 @@ import { LiveTokenTracker } from "@/components/live/LiveTokenTracker";
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
 import { GuardianBootHook } from "@/components/GuardianBootHook";
-import UltimateHomepage from "@/pages/UltimateHomepage";
+// UltimateHomepage consolidated into EliteHomepage - archived
 import EliteHomepage from "@/pages/EliteHomepage";
 import Partners from "@/pages/Partners";
-import MobileHome from "@/pages/MobileHome";
+// MobileHome consolidated into responsive EliteHomepage - archived
 import CreateCapsule from "@/pages/CreateCapsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
@@ -234,7 +234,7 @@ function Router() {
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={UltimateHomepage} />
+        <Route path="/" component={EliteHomepage} />
         <Route
           path="/test-auth"
           component={lazy(() => import("./pages/TestAuth"))}
@@ -242,7 +242,7 @@ function Router() {
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
-        <Route component={UltimateHomepage} />
+        <Route component={EliteHomepage} />
       </Switch>
     );
   }
@@ -674,7 +674,7 @@ function Router() {
             <Route path="/minting-test" component={MintingTestPage} />
             {/* LogoTestPage moved to archive */}
 
-            <Route path="/professional-homepage" component={UltimateHomepage} />
+            <Route path="/professional-homepage" component={EliteHomepage} />
             <Route
               path="/supabase-assets"
               component={lazy(() => import("./pages/asset-showcase"))}

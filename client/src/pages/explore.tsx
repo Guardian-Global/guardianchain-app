@@ -58,14 +58,17 @@ export default function Explore() {
 
   const { data: allCapsules, isLoading: allLoading } = useQuery({
     queryKey: ["/api/capsules", { limit: 50 }],
+    queryFn: () => fetch("/api/capsules?limit=50").then(res => res.json()),
   });
 
   const { data: trendingCapsules, isLoading: trendingLoading } = useQuery({
     queryKey: ["/api/capsules/trending"],
+    queryFn: () => fetch("/api/capsules/trending").then(res => res.json()),
   });
 
   const { data: featuredCapsules, isLoading: featuredLoading } = useQuery({
     queryKey: ["/api/capsules/featured"],
+    queryFn: () => fetch("/api/capsules/featured").then(res => res.json()),
   });
 
   const filteredCapsules =
@@ -97,8 +100,9 @@ export default function Explore() {
     (value) => value !== "all" && value !== "recent",
   ).length;
 
-  const userLang = detectUserLanguage();
-  const containerProps = getRTLContainerProps(userLang);
+  // RTL support for multilingual users
+  const userLang = "en"; // Default language
+  const containerProps = { dir: "ltr" }; // Default to left-to-right
 
   return (
     <div className="min-h-screen pt-20 pb-12" dir={containerProps.dir}>

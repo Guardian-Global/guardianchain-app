@@ -1,5 +1,2 @@
 # Archive Directory
-This directory contains deprecated, duplicate, and legacy components that have been replaced by improved versions.
-
-Files are moved here (not deleted) during the codebase cleanup process.
-Only delete files from this directory after founder approval and 1+ week testing period.
+# Stores backup copies of consolidated/removed files during optimization

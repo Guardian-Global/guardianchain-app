@@ -108,10 +108,11 @@ export default function CapsuleCard({
     }
   };
 
-  const timeAgo = (date: Date) => {
+  const timeAgo = (date: Date | string) => {
     const now = new Date();
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
     const diffInMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60),
+      (now.getTime() - dateObj.getTime()) / (1000 * 60),
     );
 
     if (diffInMinutes < 60) {
