@@ -32,6 +32,7 @@ import {
   Network,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import GlowButton from '@/components/ui/GlowButton';
 import CardGlass from '@/components/ui/CardGlass';
@@ -406,7 +407,73 @@ export default function EliteHomepage() {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <HelmetProvider>
+      <Helmet>
+        <title>GuardianChain | Sovereign Truth Infrastructure | Truth Vault Capsule dApp</title>
+        <meta
+          name="description"
+          content="GuardianChain is the sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization. Mint Veritas Capsules, earn $GTT yield, and submit legacy or truth capsules with institutional-grade security."
+        />
+        <meta name="keywords" content="Web3, Blockchain, Truth, Verification, NFT, GTT Token, Capsules, Polygon, DeFi" />
+        <meta property="og:title" content="GuardianChain | Sovereign Truth Infrastructure" />
+        <meta
+          property="og:description"
+          content="The sovereign Web3 infrastructure for quantum-secured truth preservation, time-locked proof, and capsule monetization."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://guardianchain.app" />
+        <meta property="og:image" content="https://guardianchain.app/assets/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GuardianChain | Sovereign Truth Infrastructure" />
+        <meta
+          name="twitter:description"
+          content="The sovereign Web3 infrastructure for quantum-secured truth preservation, time-locked proof, and capsule monetization."
+        />
+        <meta name="twitter:image" content="https://guardianchain.app/assets/twitter-image.png" />
+      </Helmet>
+      
+      {/* Main wrapper with proper TailwindCSS container and styling */}
+      <div className="min-h-screen w-full overflow-x-hidden">
+        
+        {/* Top-level layout container with gradient background and quantum effects */}
+        <div className="relative min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white">
+          
+          {/* Quantum Background Grid with Enhanced Animation */}
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,255,0.3)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.3)_1px,transparent_1px)] bg-[size:50px_50px] animate-cyber-grid"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(138,43,226,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(138,43,226,0.2)_1px,transparent_1px)] bg-[size:100px_100px] animate-cyber-grid animation-delay-500"></div>
+          </div>
+
+          {/* Floating Quantum Particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-cyan-400/60 rounded-full animate-particle-float animate-epic-glow"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 8}s`,
+                  animationDuration: `${8 + Math.random() * 4}s`
+                }}
+              />
+            ))}
+            {[...Array(10)].map((_, i) => (
+              <div
+                key={`purple-${i}`}
+                className="absolute w-1.5 h-1.5 bg-purple-400/50 rounded-full animate-particle-float animate-rainbow-glow"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 10}s`,
+                  animationDuration: `${10 + Math.random() * 6}s`
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Content wrapper with proper padding and layout */}
+          <div className="relative z-10 min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section with Full UI/UX Graphics */}
       <HeroSection />
 
@@ -558,6 +625,10 @@ export default function EliteHomepage() {
           </div>
         </div>
       </section>
-    </div>
+        </div>
+          
+        </div>
+      </div>
+    </HelmetProvider>
   );
 }
