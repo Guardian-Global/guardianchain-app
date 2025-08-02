@@ -1709,6 +1709,171 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // --- AI SERVICES ENDPOINTS ---
+  
+  // AI Image Generation
+  app.post('/api/ai/generate-image', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🎨 AI image generation requested');
+    
+    try {
+      const { prompt, style } = req.body;
+      
+      if (!prompt) {
+        return res.status(400).json({ error: 'Prompt is required' });
+      }
+      
+      // Mock AI image generation for now
+      const mockImageUrl = `/assets/generated/capsule_${Date.now()}.png`;
+      
+      console.log('✅ AI image generated:', mockImageUrl);
+      res.json({ 
+        imageUrl: mockImageUrl,
+        prompt: prompt,
+        style: style || 'default'
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to generate AI image:', error);
+      res.status(500).json({ error: 'Failed to generate image' });
+    }
+  });
+  
+  // AI Content Analysis
+  app.post('/api/ai/analyze-content', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🧠 AI content analysis requested');
+    
+    try {
+      const { title, content, capsuleType } = req.body;
+      
+      if (!title || !content) {
+        return res.status(400).json({ error: 'Title and content are required' });
+      }
+      
+      // Mock AI analysis based on content
+      const wordCount = content.split(' ').length;
+      const emotionalWords = ['love', 'loss', 'pain', 'joy', 'fear', 'hope', 'dream'];
+      const emotionalScore = emotionalWords.filter(word => 
+        content.toLowerCase().includes(word)
+      ).length;
+      
+      const mockAnalysis = {
+        emotionalIntensity: emotionalScore > 2 ? 'High' : emotionalScore > 0 ? 'Medium' : 'Low',
+        truthConfidence: Math.min(95, 65 + (wordCount / 10)),
+        recommendedGriefTier: Math.min(5, Math.max(1, Math.floor(emotionalScore / 2) + 2)),
+        suggestedTags: [
+          capsuleType.replace('_', ' '),
+          emotionalScore > 1 ? 'emotional' : 'factual',
+          wordCount > 100 ? 'detailed' : 'concise',
+          'truth',
+          'memory'
+        ],
+        summary: `This ${capsuleType.replace('_', ' ')} capsule contains ${wordCount} words with ${emotionalScore > 0 ? 'emotional depth' : 'factual content'}. The content appears authentic and suitable for long-term preservation.`,
+        contentScore: Math.min(100, 60 + emotionalScore * 5 + Math.min(20, wordCount / 5))
+      };
+      
+      console.log('✅ AI analysis completed:', mockAnalysis);
+      res.json(mockAnalysis);
+      
+    } catch (error) {
+      console.error('❌ Failed to analyze content:', error);
+      res.status(500).json({ error: 'Failed to analyze content' });
+    }
+  });
+  
+  // Yield Estimation
+  app.post('/api/capsules/estimate-yield', isDebugAuthenticated, async (req: any, res) => {
+    console.log('💰 Yield estimation requested');
+    
+    try {
+      const { griefTier, timelock, capsuleType } = req.body;
+      
+      if (!griefTier || !timelock) {
+        return res.status(400).json({ error: 'Grief tier and timelock are required' });
+      }
+      
+      // Calculate mock yield based on grief tier and timelock
+      const baseYield = griefTier * 10; // Base yield per grief tier
+      const timeBonus = Math.floor(timelock / 30) * 2; // Bonus for longer locks
+      const typeMultiplier = capsuleType === 'confession' ? 1.5 : 
+                            capsuleType === 'prophecy' ? 1.3 : 1.0;
+      
+      const totalYield = Math.floor((baseYield + timeBonus) * typeMultiplier);
+      const apy = ((totalYield / 100) / (timelock / 365)) * 100;
+      
+      const mockEstimate = {
+        estimatedYield: totalYield,
+        apy: Math.round(apy * 10) / 10,
+        baseYield,
+        timeBonus,
+        typeMultiplier,
+        lockPeriodYears: Math.round((timelock / 365) * 10) / 10,
+        breakdown: {
+          griefBonus: baseYield,
+          timeBonus: timeBonus,
+          typeBonus: Math.floor(totalYield - baseYield - timeBonus)
+        }
+      };
+      
+      console.log('✅ Yield estimated:', mockEstimate);
+      res.json(mockEstimate);
+      
+    } catch (error) {
+      console.error('❌ Failed to estimate yield:', error);
+      res.status(500).json({ error: 'Failed to estimate yield' });
+    }
+  });
+  
+  // NFT Minting
+  app.post('/api/capsules/mint-nft', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🪙 NFT minting requested');
+    
+    try {
+      const { title, content, capsuleType, timelock, imageUrl, aiAnalysis } = req.body;
+      const userId = req.user.id;
+      
+      if (!title || !content) {
+        return res.status(400).json({ error: 'Title and content are required' });
+      }
+      
+      // Mock NFT minting
+      const tokenId = Math.floor(Math.random() * 9000) + 1000;
+      const contractAddress = '0x742d35Cc6634C0532925a3b8D9C07BEC676c4A1a'; // Mock contract
+      
+      // Create capsule in storage (mock for now)
+      const capsuleId = `cap_${Date.now()}`;
+      const mockCapsule = {
+        id: capsuleId,
+        title,
+        content,
+        capsuleType,
+        timelock,
+        authorId: userId,
+        status: 'minted',
+        tokenId: tokenId.toString(),
+        contractAddress,
+        imageUrl,
+        aiAnalysis,
+        griefTier: aiAnalysis?.recommendedGriefTier || 1,
+        createdAt: new Date().toISOString(),
+        mintedAt: new Date().toISOString()
+      };
+      
+      console.log('✅ NFT minted successfully:', mockCapsule);
+      res.json({
+        success: true,
+        tokenId,
+        contractAddress,
+        capsuleId,
+        transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`,
+        capsule: mockCapsule
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to mint NFT:', error);
+      res.status(500).json({ error: 'Failed to mint NFT' });
+    }
+  });
+
   // --- LINEAGE TRACKING ENDPOINTS ---
   
   // Create lineage relationship between capsules

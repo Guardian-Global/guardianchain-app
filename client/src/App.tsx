@@ -14,8 +14,7 @@ import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
 import MobileHome from "@/pages/MobileHome";
-import CreateCapsule from "@/pages/create-capsule";
-import CreateCapsuleNew from "@/pages/CreateCapsule";
+import CreateCapsule from "@/pages/CreateCapsule";
 import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
 import Profile from "@/pages/profile";
@@ -182,7 +181,6 @@ import TruthVaultDashboard from "./pages/truth-vault-dashboard";
 import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
-import CreateCapsuleEnhanced from "./pages/CreateCapsule";
 import YieldDashboard from "./pages/dashboard/Yield";
 import ReferralDashboard from "./pages/Referral";
 import VaultExplorer from "./pages/Vault";
@@ -253,14 +251,13 @@ function Router() {
             <Route path="/governance" component={lazy(() => import("./pages/dao"))} />
             <Route path="/capsules/gallery" component={lazy(() => import("./pages/capsules/gallery"))} />
             <Route path="/capsule-view/:id" component={lazy(() => import("./pages/capsule-view"))} />
-            <Route path="/create-capsule" component={lazy(() => import("./pages/create-capsule"))} />
+            <Route path="/create-capsule" component={CreateCapsule} />
             <Route path="/gtt-yield" component={lazy(() => import("./pages/gtt-yield"))} />
             <Route path="/validator" component={lazy(() => import("./pages/validator"))} />
             <Route path="/validator-dashboard" component={lazy(() => import("./pages/validator"))} />
             <Route path="/jury" component={lazy(() => import("./pages/jury"))} />
             <Route path="/explorer" component={lazy(() => import("./pages/explorer"))} />
             <Route path="/capsule-explorer" component={lazy(() => import("./pages/explorer"))} />
-            <Route path="/create-capsule" component={lazy(() => import("./pages/create-capsule"))} />
             <Route path="/storage-capsules" component={lazy(() => import("./pages/storage-capsules"))} />
             <Route path="/upload-capsule" component={lazy(() => import("./pages/upload-capsule"))} />
             <Route path="/system-validation" component={lazy(() => import("./pages/system-validation"))} />
@@ -273,9 +270,8 @@ function Router() {
         <Route path="/gtt-demo" component={GTTDemo} />
 
         <Route path="/create" component={CreateCapsule} />
-        <Route path="/create-capsule" component={CreateCapsule} />
         <Route path="/create-with-help" component={CreateCapsule} />
-        <Route path="/create-truth-capsule" component={CreateCapsuleEnhanced} />
+        <Route path="/create-truth-capsule" component={CreateCapsule} />
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />
