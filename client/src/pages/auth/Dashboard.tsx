@@ -20,7 +20,8 @@ import {
   User,
   Crown,
   Star,
-  Zap
+  Zap,
+  Brain
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -288,6 +289,12 @@ export default function Dashboard() {
                     <Link href="/earn">
                       <Coins className="h-6 w-6" />
                       Earn GTT
+                    </Link>
+                  </Button>
+                  <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                    <Link href="/memory-features">
+                      <Brain className="h-6 w-6" />
+                      Memory Features
                     </Link>
                   </Button>
                 </div>
