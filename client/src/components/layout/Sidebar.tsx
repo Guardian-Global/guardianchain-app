@@ -1,6 +1,8 @@
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ROUTES, getRoutesForRole } from "@/lib/routes";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -10,174 +12,169 @@ import {
   Settings,
   Shield,
   Crown,
-  Zap
+  Zap,
+  BarChart3,
+  Brain,
+  Clipboard,
+  Code,
+  Globe,
+  Gift,
+  Image,
+  Calendar,
+  Award
 } from "lucide-react";
 
-interface Route {
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  roles: string[];
-  badge?: string;
-}
-
-const routes: Route[] = [
-  { 
-    name: "🧭 Dashboard", 
-    href: "/", 
-    icon: LayoutDashboard,
-    roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
-  },
-  { 
-    name: "📦 Capsules", 
-    href: "/vault", 
-    icon: FileText,
-    roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
-  },
-  { 
-    name: "🔁 Replay Capsule", 
-    href: "/replay", 
-    icon: Play,
-    roles: ["guest", "member", "moderator", "admin", "dao-owner"] 
-  },
-  { 
-    name: "🧬 Mint NFT", 
-    href: "/mint", 
-    icon: Zap,
-    roles: ["member", "moderator", "admin", "dao-owner"] 
-  },
-  { 
-    name: "📈 Analytics", 
-    href: "/analytics", 
-    icon: TrendingUp,
-    roles: ["admin", "dao-owner"],
-    badge: "ADMIN" 
-  },
-  { 
-    name: "🚨 Moderation", 
-    href: "/moderation", 
-    icon: Shield,
-    roles: ["moderator", "admin", "dao-owner"],
-    badge: "MOD+" 
-  },
-  { 
-    name: "🧪 AI Insights", 
-    href: "/insights", 
-    icon: Settings,
-    roles: ["admin", "member"] 
-  },
-  { 
-    name: "🎁 Earn GTT", 
-    href: "/earn", 
-    icon: Crown,
-    roles: ["member", "guest"] 
-  },
-  { 
-    name: "🏛 DAO Governance", 
-    href: "/dao", 
-    icon: Crown,
-    roles: ["dao-owner"],
-    badge: "DAO" 
-  },
-  { 
-    name: "🛡️ Admin Panel", 
-    href: "/admin", 
-    icon: Settings,
-    roles: ["admin", "dao-owner"],
-    badge: "ADMIN" 
-  }
-];
-
-const tierHierarchy = {
-  'guest': 0,
-  'member': 1,
-  'moderator': 2,
-  'admin': 3,
-  'dao-owner': 4
+// Icon mapping for routes
+const getIconForRoute = (path: string): React.ComponentType<{ className?: string }> => {
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    "/": LayoutDashboard,
+    "/vault": FileText,
+    "/replay": Play,
+    "/mint": Zap,
+    "/dao": Crown,
+    "/admin": Shield,
+    "/analytics": BarChart3,
+    "/moderation": Clipboard,
+    "/yield": TrendingUp,
+    "/insights": Brain,
+    "/metadata": Clipboard,
+    "/sdk": Code,
+    "/settings/language": Globe,
+    "/settings/account": Settings,
+    "/earn": Gift,
+    "/media": Image,
+    "/timeline": Calendar,
+    "/veritas": Award
+  };
+  return iconMap[path] || FileText;
 };
 
-interface SidebarProps {
-  userTier?: string;
-}
+// Badge mapping for special routes
+const getBadgeForRoute = (path: string): string | undefined => {
+  const badgeMap: Record<string, string> = {
+    "/admin": "ADMIN",
+    "/dao": "DAO",
+    "/moderation": "MOD",
+    "/analytics": "ADMIN",
+    "/yield": "ADMIN",
+    "/veritas": "LEGAL"
+  };
+  return badgeMap[path];
+};
 
-const Sidebar = ({ userTier }: SidebarProps) => {
+const getUserTier = (user: any): string => {
+  if (!user) return 'guest';
+  return user.tier?.toLowerCase() || 'guest';
+};
+
+export default function Sidebar() {
   const { user } = useAuth();
+  const userTier = getUserTier(user);
   
-  // Determine user tier from auth or props
-  const currentTier = userTier || (user as any)?.tier?.toLowerCase() || 'guest';
-  const currentTierLevel = tierHierarchy[currentTier as keyof typeof tierHierarchy] ?? 0;
+  // Get accessible routes using the new routing system
+  const accessibleRoutes = getRoutesForRole(userTier);
 
-  // Filter routes based on user permissions
-  const availableRoutes = routes.filter(route => {
-    return route.roles.some(role => {
-      const roleLevel = tierHierarchy[role as keyof typeof tierHierarchy] ?? 0;
-      return currentTierLevel >= roleLevel;
-    });
-  });
+  // Group routes by category for better organization
+  const coreRoutes = accessibleRoutes.filter(route => 
+    ["/", "/vault", "/replay", "/mint"].includes(route.path)
+  );
+  
+  const adminRoutes = accessibleRoutes.filter(route => 
+    ["/admin", "/analytics", "/moderation", "/yield"].includes(route.path)
+  );
+  
+  const toolRoutes = accessibleRoutes.filter(route => 
+    ["/insights", "/metadata", "/sdk", "/veritas"].includes(route.path)
+  );
+  
+  const userRoutes = accessibleRoutes.filter(route => 
+    ["/earn", "/media", "/timeline", "/settings/account", "/settings/language"].includes(route.path)
+  );
+  
+  const governanceRoutes = accessibleRoutes.filter(route => 
+    ["/dao"].includes(route.path)
+  );
 
-  return (
-    <aside className="w-64 bg-slate-800/50 border-r border-slate-700 hidden md:block min-h-screen">
-      <div className="p-6">
-        <div className="flex items-center gap-2 mb-8">
-          <Shield className="h-8 w-8 text-blue-400" />
-          <div>
-            <h1 className="font-bold text-xl tracking-tight text-white">GuardianChain</h1>
-            <p className="text-xs text-slate-400">Truth Vault Platform</p>
-          </div>
-        </div>
-        
-        {/* User info */}
-        <div className="mb-6 p-3 bg-slate-700/50 rounded-lg">
-          <div className="text-sm font-medium text-white">
-            {(user as any)?.firstName || 'Debug'} {(user as any)?.lastName || 'User'}
-          </div>
-          <div className="text-xs text-slate-400">
-            {(user as any)?.email || 'debug@guardianchain.app'}
-          </div>
-          <Badge variant="outline" className="mt-2 text-xs">
-            {currentTier.toUpperCase()}
-          </Badge>
-        </div>
-
-        {/* Navigation */}
-        <nav className="space-y-1">
-          {availableRoutes.map((route) => {
-            const Icon = route.icon;
+  const renderRouteGroup = (routes: typeof accessibleRoutes, title: string) => {
+    if (routes.length === 0) return null;
+    
+    return (
+      <div className="mb-6">
+        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">
+          {title}
+        </h3>
+        <ul className="space-y-1">
+          {routes.map((route) => {
+            const Icon = getIconForRoute(route.path);
+            const badge = getBadgeForRoute(route.path);
+            
             return (
-              <Link key={route.name} href={route.href}>
-                <div className="flex items-center gap-3 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors group cursor-pointer">
-                  <Icon className="h-5 w-5 text-slate-400 group-hover:text-blue-400" />
-                  <span className="font-medium">{route.name}</span>
-                  {route.badge && (
-                    <Badge variant="secondary" className="ml-auto text-xs">
-                      {route.badge}
-                    </Badge>
-                  )}
-                </div>
-              </Link>
+              <li key={route.path}>
+                <Link href={route.path}>
+                  <a className="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
+                    <Icon className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-medium truncate">{route.label}</span>
+                      <p className="text-xs text-gray-500 truncate mt-0.5">
+                        {route.description}
+                      </p>
+                    </div>
+                    {badge && (
+                      <Badge variant="secondary" className="text-xs">
+                        {badge}
+                      </Badge>
+                    )}
+                  </a>
+                </Link>
+              </li>
             );
           })}
-        </nav>
+        </ul>
+      </div>
+    );
+  };
 
-        {/* Tier upgrade prompt for lower tiers */}
-        {currentTierLevel < 2 && (
-          <div className="mt-8 p-4 bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg border border-purple-500/20">
-            <h3 className="text-sm font-semibold text-purple-200 mb-2">
-              Unlock More Features
-            </h3>
-            <p className="text-xs text-slate-400 mb-3">
-              Upgrade your tier to access advanced tools and higher yields
-            </p>
-            <Link href="/tier-access">
-              <div className="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md transition-colors cursor-pointer inline-block">
-                View Tiers
-              </div>
-            </Link>
+  return (
+    <div className="w-80 bg-white border-r border-gray-200 h-full flex flex-col">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-100">
+        <h1 className="text-xl font-bold text-gray-900">GuardianChain</h1>
+        <p className="text-sm text-gray-500 mt-1">Truth Vault Platform</p>
+        {user && (
+          <div className="mt-4 flex items-center gap-3">
+            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">
+                {user.firstName?.[0]?.toUpperCase() || 'U'}
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user.firstName} {user.lastName}
+              </p>
+              <p className="text-xs text-gray-500 truncate capitalize">
+                {userTier} Tier
+              </p>
+            </div>
           </div>
         )}
       </div>
-    </aside>
+      
+      {/* Navigation */}
+      <ScrollArea className="flex-1 px-4 py-4">
+        {renderRouteGroup(coreRoutes, "Core Features")}
+        {renderRouteGroup(governanceRoutes, "Governance")}
+        {renderRouteGroup(adminRoutes, "Administration")}
+        {renderRouteGroup(toolRoutes, "Developer Tools")}
+        {renderRouteGroup(userRoutes, "User Features")}
+      </ScrollArea>
+      
+      {/* Footer */}
+      <div className="p-4 border-t border-gray-100">
+        <div className="text-xs text-gray-500 text-center">
+          <p>GuardianChain v2.0</p>
+          <p className="mt-1">Sovereign Memory Infrastructure</p>
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default Sidebar;
+}
