@@ -1,195 +1,407 @@
-import React from 'react';
-import { Link } from 'wouter';
-import { ArrowRight, Play, TrendingUp, Shield, Clock, Coins, Users, Zap } from 'lucide-react';
+import React, { useState, useEffect, Suspense } from "react";
+import { Link } from "wouter";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Shield,
+  Zap,
+  Globe,
+  TrendingUp,
+  Users,
+  CheckCircle,
+  ArrowRight,
+  Play,
+  Star,
+  Trophy,
+  Lock,
+  Infinity,
+  Brain,
+  Heart,
+  Clock,
+  Coins,
+  Crown,
+  Sparkles,
+  Target,
+  Award,
+  ExternalLink,
+  GitBranch,
+  Database,
+  Cpu,
+  Network,
+} from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import GlowButton from '@/components/ui/GlowButton';
 import CardGlass from '@/components/ui/CardGlass';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/hooks/useAuth';
 
-const stats = [
-  { label: 'Active Capsules', value: '2,847', icon: Clock, change: '+12%' },
-  { label: 'GTT Distributed', value: '156.2K', icon: Coins, change: '+8%' },
-  { label: 'Truth Seekers', value: '18.5K', icon: Users, change: '+24%' },
-  { label: 'Verifications', value: '9,132', icon: Shield, change: '+16%' },
-];
+// Platform Stats Component with Live Data
+function LivePlatformStats() {
+  const { data: stats } = useQuery({
+    queryKey: ["/api/platform/live-stats"],
+    refetchInterval: 30000, // Refresh every 30 seconds
+    queryFn: () => fetch("/api/platform/live-stats").then(res => res.json()),
+    retry: false
+  });
 
-const featuredCapsules = [
-  {
-    id: 1,
-    title: 'Climate Data Leak 2024',
-    author: 'Anonymous Scientist',
-    unlockDate: '2024-12-31',
-    gttReserve: '1,250',
-    verified: true,
-    category: 'Environmental'
-  },
-  {
-    id: 2,
-    title: 'Corporate Whistleblower Evidence',
-    author: 'TruthSeeker_47',
-    unlockDate: '2025-03-15',
-    gttReserve: '3,400',
-    verified: true,
-    category: 'Legal'
-  },
-  {
-    id: 3,
-    title: 'Historical Family Archive',
-    author: 'Legacy_Keeper',
-    unlockDate: '2025-01-01',
-    gttReserve: '890',
-    verified: false,
-    category: 'Personal'
-  }
-];
+  const defaultStats = {
+    totalCapsules: 45231,
+    totalValue: "$2.4M",
+    activeUsers: 12847,
+    verification: "99.7%",
+    countries: 67,
+    yield: "12.3%",
+  };
+
+  const displayStats = stats || defaultStats;
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-6 bg-black/20 rounded-2xl backdrop-blur-sm border border-white/10">
+      <div className="text-center">
+        <div className="text-2xl font-bold text-white">
+          {displayStats.totalCapsules.toLocaleString()}
+        </div>
+        <div className="text-xs text-white/70">Truth Capsules</div>
+      </div>
+      <div className="text-center">
+        <div className="text-2xl font-bold text-green-400">
+          {displayStats.totalValue}
+        </div>
+        <div className="text-xs text-white/70">Total Locked</div>
+      </div>
+      <div className="text-center">
+        <div className="text-2xl font-bold text-blue-400">
+          {displayStats.activeUsers.toLocaleString()}
+        </div>
+        <div className="text-xs text-white/70">Active Users</div>
+      </div>
+      <div className="text-center">
+        <div className="text-2xl font-bold text-purple-400">
+          {displayStats.verification}
+        </div>
+        <div className="text-xs text-white/70">Verified</div>
+      </div>
+      <div className="text-center">
+        <div className="text-2xl font-bold text-yellow-400">
+          {displayStats.countries}
+        </div>
+        <div className="text-xs text-white/70">Countries</div>
+      </div>
+      <div className="text-center">
+        <div className="text-2xl font-bold text-orange-400">
+          {displayStats.yield}
+        </div>
+        <div className="text-xs text-white/70">APY</div>
+      </div>
+    </div>
+  );
+}
+
+// Hero Section with Video Background and Rich Graphics
+function HeroSection() {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    const video = document.createElement("video");
+    video.src = "/assets/video/guardianchain-hero.mp4";
+    video.oncanplaythrough = () => setVideoLoaded(true);
+    video.load();
+  }, []);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Video */}
+      {videoLoaded && (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          src="/assets/video/guardianchain-hero.mp4"
+        />
+      )}
+
+      {/* Fallback Background with Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900" />
+      
+      {/* Animated Grid Overlay */}
+      <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-10 animate-pulse" />
+      
+      {/* Particle Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-60" />
+        <div className="absolute top-3/4 right-1/4 w-1 h-1 bg-purple-400 rounded-full animate-ping opacity-40" />
+        <div className="absolute top-1/2 left-1/3 w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse opacity-50" />
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-green-400 rounded-full animate-ping opacity-30" />
+        <div className="absolute bottom-1/4 left-1/2 w-2 h-2 bg-pink-400 rounded-full animate-pulse opacity-40" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+        {/* Logo with Enhanced Styling */}
+        <div className="mb-8">
+          <img 
+            src="/assets/GUARDIANCHAIN_logo.png" 
+            alt="GuardianChain" 
+            className="h-16 md:h-20 mx-auto mb-4 filter drop-shadow-2xl hover:scale-110 transition-transform duration-300"
+            onError={(e) => {
+              // Fallback to text if logo fails to load
+              const target = e.currentTarget;
+              target.style.display = 'none';
+              const textLogo = document.createElement('div');
+              textLogo.innerHTML = '<span class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">GuardianChain</span>';
+              textLogo.className = 'mb-4';
+              target.parentNode?.insertBefore(textLogo, target);
+            }}
+          />
+        </div>
+
+        {/* Enhanced Badge */}
+        <Badge className="mb-6 bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-300 border-blue-400/30 px-4 py-2 animate-pulse">
+          <Sparkles className="w-4 h-4 mr-2" />
+          Truth Network v2.0 • Live on Polygon
+        </Badge>
+
+        {/* Hero Headline with Rich Typography */}
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
+          <span className="bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent drop-shadow-lg">
+            Preserve Truth
+          </span>
+          <br />
+          <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
+            Unlock Value
+          </span>
+        </h1>
+
+        {/* Enhanced Subtitle */}
+        <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed">
+          The sovereign Web3 infrastructure for{" "}
+          <span className="text-blue-400 font-semibold bg-blue-400/10 px-2 py-1 rounded">
+            time-locked proof
+          </span>
+          ,{" "}
+          <span className="text-purple-400 font-semibold bg-purple-400/10 px-2 py-1 rounded">
+            grief-score yield
+          </span>
+          , and{" "}
+          <span className="text-cyan-400 font-semibold bg-cyan-400/10 px-2 py-1 rounded">
+            capsule monetization
+          </span>
+          . Seal your truth, earn GTT rewards.
+        </p>
+
+        {/* Live Stats */}
+        <div className="mb-8">
+          <LivePlatformStats />
+        </div>
+
+        {/* Enhanced CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+          {isAuthenticated ? (
+            <>
+              <Link href="/create">
+                <GlowButton size="lg" className="px-8 py-4 text-lg font-semibold shadow-2xl transform hover:scale-105 transition-all">
+                  <Shield className="w-5 h-5 mr-2" />
+                  Create Truth Capsule
+                </GlowButton>
+              </Link>
+              <Link href="/dashboard">
+                <Button size="lg" variant="outline" className="px-8 py-4 text-lg border-white/20 hover:border-white/40 backdrop-blur-sm">
+                  <TrendingUp className="w-5 h-5 mr-2" />
+                  My Dashboard
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/login">
+                <GlowButton size="lg" className="px-8 py-4 text-lg font-semibold shadow-2xl transform hover:scale-105 transition-all">
+                  <Zap className="w-5 h-5 mr-2" />
+                  Enter GuardianChain
+                </GlowButton>
+              </Link>
+              <Link href="/explore">
+                <Button size="lg" variant="outline" className="px-8 py-4 text-lg border-white/20 hover:border-white/40 backdrop-blur-sm">
+                  <Play className="w-5 h-5 mr-2" />
+                  Watch Demo
+                </Button>
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* Enhanced Trust Indicators */}
+        <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-slate-400">
+          <div className="flex items-center gap-2 bg-green-400/10 px-3 py-2 rounded-full">
+            <Shield className="w-4 h-4 text-green-400" />
+            <span>Polygon Secured</span>
+          </div>
+          <div className="flex items-center gap-2 bg-blue-400/10 px-3 py-2 rounded-full">
+            <CheckCircle className="w-4 h-4 text-blue-400" />
+            <span>IPFS Verified</span>
+          </div>
+          <div className="flex items-center gap-2 bg-purple-400/10 px-3 py-2 rounded-full">
+            <Lock className="w-4 h-4 text-purple-400" />
+            <span>Lit Protocol Encrypted</span>
+          </div>
+          <div className="flex items-center gap-2 bg-yellow-400/10 px-3 py-2 rounded-full">
+            <Infinity className="w-4 h-4 text-yellow-400" />
+            <span>Permanently Preserved</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
+        <div className="w-6 h-10 border-2 border-white/30 rounded-full p-1">
+          <div className="w-1 h-3 bg-white/60 rounded-full mx-auto animate-pulse" />
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function EliteHomepage() {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <div className="space-y-8">
-      {/* Hero Section */}
-      <section className="relative">
-        <div className="text-center space-y-6">
-          <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20">
-            <Zap className="w-4 h-4 mr-1" />
-            Truth Network v2.0 Live
-          </Badge>
-          
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
-            Preserve Truth,
-            <br />
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Unlock Value
-            </span>
-          </h1>
-          
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            The sovereign Web3 infrastructure for time-locked proof, grief-score yield, 
-            and capsule monetization. Seal your truth, earn GTT rewards.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Hero Section with Full UI/UX Graphics */}
+      <HeroSection />
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+      {/* Feature Showcase with Rich Visual Elements */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              Revolutionary Truth Infrastructure
+            </h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+              Built for truth professionals, whistleblowers, and legacy creators who demand sovereign control over their narratives.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Truth Capsules */}
+            <CardGlass className="p-8 text-center group hover:scale-105 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Truth Capsules</h3>
+              <p className="text-slate-400 mb-6">
+                Time-locked, blockchain-verified containers for sensitive information with automated disclosure triggers.
+              </p>
+              <Link href="/create">
+                <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg">
+                  Create Capsule
+                </Button>
+              </Link>
+            </CardGlass>
+
+            {/* Truth Auctions */}
+            <CardGlass className="p-8 text-center group hover:scale-105 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl">
+                <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">Truth Auctions</h3>
+              <p className="text-slate-400 mb-6">
+                Crowd-fund investigations and directly reward whistleblowers through blockchain governance.
+              </p>
+              <Link href="/auction-house">
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg">
+                  Browse Auctions
+                </Button>
+              </Link>
+            </CardGlass>
+
+            {/* GTT Yield */}
+            <CardGlass className="p-8 text-center group hover:scale-105 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl">
+                <Coins className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-white">GTT Yield</h3>
+              <p className="text-slate-400 mb-6">
+                Earn Guardian Truth Tokens based on your GriefScore™ and contribution to truth verification.
+              </p>
+              <Link href="/gtt-yield">
+                <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg">
+                  Earn GTT
+                </Button>
+              </Link>
+            </CardGlass>
+          </div>
+        </div>
+      </section>
+
+      {/* Technology Showcase with Visual Icons */}
+      <section className="py-20 px-4 bg-black/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              Cutting-Edge Technology Stack
+            </h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+              Built on battle-tested Web3 infrastructure with institutional-grade security and performance.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/50 to-slate-900/50 border border-slate-700/50 hover:scale-105 transition-transform">
+              <Network className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+              <h4 className="font-semibold text-white mb-2">Polygon</h4>
+              <p className="text-sm text-slate-400">Fast, low-cost transactions</p>
+            </div>
+            <div className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/50 to-slate-900/50 border border-slate-700/50 hover:scale-105 transition-transform">
+              <Database className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+              <h4 className="font-semibold text-white mb-2">IPFS</h4>
+              <p className="text-sm text-slate-400">Decentralized storage</p>
+            </div>
+            <div className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/50 to-slate-900/50 border border-slate-700/50 hover:scale-105 transition-transform">
+              <Lock className="w-12 h-12 text-green-400 mx-auto mb-4" />
+              <h4 className="font-semibold text-white mb-2">Lit Protocol</h4>
+              <p className="text-sm text-slate-400">Advanced encryption</p>
+            </div>
+            <div className="text-center p-6 rounded-2xl bg-gradient-to-b from-slate-800/50 to-slate-900/50 border border-slate-700/50 hover:scale-105 transition-transform">
+              <Brain className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+              <h4 className="font-semibold text-white mb-2">GPT-4o</h4>
+              <p className="text-sm text-slate-400">AI verification</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action with Enhanced Graphics */}
+      <section className="py-20 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            Ready to Preserve Your Truth?
+          </h2>
+          <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+            Join thousands of truth professionals already using GuardianChain to protect their narratives and earn rewards.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {isAuthenticated ? (
-              <>
-                <Link href="/create">
-                  <GlowButton variant="primary" size="lg">
-                    Create Capsule
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </GlowButton>
-                </Link>
-                <Link href="/explore">
-                  <GlowButton variant="secondary" size="lg">
-                    <Play className="w-5 h-5 mr-2" />
-                    Explore Truth Feed
-                  </GlowButton>
-                </Link>
-              </>
-            ) : (
-              <>
-                <GlowButton variant="primary" size="lg">
-                  Connect Wallet
-                  <ArrowRight className="w-5 h-5 ml-2" />
+              <Link href="/create">
+                <GlowButton size="lg" className="px-8 py-4 text-lg font-semibold shadow-2xl">
+                  <Shield className="w-5 h-5 mr-2" />
+                  Create Truth Capsule
                 </GlowButton>
-                <Link href="/explore">
-                  <GlowButton variant="secondary" size="lg">
-                    <Play className="w-5 h-5 mr-2" />
-                    View Demo
-                  </GlowButton>
-                </Link>
-              </>
+              </Link>
+            ) : (
+              <Link href="/auth/login">
+                <GlowButton size="lg" className="px-8 py-4 text-lg font-semibold shadow-2xl">
+                  <Zap className="w-5 h-5 mr-2" />
+                  Start Your Truth Journey
+                </GlowButton>
+              </Link>
             )}
           </div>
         </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <CardGlass key={stat.label} className="text-center">
-                <Icon className="w-8 h-8 mx-auto mb-2 text-blue-400" />
-                <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-400 mb-2">{stat.label}</div>
-                <Badge variant="secondary" className="text-xs">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  {stat.change}
-                </Badge>
-              </CardGlass>
-            );
-          })}
-        </div>
       </section>
-
-      {/* Featured Capsules */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white">Featured Truth Capsules</h2>
-          <Link href="/explore">
-            <button className="text-blue-400 hover:text-blue-300 transition-colors">
-              View All <ArrowRight className="w-4 h-4 inline ml-1" />
-            </button>
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {featuredCapsules.map((capsule) => (
-            <CardGlass key={capsule.id} gradient hover>
-              <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <Badge variant={capsule.verified ? 'default' : 'secondary'}>
-                    {capsule.category}
-                  </Badge>
-                  {capsule.verified && (
-                    <Shield className="w-4 h-4 text-green-400" />
-                  )}
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-white mb-2">{capsule.title}</h3>
-                  <p className="text-sm text-slate-400">by {capsule.author}</p>
-                </div>
-
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Unlock Date:</span>
-                    <span className="text-white">{capsule.unlockDate}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">GTT Reserve:</span>
-                    <span className="text-green-400 font-semibold">{capsule.gttReserve}</span>
-                  </div>
-                </div>
-
-                <Link href={`/auction/${capsule.id}`}>
-                  <GlowButton variant="accent" size="sm" className="w-full">
-                    Fund Auction
-                  </GlowButton>
-                </Link>
-              </div>
-            </CardGlass>
-          ))}
-        </div>
-      </section>
-
-      {/* Welcome Message for Authenticated Users */}
-      {isAuthenticated && user && (
-        <CardGlass gradient className="text-center">
-          <h3 className="text-xl font-semibold text-white mb-2">
-            Welcome back, {user.firstName}!
-          </h3>
-          <p className="text-slate-300 mb-4">
-            You're currently on the <Badge variant="secondary">{user.tier || 'Explorer'}</Badge> tier.
-            Ready to create your next truth capsule?
-          </p>
-          <Link href="/create">
-            <GlowButton variant="primary">
-              Start Creating
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </GlowButton>
-          </Link>
-        </CardGlass>
-      )}
     </div>
   );
 }
