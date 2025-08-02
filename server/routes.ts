@@ -842,6 +842,191 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { registerMetadataRoutes } = await import('./routes/metadata');
   registerMetadataRoutes(app);
   
+  // Reels management endpoints
+  app.get('/api/reels/:reelId', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🎬 Fetching reel:', req.params.reelId);
+    
+    // Mock reel capsules data with voiceover URLs
+    const mockReelCapsules = [
+      {
+        id: 'capsule-reel-1',
+        title: 'Family Heritage Truth',
+        summary: 'A heartfelt story about preserving family traditions and values for future generations.',
+        mediaUrl: '/assets/reel-video-1.mp4',
+        voiceoverUrl: '/assets/reel-voice-1.mp3',
+        truthScore: 95,
+        views: 2847,
+        likes: 189,
+        author: {
+          id: 'user-1',
+          name: 'Sarah Chen',
+          avatar: '/assets/avatar-1.jpg'
+        },
+        tags: ['family', 'heritage', 'wisdom'],
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+        language: 'en',
+        translatedSummary: null
+      },
+      {
+        id: 'capsule-reel-2',
+        title: 'Climate Change Witness',
+        summary: 'Personal observations of environmental changes in my hometown over 30 years.',
+        mediaUrl: '/assets/reel-video-2.mp4',
+        voiceoverUrl: '/assets/reel-voice-2.mp3',
+        truthScore: 88,
+        views: 5124,
+        likes: 342,
+        author: {
+          id: 'user-2',
+          name: 'Dr. Ahmed Hassan',
+          avatar: '/assets/avatar-2.jpg'
+        },
+        tags: ['environment', 'climate', 'science'],
+        createdAt: new Date(Date.now() - 172800000).toISOString(),
+        language: 'en',
+        translatedSummary: null
+      },
+      {
+        id: 'capsule-reel-3',
+        title: 'Medical Research Truth',
+        summary: 'Documenting breakthrough discoveries in rare disease treatment protocols.',
+        mediaUrl: '/assets/reel-video-3.mp4',
+        voiceoverUrl: '/assets/reel-voice-3.mp3',
+        truthScore: 92,
+        views: 1523,
+        likes: 98,
+        author: {
+          id: 'user-3',
+          name: 'Dr. Maria Rodriguez',
+          avatar: '/assets/avatar-3.jpg'
+        },
+        tags: ['medical', 'research', 'breakthrough'],
+        createdAt: new Date(Date.now() - 259200000).toISOString(),
+        language: 'en',
+        translatedSummary: null
+      }
+    ];
+    
+    res.json(mockReelCapsules);
+  });
+
+  // Translation API endpoint
+  app.post('/api/ai/translate', isDebugAuthenticated, async (req: any, res) => {
+    const { text, targetLanguage, sourceLanguage } = req.body;
+    console.log('🌐 Translation requested:', { targetLanguage, textLength: text?.length });
+    
+    // Mock translation responses for different languages
+    const mockTranslations: Record<string, string> = {
+      'ar': 'قصة مؤثرة حول الحفاظ على التقاليد والقيم العائلية للأجيال القادمة.',
+      'es': 'Una historia emotiva sobre preservar las tradiciones familiares y valores para las futuras generaciones.',
+      'fr': 'Une histoire touchante sur la préservation des traditions familiales et des valeurs pour les générations futures.',
+      'de': 'Eine herzliche Geschichte über die Bewahrung von Familientraditionen und Werten für zukünftige Generationen.',
+      'zh': '一个关于为后代保存家庭传统和价值观的感人故事。',
+      'ja': '将来の世代のために家族の伝統と価値観を保存することについての心温まる物語。'
+    };
+    
+    const translatedText = mockTranslations[targetLanguage] || text;
+    
+    res.json({
+      translatedText,
+      sourceLanguage: sourceLanguage || 'auto',
+      targetLanguage,
+      confidence: 0.95
+    });
+  });
+
+  // Text-to-speech API endpoint
+  app.post('/api/ai/text-to-speech', isDebugAuthenticated, async (req: any, res) => {
+    const { text, language, voice } = req.body;
+    console.log('🎤 TTS requested:', { language, voice, textLength: text?.length });
+    
+    // Mock TTS response - in production this would generate actual audio
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Content-Length': '1024'
+    });
+    
+    // Return a mock audio buffer
+    const mockAudioBuffer = Buffer.alloc(1024);
+    res.send(mockAudioBuffer);
+  });
+
+  // User language preference endpoints
+  app.get('/api/user/language', isDebugAuthenticated, async (req: any, res) => {
+    const user = req.user;
+    console.log('🌐 Getting user language preference for:', user.id);
+    
+    res.json({
+      language: user.language || 'en',
+      preferredLanguage: user.language || 'en'
+    });
+  });
+
+  app.put('/api/user/language', isDebugAuthenticated, async (req: any, res) => {
+    const { language } = req.body;
+    const user = req.user;
+    console.log('🌐 Setting user language preference:', { userId: user.id, language });
+    
+    // In real implementation, update user.language in database
+    res.json({
+      success: true,
+      language: language,
+      message: 'Language preference updated successfully'
+    });
+  });
+
+  // Reel creation and management
+  app.post('/api/reels', isDebugAuthenticated, async (req: any, res) => {
+    const { name, capsuleIds } = req.body;
+    const user = req.user;
+    console.log('🎬 Creating reel:', { name, capsuleIds, userId: user.id });
+    
+    const newReel = {
+      id: `reel-${Date.now()}`,
+      name,
+      capsuleIds,
+      userId: user.id,
+      createdAt: new Date().toISOString(),
+      isPublic: true
+    };
+    
+    res.json({
+      success: true,
+      reel: newReel,
+      message: 'Reel created successfully'
+    });
+  });
+
+  app.get('/api/user/reels', isDebugAuthenticated, async (req: any, res) => {
+    const user = req.user;
+    console.log('🎬 Getting user reels for:', user.id);
+    
+    const mockUserReels = [
+      {
+        id: 'reel-user-1',
+        name: 'My Truth Journey',
+        capsuleIds: ['capsule-1', 'capsule-2', 'capsule-3'],
+        userId: user.id,
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+        isPublic: true,
+        views: 245,
+        likes: 18
+      },
+      {
+        id: 'reel-user-2',
+        name: 'Family Memories',
+        capsuleIds: ['capsule-4', 'capsule-5'],
+        userId: user.id,
+        createdAt: new Date(Date.now() - 172800000).toISOString(),
+        isPublic: false,
+        views: 89,
+        likes: 7
+      }
+    ];
+    
+    res.json(mockUserReels);
+  });
+
   // Register profile routes
   const profileRoutes = await import('./routes/profile');
   app.use('/api/profile', profileRoutes.default);
