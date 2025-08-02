@@ -8,13 +8,14 @@ import {
   TrendingUp, 
   Users, 
   Zap,
-  ArrowRight,
   Play,
   Star,
-  Globe
+  Crown
 } from "lucide-react";
 import { Link } from "wouter";
 import GuardianAssistant from "@/components/ai/GuardianAssistant";
+import HeroSection from "@/components/homepage/HeroSection";
+import LiveStats from "@/components/homepage/LiveStats";
 
 export default function Homepage() {
   const { isAuthenticated } = useAuth();
@@ -22,62 +23,9 @@ export default function Homepage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 text-white">
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <img 
-              src="/assets/logo/GUARDIANCHAIN_logo.png" 
-              alt="GuardianChain" 
-              className="h-20 w-auto"
-            />
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
-            Veritas Sealed.
-            <br />
-            Truth Tokenized.
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-            The sovereign truth verification platform where your memories become immutable digital assets, 
-            verified by the community and rewarded through GTT tokenomics.
-          </p>
+      <HeroSection />
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            {isAuthenticated ? (
-              <>
-                <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                  <Link href="/create-truth-capsule">
-                    <Shield className="h-5 w-5 mr-2" />
-                    Create Truth Capsule
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10">
-                  <Link href="/truth-vault">
-                    <Globe className="h-5 w-5 mr-2" />
-                    Explore Vault
-                  </Link>
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                  <Link href="/api/login">
-                    Get Started
-                    <ArrowRight className="h-5 w-5 ml-2" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10">
-                  <Link href="/truth-vault">
-                    <Play className="h-5 w-5 mr-2" />
-                    Watch Demo
-                  </Link>
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-
+        <div className="container mx-auto px-4">
         {/* Video Preview */}
         <div className="max-w-4xl mx-auto mb-16">
           <Card className="bg-slate-800/50 border-slate-700/50 overflow-hidden">

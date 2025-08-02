@@ -266,6 +266,9 @@ function Router() {
         <Route path="/yield" component={YieldDashboard} />
         <Route path="/referral-earn" component={ReferralDashboard} />
         <Route path="/truth-vault" component={VaultExplorer} />
+        <Route path="/live-demo" component={lazy(() => import("./pages/LiveDemo"))} />
+        <Route path="/tier-access" component={lazy(() => import("./pages/TierAccess"))} />
+        <Route path="/institutional-onboarding" component={lazy(() => import("./components/onboarding/InstitutionalOnboarding"))} />
         
         {/* Memory Vault System Routes */}
         <Route path="/memory-vault" component={MemoryVault} />

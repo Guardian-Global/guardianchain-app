@@ -1,7 +1,7 @@
-# Veritas - Web3 Truth Verification Platform
+# GuardianChain: Truth Vault Capsule dApp
 
 ## Overview
-Veritas (formerly GUARDIANCHAIN) is a Web3 truth verification platform designed to establish an immutable ecosystem for verifying information. It allows users to create "truth capsules," verify them through community governance, and earn GTT token rewards. The platform integrates blockchain technology with traditional web development to offer specialized tools for professional truth authentication, crowdsourced investigations, public accountability, and secure whistleblowing. Its business vision includes leveraging AI and DeFi for market impact, aiming for substantial annual revenue through transaction fees and enterprise API subscriptions. The project seeks to become critical infrastructure for preserving reality against AI alteration.
+GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization. The platform enables users to mint Veritas Capsules (sealed via SealChain™), earn $GTT yield based on GriefScore™, and submit legacy, trauma, or testimony capsules. Users can replay, verify, and unlock time-sealed capsules through an integrated Veritas Certificate Engine. The project represents institutional-grade memory infrastructure for sealing truth and unlocking value through blockchain technology and AI-powered verification systems.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
