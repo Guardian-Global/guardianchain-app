@@ -258,7 +258,10 @@ export default function InstitutionalOnboarding() {
           <Card className="bg-slate-800/50 border-slate-700/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
-                <steps[currentStep].icon className="h-6 w-6 text-blue-400" />
+                {(() => {
+                  const IconComponent = steps[currentStep].icon;
+                  return <IconComponent className="h-6 w-6 text-blue-400" />;
+                })()}
                 {steps[currentStep].title}
               </CardTitle>
               <CardDescription>{steps[currentStep].description}</CardDescription>

@@ -67,12 +67,20 @@ const getUserTier = (user: any): string => {
   return user.tier?.toLowerCase() || 'guest';
 };
 
-export default function Sidebar() {
+export default function Sidebar({ 
+  userTier, 
+  mobile = false, 
+  onNavigate 
+}: { 
+  userTier: string; 
+  mobile?: boolean; 
+  onNavigate?: () => void; 
+}) {
   const { user } = useAuth();
-  const userTier = getUserTier(user);
+  const currentUserTier = userTier || getUserTier(user);
   
   // Get accessible routes using the new routing system
-  const accessibleRoutes = getRoutesForRole(userTier);
+  const accessibleRoutes = getRoutesForRole(currentUserTier);
 
   // Group routes by category for better organization
   const coreRoutes = accessibleRoutes.filter(route => 
@@ -100,7 +108,7 @@ export default function Sidebar() {
     
     return (
       <div className="mb-6">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-3">
+        <h3 className="text-xs font-semibold text-brand-light/80 uppercase tracking-wider mb-2 px-3 font-brand">
           {title}
         </h3>
         <ul className="space-y-1">
@@ -110,21 +118,23 @@ export default function Sidebar() {
             
             return (
               <li key={route.path}>
-                <Link href={route.path}>
-                  <a className="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors">
-                    <Icon className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
-                    <div className="flex-1 min-w-0">
-                      <span className="text-sm font-medium truncate">{route.label}</span>
-                      <p className="text-xs text-gray-500 truncate mt-0.5">
-                        {route.description}
-                      </p>
-                    </div>
-                    {badge && (
-                      <Badge variant="secondary" className="text-xs">
-                        {badge}
-                      </Badge>
-                    )}
-                  </a>
+                <Link 
+                  href={route.path}
+                  onClick={() => onNavigate?.()}
+                  className="group flex items-center gap-3 px-3 py-2 text-brand-light rounded-lg hover:bg-brand-surface guardian-hover transition-colors"
+                >
+                  <Icon className="w-4 h-4 text-brand-light/70 group-hover:text-brand-primary" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-medium truncate">{route.label}</span>
+                    <p className="text-xs text-brand-light/60 truncate mt-0.5">
+                      {route.description}
+                    </p>
+                  </div>
+                  {badge && (
+                    <Badge variant="secondary" className="text-xs bg-brand-accent text-white">
+                      {badge}
+                    </Badge>
+                  )}
                 </Link>
               </li>
             );
@@ -135,24 +145,24 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 h-full flex flex-col">
+    <div className={`w-80 bg-brand-secondary border-r border-brand-surface h-full flex flex-col ${mobile ? 'w-full' : 'hidden md:flex'}`}>
       {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <h1 className="text-xl font-bold text-gray-900">GuardianChain</h1>
-        <p className="text-sm text-gray-500 mt-1">Truth Vault Platform</p>
+      <div className="p-6 border-b border-brand-surface">
+        <h1 className="text-xl font-bold text-brand-light font-brand">GuardianChain</h1>
+        <p className="text-sm text-brand-light/70 mt-1">Truth Vault Platform</p>
         {user && (
           <div className="mt-4 flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-brand-primary rounded-full flex items-center justify-center guardian-pulse">
               <span className="text-white text-sm font-medium">
                 {user.firstName?.[0]?.toUpperCase() || 'U'}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
+              <p className="text-sm font-medium text-brand-light truncate">
                 {user.firstName} {user.lastName}
               </p>
-              <p className="text-xs text-gray-500 truncate capitalize">
-                {userTier} Tier
+              <p className="text-xs text-brand-light/60 truncate capitalize">
+                {currentUserTier} Tier
               </p>
             </div>
           </div>
@@ -169,8 +179,8 @@ export default function Sidebar() {
       </ScrollArea>
       
       {/* Footer */}
-      <div className="p-4 border-t border-gray-100">
-        <div className="text-xs text-gray-500 text-center">
+      <div className="p-4 border-t border-brand-surface">
+        <div className="text-xs text-brand-light/60 text-center font-brand">
           <p>GuardianChain v2.0</p>
           <p className="mt-1">Sovereign Memory Infrastructure</p>
         </div>

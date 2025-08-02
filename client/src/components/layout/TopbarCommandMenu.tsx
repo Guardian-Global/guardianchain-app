@@ -1,139 +1,105 @@
-import { useState, useRef, useEffect } from "react";
-import { Link } from "wouter";
-import { ROUTES } from "@/lib/routes";
+// components/layout/TopbarCommandMenu.tsx — Command palette and quick actions
+import { useState } from "react";
 import { Search, Command } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { useLocation } from "wouter";
 
-export default function TopbarCommandMenu() {
-  const { user } = useAuth();
-  const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  
-  const tier = user?.tier?.toLowerCase() || "guest";
-  
-  const results = ROUTES.filter(
-    (r) => r.roles.includes(tier) && 
-    (r.label.toLowerCase().includes(query.toLowerCase()) ||
-     r.description.toLowerCase().includes(query.toLowerCase()) ||
-     r.path.toLowerCase().includes(query.toLowerCase()))
-  );
+interface TopbarCommandMenuProps {
+  tier: string;
+}
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsOpen(true);
-        setTimeout(() => inputRef.current?.focus(), 100);
-      }
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-        setQuery("");
-      }
-    };
+export default function TopbarCommandMenu({ tier }: TopbarCommandMenuProps) {
+  const [open, setOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  const commands = [
+    {
+      group: "Navigation",
+      items: [
+        { label: "Dashboard", value: "/dashboard", icon: "🏠" },
+        { label: "Create Capsule", value: "/capsules/create", icon: "✨" },
+        { label: "Vault", value: "/vault", icon: "🏛️" },
+        { label: "GTT Demo", value: "/gtt-demo", icon: "💎" },
+        { label: "Analytics", value: "/analytics", icon: "📊" },
+      ]
+    },
+    {
+      group: "Tools",
+      items: [
+        { label: "Veritas Tools", value: "/veritas", icon: "⚖️" },
+        { label: "DAO Governance", value: "/dao", icon: "🗳️" },
+        { label: "Validator Dashboard", value: "/validator", icon: "🛡️" },
+        { label: "Press Kit", value: "/press-kit", icon: "📰" },
+      ]
+    },
+    {
+      group: "Account",
+      items: [
+        { label: "Profile", value: "/profile", icon: "👤" },
+        { label: "Settings", value: "/settings", icon: "⚙️" },
+        { label: "Legal", value: "/legal", icon: "📜" },
+      ]
+    }
+  ];
 
-  const handleResultClick = () => {
-    setIsOpen(false);
-    setQuery("");
+  const handleSelect = (value: string) => {
+    setLocation(value);
+    setOpen(false);
   };
 
   return (
     <>
-      {/* Trigger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-500 bg-gray-50 hover:bg-gray-100 rounded-lg border transition-colors"
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setOpen(true)}
+        className="relative h-8 w-8 p-0 xl:h-8 xl:w-40 xl:justify-start xl:px-3 xl:py-2 bg-brand-surface/50 border-brand-surface hover:bg-brand-surface text-brand-light hover:text-brand-primary"
       >
-        <Search className="w-4 h-4" />
-        <span>Search routes...</span>
-        <div className="flex items-center gap-1 ml-auto">
-          <kbd className="px-1.5 py-0.5 text-xs bg-white border rounded">⌘</kbd>
-          <kbd className="px-1.5 py-0.5 text-xs bg-white border rounded">K</kbd>
-        </div>
-      </button>
+        <Search className="h-4 w-4 xl:mr-2" />
+        <span className="hidden xl:inline-flex">Search commands...</span>
+        <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border border-brand-surface/50 bg-brand-secondary px-1.5 font-mono text-[10px] font-medium text-brand-light/60 xl:flex">
+          <Command className="h-3 w-3" />K
+        </kbd>
+      </Button>
 
-      {/* Command Palette Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center pt-[10vh]">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4">
-            <div className="flex items-center gap-3 p-4 border-b">
-              <Command className="w-5 h-5 text-gray-400" />
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Search for features, pages, or tools..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="flex-1 outline-none text-lg"
-                autoFocus
-              />
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                ESC
-              </button>
-            </div>
-            
-            {query && (
-              <div className="max-h-80 overflow-y-auto">
-                {results.length > 0 ? (
-                  <ul className="py-2">
-                    {results.map((route) => (
-                      <li key={route.path}>
-                        <Link href={route.path}>
-                          <a 
-                            onClick={handleResultClick}
-                            className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors"
-                          >
-                            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mt-0.5">
-                              <span className="text-blue-600 text-sm font-medium">
-                                {route.label.match(/^[^a-zA-Z]*(.)/)?.[1]?.toUpperCase()}
-                              </span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-gray-900 truncate">
-                                {route.label}
-                              </div>
-                              <div className="text-sm text-gray-500 truncate">
-                                {route.description}
-                              </div>
-                              <div className="text-xs text-gray-400 mt-1">
-                                {route.path}
-                              </div>
-                            </div>
-                          </a>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="py-8 text-center text-gray-500">
-                    <Search className="w-6 h-6 mx-auto mb-2 text-gray-300" />
-                    <p>No routes found for "{query}"</p>
-                    <p className="text-sm mt-1">Try searching for features, pages, or tools</p>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {!query && (
-              <div className="py-6 px-4 text-center text-gray-500">
-                <Command className="w-8 h-8 mx-auto mb-3 text-gray-300" />
-                <p className="font-medium mb-1">Quick Navigation</p>
-                <p className="text-sm">Type to search for any platform feature or page</p>
-                <div className="mt-4 text-xs text-gray-400">
-                  <p>You have access to {ROUTES.filter(r => r.roles.includes(tier)).length} routes as a {tier} user</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput 
+          placeholder="Type a command or search..." 
+          className="bg-brand-secondary text-brand-light"
+        />
+        <CommandList className="bg-brand-secondary">
+          <CommandEmpty className="text-brand-light/60">
+            No results found.
+          </CommandEmpty>
+          {commands.map((group) => (
+            <CommandGroup 
+              key={group.group} 
+              heading={group.group}
+              className="text-brand-light"
+            >
+              {group.items.map((item) => (
+                <CommandItem
+                  key={item.value}
+                  value={item.label}
+                  onSelect={() => handleSelect(item.value)}
+                  className="text-brand-light hover:bg-brand-surface cursor-pointer"
+                >
+                  <span className="mr-2">{item.icon}</span>
+                  {item.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ))}
+        </CommandList>
+      </CommandDialog>
     </>
   );
 }
