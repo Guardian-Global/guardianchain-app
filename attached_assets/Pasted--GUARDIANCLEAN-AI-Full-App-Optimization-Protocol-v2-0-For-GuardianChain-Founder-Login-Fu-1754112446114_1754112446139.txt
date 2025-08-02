@@ -1,0 +1,154 @@
+🛠️ GUARDIANCLEAN-AI: Full App Optimization Protocol (v2.0)
+🧠 For: GuardianChain Founder Login – Full App Ownership Debug & Launch Readiness
+🎯 Mission Objectives
+Run a deep, safe audit and repair process across all files, components, routing logic, access control, and invisible page issues without deleting anything functional. Automatically generate diagnostic reports and prepare for final launch.
+
+🔍 STEP 1: Project-Wide Audit
+Scan all files (.tsx, .ts, .js, .css, .json, .md, .png, .svg, etc.)
+
+Flag any with:
+
+test, debug, placeholder, example, copy, backup, or duplicate in filename
+
+Overlapping purpose (e.g., two Dashboard.tsx pages)
+
+No imports or usage anywhere in the app
+
+Empty, commented-out, or unused code blocks
+
+🔖 Output: guardianchain_audit_report.md
+
+🧹 STEP 2: Smart Cleanup & File Mapping
+Move flagged items safely to /archive_cleanup/
+
+Create visual file tree overview of all working .tsx pages and their component dependencies
+
+Mark visually orphaned files (unused components, duplicate SVGs, old images)
+
+🔖 Output: cleanup_log.md + orphan_components.md
+
+🧩 STEP 3: Component Dependency & Import Fixes
+Check for:
+
+Broken or circular imports
+
+Component render errors due to missing props or undefined state
+
+Shadowed component definitions
+
+Attempt auto-fixes on valid files and report warnings
+
+🔖 Output: component_repair_log.md
+
+🧭 STEP 4: Routing & Navigation Repair
+Auto-map all valid pages in /pages/ and /app/ into logical nav sections:
+
+Home, Mint, Unlock, Replay, Verify, DAO, Dashboard, Profile, Login, Submit, View Capsule
+
+Rebuild navigation.tsx or relevant Layout component for proper links
+
+Mark broken buttons, duplicate nav links, or missing routes
+
+🔖 Output: navigation_fix_report.md + nav_routes.json
+
+🔐 STEP 5: Auth & Tier Guard Sync
+Validate Replit Auth + Supabase session guard on protected pages
+
+Ensure:
+
+Admin-only tools (test functions, capsule controls) are hidden from public users
+
+Public users can't access pages like /admin, /vault, /control, /launch, etc.
+
+Auto-wrap protected routes with session-checking logic (withAuth() or useSession)
+
+🔖 Output: auth_sync_log.md
+
+🎨 STEP 6: UI Layout & Tailwind Clean-Up
+Confirm all visible pages use shared layout components (layout.tsx, ClientLayout.tsx)
+
+Remove inline styles, migrate to Tailwind where possible
+
+Verify:
+
+Button visibility
+
+Mobile responsiveness
+
+Proper use of grid/flexbox containers
+
+🔖 Output: layout_optimization_log.md
+
+🧠 STEP 7: State Management & Hooks Inspection
+Detect unused or unnecessary useState, useEffect, useRef, useContext hooks
+
+Validate:
+
+No memory leaks
+
+All state-modifying components re-render properly
+
+Flag zombie hooks and stale state references
+
+🔖 Output: state_hooks_check.md
+
+⚠️ STEP 8: Runtime & Build Error Analysis
+Compile full build output with warnings and errors
+
+Fix:
+
+Cannot read property of undefined errors
+
+Invalid props or async function returns
+
+Static imports for non-static files
+
+🔖 Output: build_error_log.md + token_launch_access_fix.md (if applicable)
+
+🌐 STEP 9: API & .env Health Check
+Validate .env file for:
+
+OpenAI, Supabase, Thirdweb, Stripe, IPFS keys
+
+Missing or incorrectly scoped environment variables
+
+Ping /api/* routes and flag failing endpoints
+
+🔖 Output: env_validation_report.md + api_health_log.md
+
+🔒 STEP 10: Module Registry Diff
+Compare modules staged in GuardianBootHook.tsx vs actual present/working modules
+
+List pending modules: StripeOnramp, CapsuleMint, GTTTokenLogic, ReplayLogViewer, etc.
+
+🔖 Output: guardian_module_diff.md
+
+🧾 Final Deliverables:
+Save all to /system_audit_logs/:
+
+pgsql
+Copy
+Edit
+guardianchain_audit_report.md
+cleanup_log.md
+orphan_components.md
+component_repair_log.md
+navigation_fix_report.md
+nav_routes.json
+auth_sync_log.md
+layout_optimization_log.md
+state_hooks_check.md
+build_error_log.md
+token_launch_access_fix.md
+env_validation_report.md
+api_health_log.md
+guardian_module_diff.md
+📌 Safety Protocol
+DO NOT DELETE or MOVE:
+
+Anything inside /veritas, /vaultstream, /yield, /truth_*, /guardian_boot/
+
+Capsule logic, PDF engines, sealed memory code, or Veritas Certificate assets
+
+Any routes listed in your registry (guardian_registry.json)
+

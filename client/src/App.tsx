@@ -214,7 +214,7 @@ function Router() {
   }
 
   // Check if user should go to validator dashboard
-  const isValidator = user && (user.email === 'founder@guardianchain.app' || user.email === 'master@guardianchain.app');
+  const isValidator = user && user.email && (user.email === 'founder@guardianchain.app' || user.email === 'master@guardianchain.app');
   
   if (isValidator && window.location.pathname === '/') {
     window.location.href = '/validator-dashboard';
