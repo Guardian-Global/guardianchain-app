@@ -12,10 +12,12 @@ import {
   X,
   Trophy
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useOnboarding } from "./OnboardingProvider";
 import { useTierContext } from "@/context/TierContext";
 
 export default function OnboardingTrigger() {
+  const { user, isAuthenticated } = useAuth();
   const { userRole } = useTierContext();
   const { 
     showOnboarding, 

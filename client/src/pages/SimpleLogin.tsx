@@ -4,15 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 
   const { isAuthenticated, isLoading, user } = useAuth();
-  const [authTest, setAuthTest] = useState<string>("Waiting...");
 
   useEffect(() => {
     if (isLoading) {
-      setAuthTest("Loading authentication...");
     } else if (isAuthenticated && user) {
-      setAuthTest("✓ Authentication successful!");
     } else {
-      setAuthTest("❌ Not authenticated");
     }
   }, [isAuthenticated, isLoading, user]);
 

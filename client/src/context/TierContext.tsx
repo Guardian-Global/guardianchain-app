@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface TierContextType {
   userRole: string;
@@ -19,6 +20,7 @@ interface TierProviderProps {
 }
 
 export function TierProvider({ children }: TierProviderProps) {
+  const { user, isAuthenticated } = useAuth();
   const [userRole, setUserRole] = useState("guest");
   const [isLoading, setIsLoading] = useState(true);
 

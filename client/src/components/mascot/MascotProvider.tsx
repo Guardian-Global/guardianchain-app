@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import OnboardingMascot from "./OnboardingMascot";
 
 interface MascotContextType {
@@ -25,6 +26,7 @@ interface MascotProviderProps {
 }
 
 export function MascotProvider({ children }: MascotProviderProps) {
+  const { user, isAuthenticated } = useAuth();
   const [showMascot, setShowMascot] = useState(false);
   const [mascotEnabled, setMascotEnabled] = useState(true);
 

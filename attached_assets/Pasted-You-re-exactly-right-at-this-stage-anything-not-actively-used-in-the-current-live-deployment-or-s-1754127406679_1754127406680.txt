@@ -1,0 +1,91 @@
+You're exactly right — at this stage, anything not actively used in the current live deployment or strategically vital to the next release must be removed. But we must protect key assets like:
+
+Smart contract logic (even if unused now)
+
+Feature files under construction (e.g. Veritas, Bounties)
+
+Legacy modules with upgrade paths
+
+Historical records of milestones, if documented clearly
+
+With that in mind, here is your:
+
+✅ FINAL DEPLOYMENT VERIFICATION SCRIPT
+Includes: Build validation + Safe cleanup + Screenshot prep for GitHub Sponsors, CoinGecko, and CMC submissions.
+
+1. 🔥 DELETE ALL STALE / LEGACY / UNUSED FILES
+Paste this into Replit Shell or cleanup task runner:
+
+bash
+Copy
+Edit
+# 🧹 Remove all outdated, unused, or test auth logic
+rm -f server/routes/{auth.ts,auth-system.ts,public-auth.ts,simple-auth.ts,enterprise-auth.ts,demo-auth.ts,complete-auth.ts}
+rm -f server/middleware/{auth.ts,enterpriseAuth.ts}
+rm -f server/replitAuth.ts
+
+# 🔥 Remove unused client-side auth buttons/components
+rm -f client/src/components/{SimpleAuthButton.tsx,teams/TeamsAdvancedAuth.tsx}
+rm -f client/src/utils/withAuthGuard.tsx
+
+# 🧪 Remove tests, demos, or proof-of-concept stubs
+find . -type f \( -name "*Test*" -o -name "*test*" -o -name "*demo*" \) -delete
+
+# 🗑 Delete orphaned pages/components with no references
+rm -f client/src/pages/{debug-auth.tsx,old-auth.tsx,demo-auth.tsx}
+rm -rf client/src/components/debugTools
+2. 🛠️ REBUILD FOR CLEAN DEPLOYMENT
+bash
+Copy
+Edit
+# Clean previous builds
+rm -rf dist .vercel .next node_modules
+
+# Reinstall and rebuild cleanly
+pnpm install && pnpm build
+# or
+npm install && npm run build
+3. 📸 SCREENSHOT CHECKLIST (For Sponsors / CMC / CoinGecko)
+Before taking screenshots, confirm the following work flawlessly:
+
+Feature	✅ Status
+/dashboard loads + Memory Features button works	☐
+/create-capsule works + default export loads	☐
+Auth routes redirect properly by tier	☐
+All sponsor/subscribe logic connects	☐
+Footer links (Terms, Privacy, Contact) valid	☐
+GitHub README.md and TRANSPARENCY.md load	☐
+
+Once all these pass:
+
+bash
+Copy
+Edit
+# Take screenshots in this order (min 1440px wide)
+1. https://guardianchain.app
+2. https://guardianchain.app/dashboard
+3. https://github.com/Guardian-Global/guardianchain_app
+4. GitHub Sponsors page w/ tiers visible
+5. Optional: Stripe checkout or Capsule creation flow
+4. 🛡️ SAFEGUARD WHAT TO KEEP
+Keep the following, even if unused now:
+
+debugAuth.ts – central to current auth
+
+TRANSPARENCY.md – CMC/CGK required
+
+project_metadata.json – used for listing integrations
+
+GTT contract, Veritas logic, Vault backend, validator.ts (if planning DAO expansion)
+
+✅ When complete, your app will be lean, deployable, and institution-ready.
+Let me know when you're ready for the launch check or need a GitHub release template.
+
+
+
+
+
+
+
+Ask ChatGPT
+
