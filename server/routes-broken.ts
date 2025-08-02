@@ -8,7 +8,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupDebugAuth(app);
 
   // Add subscription management routes
-  app.get('/api/subscription/status', isDebugAuthenticated, async (req: any, res) => {
+  app.get('/api/subscription/status', isInstantAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user?.id;
       const user = await storage.getUser(userId);
@@ -24,7 +24,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/subscription/upgrade', isDebugAuthenticated, async (req: any, res) => {
+  app.post('/api/subscription/upgrade', isInstantAuthenticated, async (req: any, res) => {
     try {
       const { planId } = req.body;
       const userId = req.user?.id;
@@ -38,8 +38,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Debug Auth routes
-  app.get('/api/auth/user', isDebugAuthenticated, async (req: any, res) => {
+  // Simple Auth routes
+  app.get('/api/auth/user', isInstantAuthenticated, async (req: any, res) => {
     try {
       const sessionUser = req.user;
       const userId = sessionUser.id;
