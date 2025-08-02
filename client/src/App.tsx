@@ -269,7 +269,8 @@ function Router() {
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />
 
-        <Route path="/create" component={CreateCapsule} />
+        <Route path="/create" component={lazy(() => import("./pages/CreateCapsuleStreamlined"))} />
+        <Route path="/create-streamlined" component={lazy(() => import("./pages/CreateCapsuleStreamlined"))} />
         <Route path="/create-with-help" component={CreateCapsule} />
         <Route path="/create-truth-capsule" component={CreateCapsule} />
         
