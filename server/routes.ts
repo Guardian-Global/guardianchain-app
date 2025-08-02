@@ -1634,12 +1634,18 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json(mockCertificates);
   });
 
-  // Fix token data API with proper JSON response
+  // Fix token data API with proper JSON response and caching
   app.get('/api/token/live-data', (req, res) => {
+    // Set cache headers to reduce repeated requests
+    res.set('Cache-Control', 'public, max-age=60'); // Cache for 60 seconds
+    res.set('ETag', '"token-data-v1"'); // Simple ETag for consistency
+    
     res.status(200).json({
       price: 0.0075,
       priceChange: 0.0001,
-      marketCap: 7500000
+      marketCap: 7500000,
+      lastUpdated: new Date().toISOString(),
+      source: 'static'
     });
   });
 
@@ -2969,7 +2975,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
         // Tags filter
         if (tags) {
           const tagList = tags.toString().split(',');
-          const hasMatchingTag = tagList.some(tag => capsule.tags.includes(tag.trim()));
+          const hasMatchingTag = tagList.some((tag: string) => capsule.tags.includes(tag.trim()));
           if (!hasMatchingTag) return false;
         }
 

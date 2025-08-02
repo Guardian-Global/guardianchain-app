@@ -106,8 +106,8 @@ export const LiveTokenTracker: React.FC<LiveTokenTrackerProps> = ({
     // Initial fetch
     fetchRealTimeData();
 
-    // Update every 30 seconds for real-time feel
-    const interval = setInterval(fetchRealTimeData, 30000);
+    // Update every 2 minutes to reduce server load
+    const interval = setInterval(fetchRealTimeData, 120000);
     return () => clearInterval(interval);
   }, []);
 
