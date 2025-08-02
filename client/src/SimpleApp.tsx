@@ -1,10 +1,13 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Link } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import CapsuleStats from "./pages/CapsuleStats";
+import Timeline from "./pages/Timeline";
+import ValidatorBids from "./pages/ValidatorBids";
 
-// Create minimal Button component to avoid UI dependency issues
-function Button({ children, size, variant, className, ...props }: any) {
+// Create minimal UI components to avoid dependency issues
+function Button({ children, size, variant, className, type, ...props }: any) {
   const baseClasses = "px-4 py-2 rounded-lg font-medium transition-colors";
   const sizeClasses = size === "lg" ? "px-6 py-3 text-lg" : "";
   const variantClasses = variant === "outline" 
@@ -13,6 +16,7 @@ function Button({ children, size, variant, className, ...props }: any) {
   
   return (
     <button 
+      type={type}
       className={`${baseClasses} ${sizeClasses} ${variantClasses} ${className || ""}`}
       {...props}
     >
@@ -21,9 +25,85 @@ function Button({ children, size, variant, className, ...props }: any) {
   );
 }
 
-// Enhanced homepage component
+function Input({ placeholder, value, onChange, className, type = "text", name, ...props }: any) {
+  return (
+    <input
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className={`px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${className || ""}`}
+      {...props}
+    />
+  );
+}
+
+const translations = {
+  en: {
+    title: "GuardianChain",
+    subtitle: "The world's first sovereign memory infrastructure. Own your truth. Seal your story. Yield from your lived experiences.",
+    explore: "Explore Capsules",
+    launch: "Launch App",
+    subscribe: "Subscribe",
+    search_placeholder: "Search by title, tags, author...",
+    search: "Search",
+    cta_title: "Ready to Take Ownership of Your Truth?",
+    cta_sub: "Join thousands of users minting, sealing, and sharing their sovereign truth capsules. Your legacy is your power.",
+    start: "Get Started",
+    whitepaper: "View Whitepaper",
+    search_title: "Search Truth Capsules",
+  },
+  es: {
+    title: "GuardianChain",
+    subtitle: "La primera infraestructura de memoria soberana del mundo. Posee tu verdad. Sella tu historia. Gana con tus experiencias vividas.",
+    explore: "Explorar Cápsulas",
+    launch: "Lanzar App",
+    subscribe: "Suscribirse",
+    search_placeholder: "Buscar por título, etiquetas, autor...",
+    search: "Buscar",
+    cta_title: "¿Listo para ser dueño de tu verdad?",
+    cta_sub: "Únete a miles de usuarios que están sellando y compartiendo cápsulas de verdad soberana. Tu legado es tu poder.",
+    start: "Comenzar",
+    whitepaper: "Ver Documento",
+    search_title: "Buscar Cápsulas de Verdad",
+  },
+  ar: {
+    title: "غارديان تشين",
+    subtitle: "أول بنية تحتية للذاكرة السيادية في العالم. امتلك حقيقتك. احفظ قصتك. اربح من تجاربك المعيشية.",
+    explore: "استكشاف الكبسولات",
+    launch: "تشغيل التطبيق",
+    subscribe: "اشترك",
+    search_placeholder: "ابحث بالعنوان أو العلامات أو المؤلف...",
+    search: "ابحث",
+    cta_title: "هل أنت مستعد لامتلاك حقيقتك؟",
+    cta_sub: "انضم إلى الآلاف من المستخدمين الذين يقومون بسك وتوثيق كبسولات الحقيقة. إرثك هو قوتك.",
+    start: "ابدأ الآن",
+    whitepaper: "عرض المستند",
+    search_title: "ابحث عن كبسولات الحقيقة",
+  },
+  zh: {
+    title: "守护链",
+    subtitle: "世界上第一个主权记忆基础设施。拥有你的真相。封存你的故事。从经历中获益。",
+    explore: "探索胶囊",
+    launch: "启动应用",
+    subscribe: "订阅",
+    search_placeholder: "按标题、标签、作者搜索...",
+    search: "搜索",
+    cta_title: "准备好掌控你的真相了吗？",
+    cta_sub: "加入数千用户，共同铸造和分享主权真相胶囊。你的遗产就是你的力量。",
+    start: "立即开始",
+    whitepaper: "查看白皮书",
+    search_title: "搜索真相胶囊",
+  },
+};
+
+// Enhanced homepage component with multilingual support
 function HomePage() {
   const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const [email, setEmail] = useState("");
+  const [lang, setLang] = useState("en");
+  const t = translations[lang as keyof typeof translations];
 
   useEffect(() => {
     if (heroVideoRef.current) {
@@ -33,10 +113,39 @@ function HomePage() {
     }
   }, []);
 
+  const handleSubscribe = async () => {
+    if (!email) return;
+    try {
+      await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setEmail("");
+      alert("Successfully subscribed!");
+    } catch (error) {
+      console.error("Subscription failed:", error);
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-slate-900 text-white">
+    <main className="min-h-screen bg-slate-900 text-white" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      {/* Language Switch */}
+      <div className="absolute top-4 right-4 z-20">
+        <select
+          className="bg-slate-800 text-white px-4 py-2 rounded"
+          value={lang}
+          onChange={(e) => setLang(e.target.value)}
+        >
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="ar">🇸🇦 عربي</option>
+          <option value="zh">🇨🇳 中文</option>
+        </select>
+      </div>
+
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-indigo-900 to-indigo-600 py-20 px-6 text-center">
+      <section className="relative bg-gradient-to-br from-indigo-900 to-indigo-600 py-20 px-6 text-center overflow-hidden">
         <video
           ref={heroVideoRef}
           src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUARDIANCHAIN_PROTOCOL_VIDEO_MAIN.mp4"
@@ -53,16 +162,47 @@ function HomePage() {
             className="w-40 h-auto mb-4"
           />
           <h1 className="text-5xl md:text-7xl font-extrabold drop-shadow-xl tracking-tight">
-            GuardianChain
+            {t.title}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-200">
-            The world's first sovereign memory infrastructure. Own your truth. Seal your story. Yield from your lived experiences.
+            {t.subtitle}
           </p>
-          <div className="mt-6 flex gap-4">
-            <Button size="lg">Explore Capsules</Button>
-            <Button size="lg" variant="outline">Launch App</Button>
+          <div className="mt-6 flex flex-col md:flex-row gap-4">
+            <Button size="lg">{t.explore}</Button>
+            <Button size="lg" variant="outline">{t.launch}</Button>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubscribe();
+              }}
+              className="flex items-center gap-2 mt-4 md:mt-0"
+            >
+              <Input
+                placeholder="Enter email"
+                value={email}
+                onChange={(e: any) => setEmail(e.target.value)}
+                className="bg-white text-black"
+              />
+              <Button type="submit" className="bg-indigo-500 text-white">
+                {t.subscribe}
+              </Button>
+            </form>
           </div>
         </div>
+      </section>
+
+      {/* Search Bar */}
+      <section className="bg-slate-800 py-12 px-6 text-center">
+        <h2 className="text-3xl font-bold mb-6">{t.search_title}</h2>
+        <form action="/search" method="GET" className="flex justify-center gap-2 max-w-lg mx-auto">
+          <Input
+            type="text"
+            name="q"
+            placeholder={t.search_placeholder}
+            className="w-full bg-white text-black"
+          />
+          <Button type="submit" className="bg-indigo-600">{t.search}</Button>
+        </form>
       </section>
 
       {/* About GTT */}
@@ -113,13 +253,13 @@ function HomePage() {
 
       {/* Engagement CTA */}
       <section className="bg-indigo-700 py-20 px-8 text-center text-white">
-        <h2 className="text-4xl font-bold">Ready to Take Ownership of Your Truth?</h2>
+        <h2 className="text-4xl font-bold">{t.cta_title}</h2>
         <p className="mt-4 max-w-2xl mx-auto text-lg">
-          Join thousands of users minting, sealing, and sharing their sovereign truth capsules. Your legacy is your power.
+          {t.cta_sub}
         </p>
         <div className="mt-6 flex justify-center gap-4">
-          <Button size="lg" className="bg-white text-indigo-700 hover:bg-slate-100">Get Started</Button>
-          <Button size="lg" variant="outline">View Whitepaper</Button>
+          <Button size="lg" className="bg-white text-indigo-700 hover:bg-slate-100">{t.start}</Button>
+          <Button size="lg" variant="outline">{t.whitepaper}</Button>
         </div>
       </section>
 
@@ -142,12 +282,58 @@ function NotFound() {
   );
 }
 
+// Simple navigation component
+function Navigation() {
+  return (
+    <nav className="bg-slate-800 border-b border-slate-700 px-6 py-4">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
+        <Link href="/">
+          <span className="text-xl font-bold text-white cursor-pointer">GuardianChain</span>
+        </Link>
+        <div className="flex space-x-6">
+          <Link href="/capsule-stats">
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Capsule Stats</span>
+          </Link>
+          <Link href="/timeline">
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Timeline</span>
+          </Link>
+          <Link href="/validator-bids">
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Validator Bids</span>
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Switch>
         <Route path="/" component={HomePage} />
-        <Route component={NotFound} />
+        <Route path="/capsule-stats">
+          <Navigation />
+          <CapsuleStats />
+        </Route>
+        <Route path="/timeline">
+          <Navigation />
+          <Timeline />
+        </Route>
+        <Route path="/validator-bids">
+          <Navigation />
+          <ValidatorBids />
+        </Route>
+        <Route>
+          <Navigation />
+          <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
+              <Link href="/">
+                <Button>Return Home</Button>
+              </Link>
+            </div>
+          </div>
+        </Route>
       </Switch>
     </QueryClientProvider>
   );

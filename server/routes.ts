@@ -1,5 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { getCapsuleStats } from "./api/capsule-stats";
+import { getCapsuleTimeline } from "./api/timeline";
+import { getValidatorBids } from "./api/validator-bids";
+import { subscribeEmail } from "./api/subscribe";
 import { registerGTTContractRoutes } from './routes/gttContract';
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 import aiRoutes from './routes/ai';
@@ -39,6 +43,11 @@ function getReplayLogs(filters: any = {}) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // New API endpoints for capsule stats, timeline, and validator bids
+  app.get("/api/capsule/stats", getCapsuleStats);
+  app.get("/api/capsules/timeline", getCapsuleTimeline);
+  app.get("/api/validators/bids", getValidatorBids);
+  app.post("/api/subscribe", subscribeEmail);
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
 

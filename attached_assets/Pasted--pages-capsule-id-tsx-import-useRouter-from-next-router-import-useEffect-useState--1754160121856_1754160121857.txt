@@ -1,0 +1,76 @@
+// pages/capsule/[id].tsx
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+export default function CapsuleViewPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [capsule, setCapsule] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [minting, setMinting] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+    fetch(`/api/capsules/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) setError(data.error);
+        else setCapsule(data);
+        setLoading(false);
+      });
+  }, [id]);
+
+  const handleMint = async () => {
+    setMinting(true);
+    const res = await fetch(`/api/capsules/${id}/mint`, { method: "POST" });
+    const json = await res.json();
+    setMinting(false);
+    if (json.txHash) alert("Minted on-chain: " + json.txHash);
+    else alert(json.error || "Mint failed.");
+  };
+
+  if (loading) return <p className="text-white p-10">Loading capsule...</p>;
+  if (error) return <p className="text-red-400 p-10">{error}</p>;
+
+  return (
+    <main className="min-h-screen bg-slate-900 text-white px-6 py-16">
+      <Card className="bg-slate-800 p-8 max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold mb-2">{capsule.title}</h1>
+        <p className="text-slate-300 mb-6">{capsule.description}</p>
+
+        <div className="flex flex-wrap gap-2 mb-6">
+          {(capsule.tags || []).map((tag) => (
+            <Badge key={tag} className="bg-indigo-700 text-white">#{tag}</Badge>
+          ))}
+        </div>
+
+        <div className="mb-8 text-sm text-slate-400">
+          <p><strong>Created:</strong> {new Date(capsule.created_at).toLocaleString()}</p>
+          <p><strong>ID:</strong> {capsule.id}</p>
+        </div>
+
+        <div className="flex gap-4 flex-wrap">
+          <Button onClick={handleMint} disabled={minting}>
+            {minting ? "Minting..." : "Mint On-Chain"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => navigator.clipboard.writeText(window.location.href)}
+          >
+            Share Link
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => alert("Unlock flow coming soon")}
+          >
+            Unlock Capsule
+          </Button>
+        </div>
+      </Card>
+    </main>
+  );
+}
