@@ -182,19 +182,18 @@ export default function SearchPage() {
           <h1 className="text-3xl font-bold text-white mb-4">
             Search Results for "{query}"
           </h1>
-          <div className="max-w-4xl mx-auto text-center text-slate-300 mb-10">
+          <div className="max-w-4xl mx-auto text-center text-slate-300 mb-10 space-y-4">
             <p className="text-lg">
-              GuardianChain capsules are more than memories — they're
-              yield-generating, sovereign-authored, and permanently stored
-              truths.
+              GuardianChain capsules redefine digital permanence — every capsule is sealed for eternity, immune to deletion, censorship, or erasure.
             </p>
-            <p className="mt-2">
-              Each verified capsule contributes to the Truth Vault economy,
-              earning GTT while preserving your legacy with full cryptographic
-              authorship.
+            <p>
+              Your <span className="text-indigo-300 font-semibold">memories become currency</span>, and your <span className="text-emerald-300 font-semibold">truth earns yield</span>. When you mint grief, joy, history, or identity — you're contributing to the first economy of human-authored reality.
             </p>
-            <p className="mt-2 text-indigo-300">
-              Immutable. Monetizable. Yours forever.
+            <p className="text-sm text-slate-400 italic">
+              From ancestral stories to modern grief, from art to journalism, GuardianChain records the human journey — past, present, and future — permanently.
+            </p>
+            <p className="text-indigo-200 font-bold">
+              GTT and Truth Vault are the lifeblood of this new civilization — rewarding verified reality with economic power and sovereign authorship.
             </p>
           </div>
         </div>
@@ -285,23 +284,10 @@ export default function SearchPage() {
         )}
 
         <div className="grid gap-6">
-          {loading ? (
-            <div className="text-center py-12">
-              <Loader2 className="w-8 h-8 mx-auto mb-4 animate-spin text-blue-600" />
-              <p className="text-gray-600 dark:text-gray-400">
-                Searching capsules...
-              </p>
-            </div>
-          ) : results.length === 0 && query ? (
-            <div className="text-center py-12">
-              <SearchIcon className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-400">
-                No capsules found matching your search.
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-                Try different keywords or check your search filters.
-              </p>
-            </div>
+          {loading && page === 1 ? (
+            <p className="text-center text-slate-400">Searching...</p>
+          ) : results.length === 0 ? (
+            <p className="text-center text-slate-400">No capsules found.</p>
           ) : (
             results.map((capsule) => (
               <Card
