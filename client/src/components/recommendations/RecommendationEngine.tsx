@@ -57,11 +57,19 @@ export default function RecommendationEngine() {
     isLoading,
   } = useQuery({
     queryKey: ["/api/recommendations"],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/recommendations");
+      return response.json();
+    },
     enabled: false, // We'll trigger manually
   });
 
   const { data: userProfile, refetch: refetchProfile } = useQuery({
     queryKey: ["/api/user-profile"],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/user-profile");
+      return response.json();
+    },
     enabled: false,
   });
 
@@ -103,7 +111,7 @@ export default function RecommendationEngine() {
   };
 
   const filteredRecommendations =
-    recommendations?.filter(
+    (recommendations as RecommendationResult[])?.filter(
       (rec: RecommendationResult) =>
         selectedCategory === "all" ||
         rec.category.toLowerCase() === selectedCategory.toLowerCase()
@@ -352,7 +360,7 @@ export default function RecommendationEngine() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {userProfile.interests?.map(
+                    {(userProfile as any)?.interests?.map(
                       (interest: string, index: number) => (
                         <Badge key={index} className="bg-blue-600 text-white">
                           {interest}
@@ -371,7 +379,7 @@ export default function RecommendationEngine() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {userProfile.preferredCategories?.map(
+                    {(userProfile as any)?.preferredCategories?.map(
                       (category: string, index: number) => (
                         <Badge
                           key={index}
@@ -391,7 +399,7 @@ export default function RecommendationEngine() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-slate-300">
-                    {userProfile.behaviorPattern}
+                    {(userProfile as any)?.behaviorPattern}
                   </p>
                 </CardContent>
               </Card>
@@ -402,7 +410,7 @@ export default function RecommendationEngine() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {userProfile.recommendations?.map(
+                    {(userProfile as any)?.recommendations?.map(
                       (suggestion: string, index: number) => (
                         <li
                           key={index}

@@ -6,8 +6,17 @@ import InstitutionAccess from '@/components/InstitutionAccess';
 import { Scale, Users, Shield, Clock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
+interface User {
+  id: string;
+  email: string;
+  tier: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 function JuryPage() {
   const { user } = useAuth();
+  const typedUser = user as User | null;
 
   // Mock data for demonstration
   const mockCapsule = {
@@ -142,11 +151,11 @@ function JuryPage() {
       </Card>
 
       {/* Institutional Access */}
-      {user && user.id && user.email && user.tier && (
+      {typedUser && typedUser.id && typedUser.email && typedUser.tier && (
         <InstitutionAccess user={{
-          id: user.id,
-          email: user.email,
-          tier: user.tier
+          id: typedUser.id,
+          email: typedUser.email,
+          tier: typedUser.tier
         }} />
       )}
 

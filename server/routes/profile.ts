@@ -4,6 +4,40 @@ import { isDebugAuthenticated } from '../debugAuth';
 
 const router = Router();
 
+// Get user profile by ID - simple endpoint
+router.get('/:userId', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.params.userId;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID required' });
+    }
+
+    // Mock profile data for development
+    const mockProfile = {
+      id: userId,
+      firstName: 'Demo',
+      lastName: 'User',
+      email: 'demo@guardianchain.app',
+      tier: 'EXPLORER',
+      role: 'USER',
+      walletAddress: '0x1234567890123456789012345678901234567890',
+      truthScore: 87,
+      capsulesCreated: 12,
+      verificationCount: 45,
+      gttEarned: 2547,
+      reputation: 'Bronze',
+      createdAt: new Date(Date.now() - 86400000 * 30).toISOString(), // 30 days ago
+      lastLogin: new Date().toISOString()
+    };
+
+    res.json(mockProfile);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+
 // Get detailed user profile
 router.get('/detailed/:userId?', isDebugAuthenticated, async (req: any, res) => {
   try {
