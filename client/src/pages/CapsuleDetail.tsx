@@ -32,6 +32,9 @@ export default function CapsuleDetailPage() {
   const [capsule, setCapsule] = useState<CapsuleData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [minting, setMinting] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   useEffect(() => {
     if (match && params?.id) {
@@ -50,6 +53,7 @@ export default function CapsuleDetailPage() {
       
       const data = await response.json();
       setCapsule(data.capsule);
+      setLikeCount(parseInt(data.capsule.likes || "0"));
     } catch (err) {
       console.error("Error fetching capsule:", err);
       setError("Failed to load capsule. Please try again.");
@@ -75,6 +79,65 @@ export default function CapsuleDetailPage() {
       case "rejected": return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
       default: return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
+  };
+
+  const handleMint = async () => {
+    if (!capsule) return;
+    
+    setMinting(true);
+    try {
+      const response = await fetch(`/api/capsules/${capsule.id}/mint`, { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      const data = await response.json();
+      
+      if (data.txHash) {
+        alert(`Capsule minted on-chain! Transaction: ${data.txHash}`);
+      } else {
+        alert(data.error || "Minting failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Minting error:", error);
+      alert("Network error. Please check your connection and try again.");
+    } finally {
+      setMinting(false);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!capsule) return;
+    
+    try {
+      const response = await fetch(`/api/capsules/${capsule.id}/like`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      
+      if (response.ok) {
+        setLiked(!liked);
+        setLikeCount(prev => liked ? prev - 1 : prev + 1);
+      }
+    } catch (error) {
+      console.error("Like error:", error);
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: capsule?.title,
+        text: capsule?.description,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Link copied to clipboard!");
+    }
+  };
+
+  const handleUnlock = () => {
+    alert("Capsule unlock flow coming soon! This will allow time-locked content to be revealed.");
   };
 
   if (!match) {
@@ -221,9 +284,9 @@ export default function CapsuleDetailPage() {
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-2">
-                    <Heart className="w-5 h-5 text-gray-500 mr-1" />
+                    <Heart className={`w-5 h-5 mr-1 ${liked ? 'text-red-500 fill-current' : 'text-gray-500'}`} />
                     <span className="font-semibold text-gray-900 dark:text-white">
-                      {parseInt(capsule.likes).toLocaleString()}
+                      {likeCount.toLocaleString()}
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Likes</p>
@@ -251,23 +314,71 @@ export default function CapsuleDetailPage() {
 
             {/* Action Buttons */}
             <div className="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
-              <div className="flex flex-wrap gap-3">
-                <Button className="flex items-center">
-                  <Heart className="w-4 h-4 mr-2" />
-                  Like Capsule
-                </Button>
-                <Button variant="outline" className="flex items-center">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Add Comment
-                </Button>
-                <Button variant="outline" className="flex items-center">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
-                <Button variant="outline" className="flex items-center">
-                  <Shield className="w-4 h-4 mr-2" />
-                  Verify Truth
-                </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Interact</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <Button 
+                      onClick={handleLike}
+                      variant={liked ? "default" : "outline"}
+                      size="sm"
+                      className="flex items-center"
+                    >
+                      <Heart className={`w-4 h-4 mr-2 ${liked ? 'fill-current' : ''}`} />
+                      {liked ? 'Liked' : 'Like'}
+                    </Button>
+                    <Button variant="outline" size="sm" className="flex items-center">
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      Comment
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleShare}
+                      className="flex items-center"
+                    >
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Share
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Blockchain Actions</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <Button 
+                      onClick={handleMint}
+                      disabled={minting}
+                      className="flex items-center"
+                    >
+                      {minting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Minting...
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="w-4 h-4 mr-2" />
+                          Mint On-Chain
+                        </>
+                      )}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleUnlock}
+                      className="flex items-center"
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      Unlock
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  <strong>Capsule ID:</strong> {capsule.id}
+                </p>
               </div>
             </div>
           </CardContent>

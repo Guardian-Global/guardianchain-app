@@ -206,7 +206,7 @@ export default function SearchResults() {
                             {parseInt(result.shares).toLocaleString()}
                           </span>
                         </div>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => window.location.href = `/capsule/${result.id}`}>
                           View Capsule
                         </Button>
                       </div>

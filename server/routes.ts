@@ -6,6 +6,7 @@ import { getValidatorBids } from "./api/validator-bids";
 import { subscribeEmail } from "./api/subscribe";
 import { searchCapsules } from "./api/search";
 import { createCapsule, getCapsuleById } from "./api/capsules";
+import { mintCapsule, likeCapsule, shareCapsule } from "./api/capsule-actions";
 import { registerGTTContractRoutes } from './routes/gttContract';
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 import aiRoutes from './routes/ai';
@@ -53,6 +54,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/search", searchCapsules);
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
+  app.post("/api/capsules/:id/mint", mintCapsule);
+  app.post("/api/capsules/:id/like", likeCapsule);
+  app.post("/api/capsules/:id/share", shareCapsule);
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
 
