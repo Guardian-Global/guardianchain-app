@@ -2098,6 +2098,32 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
       }
 
       console.log('✅ Unlock event logged successfully:', data.id);
+      
+      // Optional: Log GTT yield distribution if provided
+      const { authorYield, beneficiaryYield, referrerWallet, referrerYield } = req.body;
+      if (authorYield || beneficiaryYield) {
+        try {
+          const { error: yieldError } = await supabase
+            .from('auction_yield')
+            .insert({
+              auction_id: id,
+              unlocker_wallet: wallet,
+              author_yield: authorYield || 0,
+              beneficiary_yield: beneficiaryYield || 0,
+              referrer_wallet: referrerWallet || null,
+              referrer_yield: referrerYield || 0,
+            });
+
+          if (yieldError) {
+            console.error('⚠️ Failed to log yield distribution:', yieldError);
+          } else {
+            console.log('💰 GTT yield distribution logged');
+          }
+        } catch (yieldLogError) {
+          console.error('⚠️ Yield logging error:', yieldLogError);
+        }
+      }
+
       return res.status(200).json({ 
         success: true, 
         unlock_id: data.id,
@@ -2109,6 +2135,58 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
       return res.status(500).json({ 
         error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // GTT Yield Analytics endpoint
+  app.get("/api/yield/analytics", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("💰 Fetching GTT yield analytics");
+
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+      );
+
+      // Fetch yield data with auction details
+      const { data: yields, error } = await supabase
+        .from('auction_yield')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .limit(100);
+
+      if (error) {
+        console.error("❌ Failed to fetch yield data:", error);
+        return res.status(500).json({ 
+          error: 'Failed to fetch yield analytics',
+          details: error.message 
+        });
+      }
+
+      // Calculate analytics
+      const totalAuthorYield = yields?.reduce((sum, y) => sum + Number(y.author_yield), 0) || 0;
+      const totalBeneficiaryYield = yields?.reduce((sum, y) => sum + Number(y.beneficiary_yield), 0) || 0;
+      const totalReferrerYield = yields?.reduce((sum, y) => sum + Number(y.referrer_yield), 0) || 0;
+      const totalYield = totalAuthorYield + totalBeneficiaryYield + totalReferrerYield;
+
+      const analytics = {
+        totalDistributions: yields?.length || 0,
+        totalYield,
+        authorYield: totalAuthorYield,
+        beneficiaryYield: totalBeneficiaryYield,
+        referrerYield: totalReferrerYield,
+        recentDistributions: yields?.slice(0, 10) || []
+      };
+
+      console.log("✅ GTT yield analytics calculated");
+      res.json(analytics);
+    } catch (error) {
+      console.error("❌ Failed to fetch yield analytics:", error);
+      res.status(500).json({
+        error: "Failed to fetch yield analytics",
+        details: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });

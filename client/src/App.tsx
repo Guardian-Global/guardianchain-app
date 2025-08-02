@@ -74,6 +74,7 @@ import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
 import TreasuryDashboard from "./pages/treasury";
 import UnlocksDashboard from "./pages/dashboard/unlocks";
+import YieldDashboard from "./pages/dashboard/yield";
 import AIAdvisorPanel from "./pages/ai-advisor";
 import CompliancePanel from "./pages/compliance";
 import YieldDistributionPage from "./pages/yield-distribution";
@@ -201,7 +202,6 @@ import TruthVaultDashboard from "./pages/truth-vault-dashboard";
 import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
-import YieldDashboard from "./pages/dashboard/Yield";
 import ReferralDashboard from "./pages/referral";
 import VaultExplorer from "./pages/vault";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
@@ -606,6 +606,7 @@ function Router() {
             <Route path="/donate-access" component={DonateAccessPage} />
             <Route path="/treasury" component={TreasuryDashboard} />
             <Route path="/dashboard/unlocks" component={UnlocksDashboard} />
+            <Route path="/dashboard/yield" component={YieldDashboard} />
             <Route path="/ai-advisor" component={AIAdvisorPanel} />
             <Route path="/compliance" component={CompliancePanel} />
             <Route
