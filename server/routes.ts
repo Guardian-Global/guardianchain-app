@@ -632,6 +632,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get single capsule endpoint
+  app.get('/api/capsules/:id', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const capsuleId = req.params.id;
+      
+      if (!capsuleId) {
+        return res.status(400).json({ error: 'Capsule ID is required' });
+      }
+
+      // Mock single capsule data - in production this would query the database
+      const mockCapsule = {
+        id: capsuleId,
+        title: 'Family Memories from the 1980s',
+        content: `Growing up in a small town in the 1980s was a magical experience. I remember the summer evenings when the whole neighborhood would come alive with the sounds of children playing, lawn mowers humming, and the distant melody of ice cream trucks.
+
+Our house was a modest two-story colonial with a wraparound porch where my grandmother would sit in her rocking chair, watching the world go by. She had the most incredible stories about our family's journey to America, tales that seemed like fairy tales to my young mind.
+
+I can still smell the fresh-baked apple pies cooling on the windowsill and hear my mother's voice calling us in for dinner as the sun began to set. Those were simpler times, when a bicycle and your imagination were all you needed for adventure.
+
+This memory is preserved here as a testament to the beauty of ordinary moments that become extraordinary in retrospect. The love, laughter, and lessons learned in that small town shaped who I am today.`,
+        griefTier: 2,
+        category: 'memory',
+        nftTokenId: '1234',
+        transactionHash: '0x' + Math.random().toString(16).slice(2, 66),
+        author: req.user.id,
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+        status: 'active',
+        replays: 15,
+        yieldEarned: 30
+      };
+      
+      console.log('📦 Single capsule requested:', capsuleId);
+      res.json(mockCapsule);
+    } catch (error) {
+      console.error('❌ Failed to fetch capsule:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch capsule',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
   // Get user capsules endpoint
   app.get('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
     try {
@@ -670,6 +712,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('❌ Failed to fetch capsules:', error);
       res.status(500).json({ error: 'Failed to fetch capsules' });
+    }
+  });
+
+  // Capsule replay endpoint
+  app.post('/api/capsules/replay', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleId, emotionalResponse, timestamp } = req.body;
+      
+      if (!capsuleId || typeof emotionalResponse !== 'number') {
+        return res.status(400).json({ error: 'Capsule ID and emotional response are required' });
+      }
+
+      // Calculate yield based on emotional response (0-100) and base grief tier
+      const baseYield = 10; // Base yield per replay
+      const emotionalMultiplier = Math.max(0.5, emotionalResponse / 100);
+      const yieldAmount = Math.round(baseYield * emotionalMultiplier);
+
+      // In production, this would:
+      // 1. Record the replay in the database
+      // 2. Update capsule replay count
+      // 3. Distribute GTT tokens to user
+      // 4. Log the emotional response for analytics
+
+      const replayRecord = {
+        id: `replay_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
+        capsuleId,
+        userId: req.user.id,
+        emotionalResponse,
+        yieldAmount,
+        timestamp: timestamp || new Date().toISOString(),
+        status: 'completed'
+      };
+
+      console.log('🎬 Capsule replay completed:', {
+        capsuleId,
+        emotionalResponse,
+        yieldAmount,
+        user: req.user.id
+      });
+
+      res.json({
+        success: true,
+        replayId: replayRecord.id,
+        yieldAmount,
+        emotionalResponse,
+        message: `Replay completed! You earned ${yieldAmount} GTT tokens.`
+      });
+    } catch (error) {
+      console.error('❌ Capsule replay failed:', error);
+      res.status(500).json({ 
+        error: 'Failed to process capsule replay',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 

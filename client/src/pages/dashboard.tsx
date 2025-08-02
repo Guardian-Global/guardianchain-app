@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BarChart3, Shield, Zap, Crown, TrendingUp, Users, FileText, Settings } from 'lucide-react';
 import CapsuleDrawer from '@/components/CapsuleDrawer';
+import CapsuleList from '@/components/CapsuleList';
 
 export default function DashboardPage() {
   return (
@@ -102,38 +103,10 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Recent Activity */}
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-purple-400" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-slate-700 rounded-lg">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="font-medium">Created truth capsule</p>
-                    <p className="text-sm text-slate-400">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-slate-700 rounded-lg">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="font-medium">Verified submission</p>
-                    <p className="text-sm text-slate-400">5 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-slate-700 rounded-lg">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="font-medium">Earned GTT tokens</p>
-                    <p className="text-sm text-slate-400">1 day ago</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Capsule List */}
+            <div className="bg-white">
+              <CapsuleList />
+            </div>
           </div>
 
           {/* Quick Actions */}
