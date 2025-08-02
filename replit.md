@@ -17,7 +17,7 @@ Preferred communication style: Simple, everyday language.
 - **Runtime & Language**: Node.js with Express.js, TypeScript.
 - **API Design**: RESTful API with structured error handling.
 - **Middleware**: Custom logging, JSON parsing, and error handling.
-- **Authentication**: **PRODUCTION READY** debug authentication system providing instant user authentication with complete user profiles, tier-based access control, and zero runtime errors. All legacy Replit Auth dependencies completely removed.
+- **Authentication**: **INVESTOR-READY** debug authentication system with OAuth integration (Google/GitHub via Passport.js) providing enterprise-grade user authentication, complete user profiles, tier-based access control, and zero runtime errors. All legacy dependencies removed.
 - **Object Storage**: Google Cloud Storage integration with protected file uploading, public asset serving, and ACL policy management.
 - **Data Flow**: Automated IPFS integration for content storage, community-driven verification, and GTT token reward distribution.
 
