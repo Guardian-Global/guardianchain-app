@@ -1,0 +1,87 @@
+🧠 SYSTEM COMMAND: GUARDIANTOKEN-ADVANCED-INTELLIGENCE SUITE
+
+Please generate the following reports based on the GuardianChain token system and smart contracts:
+
+---
+
+### 📈 GTT LIQUIDITY POOL ANALYSIS
+- Detect all GTT liquidity pools on Uniswap, QuickSwap, or SushiSwap (Polygon mainnet)
+- Fetch:
+  - Pool address
+  - Token pair (e.g., GTT/USDC)
+  - Liquidity amount in USD
+  - 24h volume
+  - Top holders (if accessible)
+- Report as: `gtt_liquidity_analysis.md`
+
+---
+
+### 🗳 DAO / GOVERNANCE TOKEN INTEGRATION
+- Scan smart contracts for:
+  - DAO voting hooks or token-based proposal mechanisms
+  - Token-gated access to `/govern`, `/treasury`, `/compliance`
+- Validate presence of `voteWeight`, `propose`, `stakeToVote` logic
+- If DAO contract not yet deployed, generate a migration plan
+- Report as: `governance_integration_report.md`
+
+---
+
+### 💸 YIELD ROI PROJECTIONS BY TIER
+- Based on current GTT routing + yield logic:
+  - Calculate potential monthly/yearly ROI per tier (Explorer, Seeker, Creator, Sovereign)
+  - Include assumptions: user count, average unlock volume, price volatility
+  - Graph ROI potential from conservative to aggressive market scenarios
+- Report as: `tier_yield_projection.md`
+
+---
+
+### ⛽ GAS EFFICIENCY AUDIT (SMART CONTRACTS)
+- Analyze:
+  - `OPTIMAL_GTT_CONTRACT_V2.sol`
+  - `TruthVault.sol`
+- Identify high-cost operations (`SSTORE`, `CALL`, `LOOPS`, etc.)
+- Suggest optimizations (storage packing, `immutable`, etc.)
+- Simulate deployment + transaction gas costs
+- Report as: `gas_efficiency_audit.md`
+
+---
+
+### 🌐 MULTI-CHAIN COMPATIBILITY CHECK
+- Assess contract portability to:
+  - Ethereum mainnet
+  - Arbitrum
+  - Base
+  - Solana (via wrapper if needed)
+- Confirm EVM compatibility
+- Highlight required adjustments (chain IDs, RPC changes, gas strategies)
+- Report as: `multi_chain_portability.md`
+
+---
+
+### 📅 TOKEN VESTING & UNLOCK SCHEDULE
+- Check if vesting schedules are defined in:
+  - Contract storage variables
+  - `.env` files
+  - Admin UI configs
+- If not present, recommend a 12-24 month founder/community vesting plan
+- Report as: `vesting_schedule_report.md`
+
+---
+
+### 💰 REVENUE SHARE SIMULATION
+- Simulate revenue flow based on:
+  - GTT 8% fee split: 5% → founder, 2% → burn, 1% → community
+  - Capsule unlocks + auction revenue
+  - Subscription tiers
+- Output:
+  - Monthly and annual projections (low/medium/high volume)
+  - Founder revenue
+  - Token burn rate
+  - Treasury growth
+- Report as: `revenue_share_simulation.md`
+
+---
+
+🗂️ OUTPUT DIRECTORY: `/token_analysis_reports/`
+
+Do not delete any files. Only read, compute, and summarize results.
