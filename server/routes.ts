@@ -429,6 +429,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register metadata routes
   const { registerMetadataRoutes } = await import('./routes/metadata');
   registerMetadataRoutes(app);
+  
+  // Register profile routes
+  const profileRoutes = await import('./routes/profile');
+  app.use('/api/profile', profileRoutes.default);
 
   // Analytics dashboard endpoint
   app.get('/api/analytics/dashboard', isDebugAuthenticated, async (req: any, res) => {

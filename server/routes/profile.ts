@@ -1,213 +1,192 @@
-import { Router, Request, Response } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
-import { storage } from "../storage";
+import { Router } from 'express';
+import { storage } from '../storage';
+import { isDebugAuthenticated } from '../debugAuth';
 
 const router = Router();
 
-// Get user profile
-router.get(
-  "/api/profile/:userId",
-  isDebugAuthenticated,
-  async (req: any, res: Response) => {
-    try {
-      const { userId } = req.params;
-      const requestingUserId = req.user.claims.sub;
-
-      // Users can only view their own profile unless admin
-      if (userId !== requestingUserId && !req.user.roles?.includes("ADMIN")) {
-        return res
-          .status(403)
-          .json({ message: "Unauthorized to view this profile" });
-      }
-
-      const user = await storage.getUser(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // Return enhanced profile with stats
-      const profile = {
-        ...user,
-        stats: {
-          capsulesCreated: 0, // TODO: Get from database
-          totalYieldEarned: 0, // TODO: Get from database
-          verificationScore: 100,
-          followerCount: 0,
-          followingCount: 0,
-          gttBalance: 1000, // TODO: Get from smart contract
-        },
-        preferences: {
-          theme: "dark",
-          emailNotifications: true,
-          pushNotifications: false,
-          aiAssistantEnabled: true,
-          publicProfile: true,
-          showStats: true,
-          allowMessages: true,
-        },
-      };
-
-      res.json(profile);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      res.status(500).json({ message: "Failed to fetch profile" });
+// Get detailed user profile
+router.get('/detailed/:userId?', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.params.userId || req.user?.id;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID required' });
     }
+
+    // Get base user data
+    const user = await storage.getUser(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Get user statistics
+    const stats = await storage.getUserStats(userId);
+    
+    // Get user reputation
+    const reputation = await storage.getUserReputation(userId);
+    
+    // Get user achievements
+    const achievements = await storage.getUserAchievements(userId);
+
+    const profile = {
+      ...user,
+      stats,
+      reputation,
+      achievements
+    };
+
+    res.json(profile);
+  } catch (error) {
+    console.error('Error fetching detailed profile:', error);
+    res.status(500).json({ error: 'Failed to fetch profile' });
   }
-);
+});
 
 // Update user profile
-router.put(
-  "/api/profile/:userId",
-  isDebugAuthenticated,
-  async (req: any, res: Response) => {
-    try {
-      const { userId } = req.params;
-      const requestingUserId = req.user.claims.sub;
-
-      // Users can only update their own profile
-      if (userId !== requestingUserId) {
-        return res
-          .status(403)
-          .json({ message: "Unauthorized to update this profile" });
-      }
-
-      const updates = req.body;
-
-      // Filter allowed updates
-      const allowedFields = [
-        "firstName",
-        "lastName",
-        "displayName",
-        "bio",
-        "location",
-        "occupation",
-        "website",
-        "twitter",
-        "linkedin",
-        "github",
-        "interests",
-        "specialties",
-        "preferences",
-      ];
-
-      const filteredUpdates = Object.keys(updates)
-        .filter((key) => allowedFields.includes(key))
-        .reduce((obj: any, key) => {
-          obj[key] = updates[key];
-          return obj;
-        }, {});
-
-      // Update user in database
-      const updatedUser = await storage.updateUser(userId, filteredUpdates);
-
-      res.json(updatedUser);
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      res.status(500).json({ message: "Failed to update profile" });
+router.put('/update', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
-  }
-);
 
-// AI Chat endpoint
-router.post(
-  "/api/ai/chat",
-  isDebugAuthenticated,
-  async (req: any, res: Response) => {
-    try {
-      const { message, context } = req.body;
-      const userId = req.user.claims.sub;
-
-      // Calculate importance based on content
-      const importance = calculateImportance(message);
-
-      // Mock AI response (replace with actual AI integration)
-      const aiResponse = generateAIResponse(message, context);
-
-      // Calculate GTT cost based on complexity
-      const gttCost =
-        importance === "critical" ? 5 : importance === "high" ? 3 : 0;
-
-      res.json({
-        message: aiResponse,
-        importance,
-        gttCost,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Error in AI chat:", error);
-      res.status(500).json({ message: "AI service temporarily unavailable" });
+    const updateData = req.body;
+    
+    // Validate required fields
+    if (!updateData.firstName || !updateData.lastName) {
+      return res.status(400).json({ error: 'First name and last name are required' });
     }
+
+    const updatedUser = await storage.updateUserProfile(userId, updateData);
+    
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
   }
-);
+});
 
-// Save AI memory
-router.post(
-  "/api/ai/save-memory",
-  isDebugAuthenticated,
-  async (req: any, res: Response) => {
-    try {
-      const { messageId, content, importance } = req.body;
-      const userId = req.user.claims.sub;
-
-      // TODO: Save to memories table
-      console.log(`Saving memory for user ${userId}:`, {
-        messageId,
-        content,
-        importance,
-      });
-
-      res.json({
-        success: true,
-        memorySaved: true,
-        gttCost: 10,
-      });
-    } catch (error) {
-      console.error("Error saving memory:", error);
-      res.status(500).json({ message: "Failed to save memory" });
+// Upload profile image
+router.post('/upload-image', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
+
+    // In a real implementation, this would handle file upload
+    // For now, return a placeholder response
+    const imageUrl = '/assets/profile/default-avatar.jpg';
+    
+    await storage.updateUserProfile(userId, { 
+      profileImageUrl: imageUrl 
+    });
+
+    res.json({ imageUrl });
+  } catch (error) {
+    console.error('Error uploading profile image:', error);
+    res.status(500).json({ error: 'Failed to upload image' });
   }
-);
+});
 
-function calculateImportance(message: string): string {
-  const criticalKeywords = [
-    "urgent",
-    "emergency",
-    "critical",
-    "important",
-    "help",
-  ];
-  const highKeywords = [
-    "strategy",
-    "plan",
-    "investment",
-    "decision",
-    "analysis",
-  ];
+// Get user achievements
+router.get('/achievements/:userId?', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.params.userId || req.user?.id;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID required' });
+    }
 
-  const lowerMessage = message.toLowerCase();
-
-  if (criticalKeywords.some((keyword) => lowerMessage.includes(keyword))) {
-    return "critical";
+    const achievements = await storage.getUserAchievements(userId);
+    
+    res.json(achievements);
+  } catch (error) {
+    console.error('Error fetching achievements:', error);
+    res.status(500).json({ error: 'Failed to fetch achievements' });
   }
-  if (highKeywords.some((keyword) => lowerMessage.includes(keyword))) {
-    return "high";
-  }
-  if (message.length > 100) {
-    return "medium";
-  }
-  return "low";
-}
+});
 
-function generateAIResponse(message: string, context: any): string {
-  const responses = [
-    "I understand your request. Based on your GUARDIANCHAIN activity, I recommend focusing on creating high-quality truth capsules to maximize your GTT yield.",
-    "As your sovereign AI assistant, I can help you optimize your platform usage. Your verification score is excellent, which positions you well for higher yields.",
-    "I notice you're interested in the token launch. The current phase shows strong progress, and early participation could yield significant benefits.",
-    "Your profile analytics suggest you'd benefit from exploring the advanced capsule creation features. Would you like me to guide you through the process?",
-    "Based on your tier status and GTT balance, I recommend considering the yield optimization strategies available in your dashboard.",
-  ];
+// Award achievement to user
+router.post('/award-achievement', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user?.id;
+    const { achievementId } = req.body;
+    
+    if (!userId || !achievementId) {
+      return res.status(400).json({ error: 'User ID and achievement ID required' });
+    }
 
-  return responses[Math.floor(Math.random() * responses.length)];
-}
+    const achievement = await storage.awardAchievement(userId, achievementId);
+    
+    res.json(achievement);
+  } catch (error) {
+    console.error('Error awarding achievement:', error);
+    res.status(500).json({ error: 'Failed to award achievement' });
+  }
+});
+
+// Get user activity feed
+router.get('/activity/:userId?', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.params.userId || req.user?.id;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const offset = parseInt(req.query.offset as string) || 0;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID required' });
+    }
+
+    const activities = await storage.getUserActivity(userId, limit, offset);
+    
+    res.json(activities);
+  } catch (error) {
+    console.error('Error fetching user activity:', error);
+    res.status(500).json({ error: 'Failed to fetch activity' });
+  }
+});
+
+// Get user connections/followers
+router.get('/connections/:userId?', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.params.userId || req.user?.id;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID required' });
+    }
+
+    const connections = await storage.getUserConnections(userId);
+    
+    res.json(connections);
+  } catch (error) {
+    console.error('Error fetching connections:', error);
+    res.status(500).json({ error: 'Failed to fetch connections' });
+  }
+});
+
+// Follow/unfollow user
+router.post('/follow', isDebugAuthenticated, async (req: any, res) => {
+  try {
+    const userId = req.user?.id;
+    const { targetUserId, action } = req.body; // action: 'follow' | 'unfollow'
+    
+    if (!userId || !targetUserId) {
+      return res.status(400).json({ error: 'User IDs required' });
+    }
+
+    if (userId === targetUserId) {
+      return res.status(400).json({ error: 'Cannot follow yourself' });
+    }
+
+    const result = await storage.toggleUserFollow(userId, targetUserId, action);
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error toggling follow:', error);
+    res.status(500).json({ error: 'Failed to update follow status' });
+  }
+});
 
 export default router;

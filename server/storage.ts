@@ -241,7 +241,95 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return asset;
   }
+  // Profile operations
+  async getUserStats(userId: string): Promise<any> {
+    // Return mock data for now
+    return {
+      capsulesCreated: 23,
+      truthsVerified: 156,
+      tokensEarned: 2450,
+      daysActive: 45,
+      influence: 89
+    };
+  }
+
+  async getUserReputation(userId: string): Promise<any> {
+    // Return mock data for now
+    return {
+      truthScore: 756,
+      griefTotal: 12,
+      capsuleCount: 23,
+      verificationsCount: 156,
+      reputationTier: 'Gold'
+    };
+  }
+
+  async getUserAchievements(userId: string): Promise<any[]> {
+    // Return mock data for now
+    return [
+      {
+        id: '1',
+        title: 'Truth Pioneer',
+        description: 'Created your first 10 verified capsules',
+        icon: '🏆',
+        earnedAt: '2025-07-15',
+        rarity: 'epic'
+      },
+      {
+        id: '2',
+        title: 'Community Verifier',
+        description: 'Verified 100+ community submissions',
+        icon: '✅',
+        earnedAt: '2025-07-28',
+        rarity: 'rare'
+      }
+    ];
+  }
+
+  async updateUserProfile(userId: string, updateData: any): Promise<any> {
+    // In a real implementation, this would update the database
+    console.log(`Updating profile for user ${userId}:`, updateData);
+    return { success: true, ...updateData };
+  }
+
+  async awardAchievement(userId: string, achievementId: string): Promise<any> {
+    // In a real implementation, this would add achievement to database
+    console.log(`Awarding achievement ${achievementId} to user ${userId}`);
+    return { success: true, achievementId };
+  }
+
+  async getUserActivity(userId: string, limit: number, offset: number): Promise<any[]> {
+    // Return mock activity data
+    return [
+      {
+        id: '1',
+        type: 'capsule_created',
+        description: 'Created a new truth capsule',
+        timestamp: '2025-08-01T10:00:00Z'
+      },
+      {
+        id: '2',
+        type: 'verification_completed',
+        description: 'Verified a community submission',
+        timestamp: '2025-07-31T15:30:00Z'
+      }
+    ];
+  }
+
+  async getUserConnections(userId: string): Promise<any> {
+    // Return mock connections data
+    return {
+      followers: 125,
+      following: 89,
+      connections: []
+    };
+  }
+
+  async toggleUserFollow(userId: string, targetUserId: string, action: string): Promise<any> {
+    // In a real implementation, this would update follow relationships
+    console.log(`User ${userId} ${action} user ${targetUserId}`);
+    return { success: true, action };
+  }
 }
 
-// Create storage instance
 export const storage = new DatabaseStorage();
