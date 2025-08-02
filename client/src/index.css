@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 @import './styles/animations.css';
 
 @tailwind base;
@@ -341,4 +341,125 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(215, 20%, 45%);
+}
+
+/* GuardianChain Premium Visual Identity Enhancement */
+
+/* Enhanced Brand Color Variables */
+@layer base {
+  :root {
+    /* Premium GuardianChain Brand Colors */
+    --brand-primary: #3b82f6;     /* Guardian Blue — trust + tech */
+    --brand-secondary: #0f172a;   /* Vault Black — memory permanence */
+    --brand-accent: #22c55e;      /* Veritas Green — proof and yield */
+    --brand-surface: #1e293b;     /* Capsule card dark */
+    --brand-warning: #f97316;     /* Signal Orange — moderation warning */
+    --brand-danger: #ef4444;      /* Censorship red */
+    --brand-highlight: #e0f2fe;   /* Truth light */
+    --brand-text-light: #f1f5f9;  /* Readable on dark */
+    --brand-text-dark: #1e293b;   /* Clean on white */
+  }
+}
+
+/* GuardianChain Premium Typography */
+.font-brand {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Premium Brand Utility Classes */
+.bg-brand-primary { background-color: var(--brand-primary); }
+.bg-brand-secondary { background-color: var(--brand-secondary); }
+.bg-brand-accent { background-color: var(--brand-accent); }
+.bg-brand-surface { background-color: var(--brand-surface); }
+.bg-brand-warning { background-color: var(--brand-warning); }
+.bg-brand-danger { background-color: var(--brand-danger); }
+.bg-brand-highlight { background-color: var(--brand-highlight); }
+
+.text-brand-primary { color: var(--brand-primary); }
+.text-brand-secondary { color: var(--brand-secondary); }
+.text-brand-accent { color: var(--brand-accent); }
+.text-brand-light { color: var(--brand-text-light); }
+.text-brand-dark { color: var(--brand-text-dark); }
+
+.border-brand-primary { border-color: var(--brand-primary); }
+.border-brand-accent { border-color: var(--brand-accent); }
+
+/* Premium Brand Animations */
+.guardian-pulse {
+  animation: guardian-pulse 2s ease-in-out infinite;
+}
+
+@keyframes guardian-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+    transform: scale(1.02);
+  }
+}
+
+.capsule-premium-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.capsule-premium-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+}
+
+/* Guardian Gradient Utilities */
+.guardian-gradient {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+}
+
+.vault-gradient {
+  background: linear-gradient(180deg, var(--brand-secondary) 0%, var(--brand-surface) 100%);
+}
+
+.truth-shimmer {
+  background: linear-gradient(45deg, var(--brand-highlight) 0%, rgba(59, 130, 246, 0.1) 50%, var(--brand-highlight) 100%);
+  background-size: 200% 200%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Premium Card Shadows with Brand Colors */
+.shadow-brand {
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.12);
+}
+
+.shadow-brand-lg {
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+}
+
+.shadow-capsule {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Capsule-specific styling */
+.rounded-capsule {
+  border-radius: 2rem;
+}
+
+/* Brand-aware focus states */
+.focus-brand:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* Professional micro-interactions */
+.guardian-hover {
+  transition: all 0.2s ease;
+}
+
+.guardian-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
