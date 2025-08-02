@@ -148,4 +148,4 @@ function ValidatorDashboard() {
   );
 }
 
-// Protect this route - only Creators and above can access validator dashboard
+export default ValidatorDashboard;

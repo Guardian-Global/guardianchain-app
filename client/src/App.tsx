@@ -40,7 +40,7 @@ import InsightPage from "@/pages/insight";
 import CapsuleForgePage from "@/pages/capsule-forge";
 import StakePage from "@/pages/stake";
 import LaunchpadPage from "@/pages/launchpad";
-import ReferralPage from "@/pages/referral";
+// ReferralPage import removed - using direct import
 import AirdropPage from "@/pages/airdrop";
 import GuardianPassPage from "@/pages/guardian-pass";
 import VaultDashboard from "@/components/VaultDashboard";
@@ -71,7 +71,7 @@ import TreasuryDashboard from "./pages/treasury";
 import AIAdvisorPanel from "./pages/ai-advisor";
 import CompliancePanel from "./pages/compliance";
 import YieldDistributionPage from "./pages/yield-distribution";
-import AdminDashboard from "./pages/admin";
+// AdminDashboard import removed - using direct import
 import ConfigPage from "./pages/config";
 
 import LogoSyncPage from "./pages/logo-sync";
@@ -138,7 +138,7 @@ import MasterAdmin from "./pages/MasterAdmin";
 import ContactInfo from "./components/ContactInfo";
 import Notifications from "./pages/Notifications";
 import BillingDashboard from "./features/payments/BillingDashboard";
-import Landing from "./pages/Landing";
+// Landing page removed - using UltimateHomepage
 import { useAuth } from "./hooks/useAuth";
 // Unified auth hooks removed - using simplified useAuth
 import { HelmetProvider } from "react-helmet-async";
@@ -189,8 +189,8 @@ import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
 import YieldDashboard from "./pages/dashboard/Yield";
-import ReferralDashboard from "./pages/Referral";
-import VaultExplorer from "./pages/Vault";
+import ReferralDashboard from "./pages/referral";
+import VaultExplorer from "./pages/vault";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
@@ -225,7 +225,7 @@ function Router() {
   }
 
   // Check if user should go to validator dashboard
-  const isValidator = user && user.email && (user.email === 'founder@guardianchain.app' || user.email === 'master@guardianchain.app');
+  const isValidator = user && (user as any).email && ((user as any).email === 'founder@guardianchain.app' || (user as any).email === 'master@guardianchain.app');
   
   if (isValidator && window.location.pathname === '/') {
     window.location.href = '/validator-dashboard';
@@ -255,7 +255,7 @@ function Router() {
             <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
             <Route path="/vault" component={Vault} />
             <Route path="/capsule/:id" component={lazy(() => import("./components/CapsuleReplayView"))} />
-          <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
+            <Route path="/admin" component={lazy(() => import("./pages/admin"))} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/dao/results/:id" component={lazy(() => import("./pages/dao/results"))} />
@@ -295,7 +295,7 @@ function Router() {
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />
-        <Route path="/referral-earn" component={ReferralDashboard} />
+        <Route path="/referral-earn" component={lazy(() => import("./pages/referral"))} />
         <Route path="/truth-vault" component={VaultExplorer} />
         <Route path="/live-demo" component={lazy(() => import("./pages/LiveDemo"))} />
         <Route path="/tier-access" component={lazy(() => import("./pages/TierAccess"))} />
@@ -391,7 +391,7 @@ function Router() {
         <Route path="/capsule-forge" component={CapsuleForgePage} />
         <Route path="/stake" component={StakePage} />
         <Route path="/launchpad" component={LaunchpadPage} />
-        <Route path="/referral" component={ReferralPage} />
+        <Route path="/referral" component={lazy(() => import("./pages/referral"))} />
         <Route path="/referrals" component={Referrals} />
         <Route path="/earnings" component={Earnings} />
         <Route path="/gamified-onboarding" component={GameifiedOnboardingPage} />
@@ -421,7 +421,7 @@ function Router() {
         <Route path="/yield-distribution" component={YieldDistributionPage} />
         <Route path="/admin">
           <AdminRoute>
-            <AdminDashboard />
+            <AdminDashboardPage />
           </AdminRoute>
         </Route>
         <Route path="/config" component={ConfigPage} />
@@ -468,6 +468,7 @@ function Router() {
         <Route path="/supabase-assets" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/founder-dashboard">
           <FounderRoute>
+            <div>Founder Dashboard Content</div>
           </FounderRoute>
         </Route>
         <Route path="/asset-manager" component={SupabaseAssetManager} />

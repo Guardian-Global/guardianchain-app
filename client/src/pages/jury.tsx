@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import JuryVotePanel from '@/components/JuryVotePanel';
@@ -143,7 +144,7 @@ function JuryPage() {
 
       {/* Institutional Access */}
       {user && (
-        <InstitutionAccess user={user} />
+        <InstitutionAccess user={user as any} />
       )}
 
       {/* Jury Guidelines */}
@@ -189,4 +190,4 @@ function JuryPage() {
   );
 }
 
-// Protect this route - only Seekers and above can access jury duty
+export default JuryPage;
