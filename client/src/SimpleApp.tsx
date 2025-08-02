@@ -6,6 +6,8 @@ import CapsuleStats from "./pages/CapsuleStats";
 import Timeline from "./pages/Timeline";
 import ValidatorBids from "./pages/ValidatorBids";
 import SearchResults from "./pages/SearchResults";
+import NewCapsule from "./pages/NewCapsule";
+import CapsuleDetail from "./pages/CapsuleDetail";
 
 // Create minimal UI components to avoid dependency issues
 function Button({ children, size, variant, className, type, ...props }: any) {
@@ -315,6 +317,9 @@ function Navigation() {
           <Link href="/search">
             <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Search</span>
           </Link>
+          <Link href="/capsules/new">
+            <span className="text-slate-300 hover:text-white cursor-pointer transition-colors">Create Capsule</span>
+          </Link>
         </div>
       </div>
     </nav>
@@ -341,6 +346,14 @@ export default function App() {
         <Route path="/search">
           <Navigation />
           <SearchResults />
+        </Route>
+        <Route path="/capsules/new">
+          <Navigation />
+          <NewCapsule />
+        </Route>
+        <Route path="/capsule/:id">
+          <Navigation />
+          <CapsuleDetail />
         </Route>
         <Route>
           <Navigation />
