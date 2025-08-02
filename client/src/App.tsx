@@ -255,7 +255,7 @@ function Router() {
             <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
             <Route path="/vault" component={Vault} />
             <Route path="/capsule/:id" component={lazy(() => import("./components/CapsuleReplayView"))} />
-          <Route path="/admin" component={lazy(() => import("./pages/Admin"))} />
+          <Route path="/admin" component={lazy(() => import("./pages/admin"))} />
             <Route path="/unauthorized" component={lazy(() => import("./pages/unauthorized"))} />
             <Route path="/dao" component={lazy(() => import("./pages/dao"))} />
             <Route path="/dao/results/:id" component={lazy(() => import("./pages/dao/results"))} />

@@ -189,4 +189,6 @@ function JuryPage() {
   );
 }
 
+export default JuryPage;
+
 // Protect this route - only Seekers and above can access jury duty
