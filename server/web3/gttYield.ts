@@ -1,10 +1,12 @@
 import { ethers } from "ethers";
+import { GTTYieldVaultService, CONTRACT_CONFIG } from './contracts';
 import GTT_ABI from "../../abis/GTT.json"; // your contract ABI
 
-// Web3 configuration with fallback for development
-const POLYGON_RPC_URL = process.env.POLYGON_RPC_URL || 'https://polygon-rpc.com';
+// Production GTT Yield Vault configuration
+const POLYGON_RPC_URL = CONTRACT_CONFIG.POLYGON_RPC_URL;
 const ETH_PRIVATE_KEY = process.env.ETH_PRIVATE_KEY || '0x0000000000000000000000000000000000000000000000000000000000000001';
-const GTT_CONTRACT_ADDRESS = process.env.GTT_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000';
+const GTT_YIELD_VAULT_ADDRESS = CONTRACT_CONFIG.GTT_YIELD_VAULT_ADDRESS;
+const GTT_TOKEN_ADDRESS = CONTRACT_CONFIG.GTT_TOKEN_ADDRESS;
 
 let provider: ethers.JsonRpcProvider | null = null;
 let signer: ethers.Wallet | null = null;

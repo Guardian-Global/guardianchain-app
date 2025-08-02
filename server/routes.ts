@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { registerGTTContractRoutes } from './routes/gttContract';
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 import { 
   distributeReplayYield, 
@@ -421,6 +422,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Register GTT Contract routes
+  registerGTTContractRoutes(app);
 
   // Simple auth user endpoint - no database calls
   app.get('/api/auth/user', isDebugAuthenticated, async (req: any, res) => {
