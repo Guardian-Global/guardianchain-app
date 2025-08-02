@@ -2502,6 +2502,337 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Get guardian map nodes
+  app.get('/api/guardian-map/nodes', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🗺️ Guardian map nodes requested');
+    
+    try {
+      const { region, tier } = req.query;
+      
+      // Mock guardian map data
+      const mockGuardians = [
+        {
+          id: 'guardian_1',
+          wallet: 'veritas_guardian@truth.eth',
+          latitude: 40.7128,
+          longitude: -74.0060,
+          truth_score: 187,
+          capsule_count: 23,
+          region: 'north_america',
+          country: 'United States',
+          city: 'New York',
+          reputation_tier: 'Veritas',
+          activity_level: 'high',
+          last_active: '2025-08-02T14:15:00Z',
+          specialties: ['Corporate Fraud', 'Data Privacy', 'Financial Crimes'],
+          connections: ['guardian_2', 'guardian_4', 'guardian_7'],
+          influence_radius: 25
+        },
+        {
+          id: 'guardian_2',
+          wallet: 'digital_truth_seeker@chain.app',
+          latitude: 51.5074,
+          longitude: -0.1278,
+          truth_score: 142,
+          capsule_count: 19,
+          region: 'europe',
+          country: 'United Kingdom',
+          city: 'London',
+          reputation_tier: 'Gold',
+          activity_level: 'high',
+          last_active: '2025-08-02T14:10:00Z',
+          specialties: ['Surveillance', 'Tech Industry', 'Privacy Rights'],
+          connections: ['guardian_1', 'guardian_3', 'guardian_5'],
+          influence_radius: 20
+        },
+        {
+          id: 'guardian_3',
+          wallet: 'climate_witness@guardian.net',
+          latitude: 48.8566,
+          longitude: 2.3522,
+          truth_score: 98,
+          capsule_count: 15,
+          region: 'europe',
+          country: 'France',
+          city: 'Paris',
+          reputation_tier: 'Silver',
+          activity_level: 'medium',
+          last_active: '2025-08-02T13:45:00Z',
+          specialties: ['Climate Science', 'Environmental Crime', 'Research Integrity'],
+          connections: ['guardian_2', 'guardian_6'],
+          influence_radius: 18
+        },
+        {
+          id: 'guardian_4',
+          wallet: 'healthcare_advocate@medical.org',
+          latitude: 35.6762,
+          longitude: 139.6503,
+          truth_score: 76,
+          capsule_count: 12,
+          region: 'asia',
+          country: 'Japan',
+          city: 'Tokyo',
+          reputation_tier: 'Silver',
+          activity_level: 'medium',
+          last_active: '2025-08-02T13:30:00Z',
+          specialties: ['Healthcare', 'Medical Ethics', 'Patient Rights'],
+          connections: ['guardian_1', 'guardian_8'],
+          influence_radius: 15
+        },
+        {
+          id: 'guardian_5',
+          wallet: 'financial_insider@banks.net',
+          latitude: 52.5200,
+          longitude: 13.4050,
+          truth_score: 54,
+          capsule_count: 9,
+          region: 'europe',
+          country: 'Germany',
+          city: 'Berlin',
+          reputation_tier: 'Bronze',
+          activity_level: 'low',
+          last_active: '2025-08-02T12:00:00Z',
+          specialties: ['Banking', 'Financial Fraud', 'Regulatory Violations'],
+          connections: ['guardian_2'],
+          influence_radius: 12
+        },
+        {
+          id: 'guardian_6',
+          wallet: 'research_scientist@uni.edu',
+          latitude: -33.8688,
+          longitude: 151.2093,
+          truth_score: 89,
+          capsule_count: 14,
+          region: 'oceania',
+          country: 'Australia',
+          city: 'Sydney',
+          reputation_tier: 'Silver',
+          activity_level: 'high',
+          last_active: '2025-08-02T14:00:00Z',
+          specialties: ['Academic Research', 'Scientific Integrity', 'Publication Ethics'],
+          connections: ['guardian_3', 'guardian_7'],
+          influence_radius: 16
+        },
+        {
+          id: 'guardian_7',
+          wallet: 'media_watchdog@press.org',
+          latitude: 43.6532,
+          longitude: -79.3832,
+          truth_score: 125,
+          capsule_count: 17,
+          region: 'north_america',
+          country: 'Canada',
+          city: 'Toronto',
+          reputation_tier: 'Gold',
+          activity_level: 'high',
+          last_active: '2025-08-02T14:12:00Z',
+          specialties: ['Journalism', 'Media Ethics', 'Press Freedom'],
+          connections: ['guardian_1', 'guardian_6'],
+          influence_radius: 22
+        },
+        {
+          id: 'guardian_8',
+          wallet: 'tech_ethics@startup.dev',
+          latitude: 37.7749,
+          longitude: -122.4194,
+          truth_score: 95,
+          capsule_count: 11,
+          region: 'north_america',
+          country: 'United States',
+          city: 'San Francisco',
+          reputation_tier: 'Silver',
+          activity_level: 'medium',
+          last_active: '2025-08-02T13:20:00Z',
+          specialties: ['Tech Ethics', 'AI Safety', 'Digital Rights'],
+          connections: ['guardian_4', 'guardian_9'],
+          influence_radius: 17
+        },
+        {
+          id: 'guardian_9',
+          wallet: 'debug@guardianchain.app',
+          latitude: 1.3521,
+          longitude: 103.8198,
+          truth_score: 33,
+          capsule_count: 3,
+          region: 'asia',
+          country: 'Singapore',
+          city: 'Singapore',
+          reputation_tier: 'Bronze',
+          activity_level: 'medium',
+          last_active: '2025-08-02T14:16:00Z',
+          specialties: ['Testing', 'Development', 'Platform Exploration'],
+          connections: ['guardian_8'],
+          influence_radius: 8
+        }
+      ];
+      
+      // Filter guardians based on region and tier
+      let filteredGuardians = mockGuardians;
+      
+      if (region && region !== 'all') {
+        filteredGuardians = filteredGuardians.filter(guardian => guardian.region === region);
+      }
+      
+      if (tier && tier !== 'all') {
+        filteredGuardians = filteredGuardians.filter(guardian => guardian.reputation_tier === tier);
+      }
+      
+      console.log('✅ Guardian map nodes generated:', {
+        total: mockGuardians.length,
+        filtered: filteredGuardians.length,
+        filters: { region, tier }
+      });
+      
+      res.json({
+        guardians: filteredGuardians,
+        metadata: {
+          total_guardians: mockGuardians.length,
+          filtered_guardians: filteredGuardians.length,
+          last_updated: new Date().toISOString()
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get guardian map nodes:', error);
+      res.status(500).json({ error: 'Failed to get guardian map nodes' });
+    }
+  });
+
+  // Get guardian map connections
+  app.get('/api/guardian-map/connections', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔗 Guardian map connections requested');
+    
+    try {
+      // Mock connection data
+      const mockConnections = [
+        {
+          source: 'guardian_1',
+          target: 'guardian_2',
+          strength: 0.9,
+          connection_type: 'collaboration',
+          created_at: '2025-07-15T00:00:00Z'
+        },
+        {
+          source: 'guardian_1',
+          target: 'guardian_4',
+          strength: 0.7,
+          connection_type: 'verification',
+          created_at: '2025-07-20T00:00:00Z'
+        },
+        {
+          source: 'guardian_1',
+          target: 'guardian_7',
+          strength: 0.8,
+          connection_type: 'mentorship',
+          created_at: '2025-07-10T00:00:00Z'
+        },
+        {
+          source: 'guardian_2',
+          target: 'guardian_3',
+          strength: 0.6,
+          connection_type: 'influence',
+          created_at: '2025-07-25T00:00:00Z'
+        },
+        {
+          source: 'guardian_2',
+          target: 'guardian_5',
+          strength: 0.5,
+          connection_type: 'collaboration',
+          created_at: '2025-07-18T00:00:00Z'
+        },
+        {
+          source: 'guardian_3',
+          target: 'guardian_6',
+          strength: 0.7,
+          connection_type: 'verification',
+          created_at: '2025-07-22T00:00:00Z'
+        },
+        {
+          source: 'guardian_4',
+          target: 'guardian_8',
+          strength: 0.6,
+          connection_type: 'influence',
+          created_at: '2025-07-28T00:00:00Z'
+        },
+        {
+          source: 'guardian_6',
+          target: 'guardian_7',
+          strength: 0.8,
+          connection_type: 'collaboration',
+          created_at: '2025-07-12T00:00:00Z'
+        },
+        {
+          source: 'guardian_8',
+          target: 'guardian_9',
+          strength: 0.4,
+          connection_type: 'mentorship',
+          created_at: '2025-08-01T00:00:00Z'
+        }
+      ];
+      
+      console.log('✅ Guardian map connections generated:', {
+        connections: mockConnections.length
+      });
+      
+      res.json({
+        connections: mockConnections,
+        metadata: {
+          total_connections: mockConnections.length,
+          connection_types: ['collaboration', 'verification', 'influence', 'mentorship']
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get guardian map connections:', error);
+      res.status(500).json({ error: 'Failed to get guardian map connections' });
+    }
+  });
+
+  // Get guardian map metrics
+  app.get('/api/guardian-map/metrics', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📊 Guardian map metrics requested');
+    
+    try {
+      // Mock metrics data
+      const mockMetrics = {
+        total_guardians: 9,
+        active_guardians: 6,
+        total_connections: 9,
+        global_truth_score: 899,
+        top_regions: [
+          {
+            region: 'North America',
+            guardian_count: 3,
+            avg_truth_score: 102
+          },
+          {
+            region: 'Europe',
+            guardian_count: 3,
+            avg_truth_score: 98
+          },
+          {
+            region: 'Asia',
+            guardian_count: 2,
+            avg_truth_score: 55
+          },
+          {
+            region: 'Oceania',
+            guardian_count: 1,
+            avg_truth_score: 89
+          }
+        ]
+      };
+      
+      console.log('✅ Guardian map metrics generated');
+      
+      res.json(mockMetrics);
+      
+    } catch (error) {
+      console.error('❌ Failed to get guardian map metrics:', error);
+      res.status(500).json({ error: 'Failed to get guardian map metrics' });
+    }
+  });
+
   // Get lineage graph data
   app.get('/api/lineage/graph', isDebugAuthenticated, async (req: any, res) => {
     console.log('🌳 Lineage graph requested');

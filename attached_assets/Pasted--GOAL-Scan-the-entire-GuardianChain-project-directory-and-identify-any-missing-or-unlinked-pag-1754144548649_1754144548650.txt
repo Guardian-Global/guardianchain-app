@@ -1,0 +1,55 @@
+🧾 GOAL:
+Scan the entire GuardianChain project directory and identify any **missing or unlinked pages**, **incomplete routes**, or **features referenced but not implemented** (e.g. in Layout, DAO, Capsules, SMRI, Lineage, GuardianMap, Yield, Certificates).
+
+Then:
+✅ Automatically create the missing pages/components with placeholder structure
+✅ Link them properly in the main navigation (Topbar, NavSidebar)
+✅ Log all changes in a summary file: `MISSING_PAGE_AUDIT.md`
+
+🎯 MANDATORY TARGET CHECKLIST:
+- /capsules/gallery.tsx        — Minted Capsule NFT gallery
+- /capsules/create.tsx         — Capsule creation form
+- /capsules/vault.tsx          — Capsule archive + permanent vault
+- /capsule/[id]/lineage.tsx    — Lineage graph per capsule
+- /lineage/map.tsx             — Global influence tree
+- /gtt/claim.tsx               — Yield self-claim page
+- /smri/[wallet].tsx           — Sovereign Memory Reputation Index
+- /tgene/[wallet].tsx          — Truth Genome NFT viewer
+- /dao/results.tsx             — Proposal result summary
+- /verify.tsx                  — Capsule hash/ID verifier
+- /guardianmap.tsx             — Capsule search + grief cluster
+- /docs/how-it-works.mdx       — Intro documentation
+- /docs/grants.mdx             — Grants + Public Good explanation
+- /docs/legal.mdx              — Legal doctrines + veritas structure
+- /investors.tsx               — Institutional pitch page
+- /contact.tsx                 — Support / grant / partnership contact
+
+🔗 NAVIGATION LINKS TO VERIFY & UPDATE:
+- Topbar: Walkthrough, Launch Capsule, Login
+- Sidebar: All modules above grouped in sections:
+  - Capsules / Replay / Yield / SMRI / DAO / Certificates / GuardianMap / Docs
+
+🛠 TASKS TO EXECUTE:
+1. Use project-wide grep or AST scan to find routes referenced but not implemented.
+2. Compare actual /pages/** vs listed expected above.
+3. For each missing page, generate:
+   - Basic functional placeholder
+   - Page title
+   - Route verification via test log
+4. Link the page in either Topbar or Sidebar, if appropriate.
+5. Output all files created/edited in `MISSING_PAGE_AUDIT.md` at root.
+
+📁 OUTPUT FILE:
+`MISSING_PAGE_AUDIT.md` must include:
+- ✅ Created Pages (with full paths)
+- 🔄 Updated Nav components (which files/lines changed)
+- ⚠️ Pages referenced but not yet implemented (if still missing after run)
+
+📦 BONUS:
+If time permits, auto-populate MDX content for `/docs` with headers for expansion.
+
+🤖 NOTES:
+Use Next.js best practices. Avoid hardcoding paths, prefer `Link`. Use Tailwind styling. Use `useRouter()` where dynamic routing is needed.
+
+⚠️ DO NOT DELETE EXISTING FILES OR LOGIC
+⚠️ DO NOT OVERWRITE .env or smart contract files

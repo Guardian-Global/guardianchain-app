@@ -47,6 +47,7 @@ Preferred communication style: Simple, everyday language.
 - **PWA Capabilities**: Full Progressive Web App functionality with service worker, offline support, install button, background sync, and enhanced manifest with GuardianChain branding. Includes offline indicators and seamless app-like experience.
 - **Asset Integration**: Comprehensive branding asset system with video backgrounds, NFT avatar options, logo strips, and GPU-accelerated visual effects.
 - **Navigation**: Comprehensive navigation system including a centralized ROUTES schema with role-based filtering, professional sidebar, command palette, breadcrumb navigation, and mobile drawer.
+- **Guardian Map**: Interactive global network visualization featuring real-time guardian locations, reputation tiers, activity levels, advanced search and filtering capabilities, multiple map visualization modes (standard, heatmap, connections), comprehensive export tools (CSV, JSON, Excel, image, reports), and network analysis with connection tracking.
 - **Smart Contract Suite**: Production-ready ERC-721 implementation with yield mechanics and validation systems (CapsuleNFT and GTTYieldVault).
 
 ## External Dependencies
