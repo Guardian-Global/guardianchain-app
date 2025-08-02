@@ -183,6 +183,7 @@ import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
 import MicroInteractionsShowcase from "./pages/micro-interactions-showcase";
+import MemoryFeaturesPage from "./pages/memory-features";
 import ProtectedRoute, { AdminRoute, MasterAdminRoute, FounderRoute } from "./components/auth/ProtectedRoute";
 // OnboardingChecker moved to different import location
 
@@ -472,6 +473,7 @@ function Router() {
         {/* Communication & Streaming */}
         <Route path="/messaging" component={Messaging} />
         <Route path="/live-streaming" component={LiveStreaming} />
+        <Route path="/memory-features" component={MemoryFeaturesPage} />
         <Route path="/upgrade" component={UpgradePage} />
         {/* AdminLogin archived - using unified auth */}
         <Route path="/admin/dashboard" component={AdminDashboardPage} />
