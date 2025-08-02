@@ -2373,6 +2373,289 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Get SMRI leaderboard
+  app.get('/api/smri/leaderboard', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🏆 SMRI leaderboard requested');
+    
+    try {
+      const { tier = 'all' } = req.query;
+      
+      // Mock leaderboard data
+      const mockLeaderboard = [
+        {
+          wallet: 'veritas_guardian@truth.eth',
+          truth_score: 187,
+          grief_total: 45,
+          capsule_count: 23,
+          influence_count: 18,
+          cert_count: 12,
+          reputation_tier: 'Veritas',
+          last_updated: '2025-08-02T14:00:00Z',
+          trending: 'up',
+          rank: 1,
+          bio: 'Veteran whistleblower fighting corporate corruption',
+          specialties: ['Corporate Fraud', 'Data Privacy', 'Financial Crimes']
+        },
+        {
+          wallet: 'digital_truth_seeker@chain.app',
+          truth_score: 142,
+          grief_total: 38,
+          capsule_count: 19,
+          influence_count: 14,
+          cert_count: 8,
+          reputation_tier: 'Gold',
+          last_updated: '2025-08-02T13:45:00Z',
+          trending: 'up',
+          rank: 2,
+          bio: 'Investigative journalist exposing tech surveillance',
+          specialties: ['Surveillance', 'Tech Industry', 'Privacy Rights']
+        },
+        {
+          wallet: 'climate_witness@guardian.net',
+          truth_score: 98,
+          grief_total: 28,
+          capsule_count: 15,
+          influence_count: 11,
+          cert_count: 6,
+          reputation_tier: 'Silver',
+          last_updated: '2025-08-02T13:30:00Z',
+          trending: 'stable',
+          rank: 3,
+          bio: 'Environmental scientist documenting climate suppression',
+          specialties: ['Climate Science', 'Environmental Crime', 'Research Integrity']
+        },
+        {
+          wallet: 'healthcare_advocate@medical.org',
+          truth_score: 76,
+          grief_total: 22,
+          capsule_count: 12,
+          influence_count: 8,
+          cert_count: 4,
+          reputation_tier: 'Silver',
+          last_updated: '2025-08-02T13:15:00Z',
+          trending: 'down',
+          rank: 4,
+          bio: 'Medical professional exposing healthcare fraud',
+          specialties: ['Healthcare', 'Medical Ethics', 'Patient Rights']
+        },
+        {
+          wallet: 'financial_insider@banks.net',
+          truth_score: 54,
+          grief_total: 16,
+          capsule_count: 9,
+          influence_count: 6,
+          cert_count: 3,
+          reputation_tier: 'Bronze',
+          last_updated: '2025-08-02T13:00:00Z',
+          trending: 'up',
+          rank: 5,
+          bio: 'Former bank employee revealing financial misconduct',
+          specialties: ['Banking', 'Financial Fraud', 'Regulatory Violations']
+        },
+        {
+          wallet: 'tech_worker@anonymous.dev',
+          truth_score: 42,
+          grief_total: 12,
+          capsule_count: 7,
+          influence_count: 5,
+          cert_count: 2,
+          reputation_tier: 'Bronze',
+          last_updated: '2025-08-02T12:45:00Z',
+          trending: 'stable',
+          rank: 6,
+          bio: 'Software engineer documenting tech industry abuses',
+          specialties: ['Software Development', 'Worker Rights', 'Tech Ethics']
+        },
+        {
+          wallet: 'debug@guardianchain.app',
+          truth_score: 33,
+          grief_total: 12,
+          capsule_count: 3,
+          influence_count: 2,
+          cert_count: 2,
+          reputation_tier: 'Bronze',
+          last_updated: '2025-08-02T14:16:00Z',
+          trending: 'stable',
+          rank: 7,
+          bio: 'Debug user exploring the Guardian ecosystem',
+          specialties: ['Testing', 'Development', 'Platform Exploration']
+        }
+      ];
+      
+      // Filter by tier if specified
+      let filteredLeaderboard = mockLeaderboard;
+      if (tier !== 'all') {
+        filteredLeaderboard = mockLeaderboard.filter(profile => profile.reputation_tier === tier);
+      }
+      
+      console.log('✅ SMRI leaderboard generated:', {
+        total: mockLeaderboard.length,
+        filtered: filteredLeaderboard.length,
+        tier
+      });
+      
+      res.json(filteredLeaderboard);
+      
+    } catch (error) {
+      console.error('❌ Failed to get SMRI leaderboard:', error);
+      res.status(500).json({ error: 'Failed to get SMRI leaderboard' });
+    }
+  });
+
+  // Get lineage graph data
+  app.get('/api/lineage/graph', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🌳 Lineage graph requested');
+    
+    try {
+      const { search, type } = req.query;
+      
+      // Mock lineage data
+      const mockNodes = [
+        {
+          id: 'root_1',
+          title: 'Corporate Surveillance Exposed',
+          creator: 'whistleblower@secure.net',
+          created_at: '2025-01-01T12:00:00Z',
+          grief_score: 5,
+          influence_count: 12,
+          verification_status: 'verified',
+          capsule_type: 'whistleblower',
+          children: ['child_1', 'child_2'],
+          parents: []
+        },
+        {
+          id: 'child_1',
+          title: 'Data Mining Investigation',
+          creator: 'journalist@truth.org',
+          created_at: '2025-01-05T14:30:00Z',
+          grief_score: 4,
+          influence_count: 8,
+          verification_status: 'verified',
+          capsule_type: 'evidence',
+          children: ['grandchild_1'],
+          parents: ['root_1']
+        },
+        {
+          id: 'child_2',
+          title: 'Tech Worker Testimony',
+          creator: 'insider@anonymous.net',
+          created_at: '2025-01-03T09:15:00Z',
+          grief_score: 3,
+          influence_count: 6,
+          verification_status: 'pending',
+          capsule_type: 'testimony',
+          children: ['grandchild_2'],
+          parents: ['root_1']
+        },
+        {
+          id: 'grandchild_1',
+          title: 'Privacy Law Analysis',
+          creator: 'lawyer@justice.org',
+          created_at: '2025-01-10T16:45:00Z',
+          grief_score: 2,
+          influence_count: 4,
+          verification_status: 'verified',
+          capsule_type: 'legacy',
+          children: [],
+          parents: ['child_1']
+        },
+        {
+          id: 'grandchild_2',
+          title: 'Employee Rights Documentation',
+          creator: 'advocate@workers.org',
+          created_at: '2025-01-08T11:20:00Z',
+          grief_score: 3,
+          influence_count: 5,
+          verification_status: 'verified',
+          capsule_type: 'testimony',
+          children: [],
+          parents: ['child_2']
+        },
+        {
+          id: 'isolated_1',
+          title: 'Climate Data Suppression',
+          creator: 'scientist@research.edu',
+          created_at: '2025-01-12T13:30:00Z',
+          grief_score: 4,
+          influence_count: 7,
+          verification_status: 'verified',
+          capsule_type: 'evidence',
+          children: [],
+          parents: []
+        }
+      ];
+      
+      const mockConnections = [
+        {
+          source: 'root_1',
+          target: 'child_1',
+          influence_type: 'inspired',
+          strength: 0.9
+        },
+        {
+          source: 'root_1',
+          target: 'child_2',
+          influence_type: 'inspired',
+          strength: 0.8
+        },
+        {
+          source: 'child_1',
+          target: 'grandchild_1',
+          influence_type: 'referenced',
+          strength: 0.7
+        },
+        {
+          source: 'child_2',
+          target: 'grandchild_2',
+          influence_type: 'expanded',
+          strength: 0.6
+        }
+      ];
+      
+      // Filter nodes based on search and type
+      let filteredNodes = mockNodes;
+      
+      if (search) {
+        const searchTerm = search.toLowerCase();
+        filteredNodes = filteredNodes.filter(node =>
+          node.title.toLowerCase().includes(searchTerm) ||
+          node.creator.toLowerCase().includes(searchTerm) ||
+          node.capsule_type.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      if (type && type !== 'all') {
+        filteredNodes = filteredNodes.filter(node => node.capsule_type === type);
+      }
+      
+      // Filter connections to only include nodes that are in filtered set
+      const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
+      const filteredConnections = mockConnections.filter(conn =>
+        filteredNodeIds.has(conn.source) && filteredNodeIds.has(conn.target)
+      );
+      
+      console.log('✅ Lineage graph data generated:', {
+        nodes: filteredNodes.length,
+        connections: filteredConnections.length
+      });
+      
+      res.json({
+        nodes: filteredNodes,
+        connections: filteredConnections,
+        metadata: {
+          total_nodes: mockNodes.length,
+          total_connections: mockConnections.length,
+          filtered_nodes: filteredNodes.length,
+          filtered_connections: filteredConnections.length
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get lineage graph:', error);
+      res.status(500).json({ error: 'Failed to get lineage graph' });
+    }
+  });
+
   // Get lineage tree data
   app.get('/api/lineage/tree/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
     console.log('🌳 Lineage tree requested for:', req.params.capsuleId);
