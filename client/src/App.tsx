@@ -279,6 +279,7 @@ function Router() {
             <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
 
         <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
+        <Route path="/u/:username" component={lazy(() => import("./pages/u/[username]"))} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />
 

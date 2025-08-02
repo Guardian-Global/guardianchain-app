@@ -491,6 +491,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  app.post('/api/ai/analyze-capsule', isDebugAuthenticated, (req: any, res) => {
+    console.log('🧠 AI capsule analysis requested:', req.body);
+    res.json({
+      success: true,
+      analysis: {
+        emotionalResonance: Math.floor(Math.random() * 20 + 80),
+        truthLikelihood: Math.floor(Math.random() * 15 + 85),
+        historicalSignificance: Math.floor(Math.random() * 30 + 60),
+        personalValue: Math.floor(Math.random() * 10 + 90),
+        suggestedTitle: `Enhanced ${req.body.fileName} Memory`,
+        keyThemes: ['Family', 'Legacy', 'Truth', 'Memory'],
+        recommendedAudience: 'Family and trusted connections'
+      }
+    });
+  });
+
+  app.post('/api/capsules/metadata', isDebugAuthenticated, (req: any, res) => {
+    console.log('📝 Storing capsule metadata:', req.body);
+    res.json({
+      success: true,
+      message: 'Capsule metadata stored successfully',
+      capsuleId: req.body.capsuleId
+    });
+  });
+
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
 

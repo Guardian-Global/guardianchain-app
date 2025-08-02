@@ -50,6 +50,9 @@ import { CapsuleVaultTimeline } from "@/components/CapsuleVaultTimeline";
 import { SaveNotificationProvider } from "@/components/SaveNotificationProvider";
 import FeaturedCapsulesManager from "@/components/profile/FeaturedCapsulesManager";
 import NFTAutoMinter from "@/components/profile/NFTAutoMinter";
+import TruthGenomeCard from "@/components/profile/TruthGenomeCard";
+import CapsuleWallToggle, { type ViewMode } from "@/components/profile/CapsuleWallToggle";
+import EnhancedCapsuleUploader from "@/components/profile/EnhancedCapsuleUploader";
 
 interface SovereignProfile {
   id: string;
@@ -122,6 +125,7 @@ export default function SovereignSocialProfile() {
 
   const [activeTab, setActiveTab] = useState("timeline");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const { toast } = useToast();
 
   // Media upload handlers
@@ -441,31 +445,42 @@ export default function SovereignSocialProfile() {
   );
 
   const renderStatsPanel = () => (
-    <div className="grid grid-cols-4 gap-4 mb-6">
-      <Card>
-        <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold text-blue-500">{profile.capsuleCount}</div>
-          <div className="text-sm text-gray-600">Capsules</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold text-purple-500">{profile.nftCount}</div>
-          <div className="text-sm text-gray-600">NFTs</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold text-green-500">{profile.veritasSealCount}</div>
-          <div className="text-sm text-gray-600">Veritas Seals</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardContent className="p-4 text-center">
-          <div className="text-2xl font-bold text-orange-500">{profile.griefScore}</div>
-          <div className="text-sm text-gray-600">Grief Score</div>
-        </CardContent>
-      </Card>
+    <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 col-span-2 gap-4">
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-blue-500">{profile.capsuleCount}</div>
+            <div className="text-sm text-gray-600">Capsules</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-purple-500">{profile.nftCount}</div>
+            <div className="text-sm text-gray-600">NFTs</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-green-500">{profile.veritasSealCount}</div>
+            <div className="text-sm text-gray-600">Veritas Seals</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-orange-500">{profile.griefScore}</div>
+            <div className="text-sm text-gray-600">Grief Score</div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Truth Genome Card */}
+      <div className="row-span-1">
+        <TruthGenomeCard 
+          userId={profile.id}
+          overallScore={Math.round((profile.truthScore || 0) / 10)}
+          className="h-full"
+        />
+      </div>
     </div>
   );
 
@@ -624,7 +639,14 @@ export default function SovereignSocialProfile() {
             </TabsList>
 
             <TabsContent value="timeline" className="mt-6">
-              <CapsuleVaultTimeline userId={profile.id} />
+              <div className="space-y-4">
+                <CapsuleWallToggle
+                  currentView={viewMode}
+                  onViewChange={setViewMode}
+                  capsuleCount={profile.capsuleCount || 0}
+                />
+                <CapsuleVaultTimeline userId={profile.id} viewMode={viewMode} />
+              </div>
             </TabsContent>
 
             <TabsContent value="featured" className="mt-6">
@@ -649,7 +671,17 @@ export default function SovereignSocialProfile() {
             </TabsContent>
 
             <TabsContent value="upload" className="mt-6">
-              {renderMediaUploadPanel()}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <EnhancedCapsuleUploader
+                  onCapsuleCreated={(capsule) => {
+                    toast({
+                      title: "Capsule Added to Timeline",
+                      description: "Your new capsule is now live on your sovereign profile",
+                    });
+                  }}
+                />
+                {renderMediaUploadPanel()}
+              </div>
             </TabsContent>
 
             <TabsContent value="seals" className="mt-6">
