@@ -1,0 +1,26 @@
+Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn&#x27;t have a dependency array, or one of the dependencies changes on every render.
+    at EnhancedProfileDashboard (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/profile/EnhancedProfileDashboard.tsx:81:21)
+    at component
+    at Route (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=50e7c959:191:16)
+    at Switch (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=50e7c959:247:17)
+    at Suspense
+    at main
+    at div
+    at Router (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/App.tsx?v=VGg1pFlLx2QnGD_9R47on:185:48)
+    at main
+    at Provider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6CYQPTYK.js?v=50e7c959:38:15)
+    at TooltipProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=50e7c959:64:5)
+    at AssetProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/assets/AssetProvider.tsx:31:3)
+    at ThemeProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/web3/theme-provider.tsx:25:3)
+    at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5T6ZDHJF.js?v=50e7c959:2805:3)
+    at Hydrate (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wagmi.js?v=50e7c959:212:11)
+    at WagmiProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wagmi.js?v=50e7c959:236:11)
+    at WalletProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/web3/wallet-provider.tsx:29:42)
+    at MascotProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/mascot/MascotProvider.tsx:31:34)
+    at HelpProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/help/HelpProvider.tsx:29:32)
+    at OnboardingChecker (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/onboarding/OnboardingChecker.tsx:21:37)
+    at OnboardingProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/onboarding/OnboardingProvider.tsx:42:46)
+    at TierProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/context/TierContext.tsx:31:32)
+    at UnifiedAuthProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/hooks/useUnifiedAuth.ts:29:39)
+    at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5T6ZDHJF.js?v=50e7c959:2805:3)
+    at App

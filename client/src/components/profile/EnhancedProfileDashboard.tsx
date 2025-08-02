@@ -169,41 +169,44 @@ export default function EnhancedProfileDashboard() {
   });
 
   useEffect(() => {
-    if (profile) {
-      setProfileData(profile as UserProfile);
-    } else if (user) {
-      // Initialize with basic user data
-      setProfileData({
-        id: (user as any).id || "unknown",
-        email: (user as any).email,
-        firstName: (user as any).firstName,
-        lastName: (user as any).lastName,
-        displayName:
-          (user as any).displayName ||
-          `${(user as any).firstName} ${(user as any).lastName}`,
-        profileImageUrl: (user as any).profileImageUrl,
-        tier: "EXPLORER",
-        roles: ["USER"],
-        stats: {
-          capsulesCreated: 0,
-          totalYieldEarned: 0,
-          verificationScore: 100,
-          followerCount: 0,
-          followingCount: 0,
-          gttBalance: 0,
-        },
-        preferences: {
-          theme: "dark",
-          emailNotifications: true,
-          pushNotifications: false,
-          aiAssistantEnabled: true,
-          publicProfile: true,
-          showStats: true,
-          allowMessages: true,
-        },
-      });
+    // Only update profile data once when we get user/profile data and don't have profile data yet
+    if (!profileData) {
+      if (profile) {
+        setProfileData(profile as UserProfile);
+      } else if (user) {
+        // Initialize with basic user data
+        setProfileData({
+          id: (user as any).id || "unknown",
+          email: (user as any).email,
+          firstName: (user as any).firstName,
+          lastName: (user as any).lastName,
+          displayName:
+            (user as any).displayName ||
+            `${(user as any).firstName} ${(user as any).lastName}`,
+          profileImageUrl: (user as any).profileImageUrl,
+          tier: "EXPLORER",
+          roles: ["USER"],
+          stats: {
+            capsulesCreated: 0,
+            totalYieldEarned: 0,
+            verificationScore: 100,
+            followerCount: 0,
+            followingCount: 0,
+            gttBalance: 0,
+          },
+          preferences: {
+            theme: "dark",
+            emailNotifications: true,
+            pushNotifications: false,
+            aiAssistantEnabled: true,
+            publicProfile: true,
+            showStats: true,
+            allowMessages: true,
+          },
+        });
+      }
     }
-  }, [profile, user]);
+  }, [profile, user, profileData]);
 
   const handleSaveProfile = () => {
     if (profileData) {
