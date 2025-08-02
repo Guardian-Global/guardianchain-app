@@ -1,378 +1,510 @@
-import React from 'react';
-import { useState } from "react";
-import { useLocation } from 'wouter';
-import { useMutation } from '@tanstack/react-query';
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { 
+  Infinity, 
   Shield, 
-  Brain, 
-  Lock, 
-  Calendar, 
-  User, 
-  CheckCircle, 
-  Loader2,
-  Scroll,
-  Sparkles
+  Clock, 
+  Heart,
+  FileText,
+  User,
+  Calendar,
+  Lock,
+  Unlock,
+  Copy,
+  ExternalLink,
+  AlertCircle,
+  CheckCircle,
+  Crown,
+  Gavel,
+  Scroll
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
 
-export default function EternalContracts() {
-  const { user, isAuthenticated } = useAuth();
-  const [, setLocation] = useLocation();
+interface EternalContract {
+  id: string;
+  title: string;
+  content: string;
+  contractType: 'will' | 'testimony' | 'declaration' | 'covenant' | 'legacy';
+  status: 'draft' | 'sealed' | 'executed' | 'activated';
+  createdAt: string;
+  unlockDate?: string;
+  beneficiaries?: string[];
+  ensName?: string;
+  blockchainTx?: string;
+  isPublic: boolean;
+  requiresWitness: boolean;
+  legalBindingLevel: 'personal' | 'notarized' | 'legal' | 'sovereign';
+}
+
+export default function EternalContractsPage() {
+  const { user } = useAuth();
   const { toast } = useToast();
-  
-  // Form state
-  const [content, setContent] = useState("");
-  const [summary, setSummary] = useState("");
-  const [beneficiary, setBeneficiary] = useState("");
-  const [unlockDate, setUnlockDate] = useState("");
-  const [contractTitle, setContractTitle] = useState("");
-  
-  // UI state
-  const [verifying, setVerifying] = useState(false);
-  const [publishing, setPublishing] = useState(false);
-  const [verified, setVerified] = useState(false);
-  const [published, setPublished] = useState(false);
+  const [activeTab, setActiveTab] = useState<'create' | 'contracts' | 'templates'>('create');
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    contractType: 'declaration' as const,
+    unlockDate: '',
+    beneficiaries: [] as string[],
+    ensName: '',
+    isPublic: false,
+    requiresWitness: false,
+    legalBindingLevel: 'personal' as const
+  });
 
-  // AI Verification
-  const verifyContract = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/ai/verify-contract', {
-        content,
-        title: contractTitle
-      });
-      return response.json();
+  const { data: contracts, isLoading } = useQuery<EternalContract[]>({
+    queryKey: ['/api/eternal-contracts', user?.id],
+    enabled: !!user?.id,
+  });
+
+  const createContractMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      return apiRequest('POST', '/api/eternal-contracts/create', data);
     },
-    onSuccess: (data) => {
-      setSummary(data.summary);
-      setVerified(true);
+    onSuccess: () => {
       toast({
-        title: "Contract Verified",
-        description: "AI has analyzed your eternal declaration.",
+        title: 'Eternal Contract Created',
+        description: 'Your immortal declaration has been sealed on the blockchain.',
+      });
+      setFormData({
+        title: '',
+        content: '',
+        contractType: 'declaration',
+        unlockDate: '',
+        beneficiaries: [],
+        ensName: '',
+        isPublic: false,
+        requiresWitness: false,
+        legalBindingLevel: 'personal'
       });
     },
     onError: (error) => {
-      console.error('Verification failed:', error);
       toast({
-        title: "Verification Failed",
-        description: "Could not verify contract. Please try again.",
-        variant: "destructive"
+        title: 'Creation Failed',
+        description: 'There was an error creating your eternal contract.',
+        variant: 'destructive',
       });
     }
   });
 
-  // Publish Contract
-  const publishContract = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/capsule/publish-contract', {
-        title: contractTitle,
-        content,
-        summary,
-        author: (user as any)?.email || 'anonymous',
-        beneficiary: beneficiary || null,
-        unlockDate: unlockDate || null,
-        contractType: 'eternal_declaration',
-        metadata: {
-          wordCount: content.split(' ').length,
-          hasVerification: verified,
-          hasBeneficiary: !!beneficiary,
-          hasUnlockDate: !!unlockDate
-        }
-      });
-      return response.json();
+  const contractTypes = [
+    {
+      type: 'will' as const,
+      title: 'Digital Will',
+      description: 'Legal testament for digital assets and final wishes',
+      icon: Scroll,
+      color: 'purple'
     },
-    onSuccess: (data) => {
-      setPublished(true);
-      queryClient.invalidateQueries({ queryKey: ['/api/contracts/recent'] });
-      toast({
-        title: "Contract Sealed Forever",
-        description: `Your eternal declaration has been permanently recorded on-chain.`,
-      });
+    {
+      type: 'testimony' as const,
+      title: 'Personal Testimony',
+      description: 'Permanent record of life experiences and wisdom',
+      icon: Heart,
+      color: 'red'
     },
-    onError: (error) => {
-      console.error('Publishing failed:', error);
-      toast({
-        title: "Publishing Failed",
-        description: "Could not seal your contract. Please try again.",
-        variant: "destructive"
-      });
+    {
+      type: 'declaration' as const,
+      title: 'Immortal Declaration',
+      description: 'Eternal statement of beliefs, values, or principles',
+      icon: Crown,
+      color: 'gold'
+    },
+    {
+      type: 'covenant' as const,
+      title: 'Sacred Covenant',
+      description: 'Binding agreement or promise for future generations',
+      icon: Gavel,
+      color: 'blue'
+    },
+    {
+      type: 'legacy' as const,
+      title: 'Legacy Document',
+      description: 'Comprehensive life story and achievements',
+      icon: Infinity,
+      color: 'green'
     }
-  });
+  ];
 
-  const handleVerify = () => {
-    if (!content.trim()) {
-      toast({
-        title: "Content Required",
-        description: "Please write your eternal declaration first.",
-        variant: "destructive"
-      });
-      return;
+  const legalLevels = [
+    {
+      value: 'personal' as const,
+      label: 'Personal',
+      description: 'Symbolic commitment with blockchain verification',
+      cost: 'Free'
+    },
+    {
+      value: 'notarized' as const,
+      label: 'Notarized',
+      description: 'Professional notarization with legal weight',
+      cost: '25 GTT'
+    },
+    {
+      value: 'legal' as const,
+      label: 'Legal',
+      description: 'Attorney-drafted with full legal standing',
+      cost: '100 GTT'
+    },
+    {
+      value: 'sovereign' as const,
+      label: 'Sovereign',
+      description: 'Maximum legal protection with international recognition',
+      cost: '500 GTT'
     }
-    verifyContract.mutate();
+  ];
+
+  const getTypeColor = (type: string) => {
+    const colors = {
+      will: 'from-purple-500/20 to-purple-600/20 border-purple-400/30',
+      testimony: 'from-red-500/20 to-red-600/20 border-red-400/30',
+      declaration: 'from-yellow-500/20 to-yellow-600/20 border-yellow-400/30',
+      covenant: 'from-blue-500/20 to-blue-600/20 border-blue-400/30',
+      legacy: 'from-green-500/20 to-green-600/20 border-green-400/30'
+    };
+    return colors[type as keyof typeof colors] || colors.declaration;
   };
 
-  const handlePublish = () => {
-    if (!content.trim() || !contractTitle.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Please provide both title and content for your eternal contract.",
-        variant: "destructive"
-      });
-      return;
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'draft': return <FileText className="w-4 h-4 text-gray-500" />;
+      case 'sealed': return <Lock className="w-4 h-4 text-blue-500" />;
+      case 'executed': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'activated': return <Unlock className="w-4 h-4 text-orange-500" />;
+      default: return <FileText className="w-4 h-4 text-gray-500" />;
     }
-    publishContract.mutate();
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
-        <Card className="max-w-md bg-black/40 backdrop-blur-xl border-purple-500/20">
-          <CardContent className="text-center py-8">
-            <Lock className="w-16 h-16 text-purple-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-purple-300 mb-2">Authentication Required</h2>
-            <p className="text-gray-300 mb-4">You must be logged in to create eternal contracts.</p>
-            <Button onClick={() => setLocation('/login')} className="bg-purple-600 hover:bg-purple-700">
-              Sign In
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-      
-      <div className="relative z-10 container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <Infinity className="w-16 h-16 text-purple-500 mr-4" />
+            <h1 className="text-5xl font-bold text-gray-900 dark:text-white">
               Eternal Contracts
             </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Write permanent declarations. Use AI to verify clarity. Seal with cryptographic certainty.
-            </p>
-            <div className="flex justify-center space-x-4 mt-4">
-              <Badge variant="outline" className="border-purple-500/30 text-purple-300">
-                <Scroll className="w-3 h-3 mr-1" />
-                Immutable
-              </Badge>
-              <Badge variant="outline" className="border-blue-500/30 text-blue-300">
-                <Shield className="w-3 h-3 mr-1" />
-                Verified
-              </Badge>
-              <Badge variant="outline" className="border-green-500/30 text-green-300">
-                <Lock className="w-3 h-3 mr-1" />
-                Eternal
-              </Badge>
-            </div>
           </div>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto">
+            Create immutable declarations that transcend time. Seal your final words, 
+            digital wills, and sacred promises for eternity.
+          </p>
+        </div>
 
-          {published ? (
-            /* Success State */
-            <Card className="bg-green-900/20 border-green-500/30">
-              <CardContent className="text-center py-12">
-                <CheckCircle className="w-24 h-24 text-green-400 mx-auto mb-6" />
-                <h2 className="text-3xl font-bold text-green-300 mb-4">
-                  Contract Sealed Forever
-                </h2>
-                <p className="text-gray-300 text-lg mb-6">
-                  Your eternal declaration has been permanently recorded on the blockchain.
-                  It will exist as long as the network survives.
-                </p>
-                <div className="space-x-4">
-                  <Button
-                    onClick={() => setLocation('/dashboard')}
-                    variant="outline"
-                    className="border-green-500/30 text-green-300 hover:bg-green-500/10"
-                  >
-                    View Dashboard
-                  </Button>
-                  <Button
-                    onClick={() => window.location.reload()}
-                    className="bg-purple-600 hover:bg-purple-700"
-                  >
-                    Create Another
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            /* Contract Creation Form */
-            <div className="space-y-6">
-              
-              {/* Contract Title */}
-              <Card className="bg-black/40 backdrop-blur-xl border-purple-500/20">
+        {/* Navigation Tabs */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-1 shadow-sm">
+            {['create', 'contracts', 'templates'].map((tab) => (
+              <Button
+                key={tab}
+                variant={activeTab === tab ? 'default' : 'ghost'}
+                onClick={() => setActiveTab(tab as any)}
+                className="mx-1"
+              >
+                {tab === 'create' && <FileText className="w-4 h-4 mr-2" />}
+                {tab === 'contracts' && <Scroll className="w-4 h-4 mr-2" />}
+                {tab === 'templates' && <Crown className="w-4 h-4 mr-2" />}
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {activeTab === 'create' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Contract Type Selection */}
+            <div className="lg:col-span-1">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl text-purple-300 flex items-center">
-                    <Scroll className="w-6 h-6 mr-2" />
-                    Contract Declaration
+                  <CardTitle className="flex items-center">
+                    <Crown className="w-5 h-5 mr-2" />
+                    Contract Type
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
+                  {contractTypes.map((type) => (
+                    <div
+                      key={type.type}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        formData.contractType === type.type
+                          ? `bg-gradient-to-br ${getTypeColor(type.type)} border-opacity-100`
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                      }`}
+                      onClick={() => setFormData(prev => ({ ...prev, contractType: type.type }))}
+                    >
+                      <div className="flex items-center mb-2">
+                        <type.icon className="w-5 h-5 mr-2 text-purple-500" />
+                        <h3 className="font-semibold">{type.title}</h3>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{type.description}</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Contract Creation Form */}
+            <div className="lg:col-span-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Scroll className="w-5 h-5 mr-2" />
+                    Create Eternal Contract
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Title */}
                   <div>
-                    <Label className="text-lg font-medium text-purple-300">
-                      Title
-                    </Label>
+                    <label className="block text-sm font-medium mb-2">Contract Title *</label>
                     <Input
-                      placeholder="Give your eternal contract a powerful title..."
-                      value={contractTitle}
-                      onChange={(e) => setContractTitle(e.target.value)}
-                      className="bg-slate-800/50 border-purple-500/30 text-white placeholder:text-gray-400 text-lg"
+                      value={formData.title}
+                      onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="My Last Testament and Will"
                     />
                   </div>
-                  
-                  <div>
-                    <Label className="text-lg font-medium text-purple-300">
-                      Contract Content
-                    </Label>
-                    <Textarea
-                      rows={12}
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="Write your unchangeable truth here...
 
-Examples:
-• Personal declarations of values and principles
-• Commitments to future generations
-• Testimony that must be preserved
-• Instructions for inheritance or legacy
-• Promises that transcend time"
-                      className="bg-slate-800/50 border-purple-500/30 text-white placeholder:text-gray-400 min-h-[300px]"
+                  {/* Content */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Contract Content *</label>
+                    <Textarea
+                      value={formData.content}
+                      onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                      placeholder="Write your eternal message here..."
+                      rows={8}
                     />
-                    <p className="text-sm text-gray-400 mt-2">
-                      {content.split(' ').filter(word => word.length > 0).length} words
+                  </div>
+
+                  {/* Legal Binding Level */}
+                  <div>
+                    <label className="block text-sm font-medium mb-3">Legal Binding Level</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {legalLevels.map((level) => (
+                        <div
+                          key={level.value}
+                          className={`p-3 border-2 rounded-lg cursor-pointer transition-all ${
+                            formData.legalBindingLevel === level.value
+                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                              : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                          }`}
+                          onClick={() => setFormData(prev => ({ ...prev, legalBindingLevel: level.value }))}
+                        >
+                          <div className="flex justify-between items-center mb-1">
+                            <h3 className="font-semibold">{level.label}</h3>
+                            <Badge variant="outline">{level.cost}</Badge>
+                          </div>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">{level.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Unlock Date */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Unlock Date (Optional)</label>
+                    <Input
+                      type="datetime-local"
+                      value={formData.unlockDate}
+                      onChange={(e) => setFormData(prev => ({ ...prev, unlockDate: e.target.value }))}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      When should this contract be automatically revealed?
                     </p>
                   </div>
-                </CardContent>
-              </Card>
 
-              {/* AI Verification */}
-              <Card className="bg-black/40 backdrop-blur-xl border-blue-500/20">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-blue-300 flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Brain className="w-6 h-6 mr-2" />
-                      AI Veritas Check
-                    </div>
-                    <Button
-                      onClick={handleVerify}
-                      disabled={verifyContract.isPending || !content.trim()}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                    >
-                      {verifyContract.isPending ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Verifying...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Verify Contract
-                        </>
-                      )}
-                    </Button>
-                  </CardTitle>
-                </CardHeader>
-                
-                {summary && (
-                  <CardContent>
-                    <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                      <Label className="text-blue-300 font-medium">AI Analysis Summary</Label>
-                      <p className="text-gray-200 whitespace-pre-wrap mt-2">{summary}</p>
-                      <Badge className="mt-3 bg-green-500/20 text-green-300 border-green-500/30">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Verified
-                      </Badge>
-                    </div>
-                  </CardContent>
-                )}
-              </Card>
+                  {/* ENS Name */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">ENS Name (Optional)</label>
+                    <Input
+                      value={formData.ensName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, ensName: e.target.value }))}
+                      placeholder="yourname.eth"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Associate this contract with your ENS domain for public verification
+                    </p>
+                  </div>
 
-              {/* Contract Configuration */}
-              <Card className="bg-black/40 backdrop-blur-xl border-gray-500/20">
-                <CardHeader>
-                  <CardTitle className="text-2xl text-gray-300">
-                    Optional Configuration
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-lg font-medium text-gray-300 flex items-center">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Unlock Date (Optional)
-                      </Label>
-                      <Input
-                        type="datetime-local"
-                        value={unlockDate}
-                        onChange={(e) => setUnlockDate(e.target.value)}
-                        className="bg-slate-800/50 border-gray-500/30 text-white"
+                  {/* Options */}
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="isPublic"
+                        checked={formData.isPublic}
+                        onChange={(e) => setFormData(prev => ({ ...prev, isPublic: e.target.checked }))}
+                        className="rounded"
                       />
-                      <p className="text-sm text-gray-400 mt-1">
-                        Contract will be sealed immediately but can specify when it becomes publicly readable
-                      </p>
+                      <label htmlFor="isPublic" className="text-sm">
+                        Make publicly viewable after sealing
+                      </label>
                     </div>
                     
-                    <div>
-                      <Label className="text-lg font-medium text-gray-300 flex items-center">
-                        <User className="w-4 h-4 mr-2" />
-                        Beneficiary ENS or Wallet
-                      </Label>
-                      <Input
-                        placeholder="0x... or username.eth"
-                        value={beneficiary}
-                        onChange={(e) => setBeneficiary(e.target.value)}
-                        className="bg-slate-800/50 border-gray-500/30 text-white placeholder:text-gray-400"
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="requiresWitness"
+                        checked={formData.requiresWitness}
+                        onChange={(e) => setFormData(prev => ({ ...prev, requiresWitness: e.target.checked }))}
+                        className="rounded"
                       />
-                      <p className="text-sm text-gray-400 mt-1">
-                        Who can access this contract (leave empty for public)
-                      </p>
+                      <label htmlFor="requiresWitness" className="text-sm">
+                        Require witness signatures for activation
+                      </label>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
 
-              {/* Seal Contract */}
-              <Card className="bg-black/40 backdrop-blur-xl border-red-500/20">
-                <CardContent className="pt-6">
+                  {/* Submit Button */}
                   <Button
-                    onClick={handlePublish}
-                    disabled={publishContract.isPending || !content.trim() || !contractTitle.trim()}
-                    className="w-full bg-gradient-to-r from-red-600 to-purple-600 hover:from-red-700 hover:to-purple-700 text-lg py-6"
+                    onClick={() => createContractMutation.mutate(formData)}
+                    disabled={!formData.title || !formData.content || createContractMutation.isPending}
+                    className="w-full"
+                    size="lg"
                   >
-                    {publishContract.isPending ? (
+                    {createContractMutation.isPending ? (
                       <>
-                        <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                        Sealing Contract Forever...
+                        <div className="animate-spin w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+                        Sealing Contract...
                       </>
                     ) : (
                       <>
-                        <Lock className="w-5 h-5 mr-3" />
-                        🔒 Seal Permanently to GuardianChain
+                        <Infinity className="w-5 h-5 mr-2" />
+                        Seal Eternal Contract
                       </>
                     )}
                   </Button>
-                  
-                  <p className="text-center text-gray-400 text-sm mt-4">
-                    Warning: This action cannot be undone. Your contract will be permanently recorded on the blockchain.
-                  </p>
                 </CardContent>
               </Card>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {activeTab === 'contracts' && (
+          <div className="space-y-6">
+            {isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="animate-pulse">
+                    <CardContent className="p-6">
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-3"></div>
+                      <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded mb-3"></div>
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : contracts && contracts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {contracts.map((contract) => (
+                  <Card key={contract.id} className={`bg-gradient-to-br ${getTypeColor(contract.contractType)} border`}>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg">{contract.title}</CardTitle>
+                        <div className="flex items-center space-x-2">
+                          {getStatusIcon(contract.status)}
+                          <Badge variant="outline" className="text-xs capitalize">
+                            {contract.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+                        {contract.content}
+                      </p>
+                      
+                      <div className="space-y-2 text-xs">
+                        <div className="flex justify-between">
+                          <span>Type:</span>
+                          <span className="capitalize">{contract.contractType}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Created:</span>
+                          <span>{formatDate(contract.createdAt)}</span>
+                        </div>
+                        {contract.unlockDate && (
+                          <div className="flex justify-between">
+                            <span>Unlocks:</span>
+                            <span>{formatDate(contract.unlockDate)}</span>
+                          </div>
+                        )}
+                        {contract.ensName && (
+                          <div className="flex justify-between">
+                            <span>ENS:</span>
+                            <span>{contract.ensName}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex space-x-2 mt-4">
+                        <Button variant="outline" size="sm" className="flex-1">
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          View
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Infinity className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold mb-2">No Eternal Contracts Yet</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Create your first immortal declaration to preserve your legacy.
+                </p>
+                <Button onClick={() => setActiveTab('create')}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  Create Contract
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'templates' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {contractTypes.map((template) => (
+              <Card key={template.type} className={`bg-gradient-to-br ${getTypeColor(template.type)} border hover:scale-105 transition-all cursor-pointer`}>
+                <CardHeader>
+                  <div className="flex items-center">
+                    <template.icon className="w-8 h-8 mr-3 text-purple-500" />
+                    <CardTitle>{template.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{template.description}</p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, contractType: template.type }));
+                      setActiveTab('create');
+                    }}
+                  >
+                    Use Template
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

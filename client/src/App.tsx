@@ -18,7 +18,7 @@ import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
-import EliteHomepage from "@/pages/EliteHomepage";
+import UltimateHomepage from "@/pages/UltimateHomepage";
 import MobileHome from "@/pages/MobileHome";
 import CreateCapsule from "@/pages/CreateCapsule";
 import Explore from "@/pages/explore";
@@ -126,7 +126,7 @@ import Vault from "./pages/vault";
 import MintingTestPage from "./pages/minting-test";
 // LogoTestPage moved to archive
 
-import ProfessionalHomepage from "./pages/professional-homepage";
+// Legacy homepage files removed - using UltimateHomepage
 
 import MasterAccess from "./pages/master-access";
 import ProfileCustomization from "./pages/profile-customization";
@@ -214,12 +214,12 @@ function Router() {
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={EliteHomepage} />
+        <Route path="/" component={UltimateHomepage} />
         <Route path="/test-auth" component={lazy(() => import("./pages/TestAuth"))} />
         <Route path="/legal/privacy" component={PrivacyPolicy} />
         <Route path="/legal/terms" component={TermsOfService} />
         <Route path="/legal/security" component={SecurityPolicy} />
-        <Route component={EliteHomepage} />
+        <Route component={UltimateHomepage} />
       </Switch>
     );
   }
@@ -276,7 +276,7 @@ function Router() {
             <Route path="/launch-enhancements" component={lazy(() => import("./pages/launch-enhancements"))} />
             <Route path="/profile-dashboard" component={lazy(() => import("./pages/profile-dashboard"))} />
             <Route path="/advanced-profile" component={lazy(() => import("./pages/advanced-profile"))} />
-        <Route path="/asset-showcase" component={ProfessionalHomepage} />
+        <Route path="/asset-showcase" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/gtt-launch" component={GTTLaunch} />
         <Route path="/gtt-demo" component={GTTDemo} />
 
@@ -463,8 +463,8 @@ function Router() {
         <Route path="/minting-test" component={MintingTestPage} />
         {/* LogoTestPage moved to archive */}
 
-        <Route path="/professional-homepage" component={ProfessionalHomepage} />
-        <Route path="/supabase-assets" component={() => <ProfessionalHomepage />} />
+        <Route path="/professional-homepage" component={UltimateHomepage} />
+        <Route path="/supabase-assets" component={lazy(() => import("./pages/asset-showcase"))} />
         <Route path="/founder-dashboard">
           <FounderRoute>
           </FounderRoute>
@@ -517,7 +517,7 @@ function Router() {
         <Route path="/admin/chain-audit" component={AdminDashboardPage} />
 
         {/* Asset Test Page */}
-        <Route path="/asset-test" component={ProfessionalHomepage} />
+        <Route path="/asset-test" component={lazy(() => import("./pages/asset-showcase"))} />
         
         {/* Legal Pages */}
         <Route path="/legal/privacy" component={PrivacyPolicy} />
