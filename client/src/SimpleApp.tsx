@@ -9,6 +9,7 @@ import Search from "./pages/Search";
 import NewCapsule from "./pages/NewCapsule";
 import CapsuleDetail from "./pages/CapsuleDetail";
 import NewTruthAuctionPage from "./pages/auction/new";
+import AuctionViewPage from "./pages/auction/[id]";
 
 // Create minimal UI components to avoid dependency issues
 function Button({ children, size, variant, className, type, ...props }: any) {
@@ -413,6 +414,10 @@ export default function App() {
         <Route path="/auction/new">
           <Navigation />
           <NewTruthAuctionPage />
+        </Route>
+        <Route path="/auction/:id">
+          <Navigation />
+          <AuctionViewPage />
         </Route>
         <Route path="/capsule/:id">
           <Navigation />
