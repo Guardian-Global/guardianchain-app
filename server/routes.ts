@@ -1,68 +1,61 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
-import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
 
-  // Add subscription management routes
+  // Simple subscription status - no database calls
   app.get('/api/subscription/status', isDebugAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user?.id;
-      const user = await storage.getUser(userId);
-      res.json({
-        tier: user?.tier || 'EXPLORER',
-        usage: {
-          capsulesCreated: 0,
-          capsulesLimit: user?.tier === 'EXPLORER' ? 5 : user?.tier === 'SEEKER' ? 25 : 999
-        }
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch subscription status" });
-    }
+    console.log('🔵 DEBUG: /api/subscription/status called');
+    const user = req.user;
+    const tier = user?.tier || 'EXPLORER';
+    
+    res.json({
+      tier: tier,
+      usage: {
+        capsulesCreated: 0,
+        capsulesLimit: tier === 'EXPLORER' ? 5 : tier === 'SEEKER' ? 25 : 999
+      },
+      subscription: null
+    });
   });
 
+  // Simple subscription upgrade - no database calls
   app.post('/api/subscription/upgrade', isDebugAuthenticated, async (req: any, res) => {
-    try {
-      const { planId } = req.body;
-      const userId = req.user?.id;
-      
-      // For now, just simulate an upgrade
-      await storage.updateUserTier(userId, planId.toUpperCase());
-      
-      res.json({ success: true, message: "Subscription upgraded successfully" });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to upgrade subscription" });
-    }
+    console.log('🔵 DEBUG: /api/subscription/upgrade called');
+    const { planId } = req.body;
+    
+    res.json({ 
+      success: true, 
+      message: "Subscription upgraded successfully",
+      newTier: planId?.toUpperCase() || 'SEEKER'
+    });
   });
 
-  // Debug Auth routes
+  // Simple auth user endpoint - no database calls
   app.get('/api/auth/user', isDebugAuthenticated, async (req: any, res) => {
-    try {
-      const sessionUser = req.user;
-      const userId = sessionUser.id;
-      
-      let user = await storage.getUser(userId);
-      
-      // If user doesn't exist in DB, create from session
-      if (!user) {
-        await storage.upsertUser({
-          id: sessionUser.id,
-          email: sessionUser.email,
-          firstName: sessionUser.firstName,
-          lastName: sessionUser.lastName,
-          tier: sessionUser.tier || 'EXPLORER'
-        });
-        user = await storage.getUser(userId);
-      }
-      
-      res.json(user || sessionUser);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
+    console.log('🔵 DEBUG: /api/auth/user called');
+    const sessionUser = req.user;
+    
+    const responseUser = {
+      id: sessionUser.id,
+      email: sessionUser.email,
+      firstName: sessionUser.firstName,
+      lastName: sessionUser.lastName,
+      tier: sessionUser.tier || 'EXPLORER',
+      usage: {
+        capsulesCreated: 0,
+        capsulesLimit: sessionUser.tier === 'EXPLORER' ? 5 : 25
+      },
+      subscription: null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    console.log('✅ DEBUG: Returning user data:', responseUser);
+    res.json(responseUser);
   });
 
   // Health check endpoint
