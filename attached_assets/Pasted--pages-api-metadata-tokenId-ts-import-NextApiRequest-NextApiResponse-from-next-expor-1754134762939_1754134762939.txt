@@ -1,0 +1,106 @@
+// pages/api/metadata/[tokenId].ts
+import { NextApiRequest, NextApiResponse } from "next";
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const tokenId = req.query.tokenId as string;
+  const baseUrl = req.headers.host;
+
+  const metadata = {
+    name: `Guardian Capsule #${tokenId}`,
+    description: "A sealed capsule of memory minted on GuardianChain.",
+    image: `https://${baseUrl}/capsule-preview.png`,
+    external_url: `https://${baseUrl}/capsules/${tokenId}`,
+    attributes: [
+      { trait_type: "Chain", value: "Polygon" },
+      { trait_type: "Category", value: "Veritas Capsule" },
+      { display_type: "number", trait_type: "Token ID", value: parseInt(tokenId) }
+    ]
+  };
+
+  res.status(200).json(metadata);
+}
+
+
+// components/CapsuleMintButton.tsx
+import { ethers } from "ethers";
+import CapsuleNFT from "@/abis/CapsuleNFT.json";
+import { useState } from "react";
+
+const CapsuleMintButton = ({ uri }: { uri: string }) => {
+  const [txHash, setTxHash] = useState<string | null>(null);
+
+  async function mintCapsuleNFT() {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_NFT_CONTRACT!,
+      CapsuleNFT,
+      signer
+    );
+
+    const tx = await contract.mint(uri);
+    const receipt = await tx.wait();
+    setTxHash(receipt.transactionHash);
+  }
+
+  return (
+    <div>
+      <button
+        className="px-4 py-2 bg-purple-700 text-white rounded"
+        onClick={mintCapsuleNFT}
+      >
+        🧬 Mint Capsule NFT
+      </button>
+      {txHash && (
+        <p className="mt-2 text-sm text-green-600">Minted! Tx: {txHash.slice(0, 10)}...</p>
+      )}
+    </div>
+  );
+};
+
+export default CapsuleMintButton;
+
+
+// components/AdminModerationPanel.tsx
+import { useEffect, useState } from "react";
+
+export default function AdminModerationPanel() {
+  const [logs, setLogs] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("/api/mod-logs")
+      .then((res) => res.json())
+      .then((data) => setLogs(data));
+  }, []);
+
+  return (
+    <div className="p-6 bg-white rounded shadow mt-6">
+      <h2 className="text-lg font-bold mb-2">🚨 Moderation Logs</h2>
+      <ul className="text-sm space-y-2">
+        {logs.map((log, i) => (
+          <li key={i} className="border-b pb-2">
+            <p><strong>User:</strong> {log.user}</p>
+            <p><strong>Reason:</strong> {log.reason}</p>
+            <p className="text-xs text-gray-500">{new Date(log.created_at).toLocaleString()}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+
+// pages/api/mod-logs.ts
+import { createClient } from "@supabase/supabase-js";
+import { NextApiRequest, NextApiResponse } from "next";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { data, error } = await supabase.from("moderation_logs").select("*").order("created_at", { ascending: false });
+  if (error) return res.status(500).json({ error });
+  res.status(200).json(data);
+}

@@ -9,6 +9,7 @@ import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import Footer from "@/components/layout/footer";
+import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
 import { MobileHeader } from "@/components/mobile/MobileNavigation";
 import WelcomeTour from "@/components/WelcomeTour";
@@ -221,7 +222,7 @@ function Router() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
+    <EnhancedLayout>
       <WelcomeTour />
       <LiveTokenTracker position="top" />
       <main className="px-4 max-w-screen-xl mx-auto">
@@ -496,7 +497,7 @@ function Router() {
         </Suspense>
       </main>
       <Footer />
-    </div>
+    </EnhancedLayout>
   );
 }
 
