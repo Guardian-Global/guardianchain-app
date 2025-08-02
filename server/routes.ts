@@ -951,25 +951,206 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
 
   // Get user capsules
   app.get('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
-    console.log('🔵 DEBUG: /api/capsules GET called');
+    console.log('📋 User capsules requested');
     const user = req.user;
     
-    // Return mock capsules
+    // Return enhanced mock capsules with comprehensive data
     const mockCapsules = [
       {
-        id: 'sample-capsule-1',
-        title: 'Sample Truth Capsule',
-        content: 'This is a sample capsule for demonstration.',
-        capsuleType: 'news_verification',
+        id: 'cap_1754140001_abc123',
+        title: 'Family Legacy Documentation',
+        content: 'Important family documents and memories preserved for future generations.',
+        capsuleType: 'personal_memory',
+        veritasSealType: 'notarized_statement',
+        urgencyLevel: 'normal',
+        sensitivityLevel: 'private',
+        legalImportance: 'standard',
         authorId: user.id,
         status: 'verified',
-        verificationCount: 3,
-        truthScore: 85,
-        createdAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+        verificationCount: 2,
+        truthScore: 92,
+        tags: ['family', 'legacy', 'private'],
+        accessCost: 0,
+        viewCount: 5,
+        createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+        updatedAt: new Date(Date.now() - 86400000).toISOString()   // 1 day ago
+      },
+      {
+        id: 'cap_1754140002_def456',
+        title: 'Corporate Transparency Report',
+        content: 'Quarterly financial disclosures and governance updates.',
+        capsuleType: 'corporate_filing',
+        veritasSealType: 'auditor_certified',
+        urgencyLevel: 'high',
+        sensitivityLevel: 'public',
+        legalImportance: 'regulatory',
+        authorId: user.id,
+        status: 'pending',
+        verificationCount: 0,
+        truthScore: 0,
+        tags: ['corporate', 'financial', 'transparency'],
+        accessCost: 2.5,
+        viewCount: 0,
+        createdAt: new Date(Date.now() - 43200000).toISOString(), // 12 hours ago
+        updatedAt: new Date(Date.now() - 43200000).toISOString()
       }
     ];
     
     res.json(mockCapsules);
+  });
+
+  // DAO Governance Routes
+  
+  // Get all proposals with voting data
+  app.get('/api/dao/proposals', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🏛️ DAO proposals requested');
+    
+    const mockProposals = [
+      {
+        id: 'prop_1754140100_gov001',
+        title: 'Increase GTT Yield Rewards for Truth Verification',
+        description: 'Proposal to increase GTT token rewards from 10 to 15 tokens per verified truth capsule to incentivize more community participation in verification processes.',
+        status: 'open',
+        startTime: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        endTime: new Date(Date.now() + 518400000).toISOString(),  // 6 days from now
+        createdBy: 'dao-member-123',
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+        updatedAt: new Date(Date.now() - 86400000).toISOString(),
+        votes: [
+          {
+            id: 'vote_001',
+            proposalId: 'prop_1754140100_gov001',
+            voterAddress: '0x1234567890abcdef',
+            choice: 'support',
+            weight: 1000,
+            castAt: new Date(Date.now() - 43200000).toISOString()
+          },
+          {
+            id: 'vote_002',
+            proposalId: 'prop_1754140100_gov001',
+            voterAddress: '0xfedcba0987654321',
+            choice: 'support',
+            weight: 750,
+            castAt: new Date(Date.now() - 21600000).toISOString()
+          },
+          {
+            id: 'vote_003',
+            proposalId: 'prop_1754140100_gov001',
+            voterAddress: '0x9876543210fedcba',
+            choice: 'reject',
+            weight: 500,
+            castAt: new Date(Date.now() - 10800000).toISOString()
+          }
+        ],
+        supportVotes: 2,
+        rejectVotes: 1,
+        abstainVotes: 0,
+        totalWeight: 2250
+      },
+      {
+        id: 'prop_1754140200_gov002',
+        title: 'Implement Tiered Access for Premium Capsule Features',
+        description: 'Introduce a tiered access system where premium features like advanced encryption, priority verification, and extended storage are available to higher-tier subscribers.',
+        status: 'open',
+        startTime: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+        endTime: new Date(Date.now() + 345600000).toISOString(),   // 4 days from now
+        createdBy: 'dao-member-456',
+        createdAt: new Date(Date.now() - 172800000).toISOString(),
+        updatedAt: new Date(Date.now() - 172800000).toISOString(),
+        votes: [
+          {
+            id: 'vote_004',
+            proposalId: 'prop_1754140200_gov002',
+            voterAddress: '0xabcdef1234567890',
+            choice: 'support',
+            weight: 1500,
+            castAt: new Date(Date.now() - 86400000).toISOString()
+          },
+          {
+            id: 'vote_005',
+            proposalId: 'prop_1754140200_gov002',
+            voterAddress: '0x5678901234abcdef',
+            choice: 'abstain',
+            weight: 300,
+            castAt: new Date(Date.now() - 43200000).toISOString()
+          }
+        ],
+        supportVotes: 1,
+        rejectVotes: 0,
+        abstainVotes: 1,
+        totalWeight: 1800
+      }
+    ];
+    
+    res.json(mockProposals);
+  });
+
+  // Create new proposal
+  app.post('/api/dao/proposals', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🏛️ Creating new DAO proposal');
+    const user = req.user;
+    const { title, description, endTime } = req.body;
+    
+    const newProposal = {
+      id: `prop_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      title,
+      description,
+      status: 'open',
+      startTime: new Date().toISOString(),
+      endTime: endTime ? new Date(endTime).toISOString() : null,
+      createdBy: user.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      votes: [],
+      supportVotes: 0,
+      rejectVotes: 0,
+      abstainVotes: 0,
+      totalWeight: 0
+    };
+    
+    console.log('✅ Proposal created:', newProposal.id);
+    res.status(201).json(newProposal);
+  });
+
+  // Vote on proposal
+  app.post('/api/dao/vote', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🗳️ Processing DAO vote');
+    const user = req.user;
+    const { proposalId, choice } = req.body;
+    
+    // Simulate wallet address (in production, this would come from Web3 wallet)
+    const walletAddress = user.walletAddress || `0x${Math.random().toString(16).substring(2, 42)}`;
+    
+    const vote = {
+      id: `vote_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      proposalId,
+      voterAddress: walletAddress,
+      choice, // support, reject, abstain
+      weight: 100, // Base voting weight (would be calculated from GTT holdings)
+      castAt: new Date().toISOString()
+    };
+    
+    console.log('✅ Vote recorded:', vote.id, 'Choice:', choice);
+    res.status(201).json(vote);
+  });
+
+  // Get truth certificates
+  app.get('/api/dao/certificates', isDebugAuthenticated, async (req: any, res) => {
+    console.log('📜 Truth certificates requested');
+    
+    const mockCertificates = [
+      {
+        id: 'cert_1754140300_abc123',
+        capsuleId: 'cap_1754140001_abc123',
+        walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
+        timestamp: new Date(Date.now() - 86400000).toISOString(),
+        hash: '0xa1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456',
+        signedPdfUrl: '/certificates/truth_certificate_cap_1754140001_abc123.pdf',
+        createdAt: new Date(Date.now() - 86400000).toISOString()
+      }
+    ];
+    
+    res.json(mockCertificates);
   });
 
   // Fix token data API with proper JSON response

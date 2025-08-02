@@ -1,251 +1,290 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Vote, 
-  Users, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
-  AlertCircle,
-  TrendingUp,
-  Shield,
-  Coins,
-  FileText
-} from 'lucide-react';
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { Gavel, Plus, Vote, Shield, FileText, Calendar } from "lucide-react";
+import { z } from "zod";
+import Layout from "@/components/layout/Layout";
+import PageHeader from "@/components/layout/PageHeader";
+import ProposalList from "@/components/dao/ProposalList";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function DAO() {
-  const activeProposals = [
-    {
-      id: 1,
-      title: "Update Truth Verification Threshold",
-      description: "Proposal to increase minimum verification threshold from 3 to 5 validators for Veritas Seal certification",
-      status: "active",
-      votes: { for: 1247, against: 382 },
-      totalVotes: 1629,
-      timeLeft: "2 days",
-      category: "verification"
-    },
-    {
-      id: 2,
-      title: "GTT Reward Distribution Adjustment",
-      description: "Modify reward distribution to allocate 15% more tokens to active community validators",
-      status: "active",
-      votes: { for: 892, against: 234 },
-      totalVotes: 1126,
-      timeLeft: "5 days",
-      category: "rewards"
-    },
-    {
-      id: 3,
-      title: "New Capsule Category: Environmental Evidence",
-      description: "Create dedicated category for environmental truth claims with specialized validation protocols",
-      status: "passed",
-      votes: { for: 2341, against: 156 },
-      totalVotes: 2497,
-      timeLeft: "Completed",
-      category: "governance"
-    }
-  ];
+const proposalSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
+  endTime: z.string().optional(),
+});
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'bg-blue-600';
-      case 'passed': return 'bg-green-600';
-      case 'rejected': return 'bg-red-600';
-      default: return 'bg-slate-600';
-    }
+type ProposalForm = z.infer<typeof proposalSchema>;
+
+export default function DAOPage() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  
+  const form = useForm<ProposalForm>({
+    resolver: zodResolver(proposalSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      endTime: "",
+    },
+  });
+
+  const createProposalMutation = useMutation({
+    mutationFn: async (data: ProposalForm) => {
+      return apiRequest("POST", "/api/dao/proposals", data);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Proposal Created",
+        description: "Your proposal has been submitted for voting.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/dao/proposals"] });
+      setIsCreateOpen(false);
+      form.reset();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const voteMutation = useMutation({
+    mutationFn: async ({ proposalId, choice }: { proposalId: string; choice: string }) => {
+      return apiRequest("POST", "/api/dao/vote", { proposalId, choice });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Vote Submitted",
+        description: "Your vote has been recorded on the blockchain.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/dao/proposals"] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Voting Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleVote = (proposalId: string, choice: 'support' | 'reject' | 'abstain') => {
+    voteMutation.mutate({ proposalId, choice });
   };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'verification': return Shield;
-      case 'rewards': return Coins;
-      case 'governance': return FileText;
-      default: return Vote;
-    }
+  const onSubmit = (data: ProposalForm) => {
+    createProposalMutation.mutate(data);
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-white flex items-center justify-center">
-          <Vote className="w-10 h-10 mr-3 text-blue-500" />
-          Guardian DAO Governance
-        </h1>
-        <p className="text-slate-300 max-w-2xl mx-auto">
-          Community-driven decision making for the GUARDIANCHAIN ecosystem. 
-          Participate in proposals, vote on platform changes, and shape the future of truth preservation.
-        </p>
-      </div>
+    <Layout>
+      <PageHeader
+        title="DAO Governance"
+        description="Participate in GuardianChain decentralized governance"
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "DAO Governance" }
+        ]}
+      />
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="p-4 text-center">
-            <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">2,847</div>
-            <div className="text-sm text-slate-400">Active Voters</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="p-4 text-center">
-            <Vote className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">23</div>
-            <div className="text-sm text-slate-400">Total Proposals</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="p-4 text-center">
-            <CheckCircle className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">18</div>
-            <div className="text-sm text-slate-400">Passed</div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-slate-800 border-slate-700">
-          <CardContent className="p-4 text-center">
-            <TrendingUp className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">76%</div>
-            <div className="text-sm text-slate-400">Participation Rate</div>
-          </CardContent>
-        </Card>
-      </div>
+      <div className="space-y-8 p-6">
+        {/* Header Section */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <Gavel className="w-8 h-8 text-brand-primary" />
+            <h1 className="text-3xl font-bold text-brand-light font-brand">
+              GuardianChain DAO
+            </h1>
+          </div>
+          <p className="text-lg text-brand-light/80 max-w-2xl mx-auto">
+            Shape the future of truth preservation through decentralized governance.
+            Create proposals, vote on initiatives, and earn GTT rewards for participation.
+          </p>
+        </div>
 
-      {/* Active Proposals */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-white mb-4">Active Proposals</h2>
-        
-        {activeProposals.map((proposal) => {
-          const CategoryIcon = getCategoryIcon(proposal.category);
-          const forPercentage = (proposal.votes.for / proposal.totalVotes) * 100;
-          const againstPercentage = (proposal.votes.against / proposal.totalVotes) * 100;
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-brand-secondary border-brand-surface shadow-card">
+            <CardContent className="p-6 text-center">
+              <Vote className="w-8 h-8 text-brand-accent mx-auto mb-3" />
+              <div className="text-2xl font-bold text-brand-light mb-1">12</div>
+              <div className="text-sm text-brand-light/60">Active Proposals</div>
+            </CardContent>
+          </Card>
           
-          return (
-            <Card key={proposal.id} className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center">
-                      <CategoryIcon className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-white text-lg">{proposal.title}</CardTitle>
-                      <p className="text-slate-300 text-sm mt-1">{proposal.description}</p>
-                    </div>
-                  </div>
-                  <Badge className={`${getStatusColor(proposal.status)} text-white`}>
-                    {proposal.status}
-                  </Badge>
-                </div>
-              </CardHeader>
+          <Card className="bg-brand-secondary border-brand-surface shadow-card">
+            <CardContent className="p-6 text-center">
+              <Shield className="w-8 h-8 text-brand-primary mx-auto mb-3" />
+              <div className="text-2xl font-bold text-brand-light mb-1">1,247</div>
+              <div className="text-sm text-brand-light/60">Total Votes Cast</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-brand-secondary border-brand-surface shadow-card">
+            <CardContent className="p-6 text-center">
+              <FileText className="w-8 h-8 text-brand-warning mx-auto mb-3" />
+              <div className="text-2xl font-bold text-brand-light mb-1">89</div>
+              <div className="text-sm text-brand-light/60">Truth Certificates</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content */}
+        <Tabs defaultValue="proposals" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-brand-surface">
+            <TabsTrigger value="proposals" className="data-[state=active]:bg-brand-primary data-[state=active]:text-white">
+              Active Proposals
+            </TabsTrigger>
+            <TabsTrigger value="history" className="data-[state=active]:bg-brand-primary data-[state=active]:text-white">
+              Voting History
+            </TabsTrigger>
+            <TabsTrigger value="certificates" className="data-[state=active]:bg-brand-primary data-[state=active]:text-white">
+              Truth Certificates
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="proposals" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-brand-light">Active Proposals</h2>
               
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Voting Progress */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-green-400">For: {proposal.votes.for} ({forPercentage.toFixed(1)}%)</span>
-                      <span className="text-red-400">Against: {proposal.votes.against} ({againstPercentage.toFixed(1)}%)</span>
-                    </div>
-                    <div className="flex space-x-1 h-2 bg-slate-700 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-green-500 h-full" 
-                        style={{ width: `${forPercentage}%` }}
-                      />
-                      <div 
-                        className="bg-red-500 h-full" 
-                        style={{ width: `${againstPercentage}%` }}
-                      />
-                    </div>
-                  </div>
+              <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-brand-primary hover:bg-brand-primary/90 text-white">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Proposal
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-brand-secondary border-brand-surface max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-brand-light font-brand">Create New Proposal</DialogTitle>
+                  </DialogHeader>
                   
-                  {/* Actions */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center text-sm text-slate-400">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {proposal.timeLeft}
-                    </div>
-                    
-                    {proposal.status === 'active' ? (
-                      <div className="flex space-x-2">
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Vote For
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-brand-light">Proposal Title</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Enter proposal title..."
+                                className="bg-brand-surface border-brand-primary/20 text-brand-light"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-brand-light">Description</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Detailed description of your proposal..."
+                                className="bg-brand-surface border-brand-primary/20 text-brand-light min-h-[120px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="endTime"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-brand-light">End Time (Optional)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="datetime-local"
+                                className="bg-brand-surface border-brand-primary/20 text-brand-light"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <div className="flex gap-3">
+                        <Button 
+                          type="submit" 
+                          disabled={createProposalMutation.isPending}
+                          className="flex-1 bg-brand-primary hover:bg-brand-primary/90"
+                        >
+                          {createProposalMutation.isPending ? "Creating..." : "Create Proposal"}
                         </Button>
-                        <Button size="sm" variant="outline" className="border-red-600 text-red-400 hover:bg-red-600 hover:text-white">
-                          <XCircle className="w-4 h-4 mr-1" />
-                          Vote Against
+                        <Button 
+                          type="button" 
+                          variant="outline"
+                          onClick={() => setIsCreateOpen(false)}
+                          className="border-brand-surface text-brand-light hover:bg-brand-surface"
+                        >
+                          Cancel
                         </Button>
                       </div>
-                    ) : (
-                      <Badge variant="outline" className="border-slate-600 text-slate-400">
-                        Voting Closed
-                      </Badge>
-                    )}
-                  </div>
-                </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <ProposalList 
+              onVote={handleVote}
+              userAddress={user?.walletAddress}
+            />
+          </TabsContent>
+
+          <TabsContent value="history" className="space-y-6">
+            <Card className="bg-brand-secondary border-brand-surface">
+              <CardContent className="p-8 text-center">
+                <Calendar className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-brand-light mb-2">Voting History</h3>
+                <p className="text-brand-light/60">
+                  Your voting history will appear here once you start participating in governance.
+                </p>
               </CardContent>
             </Card>
-          );
-        })}
+          </TabsContent>
+
+          <TabsContent value="certificates" className="space-y-6">
+            <Card className="bg-brand-secondary border-brand-surface">
+              <CardContent className="p-8 text-center">
+                <FileText className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-brand-light mb-2">Truth Certificates</h3>
+                <p className="text-brand-light/60">
+                  Truth certificates for verified capsules will be displayed here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-
-      {/* DAO Features */}
-      <Card className="bg-slate-800 border-slate-700">
-        <CardHeader>
-          <CardTitle className="text-white">DAO Governance Features</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <Shield className="w-12 h-12 text-blue-500 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">Truth Verification Rules</h3>
-              <p className="text-slate-400 text-sm">
-                Propose and vote on verification standards, validator requirements, and Veritas Seal criteria.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <Coins className="w-12 h-12 text-yellow-500 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">GTT Token Economics</h3>
-              <p className="text-slate-400 text-sm">
-                Influence reward distribution, staking parameters, and tokenomics adjustments.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <Users className="w-12 h-12 text-purple-500 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">Community Governance</h3>
-              <p className="text-slate-400 text-sm">
-                Elect validators, approve platform updates, and manage community treasury funds.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Call to Action */}
-      <Card className="bg-gradient-to-r from-blue-900 to-purple-900 border-slate-700">
-        <CardContent className="p-6 text-center">
-          <h3 className="text-xl font-bold text-white mb-2">Ready to Participate?</h3>
-          <p className="text-slate-300 mb-4">
-            Hold GTT tokens to participate in governance. Your voice shapes the future of truth preservation.
-          </p>
-          <div className="flex justify-center space-x-3">
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Connect Wallet
-            </Button>
-            <Button variant="outline" className="border-slate-600 text-slate-300">
-              Learn More
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    </Layout>
   );
 }

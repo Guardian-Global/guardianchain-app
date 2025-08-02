@@ -7,7 +7,9 @@ import {
   varchar,
   boolean,
   integer,
-  text
+  text,
+  uuid,
+  numeric
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -358,3 +360,47 @@ export const updateProfileSchema = z.object({
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type RegisterRequest = z.infer<typeof registerSchema>;
 export type UpdateProfileRequest = z.infer<typeof updateProfileSchema>;
+
+// DAO Governance System Tables
+export const proposals = pgTable("proposals", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title"),
+  description: text("description"),
+  status: text("status").default("open"), // open, closed, executed
+  startTime: timestamp("start_time").defaultNow(),
+  endTime: timestamp("end_time"),
+  createdBy: text("created_by"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const votes = pgTable("votes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  proposalId: varchar("proposal_id").references(() => proposals.id),
+  voterAddress: text("voter_address"),
+  choice: text("choice"), // support, reject, abstain
+  weight: numeric("weight"),
+  castAt: timestamp("cast_at").defaultNow(),
+});
+
+export const truthCertificates = pgTable("truth_certificates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  capsuleId: text("capsule_id"),
+  walletAddress: text("wallet_address"),
+  timestamp: timestamp("timestamp").defaultNow(),
+  hash: text("hash"),
+  signedPdfUrl: text("signed_pdf_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Schema types for DAO Governance
+export const insertProposalSchema = createInsertSchema(proposals);
+export const insertVoteSchema = createInsertSchema(votes);
+export const insertTruthCertificateSchema = createInsertSchema(truthCertificates);
+
+export type InsertProposal = typeof proposals.$inferInsert;
+export type Proposal = typeof proposals.$inferSelect;
+export type InsertVote = typeof votes.$inferInsert;
+export type Vote = typeof votes.$inferSelect;
+export type InsertTruthCertificate = typeof truthCertificates.$inferInsert;
+export type TruthCertificate = typeof truthCertificates.$inferSelect;
