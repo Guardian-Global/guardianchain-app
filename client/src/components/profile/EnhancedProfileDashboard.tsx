@@ -40,8 +40,12 @@ import {
   Sparkles,
   Lock,
   Globe,
+  Upload,
 } from "lucide-react";
 import SovereignAIAssistant from "./SovereignAIAssistant";
+import FeaturedCapsulesManager from "./FeaturedCapsulesManager";
+import MintCapsuleButton from "./MintCapsuleButton";
+import GTTPortfolioManager from "./GTTPortfolioManager";
 
 interface UserProfile {
   id: string;
@@ -363,14 +367,15 @@ export default function EnhancedProfileDashboard() {
 
       {/* Profile Tabs */}
       <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="edit">Edit Profile</TabsTrigger>
+          <TabsTrigger value="capsules">Capsules</TabsTrigger>
+          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
           <TabsTrigger value="ai-assistant">AI Assistant</TabsTrigger>
+          <TabsTrigger value="edit">Edit Profile</TabsTrigger>
           <TabsTrigger value="achievements">Achievements</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="founder">Founder Setup</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -459,6 +464,49 @@ export default function EnhancedProfileDashboard() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="capsules" className="space-y-6">
+          <FeaturedCapsulesManager />
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="w-5 h-5" />
+                Quick Actions
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Button className="h-16 flex flex-col items-center gap-2" variant="outline">
+                <Plus className="w-6 h-6" />
+                Create Capsule
+              </Button>
+              <Button className="h-16 flex flex-col items-center gap-2" variant="outline">
+                <Upload className="w-6 h-6" />
+                Upload Media
+              </Button>
+              <Button className="h-16 flex flex-col items-center gap-2" variant="outline">
+                <Star className="w-6 h-6" />
+                Mint NFT
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="portfolio" className="space-y-6">
+          <GTTPortfolioManager 
+            userId={profileData.id}
+            gttBalance={profileData.stats?.gttBalance || 0}
+            totalEarned={profileData.stats?.totalYieldEarned || 0}
+          />
+        </TabsContent>
+
+        <TabsContent value="ai-assistant" className="space-y-6">
+          <SovereignAIAssistant 
+            userId={profileData.id}
+            userTier={profileData.tier}
+            gttBalance={profileData.stats?.gttBalance || 0}
+          />
         </TabsContent>
 
         <TabsContent value="edit" className="space-y-6">
