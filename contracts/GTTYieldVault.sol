@@ -27,6 +27,16 @@ contract GTTYieldVault {
         emit YieldDistributed(author, yieldAmount, griefTier);
     }
 
+    function claimYield(uint256 griefTier) external {
+        require(griefTier > 0 && griefTier <= 5, "Invalid grief tier");
+        uint256 yieldAmount = griefTier * 10 * 1e18;
+
+        bool sent = IERC20(GTTToken).transfer(msg.sender, yieldAmount);
+        require(sent, "Transfer failed");
+
+        emit YieldDistributed(msg.sender, yieldAmount, griefTier);
+    }
+
     function updateAdmin(address newAdmin) external onlyAdmin {
         admin = newAdmin;
     }

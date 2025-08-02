@@ -5,6 +5,76 @@ import { isDebugAuthenticated } from '../debugAuth';
 
 export function registerGTTContractRoutes(app: Express) {
   
+  // User-initiated GTT yield claiming endpoint
+  app.post('/api/gtt/vault/claim', isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { griefTier } = req.body;
+      
+      if (!griefTier) {
+        return res.status(400).json({ 
+          error: 'Missing required field: griefTier' 
+        });
+      }
+
+      // Check if contracts are deployed
+      if (CONTRACT_CONFIG.GTT_YIELD_VAULT_ADDRESS === '0x0000000000000000000000000000000000000000') {
+        // Development mode - return simulated result
+        const simulatedResult = {
+          transactionHash: `0x${Math.random().toString(16).slice(2, 15)}`,
+          blockNumber: Math.floor(Math.random() * 1000000) + 50000000,
+          gasUsed: '45000',
+          yieldAmount: (griefTier * 10).toString(),
+          status: 'simulated_development',
+          network: 'Polygon',
+          timestamp: new Date().toISOString(),
+          claimedBy: req.user.id
+        };
+        
+        console.log('🔵 DEBUG: GTT Vault yield claimed (development mode):', simulatedResult);
+        
+        return res.json({
+          success: true,
+          claim: simulatedResult,
+          message: 'Yield claimed via development simulation'
+        });
+      }
+
+      // Production mode - interact with actual smart contract
+      const privateKey = process.env.ETH_PRIVATE_KEY;
+      if (!privateKey || privateKey === '0x0000000000000000000000000000000000000000000000000000000000000001') {
+        return res.status(500).json({
+          error: 'Private key not configured for production deployment'
+        });
+      }
+
+      const provider = new ethers.JsonRpcProvider(CONTRACT_CONFIG.POLYGON_RPC_URL);
+      const yieldVaultService = new GTTYieldVaultService(provider, privateKey);
+      
+      const result = await yieldVaultService.claimYield(griefTier);
+      
+      console.log('✅ GTT Vault yield claimed:', result);
+      
+      res.json({
+        success: true,
+        claim: {
+          ...result,
+          status: 'completed',
+          network: 'Polygon',
+          timestamp: new Date().toISOString(),
+          claimedBy: req.user.id
+        },
+        message: 'GTT yield claimed via smart contract'
+      });
+      
+    } catch (error) {
+      console.error('❌ GTT Vault claim failed:', error);
+      res.status(500).json({ 
+        error: 'Failed to claim GTT yield', 
+        details: error instanceof Error ? error.message : 'Unknown error' 
+      });
+    }
+  });
+
   // Production GTT yield distribution endpoint
   app.post('/api/gtt/vault/distribute', isDebugAuthenticated, async (req: any, res) => {
     try {

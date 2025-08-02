@@ -1,39 +1,32 @@
 import { ethers } from 'ethers';
 
-// GTT Yield Vault Contract ABI
+// GTT Yield Vault Contract ABI - Updated with claimYield function
 export const GTT_YIELD_VAULT_ABI = [
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_GTTToken",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "author", "type": "address" },
+      { "internalType": "uint256", "name": "griefTier", "type": "uint256" }
     ],
+    "name": "distributeYield",
+    "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "constructor"
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "griefTier", "type": "uint256" }
+    ],
+    "name": "claimYield",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "author",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "griefTier",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "author", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "griefTier", "type": "uint256" }
     ],
     "name": "YieldDistributed",
     "type": "event"
@@ -62,24 +55,6 @@ export const GTT_YIELD_VAULT_ABI = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "author",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "griefTier",
-        "type": "uint256"
-      }
-    ],
-    "name": "distributeYield",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -137,6 +112,42 @@ export class GTTYieldVaultService {
     this.contract = getYieldVaultContract(provider, this.signer);
   }
   
+  async claimYield(griefTier: number): Promise<{
+    transactionHash: string;
+    blockNumber: number;
+    gasUsed: string;
+    yieldAmount: string;
+  }> {
+    try {
+      // Validate inputs
+      if (griefTier < 1 || griefTier > 5) {
+        throw new Error('Grief tier must be between 1 and 5');
+      }
+      
+      // Execute transaction
+      const tx = await this.contract.claimYield(griefTier, {
+        gasLimit: CONTRACT_CONFIG.GAS_LIMIT,
+        gasPrice: CONTRACT_CONFIG.GAS_PRICE,
+      });
+      
+      // Wait for confirmation
+      const receipt = await tx.wait();
+      
+      // Calculate yield amount (griefTier * 10 GTT)
+      const yieldAmount = ethers.formatEther(BigInt(griefTier * 10) * BigInt(10 ** 18));
+      
+      return {
+        transactionHash: receipt.hash,
+        blockNumber: receipt.blockNumber,
+        gasUsed: receipt.gasUsed.toString(),
+        yieldAmount,
+      };
+    } catch (error) {
+      console.error('GTT Yield claim failed:', error);
+      throw error;
+    }
+  }
+
   async distributeYield(authorAddress: string, griefTier: number): Promise<{
     transactionHash: string;
     blockNumber: number;
