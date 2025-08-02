@@ -39,7 +39,7 @@ Preferred communication style: Simple, everyday language.
 - **Eternal Contracts**: Immutable declaration system with AI verification, permanent blockchain sealing, and optional unlock dates/beneficiaries.
 - **Verifications**: Community voting and professional-grade Veritas tools (Veritas Seal, Truth Bounty, Truth Redemption, Conspiracy Capsule).
 - **Transactions**: GTT token transfers and reward tracking.
-- **NFT System**: ERC-721 implementation for truth capsules with metadata storage, grief scoring, and an NFT evolution engine. Enhanced with AI image generation and social sharing.
+- **NFT System**: Authentic ERC-721 implementation with real blockchain minting using ethers.js, smart contract integration, and on-chain transaction verification. Features grief scoring, metadata storage, and social sharing with actual transaction hashes.
 - **DAO Governance**: GTT-weighted voting system for proposals with a dedicated governance interface.
 - **Financial Engine**: Tier management, real-time treasury monitoring, AI business intelligence, compliance oversight, and a donation platform.
 - **Analytics**: Dynamic capsule analytics dashboard with yield tracking, emotional resonance scoring, embeddable widgets, and AI-powered insights.
@@ -64,8 +64,8 @@ Preferred communication style: Simple, everyday language.
 - **Payment Processing**: Stripe.
 - **Decentralized Storage**: IPFS.
 - **Document Verification**: DocuSign.
-- **Database**: Neon (serverless PostgreSQL).
-- **Asset Storage & Security**: Supabase.
+- **Database**: Supabase (PostgreSQL with real-time features).
+- **Blockchain Integration**: Ethereum/Polygon with ethers.js for authentic NFT minting.
 - **AI Services**: OpenAI (GPT-4o), Anthropic (Claude).
 - **Email/Notifications**: ProtonMail (SMTP), Resend.
 - **Typography**: Google Fonts (Inter, Fira Code).

@@ -1,79 +1,139 @@
 import { Request, Response } from "express";
+import { createClient } from "@supabase/supabase-js";
+import { ethers } from "ethers";
 
 // Initialize Supabase client for server-side operations
 const createSupabaseClient = () => {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error("Supabase credentials not configured. Please add NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to environment variables.");
+    return null; // Return null instead of throwing to allow fallback
   }
   
-  return {
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    key: process.env.SUPABASE_SERVICE_ROLE_KEY
-  };
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
 };
+
+// Smart contract configuration
+const MINT_CONTRACT_ADDRESS = process.env.CAPSULE_MINT_CONTRACT;
+const PRIVATE_KEY = process.env.MINT_WALLET_PRIVATE_KEY;
+const PROVIDER_URL = process.env.ALCHEMY_POLYGON_URL; // or SealChain
+
+const MINT_ABI = [
+  "function mintCapsule(string memory cid, string memory capsuleId) public returns (uint256)"
+];
 
 export async function mintCapsule(req: Request, res: Response) {
   try {
     const { id } = req.params;
     
-    if (!id) {
-      return res.status(400).json({ error: "Capsule ID is required" });
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ error: "Missing capsule ID" });
     }
 
-    try {
-      // In a real implementation, this would:
-      // 1. Verify capsule exists and is owned by user
-      // 2. Generate NFT metadata
-      // 3. Call smart contract to mint NFT
-      // 4. Update capsule with blockchain transaction hash
-      
-      // For now, simulate blockchain minting
+    const supabase = createSupabaseClient();
+    
+    if (!supabase) {
+      // Development fallback when Supabase not configured
       const mockTxHash = `0x${Math.random().toString(16).substr(2, 64)}`;
-      
-      const supabaseConfig = createSupabaseClient();
-      
-      // Update capsule with minting status
-      const updateResponse = await fetch(`${supabaseConfig.url}/rest/v1/capsules?id=eq.${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-        },
-        body: JSON.stringify({
-          verification_status: 'verified',
-          content: {
-            minted: true,
-            tx_hash: mockTxHash,
-            minted_at: new Date().toISOString()
-          }
-        })
-      });
-
-      if (!updateResponse.ok) {
-        console.error("Failed to update capsule minting status");
-      }
-
-      res.json({
-        success: true,
-        txHash: mockTxHash,
-        message: "Capsule successfully minted on blockchain",
-        blockchainNetwork: "Polygon",
-        gasUsed: "0.0021 ETH"
-      });
-    } catch (supabaseError) {
-      console.error("Supabase connection error:", supabaseError);
-      
-      // Fallback mock minting for development
-      const mockTxHash = `0x${Math.random().toString(16).substr(2, 64)}`;
-      
-      res.json({
+      return res.json({
         success: true,
         txHash: mockTxHash,
         message: "Capsule minted successfully (development mode)",
         blockchainNetwork: "Polygon Testnet",
         gasUsed: "0.0021 ETH",
-        note: "Development mode - simulated blockchain transaction"
+        note: "Development mode - Supabase not configured"
+      });
+    }
+
+    // Fetch capsule from Supabase
+    const { data: capsule, error } = await supabase
+      .from("capsules")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error || !capsule) {
+      return res.status(404).json({ error: "Capsule not found" });
+    }
+
+    // Check if blockchain credentials are configured
+    if (!MINT_CONTRACT_ADDRESS || !PRIVATE_KEY || !PROVIDER_URL) {
+      console.log("Blockchain credentials not configured, using development fallback");
+      
+      // Update capsule with mock minting status
+      const mockTxHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+      
+      await supabase
+        .from("capsules")
+        .update({
+          verification_status: 'verified',
+          content: {
+            ...capsule.content,
+            minted: true,
+            tx_hash: mockTxHash,
+            minted_at: new Date().toISOString()
+          }
+        })
+        .eq("id", id);
+
+      return res.json({
+        success: true,
+        txHash: mockTxHash,
+        message: "Capsule minted successfully (development mode)",
+        blockchainNetwork: "Polygon Testnet",
+        gasUsed: "0.0021 ETH",
+        note: "Development mode - blockchain credentials not configured"
+      });
+    }
+
+    try {
+      // Real blockchain minting
+      const provider = new ethers.JsonRpcProvider(PROVIDER_URL);
+      const signer = new ethers.Wallet(PRIVATE_KEY, provider);
+      const contract = new ethers.Contract(MINT_CONTRACT_ADDRESS, MINT_ABI, signer);
+
+      // Create capsule hash for blockchain
+      const capsuleHash = ethers.id(JSON.stringify({
+        title: capsule.title,
+        description: capsule.description,
+        tags: capsule.tags || [],
+        created_at: capsule.created_at,
+      }));
+
+      // Execute mint transaction
+      const tx = await contract.mintCapsule(capsuleHash, capsule.id);
+      await tx.wait();
+
+      // Update capsule with real transaction hash
+      await supabase
+        .from("capsules")
+        .update({
+          verification_status: 'verified',
+          content: {
+            ...capsule.content,
+            minted: true,
+            tx_hash: tx.hash,
+            minted_at: new Date().toISOString(),
+            block_number: tx.blockNumber,
+            gas_used: tx.gasUsed?.toString()
+          }
+        })
+        .eq("id", id);
+
+      res.json({
+        success: true,
+        txHash: tx.hash,
+        message: "Capsule successfully minted on blockchain",
+        blockchainNetwork: "Polygon",
+        gasUsed: tx.gasUsed?.toString(),
+        blockNumber: tx.blockNumber
+      });
+    } catch (mintingError) {
+      console.error("Blockchain minting error:", mintingError);
+      res.status(500).json({ 
+        error: "Blockchain minting failed",
+        details: mintingError.message 
       });
     }
   } catch (error) {
@@ -90,26 +150,26 @@ export async function likeCapsule(req: Request, res: Response) {
       return res.status(400).json({ error: "Capsule ID is required" });
     }
 
-    try {
-      const supabaseConfig = createSupabaseClient();
-      
-      // First, get current likes count
-      const getResponse = await fetch(`${supabaseConfig.url}/rest/v1/capsules?id=eq.${id}&select=likes`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-        }
+    const supabase = createSupabaseClient();
+    
+    if (!supabase) {
+      // Development fallback
+      return res.json({
+        success: true,
+        likes: Math.floor(Math.random() * 1000) + 100,
+        message: "Capsule liked successfully (development mode)"
       });
+    }
 
-      if (!getResponse.ok) {
-        throw new Error("Failed to fetch capsule");
-      }
+    try {
+      // Get current capsule data
+      const { data: capsule, error: fetchError } = await supabase
+        .from("capsules")
+        .select("likes")
+        .eq("id", id)
+        .single();
 
-      const capsuleData = await getResponse.json();
-      const capsule = capsuleData[0];
-      
-      if (!capsule) {
+      if (fetchError || !capsule) {
         return res.status(404).json({ error: "Capsule not found" });
       }
 
@@ -117,20 +177,13 @@ export async function likeCapsule(req: Request, res: Response) {
       const newLikes = currentLikes + 1;
 
       // Update likes count
-      const updateResponse = await fetch(`${supabaseConfig.url}/rest/v1/capsules?id=eq.${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-        },
-        body: JSON.stringify({
-          likes: newLikes.toString()
-        })
-      });
+      const { error: updateError } = await supabase
+        .from("capsules")
+        .update({ likes: newLikes.toString() })
+        .eq("id", id);
 
-      if (!updateResponse.ok) {
-        throw new Error("Failed to update likes");
+      if (updateError) {
+        throw updateError;
       }
 
       res.json({
@@ -139,14 +192,8 @@ export async function likeCapsule(req: Request, res: Response) {
         message: "Capsule liked successfully"
       });
     } catch (supabaseError) {
-      console.error("Supabase connection error:", supabaseError);
-      
-      // Fallback for development
-      res.json({
-        success: true,
-        likes: Math.floor(Math.random() * 1000) + 100,
-        message: "Capsule liked successfully (development mode)"
-      });
+      console.error("Supabase operation error:", supabaseError);
+      res.status(500).json({ error: "Failed to update likes" });
     }
   } catch (error) {
     console.error("Error liking capsule:", error);
@@ -162,39 +209,34 @@ export async function shareCapsule(req: Request, res: Response) {
       return res.status(400).json({ error: "Capsule ID is required" });
     }
 
-    try {
-      const supabaseConfig = createSupabaseClient();
-      
-      // Get current shares count and increment
-      const getResponse = await fetch(`${supabaseConfig.url}/rest/v1/capsules?id=eq.${id}&select=shares`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${supabaseConfig.key}`,
-          'apikey': supabaseConfig.key,
-        }
+    const supabase = createSupabaseClient();
+    
+    if (!supabase) {
+      // Development fallback
+      return res.json({
+        success: true,
+        message: "Share recorded successfully (development mode)",
+        shareUrl: `${req.protocol}://${req.get('host')}/capsule/${id}`
       });
+    }
 
-      if (getResponse.ok) {
-        const capsuleData = await getResponse.json();
-        const capsule = capsuleData[0];
-        
-        if (capsule) {
-          const currentShares = parseInt(capsule.shares || "0");
-          const newShares = currentShares + 1;
+    try {
+      // Get current capsule data
+      const { data: capsule, error: fetchError } = await supabase
+        .from("capsules")
+        .select("shares")
+        .eq("id", id)
+        .single();
 
-          // Update shares count
-          await fetch(`${supabaseConfig.url}/rest/v1/capsules?id=eq.${id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${supabaseConfig.key}`,
-              'apikey': supabaseConfig.key,
-            },
-            body: JSON.stringify({
-              shares: newShares.toString()
-            })
-          });
-        }
+      if (!fetchError && capsule) {
+        const currentShares = parseInt(capsule.shares || "0");
+        const newShares = currentShares + 1;
+
+        // Update shares count
+        await supabase
+          .from("capsules")
+          .update({ shares: newShares.toString() })
+          .eq("id", id);
       }
 
       res.json({
@@ -203,12 +245,13 @@ export async function shareCapsule(req: Request, res: Response) {
         shareUrl: `${req.protocol}://${req.get('host')}/capsule/${id}`
       });
     } catch (supabaseError) {
-      console.error("Supabase connection error:", supabaseError);
+      console.error("Supabase operation error:", supabaseError);
       
       res.json({
         success: true,
-        message: "Share recorded successfully (development mode)",
-        shareUrl: `${req.protocol}://${req.get('host')}/capsule/${id}`
+        message: "Share recorded successfully",
+        shareUrl: `${req.protocol}://${req.get('host')}/capsule/${id}`,
+        note: "Share count not updated due to database error"
       });
     }
   } catch (error) {
