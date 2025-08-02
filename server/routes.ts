@@ -2269,6 +2269,110 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
 
+  // Search API
+  app.get('/api/search', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🔍 Search requested');
+    
+    try {
+      const { q, type = 'all', sort = 'relevance' } = req.query;
+      
+      if (!q) {
+        return res.json([]);
+      }
+      
+      // Mock search results
+      const mockResults = [
+        {
+          id: 'cap_001',
+          title: 'The Truth About Digital Privacy',
+          type: 'capsule',
+          content: 'A comprehensive analysis of how personal data is being harvested and sold by major tech companies without proper consent...',
+          creator: 'privacy_advocate@truth.eth',
+          created_at: '2025-01-15T10:30:00Z',
+          grief_tier: 4,
+          verification_status: 'verified',
+          tags: ['privacy', 'tech', 'surveillance'],
+          smri_score: 89
+        },
+        {
+          id: 'guard_001',
+          title: 'Digital Rights Guardian',
+          type: 'guardian',
+          content: 'Veteran cybersecurity expert dedicated to protecting digital freedoms and exposing corporate surveillance...',
+          creator: 'privacy_advocate@truth.eth',
+          created_at: '2025-01-10T14:20:00Z',
+          grief_tier: 0,
+          verification_status: 'verified',
+          tags: ['guardian', 'cybersecurity', 'activism'],
+          smri_score: 156
+        },
+        {
+          id: 'contract_001',
+          title: 'Eternal Privacy Declaration',
+          type: 'contract',
+          content: 'I hereby declare that privacy is a fundamental human right that must be protected for all future generations...',
+          creator: 'rights_defender@chain.app',
+          created_at: '2025-01-08T09:15:00Z',
+          grief_tier: 2,
+          verification_status: 'pending',
+          tags: ['privacy', 'rights', 'declaration']
+        },
+        {
+          id: 'cap_002',
+          title: 'Climate Change Evidence Archive',
+          type: 'capsule',
+          content: 'Documenting the real impact of climate change with suppressed scientific data and corporate cover-ups...',
+          creator: 'climate_scientist@research.org',
+          created_at: '2025-01-12T16:45:00Z',
+          grief_tier: 5,
+          verification_status: 'verified',
+          tags: ['climate', 'science', 'environment'],
+          smri_score: 142
+        }
+      ];
+      
+      // Filter by type
+      let filteredResults = mockResults;
+      if (type !== 'all') {
+        filteredResults = mockResults.filter(result => result.type === type);
+      }
+      
+      // Simple search filtering
+      const searchTerm = q.toLowerCase();
+      filteredResults = filteredResults.filter(result => 
+        result.title.toLowerCase().includes(searchTerm) ||
+        result.content.toLowerCase().includes(searchTerm) ||
+        result.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+      );
+      
+      // Sort results
+      switch (sort) {
+        case 'recent':
+          filteredResults.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+          break;
+        case 'grief':
+          filteredResults.sort((a, b) => b.grief_tier - a.grief_tier);
+          break;
+        case 'verified':
+          filteredResults.sort((a, b) => {
+            if (a.verification_status === 'verified' && b.verification_status !== 'verified') return -1;
+            if (b.verification_status === 'verified' && a.verification_status !== 'verified') return 1;
+            return 0;
+          });
+          break;
+        default: // relevance - already filtered by search term
+          break;
+      }
+      
+      console.log('✅ Search results generated:', filteredResults.length);
+      res.json(filteredResults);
+      
+    } catch (error) {
+      console.error('❌ Failed to perform search:', error);
+      res.status(500).json({ error: 'Failed to perform search' });
+    }
+  });
+
   // Get lineage tree data
   app.get('/api/lineage/tree/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
     console.log('🌳 Lineage tree requested for:', req.params.capsuleId);

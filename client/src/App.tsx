@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/web3/wallet-provider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
+import NavigationMenu from "@/components/NavigationMenu";
 import Footer from "@/components/layout/footer";
 import EnhancedLayout from "@/components/layout/EnhancedLayout";
 import { LiveTokenTracker } from '@/components/live/LiveTokenTracker';
@@ -279,6 +280,7 @@ function Router() {
         <Route path="/smri" component={lazy(() => import("./pages/ReputationIndex"))} />
         <Route path="/smri-dashboard" component={lazy(() => import("./pages/SMRIDashboard"))} />
         <Route path="/guardian-map" component={lazy(() => import("./pages/GuardianMap"))} />
+        <Route path="/search" component={lazy(() => import("./pages/SearchPage"))} />
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />
@@ -542,6 +544,7 @@ export default function App() {
                           <Router />
                         </main>
                         <Toaster />
+                        <NavigationMenu />
                       </TooltipProvider>
                     </AssetProvider>
                   </ThemeProvider>
