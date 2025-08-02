@@ -1,28 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
+import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { toast, ToastContainer } from "react-toastify";
-import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
-import { parseEther } from "viem";
+import { useFundAuction } from "@/hooks/useFundAuction";
 import 'react-toastify/dist/ReactToastify.css';
-
-// Mock contract address - replace with actual deployed contract
-const AUCTION_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890";
-const AUCTION_ABI = [
-  {
-    "inputs": [
-      {"name": "auctionId", "type": "uint256"},
-      {"name": "amount", "type": "uint256"}
-    ],
-    "name": "fundAuction",
-    "outputs": [{"name": "", "type": "bool"}],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-];
 
 function useCountdown(targetDate: number) {
   const [timeLeft, setTimeLeft] = useState(0);
@@ -48,37 +33,24 @@ function useCountdown(targetDate: number) {
 export default function AuctionViewPage() {
   const [match, params] = useRoute("/auction/:id");
   const auctionId = params?.id;
+  const { address, isConnected } = useAccount();
+  
   const [auction, setAuction] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [funding, setFunding] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
-  const [contributionAmount, setContributionAmount] = useState("100");
+  const [contributionAmount, setContributionAmount] = useState(100);
   const [disclosureContent, setDisclosureContent] = useState<string | null>(null);
   
-  const { address, isConnected } = useAccount();
   const { days, hours, minutes, seconds, timeLeft } = useCountdown(auction?.expiresAt || 0);
-
-  // Smart contract interaction setup
-  const { config: contractConfig } = usePrepareContractWrite({
-    address: AUCTION_CONTRACT_ADDRESS,
-    abi: AUCTION_ABI,
-    functionName: "fundAuction",
-    args: [BigInt(auctionId || 0), parseEther(contributionAmount)],
-    enabled: !!auctionId && !!contributionAmount && isConnected,
-  });
-
+  
+  // Smart contract interaction with custom hook
   const { 
-    data: txData, 
-    write: fundAuctionWrite, 
-    isLoading: isWriting 
-  } = useContractWrite(contractConfig);
-
-  const { 
-    isLoading: isTxLoading, 
-    isSuccess: isTxSuccess 
-  } = useWaitForTransaction({
-    hash: txData?.hash,
-  });
+    fundAuction, 
+    isLoading: fundingTx, 
+    isSuccess: fundingSuccess,
+    transactionHash 
+  } = useFundAuction(auctionId, contributionAmount);
 
   useEffect(() => {
     if (!auctionId) return;
@@ -114,11 +86,18 @@ export default function AuctionViewPage() {
   }, [auctionId]);
 
   useEffect(() => {
-    if (isTxSuccess) {
-      toast.success("GTT contribution successful! 🎯");
-      setFunding(prev => prev + parseFloat(contributionAmount));
+    if (fundingSuccess) {
+      toast.success(`GTT contribution successful! 🎯 Tx: ${transactionHash?.slice(0, 10)}...`);
+      setFunding(prev => prev + contributionAmount);
+      
+      // Check if reserve is now met
+      if (funding + contributionAmount >= auction?.reservePrice) {
+        setUnlocked(true);
+        fetchDisclosureContent();
+        toast.success("🔓 Reserve met! Truth disclosure unlocked!");
+      }
     }
-  }, [isTxSuccess, contributionAmount]);
+  }, [fundingSuccess, contributionAmount, transactionHash, funding, auction?.reservePrice]);
 
   const fetchDisclosureContent = async () => {
     try {
@@ -139,13 +118,14 @@ export default function AuctionViewPage() {
       return;
     }
 
-    if (!contributionAmount || parseFloat(contributionAmount) <= 0) {
+    if (!contributionAmount || contributionAmount <= 0) {
       toast.error("Please enter a valid contribution amount");
       return;
     }
 
     try {
-      fundAuctionWrite?.();
+      fundAuction?.();
+      toast.info("Transaction submitted to blockchain...");
     } catch (error) {
       toast.error("Transaction failed");
       console.error("Funding error:", error);
@@ -289,7 +269,7 @@ export default function AuctionViewPage() {
                     <Input
                       type="number"
                       value={contributionAmount}
-                      onChange={(e) => setContributionAmount(e.target.value)}
+                      onChange={(e) => setContributionAmount(parseFloat(e.target.value) || 0)}
                       placeholder="Amount in GTT"
                       className="w-32 bg-slate-700 text-white border-slate-600"
                       min="1"
@@ -299,10 +279,10 @@ export default function AuctionViewPage() {
                   
                   <Button 
                     onClick={handleFundWithContract}
-                    disabled={isWriting || isTxLoading}
+                    disabled={fundingTx || !address}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2"
                   >
-                    {isWriting || isTxLoading 
+                    {fundingTx 
                       ? "Processing..." 
                       : `Contribute ${contributionAmount} GTT`
                     }
