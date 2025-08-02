@@ -73,6 +73,19 @@ import ReelsViewer from "./pages/reels-viewer";
 import CapsuleAnalyticsPage from "./features/analytics/capsule-analytics";
 import DynamicCapsuleAnalytics from "./pages/capsule/[id]/analytics";
 import FinancialDashboard from "./features/analytics/financial-dashboard";
+
+// Guardian Visual Supremacy Pages
+import Timeline from "./pages/timeline";
+import CapsuleStats from "./pages/capsule-stats";
+import VeritasNode from "./pages/veritas-node";
+import TruthMarket from "./pages/truth-market";
+import ValidatorBids from "./pages/validator-bids";
+import TruthPipeline from "./pages/truth-pipeline";
+import CapsuleComments from "./pages/capsule-comments";
+
+// Elite Navigation Components
+import Navigation from "./components/Navigation";
+import EliteFooter from "./components/Footer";
 import TiersPage from "./pages/tiers";
 import DonateAccessPage from "./pages/donate-access";
 import TreasuryDashboard from "./pages/treasury";
@@ -293,6 +306,33 @@ function Router() {
               <Route path="/partners" component={Partners} />
               <Route path="/investor/demo-kit" component={DemoKit} />
               <Route path="/create" component={CreateCapsule} />
+              
+              {/* Guardian Visual Supremacy Routes */}
+              <Route path="/timeline" component={Timeline} />
+              <Route path="/capsule-stats" component={CapsuleStats} />
+              <Route path="/veritas-node" component={VeritasNode} />
+              <Route path="/truth-market" component={TruthMarket} />
+              <Route path="/validator-bids" component={ValidatorBids} />
+              <Route path="/truth-pipeline" component={TruthPipeline} />
+              <Route path="/capsule-comments" component={CapsuleComments} />
+              
+              {/* Navigation Routes */}
+              <Route
+                path="/replay"
+                component={lazy(() => import("./pages/replay"))}
+              />
+              <Route
+                path="/unlock"
+                component={lazy(() => import("./pages/unlock"))}
+              />
+              <Route
+                path="/submit"
+                component={lazy(() => import("./pages/submit"))}
+              />
+              <Route
+                path="/verify"
+                component={lazy(() => import("./pages/verify"))}
+              />
           <Route
             path="/legacy"
             component={lazy(() => import("./pages/EnhancedDashboard"))}

@@ -221,6 +221,32 @@ function HeroSection() {
           . Seal your truth, earn GTT rewards.
         </p>
 
+        {/* Hero Video Section */}
+        <div className="max-w-4xl mx-auto mb-12 relative">
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-[#FFD700]/20 animate-epic-glow">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-auto max-h-96 object-cover"
+              poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI1NzYiIHZpZXdCb3g9IjAgMCAxMDI0IDU3NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMjQiIGhlaWdodD0iNTc2IiBmaWxsPSIjMDAwIi8+Cjx0ZXh0IHg9IjUxMiIgeT0iMjg4IiBmaWxsPSIjRkZENzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiBmb250LXNpemU9IjI0Ij5HdWFyZGlhbkNoYWluIE5GVCBWaWRlbzwvdGV4dD4KPC9zdmc+"
+            >
+              <source 
+                src="https://mpjgcleldijxkvbuxiqg.supabase.co/storage/v1/object/public/media-assets//GUADIANCHAIN%20NFT%20VIDEO.mp4" 
+                type="video/mp4" 
+              />
+              Your browser does not support the video tag.
+            </video>
+            
+            {/* Video overlay effects */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20 pointer-events-none"></div>
+            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-white/80">
+              <span className="animate-pulse">● LIVE</span>
+            </div>
+          </div>
+        </div>
+
         {/* Live Stats */}
         <div className="mb-8">
           <LivePlatformStats />
