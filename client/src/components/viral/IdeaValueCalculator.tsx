@@ -34,11 +34,11 @@ interface ValueMetrics {
 const IdeaValueCalculator: React.FC = () => {
   const [metrics, setMetrics] = useState<ValueMetrics>({
     contentType: "educational",
-    audienceSize: 10000,
-    engagementRate: 5,
-    uniqueness: 70,
-    trendRelevance: 60,
-    monetizationPotential: 50,
+    audienceSize: 100, // Realistic starting audience
+    engagementRate: 2, // Conservative engagement rate
+    uniqueness: 50, // Average uniqueness
+    trendRelevance: 30, // Low trend relevance for new users
+    monetizationPotential: 20, // Low monetization potential for beginners
     estimatedValue: 0,
     monthlyEarnings: 0,
     yearlyProjection: 0,
@@ -65,14 +65,14 @@ const IdeaValueCalculator: React.FC = () => {
         contentTypes.find((t) => t.id === metrics.contentType)?.multiplier ||
         1.0;
 
-      // Base value calculation
-      const audienceValue = metrics.audienceSize * 0.02; // $0.02 per follower
+      // Realistic value calculation for new users
+      const audienceValue = metrics.audienceSize * 0.005; // $0.005 per follower (more realistic)
       const engagementBonus =
-        (metrics.engagementRate / 100) * audienceValue * 3;
-      const uniquenessBonus = (metrics.uniqueness / 100) * audienceValue * 2;
-      const trendBonus = (metrics.trendRelevance / 100) * audienceValue * 1.5;
+        (metrics.engagementRate / 100) * audienceValue * 1.5; // Reduced multiplier
+      const uniquenessBonus = (metrics.uniqueness / 100) * audienceValue * 1.0; // Reduced multiplier  
+      const trendBonus = (metrics.trendRelevance / 100) * audienceValue * 0.5; // Much lower trend bonus
       const monetizationBonus =
-        (metrics.monetizationPotential / 100) * audienceValue * 2.5;
+        (metrics.monetizationPotential / 100) * audienceValue * 1.0; // Realistic monetization
 
       const baseValue =
         (audienceValue +

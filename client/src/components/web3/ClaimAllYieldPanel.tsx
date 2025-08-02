@@ -81,14 +81,13 @@ export default function ClaimAllYieldPanel() {
         console.log("Using mock yield data for development");
       }
 
-      // Mock data for development - replace with real contract calls
+      // Realistic starter data for new users
       const mockYieldData: YieldData = {
-        pendingYield: pendingYield !== "0" ? pendingYield : "45.75",
-        claimableAmount: pendingYield !== "0" ? pendingYield : "45.75",
-        totalClaimed: "234.50",
-        lastClaimDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-        estimatedValue:
-          parseFloat(pendingYield !== "0" ? pendingYield : "45.75") * 0.5, // Assuming $0.50 per GTT
+        pendingYield: pendingYield !== "0" ? pendingYield : "0.00", // New users start with zero
+        claimableAmount: pendingYield !== "0" ? pendingYield : "0.00", // No claimable amount for new users
+        totalClaimed: "0.00", // No claims yet for new users
+        lastClaimDate: null, // No previous claims
+        estimatedValue: 0, // No estimated value for new users
       };
 
       setYieldData(mockYieldData);

@@ -37,46 +37,7 @@ interface CapsuleHistoryProps {
 }
 
 const defaultCapsules: CapsuleHistoryItem[] = [
-  {
-    id: "cap-001",
-    title: "First Truth Capsule - Platform Introduction",
-    type: "STANDARD",
-    status: "verified",
-    createdAt: "2024-07-01",
-    stats: { views: 2847, shares: 45, votes: 23 },
-    griefScore: 95,
-    truthYield: 127.5,
-  },
-  {
-    id: "cap-002",
-    title: "Evidence of Corporate Fraud Case #2024-001",
-    type: "FRAUD_PROOF",
-    status: "verified",
-    createdAt: "2024-07-15",
-    stats: { views: 5231, shares: 128, votes: 67 },
-    griefScore: 88,
-    truthYield: 445.2,
-  },
-  {
-    id: "cap-003",
-    title: "AI-Generated Content Verification Study",
-    type: "AI_GENERATED",
-    status: "pending",
-    createdAt: "2024-07-20",
-    stats: { views: 892, shares: 12, votes: 8 },
-    griefScore: 92,
-    truthYield: 78.3,
-  },
-  {
-    id: "cap-004",
-    title: "Witness Account: Traffic Incident Documentation",
-    type: "WITNESS_TESTIMONY",
-    status: "verified",
-    createdAt: "2024-07-18",
-    stats: { views: 1456, shares: 34, votes: 19 },
-    griefScore: 91,
-    truthYield: 156.8,
-  },
+  // Start with realistic new user data - no capsules created yet
 ];
 
 const getStatusIcon = (status: string) => {
