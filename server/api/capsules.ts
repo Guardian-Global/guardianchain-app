@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { z } from "zod";
+import { encryptCapsule } from "../utils/lit/encryptCapsule";
+import { createTimeBasedCondition, createTokenBalanceCondition } from "../utils/lit/accessConditions";
 
 // Initialize Supabase client for server-side operations
 const createSupabaseClient = () => {
@@ -20,6 +22,19 @@ const createCapsuleSchema = z.object({
   category: z.string().min(1, "Category is required"),
   author: z.string().min(1, "Author is required"),
   tags: z.array(z.string()).optional().default([]),
+  // Time lock settings
+  timelock: z.object({
+    enabled: z.boolean().default(false),
+    unlockDate: z.string().optional(),
+    unlockTimestamp: z.number().optional()
+  }).optional(),
+  // Access control settings
+  accessControl: z.object({
+    type: z.enum(["public", "time_locked", "token_gated", "nft_gated"]).default("public"),
+    tokenAddress: z.string().optional(),
+    minimumBalance: z.string().optional(),
+    nftContractAddress: z.string().optional()
+  }).optional()
 });
 
 export async function createCapsule(req: Request, res: Response) {
@@ -30,6 +45,57 @@ export async function createCapsule(req: Request, res: Response) {
     try {
       const supabaseConfig = createSupabaseClient();
       
+      // Prepare content for potential encryption
+      let contentData = {
+        type: "text",
+        data: validatedData.description || "",
+        metadata: {
+          created_via: "web_interface",
+          version: "1.0"
+        }
+      };
+
+      // Handle time-locked or access-controlled capsules
+      if (validatedData.timelock?.enabled || validatedData.accessControl?.type !== "public") {
+        try {
+          let accessConditions = [];
+
+          // Create access control conditions based on settings
+          if (validatedData.timelock?.enabled && validatedData.timelock.unlockTimestamp) {
+            accessConditions = createTimeBasedCondition(validatedData.timelock.unlockTimestamp);
+          } else if (validatedData.accessControl?.type === "token_gated" && 
+                     validatedData.accessControl.tokenAddress && 
+                     validatedData.accessControl.minimumBalance) {
+            accessConditions = createTokenBalanceCondition(
+              validatedData.accessControl.tokenAddress,
+              validatedData.accessControl.minimumBalance
+            );
+          }
+
+          if (accessConditions.length > 0) {
+            // Encrypt the sensitive content
+            const encryptionResult = await encryptCapsule({
+              content: validatedData.description || "",
+              accessControlConditions: accessConditions
+            });
+
+            contentData = {
+              ...contentData,
+              encrypted: true,
+              encryptedContent: encryptionResult.encryptedContent,
+              encryptedSymmetricKey: encryptionResult.encryptedSymmetricKey,
+              accessControlConditions: encryptionResult.accessControlConditions,
+              originalData: null // Hide original data when encrypted
+            };
+          }
+        } catch (encryptionError) {
+          console.error("Encryption failed:", encryptionError);
+          // Continue without encryption as fallback
+          contentData.encryption_failed = true;
+          contentData.encryption_error = encryptionError.message;
+        }
+      }
+
       // Prepare capsule data for insertion
       const capsuleData = {
         title: validatedData.title,
@@ -43,14 +109,7 @@ export async function createCapsule(req: Request, res: Response) {
         likes: "0",
         comments: "0",
         shares: "0",
-        content: {
-          type: "text",
-          data: validatedData.description || "",
-          metadata: {
-            created_via: "web_interface",
-            version: "1.0"
-          }
-        }
+        content: contentData
       };
       
       // Make direct API call to Supabase

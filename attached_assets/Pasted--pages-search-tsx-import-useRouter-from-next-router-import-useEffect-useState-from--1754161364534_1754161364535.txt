@@ -1,0 +1,138 @@
+// pages/search.tsx
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useAccount } from "wagmi";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { motion } from "framer-motion";
+
+export default function SearchPage() {
+  const router = useRouter();
+  const { q } = router.query;
+  const { address } = useAccount();
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [onlyPublic, setOnlyPublic] = useState(true);
+  const [sortBy, setSortBy] = useState("recent");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchResults = async () => {
+    if (!q) return;
+    setLoading(true);
+    const res = await fetch(`/api/search?q=${q}&sort=${sortBy}&page=${page}`);
+    const json = await res.json();
+    setLoading(false);
+    const filtered = onlyPublic ? json.results.filter(r => !r.isPrivate) : json.results;
+    setResults(prev => page === 1 ? filtered : [...prev, ...filtered]);
+    setHasMore(filtered.length >= 10);
+  };
+
+  useEffect(() => {
+    setPage(1);
+    setResults([]);
+  }, [q, sortBy, onlyPublic]);
+
+  useEffect(() => {
+    fetchResults();
+  }, [q, onlyPublic, sortBy, page]);
+
+  const handleLoadMore = () => {
+    if (hasMore) setPage(prev => prev + 1);
+  };
+
+  const handleVote = async (capsuleId) => {
+    if (!address) return toast.error("Connect your wallet to vote");
+    const res = await fetch(`/api/capsules/${capsuleId}/vote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet: address })
+    });
+    const json = await res.json();
+    if (json.message) toast.success("🔥 Vote counted!");
+    else toast.error(json.error || "Failed to vote");
+  };
+
+  return (
+    <main className="min-h-screen bg-slate-900 text-white py-12 px-6">
+      <ToastContainer position="bottom-right" autoClose={3000} />
+      <h1 className="text-3xl font-bold mb-6 text-center">Search Results for "{q}"</h1>
+
+      <div className="max-w-4xl mx-auto text-center text-slate-300 mb-10 space-y-4">
+        <p className="text-lg">
+          GuardianChain capsules redefine digital permanence — every capsule is sealed for eternity, immune to deletion, censorship, or erasure.
+        </p>
+        <p>
+          Your <span className="text-indigo-300 font-semibold">memories become currency</span>, and your <span className="text-emerald-300 font-semibold">truth earns yield</span>. When you mint grief, joy, history, or identity — you’re contributing to the first economy of human-authored reality.
+        </p>
+        <p className="text-sm text-slate-400 italic">
+          From ancestral stories to modern grief, from art to journalism, GuardianChain records the human journey — past, present, and future — permanently.
+        </p>
+        <p className="text-indigo-200 font-bold">
+          GTT and Truth Vault are the lifeblood of this new civilization — rewarding verified reality with economic power and sovereign authorship.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-4 mb-6">
+        <label className="text-sm">Show only public capsules:</label>
+        <input
+          type="checkbox"
+          checked={onlyPublic}
+          onChange={() => setOnlyPublic(!onlyPublic)}
+          className="w-4 h-4"
+        />
+        <label className="text-sm">Sort by:</label>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="bg-slate-800 text-white px-2 py-1 rounded"
+        >
+          <option value="recent">Most Recent</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+
+      <div className="grid gap-6 max-w-5xl mx-auto">
+        {loading && page === 1 ? (
+          <p className="text-center text-slate-400">Searching...</p>
+        ) : results.length === 0 ? (
+          <p className="text-center text-slate-400">No capsules found.</p>
+        ) : (
+          results.map((capsule) => (
+            <Card key={capsule.id} className="bg-slate-800 p-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold mb-1">{capsule.title}</h2>
+                {capsule.isPrivate && <Badge className="bg-red-700 text-white">🔒 Private</Badge>}
+              </div>
+              <p className="text-slate-300 mb-2">{capsule.description?.slice(0, 140) || "Encrypted capsule."}</p>
+              <p className="text-xs text-slate-400 mb-2">By {capsule.ens || capsule.creator || "Anonymous"}</p>
+              {capsule.vote_count !== undefined && (
+                <p className="text-sm text-orange-400 mb-2">🔥 {capsule.vote_count} votes</p>
+              )}
+              <div className="flex gap-4">
+                <Button variant="link" href={`/capsule/${capsule.id}`}>View Capsule</Button>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
+                  onClick={() => handleVote(capsule.id)}
+                >
+                  Vote
+                </motion.button>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {hasMore && !loading && (
+        <div className="text-center mt-10">
+          <Button onClick={handleLoadMore}>Load More</Button>
+        </div>
+      )}
+    </main>
+  );
+}

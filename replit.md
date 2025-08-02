@@ -34,7 +34,7 @@ Preferred communication style: Simple, everyday language.
 - **Authentication System**: Full-featured tiered access control with TierGate component and SubscriptionManager.
 - **Subscription Tiers**: Four-tier system with progressive feature unlocking.
 - **Dashboard Flows**: Comprehensive authenticated user experience with real-time usage tracking and tier progress monitoring.
-- **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status. Features EnhancedCapsuleUploader with 4-step workflow, AI-powered content analysis (emotional resonance, auto-tagging), and integrated NFT minting. Includes CapsuleAutotagger and CapsulePrivacyToggle with granular privacy controls.
+- **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status. Features EnhancedCapsuleUploader with 4-step workflow, AI-powered content analysis (emotional resonance, auto-tagging), and integrated NFT minting. Includes CapsuleAutotagger and CapsulePrivacyToggle with granular privacy controls. Advanced encryption via Lit Protocol enables time-locked content, token-gated access, and condition-based reveals.
 - **Truth Lineage Protocol**: Advanced lineage tracking system with grief flow analytics, influence scoring, and capsule inheritance infrastructure. Includes visual lineage graph interface.
 - **Eternal Contracts**: Immutable declaration system with AI verification, permanent blockchain sealing, and optional unlock dates/beneficiaries.
 - **Verifications**: Community voting and professional-grade Veritas tools (Veritas Seal, Truth Bounty, Truth Redemption, Conspiracy Capsule).
@@ -66,6 +66,7 @@ Preferred communication style: Simple, everyday language.
 - **Document Verification**: DocuSign.
 - **Database**: Supabase (PostgreSQL with real-time features).
 - **Blockchain Integration**: Ethereum/Polygon with ethers.js for authentic NFT minting.
+- **Encryption**: Lit Protocol for time-locked and condition-based content encryption.
 - **AI Services**: OpenAI (GPT-4o), Anthropic (Claude).
 - **Email/Notifications**: ProtonMail (SMTP), Resend.
 - **Typography**: Google Fonts (Inter, Fira Code).
