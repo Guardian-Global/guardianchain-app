@@ -7,6 +7,8 @@ import {
   timestamp,
   uuid,
   varchar,
+  numeric,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -106,6 +108,32 @@ export const capsules = pgTable(
   ],
 );
 
+// Truth Auctions table for sealed disclosure capsules
+export const truthAuctions = pgTable(
+  "truth_auctions",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    title: text("title").notNull(),
+    summary: text("summary").notNull(),
+    reservePrice: numeric("reserve_price").notNull(),
+    currentFunding: numeric("current_funding").default("0"),
+    beneficiaries: text("beneficiaries").array(),
+    disclosureContent: text("disclosure_content"), // Encrypted content
+    expiresAt: timestamp("expires_at").notNull(),
+    unlocked: boolean("unlocked").default(false),
+    creatorId: uuid("creator_id").references(() => users.id),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_truth_auctions_creator").on(table.creatorId),
+    index("idx_truth_auctions_expires").on(table.expiresAt),
+    index("idx_truth_auctions_unlocked").on(table.unlocked),
+  ],
+);
+
 // Type definitions
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
@@ -116,6 +144,8 @@ export type Capsule = typeof capsules.$inferSelect;
 export type InsertCapsule = typeof capsules.$inferInsert;
 export type CapsuleVote = typeof capsuleVotes.$inferSelect;
 export type InsertCapsuleVote = typeof capsuleVotes.$inferInsert;
+export type TruthAuction = typeof truthAuctions.$inferSelect;
+export type InsertTruthAuction = typeof truthAuctions.$inferInsert;
 
 // Extended types for UI compatibility
 export interface EnhancedCapsuleData extends Capsule {
@@ -142,6 +172,7 @@ export const insertNewsletterSubscriberSchema = createInsertSchema(
 );
 export const insertCapsuleSchema = createInsertSchema(capsules);
 export const insertCapsuleVoteSchema = createInsertSchema(capsuleVotes);
+export const insertTruthAuctionSchema = createInsertSchema(truthAuctions);
 
 export type InsertUserType = z.infer<typeof insertUserSchema>;
 export type InsertNewsletterSubscriberType = z.infer<
@@ -149,3 +180,4 @@ export type InsertNewsletterSubscriberType = z.infer<
 >;
 export type InsertCapsuleType = z.infer<typeof insertCapsuleSchema>;
 export type InsertCapsuleVoteType = z.infer<typeof insertCapsuleVoteSchema>;
+export type InsertTruthAuctionType = z.infer<typeof insertTruthAuctionSchema>;

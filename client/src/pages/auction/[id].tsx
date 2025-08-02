@@ -3,8 +3,47 @@ import { useRoute } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
 import { toast, ToastContainer } from "react-toastify";
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { parseEther } from "viem";
 import 'react-toastify/dist/ReactToastify.css';
+
+// Mock contract address - replace with actual deployed contract
+const AUCTION_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890";
+const AUCTION_ABI = [
+  {
+    "inputs": [
+      {"name": "auctionId", "type": "uint256"},
+      {"name": "amount", "type": "uint256"}
+    ],
+    "name": "fundAuction",
+    "outputs": [{"name": "", "type": "bool"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+function useCountdown(targetDate: number) {
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const remaining = Math.max(0, targetDate - now);
+      setTimeLeft(remaining);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+  return { days, hours, minutes, seconds, timeLeft };
+}
 
 export default function AuctionViewPage() {
   const [match, params] = useRoute("/auction/:id");
@@ -13,7 +52,33 @@ export default function AuctionViewPage() {
   const [loading, setLoading] = useState(true);
   const [funding, setFunding] = useState(0);
   const [unlocked, setUnlocked] = useState(false);
-  const [contributing, setContributing] = useState(false);
+  const [contributionAmount, setContributionAmount] = useState("100");
+  const [disclosureContent, setDisclosureContent] = useState<string | null>(null);
+  
+  const { address, isConnected } = useAccount();
+  const { days, hours, minutes, seconds, timeLeft } = useCountdown(auction?.expiresAt || 0);
+
+  // Smart contract interaction setup
+  const { config: contractConfig } = usePrepareContractWrite({
+    address: AUCTION_CONTRACT_ADDRESS,
+    abi: AUCTION_ABI,
+    functionName: "fundAuction",
+    args: [BigInt(auctionId || 0), parseEther(contributionAmount)],
+    enabled: !!auctionId && !!contributionAmount && isConnected,
+  });
+
+  const { 
+    data: txData, 
+    write: fundAuctionWrite, 
+    isLoading: isWriting 
+  } = useContractWrite(contractConfig);
+
+  const { 
+    isLoading: isTxLoading, 
+    isSuccess: isTxSuccess 
+  } = useWaitForTransaction({
+    hash: txData?.hash,
+  });
 
   useEffect(() => {
     if (!auctionId) return;
@@ -24,9 +89,17 @@ export default function AuctionViewPage() {
         const data = await res.json();
         
         if (res.ok) {
-          setAuction(data);
+          setAuction({
+            ...data,
+            expiresAt: data.expiresAt || Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days default
+          });
           setFunding(data.funded || 0);
           setUnlocked(data.unlocked || false);
+          
+          // If auction is unlocked, fetch disclosure content
+          if (data.unlocked) {
+            fetchDisclosureContent();
+          }
         } else {
           toast.error("Failed to load auction");
         }
@@ -40,31 +113,59 @@ export default function AuctionViewPage() {
     fetchAuction();
   }, [auctionId]);
 
-  const handleFund = async () => {
-    if (!auctionId) return;
-    
-    setContributing(true);
-    
+  useEffect(() => {
+    if (isTxSuccess) {
+      toast.success("GTT contribution successful! 🎯");
+      setFunding(prev => prev + parseFloat(contributionAmount));
+    }
+  }, [isTxSuccess, contributionAmount]);
+
+  const fetchDisclosureContent = async () => {
     try {
-      const res = await fetch(`/api/auction/${auctionId}/fund`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 100 }), // Placeholder contribution
-      });
+      const res = await fetch(`/api/auction/${auctionId}/disclosure`);
+      const data = await res.json();
       
-      const json = await res.json();
-      
-      if (json.success) {
-        setFunding(prev => prev + 100);
-        toast.success("Contribution successful! 🎯");
-      } else {
-        toast.error(json.error || "Contribution failed");
+      if (res.ok) {
+        setDisclosureContent(data.content);
       }
     } catch (error) {
-      toast.error("Network error occurred");
-    } finally {
-      setContributing(false);
+      console.error("Failed to fetch disclosure content:", error);
     }
+  };
+
+  const handleFundWithContract = async () => {
+    if (!isConnected) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    if (!contributionAmount || parseFloat(contributionAmount) <= 0) {
+      toast.error("Please enter a valid contribution amount");
+      return;
+    }
+
+    try {
+      fundAuctionWrite?.();
+    } catch (error) {
+      toast.error("Transaction failed");
+      console.error("Funding error:", error);
+    }
+  };
+
+  const handleDownloadDisclosure = () => {
+    if (!disclosureContent) return;
+    
+    const blob = new Blob([disclosureContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `truth-disclosure-${auctionId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast.success("Truth disclosure downloaded!");
   };
 
   if (loading) {
@@ -100,6 +201,31 @@ export default function AuctionViewPage() {
           <p className="text-slate-400 text-lg">{auction.summary}</p>
         </div>
 
+        {/* Countdown Timer */}
+        {timeLeft > 0 && (
+          <div className="mb-6 p-4 bg-slate-700 rounded-lg border border-yellow-500/30">
+            <p className="text-yellow-300 text-sm mb-2">🕒 Time Remaining</p>
+            <div className="grid grid-cols-4 gap-2 text-center">
+              <div className="bg-slate-800 p-2 rounded">
+                <p className="text-xl font-bold text-white">{days}</p>
+                <p className="text-xs text-slate-400">Days</p>
+              </div>
+              <div className="bg-slate-800 p-2 rounded">
+                <p className="text-xl font-bold text-white">{hours}</p>
+                <p className="text-xs text-slate-400">Hours</p>
+              </div>
+              <div className="bg-slate-800 p-2 rounded">
+                <p className="text-xl font-bold text-white">{minutes}</p>
+                <p className="text-xs text-slate-400">Min</p>
+              </div>
+              <div className="bg-slate-800 p-2 rounded">
+                <p className="text-xl font-bold text-white">{seconds}</p>
+                <p className="text-xs text-slate-400">Sec</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <p className="text-sm text-slate-400">
@@ -117,29 +243,72 @@ export default function AuctionViewPage() {
 
         <div className="mb-8">
           {canUnlock ? (
-            <div className="text-center">
-              <p className="text-green-400 text-xl font-bold mb-4">
+            <div className="text-center space-y-4">
+              <p className="text-green-400 text-xl font-bold">
                 ✅ Reserve Met — Truth Ready for Unlock
               </p>
-              <Button 
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2"
-                disabled
-              >
-                Truth Unlocked
-              </Button>
+              {disclosureContent ? (
+                <div className="space-y-3">
+                  <div className="bg-slate-700 p-4 rounded-lg max-h-40 overflow-y-auto">
+                    <p className="text-slate-300 text-sm whitespace-pre-wrap">
+                      {disclosureContent.substring(0, 500)}
+                      {disclosureContent.length > 500 && "..."}
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={handleDownloadDisclosure}
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2"
+                  >
+                    📥 Download Full Disclosure
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-slate-400">Loading disclosure content...</p>
+              )}
+            </div>
+          ) : timeLeft <= 0 ? (
+            <div className="text-center">
+              <p className="text-red-400 text-xl font-bold mb-4">
+                ⏰ Auction Expired
+              </p>
+              <p className="text-slate-400">This truth auction has ended without meeting its reserve.</p>
             </div>
           ) : (
-            <div className="text-center">
+            <div className="text-center space-y-4">
               <p className="text-slate-300 mb-4">
-                Contribute to unlock this sealed disclosure
+                Contribute GTT to unlock this sealed disclosure
               </p>
-              <Button 
-                onClick={handleFund}
-                disabled={contributing}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2"
-              >
-                {contributing ? "Contributing..." : "Contribute 100 GTT"}
-              </Button>
+              
+              {!isConnected ? (
+                <p className="text-yellow-400 mb-4">
+                  Please connect your wallet to contribute
+                </p>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-center gap-2">
+                    <Input
+                      type="number"
+                      value={contributionAmount}
+                      onChange={(e) => setContributionAmount(e.target.value)}
+                      placeholder="Amount in GTT"
+                      className="w-32 bg-slate-700 text-white border-slate-600"
+                      min="1"
+                    />
+                    <span className="text-slate-400">GTT</span>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleFundWithContract}
+                    disabled={isWriting || isTxLoading}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2"
+                  >
+                    {isWriting || isTxLoading 
+                      ? "Processing..." 
+                      : `Contribute ${contributionAmount} GTT`
+                    }
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>

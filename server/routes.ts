@@ -60,6 +60,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/capsules/:id/like", likeCapsule);
   app.post("/api/capsules/:id/share", shareCapsule);
   app.get("/api/capsules/:id/unlock", unlockCapsule);
+
+  // Truth Auction endpoints
+  app.post("/api/auction/new", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { title, summary, reservePrice, beneficiaries } = req.body;
+      
+      if (!title || !summary || !reservePrice) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const auctionId = `auction_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const expiresAt = new Date(Date.now() + (7 * 24 * 60 * 60 * 1000)); // 7 days from now
+      
+      // Mock storage - in production this would use the database
+      const auction = {
+        id: auctionId,
+        title,
+        summary,
+        reservePrice: parseFloat(reservePrice),
+        currentFunding: 0,
+        beneficiaries: beneficiaries || [],
+        expiresAt: expiresAt.getTime(),
+        unlocked: false,
+        creatorId: req.user.id,
+        disclosureContent: `This is a sealed disclosure for: ${title}\n\nDetailed information will be revealed once the reserve price of ${reservePrice} GTT is met.\n\nCreated by: ${req.user.email}`,
+        createdAt: new Date().toISOString(),
+      };
+
+      res.json(auction);
+    } catch (error) {
+      console.error("Error creating auction:", error);
+      res.status(500).json({ error: "Failed to create auction" });
+    }
+  });
+
+  app.get("/api/auction/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Mock auction data - in production this would query the database
+      const auction = {
+        id,
+        title: "Whistleblower Testimony 2024",
+        summary: "Critical information about corporate misconduct that needs to be brought to light. The truth deserves to be heard.",
+        reservePrice: 5000,
+        currentFunding: 2750,
+        funded: 2750,
+        beneficiaries: ["0x1234567890123456789012345678901234567890", "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"],
+        expiresAt: Date.now() + (5 * 24 * 60 * 60 * 1000), // 5 days from now
+        unlocked: false,
+        creatorId: "debug-user-456",
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+      };
+
+      res.json(auction);
+    } catch (error) {
+      console.error("Error fetching auction:", error);
+      res.status(500).json({ error: "Failed to fetch auction" });
+    }
+  });
+
+  app.post("/api/auction/:id/fund", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { amount } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ error: "Invalid contribution amount" });
+      }
+
+      // Mock funding logic - in production this would update the database
+      // and verify blockchain transaction
+      res.json({ 
+        success: true, 
+        newFunding: amount,
+        transactionHash: `0x${Math.random().toString(16).substring(2)}`,
+        message: "Contribution successful"
+      });
+    } catch (error) {
+      console.error("Error funding auction:", error);
+      res.status(500).json({ error: "Failed to process contribution" });
+    }
+  });
+
+  app.get("/api/auction/:id/disclosure", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Mock disclosure content - in production this would decrypt and serve the content
+      const disclosureContent = `CONFIDENTIAL DISCLOSURE - AUCTION ${id}
+
+This sealed disclosure contains critical information about:
+- Corporate misconduct patterns from 2020-2024
+- Financial irregularities totaling $2.3M
+- Internal communications exposing cover-up attempts
+- Documented evidence of regulatory violations
+
+Key Evidence:
+1. Email chains showing deliberate misreporting
+2. Financial records with altered timestamps
+3. Recorded conversations with senior management
+4. Compliance audit reports marked "confidential"
+
+Timeline of Events:
+- January 2020: First incident reported internally
+- March 2020: Management directive to suppress findings
+- June 2020: External audit manipulation discovered
+- September 2020: Whistleblower protection request filed
+- December 2020: Retaliation against reporting employee
+
+This disclosure is now permanently sealed on the blockchain and verified through GuardianChain's Truth Vault Protocol.
+
+Reserve met on: ${new Date().toISOString()}
+Contributors: Community-funded truth preservation
+Verification Status: Authenticated via Veritas Certificate Engine
+
+[Additional 50+ pages of detailed evidence, documents, and witness testimonies would follow...]`;
+
+      res.json({ content: disclosureContent });
+    } catch (error) {
+      console.error("Error fetching disclosure:", error);
+      res.status(500).json({ error: "Failed to fetch disclosure content" });
+    }
+  });
+
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
 
