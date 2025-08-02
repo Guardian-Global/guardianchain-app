@@ -194,12 +194,31 @@ function HomePage() {
       {/* Search Bar */}
       <section className="bg-slate-800 py-12 px-6 text-center">
         <h2 className="text-3xl font-bold mb-6">{t.search_title}</h2>
-        <form action="/search" method="GET" className="flex justify-center gap-2 max-w-lg mx-auto">
+        <form 
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target as HTMLFormElement);
+            const searchQuery = formData.get('q') as string;
+            if (searchQuery) {
+              try {
+                const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+                const data = await response.json();
+                console.log('Search results:', data);
+                alert(`Found ${data.total} results for "${searchQuery}"`);
+              } catch (error) {
+                console.error('Search failed:', error);
+                alert('Search failed. Please try again.');
+              }
+            }
+          }}
+          className="flex justify-center gap-2 max-w-lg mx-auto"
+        >
           <Input
             type="text"
             name="q"
             placeholder={t.search_placeholder}
             className="w-full bg-white text-black"
+            required
           />
           <Button type="submit" className="bg-indigo-600">{t.search}</Button>
         </form>
