@@ -275,6 +275,8 @@ function Router() {
         <Route path="/create-truth-capsule" component={CreateCapsule} />
         <Route path="/eternal-contracts" component={lazy(() => import("./pages/EternalContracts"))} />
         <Route path="/lineage" component={lazy(() => import("./pages/LineageGraph"))} />
+        <Route path="/reputation" component={lazy(() => import("./pages/ReputationIndex"))} />
+        <Route path="/smri" component={lazy(() => import("./pages/ReputationIndex"))} />
         
         {/* Enhanced UI Routes */}
         <Route path="/yield" component={YieldDashboard} />

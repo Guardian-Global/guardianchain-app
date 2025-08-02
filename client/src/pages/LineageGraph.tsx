@@ -62,10 +62,10 @@ export default function LineageGraph() {
   });
 
   const renderLineageNode = (node: LineageNode, level: number = 0) => {
-    const indentClass = level > 0 ? `ml-${Math.min(level * 4, 16)}` : '';
+    const indentStyle = level > 0 ? { marginLeft: `${Math.min(level * 16, 64)}px` } : {};
     
     return (
-      <div key={node.capsuleId} className={`${indentClass} mb-4`}>
+      <div key={node.capsuleId} style={indentStyle} className="mb-4">
         <Card 
           className={`bg-black/40 backdrop-blur-xl border-blue-500/20 cursor-pointer transition-all hover:border-blue-400/40 ${
             selectedNode?.capsuleId === node.capsuleId ? 'ring-2 ring-blue-400/50' : ''

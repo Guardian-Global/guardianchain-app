@@ -2077,6 +2077,55 @@ Recommendation: ${wordCount > 50 && hasTitle ? 'Ready for sealing' : 'Consider a
     }
   });
   
+  // Sovereign Memory Reputation Index (SMRI) API
+  app.get('/api/smri/:wallet', isDebugAuthenticated, async (req: any, res) => {
+    console.log('🏆 SMRI requested for wallet:', req.params.wallet);
+    
+    try {
+      const { wallet } = req.params;
+      
+      if (!wallet) {
+        return res.status(400).json({ error: 'Wallet address is required' });
+      }
+      
+      // Mock data for reputation calculation - would query database in production
+      const mockCapsules = [
+        { id: 'cap_1', grief_tier: 4, influence_score: 85, inspired_by: 'cap_0' },
+        { id: 'cap_2', grief_tier: 3, influence_score: 72, inspired_by: null },
+        { id: 'cap_3', grief_tier: 5, influence_score: 95, inspired_by: 'cap_1' }
+      ];
+      
+      const mockCerts = [
+        { id: 'cert_1', type: 'veritas_seal' },
+        { id: 'cert_2', type: 'truth_bounty' }
+      ];
+      
+      const griefTotal = mockCapsules.reduce((sum, c) => sum + (c.grief_tier || 0), 0);
+      const influence = mockCapsules.filter((c) => c.inspired_by !== null).length;
+      const score = Math.round((griefTotal + influence * 2 + mockCerts.length * 3) * 1.5);
+      const tier = score > 150 ? "Veritas" : score > 100 ? "Gold" : score > 50 ? "Silver" : "Bronze";
+      
+      const smriData = {
+        wallet,
+        truth_score: score,
+        grief_total: griefTotal,
+        capsule_count: mockCapsules.length,
+        influence_count: influence,
+        cert_count: mockCerts.length,
+        reputation_tier: tier,
+        last_updated: new Date().toISOString(),
+        trending: score > 100 ? 'up' : 'stable'
+      };
+      
+      console.log('✅ SMRI calculated:', smriData);
+      res.json(smriData);
+      
+    } catch (error) {
+      console.error('❌ Failed to calculate SMRI:', error);
+      res.status(500).json({ error: 'Failed to calculate reputation score' });
+    }
+  });
+
   // Get grief flow analytics
   app.get('/api/lineage/analytics/:capsuleId', isDebugAuthenticated, async (req: any, res) => {
     console.log('📊 Grief flow analytics requested for:', req.params.capsuleId);
