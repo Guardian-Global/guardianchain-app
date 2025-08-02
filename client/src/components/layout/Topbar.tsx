@@ -1,8 +1,8 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import NotificationCenter from "./NotificationCenter";
 import { 
-  Bell, 
   Settings, 
   User, 
   LogOut,
@@ -64,10 +64,7 @@ const Topbar = ({ onMobileMenuToggle }: TopbarProps) => {
       {/* Right side */}
       <div className="flex items-center gap-4">
         {/* Notifications */}
-        <Button variant="ghost" size="sm" className="relative text-slate-400 hover:text-white">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-        </Button>
+        <NotificationCenter />
 
         {/* User menu */}
         {isAuthenticated ? (

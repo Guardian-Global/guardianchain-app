@@ -6,6 +6,8 @@ import CommandPalette from "./CommandPalette";
 import MobileNav from "./MobileNav";
 import Breadcrumbs from "./Breadcrumbs";
 import CapsuleDrawer from "@/components/ui/CapsuleDrawer";
+import QuickActions from "./QuickActions";
+import StatusIndicator from "./StatusIndicator";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
@@ -15,6 +17,8 @@ interface EnhancedLayoutProps {
   showCommandPalette?: boolean;
   showBreadcrumbs?: boolean;
   showCapsuleDrawer?: boolean;
+  showQuickActions?: boolean;
+  showStatusIndicator?: boolean;
 }
 
 const EnhancedLayout = ({ 
@@ -22,7 +26,9 @@ const EnhancedLayout = ({
   showSidebar = true, 
   showCommandPalette = true,
   showBreadcrumbs = true,
-  showCapsuleDrawer = true
+  showCapsuleDrawer = true,
+  showQuickActions = true,
+  showStatusIndicator = true
 }: EnhancedLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
@@ -65,6 +71,8 @@ const EnhancedLayout = ({
         {/* Floating Components */}
         {showCommandPalette && <CommandPalette />}
         {showCapsuleDrawer && <CapsuleDrawer />}
+        {showQuickActions && <QuickActions />}
+        {showStatusIndicator && <StatusIndicator />}
       </div>
     </>
   );
