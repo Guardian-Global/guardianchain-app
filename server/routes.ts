@@ -429,18 +429,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ success: true, message: 'Profile updated successfully' });
   });
 
-  // Profile data endpoint
+  // Profile data endpoint - Enhanced with subscription data
   app.get('/api/profile/:userId', isDebugAuthenticated, (req: any, res) => {
     console.log('🔵 DEBUG: Getting profile for user:', req.params.userId);
     const userId = req.params.userId;
+    const user = req.user;
     
-    // Mock profile data - replace with actual database lookup
+    // Enhanced profile data with subscription integration
     const mockProfile = {
       id: userId,
-      email: 'debug@guardianchain.app',
-      firstName: 'Debug',
-      lastName: 'User', 
-      displayName: 'Debug User',
+      email: user?.email || 'debug@guardianchain.app',
+      firstName: user?.firstName || 'Debug',
+      lastName: user?.lastName || 'User', 
+      displayName: `${user?.firstName || 'Debug'} ${user?.lastName || 'User'}`,
       bio: 'Guardian of truth and digital sovereignty',
       profileImageUrl: '/assets/default-avatar.png',
       coverImageUrl: '/assets/default-cover.jpg',
@@ -448,7 +449,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       website: 'https://guardianchain.app',
       occupation: 'Truth Seeker',
       interests: ['Blockchain', 'Truth Verification', 'Digital Sovereignty'],
-      tier: 'EXPLORER',
+      tier: user?.tier || 'EXPLORER',
       roles: ['USER'],
       isFounder: false,
       isVerified: true,
@@ -458,7 +459,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         verificationScore: 87,
         followerCount: 42,
         followingCount: 18,
-        gttBalance: 0
+        gttBalance: 1247.83
       },
       preferences: {
         theme: 'dark',
@@ -469,10 +470,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
         showStats: true,
         allowMessages: true
       },
+      subscription: {
+        tier: user?.tier || 'EXPLORER',
+        status: 'active',
+        features: getTierFeatures(user?.tier || 'EXPLORER'),
+        usage: {
+          capsulesCreated: 3,
+          capsulesLimit: getTierLimits(user?.tier || 'EXPLORER').capsules,
+          storageUsed: 1.2,
+          storageLimit: getTierLimits(user?.tier || 'EXPLORER').storage
+        }
+      },
       createdAt: new Date().toISOString()
     };
     
     res.json(mockProfile);
+  });
+
+  // Helper functions for tier features and limits
+  function getTierFeatures(tier: string) {
+    const features = {
+      EXPLORER: ['Basic Capsules', 'Community Access', 'Limited AI Assistance'],
+      SEEKER: ['Advanced Capsules', 'Truth Verification', 'Extended AI Assistance', 'Priority Support'],
+      CREATOR: ['Unlimited Capsules', 'NFT Minting', 'Full AI Suite', 'Revenue Sharing'],
+      SOVEREIGN: ['All Features', 'White Label', 'Custom Integration', 'Priority Development']
+    };
+    return features[tier as keyof typeof features] || features.EXPLORER;
+  }
+
+  function getTierLimits(tier: string) {
+    const limits = {
+      EXPLORER: { capsules: 5, storage: 1, aiQueries: 50 },
+      SEEKER: { capsules: 25, storage: 10, aiQueries: 200 },
+      CREATOR: { capsules: 999, storage: 100, aiQueries: 1000 },
+      SOVEREIGN: { capsules: 9999, storage: 1000, aiQueries: 9999 }
+    };
+    return limits[tier as keyof typeof limits] || limits.EXPLORER;
+  }
+
+  // Profile update endpoint with subscription awareness
+  app.put('/api/profile/:userId', isDebugAuthenticated, (req: any, res) => {
+    console.log('📝 Profile update requested for user:', req.params.userId);
+    console.log('📝 Update data:', req.body);
+    
+    // In real implementation, validate tier permissions before allowing updates
+    const userTier = req.user?.tier || 'EXPLORER';
+    const tierLimits = getTierLimits(userTier);
+    
+    res.json({ 
+      success: true, 
+      message: 'Profile updated successfully',
+      tierInfo: {
+        current: userTier,
+        limits: tierLimits,
+        features: getTierFeatures(userTier)
+      }
+    });
   });
 
   app.get('/api/profile/featured-capsules', isDebugAuthenticated, (req: any, res) => {

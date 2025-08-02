@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
 import {
   User,
   Settings,
@@ -130,11 +131,8 @@ const FOUNDER_PROFILES = [
 ];
 
 export default function EnhancedProfileDashboard() {
-  // Use localStorage auth instead of hook to prevent conflicts
-  const token = localStorage.getItem('auth_token');
-  const userStr = localStorage.getItem('auth_user');
-  const user = userStr ? JSON.parse(userStr) : null;
-  const isAuthenticated = Boolean(token && user);
+  // Use proper auth hook for consistent authentication
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
@@ -143,10 +141,10 @@ export default function EnhancedProfileDashboard() {
 
   // Fetch user profile
   const { data: profile, isLoading } = useQuery({
-    queryKey: ["/api/profile", user?.id || "demo-1754024933907"],
+    queryKey: ["/api/profile", user?.id],
     queryFn: async () => {
-      const userId = user?.id || "demo-1754024933907";
-      const response = await fetch(`/api/profile/${userId}`, {
+      if (!user?.id) throw new Error("User ID not found");
+      const response = await fetch(`/api/profile/${user.id}`, {
         credentials: "include",
       });
       if (!response.ok) {
@@ -154,8 +152,9 @@ export default function EnhancedProfileDashboard() {
       }
       return response.json();
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id && isAuthenticated,
     retry: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Update profile mutation
@@ -242,6 +241,17 @@ export default function EnhancedProfileDashboard() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+          <span className="ml-3 text-slate-400">Loading profile...</span>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
@@ -266,6 +276,7 @@ export default function EnhancedProfileDashboard() {
       <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+          <span className="ml-3 text-slate-400">Loading profile data...</span>
         </div>
       </div>
     );
@@ -504,9 +515,172 @@ export default function EnhancedProfileDashboard() {
         <TabsContent value="ai-assistant" className="space-y-6">
           <SovereignAIAssistant 
             userId={profileData.id}
-            userTier={profileData.tier}
+            userTier={profileData.tier || 'EXPLORER'}
             gttBalance={profileData.stats?.gttBalance || 0}
           />
+        </TabsContent>
+
+        <TabsContent value="achievements" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trophy className="w-5 h-5" />
+                Achievements & Milestones
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <Crown className="w-5 h-5 text-yellow-600" />
+                  <span className="font-semibold">Early Adopter</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Joined GuardianChain during launch phase</p>
+              </div>
+              
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="w-5 h-5 text-blue-600" />
+                  <span className="font-semibold">Truth Verified</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Account verified for authenticity</p>
+              </div>
+              
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <Star className="w-5 h-5 text-green-600" />
+                  <span className="font-semibold">First Capsule</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Created your first truth capsule</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                Subscription Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Current Tier */}
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950 dark:to-blue-950 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="text-center">
+                    <Crown className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                    <h3 className="font-semibold text-lg">{profileData.tier}</h3>
+                    <p className="text-sm text-muted-foreground">Current Plan</p>
+                  </div>
+                </div>
+
+                {/* Usage Stats */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="text-center">
+                    <Zap className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                    <h3 className="font-semibold text-lg">{profileData.stats?.capsulesCreated || 0}</h3>
+                    <p className="text-sm text-muted-foreground">Capsules Created</p>
+                  </div>
+                </div>
+
+                {/* GTT Balance */}
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                  <div className="text-center">
+                    <Star className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                    <h3 className="font-semibold text-lg">{profileData.stats?.gttBalance || 0}</h3>
+                    <p className="text-sm text-muted-foreground">GTT Balance</p>
+                  </div>
+                </div>
+
+                {/* Verification Score */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="text-center">
+                    <Shield className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                    <h3 className="font-semibold text-lg">{profileData.stats?.verificationScore || 0}</h3>
+                    <p className="text-sm text-muted-foreground">Truth Score</p>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <h4 className="font-semibold flex items-center gap-2">
+                  <Settings className="w-4 h-4" />
+                  Preferences
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="email-notifications">Email Notifications</Label>
+                    <Switch id="email-notifications" defaultChecked={profileData.preferences?.emailNotifications} />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="push-notifications">Push Notifications</Label>
+                    <Switch id="push-notifications" defaultChecked={profileData.preferences?.pushNotifications} />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="ai-assistant">AI Assistant</Label>
+                    <Switch id="ai-assistant" defaultChecked={profileData.preferences?.aiAssistantEnabled} />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="public-profile">Public Profile</Label>
+                    <Switch id="public-profile" defaultChecked={profileData.preferences?.publicProfile} />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="security" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                Security & Privacy
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lock className="w-5 h-5 text-green-600" />
+                    <span className="font-semibold text-green-800 dark:text-green-200">Account Secured</span>
+                  </div>
+                  <p className="text-sm text-green-700 dark:text-green-300">
+                    Your account is protected with advanced encryption and verification
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button variant="outline" className="justify-start">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Two-Factor Authentication
+                  </Button>
+                  
+                  <Button variant="outline" className="justify-start">
+                    <Lock className="w-4 h-4 mr-2" />
+                    Change Password
+                  </Button>
+                  
+                  <Button variant="outline" className="justify-start">
+                    <Globe className="w-4 h-4 mr-2" />
+                    Privacy Settings
+                  </Button>
+                  
+                  <Button variant="outline" className="justify-start">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Account Settings
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="edit" className="space-y-6">
