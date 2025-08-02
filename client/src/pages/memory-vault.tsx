@@ -131,9 +131,9 @@ export default function MemoryVault() {
   const stakingRewards = {
     1: { multiplier: '1.05x', annual: '5%' },
     10: { multiplier: '1.8x', annual: '6%' },
-    25: { multiplier: '3.2x', annual: '7%' },
-    50: { multiplier: '7.4x', annual: '8%' },
-    100: { multiplier: '16.9x', annual: '9%' },
+    25: { multiplier: '5.4x', annual: '7%' },
+    50: { multiplier: '47x', annual: '8%' },
+    100: { multiplier: '136x', annual: '9%' },
   };
 
   const calculatePotentialValue = (initialCost: number, years: number) => {
@@ -440,13 +440,13 @@ export default function MemoryVault() {
           </CardContent>
         </Card>
 
-        {/* Time-Lock Message Example */}
+        {/* Time-Lock Message Example - Realistic 100-Year Timeline */}
         <Card className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-purple-500/30 mb-12">
           <CardHeader>
             <CardTitle className="text-white flex items-center space-x-3">
               <MessageSquare className="h-6 w-6 text-pink-400" />
-              <span>Time-Lock Message: 600-Year Example</span>
-              <Badge className="bg-pink-600/20 text-pink-400">VIRAL POTENTIAL</Badge>
+              <span>Time-Lock Message: 100-Year Example</span>
+              <Badge className="bg-pink-600/20 text-pink-400">FAMILY LEGACY</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -455,13 +455,13 @@ export default function MemoryVault() {
                 <h3 className="text-lg font-semibold text-white mb-4">The Message</h3>
                 <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-600">
                   <p className="text-slate-300 italic">
-                    "Happy 16th birthday, my dear great-great-great-granddaughter! 
-                    I'm writing this in 2025, hoping you'll read it in 2625. 
-                    I invested ${calculateMemoryVaultGrowth(15, 600, 'time_capsules').initialInvestment} in this message capsule. I wonder what it's worth now? 
+                    "Happy 16th birthday, my dear great-granddaughter! 
+                    I'm writing this in 2025, hoping you'll read it in 2125. 
+                    I invested $15 in this message capsule. I wonder what it's worth now? 
                     Remember: family love is the only currency that appreciates forever. ❤️"
                   </p>
                   <div className="mt-4 text-xs text-slate-400">
-                    — Locked until January 1, 2625
+                    — Locked until January 1, 2125
                   </div>
                 </div>
               </div>
@@ -471,19 +471,19 @@ export default function MemoryVault() {
                 <div className="space-y-3">
                   <div className="flex justify-between p-3 bg-slate-800/30 rounded-lg">
                     <span className="text-slate-300">2025 (Today)</span>
-                    <span className="text-white font-bold">${calculateMemoryVaultGrowth(15, 0, 'time_capsules').initialInvestment}</span>
+                    <span className="text-white font-bold">$15</span>
                   </div>
                   <div className="flex justify-between p-3 bg-slate-700/50 rounded-lg">
-                    <span className="text-slate-300">2125 (100 years)</span>
-                    <span className="text-yellow-400 font-bold">${calculateMemoryVaultGrowth(15, 100, 'time_capsules').finalValue.toLocaleString()}</span>
+                    <span className="text-slate-300">2050 (25 years)</span>
+                    <span className="text-yellow-400 font-bold">$81</span>
                   </div>
                   <div className="flex justify-between p-3 bg-slate-600/50 rounded-lg">
-                    <span className="text-slate-300">2325 (300 years)</span>
-                    <span className="text-orange-400 font-bold">${calculateMemoryVaultGrowth(15, 300, 'time_capsules').finalValue.toLocaleString()}</span>
+                    <span className="text-slate-300">2075 (50 years)</span>
+                    <span className="text-orange-400 font-bold">$705</span>
                   </div>
                   <div className="flex justify-between p-3 bg-gradient-to-r from-green-600/20 to-emerald-600/20 rounded-lg border border-green-500/30">
-                    <span className="text-slate-300">2625 (600 years)</span>
-                    <span className="text-green-400 font-bold text-xl">${calculateMemoryVaultGrowth(15, 600, 'time_capsules').finalValue.toLocaleString()}</span>
+                    <span className="text-slate-300">2125 (100 years)</span>
+                    <span className="text-green-400 font-bold text-xl">$2,047</span>
                   </div>
                 </div>
               </div>

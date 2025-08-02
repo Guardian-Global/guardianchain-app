@@ -118,6 +118,9 @@ export function calculateMemoryVaultGrowth(
   years: number,
   assetType: keyof typeof BASE_GROWTH_RATES = 'family_memories'
 ): MemoryVaultCalculation {
+  // Limit maximum time period to prevent astronomical figures
+  const maxYears = Math.min(years, 100); // Cap at 100 years for realistic calculations
+  
   const baseRate = BASE_GROWTH_RATES[assetType];
   const stakingBonus = GTT_TOKEN_ECONOMICS.stakingAPY;
   const platformBonus = GTT_TOKEN_ECONOMICS.platformGrowthMultiplier - 1;
@@ -125,17 +128,17 @@ export function calculateMemoryVaultGrowth(
   // Combined annual growth rate
   const totalAnnualRate = baseRate + stakingBonus + platformBonus;
   
-  // Calculate compound growth
-  const finalValue = initialInvestment * Math.pow(1 + totalAnnualRate, years);
+  // Calculate compound growth with realistic cap
+  const finalValue = initialInvestment * Math.pow(1 + totalAnnualRate, maxYears);
   
   // Calculate GTT token rewards (users earn tokens based on capsule validation)
   const gttTokensEarned = (initialInvestment * GTT_TOKEN_ECONOMICS.capsuleRewardRate) / GTT_TOKEN_ECONOMICS.currentPrice;
-  const gttFuturePrice = GTT_TOKEN_ECONOMICS.currentPrice * Math.pow(1 + GTT_TOKEN_ECONOMICS.expectedAnnualGrowth, years);
+  const gttFuturePrice = GTT_TOKEN_ECONOMICS.currentPrice * Math.pow(1 + GTT_TOKEN_ECONOMICS.expectedAnnualGrowth, maxYears);
   const gttTokenValue = gttTokensEarned * gttFuturePrice;
   
   return {
     initialInvestment,
-    stakingPeriod: years,
+    stakingPeriod: maxYears, // Return the capped years
     finalValue: Math.round(finalValue + gttTokenValue),
     totalReturn: Math.round(((finalValue + gttTokenValue) / initialInvestment - 1) * 100),
     annualGrowthRate: Math.round(totalAnnualRate * 100),
