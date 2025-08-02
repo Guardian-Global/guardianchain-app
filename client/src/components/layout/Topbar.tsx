@@ -2,6 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import NotificationCenter from "./NotificationCenter";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { 
   Settings, 
   User, 
@@ -63,6 +64,9 @@ const Topbar = ({ onMobileMenuToggle }: TopbarProps) => {
 
       {/* Right side */}
       <div className="flex items-center gap-4">
+        {/* Language Switcher */}
+        <LanguageSwitcher />
+        
         {/* Notifications */}
         <NotificationCenter />
 

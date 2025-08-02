@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import { 
   FileText, 
   Calendar, 
@@ -17,7 +22,13 @@ import {
   Download,
   Flag,
   Star,
-  DollarSign
+  DollarSign,
+  Plus,
+  CreditCard,
+  Coins,
+  Play,
+  Lock,
+  Unlock
 } from "lucide-react";
 
 interface CapsuleData {
@@ -41,6 +52,7 @@ interface CapsuleDrawerProps {
   capsule?: CapsuleData;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  mode?: 'view' | 'create';
 }
 
 const mockCapsule: CapsuleData = {
@@ -63,11 +75,26 @@ const mockCapsule: CapsuleData = {
 const CapsuleDrawer = ({ 
   capsule = mockCapsule, 
   isOpen = false, 
-  onOpenChange 
+  onOpenChange,
+  mode = 'view'
 }: CapsuleDrawerProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    capsuleType: 'personal_memory',
+    accessCost: 0,
+    tags: '',
+    isSealed: false
+  });
+  const [loading, setLoading] = useState(false);
+  const [replayLoading, setReplayLoading] = useState(false);
   
-  const open = isOpen || internalOpen;
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const open = isOpen || internalOpen || createMode;
   const setOpen = onOpenChange || setInternalOpen;
 
   const getStatusColor = (status: string) => {
@@ -88,32 +115,252 @@ const CapsuleDrawer = ({
     }
   };
 
+  const submitCapsule = async () => {
+    setLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/capsules", {
+        ...formData,
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+        authorId: user?.id
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Capsule Created",
+          description: "Your truth capsule has been submitted and sealed. GTT rewards will be distributed upon verification.",
+        });
+        
+        // Trigger Stripe + GTT payout
+        await apiRequest("POST", "/api/trigger-stripe", {
+          capsuleId: (await response.json()).id,
+          amount: formData.accessCost || 2.50
+        });
+        
+        setCreateMode(false);
+        setFormData({
+          title: '',
+          content: '',
+          capsuleType: 'personal_memory',
+          accessCost: 0,
+          tags: '',
+          isSealed: false
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create capsule. Please try again.",
+        variant: "destructive",
+      });
+    }
+    setLoading(false);
+  };
+
+  const handleReplay = async () => {
+    setReplayLoading(true);
+    try {
+      const response = await apiRequest("POST", `/api/replay-capsule`, {
+        capsuleId: capsule.id
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Capsule Replayed",
+          description: "GTT yield has been issued to the author. Truth value confirmed.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Replay Failed",
+        description: "Unable to replay capsule. Please try again.",
+        variant: "destructive",
+      });
+    }
+    setReplayLoading(false);
+  };
+
+  const handlePurchaseAccess = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/purchase-capsule-access", {
+        capsuleId: capsule.id,
+        amount: capsule.accessCost
+      });
+
+      if (response.ok) {
+        const { sessionUrl } = await response.json();
+        window.location.href = sessionUrl;
+      }
+    } catch (error) {
+      toast({
+        title: "Purchase Failed",
+        description: "Unable to process payment. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button variant="outline" className="fixed bottom-20 right-6 z-40 bg-slate-800 border-slate-600 text-white hover:bg-slate-700">
-          <FileText className="h-4 w-4 mr-2" />
-          View Sample Capsule
-        </Button>
-      </SheetTrigger>
+    <>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button 
+            variant="outline" 
+            className="fixed bottom-20 right-6 z-40 bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
+            onClick={() => setCreateMode(false)}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            View Sample Capsule
+          </Button>
+        </SheetTrigger>
       
-      <SheetContent className="w-full sm:max-w-lg bg-slate-900 border-slate-700 text-white">
-        <ScrollArea className="h-full">
-          <SheetHeader className="mb-6">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <FileText className="h-6 w-6 text-blue-400" />
-              </div>
-              <div className="flex-1">
-                <SheetTitle className="text-white text-lg leading-tight">
-                  {capsule.title}
-                </SheetTitle>
-                <SheetDescription className="text-slate-400 mt-1">
-                  Capsule ID: {capsule.id}
-                </SheetDescription>
-              </div>
-            </div>
-          </SheetHeader>
+        <SheetContent className="w-full sm:max-w-lg bg-slate-900 border-slate-700 text-white">
+          <ScrollArea className="h-full">
+            {createMode || mode === 'create' ? (
+              // Create Mode
+              <>
+                <SheetHeader className="mb-6">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-green-500/20 rounded-lg">
+                      <Plus className="h-6 w-6 text-green-400" />
+                    </div>
+                    <div className="flex-1">
+                      <SheetTitle className="text-white text-lg leading-tight">
+                        Create Truth Capsule
+                      </SheetTitle>
+                      <SheetDescription className="text-slate-400 mt-1">
+                        Submit and seal your memory for verification
+                      </SheetDescription>
+                    </div>
+                  </div>
+                </SheetHeader>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Title
+                    </label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="Enter capsule title..."
+                      className="bg-slate-800 border-slate-600 text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Content
+                    </label>
+                    <Textarea
+                      value={formData.content}
+                      onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                      placeholder="Your memory, sealed for posterity..."
+                      rows={6}
+                      className="bg-slate-800 border-slate-600 text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Capsule Type
+                    </label>
+                    <select
+                      value={formData.capsuleType}
+                      onChange={(e) => setFormData(prev => ({ ...prev, capsuleType: e.target.value }))}
+                      className="w-full bg-slate-800 border border-slate-600 rounded-md px-3 py-2 text-white"
+                    >
+                      <option value="personal_memory">Personal Memory</option>
+                      <option value="whistleblower_protection">Whistleblower Report</option>
+                      <option value="historical_record">Historical Record</option>
+                      <option value="legal_testimony">Legal Testimony</option>
+                      <option value="family_legacy">Family Legacy</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Access Cost (GTT)
+                    </label>
+                    <Input
+                      type="number"
+                      value={formData.accessCost}
+                      onChange={(e) => setFormData(prev => ({ ...prev, accessCost: parseFloat(e.target.value) || 0 }))}
+                      placeholder="0"
+                      min="0"
+                      step="0.1"
+                      className="bg-slate-800 border-slate-600 text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-slate-300 mb-2 block">
+                      Tags (comma-separated)
+                    </label>
+                    <Input
+                      value={formData.tags}
+                      onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+                      placeholder="truth, memory, sealed"
+                      className="bg-slate-800 border-slate-600 text-white"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="sealed"
+                      checked={formData.isSealed}
+                      onChange={(e) => setFormData(prev => ({ ...prev, isSealed: e.target.checked }))}
+                      className="rounded"
+                    />
+                    <label htmlFor="sealed" className="text-sm text-slate-300">
+                      Seal with Veritas protection
+                    </label>
+                  </div>
+
+                  <div className="pt-4 space-y-3">
+                    <Button 
+                      onClick={submitCapsule}
+                      disabled={loading || !formData.title || !formData.content}
+                      className="w-full bg-green-600 hover:bg-green-700"
+                    >
+                      {loading ? (
+                        "Sealing..."
+                      ) : (
+                        <>
+                          <Coins className="h-4 w-4 mr-2" />
+                          Submit + Earn GTT
+                        </>
+                      )}
+                    </Button>
+                    
+                    <Button 
+                      variant="outline"
+                      onClick={() => setCreateMode(false)}
+                      className="w-full"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              // View Mode
+              <>
+                <SheetHeader className="mb-6">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-blue-500/20 rounded-lg">
+                      <FileText className="h-6 w-6 text-blue-400" />
+                    </div>
+                    <div className="flex-1">
+                      <SheetTitle className="text-white text-lg leading-tight">
+                        {capsule.title}
+                      </SheetTitle>
+                      <SheetDescription className="text-slate-400 mt-1">
+                        Capsule ID: {capsule.id}
+                      </SheetDescription>
+                    </div>
+                  </div>
+                </SheetHeader>
 
           {/* Verification Status */}
           <div className="mb-6">
@@ -225,28 +472,65 @@ const CapsuleDrawer = ({
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="space-y-3">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700">
-              <Star className="h-4 w-4 mr-2" />
-              Access Full Content
-            </Button>
-            
-            <div className="grid grid-cols-3 gap-2">
-              <Button variant="outline" size="sm">
-                <Heart className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="sm">
-                <Share2 className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
+                {/* Actions */}
+                <div className="space-y-3">
+                  {capsule.accessCost && capsule.accessCost > 0 ? (
+                    <Button 
+                      onClick={handlePurchaseAccess}
+                      className="w-full bg-purple-600 hover:bg-purple-700"
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Purchase Access ({capsule.accessCost} GTT)
+                    </Button>
+                  ) : (
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      <Star className="h-4 w-4 mr-2" />
+                      Access Full Content
+                    </Button>
+                  )}
+                  
+                  <Button 
+                    onClick={handleReplay}
+                    disabled={replayLoading}
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    {replayLoading ? (
+                      "Processing..."
+                    ) : (
+                      <>
+                        <Play className="h-4 w-4 mr-2" />
+                        Replay + Release Yield
+                      </>
+                    )}
+                  </Button>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button variant="outline" size="sm">
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
+
+      {/* Create Capsule Floating Button */}
+      <Button
+        onClick={() => setCreateMode(true)}
+        className="fixed bottom-4 left-4 bg-green-600 hover:bg-green-700 text-white shadow-lg z-40"
+      >
+        <Plus className="h-4 w-4 mr-2" />
+        New Capsule
+      </Button>
+    </>
   );
 };
 

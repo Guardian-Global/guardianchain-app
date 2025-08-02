@@ -34,6 +34,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Capsule Management Routes
+  app.post('/api/capsules', isDebugAuthenticated, async (req: any, res) => {
+    const { title, content, capsuleType, accessCost, tags, isSealed } = req.body;
+    const authorId = req.user.id;
+
+    if (!title || !content) {
+      return res.status(400).json({ error: 'Missing required fields: title, content' });
+    }
+
+    const capsule = {
+      id: `cap_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      title,
+      content,
+      author: authorId,
+      capsuleType: capsuleType || 'personal_memory',
+      accessCost: accessCost || 0,
+      tags: Array.isArray(tags) ? tags : [],
+      isSealed: isSealed || false,
+      verificationStatus: 'pending',
+      truthScore: 0,
+      views: 0,
+      likes: 0,
+      comments: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    console.log('🔵 DEBUG: Creating capsule:', capsule);
+    res.status(201).json({ success: true, capsule, message: 'Capsule created successfully' });
+  });
+
+  app.post('/api/trigger-stripe', isDebugAuthenticated, async (req: any, res) => {
+    const { capsuleId, amount } = req.body;
+    console.log('🔵 DEBUG: Triggering Stripe payment for capsule:', capsuleId, 'Amount:', amount);
+
+    const paymentResult = {
+      sessionId: `stripe_${Date.now()}`,
+      amount: amount || 2.50,
+      currency: 'GTT',
+      status: 'completed',
+      capsuleId,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('✅ DEBUG: Stripe payment processed:', paymentResult);
+    res.json({ success: true, payment: paymentResult, message: 'Payment processed and GTT rewards distributed' });
+  });
+
+  app.post('/api/replay-capsule', isDebugAuthenticated, async (req: any, res) => {
+    const { capsuleId, authorId, yieldAmount } = req.body;
+    
+    if (!capsuleId) {
+      return res.status(400).json({ error: 'Missing capsuleId' });
+    }
+
+    console.log('🔵 DEBUG: Replaying capsule:', capsuleId, 'Yield:', yieldAmount);
+
+    const replayResult = {
+      capsuleId,
+      authorId,
+      yieldAmount: yieldAmount || 2.50,
+      replayCount: 1,
+      timestamp: new Date().toISOString(),
+      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`
+    };
+
+    console.log('✅ DEBUG: Capsule replay completed:', replayResult);
+    res.json({ success: true, replay: replayResult, message: 'Capsule replayed and yield distributed successfully' });
+  });
+
+  app.post('/api/purchase-capsule-access', isDebugAuthenticated, async (req: any, res) => {
+    const { capsuleId, amount } = req.body;
+    console.log('🔵 DEBUG: Processing capsule access purchase:', capsuleId, 'Amount:', amount);
+
+    const sessionUrl = `https://checkout.stripe.com/pay/test_session_${Date.now()}`;
+    res.json({ success: true, sessionUrl, amount, capsuleId, message: 'Payment session created' });
+  });
+
+  app.post('/api/distribute-gtt-yield', isDebugAuthenticated, async (req: any, res) => {
+    const { recipientId, amount, reason, capsuleId } = req.body;
+    
+    console.log('🔵 DEBUG: Distributing GTT yield:', { recipientId, amount, reason, capsuleId });
+
+    const distribution = {
+      id: `dist_${Date.now()}`,
+      recipientId,
+      amount,
+      reason,
+      capsuleId,
+      timestamp: new Date().toISOString(),
+      status: 'completed'
+    };
+
+    console.log('✅ DEBUG: GTT yield distributed:', distribution);
+    res.json({ success: true, distribution, message: 'GTT yield distributed successfully' });
+  });
+
   // Simple auth user endpoint - no database calls
   app.get('/api/auth/user', isDebugAuthenticated, async (req: any, res) => {
     console.log('🔵 DEBUG: /api/auth/user called');
