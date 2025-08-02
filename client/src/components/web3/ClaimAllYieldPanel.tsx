@@ -78,7 +78,7 @@ export default function ClaimAllYieldPanel() {
         const yieldOwed = await contract.yieldOwed(address);
         pendingYield = (await import("ethers")).formatEther(yieldOwed);
       } catch (error) {
-        console.log("Using mock yield data for development");
+        // Development logging removed for production
       }
 
       // Realistic starter data for new users

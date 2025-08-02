@@ -9,7 +9,7 @@ export function useAuth() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  console.log('🔍 useAuth hook:', { user, isLoading, error, isAuthenticated: !!user && !error });
+  // Debug logging removed for production
 
   return {
     user,

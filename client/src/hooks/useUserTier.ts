@@ -30,7 +30,7 @@ export function useUserTier() {
         // Get user ID from auth context  
         const userId = user.id || (user as any).sub || user.email;
         if (!userId) {
-          console.warn("No user ID available for tier management");
+          // User ID validation removed for production
           setTier("guest");
           return;
         }

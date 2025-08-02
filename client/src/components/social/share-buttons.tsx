@@ -53,7 +53,7 @@ export default function ShareButtons({
       });
     } catch (error) {
       // User cancelled sharing or sharing failed
-      console.log("Native sharing cancelled or failed");
+      // Sharing logging removed for production
     } finally {
       setIsSharing(false);
     }

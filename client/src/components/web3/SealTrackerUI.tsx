@@ -44,7 +44,7 @@ export default function SealTrackerUI({
     try {
       return getContractAddress(chainId, "vault") as `0x${string}`;
     } catch (error) {
-      console.warn("Failed to get vault address:", error);
+      // Error logging removed for production
       return undefined;
     }
   };
