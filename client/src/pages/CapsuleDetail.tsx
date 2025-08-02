@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, Heart, MessageCircle, Share2, Calendar, User, Tag, Shield, Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import VoteButton from "@/components/VoteButton";
+import { useAccount } from "wagmi";
 
 interface CapsuleData {
   id: string;
@@ -30,6 +31,7 @@ interface CapsuleData {
 
 export default function CapsuleDetailPage() {
   const [match, params] = useRoute("/capsule/:id");
+  const { address } = useAccount();
   const [capsule, setCapsule] = useState<CapsuleData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -40,26 +42,11 @@ export default function CapsuleDetailPage() {
   const [unlocked, setUnlocked] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [userWallet, setUserWallet] = useState<string>("");
 
   useEffect(() => {
     if (match && params?.id) {
       fetchCapsule(params.id);
     }
-    // Try to get wallet address from localStorage or window.ethereum
-    const checkWallet = async () => {
-      if (typeof window !== "undefined" && window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts.length > 0) {
-            setUserWallet(accounts[0]);
-          }
-        } catch (error) {
-          console.log("No wallet connected");
-        }
-      }
-    };
-    checkWallet();
   }, [match, params]);
 
   const fetchCapsule = async (id: string) => {
@@ -431,7 +418,7 @@ export default function CapsuleDetailPage() {
                   <div className="flex flex-wrap gap-2">
                     <VoteButton
                       capsuleId={capsule.id}
-                      wallet={userWallet}
+                      wallet={address || ""}
                       initialLikes={parseInt(capsule.likes || "0")}
                     />
                     <Button variant="outline" size="sm" className="flex items-center">

@@ -47,8 +47,7 @@ export function VoteButton({ capsuleId, wallet, initialLikes = 0, className }: V
       return await apiRequest(`/api/capsules/${capsuleId}/vote`, {
         method: "POST",
         body: JSON.stringify({
-          wallet,
-          vote_type: voteType
+          wallet
         }),
         headers: {
           "Content-Type": "application/json",

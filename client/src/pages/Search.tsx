@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import VoteButton from "@/components/VoteButton";
 import { Loader2, Search as SearchIcon, Shield, Eye, Clock } from "lucide-react";
+import { useAccount } from "wagmi";
 
 interface SearchResult {
   id: string;
@@ -15,6 +16,9 @@ interface SearchResult {
   tags: string[];
   isPrivate?: boolean;
   created_at: string;
+  creator?: string;
+  ens?: string;
+  vote_count?: number;
   content?: {
     encrypted?: boolean;
     minted?: boolean;
@@ -26,6 +30,7 @@ export default function SearchPage() {
   const [location] = useLocation();
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
   const query = urlParams.get("q") || "";
+  const { address } = useAccount();
   
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +41,6 @@ export default function SearchPage() {
   const [hasMore, setHasMore] = useState(true);
   const [totalResults, setTotalResults] = useState(0);
   const [error, setError] = useState("");
-  const [userWallet, setUserWallet] = useState<string>("");
 
   const performSearch = async (searchTerm: string, pageNum: number = 1, append: boolean = false) => {
     if (!searchTerm.trim()) {
@@ -52,7 +56,6 @@ export default function SearchPage() {
     try {
       const params = new URLSearchParams({
         q: searchTerm,
-        public_only: onlyPublic.toString(),
         sort: sortBy,
         page: pageNum.toString(),
         limit: "10"
@@ -62,13 +65,16 @@ export default function SearchPage() {
       const data = await response.json();
       
       if (data.results) {
+        // Filter results based on privacy setting
+        const filtered = onlyPublic ? data.results.filter((r: SearchResult) => !r.isPrivate) : data.results;
+        
         if (append && pageNum > 1) {
-          setResults(prev => [...prev, ...data.results]);
+          setResults(prev => [...prev, ...filtered]);
         } else {
-          setResults(data.results);
+          setResults(filtered);
         }
         setTotalResults(data.total || 0);
-        setHasMore(data.results.length >= 10);
+        setHasMore(filtered.length >= 10);
       } else {
         setError(data.error || "Search failed");
         if (!append) {
@@ -103,21 +109,6 @@ export default function SearchPage() {
       setSearchQuery(query);
       performSearch(query, 1, false);
     }
-    
-    // Check for user wallet
-    const checkWallet = async () => {
-      if (typeof window !== "undefined" && window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts.length > 0) {
-            setUserWallet(accounts[0]);
-          }
-        } catch (error) {
-          console.log("No wallet connected");
-        }
-      }
-    };
-    checkWallet();
   }, [query, onlyPublic, sortBy]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -135,6 +126,36 @@ export default function SearchPage() {
       const nextPage = page + 1;
       setPage(nextPage);
       performSearch(query, nextPage, true);
+    }
+  };
+
+  const handleVote = async (capsuleId: string) => {
+    if (!address) {
+      alert("Connect your wallet to vote");
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/api/capsules/${capsuleId}/vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wallet: address })
+      });
+      
+      const data = await response.json();
+      
+      if (data.message || response.ok) {
+        alert("Vote counted!");
+        // Refresh the search results to show updated vote count
+        if (query) {
+          performSearch(query, 1, false);
+        }
+      } else {
+        alert(data.error || "Failed to vote");
+      }
+    } catch (error) {
+      console.error("Vote error:", error);
+      alert("Network error. Please try again.");
     }
   };
 
@@ -291,8 +312,15 @@ export default function SearchPage() {
 
                   {/* Creator Info */}
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                    By {capsule.author || "Anonymous"} • {new Date(capsule.created_at).toLocaleDateString()}
+                    By {capsule.ens || capsule.creator || "Anonymous"} • {new Date(capsule.created_at).toLocaleDateString()}
                   </p>
+                  
+                  {/* Vote Count */}
+                  {capsule.vote_count !== undefined && (
+                    <p className="text-sm text-orange-400 mb-2">
+                      🔥 {capsule.vote_count} votes
+                    </p>
+                  )}
 
                   {/* Tags */}
                   {capsule.tags && capsule.tags.length > 0 && (
@@ -321,10 +349,19 @@ export default function SearchPage() {
                       
                       <VoteButton
                         capsuleId={capsule.id}
-                        wallet={userWallet}
-                        initialLikes={0}
+                        wallet={address || ""}
+                        initialLikes={capsule.vote_count || 0}
                         className="ml-2"
                       />
+                      
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleVote(capsule.id)}
+                        className="text-orange-400 hover:text-orange-300"
+                      >
+                        🔥 Vote
+                      </Button>
                     </div>
                     
                     {capsule.content?.tx_hash && (
