@@ -1,19 +1,4 @@
-// Note: In production, install @lit-protocol/lit-node-client and @lit-protocol/encryption
-// For now, using mock implementation until proper Lit Protocol setup
-interface LitNodeClient {
-  connect(): Promise<void>;
-  getEncryptionKey(params: any): Promise<CryptoKey>;
-}
-
-declare const LitNodeClient: {
-  new(): LitNodeClient;
-  checkAndSignAuthMessage(params: { chain: string }): Promise<any>;
-};
-
-async function decryptString(blob: Blob, symmetricKey: CryptoKey): Promise<string> {
-  // Mock implementation - in production would use actual Lit Protocol decryption
-  return "DECRYPTED_CONTENT_PLACEHOLDER";
-}
+import { LitNodeClient, decryptString } from "lit-js-sdk/build/index.node.mjs";
 
 export async function unlockDisclosure({
   encryptedSymmetricKey,

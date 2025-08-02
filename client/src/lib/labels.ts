@@ -73,3 +73,21 @@ export const LABELS: Record<string, Record<string, string>> = {
 export function getLabel(key: string, language: string = "en"): string {
   return LABELS[language]?.[key] || LABELS.en[key] || key;
 }
+
+// Detect user language from browser or user preferences
+export function detectUserLanguage(): string {
+  // Check localStorage for saved preference
+  const savedLanguage = localStorage.getItem('preferred-language');
+  if (savedLanguage && LABELS[savedLanguage]) {
+    return savedLanguage;
+  }
+  
+  // Fall back to browser language
+  const browserLanguage = navigator.language.split('-')[0];
+  if (LABELS[browserLanguage]) {
+    return browserLanguage;
+  }
+  
+  // Default to English
+  return 'en';
+}
