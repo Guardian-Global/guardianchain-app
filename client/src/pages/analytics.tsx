@@ -16,10 +16,7 @@ export default function AnalyticsPage() {
 
       <Layout>
         <div className="max-w-7xl mx-auto p-6 space-y-8">
-          <PageHeader 
-            title="AI Analytics Dashboard"
-            description="Advanced machine learning analysis of truth capsule patterns and emotional themes"
-          />
+          <PageHeader title="AI Analytics Dashboard" />
 
           <CapsuleClusteringDashboard />
         </div>

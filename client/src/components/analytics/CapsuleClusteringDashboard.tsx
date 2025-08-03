@@ -6,7 +6,6 @@ import {
   BarChart3,
   Brain,
   Loader2,
-  Scatter3D,
   Target,
   TrendingUp,
   Users,
@@ -144,7 +143,7 @@ export default function CapsuleClusteringDashboard() {
                 </>
               ) : (
                 <>
-                  <Scatter3D className="w-4 h-4 mr-2" />
+                  <BarChart3 className="w-4 h-4 mr-2" />
                   Run New Analysis
                 </>
               )}
@@ -422,7 +421,7 @@ export default function CapsuleClusteringDashboard() {
               onClick={() => clusteringMutation.mutate({})}
               className="bg-brand-primary hover:bg-brand-primary/80"
             >
-              <Scatter3D className="w-4 h-4 mr-2" />
+              <BarChart3 className="w-4 h-4 mr-2" />
               Start Analysis
             </Button>
           </CardContent>

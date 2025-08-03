@@ -14,7 +14,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Scatter3D, Download, ZoomIn, RotateCcw } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BarChart3, Download, ZoomIn, RotateCcw, Filter } from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -57,6 +58,7 @@ interface ClusterVisualizerProps {
 export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerProps) {
   const [data, setData] = useState<CapsuleData[]>([]);
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const chartRef = useRef<ChartJS<"scatter">>(null);
 
@@ -97,13 +99,20 @@ export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerP
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  // Get unique clusters from data
-  const uniqueClusters = Array.from(new Set(data.map(d => d.cluster))).sort((a, b) => a - b);
+  // Apply filters to data
+  const filteredData = data.filter(d =>
+    (selectedCluster === null || d.cluster === selectedCluster) &&
+    (selectedYear === null || d.year === +selectedYear)
+  );
 
-  // Prepare scatter plot data
+  // Get unique clusters and years from original data
+  const uniqueClusters = Array.from(new Set(data.map(d => d.cluster))).sort((a, b) => a - b);
+  const uniqueYears = Array.from(new Set(data.map(d => d.year))).sort((a, b) => a - b);
+
+  // Prepare scatter plot data with filtered data
   const scatterData = {
-    datasets: uniqueClusters.map((clusterId) => {
-      const clusterData = data.filter((d) => d.cluster === clusterId);
+    datasets: Array.from(new Set(filteredData.map(d => d.cluster))).map((clusterId) => {
+      const clusterData = filteredData.filter((d) => d.cluster === clusterId);
       const isSelected = selectedCluster === null || selectedCluster === clusterId;
       
       return {
@@ -179,7 +188,7 @@ export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerP
             if (!capsule) return "";
             
             return [
-              `Year: ${capsule.year}`,
+              `${capsule.title} — ${capsule.year}`,
               `Category: ${capsule.category}`,
               `Emotional Score: ${capsule.emotional_score}/10`,
               `Grief Score: ${capsule.grief_score}/10`,
@@ -204,6 +213,7 @@ export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerP
 
   const handleResetView = () => {
     setSelectedCluster(null);
+    setSelectedYear(null);
     setZoomLevel(1);
     if (chartRef.current) {
       chartRef.current.resetZoom();
@@ -247,7 +257,7 @@ export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerP
     return (
       <Card className="bg-brand-secondary border-brand-surface">
         <CardContent className="p-8 text-center">
-          <Scatter3D className="w-16 h-16 text-brand-light/30 mx-auto mb-4" />
+          <BarChart3 className="w-16 h-16 text-brand-light/30 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-brand-light mb-2">
             Cluster Visualization
           </h3>
@@ -266,7 +276,7 @@ export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerP
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-brand-light flex items-center gap-2">
-              <Scatter3D className="w-5 h-5 text-brand-accent" />
+              <BarChart3 className="w-5 h-5 text-brand-accent" />
               Interactive Cluster Visualization
             </CardTitle>
             
@@ -293,6 +303,48 @@ export default function ClusterVisualizer({ clusteringData }: ClusterVisualizerP
                 Download
               </Button>
             </div>
+          </div>
+          
+          {/* Filter Controls */}
+          <div className="flex gap-4 items-center pt-4">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-brand-light/60" />
+              <span className="text-sm text-brand-light/60">Filters:</span>
+            </div>
+            
+            <Select value={selectedCluster?.toString() || "all"} onValueChange={(value) => setSelectedCluster(value === "all" ? null : parseInt(value))}>
+              <SelectTrigger className="w-40 bg-brand-dark border-brand-surface text-brand-light">
+                <SelectValue placeholder="All Clusters" />
+              </SelectTrigger>
+              <SelectContent className="bg-brand-dark border-brand-surface">
+                <SelectItem value="all" className="text-brand-light">All Clusters</SelectItem>
+                {uniqueClusters.map(cluster => (
+                  <SelectItem key={cluster} value={cluster.toString()} className="text-brand-light">
+                    Cluster {cluster}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <Select value={selectedYear || "all"} onValueChange={(value) => setSelectedYear(value === "all" ? null : value)}>
+              <SelectTrigger className="w-40 bg-brand-dark border-brand-surface text-brand-light">
+                <SelectValue placeholder="All Years" />
+              </SelectTrigger>
+              <SelectContent className="bg-brand-dark border-brand-surface">
+                <SelectItem value="all" className="text-brand-light">All Years</SelectItem>
+                {uniqueYears.map(year => (
+                  <SelectItem key={year} value={year.toString()} className="text-brand-light">
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            {(selectedCluster !== null || selectedYear !== null) && (
+              <Badge variant="secondary" className="bg-brand-accent/20 text-brand-accent">
+                {filteredData.length} of {data.length} capsules
+              </Badge>
+            )}
           </div>
         </CardHeader>
         

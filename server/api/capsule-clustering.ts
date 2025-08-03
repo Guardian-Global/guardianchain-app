@@ -107,8 +107,8 @@ export async function runCapsuleClustering(req: Request, res: Response) {
           if (fs.existsSync(outputPath)) {
             const results = JSON.parse(fs.readFileSync(outputPath, "utf8"));
             
-            // Clean up temporary file
-            fs.unlinkSync(outputPath);
+            // Keep the file for the results endpoint - don't delete it yet
+            // fs.unlinkSync(outputPath);
             
             return res.status(200).json({
               success: true,
@@ -162,23 +162,31 @@ export async function runCapsuleClustering(req: Request, res: Response) {
  */
 export async function getCachedClusteringResults(req: Request, res: Response) {
   try {
-    const cacheFile = path.join(process.cwd(), "cached_clustering_results.json");
+    // Check multiple possible output paths
+    const outputPaths = [
+      path.join(process.cwd(), "clustered_capsules_analysis.json"),
+      path.join(process.cwd(), "server/ai/clustered_capsules_analysis.json"),
+      path.join(process.cwd(), "cached_clustering_results.json")
+    ];
     
-    if (fs.existsSync(cacheFile)) {
-      const cachedResults = JSON.parse(fs.readFileSync(cacheFile, "utf8"));
-      
-      return res.status(200).json({
-        success: true,
-        cached: true,
-        analysis: cachedResults,
-        message: "Retrieved cached clustering results"
-      });
-    } else {
-      return res.status(404).json({
-        error: "No cached results available",
-        message: "Run clustering analysis first to generate results"
-      });
+    for (const outputPath of outputPaths) {
+      if (fs.existsSync(outputPath)) {
+        const results = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+        console.log(`📊 Found cached results at: ${outputPath}`);
+        
+        return res.status(200).json({
+          success: true,
+          cached: true,
+          analysis: results,
+          message: "Retrieved cached clustering results"
+        });
+      }
     }
+    
+    return res.status(404).json({
+      error: "No cached results available",
+      message: "Run clustering analysis first to generate results"
+    });
   } catch (error) {
     console.error("Error retrieving cached results:", error);
     
