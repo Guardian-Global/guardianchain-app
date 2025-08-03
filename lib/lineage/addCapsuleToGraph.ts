@@ -1,5 +1,5 @@
-import { db } from "@/server/db";
-import { lineageNodes, lineageEdges } from "@/shared/schema";
+import { db } from "../../server/db";
+import { lineageNodes, lineageEdges } from "../../shared/schema";
 
 export async function addCapsuleToLineage({ capsuleId, title, parentIds = [] }: {
   capsuleId: string,

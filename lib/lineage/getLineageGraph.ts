@@ -1,5 +1,5 @@
-import { db } from "@/server/db";
-import { lineageNodes, lineageEdges } from "@/shared/schema";
+import { db } from "../../server/db";
+import { lineageNodes, lineageEdges } from "../../shared/schema";
 import { eq } from "drizzle-orm";
 
 export interface LineageGraphData {
