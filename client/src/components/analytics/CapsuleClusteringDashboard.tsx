@@ -20,6 +20,7 @@ import ClusterVisualizer from "./ClusterVisualizer";
 import MemoryYieldChart from "./MemoryYieldChart";
 import LineageVisualizer from "../lineage/LineageVisualizer";
 import ClusterThemeVoting from "../dao/ClusterThemeVoting";
+import PublicClusterStream from "./PublicClusterStream";
 
 interface ClusterTheme {
   theme_name: string;
@@ -341,6 +342,9 @@ export default function CapsuleClusteringDashboard() {
 
           {/* Truth Lineage Graph */}
           <LineageVisualizer />
+
+          {/* Public Truth Stream */}
+          <PublicClusterStream />
 
           {/* Selected Cluster Details */}
           {selectedCluster !== null && analysis.cluster_themes[selectedCluster] && (

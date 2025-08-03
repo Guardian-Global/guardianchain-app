@@ -233,6 +233,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Public cluster stream endpoint for real-time capsule discovery
+  app.get("/api/cluster/public-stream", async (req: any, res) => {
+    try {
+      const { cluster, limit = 25 } = req.query;
+      
+      // Demo public stream data with cluster filtering
+      const mockCapsules = [
+        {
+          id: "cap_2025_001",
+          title: "Grandmother's Last Words",
+          description: "A final conversation that changed everything",
+          cluster: 0,
+          clusterTheme: "Grief & Loss",
+          created_at: new Date(Date.now() - 86400000), // 1 day ago
+          truthScore: 95,
+          emotionalResonance: 0.89
+        },
+        {
+          id: "cap_2025_002", 
+          title: "Wedding Day Revelation",
+          description: "Truth discovered on my happiest day",
+          cluster: 1,
+          clusterTheme: "Family Memories",
+          created_at: new Date(Date.now() - 172800000), // 2 days ago
+          truthScore: 87,
+          emotionalResonance: 0.76
+        },
+        {
+          id: "cap_2025_003",
+          title: "Career Breakthrough Moment",
+          description: "When everything finally clicked",
+          cluster: 2,
+          clusterTheme: "Personal Growth",
+          created_at: new Date(Date.now() - 259200000), // 3 days ago
+          truthScore: 82,
+          emotionalResonance: 0.71
+        },
+        {
+          id: "cap_2025_004",
+          title: "Childhood Home Discovery",
+          description: "Hidden letters found in the attic",
+          cluster: 1,
+          clusterTheme: "Family Memories", 
+          created_at: new Date(Date.now() - 345600000), // 4 days ago
+          truthScore: 91,
+          emotionalResonance: 0.83
+        },
+        {
+          id: "cap_2025_005",
+          title: "Medical Diagnosis Truth",
+          description: "The day that changed my perspective",
+          cluster: 0,
+          clusterTheme: "Grief & Loss",
+          created_at: new Date(Date.now() - 432000000), // 5 days ago
+          truthScore: 94,
+          emotionalResonance: 0.92
+        }
+      ];
+
+      // Filter by cluster if specified
+      let filteredCapsules = mockCapsules;
+      if (cluster !== undefined) {
+        const clusterNum = parseInt(cluster as string);
+        filteredCapsules = mockCapsules.filter(cap => cap.cluster === clusterNum);
+      }
+
+      // Apply limit
+      const limitNum = Math.min(parseInt(limit as string), 100);
+      const results = filteredCapsules
+        .sort((a, b) => b.created_at.getTime() - a.created_at.getTime())
+        .slice(0, limitNum);
+
+      res.json({
+        success: true,
+        capsules: results,
+        total: results.length,
+        cluster: cluster ? parseInt(cluster as string) : null,
+        timestamp: new Date().toISOString()
+      });
+
+      console.log(`📊 Public cluster stream: ${results.length} capsules${cluster ? ` (cluster ${cluster})` : ''}`);
+    } catch (error) {
+      console.error("❌ Failed to get public cluster stream:", error);
+      res.status(500).json({
+        error: "Failed to fetch cluster stream",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
