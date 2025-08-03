@@ -1,8 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, TrendingUp, DollarSign, Star, Award, Target } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Trophy, TrendingUp, DollarSign, Star, Award, Target, RefreshCw, Wifi, WifiOff } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useRealtimeRewards } from "@/hooks/useRealtimeRewards";
 
 interface ThemeYieldData {
   theme: string;
@@ -19,10 +21,15 @@ interface YieldResponse {
 }
 
 export default function Rewards() {
-  const { data: yieldData, isLoading } = useQuery<YieldResponse>({
+  const { isConnected, yieldData, triggerRefresh } = useRealtimeRewards();
+  
+  const { data: rawYieldData, isLoading } = useQuery<YieldResponse>({
     queryKey: ["/api/gtt/theme-yield"],
-    refetchInterval: 30000, // Refresh every 30 seconds for live leaderboard
+    refetchInterval: 30000,
   });
+
+  // Use realtime data if available, fallback to query data
+  const activeYieldData = yieldData || rawYieldData;
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -68,7 +75,7 @@ export default function Rewards() {
     );
   }
 
-  if (!yieldData?.yields) {
+  if (!activeYieldData?.yields) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="text-center mb-8">
@@ -85,7 +92,7 @@ export default function Rewards() {
     );
   }
 
-  const sortedYields = [...yieldData.yields].sort((a, b) => b.gttYield - a.gttYield);
+  const sortedYields = [...activeYieldData.yields].sort((a, b) => b.gttYield - a.gttYield);
   const totalRewards = sortedYields.reduce((sum, item) => sum + item.gttYield, 0);
   const topPerformer = sortedYields[0];
 
@@ -96,6 +103,30 @@ export default function Rewards() {
         <p className="text-purple-300 text-lg max-w-2xl mx-auto">
           Live performance rankings of emotional themes based on engagement velocity and community resonance
         </p>
+        
+        {/* Real-time Status and Controls */}
+        <div className="flex items-center justify-center gap-4 mt-4">
+          <div className="flex items-center gap-2">
+            {isConnected ? (
+              <Wifi className="w-4 h-4 text-green-400" />
+            ) : (
+              <WifiOff className="w-4 h-4 text-red-400" />
+            )}
+            <span className={`text-sm ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
+              {isConnected ? 'Live Updates Active' : 'Connecting...'}
+            </span>
+          </div>
+          
+          <Button
+            onClick={triggerRefresh}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh Now
+          </Button>
+        </div>
       </div>
 
       {/* Summary Stats */}
@@ -216,8 +247,8 @@ export default function Rewards() {
 
       {/* Last Updated */}
       <div className="text-center mt-6 text-slate-500 text-sm">
-        Last updated: {new Date(yieldData.timestamp).toLocaleString()}
-        <span className="ml-2">• Updates every 30 seconds</span>
+        Last updated: {new Date(activeYieldData.timestamp).toLocaleString()}
+        <span className="ml-2">• {isConnected ? 'Live updates active' : 'Updates every 30 seconds'}</span>
       </div>
     </div>
   );

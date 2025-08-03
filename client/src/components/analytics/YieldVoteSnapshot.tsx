@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
+import { useRealtimeRewards } from "@/hooks/useRealtimeRewards";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -14,10 +15,27 @@ interface YieldVoteData {
 export default function YieldVoteSnapshot() {
   const [data, setData] = useState<YieldVoteData[]>([]);
   const [loading, setLoading] = useState(true);
+  const { yieldData: realtimeYield, voteData: realtimeVote } = useRealtimeRewards();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Use realtime data if available, otherwise fetch fresh
+        if (realtimeYield?.yields && realtimeVote?.themes) {
+          const combined = realtimeYield.yields.map((yieldItem: any) => {
+            const voteItem = realtimeVote.themes.find((v: any) => v.cluster === yieldItem.cluster) || {};
+            return {
+              theme: yieldItem.theme,
+              cluster: yieldItem.cluster,
+              gttYield: yieldItem.gttYield || 0,
+              voteCount: voteItem.voteCount || 0
+            };
+          });
+          setData(combined);
+          setLoading(false);
+          return;
+        }
+
         const [yieldRes, voteRes] = await Promise.all([
           fetch("/api/gtt/theme-yield"),
           fetch("/api/dao/vote-summary")
@@ -46,7 +64,7 @@ export default function YieldVoteSnapshot() {
     };
 
     fetchData();
-  }, []);
+  }, [realtimeYield, realtimeVote]);
 
   const chartData = {
     labels: data.map(d => d.theme || `Cluster ${d.cluster}`),

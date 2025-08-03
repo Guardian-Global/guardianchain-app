@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import YieldVoteSnapshot from "@/components/analytics/YieldVoteSnapshot";
 import MemoryYieldChart from "@/components/analytics/MemoryYieldChart";
+import { useRealtimeRewards } from "@/hooks/useRealtimeRewards";
 
 export default function MetricsDashboard() {
   const [capsuleCount, setCapsuleCount] = useState(127);
@@ -9,6 +10,8 @@ export default function MetricsDashboard() {
   const [totalGTT, setTotalGTT] = useState(61.4);
   const [engagement, setEngagement] = useState(7.3);
   const [clusters, setClusters] = useState(4);
+  
+  const { isConnected } = useRealtimeRewards();
 
   useEffect(() => {
     fetch("/api/analytics/platform-metrics")
@@ -97,7 +100,7 @@ export default function MetricsDashboard() {
       <YieldVoteSnapshot />
       
       <div className="text-center text-slate-500 text-sm">
-        Last updated: {new Date().toLocaleString()} • Auto-refresh every 30 seconds
+        Last updated: {new Date().toLocaleString()} • {isConnected ? 'Live updates active' : 'Auto-refresh every 30 seconds'}
       </div>
     </div>
   );
