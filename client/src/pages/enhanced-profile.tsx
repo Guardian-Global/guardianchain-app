@@ -13,6 +13,7 @@ import ActivityTimeline from "@/components/profile/ActivityTimeline";
 import VerifiedCapsulesGrid from "@/components/profile/VerifiedCapsulesGrid";
 import SocialLinksCard from "@/components/profile/SocialLinksCard";
 import ProfileThemeToggle from "@/components/profile/ProfileThemeToggle";
+import MediaRemixUploader from "@/components/profile/MediaRemixUploader";
 import { getUserProfile, getUserCapsules, getUserBadges, getFriends } from "@/lib/profile-api";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -105,9 +106,25 @@ export default function EnhancedProfilePage() {
           )}
 
           {activeTab === "media" && (
-            <div className="grid lg:grid-cols-2 gap-8">
-              <ProfileMediaUploader userId={profile.id} />
-              <MemoryRecallAI userId={profile.id} />
+            <div className="space-y-8">
+              <div className="grid lg:grid-cols-2 gap-8">
+                <ProfileMediaUploader userId={profile.id} />
+                <MemoryRecallAI userId={profile.id} />
+              </div>
+              
+              {/* AI Media Remix Studio */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-brand-light flex items-center gap-2">
+                  <span className="text-brand-accent">🎨</span>
+                  AI Media Remix Studio
+                </h3>
+                <MediaRemixUploader 
+                  userId={profile.id}
+                  onRemixComplete={(outputUrl) => {
+                    console.log("Remix completed:", outputUrl);
+                  }}
+                />
+              </div>
             </div>
           )}
 

@@ -19,6 +19,7 @@ import vaultRouter from "./routes/vault";
 import { analyzeVoiceFile } from "./ai/voice-analysis";
 import { composeCapsule } from "./ai/capsule-composer";
 import { registerSubscriptionRoutes } from "./routes/subscription";
+import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import multer from "multer";
 import {
   distributeReplayYield,
@@ -67,6 +68,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/capsules/timeline", getCapsuleTimeline);
   app.get("/api/validators/bids", getValidatorBids);
   app.post("/api/subscribe", subscribeEmail);
+  
+  // Media remixing endpoints
+  app.post("/api/media/remix", isDebugAuthenticated, handleMediaRemix);
+  app.get("/api/media/remix/status/:predictionId", isDebugAuthenticated, handleMediaRemixStatus);
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
