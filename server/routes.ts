@@ -345,6 +345,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // DAO vote summary endpoint for yield vs vote analysis
+  app.get("/api/dao/vote-summary", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const demoVoteData = [
+        {
+          cluster: 0,
+          theme: "Grief & Loss",
+          voteCount: 89,
+          activeVoters: 23,
+          proposalsPassed: 12,
+          totalGTTStaked: 1250
+        },
+        {
+          cluster: 1,
+          theme: "Family Memories", 
+          voteCount: 76,
+          activeVoters: 19,
+          proposalsPassed: 8,
+          totalGTTStaked: 980
+        },
+        {
+          cluster: 2,
+          theme: "Personal Growth",
+          voteCount: 45,
+          activeVoters: 14,
+          proposalsPassed: 5,
+          totalGTTStaked: 650
+        },
+        {
+          cluster: 3,
+          theme: "Life Transitions",
+          voteCount: 67,
+          activeVoters: 17,
+          proposalsPassed: 9,
+          totalGTTStaked: 890
+        }
+      ];
+
+      res.json({
+        success: true,
+        themes: demoVoteData,
+        summary: {
+          totalVotes: demoVoteData.reduce((sum, theme) => sum + theme.voteCount, 0),
+          totalVoters: demoVoteData.reduce((sum, theme) => sum + theme.activeVoters, 0),
+          totalProposals: demoVoteData.reduce((sum, theme) => sum + theme.proposalsPassed, 0),
+          totalStaked: demoVoteData.reduce((sum, theme) => sum + theme.totalGTTStaked, 0)
+        },
+        timestamp: new Date().toISOString()
+      });
+
+      console.log(`🗳️ DAO vote summary generated: ${demoVoteData.length} themes`);
+    } catch (error) {
+      console.error("❌ Failed to get DAO vote summary:", error);
+      res.status(500).json({
+        error: "Failed to get vote summary",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
