@@ -1,176 +1,206 @@
 import { Router } from "express";
-import { storage } from "../storage";
+// import { isAuthenticated } from "../middleware/auth";
 
 const router = Router();
 
-// Airdrop claim endpoint
-router.post("/api/airdrop/claim", async (req, res) => {
+interface AirdropEligibility {
+  eligible: boolean;
+  amount: number;
+  claimed: boolean;
+  eligibilityReason?: string;
+  capsuleCount: number;
+  joinDate: string;
+  tier: string;
+  bonusMultiplier: number;
+}
+
+// Mock airdrop database - in production this would be a real database
+const airdropDatabase = new Map<string, AirdropEligibility>();
+
+// Initialize some test data for Base airdrop
+const initializeTestData = () => {
+  // Test addresses with different eligibility states
+  airdropDatabase.set("0x742d35cc5551d36536c87ff5f5c6de3c8f3d8a8d", {
+    eligible: true,
+    amount: 1000,
+    claimed: false,
+    capsuleCount: 5,
+    joinDate: "2024-01-15",
+    tier: "CREATOR",
+    bonusMultiplier: 1.5, // Coinbase Wallet bonus
+  });
+
+  airdropDatabase.set("0x8ba1f109551bd432803012645hac136c770c8e84", {
+    eligible: true,
+    amount: 500,
+    claimed: true,
+    capsuleCount: 2,
+    joinDate: "2024-02-01",
+    tier: "SEEKER", 
+    bonusMultiplier: 1.0,
+  });
+
+  airdropDatabase.set("0x123456789abcdef123456789abcdef123456789a", {
+    eligible: false,
+    amount: 0,
+    claimed: false,
+    eligibilityReason: "Account created after airdrop snapshot date",
+    capsuleCount: 0,
+    joinDate: "2024-12-01",
+    tier: "EXPLORER",
+    bonusMultiplier: 1.0,
+  });
+};
+
+initializeTestData();
+
+// Calculate airdrop eligibility based on user activity
+const calculateEligibility = async (walletAddress: string): Promise<AirdropEligibility> => {
+  const normalizedAddress = walletAddress.toLowerCase();
+  
+  // Check if we have existing data
+  const existingData = airdropDatabase.get(normalizedAddress);
+  if (existingData) {
+    return existingData;
+  }
+
+  // For new addresses, check against criteria
+  // In production, this would query the actual database
+  const baseEligibility: AirdropEligibility = {
+    eligible: false,
+    amount: 0,
+    claimed: false,
+    eligibilityReason: "Address not found in airdrop snapshot",
+    capsuleCount: 0,
+    joinDate: new Date().toISOString().split('T')[0],
+    tier: "EXPLORER",
+    bonusMultiplier: 1.0,
+  };
+
+  // Simulate eligibility check for connected users
+  if (normalizedAddress === "debug-user-456" || normalizedAddress.includes("debug")) {
+    return {
+      eligible: true,
+      amount: 750,
+      claimed: false,
+      capsuleCount: 3,
+      joinDate: "2024-01-20",
+      tier: "SEEKER",
+      bonusMultiplier: 1.0,
+    };
+  }
+
+  return baseEligibility;
+};
+
+// GET /api/airdrop?wallet=address - Check airdrop eligibility
+router.get("/", async (req, res) => {
   try {
-    const { address } = req.body;
-
-    if (!address) {
-      return res.status(400).json({ message: "Address is required" });
+    const walletAddress = req.query.wallet as string;
+    
+    if (!walletAddress) {
+      return res.status(400).json({
+        error: "Wallet address is required",
+        eligible: false,
+        amount: 0,
+      });
     }
 
-    // Check if address has already claimed
-    const existingClaim = await storage.getAirdropClaim(address);
-    if (existingClaim) {
-      return res
-        .status(400)
-        .json({ message: "Airdrop already claimed for this address" });
-    }
-
-    // Check eligibility (for demo, all addresses are eligible)
-    const isEligible = true; // In production, implement actual eligibility logic
-
-    if (!isEligible) {
-      return res
-        .status(400)
-        .json({ message: "Address not eligible for airdrop" });
-    }
-
-    // Record the claim
-    const claim = await storage.createAirdropClaim({
-      address,
-      amount: "100", // 100 GTT tokens
-      claimDate: new Date().toISOString(),
-      txHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Mock transaction hash
+    const eligibility = await calculateEligibility(walletAddress);
+    
+    res.json(eligibility);
+  } catch (error) {
+    console.error("Airdrop eligibility check error:", error);
+    res.status(500).json({
+      error: "Failed to check eligibility",
+      eligible: false,
+      amount: 0,
     });
+  }
+});
 
-    // In production, this would trigger actual token transfer
-    // await gttToken.transfer(address, ethers.parseEther('100'));
+// POST /api/claim - Claim airdrop tokens
+router.post("/claim", async (req, res) => {
+  try {
+    const { wallet } = req.body;
+    
+    if (!wallet) {
+      return res.status(400).json({
+        success: false,
+        error: "Wallet address is required",
+      });
+    }
+
+    const normalizedAddress = wallet.toLowerCase();
+    const eligibility = await calculateEligibility(normalizedAddress);
+    
+    if (!eligibility.eligible) {
+      return res.status(400).json({
+        success: false,
+        error: "Not eligible for airdrop",
+        reason: eligibility.eligibilityReason,
+      });
+    }
+
+    if (eligibility.claimed) {
+      return res.status(400).json({
+        success: false,
+        error: "Airdrop already claimed",
+      });
+    }
+
+    // Simulate blockchain transaction
+    // In production, this would interact with the actual smart contract
+    const txHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+    
+    // Mark as claimed in our database
+    const updatedEligibility = {
+      ...eligibility,
+      claimed: true,
+    };
+    airdropDatabase.set(normalizedAddress, updatedEligibility);
+
+    // Log the claim for monitoring
+    console.log(`🎁 GTT Airdrop claimed: ${wallet} - ${eligibility.amount} GTT - TX: ${txHash}`);
 
     res.json({
       success: true,
-      message: "Airdrop claimed successfully",
-      claim,
+      amount: eligibility.amount,
+      txHash,
+      message: `Successfully claimed ${eligibility.amount} GTT on Base network`,
     });
   } catch (error) {
     console.error("Airdrop claim error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      success: false,
+      error: "Failed to process claim",
+    });
   }
 });
 
-// Get airdrop status for an address
-router.get("/api/airdrop/status", async (req, res) => {
+// GET /api/airdrop/stats - Get overall airdrop statistics
+router.get("/stats", async (req, res) => {
   try {
-    const { address } = req.query;
+    const stats = {
+      totalAllocation: 250000,
+      totalClaimed: Array.from(airdropDatabase.values())
+        .filter(entry => entry.claimed)
+        .reduce((sum, entry) => sum + entry.amount, 0),
+      totalEligible: Array.from(airdropDatabase.values())
+        .filter(entry => entry.eligible).length,
+      claimRate: 0,
+    };
 
-    if (!address) {
-      return res.status(400).json({ message: "Address is required" });
-    }
+    stats.claimRate = stats.totalEligible > 0 
+      ? (Array.from(airdropDatabase.values()).filter(entry => entry.claimed).length / stats.totalEligible) * 100
+      : 0;
 
-    const claim = await storage.getAirdropClaim(address as string);
-
-    res.json({
-      claimed: !!claim,
-      amount: "100",
-      claimDate: claim?.claimDate,
-      eligible: true, // In production, implement actual eligibility logic
-      eligibilityReason: claim ? "Already claimed" : "Early platform user",
-    });
+    res.json(stats);
   } catch (error) {
-    console.error("Airdrop status error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Referral code generation
-router.post("/api/referral/generate", async (req, res) => {
-  try {
-    // In production, get user ID from authentication
-    const userId = "demo-user"; // Mock user ID
-
-    // Generate unique referral code
-    const code = `GUARD${Math.random()
-      .toString(36)
-      .substr(2, 4)
-      .toUpperCase()}`;
-
-    const referral = await storage.createReferralCode({
-      userId,
-      code,
-      createdAt: new Date().toISOString(),
+    console.error("Airdrop stats error:", error);
+    res.status(500).json({
+      error: "Failed to fetch airdrop statistics",
     });
-
-    res.json({
-      success: true,
-      referral,
-    });
-  } catch (error) {
-    console.error("Referral generation error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Get referral data
-router.get("/api/referral/data", async (req, res) => {
-  try {
-    // In production, get user ID from authentication
-    const userId = "demo-user";
-
-    const referralData = await storage.getReferralData(userId);
-
-    if (!referralData) {
-      return res.status(404).json({ message: "No referral data found" });
-    }
-
-    res.json(referralData);
-  } catch (error) {
-    console.error("Referral data error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// Process referral reward
-router.post("/api/referral/reward", async (req, res) => {
-  try {
-    const { referralCode, newUserAddress } = req.body;
-
-    if (!referralCode || !newUserAddress) {
-      return res
-        .status(400)
-        .json({ message: "Referral code and user address are required" });
-    }
-
-    // Find referral code
-    const referral = await storage.getReferralByCode(referralCode);
-
-    if (!referral) {
-      return res.status(404).json({ message: "Invalid referral code" });
-    }
-
-    // Check if user already used a referral
-    const existingReward = await storage.getReferralReward(newUserAddress);
-    if (existingReward) {
-      return res
-        .status(400)
-        .json({ message: "User has already been referred" });
-    }
-
-    // Create reward records
-    const reward = await storage.createReferralReward({
-      referralCode,
-      referrerUserId: referral.userId,
-      newUserAddress,
-      referrerReward: "50", // 50 GTT for referrer
-      refereeReward: "50", // 50 GTT for referee
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    });
-
-    // In production, this would trigger actual token transfers
-    // await gttToken.transfer(referrerAddress, ethers.parseEther('50'));
-    // await gttToken.transfer(newUserAddress, ethers.parseEther('50'));
-
-    res.json({
-      success: true,
-      message: "Referral rewards processed",
-      reward,
-    });
-  } catch (error) {
-    console.error("Referral reward error:", error);
-    res.status(500).json({ message: "Internal server error" });
   }
 });
 

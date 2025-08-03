@@ -1,0 +1,117 @@
+// ✅ FILE: lib/auth.ts
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+
+export const getUserFromSession = async (req: any, res: any) => {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return null;
+  return session.user;
+};
+
+
+// ✅ FILE: components/MediaUploader.tsx
+"use client";
+
+import { useState } from "react";
+import { useWallet } from "@/hooks/useWallet";
+
+export default function MediaUploader({ onUpload }: { onUpload: (url: string) => void }) {
+  const [file, setFile] = useState<File | null>(null);
+  const { address } = useWallet();
+
+  const uploadFile = async () => {
+    if (!file || !address) return;
+
+    const filePath = `user-${address}/${file.name}`;
+    const { data, error } = await supabase.storage
+      .from("media")
+      .upload(filePath, file);
+
+    if (error) {
+      console.error("Upload failed", error);
+    } else {
+      const url = supabase.storage.from("media").getPublicUrl(filePath).data.publicUrl;
+      onUpload(url);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+      <button onClick={uploadFile} className="bg-yellow-500 text-white px-4 py-2 rounded">
+        Upload
+      </button>
+    </div>
+  );
+}
+
+
+// ✅ FILE: components/CapsuleCreator.tsx
+"use client";
+
+import { useState } from "react";
+import MediaUploader from "./MediaUploader";
+import { useWallet } from "@/hooks/useWallet";
+
+export default function CapsuleCreator() {
+  const { address } = useWallet();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [veritasSeal, setVeritasSeal] = useState(false);
+
+  const mintCapsule = async () => {
+    if (!address || !mediaUrl || !title) return;
+
+    const res = await fetch("/api/capsule/mint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, description, filePath: mediaUrl, owner: address, veritas: veritasSeal }),
+    });
+
+    if (res.ok) alert("Capsule minted!");
+    else alert("Minting failed");
+  };
+
+  return (
+    <div className="p-6 bg-white rounded shadow space-y-4">
+      <h2 className="text-xl font-semibold">Create Capsule</h2>
+      <input className="w-full border p-2" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <textarea className="w-full border p-2" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+      <MediaUploader onUpload={setMediaUrl} />
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" checked={veritasSeal} onChange={(e) => setVeritasSeal(e.target.checked)} />
+        <span>Apply Veritas Seal</span>
+      </label>
+      <button onClick={mintCapsule} className="bg-yellow-600 text-white px-4 py-2 rounded">
+        Mint Capsule
+      </button>
+    </div>
+  );
+}
+
+
+// ✅ FILE: pages/api/capsule/mint.ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") return res.status(405).end();
+
+  const { title, description, filePath, owner, veritas } = req.body;
+  if (!title || !filePath || !owner) return res.status(400).json({ error: "Missing fields" });
+
+  const { data, error } = await supabase.from("capsules").insert({
+    title,
+    description,
+    file_path: filePath,
+    owner,
+    veritas,
+    created_at: new Date().toISOString(),
+  });
+
+  if (error) return res.status(500).json({ error });
+  return res.status(200).json({ success: true });
+}

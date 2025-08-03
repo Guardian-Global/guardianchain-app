@@ -1,197 +1,130 @@
 import { ethers } from "hardhat";
-import { writeFileSync } from "fs";
+import * as dotenv from "dotenv";
 
-/**
- * Enhanced Base Network GTT Token Deployment Script
- * Deploys GTT token with multi-chain yield mechanics and Base-specific optimizations
- */
+dotenv.config();
 
-async function main() {
-  console.log("🚀 Starting Base GTT Token Deployment...");
-
-  // Get deployer account
-  const [deployer] = await ethers.getSigners();
-  const deployerAddress = await deployer.getAddress();
-  const deployerBalance = await deployer.provider.getBalance(deployerAddress);
-
-  console.log("📋 Deployment Details:");
-  console.log(`  Deployer: ${deployerAddress}`);
-  console.log(`  Balance: ${ethers.formatEther(deployerBalance)} ETH`);
-  console.log(`  Network: Base (Chain ID: 8453)`);
-
-  // Deploy GTT Token Contract
-  console.log("\n📦 Deploying GTT Token...");
-  const GTTToken = await ethers.getContractFactory("GTTToken");
-  
-  // GTT Token Constructor Parameters
-  const tokenParams = {
-    name: "GuardianChain Truth Token",
-    symbol: "GTT",
-    initialSupply: ethers.parseEther("1000000000"), // 1B GTT
-    owner: deployerAddress,
-  };
-
-  const gttToken = await GTTToken.deploy(
-    tokenParams.name,
-    tokenParams.symbol,
-    tokenParams.initialSupply,
-    tokenParams.owner
-  );
-
-  await gttToken.waitForDeployment();
-  const gttAddress = await gttToken.getAddress();
-  console.log(`✅ GTT Token deployed to: ${gttAddress}`);
-
-  // Deploy Capsule NFT Contract
-  console.log("\n📦 Deploying Capsule NFT Contract...");
-  const CapsuleNFT = await ethers.getContractFactory("CapsuleNFT");
-  
-  const capsuleNFT = await CapsuleNFT.deploy(
-    "GuardianChain Capsule",
-    "CAPSULE",
-    gttAddress, // GTT token for yield
-    deployerAddress // Initial owner
-  );
-
-  await capsuleNFT.waitForDeployment();
-  const capsuleAddress = await capsuleNFT.getAddress();
-  console.log(`✅ Capsule NFT deployed to: ${capsuleAddress}`);
-
-  // Deploy Yield Vault Contract
-  console.log("\n📦 Deploying GTT Yield Vault...");
-  const GTTYieldVault = await ethers.getContractFactory("GTTYieldVault");
-  
-  const yieldVault = await GTTYieldVault.deploy(
-    gttAddress,    // GTT token
-    capsuleAddress, // Capsule NFT contract
-    ethers.parseEther("0.1"), // Base yield rate (10%)
-    86400 * 7      // 1 week lock period
-  );
-
-  await yieldVault.waitForDeployment();
-  const yieldVaultAddress = await yieldVault.getAddress();
-  console.log(`✅ Yield Vault deployed to: ${yieldVaultAddress}`);
-
-  // Configure contracts
-  console.log("\n⚙️ Configuring contracts...");
-  
-  // Set yield vault as minter for GTT (for yield distribution)
-  const minterRole = await gttToken.MINTER_ROLE();
-  await gttToken.grantRole(minterRole, yieldVaultAddress);
-  console.log(`✅ Granted minter role to yield vault`);
-
-  // Set capsule contract as approved operator
-  await gttToken.approve(capsuleAddress, ethers.MaxUint256);
-  console.log(`✅ Approved capsule contract for GTT transfers`);
-
-  // Verify deployment on Base
-  console.log("\n🔍 Verifying contracts...");
-  try {
-    const gttBalance = await gttToken.balanceOf(deployerAddress);
-    const gttSymbol = await gttToken.symbol();
-    const capsuleName = await capsuleNFT.name();
-    
-    console.log(`✅ GTT Token verified: ${gttSymbol}, Balance: ${ethers.formatEther(gttBalance)}`);
-    console.log(`✅ Capsule NFT verified: ${capsuleName}`);
-    console.log(`✅ Yield Vault verified: ${yieldVaultAddress}`);
-  } catch (error) {
-    console.error("❌ Verification failed:", error);
-  }
-
-  // Generate deployment report
-  const deploymentReport = {
-    network: "base",
-    chainId: 8453,
-    deployer: deployerAddress,
-    deploymentDate: new Date().toISOString(),
-    contracts: {
-      gttToken: {
-        address: gttAddress,
-        name: tokenParams.name,
-        symbol: tokenParams.symbol,
-        totalSupply: tokenParams.initialSupply.toString(),
-      },
-      capsuleNFT: {
-        address: capsuleAddress,
-        name: "GuardianChain Capsule",
-        symbol: "CAPSULE",
-      },
-      yieldVault: {
-        address: yieldVaultAddress,
-        gttToken: gttAddress,
-        capsuleContract: capsuleAddress,
-      },
-    },
-    features: {
-      multiChainSupport: true,
-      yieldFarming: true,
-      griefScoreMechanics: true,
-      coinbaseIntegration: true,
-      fastUnlocks: true,
-    },
-    explorerLinks: {
-      gttToken: `https://basescan.org/address/${gttAddress}`,
-      capsuleNFT: `https://basescan.org/address/${capsuleAddress}`,
-      yieldVault: `https://basescan.org/address/${yieldVaultAddress}`,
-    },
-  };
-
-  // Save deployment addresses
-  const envConfig = `
-# Base Network Contract Addresses
-VITE_GTT_BASE_ADDRESS=${gttAddress}
-VITE_CAPSULE_BASE_ADDRESS=${capsuleAddress}
-VITE_YIELD_VAULT_BASE=${yieldVaultAddress}
-VITE_BASE_RPC=https://mainnet.base.org
-VITE_BASESCAN=https://basescan.org
-VITE_BASE_CHAIN_ID=8453
-
-# Base Network Features
-VITE_BASE_ENABLED=true
-VITE_BASE_FAST_UNLOCKS=true
-VITE_BASE_COINBASE_INTEGRATION=true
-`;
-
-  writeFileSync("deployment/base-contracts.json", JSON.stringify(deploymentReport, null, 2));
-  writeFileSync("deployment/.env.base", envConfig);
-
-  console.log("\n🎉 Base Deployment Complete!");
-  console.log("\n📋 Contract Addresses:");
-  console.log(`  GTT Token: ${gttAddress}`);
-  console.log(`  Capsule NFT: ${capsuleAddress}`);
-  console.log(`  Yield Vault: ${yieldVaultAddress}`);
-  console.log("\n📁 Files Generated:");
-  console.log(`  deployment/base-contracts.json`);
-  console.log(`  deployment/.env.base`);
-  console.log("\n🔗 Explorer Links:");
-  console.log(`  GTT: https://basescan.org/address/${gttAddress}`);
-  console.log(`  Capsule: https://basescan.org/address/${capsuleAddress}`);
-  console.log(`  Vault: https://basescan.org/address/${yieldVaultAddress}`);
-
-  // Base Airdrop Setup
-  console.log("\n🎁 Setting up Base Airdrop...");
-  const airdropAmount = ethers.parseEther("250000"); // 250K GTT for Base users
-  
-  try {
-    // Transfer airdrop tokens to a dedicated airdrop wallet
-    const airdropWallet = "0x" + "0".repeat(40); // Replace with actual airdrop contract
-    console.log(`📦 Airdrop allocation: ${ethers.formatEther(airdropAmount)} GTT`);
-    console.log(`📍 Airdrop ready for Base users (30-day snapshot window)`);
-  } catch (error) {
-    console.log(`⚠️ Airdrop setup pending: ${error}`);
-  }
-
-  console.log("\n✨ Next Steps:");
-  console.log("1. Add contract addresses to your .env.local file");
-  console.log("2. Update frontend chains.ts configuration");
-  console.log("3. Test capsule minting on Base testnet first");
-  console.log("4. Launch Base GTT airdrop campaign");
-  console.log("5. Enable Coinbase Wallet integration");
+interface DeploymentResult {
+  network: string;
+  gttToken: string;
+  airdropContract: string;
+  deployer: string;
+  totalSupply: string;
+  airdropAllocation: string;
+  gasUsed: string;
+  transactionHashes: string[];
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error("❌ Deployment failed:", error);
-    process.exit(1);
-  });
+async function main(): Promise<DeploymentResult> {
+  const [deployer] = await ethers.getSigners();
+  const network = await ethers.provider.getNetwork();
+  
+  console.log("\n🚀 DEPLOYING GTT TOKEN & AIRDROP TO BASE NETWORK");
+  console.log("================================================");
+  console.log(`Network: Base (${network.chainId})`);
+  console.log(`Deployer: ${deployer.address}`);
+  console.log(`Balance: ${ethers.utils.formatEther(await deployer.getBalance())} ETH\n`);
+
+  const transactionHashes: string[] = [];
+  let totalGasUsed = ethers.BigNumber.from(0);
+
+  // Deploy GTT Token Contract
+  console.log("1️⃣ Deploying GTT Token Contract...");
+  const GTTToken = await ethers.getContractFactory("GTTToken");
+  const gttToken = await GTTToken.deploy(
+    "GuardianChain Truth Token", // name
+    "GTT", // symbol
+    ethers.utils.parseEther("1000000000"), // 1 billion total supply
+    deployer.address // initial owner
+  );
+  
+  await gttToken.deployed();
+  console.log(`✅ GTT Token deployed to: ${gttToken.address}`);
+  console.log(`   Transaction: ${gttToken.deployTransaction.hash}`);
+  transactionHashes.push(gttToken.deployTransaction.hash);
+  
+  const gttReceipt = await gttToken.deployTransaction.wait();
+  totalGasUsed = totalGasUsed.add(gttReceipt.gasUsed);
+
+  // Deploy Airdrop Contract
+  console.log("\n2️⃣ Deploying Airdrop Contract...");
+  const BaseAirdrop = await ethers.getContractFactory("BaseAirdrop");
+  const airdropContract = await BaseAirdrop.deploy(
+    gttToken.address, // GTT token address
+    ethers.utils.parseEther("250000"), // 250,000 GTT airdrop allocation
+    Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // 30 days from now
+    ethers.utils.parseEther("1.5") // 1.5x multiplier for Coinbase wallet users
+  );
+
+  await airdropContract.deployed();
+  console.log(`✅ Airdrop Contract deployed to: ${airdropContract.address}`);
+  console.log(`   Transaction: ${airdropContract.deployTransaction.hash}`);
+  transactionHashes.push(airdropContract.deployTransaction.hash);
+  
+  const airdropReceipt = await airdropContract.deployTransaction.wait();
+  totalGasUsed = totalGasUsed.add(airdropReceipt.gasUsed);
+
+  // Transfer airdrop allocation to airdrop contract
+  console.log("\n3️⃣ Transferring Airdrop Allocation...");
+  const transferTx = await gttToken.transfer(
+    airdropContract.address,
+    ethers.utils.parseEther("250000")
+  );
+  
+  await transferTx.wait();
+  console.log(`✅ Transferred 250,000 GTT to airdrop contract`);
+  console.log(`   Transaction: ${transferTx.hash}`);
+  transactionHashes.push(transferTx.hash);
+  
+  const transferReceipt = await transferTx.wait();
+  totalGasUsed = totalGasUsed.add(transferReceipt.gasUsed);
+
+  // Verify deployment
+  console.log("\n4️⃣ Verifying Deployment...");
+  const tokenSupply = await gttToken.totalSupply();
+  const airdropBalance = await gttToken.balanceOf(airdropContract.address);
+  const deployerBalance = await gttToken.balanceOf(deployer.address);
+
+  console.log(`✅ Token Total Supply: ${ethers.utils.formatEther(tokenSupply)} GTT`);
+  console.log(`✅ Airdrop Contract Balance: ${ethers.utils.formatEther(airdropBalance)} GTT`);
+  console.log(`✅ Deployer Balance: ${ethers.utils.formatEther(deployerBalance)} GTT`);
+
+  const result: DeploymentResult = {
+    network: `Base (Chain ID: ${network.chainId})`,
+    gttToken: gttToken.address,
+    airdropContract: airdropContract.address,
+    deployer: deployer.address,
+    totalSupply: ethers.utils.formatEther(tokenSupply),
+    airdropAllocation: ethers.utils.formatEther(airdropBalance),
+    gasUsed: ethers.utils.formatEther(totalGasUsed.mul(ethers.utils.parseUnits("1", "gwei"))),
+    transactionHashes
+  };
+
+  console.log("\n🎉 DEPLOYMENT COMPLETE!");
+  console.log("======================");
+  console.log(JSON.stringify(result, null, 2));
+
+  // Generate environment variables
+  console.log("\n📝 Add these to your .env file:");
+  console.log("================================");
+  console.log(`VITE_GTT_BASE_ADDRESS=${gttToken.address}`);
+  console.log(`VITE_AIRDROP_BASE_ADDRESS=${airdropContract.address}`);
+  console.log(`BASE_GTT_DEPLOYED_BLOCK=${gttReceipt.blockNumber}`);
+  console.log(`BASE_AIRDROP_DEPLOYED_BLOCK=${airdropReceipt.blockNumber}`);
+
+  return result;
+}
+
+// Execute deployment
+if (require.main === module) {
+  main()
+    .then((result) => {
+      console.log("\n✨ Base network deployment successful!");
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error("\n❌ Deployment failed:", error);
+      process.exit(1);
+    });
+}
+
+export { main as deployBaseGTT };

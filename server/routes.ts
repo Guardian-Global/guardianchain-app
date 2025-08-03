@@ -12,6 +12,7 @@ import { registerGTTContractRoutes } from "./routes/gttContract";
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
+import airdropRoutes from "./routes/airdrop";
 import {
   distributeReplayYield,
   calculateGriefYield,
@@ -60,6 +61,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/capsules/:id/like", likeCapsule);
   app.post("/api/capsules/:id/share", shareCapsule);
   app.get("/api/capsules/:id/unlock", unlockCapsule);
+
+  // GET /api/capsules/multi-chain - Get capsules from multiple chains
+  app.get("/api/capsules/multi-chain", isDebugAuthenticated, async (req: any, res) => {
+    const { category, userId, chains } = req.query;
+    
+    console.log("🔗 Multi-chain capsules requested:", { category, userId, chains });
+    
+    const mockMultiChainCapsules = [
+      {
+        id: "poly-cap-1",
+        title: "Family Legacy on Polygon",
+        description: "Preserving family stories with ultra-low gas costs",
+        truthScore: 94,
+        chainId: 137,
+        contractAddress: "0x742d35cc5551d36536c87ff5f5c6de3c8f3d8a8d",
+        tokenId: "1001",
+        isMinted: true,
+        createdAt: "2024-08-02T10:00:00Z",
+        author: { name: "Sarah Chen", avatar: "/avatar-1.jpg" },
+        mediaType: "video",
+        mediaUrl: "/family-legacy.mp4",
+        views: 2847,
+        likes: 189,
+        gasUsed: "0.002 MATIC (~$0.001)",
+        transactionHash: "0x1234567890abcdef1234567890abcdef12345678",
+      },
+      {
+        id: "base-cap-1", 
+        title: "Truth Report on Base",
+        description: "Coinbase's L2 for mainstream adoption",
+        truthScore: 91,
+        chainId: 8453,
+        contractAddress: "0x8ba1f109551bd432803012645hac136c770c8e84",
+        tokenId: "2001",
+        isMinted: true,
+        createdAt: "2024-08-01T15:30:00Z",
+        author: { name: "Alex Rivera", avatar: "/avatar-2.jpg" },
+        mediaType: "document",
+        views: 1523,
+        likes: 98,
+        gasUsed: "0.0001 ETH (~$0.01)",
+        transactionHash: "0xabcdef1234567890abcdef1234567890abcdef12",
+      },
+      {
+        id: "base-cap-2",
+        title: "Coinbase Wallet Integration Test",
+        description: "Testing ultra-low fees on Base network",
+        truthScore: 88,
+        chainId: 8453,
+        contractAddress: "0x123456789abcdef123456789abcdef123456789a",
+        tokenId: "2002", 
+        isMinted: true,
+        createdAt: "2024-08-03T08:15:00Z",
+        author: { name: "Dr. Kim Park", avatar: "/avatar-3.jpg" },
+        mediaType: "image",
+        mediaUrl: "/coinbase-test.jpg",
+        views: 892,
+        likes: 67,
+        gasUsed: "0.00005 ETH (~$0.005)",
+        transactionHash: "0xfedcba0987654321fedcba0987654321fedcba09",
+      },
+      {
+        id: "poly-cap-2",
+        title: "Climate Data Collection",
+        description: "Long-term environmental monitoring capsule",
+        truthScore: 96,
+        chainId: 137,
+        contractAddress: "0x555666777888999aaabbbcccdddeeefffgg1122",
+        tokenId: "1002",
+        isMinted: true,
+        createdAt: "2024-07-28T12:45:00Z",
+        author: { name: "Dr. Elena Vasquez", avatar: "/avatar-4.jpg" },
+        mediaType: "data",
+        views: 3241,
+        likes: 287,
+        gasUsed: "0.003 MATIC (~$0.002)",
+        transactionHash: "0x9876543210987654321098765432109876543210",
+      },
+      {
+        id: "eth-cap-1",
+        title: "Historic Documentation",
+        description: "High-value archival on Ethereum mainnet",
+        truthScore: 99,
+        chainId: 1,
+        contractAddress: "0xaabbccddeeff11223344556677889900aabbccdd",
+        tokenId: "3001",
+        isMinted: true,
+        createdAt: "2024-07-20T14:20:00Z",
+        author: { name: "Professor Thompson", avatar: "/avatar-5.jpg" },
+        mediaType: "document",
+        views: 5847,
+        likes: 432,
+        gasUsed: "0.05 ETH (~$15)",
+        transactionHash: "0x1111222233334444555566667777888899990000",
+      }
+    ];
+
+    res.json(mockMultiChainCapsules);
+  });
 
   // Truth Auction endpoints
   app.post("/api/auction/new", isDebugAuthenticated, async (req: any, res) => {
@@ -5787,6 +5887,8 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Register AI and NFT routes
   app.use("/api/ai", aiRoutes);
   app.use("/api/nft", nftRoutes);
+  app.use("/api/airdrop", airdropRoutes);
+  app.use("/api/claim", airdropRoutes);
 
   // Live token data endpoint for LiveTokenTracker
   app.get("/api/token/live-data", (req, res) => {

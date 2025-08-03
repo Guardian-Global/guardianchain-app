@@ -1,0 +1,119 @@
+// ✅ FILE: lib/auth.ts
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+
+export const getUserFromSession = async (req: any, res: any) => {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return null;
+  return session.user;
+};
+
+
+// ✅ FILE: pages/capsule/[id].tsx
+"use client";
+
+import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
+
+export default function CapsuleDetail() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["capsule", id],
+    queryFn: async () => {
+      const res = await fetch(`/api/capsule/detail?id=${id}`);
+      if (!res.ok) throw new Error("Failed to load capsule");
+      return res.json();
+    },
+    enabled: !!id,
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+
+  return (
+    <div className="max-w-3xl mx-auto p-6 space-y-4">
+      <h1 className="text-2xl font-bold">{data.title}</h1>
+      <p>{data.description}</p>
+      {data.file_path && (
+        <video src={data.file_path} controls className="rounded" />
+      )}
+      {data.ipfs_url && (
+        <a href={data.ipfs_url} className="text-blue-500 underline" target="_blank">View on IPFS</a>
+      )}
+      <div className="mt-2">Veritas Sealed: {data.veritas ? "✅" : "❌"}</div>
+      <div className="mt-4">
+        <button className="bg-yellow-500 text-white px-4 py-2 rounded">Share to Farcaster</button>
+        <button className="ml-2 bg-black text-white px-4 py-2 rounded">Share to Lens</button>
+      </div>
+    </div>
+  );
+}
+
+
+// ✅ FILE: pages/api/capsule/detail.ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query;
+  if (!id) return res.status(400).json({ error: "Missing capsule id" });
+
+  const { data, error } = await supabase.from("capsules").select("*").eq("id", id).single();
+  if (error) return res.status(500).json({ error });
+  res.status(200).json(data);
+}
+
+
+// ✅ FILE: utils/calculateYield.ts
+export function calculateCapsuleYield(createdAt: string, baseRate: number = 0.12): string {
+  const created = new Date(createdAt);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+  const apy = baseRate * (diffDays / 365);
+  return `${apy.toFixed(2)} GTT unlocked`;
+}
+
+
+// ✅ FILE: pages/timeline.tsx
+import { useQuery } from "@tanstack/react-query";
+
+export default function Timeline() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["timeline"],
+    queryFn: async () => {
+      const res = await fetch("/api/capsule/timeline");
+      if (!res.ok) throw new Error("Failed to load timeline");
+      return res.json();
+    },
+  });
+
+  if (isLoading) return <div>Loading timeline...</div>;
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-4">
+      <h1 className="text-2xl font-bold">Veritas Capsule Timeline</h1>
+      {data.map((capsule) => (
+        <div key={capsule.id} className="border-l-4 border-yellow-500 pl-4 py-2">
+          <p className="text-sm">{new Date(capsule.created_at).toLocaleDateString()}</p>
+          <p className="text-md font-semibold">{capsule.title}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+// ✅ FILE: pages/api/capsule/timeline.ts
+import { NextApiRequest, NextApiResponse } from "next";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { data, error } = await supabase.from("capsules").select("id, title, created_at").eq("veritas", true).order("created_at", { ascending: false });
+  if (error) return res.status(500).json({ error });
+  res.status(200).json(data);
+}

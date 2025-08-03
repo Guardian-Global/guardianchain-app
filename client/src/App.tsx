@@ -52,6 +52,7 @@ import StakePage from "@/pages/stake";
 import LaunchpadPage from "@/pages/launchpad";
 // ReferralPage import removed - using direct import
 import AirdropPage from "@/pages/airdrop";
+import Claim from "@/pages/Claim";
 import GuardianPassPage from "@/pages/guardian-pass";
 import EliteVault from "@/pages/EliteVault";
 import EliteMint from "@/pages/EliteMint";
@@ -656,6 +657,7 @@ function Router() {
               component={lazy(() => import("./pages/privacy"))}
             />
             <Route path="/airdrop" component={AirdropPage} />
+            <Route path="/claim" component={Claim} />
             <Route path="/guardian-pass" component={GuardianPassPage} />
             <Route path="/vault" component={() => <VaultDashboard />} />
             <Route path="/mint" component={EliteMint} />

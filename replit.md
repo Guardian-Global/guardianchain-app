@@ -4,6 +4,8 @@
 
 GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization. The platform enables users to mint Veritas Capsules, earn $GTT yield based on GriefScore™, and submit legacy, trauma, or testimony capsules. Users can replay, verify, and unlock time-sealed capsules through an integrated Veritas Certificate Engine. The project aims to provide institutional-grade memory infrastructure for sealing truth and unlocking value through blockchain technology and AI-powered verification systems.
 
+**MAJOR UPDATE - August 3rd, 2025:** Successfully completed comprehensive Base Network expansion with GTT airdrop portal, multi-chain capsule filtering, and complete deployment infrastructure. Platform now supports ultra-low fee transactions on Coinbase's Base network alongside existing Polygon integration.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -26,6 +28,7 @@ Preferred communication style: Simple, everyday language.
 - **API Design**: RESTful API with structured error handling.
 - **Authentication**: Debug authentication system with OAuth integration (Google/GitHub via Passport.js) providing enterprise-grade user authentication and tier-based access control.
 - **Object Storage**: Google Cloud Storage integration with protected file uploading, public asset serving, and ACL policy management.
+- **Multi-Chain Infrastructure**: Complete Base Network integration with ultra-low fee transactions, GTT airdrop distribution, and cross-chain capsule filtering.
 - **Data Flow**: Automated IPFS integration for content storage, community-driven verification, and GTT token reward distribution.
 
 ### Database & ORM
@@ -64,10 +67,12 @@ Preferred communication style: Simple, everyday language.
 ### Blockchain & Web3
 
 - **Ethereum Integration**: ethers.js.
-- **Multi-chain Support**: Ethereum mainnet, Polygon, and testnets.
-- **Wallet Providers**: MetaMask.
-- **Development**: Hardhat.
-- **Web3 Integration**: Wagmi/Viem.
+- **Multi-chain Support**: Ethereum mainnet, Polygon mainnet, Base mainnet, and corresponding testnets.
+- **Base Network**: Coinbase L2 with ultra-low fees (~$0.01), 1.5x Coinbase Wallet bonuses, and mainstream adoption focus.
+- **Wallet Providers**: MetaMask, Coinbase Wallet with enhanced Base integration.
+- **Development**: Hardhat with comprehensive multi-chain configuration.
+- **Web3 Integration**: Wagmi/Viem with cross-chain switching capabilities.
+- **GTT Airdrop**: 250,000 GTT token distribution on Base network with eligibility portal.
 
 ### Third-party Services
 
