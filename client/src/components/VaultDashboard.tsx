@@ -1,534 +1,506 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  TrendingUp,
-  DollarSign,
-  Clock,
-  Users,
-  Zap,
-  ArrowUpRight,
-  ArrowDownLeft,
-} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { 
+  Vault, 
+  Coins, 
+  TrendingUp, 
+  Users, 
+  Clock, 
+  Shield, 
+  AlertTriangle,
+  CheckCircle,
+  ArrowUpDown,
+  BarChart3,
+  Timer,
+  Wallet
+} from "lucide-react";
 
 interface VaultStats {
-  tvl: string;
-  apy: string;
-  userStaked: string;
-  pendingRewards: string;
-  sharePrice: string;
-  nextCompoundTime: string;
-  totalUsers: number;
-  performanceFee: string;
+  totalBalance: number;
+  reserveBalance: number;
+  distributedToday: number;
+  distributedThisWeek: number;
+  distributedThisMonth: number;
+  totalDistributed: number;
+  activeValidators: number;
+  pendingRewards: number;
+  lastDistribution: number;
+  nextDistribution: number;
+  recentTransactions: Array<{
+    id: string;
+    type: string;
+    amount: number;
+    timestamp: number;
+    recipient?: string;
+    metadata?: any;
+  }>;
+  distributionProgress: {
+    daily: { used: number; limit: number; percentage: number };
+    weekly: { used: number; limit: number; percentage: number };
+    monthly: { used: number; limit: number; percentage: number };
+  };
 }
 
-interface UserPosition {
-  stakedAmount: string;
-  shares: string;
-  totalRewardsEarned: string;
-  autoCompoundedAmount: string;
-  lastDepositTime: string;
+interface PayoutQueueStats {
+  totalRequests: number;
+  pendingAmount: number;
+  processedToday: number;
+  processingErrors: number;
+  averageProcessingTime: number;
+  queuesByType: Record<string, number>;
+  queuesByPriority: Record<string, number>;
+  dailyVolume: number;
+  weeklyVolume: number;
+  successRate: number;
 }
 
 export default function VaultDashboard() {
   const { toast } = useToast();
-  const [vaultStats, setVaultStats] = useState<VaultStats>({
-    tvl: "0",
-    apy: "0",
-    userStaked: "0",
-    pendingRewards: "0",
-    sharePrice: "1.00",
-    nextCompoundTime: "",
-    totalUsers: 0,
-    performanceFee: "2%",
-  });
+  const [vaultStats, setVaultStats] = useState<VaultStats | null>(null);
+  const [payoutStats, setPayoutStats] = useState<PayoutQueueStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
 
-  const [userPosition, setUserPosition] = useState<UserPosition>({
-    stakedAmount: "0",
-    shares: "0",
-    totalRewardsEarned: "0",
-    autoCompoundedAmount: "0",
-    lastDepositTime: "",
-  });
-
-  const [depositAmount, setDepositAmount] = useState("");
-  const [withdrawShares, setWithdrawShares] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Fetch vault data
   useEffect(() => {
-    fetchVaultData();
-    const interval = setInterval(fetchVaultData, 30000); // Update every 30 seconds
-    return () => clearInterval(interval);
+    loadVaultData();
   }, []);
 
-  const fetchVaultData = async () => {
+  const loadVaultData = async () => {
     try {
-      // In production, this would call actual smart contract methods
-      // For demo, we'll use realistic mock data
+      setLoading(true);
+      
+      // Load vault statistics
+      const vaultResponse = await apiRequest("GET", "/api/dao/vault/stats");
+      setVaultStats(vaultResponse.vault);
 
-      const mockStats: VaultStats = {
-        tvl: "2,547,832",
-        apy: "25.7",
-        userStaked: "15,000",
-        pendingRewards: "1,247.50",
-        sharePrice: "1.0847",
-        nextCompoundTime: new Date(
-          Date.now() + 6 * 60 * 60 * 1000,
-        ).toISOString(), // 6 hours from now
-        totalUsers: 1247,
-        performanceFee: "2%",
-      };
+      // Load payout queue statistics
+      try {
+        const payoutResponse = await apiRequest("GET", "/api/payout/stats");
+        setPayoutStats(payoutResponse.stats);
+      } catch (error) {
+        console.log("Payout stats not available:", error);
+      }
 
-      const mockPosition: UserPosition = {
-        stakedAmount: "15,000",
-        shares: "13,833.24",
-        totalRewardsEarned: "3,247.89",
-        autoCompoundedAmount: "1,847.32",
-        lastDepositTime: new Date(
-          Date.now() - 15 * 24 * 60 * 60 * 1000,
-        ).toISOString(), // 15 days ago
-      };
-
-      setVaultStats(mockStats);
-      setUserPosition(mockPosition);
     } catch (error) {
-      console.error("Error fetching vault data:", error);
-    }
-  };
-
-  const handleDeposit = async () => {
-    if (!depositAmount || parseFloat(depositAmount) <= 0) {
+      console.error("Failed to load vault data:", error);
       toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid deposit amount",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // In production, this would interact with the AutoCompoundVault contract
-      // Mock the deposit process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      toast({
-        title: "Deposit Successful",
-        description: `Successfully deposited ${depositAmount} GTT to the vault`,
-      });
-
-      setDepositAmount("");
-      fetchVaultData();
-    } catch (error) {
-      toast({
-        title: "Deposit Failed",
-        description: "Failed to deposit tokens to vault",
-        variant: "destructive",
+        title: "Error",
+        description: "Failed to load vault data",
+        variant: "destructive"
       });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleWithdraw = async () => {
-    if (!withdrawShares || parseFloat(withdrawShares) <= 0) {
-      toast({
-        title: "Invalid Amount",
-        description: "Please enter a valid number of shares to withdraw",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
+  const processWeeklyDistribution = async () => {
     try {
-      // In production, this would interact with the AutoCompoundVault contract
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      toast({
-        title: "Withdrawal Successful",
-        description: `Successfully withdrew ${withdrawShares} shares from the vault`,
-      });
-
-      setWithdrawShares("");
-      fetchVaultData();
+      setProcessing(true);
+      
+      const response = await apiRequest("POST", "/api/dao/vault/distribute");
+      
+      if (response.success) {
+        toast({
+          title: "Distribution Successful",
+          description: `Distributed ${response.totalDistributed || 0} GTT to community`
+        });
+        
+        // Reload data
+        await loadVaultData();
+      } else {
+        toast({
+          title: "Distribution Failed",
+          description: response.reason || "Unknown error occurred",
+          variant: "destructive"
+        });
+      }
     } catch (error) {
       toast({
-        title: "Withdrawal Failed",
-        description: "Failed to withdraw from vault",
-        variant: "destructive",
+        title: "Error",
+        description: "Failed to process distribution",
+        variant: "destructive"
       });
     } finally {
-      setIsLoading(false);
+      setProcessing(false);
     }
   };
 
-  const handleCompound = async () => {
-    setIsLoading(true);
-
-    try {
-      // In production, this would call the compound() function on the smart contract
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      toast({
-        title: "Compound Triggered",
-        description: "Successfully triggered auto-compound for all users",
-      });
-
-      fetchVaultData();
-    } catch (error) {
-      toast({
-        title: "Compound Failed",
-        description: "Failed to trigger compound",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const getHealthScore = (): number => {
+    if (!vaultStats) return 0;
+    
+    let score = 100;
+    
+    // Deduct for low balance
+    if (vaultStats.totalBalance < 10000) score -= 30;
+    else if (vaultStats.totalBalance < 25000) score -= 15;
+    
+    // Deduct for high distribution usage
+    if (vaultStats.distributionProgress.daily.percentage > 90) score -= 20;
+    else if (vaultStats.distributionProgress.daily.percentage > 70) score -= 10;
+    
+    // Deduct for low reserve ratio
+    const reserveRatio = (vaultStats.reserveBalance / vaultStats.totalBalance) * 100;
+    if (reserveRatio < 10) score -= 25;
+    else if (reserveRatio < 20) score -= 15;
+    
+    return Math.max(0, Math.min(100, score));
   };
 
-  const timeUntilCompound = () => {
-    if (!vaultStats.nextCompoundTime) return "";
-
-    const now = new Date();
-    const compoundTime = new Date(vaultStats.nextCompoundTime);
-    const diff = compoundTime.getTime() - now.getTime();
-
-    if (diff <= 0) return "Ready to compound";
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    return `${hours}h ${minutes}m`;
+  const getHealthColor = (score: number): string => {
+    if (score >= 80) return "text-green-400";
+    if (score >= 60) return "text-yellow-400";
+    return "text-red-400";
   };
+
+  const getStatusBadge = (percentage: number) => {
+    if (percentage >= 90) return <Badge variant="destructive">Critical</Badge>;
+    if (percentage >= 70) return <Badge variant="secondary">High</Badge>;
+    if (percentage >= 50) return <Badge variant="outline">Medium</Badge>;
+    return <Badge className="bg-green-600">Healthy</Badge>;
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!vaultStats) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-8 text-center">
+            <AlertTriangle className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">Vault Data Unavailable</h3>
+            <p className="text-gray-300 mb-4">Unable to load vault statistics</p>
+            <Button onClick={loadVaultData}>Retry</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const healthScore = getHealthScore();
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-green-600 bg-clip-text text-transparent">
-          Auto-Compound Vault
-        </h2>
-        <p className="text-muted-foreground">
-          Maximize your GTT yield with automated compounding
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <Vault className="h-8 w-8 text-purple-400" />
+          <h1 className="text-3xl font-bold text-white">DAO Vault Dashboard</h1>
+        </div>
+        <p className="text-gray-300 text-lg">
+          Community treasury management and automated reward distribution
         </p>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Total Value Locked
-                </p>
-                <p className="text-2xl font-bold">{vaultStats.tvl} GTT</p>
+                <p className="text-gray-300 text-sm">Total Balance</p>
+                <p className="text-2xl font-bold text-white">{vaultStats.totalBalance.toLocaleString()}</p>
+                <p className="text-xs text-gray-400">GTT</p>
               </div>
-              <DollarSign className="h-8 w-8 text-green-600" />
+              <Coins className="h-8 w-8 text-yellow-400" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-6">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Current APY
-                </p>
-                <p className="text-2xl font-bold text-green-600">
-                  {vaultStats.apy}%
+                <p className="text-gray-300 text-sm">Reserve Balance</p>
+                <p className="text-2xl font-bold text-white">{vaultStats.reserveBalance.toLocaleString()}</p>
+                <p className="text-xs text-gray-400">
+                  {((vaultStats.reserveBalance / vaultStats.totalBalance) * 100).toFixed(1)}% of total
                 </p>
               </div>
-              <TrendingUp className="h-8 w-8 text-green-600" />
+              <Shield className="h-8 w-8 text-blue-400" />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-6">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Active Users
+                <p className="text-gray-300 text-sm">Health Score</p>
+                <p className={`text-2xl font-bold ${getHealthColor(healthScore)}`}>
+                  {healthScore}/100
                 </p>
-                <p className="text-2xl font-bold">
-                  {vaultStats.totalUsers.toLocaleString()}
-                </p>
+                <p className="text-xs text-gray-400">Vault health status</p>
               </div>
-              <Users className="h-8 w-8 text-blue-600" />
+              <BarChart3 className={`h-8 w-8 ${getHealthColor(healthScore).replace('text-', 'text-')}`} />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-6">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Next Compound
-                </p>
-                <p className="text-lg font-bold">{timeUntilCompound()}</p>
+                <p className="text-gray-300 text-sm">Active Validators</p>
+                <p className="text-2xl font-bold text-white">{vaultStats.activeValidators}</p>
+                <p className="text-xs text-gray-400">Earning rewards</p>
               </div>
-              <Clock className="h-8 w-8 text-purple-600" />
+              <Users className="h-8 w-8 text-green-400" />
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Main Dashboard */}
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 bg-gray-800">
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="deposit">Deposit</TabsTrigger>
-          <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
+          <TabsTrigger value="distributions">Distributions</TabsTrigger>
+          <TabsTrigger value="payouts">Payout Queue</TabsTrigger>
+          <TabsTrigger value="transactions">Transactions</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* User Position */}
-            <Card>
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Distribution Progress */}
+            <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" />
-                  Your Position
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <TrendingUp className="h-5 w-5" />
+                  Distribution Limits
                 </CardTitle>
-                <CardDescription>
-                  Your current vault position and earnings
-                </CardDescription>
+                <CardDescription>Current usage against daily/weekly/monthly limits</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      Staked Amount
-                    </p>
-                    <p className="text-xl font-bold">
-                      {userPosition.stakedAmount} GTT
-                    </p>
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-300">Daily ({vaultStats.distributionProgress.daily.used.toFixed(0)}/{vaultStats.distributionProgress.daily.limit} GTT)</span>
+                    {getStatusBadge(vaultStats.distributionProgress.daily.percentage)}
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Your Shares</p>
-                    <p className="text-xl font-bold">{userPosition.shares}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      Pending Rewards
-                    </p>
-                    <p className="text-xl font-bold text-green-600">
-                      {vaultStats.pendingRewards} GTT
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      Total Earned
-                    </p>
-                    <p className="text-xl font-bold text-green-600">
-                      {userPosition.totalRewardsEarned} GTT
-                    </p>
-                  </div>
+                  <Progress 
+                    value={vaultStats.distributionProgress.daily.percentage} 
+                    className="h-2"
+                  />
                 </div>
 
-                <div className="pt-4 border-t">
+                <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-muted-foreground">
-                      Auto-Compounded
-                    </span>
-                    <Badge variant="secondary">
-                      {userPosition.autoCompoundedAmount} GTT
-                    </Badge>
+                    <span className="text-sm text-gray-300">Weekly ({vaultStats.distributionProgress.weekly.used.toFixed(0)}/{vaultStats.distributionProgress.weekly.limit} GTT)</span>
+                    {getStatusBadge(vaultStats.distributionProgress.weekly.percentage)}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Share Price
-                    </span>
-                    <Badge variant="outline">${vaultStats.sharePrice}</Badge>
+                  <Progress 
+                    value={vaultStats.distributionProgress.weekly.percentage} 
+                    className="h-2"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-300">Monthly ({vaultStats.distributionProgress.monthly.used.toFixed(0)}/{vaultStats.distributionProgress.monthly.limit} GTT)</span>
+                    {getStatusBadge(vaultStats.distributionProgress.monthly.percentage)}
                   </div>
+                  <Progress 
+                    value={vaultStats.distributionProgress.monthly.percentage} 
+                    className="h-2"
+                  />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Vault Information */}
-            <Card>
+            {/* Distribution Schedule */}
+            <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
-                <CardTitle>Vault Information</CardTitle>
-                <CardDescription>
-                  Detailed vault configuration and performance
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Timer className="h-5 w-5" />
+                  Distribution Schedule
+                </CardTitle>
+                <CardDescription>Automated reward distribution timeline</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      Performance Fee
-                    </p>
-                    <p className="text-lg font-semibold">
-                      {vaultStats.performanceFee}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      Compound Frequency
-                    </p>
-                    <p className="text-lg font-semibold">24 hours</p>
+                <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <div>
+                      <p className="text-white font-medium">Last Distribution</p>
+                      <p className="text-sm text-gray-400">
+                        {new Date(vaultStats.lastDistribution).toLocaleString()}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      Auto-Compound Progress
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      {timeUntilCompound()}
-                    </span>
+                <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Clock className="h-5 w-5 text-yellow-400" />
+                    <div>
+                      <p className="text-white font-medium">Next Distribution</p>
+                      <p className="text-sm text-gray-400">
+                        {new Date(vaultStats.nextDistribution).toLocaleString()}
+                      </p>
+                    </div>
                   </div>
-                  <Progress value={75} className="h-2" />
                 </div>
 
-                <Button
-                  onClick={handleCompound}
-                  disabled={isLoading}
-                  className="w-full"
-                  variant="outline"
-                >
-                  Trigger Manual Compound
-                </Button>
+                <div className="pt-4">
+                  <Button 
+                    onClick={processWeeklyDistribution}
+                    disabled={processing}
+                    className="w-full"
+                  >
+                    {processing ? "Processing..." : "Process Weekly Distribution"}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="deposit" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ArrowUpRight className="h-5 w-5" />
-                Deposit GTT Tokens
-              </CardTitle>
-              <CardDescription>
-                Stake your GTT tokens to earn auto-compounding rewards
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="deposit-amount">Amount to Deposit</Label>
-                <Input
-                  id="deposit-amount"
-                  type="number"
-                  placeholder="Enter GTT amount"
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                />
-                <p className="text-sm text-muted-foreground">
-                  You will receive shares proportional to your deposit
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Current Share Price
-                  </p>
-                  <p className="font-semibold">${vaultStats.sharePrice}</p>
+        <TabsContent value="distributions" className="space-y-6">
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-6 text-center">
+                <div className="text-3xl font-bold text-cyan-400 mb-2">
+                  {vaultStats.distributedToday.toFixed(2)}
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Estimated Shares
-                  </p>
-                  <p className="font-semibold">
-                    {depositAmount
-                      ? (
-                          parseFloat(depositAmount) /
-                          parseFloat(vaultStats.sharePrice)
-                        ).toFixed(2)
-                      : "0"}
-                  </p>
-                </div>
-              </div>
+                <div className="text-gray-300">GTT Distributed Today</div>
+              </CardContent>
+            </Card>
 
-              <Button
-                onClick={handleDeposit}
-                disabled={isLoading || !depositAmount}
-                className="w-full"
-              >
-                {isLoading ? "Processing..." : "Deposit to Vault"}
-              </Button>
-            </CardContent>
-          </Card>
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-6 text-center">
+                <div className="text-3xl font-bold text-purple-400 mb-2">
+                  {vaultStats.distributedThisWeek.toFixed(2)}
+                </div>
+                <div className="text-gray-300">GTT Distributed This Week</div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-6 text-center">
+                <div className="text-3xl font-bold text-green-400 mb-2">
+                  {vaultStats.totalDistributed.toFixed(2)}
+                </div>
+                <div className="text-gray-300">Total GTT Distributed</div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
-        <TabsContent value="withdraw" className="space-y-4">
-          <Card>
+        <TabsContent value="payouts" className="space-y-6">
+          {payoutStats ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6 text-center">
+                  <div className="text-2xl font-bold text-white mb-2">
+                    {payoutStats.totalRequests}
+                  </div>
+                  <div className="text-gray-300 text-sm">Total Requests</div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6 text-center">
+                  <div className="text-2xl font-bold text-yellow-400 mb-2">
+                    {payoutStats.pendingAmount.toFixed(2)}
+                  </div>
+                  <div className="text-gray-300 text-sm">Pending Amount (GTT)</div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6 text-center">
+                  <div className="text-2xl font-bold text-green-400 mb-2">
+                    {payoutStats.successRate.toFixed(1)}%
+                  </div>
+                  <div className="text-gray-300 text-sm">Success Rate</div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6 text-center">
+                  <div className="text-2xl font-bold text-blue-400 mb-2">
+                    {Math.round(payoutStats.averageProcessingTime / 1000)}s
+                  </div>
+                  <div className="text-gray-300 text-sm">Avg Processing Time</div>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <Card className="bg-gray-800 border-gray-700">
+              <CardContent className="p-8 text-center">
+                <p className="text-gray-300">Payout queue statistics not available</p>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="transactions" className="space-y-6">
+          <Card className="bg-gray-800 border-gray-700">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ArrowDownLeft className="h-5 w-5" />
-                Withdraw from Vault
+              <CardTitle className="flex items-center gap-2 text-white">
+                <ArrowUpDown className="h-5 w-5" />
+                Recent Transactions
               </CardTitle>
-              <CardDescription>
-                Redeem your shares for GTT tokens plus earned rewards
-              </CardDescription>
+              <CardDescription>Latest vault transactions and distributions</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="withdraw-shares">Shares to Withdraw</Label>
-                <Input
-                  id="withdraw-shares"
-                  type="number"
-                  placeholder="Enter number of shares"
-                  value={withdrawShares}
-                  onChange={(e) => setWithdrawShares(e.target.value)}
-                  max={userPosition.shares}
-                />
-                <p className="text-sm text-muted-foreground">
-                  Available shares: {userPosition.shares}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Current Share Price
-                  </p>
-                  <p className="font-semibold">${vaultStats.sharePrice}</p>
+            <CardContent>
+              {vaultStats.recentTransactions.length > 0 ? (
+                <div className="space-y-3">
+                  {vaultStats.recentTransactions.slice(0, 10).map(tx => (
+                    <div key={tx.id} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-full ${
+                          tx.type === 'deposit' ? 'bg-green-600' :
+                          tx.type === 'reward' ? 'bg-blue-600' :
+                          tx.type === 'burn' ? 'bg-red-600' :
+                          'bg-gray-600'
+                        }`}>
+                          {tx.type === 'deposit' ? <TrendingUp className="h-4 w-4" /> :
+                           tx.type === 'reward' ? <Coins className="h-4 w-4" /> :
+                           <ArrowUpDown className="h-4 w-4" />}
+                        </div>
+                        <div>
+                          <p className="text-white font-medium capitalize">
+                            {tx.type.replace('_', ' ')}
+                          </p>
+                          <p className="text-sm text-gray-400">
+                            {new Date(tx.timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`font-bold ${
+                          tx.type === 'deposit' ? 'text-green-400' : 'text-red-400'
+                        }`}>
+                          {tx.type === 'deposit' ? '+' : '-'}{tx.amount.toFixed(2)} GTT
+                        </p>
+                        {tx.recipient && (
+                          <p className="text-xs text-gray-400">
+                            {tx.recipient.slice(0, 10)}...
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">GTT Amount</p>
-                  <p className="font-semibold">
-                    {withdrawShares
-                      ? (
-                          parseFloat(withdrawShares) *
-                          parseFloat(vaultStats.sharePrice)
-                        ).toFixed(2)
-                      : "0"}
-                  </p>
+              ) : (
+                <div className="text-center py-8">
+                  <Wallet className="h-12 w-12 text-gray-500 mx-auto mb-4" />
+                  <p className="text-gray-300">No recent transactions</p>
                 </div>
-              </div>
-
-              <Button
-                onClick={handleWithdraw}
-                disabled={isLoading || !withdrawShares}
-                className="w-full"
-                variant="outline"
-              >
-                {isLoading ? "Processing..." : "Withdraw from Vault"}
-              </Button>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

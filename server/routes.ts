@@ -1303,6 +1303,269 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
+  // License Verification endpoints
+  app.post("/api/licenses/generate", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const licenseData = req.body;
+      console.log("📜 Generating capsule license:", licenseData.capsuleId);
+      
+      const { capsuleLicenseManager } = await import("../lib/capsuleLicense");
+      const license = capsuleLicenseManager.generateCapsuleLicense({
+        ...licenseData,
+        author: req.user.id
+      });
+
+      res.json({
+        success: true,
+        license
+      });
+    } catch (error) {
+      console.error("❌ License generation failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "License generation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/licenses/verify", async (req: any, res) => {
+    try {
+      const { licenseId, verifierAddress } = req.body;
+      console.log("🔍 Verifying license:", licenseId);
+      
+      const { capsuleLicenseManager } = await import("../lib/capsuleLicense");
+      const result = capsuleLicenseManager.verifyLicense(licenseId, verifierAddress);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ License verification failed:", error);
+      res.status(500).json({
+        valid: false,
+        error: "License verification failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/licenses/metrics", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📊 Fetching license metrics");
+      
+      const { capsuleLicenseManager } = await import("../lib/capsuleLicense");
+      const metrics = capsuleLicenseManager.getLicenseMetrics();
+
+      res.json({
+        success: true,
+        metrics
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch license metrics:", error);
+      res.status(500).json({
+        error: "Failed to fetch license metrics",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Payout Queue endpoints
+  app.post("/api/payout/request", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const requestData = req.body;
+      console.log("💳 Creating payout request:", requestData);
+      
+      const { payoutQueueManager } = await import("../lib/payoutQueue");
+      const request = payoutQueueManager.addPayoutRequest({
+        ...requestData,
+        requestedBy: req.user.id
+      });
+
+      res.json({
+        success: true,
+        request
+      });
+    } catch (error) {
+      console.error("❌ Payout request failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Payout request failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/payout/process", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { vaultBalance = 50000 } = req.body;
+      console.log("🔄 Processing payout queue with balance:", vaultBalance);
+      
+      const { payoutQueueManager } = await import("../lib/payoutQueue");
+      const result = await payoutQueueManager.processPayoutQueue(vaultBalance);
+
+      res.json({
+        success: true,
+        ...result
+      });
+    } catch (error) {
+      console.error("❌ Payout processing failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Payout processing failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/payout/stats", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📊 Fetching payout queue statistics");
+      
+      const { payoutQueueManager } = await import("../lib/payoutQueue");
+      const stats = payoutQueueManager.getQueueStats();
+
+      res.json({
+        success: true,
+        stats
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch payout stats:", error);
+      res.status(500).json({
+        error: "Failed to fetch payout statistics",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Multisig Security endpoints
+  app.post("/api/multisig/create", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const transactionData = req.body;
+      console.log("🔐 Creating multisig transaction:", transactionData.type);
+      
+      const { multisigGate } = await import("../lib/multisigGate");
+      const transaction = multisigGate.createMultisigTransaction({
+        ...transactionData,
+        createdBy: req.user.id
+      });
+
+      res.json({
+        success: true,
+        transaction
+      });
+    } catch (error) {
+      console.error("❌ Multisig creation failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Multisig transaction creation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/multisig/sign", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { txId, signature, message } = req.body;
+      console.log("✍️ Signing multisig transaction:", txId);
+      
+      const { multisigGate } = await import("../lib/multisigGate");
+      const result = multisigGate.signTransaction(txId, req.user.id, signature, message);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Multisig signing failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Multisig signing failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/multisig/execute", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { txId } = req.body;
+      console.log("🚀 Executing multisig transaction:", txId);
+      
+      const { multisigGate } = await import("../lib/multisigGate");
+      const result = await multisigGate.executeTransaction(txId, req.user.id);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Multisig execution failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Multisig execution failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/multisig/pending", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📋 Fetching pending multisig transactions");
+      
+      const { multisigGate } = await import("../lib/multisigGate");
+      const pending = multisigGate.getPendingTransactions(req.user.id);
+
+      res.json({
+        success: true,
+        transactions: pending,
+        count: pending.length
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch pending multisig transactions:", error);
+      res.status(500).json({
+        error: "Failed to fetch pending transactions",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Redemption Signature Verification endpoints
+  app.post("/api/redeem/verify-signature", async (req: any, res) => {
+    try {
+      const { signature, additionalSignatures } = req.body;
+      console.log("🔐 Verifying redemption signature");
+      
+      const { redemptionSignatureVerifier } = await import("../lib/verifyRedemptionSig");
+      const result = redemptionSignatureVerifier.verifyRedemptionSignature(
+        signature, 
+        additionalSignatures
+      );
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Signature verification failed:", error);
+      res.status(500).json({
+        valid: false,
+        error: "Signature verification failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/redeem/create-challenge", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleId, redeemer } = req.body;
+      console.log("🎯 Creating redemption challenge:", capsuleId);
+      
+      const { redemptionSignatureVerifier } = await import("../lib/verifyRedemptionSig");
+      const challenge = redemptionSignatureVerifier.createSignatureChallenge(capsuleId, redeemer);
+
+      res.json({
+        success: true,
+        challenge
+      });
+    } catch (error) {
+      console.error("❌ Challenge creation failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Challenge creation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Archive Certificate endpoints
   app.post("/api/certificates/generate", isDebugAuthenticated, async (req: any, res) => {
     try {
