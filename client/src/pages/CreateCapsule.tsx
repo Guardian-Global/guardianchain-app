@@ -26,6 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { useNotificationHelpers } from "@/components/ui/notification-system";
 import { cn } from "@/lib/utils";
+import DisclaimerBlock from "@/components/DisclaimerBlock";
 
 const capsuleSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title too long"),
@@ -440,6 +441,11 @@ const CreateCapsule: React.FC = () => {
               </div>
             </div>
           </motion.div>
+          
+          {/* Legal Disclaimer */}
+          <div className="container mx-auto px-6">
+            <DisclaimerBlock />
+          </div>
         </div>
       </EnhancedLayout>
     </AuthGuard>

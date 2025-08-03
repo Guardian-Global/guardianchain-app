@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Dna, Brain, Heart, TrendingUp, Shield } from "lucide-react";
+import DisclaimerBlock from "@/components/DisclaimerBlock";
 
 interface TruthGenomeData {
   capsuleId: string;
@@ -333,6 +334,9 @@ export default function TruthGenome() {
             Share Analysis
           </button>
         </div>
+
+        {/* Legal Disclaimer */}
+        <DisclaimerBlock />
       </div>
     </div>
   );
