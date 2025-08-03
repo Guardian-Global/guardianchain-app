@@ -220,6 +220,30 @@ export default function PartnersPage() {
         </CardContent>
       </Card>
 
+      {/* Tokenomics Quick View */}
+      <Card className="bg-gray-800 border-gray-700 mb-12">
+        <CardHeader>
+          <CardTitle className="text-white">GTT Token Overview</CardTitle>
+          <CardDescription>Key tokenomics metrics for investors and partners</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center p-4 bg-gray-700 rounded-lg">
+              <div className="text-3xl font-bold text-yellow-400 mb-2">$GTT</div>
+              <div className="text-sm text-gray-300">Governance & Yield Token</div>
+            </div>
+            <div className="text-center p-4 bg-gray-700 rounded-lg">
+              <div className="text-3xl font-bold text-green-400 mb-2">DAO</div>
+              <div className="text-sm text-gray-300">Community Governance</div>
+            </div>
+            <div className="text-center p-4 bg-gray-700 rounded-lg">
+              <div className="text-3xl font-bold text-blue-400 mb-2">DeFi</div>
+              <div className="text-sm text-gray-300">Yield Generation</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Call to Action */}
       <div className="text-center mt-12">
         <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 p-8 rounded-xl border border-purple-500/20">
@@ -228,16 +252,33 @@ export default function PartnersPage() {
             Join us in building the future of decentralized truth infrastructure. Whether you're an investor, 
             technology partner, or grant organization, we'd love to explore collaboration opportunities.
           </p>
-          <Button 
-            asChild 
-            size="lg"
-            className="bg-purple-600 hover:bg-purple-700"
-          >
-            <a href="mailto:compliance@guardianchain.app" className="flex items-center gap-2">
-              <Mail className="h-5 w-5" />
-              Get In Touch
-            </a>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              asChild 
+              size="lg"
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              <a href="mailto:compliance@guardianchain.app" className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Get In Touch
+              </a>
+            </Button>
+            <Button 
+              variant="outline" 
+              asChild 
+              size="lg"
+            >
+              <a 
+                href="/GuardianChain_Revenue_Share_Summary.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <Download className="h-5 w-5" />
+                Quick Summary
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
