@@ -118,7 +118,7 @@ export function EliteNavbar() {
             </DropdownMenu>
 
             {/* Connect Button */}
-            <Button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold hover:from-yellow-500 hover:to-amber-600">
+            <Button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold hover:from-yellow-500 hover:to-amber-600 transition-all duration-200">
               Connect Wallet
             </Button>
           </div>
@@ -172,7 +172,7 @@ export function EliteNavbar() {
                 );
               })}
               
-              <Button className="mt-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold">
+              <Button className="mt-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold hover:from-yellow-500 hover:to-amber-600 transition-all duration-200">
                 Connect Wallet
               </Button>
             </div>
