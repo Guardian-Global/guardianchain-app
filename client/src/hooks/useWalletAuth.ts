@@ -156,12 +156,26 @@ This action will not incur any gas fees.`;
     });
   };
 
-  // Auto-authenticate when wallet connects (if user is logged in)
+  // Enhanced session alignment - ensure authenticated user matches wallet address
   useEffect(() => {
     if (isConnected && address && user && !isWalletAuthenticated && !isAuthenticating) {
       // Auto-link wallet if user is authenticated but wallet isn't linked
       const autoLink = async () => {
         try {
+          console.log("🔍 Session alignment check:", { 
+            userAddress: user.walletAddress, 
+            connectedAddress: address,
+            isAuthenticated: !!user 
+          });
+          
+          // Ensure session user matches wallet address
+          if (user.walletAddress && user.walletAddress.toLowerCase() !== address.toLowerCase()) {
+            console.warn("⚠️ Session/wallet mismatch detected, forcing re-authentication");
+            // Force logout to prevent session confusion
+            window.location.href = "/api/auth/signout";
+            return;
+          }
+          
           await authenticateWallet();
         } catch (error) {
           console.warn("Auto wallet authentication failed:", error);

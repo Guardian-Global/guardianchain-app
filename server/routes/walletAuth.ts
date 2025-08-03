@@ -82,6 +82,18 @@ router.post("/verify-wallet", isDebugAuthenticated, async (req: any, res) => {
     // 2. Link it to the current user account
     // 3. Update user's verification status
 
+    // Update user session with verified wallet address
+    if (req.user) {
+      req.user.walletAddress = walletAddress.toLowerCase();
+      req.user.isWalletVerified = true;
+      req.user.walletVerifiedAt = new Date().toISOString();
+      
+      console.log("🔗 Session updated with wallet address:", {
+        userId: req.user.id,
+        walletAddress: walletAddress.toLowerCase()
+      });
+    }
+
     console.log("✅ Wallet verification successful:", walletAddress);
 
     // For debug mode, we'll simulate success

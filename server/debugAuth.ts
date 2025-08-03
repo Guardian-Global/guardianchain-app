@@ -25,6 +25,8 @@ export const isDebugAuthenticated: RequestHandler = (req: any, res, next) => {
     firstName: "Debug",
     lastName: "User",
     tier: "EXPLORER",
+    walletAddress: undefined, // Will be set during wallet verification
+    isWalletVerified: false
   };
 
   console.log("🔵 DEBUG: User set:", req.user);
