@@ -17,6 +17,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import ClusterVisualizer from "./ClusterVisualizer";
 
 interface ClusterTheme {
   theme_name: string;
@@ -329,6 +330,9 @@ export default function CapsuleClusteringDashboard() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Interactive Cluster Visualization */}
+          <ClusterVisualizer clusteringData={analysis} />
 
           {/* Selected Cluster Details */}
           {selectedCluster !== null && analysis.cluster_themes[selectedCluster] && (

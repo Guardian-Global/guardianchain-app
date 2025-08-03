@@ -58,18 +58,18 @@ export async function runCapsuleClustering(req: Request, res: Response) {
 
   try {
     // Prepare Python script execution - try main script first, fallback if OpenAI fails
-    const mainScriptPath = path.join(__dirname, "../ai/capsule-clustering.py");
-    const fallbackScriptPath = path.join(__dirname, "../ai/fallback-clustering.py");
+    const mainScriptPath = path.join(process.cwd(), "server/ai/capsule-clustering.py");
+    const fallbackScriptPath = path.join(process.cwd(), "server/ai/fallback-clustering.py");
     const outputPath = path.join(process.cwd(), "clustered_capsules_analysis.json");
 
-    // Check if Python scripts exist
-    const useMainScript = fs.existsSync(mainScriptPath) && process.env.OPENAI_API_KEY;
+    // Always use fallback script when OpenAI quota is exceeded
+    const useMainScript = false; // Force fallback for demo
     const scriptToUse = useMainScript ? mainScriptPath : fallbackScriptPath;
     
     if (!fs.existsSync(scriptToUse)) {
       return res.status(500).json({
         error: "Clustering script not found",
-        details: "Python clustering pipeline is not properly installed"
+        details: `Python clustering pipeline is not properly installed. Looking for: ${scriptToUse}`
       });
     }
 

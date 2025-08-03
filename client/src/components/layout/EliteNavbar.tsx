@@ -109,7 +109,7 @@ export function EliteNavbar() {
                   <Link href="/timeline">Timeline</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/stats">Analytics</Link>
+                  <Link href="/analytics">Analytics</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/lineage">Lineage Graph</Link>
