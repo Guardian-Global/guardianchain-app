@@ -3418,6 +3418,90 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
 
   // DAO Governance Routes
 
+  // DAO Rankings endpoint  
+  app.get("/api/dao/ranking", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🏆 DAO rankings requested");
+      
+      const mockRankings = [
+        { name: "TruthSeeker", score: 9847, badges: 12, followers: 234 },
+        { name: "VerityGuard", score: 8756, badges: 9, followers: 189 },
+        { name: "ChainWarden", score: 7623, badges: 8, followers: 156 },
+        { name: "DataKeeper", score: 6891, badges: 7, followers: 134 },
+        { name: "CryptoSage", score: 5947, badges: 6, followers: 98 },
+      ];
+      
+      res.json(mockRankings);
+    } catch (error) {
+      console.error("❌ Failed to get DAO rankings:", error);
+      res.status(500).json({ error: "Failed to fetch DAO rankings" });
+    }
+  });
+
+  // DAO Yields endpoint
+  app.get("/api/dao/yields", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📈 DAO yields requested");
+      
+      const mockYields = [
+        { name: "Guardian Alpha", yield: 1247, capsules: 89, rank: 1, change: 12.5 },
+        { name: "Truth Keeper", yield: 987, capsules: 67, rank: 2, change: 8.3 },
+        { name: "Validator Prime", yield: 756, capsules: 54, rank: 3, change: -2.1 },
+        { name: "Chain Sentinel", yield: 623, capsules: 43, rank: 4, change: 15.7 },
+      ];
+      
+      res.json(mockYields);
+    } catch (error) {
+      console.error("❌ Failed to get DAO yields:", error);
+      res.status(500).json({ error: "Failed to fetch DAO yields" });
+    }
+  });
+
+  // Capsule Redemption endpoint
+  app.post("/api/redeem", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleId, wallet } = req.body;
+      
+      if (!capsuleId || !wallet) {
+        return res.status(400).json({ 
+          success: false, 
+          reason: 'Missing capsuleId or wallet address' 
+        });
+      }
+
+      console.log("🔓 Capsule redemption requested:", { capsuleId, wallet });
+
+      // Mock redemption logic
+      const success = Math.random() > 0.3;
+      
+      if (success) {
+        const result = {
+          success: true,
+          capsuleId,
+          redeemedAt: new Date().toISOString(),
+          reward: Math.floor(Math.random() * 1000) + 100,
+        };
+        
+        console.log("✅ Capsule redeemed successfully:", result);
+        res.json(result);
+      } else {
+        const result = {
+          success: false,
+          reason: 'Capsule not eligible for redemption or already claimed',
+        };
+        
+        console.log("❌ Capsule redemption failed:", result);
+        res.json(result);
+      }
+    } catch (error) {
+      console.error("❌ Capsule redemption error:", error);
+      res.status(500).json({ 
+        success: false, 
+        reason: "Server error occurred" 
+      });
+    }
+  });
+
   // Get all proposals with voting data
   app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
     console.log("🏛️ DAO proposals requested");

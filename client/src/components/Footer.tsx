@@ -30,6 +30,18 @@ export default function Footer() {
           <Github className="w-4 h-4" />
           <span>📊 Partner Portal</span>
         </a>
+        <span>•</span>
+        <Link href="/dao">
+          <span className="text-yellow-400 hover:text-yellow-300 transition-colors cursor-pointer underline">
+            🏛️ DAO Governance
+          </span>
+        </Link>
+        <span>•</span>
+        <Link href="/dao">
+          <span className="text-yellow-400 hover:text-yellow-300 transition-colors cursor-pointer underline">
+            🏛️ DAO Governance
+          </span>
+        </Link>
       </p>
     </footer>
   );

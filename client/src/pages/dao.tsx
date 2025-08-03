@@ -30,6 +30,9 @@ import { z } from "zod";
 import Layout from "@/components/layout/Layout";
 import PageHeader from "@/components/layout/PageHeader";
 import ProposalList from "@/components/dao/ProposalList";
+import YieldGauge from "@/components/dao/YieldGauge";
+import DAORanking from "@/components/dao/DAORanking";
+import CapsuleRedeemer from "@/components/dao/CapsuleRedeemer";
 import { useAuth } from "@/hooks/useAuth";
 
 const proposalSchema = z.object({
@@ -178,24 +181,36 @@ export default function DAOPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="proposals" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-brand-surface">
+          <TabsList className="grid w-full grid-cols-5 bg-brand-surface">
             <TabsTrigger
               value="proposals"
               className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
             >
-              Active Proposals
+              Proposals
             </TabsTrigger>
             <TabsTrigger
-              value="history"
+              value="rankings"
               className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
             >
-              Voting History
+              Rankings
+            </TabsTrigger>
+            <TabsTrigger
+              value="yields"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+            >
+              Yields
+            </TabsTrigger>
+            <TabsTrigger
+              value="redeem"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+            >
+              Redeem
             </TabsTrigger>
             <TabsTrigger
               value="certificates"
               className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
             >
-              Truth Certificates
+              Certificates
             </TabsTrigger>
           </TabsList>
 
@@ -315,19 +330,66 @@ export default function DAOPage() {
             />
           </TabsContent>
 
-          <TabsContent value="history" className="space-y-6">
-            <Card className="bg-brand-secondary border-brand-surface">
-              <CardContent className="p-8 text-center">
-                <Calendar className="w-12 h-12 text-brand-light/40 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-brand-light mb-2">
-                  Voting History
-                </h3>
-                <p className="text-brand-light/60">
-                  Your voting history will appear here once you start
-                  participating in governance.
-                </p>
-              </CardContent>
-            </Card>
+          <TabsContent value="rankings" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <DAORanking />
+              <Card className="bg-brand-secondary border-brand-surface">
+                <CardHeader>
+                  <CardTitle className="text-brand-light flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-brand-accent" />
+                    Your DAO Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-brand-surface rounded">
+                      <div className="text-xl font-bold text-brand-accent">7</div>
+                      <div className="text-xs text-brand-light/60">Votes Cast</div>
+                    </div>
+                    <div className="text-center p-3 bg-brand-surface rounded">
+                      <div className="text-xl font-bold text-brand-warning">2</div>
+                      <div className="text-xs text-brand-light/60">Proposals</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-brand-light/80">
+                    <p>Rank: #47 (climbing 🚀)</p>
+                    <p>Reputation: 1,234 points</p>
+                    <p>Truth Score: 87/100</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="yields" className="space-y-6">
+            <YieldGauge />
+          </TabsContent>
+
+          <TabsContent value="redeem" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <CapsuleRedeemer />
+              <Card className="bg-brand-secondary border-brand-surface">
+                <CardHeader>
+                  <CardTitle className="text-brand-light">Recent Redemptions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 text-sm">
+                    <div className="p-3 bg-brand-surface rounded flex justify-between">
+                      <span className="text-brand-light/80">cap_abc123</span>
+                      <span className="text-brand-warning">+450 GTT</span>
+                    </div>
+                    <div className="p-3 bg-brand-surface rounded flex justify-between">
+                      <span className="text-brand-light/80">cap_def456</span>
+                      <span className="text-brand-warning">+320 GTT</span>
+                    </div>
+                    <div className="p-3 bg-brand-surface rounded flex justify-between">
+                      <span className="text-brand-light/80">cap_ghi789</span>
+                      <span className="text-brand-warning">+890 GTT</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="certificates" className="space-y-6">
