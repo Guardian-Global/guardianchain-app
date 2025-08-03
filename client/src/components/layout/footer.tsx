@@ -111,7 +111,7 @@ export default function Footer() {
                 </Button>
               </a>
               <a
-                href="https://github.com/guardianchain"
+                href="https://github.com/Guardian-Global/guardianchain.app"
                 target="_blank"
                 rel="noopener noreferrer"
               >
