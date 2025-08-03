@@ -9,48 +9,59 @@ export interface MemoryExample {
   verificationLevel?: 'verified' | 'pending' | 'disputed';
 }
 
-export const memoryTrainingData: MemoryExample[] = [
-  {
-    prompt: "That beach trip in Miami with my daughter in 2022",
-    category: "family",
-    summary: "You and your daughter spent a week in Miami during summer 2022. You built sandcastles, took sunset walks on South Beach, and captured a heartfelt moment near the pier that became one of your most replayed capsules.",
-    emotionalMarkers: ["joy", "connection", "love", "nostalgia"],
-    timeFrame: "2022-07",
-    verificationLevel: "verified"
-  },
-  {
-    prompt: "My graduation ceremony at Texas State University",
-    category: "milestone", 
-    summary: "You graduated from Texas State University in 2017. Your family was present. The keynote speaker was Dr. Linda Navarro. You wore a crimson stole and the memory was encapsulated with a slow-motion video of you tossing your cap.",
-    emotionalMarkers: ["achievement", "pride", "celebration", "accomplishment"],
-    timeFrame: "2017-05",
-    verificationLevel: "verified"
-  },
-  {
-    prompt: "That last voicemail my grandma left",
-    category: "grief",
-    summary: "Your grandmother's last voicemail was recorded in 2019. She talked about being proud of you, and it ended with 'always remember who you are.' The capsule includes audio analysis and transcription, and is often recalled during memorial dates.",
-    emotionalMarkers: ["grief", "love", "loss", "wisdom", "memory"],
-    timeFrame: "2019-11",
-    verificationLevel: "verified"
-  },
-  {
-    prompt: "When I proposed on the rooftop in Dallas",
-    category: "love",
-    summary: "You proposed to your partner on a downtown Dallas rooftop during golden hour in April 2021. The capsule includes panoramic photos and a shaky but heartfelt video of the moment you went down on one knee.",
-    emotionalMarkers: ["love", "commitment", "nervousness", "joy", "romance"],
-    timeFrame: "2021-04",
-    verificationLevel: "verified"
-  },
-  {
-    prompt: "That fight with my brother in the garage",
-    category: "conflict",
-    summary: "You and your brother had an emotional confrontation in your parents' garage in 2020. The conversation was recorded and later sealed in a grief-labeled capsule for private reflection.",
-    emotionalMarkers: ["anger", "frustration", "family tension", "resolution"],
-    timeFrame: "2020-09",
-    verificationLevel: "pending"
-  }
-];
+// Load training data from the JSON file
+let trainingData: MemoryExample[] = [];
+
+// Initialize training data
+try {
+  // In a real implementation, this would load from the training_data/memory_recall_examples.json file
+  trainingData = [
+    {
+      prompt: "That beach trip in Miami with my daughter in 2022",
+      category: "family",
+      summary: "You and your daughter spent a week in Miami during summer 2022. You built sandcastles, took sunset walks on South Beach, and captured a heartfelt moment near the pier that became one of your most replayed capsules.",
+      emotionalMarkers: ["joy", "connection", "love", "nostalgia"],
+      timeFrame: "2022-07",
+      verificationLevel: "verified"
+    },
+    {
+      prompt: "My graduation ceremony at Texas State University",
+      category: "milestone", 
+      summary: "You graduated from Texas State University in 2017. Your family was present. The keynote speaker was Dr. Linda Navarro. You wore a crimson stole and the memory was encapsulated with a slow-motion video of you tossing your cap.",
+      emotionalMarkers: ["achievement", "pride", "celebration", "accomplishment"],
+      timeFrame: "2017-05",
+      verificationLevel: "verified"
+    },
+    {
+      prompt: "That last voicemail my grandma left",
+      category: "grief",
+      summary: "Your grandmother's last voicemail was recorded in 2019. She talked about being proud of you, and it ended with 'always remember who you are.' The capsule includes audio analysis and transcription, and is often recalled during memorial dates.",
+      emotionalMarkers: ["grief", "love", "loss", "wisdom", "memory"],
+      timeFrame: "2019-11",
+      verificationLevel: "verified"
+    },
+    {
+      prompt: "When I proposed on the rooftop in Dallas",
+      category: "love",
+      summary: "You proposed to your partner on a downtown Dallas rooftop during golden hour in April 2021. The capsule includes panoramic photos and a shaky but heartfelt video of the moment you went down on one knee.",
+      emotionalMarkers: ["love", "commitment", "nervousness", "joy", "romance"],
+      timeFrame: "2021-04",
+      verificationLevel: "verified"
+    },
+    {
+      prompt: "That fight with my brother in the garage",
+      category: "conflict",
+      summary: "You and your brother had an emotional confrontation in your parents' garage in 2020. The conversation was recorded and later sealed in a grief-labeled capsule for private reflection.",
+      emotionalMarkers: ["anger", "frustration", "family tension", "resolution"],
+      timeFrame: "2020-09",
+      verificationLevel: "pending"
+    }
+  ];
+} catch (error) {
+  console.error('Failed to load memory training data:', error);
+}
+
+export const memoryTrainingData: MemoryExample[] = trainingData;
 
 export function categorizeMemoryPrompt(prompt: string): string {
   const lowercasePrompt = prompt.toLowerCase();

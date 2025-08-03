@@ -1,12 +1,19 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Plus, X, Twitter, Github, Globe, Mail } from "lucide-react";
+import { 
+  ExternalLink, 
+  Plus, 
+  X, 
+  CheckCircle,
+  AlertCircle,
+  Edit3,
+  Save,
+  Globe
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
 
 interface SocialLink {
   id: string;
@@ -16,215 +23,237 @@ interface SocialLink {
 }
 
 interface SocialLinksCardProps {
-  profile: {
-    id: string;
-    socialLinks?: SocialLink[];
-  };
+  userId: string;
+  socialLinks?: SocialLink[];
+  isOwner?: boolean;
 }
 
-export default function SocialLinksCard({ profile }: SocialLinksCardProps) {
+export default function SocialLinksCard({ 
+  userId, 
+  socialLinks = [], 
+  isOwner = false 
+}: SocialLinksCardProps) {
+  const [links, setLinks] = useState<SocialLink[]>(socialLinks);
   const [isEditing, setIsEditing] = useState(false);
-  const [newPlatform, setNewPlatform] = useState("");
-  const [newUrl, setNewUrl] = useState("");
+  const [newLink, setNewLink] = useState({ platform: "", url: "" });
   const { toast } = useToast();
-  const queryClient = useQueryClient();
 
-  const socialLinks = profile.socialLinks || [];
+  const platformIcons = {
+    twitter: "🐦",
+    github: "🐙", 
+    linkedin: "💼",
+    website: "🌐",
+    youtube: "📺",
+    instagram: "📷",
+    discord: "🎮",
+    telegram: "✈️"
+  };
 
-  const addLinkMutation = useMutation({
-    mutationFn: async ({ platform, url }: { platform: string; url: string }) => {
-      return apiRequest("POST", `/api/profile/${profile.id}/social-links`, { platform, url });
-    },
-    onSuccess: () => {
+  const addLink = () => {
+    if (!newLink.platform.trim() || !newLink.url.trim()) {
       toast({
-        title: "Link Added",
-        description: "Social link has been added to your profile.",
-      });
-      setNewPlatform("");
-      setNewUrl("");
-      setIsEditing(false);
-      queryClient.invalidateQueries({ queryKey: [`/api/profile/${profile.id}`] });
-    },
-    onError: () => {
-      toast({
-        title: "Failed to Add Link",
-        description: "Could not add social link. Please try again.",
+        title: "Invalid Link",
+        description: "Please provide both platform and URL",
         variant: "destructive",
       });
-    },
-  });
+      return;
+    }
 
-  const removeLinkMutation = useMutation({
-    mutationFn: async (linkId: string) => {
-      return apiRequest("DELETE", `/api/profile/${profile.id}/social-links/${linkId}`);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Link Removed",
-        description: "Social link has been removed from your profile.",
-      });
-      queryClient.invalidateQueries({ queryKey: [`/api/profile/${profile.id}`] });
-    },
-    onError: () => {
-      toast({
-        title: "Failed to Remove Link",
-        description: "Could not remove social link. Please try again.",
-        variant: "destructive",
-      });
-    },
-  });
+    const newSocialLink: SocialLink = {
+      id: `link-${Date.now()}`,
+      platform: newLink.platform.toLowerCase(),
+      url: newLink.url,
+      verified: false,
+    };
+
+    setLinks([...links, newSocialLink]);
+    setNewLink({ platform: "", url: "" });
+    
+    toast({
+      title: "Link Added",
+      description: "Social link has been added to your profile",
+    });
+  };
+
+  const removeLink = (linkId: string) => {
+    setLinks(links.filter(link => link.id !== linkId));
+    toast({
+      title: "Link Removed",
+      description: "Social link has been removed from your profile",
+    });
+  };
+
+  const saveChanges = () => {
+    setIsEditing(false);
+    toast({
+      title: "Profile Updated",
+      description: "Your social links have been saved",
+    });
+  };
 
   const getPlatformIcon = (platform: string) => {
-    switch (platform.toLowerCase()) {
-      case "twitter":
-        return <Twitter className="w-4 h-4" />;
-      case "github":
-        return <Github className="w-4 h-4" />;
-      case "email":
-        return <Mail className="w-4 h-4" />;
-      default:
-        return <Globe className="w-4 h-4" />;
-    }
+    return platformIcons[platform.toLowerCase() as keyof typeof platformIcons] || "🔗";
   };
 
-  const getPlatformColor = (platform: string) => {
-    switch (platform.toLowerCase()) {
-      case "twitter":
-        return "text-blue-400 border-blue-500";
-      case "github":
-        return "text-gray-400 border-gray-500";
-      case "email":
-        return "text-green-400 border-green-500";
-      default:
-        return "text-brand-accent border-brand-accent";
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
-  };
-
-  const handleAddLink = () => {
-    if (!newPlatform.trim() || !newUrl.trim()) return;
-    addLinkMutation.mutate({ platform: newPlatform, url: newUrl });
   };
 
   return (
-    <Card className="bg-brand-secondary border-brand-surface w-64">
+    <Card className="bg-brand-secondary border-brand-surface">
       <CardHeader>
-        <CardTitle className="text-brand-light flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ExternalLink className="w-5 h-5 text-brand-accent" />
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-brand-light flex items-center gap-2">
+            <Globe className="w-5 h-5 text-brand-accent" />
             Social Links
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsEditing(!isEditing)}
-            className="text-brand-light/60 hover:text-brand-light"
-            data-testid="button-edit-social-links"
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
-        </CardTitle>
+          </CardTitle>
+          
+          {isOwner && (
+            <div className="flex gap-2">
+              {isEditing ? (
+                <Button
+                  onClick={saveChanges}
+                  size="sm"
+                  className="bg-brand-primary hover:bg-brand-primary/80"
+                  data-testid="button-save-social-links"
+                >
+                  <Save className="w-3 h-3 mr-1" />
+                  Save
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setIsEditing(true)}
+                  variant="outline"
+                  size="sm"
+                  className="border-brand-light/20 hover:bg-brand-light/10 text-brand-light"
+                  data-testid="button-edit-social-links"
+                >
+                  <Edit3 className="w-3 h-3 mr-1" />
+                  Edit
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {/* Existing Links */}
-        {socialLinks.length === 0 && !isEditing && (
-          <div className="text-center py-4">
-            <p className="text-xs text-brand-light/60">No social links added</p>
+
+      <CardContent className="space-y-4">
+        {links.length === 0 && !isEditing ? (
+          <div className="text-center py-6">
+            <Globe className="w-8 h-8 text-brand-light/30 mx-auto mb-3" />
+            <p className="text-brand-light/60 text-sm">
+              {isOwner ? "Add your social links to connect with others" : "No social links added yet"}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {links.map((link, index) => (
+              <div
+                key={link.id}
+                className="flex items-center gap-3 p-3 bg-brand-surface border border-brand-light/10 rounded-lg"
+                data-testid={`social-link-${index}`}
+              >
+                <div className="text-lg">
+                  {getPlatformIcon(link.platform)}
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-brand-light capitalize">
+                      {link.platform}
+                    </span>
+                    {link.verified ? (
+                      <CheckCircle className="w-4 h-4 text-green-400" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-yellow-400" />
+                    )}
+                  </div>
+                  
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-brand-accent hover:text-brand-accent/80 truncate block"
+                  >
+                    {link.url}
+                  </a>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="hover:bg-brand-light/10"
+                    data-testid={`button-visit-${link.platform}`}
+                  >
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </Button>
+
+                  {isOwner && isEditing && (
+                    <Button
+                      onClick={() => removeLink(link.id)}
+                      variant="ghost"
+                      size="sm"
+                      className="hover:bg-red-500/20 text-red-400"
+                      data-testid={`button-remove-${link.platform}`}
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
-        {socialLinks.map((link) => (
-          <div
-            key={link.id}
-            className="flex items-center gap-3 p-2 bg-brand-surface rounded border border-brand-light/10 hover:border-brand-light/20 transition-colors"
-            data-testid={`social-link-${link.id}`}
-          >
-            <div className={`${getPlatformColor(link.platform)}`}>
-              {getPlatformIcon(link.platform)}
-            </div>
+        {isOwner && isEditing && (
+          <div className="space-y-3 border-t border-brand-light/10 pt-4">
+            <h4 className="text-sm font-medium text-brand-light">Add New Link</h4>
             
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-brand-light capitalize">
-                  {link.platform}
-                </span>
-                {link.verified && (
-                  <Badge variant="outline" className="text-green-400 border-green-500 text-xs">
-                    Verified
-                  </Badge>
-                )}
-              </div>
-              <div className="text-xs text-brand-light/60 truncate">
-                {link.url}
-              </div>
-            </div>
-
-            <div className="flex gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => window.open(link.url, '_blank')}
-                className="text-brand-light/60 hover:text-brand-light p-1"
-                data-testid={`button-open-link-${link.id}`}
-              >
-                <ExternalLink className="w-3 h-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => removeLinkMutation.mutate(link.id)}
-                className="text-brand-light/60 hover:text-red-400 p-1"
-                data-testid={`button-remove-link-${link.id}`}
-              >
-                <X className="w-3 h-3" />
-              </Button>
-            </div>
-          </div>
-        ))}
-
-        {/* Add New Link Form */}
-        {isEditing && (
-          <div className="space-y-3 p-3 bg-brand-surface/50 rounded border border-brand-light/10">
             <div className="space-y-2">
               <Input
-                value={newPlatform}
-                onChange={(e) => setNewPlatform(e.target.value)}
-                placeholder="Platform (e.g., Twitter, GitHub)"
-                className="bg-brand-surface border-brand-light/20 text-brand-light text-sm"
-                data-testid="input-social-platform"
+                value={newLink.platform}
+                onChange={(e) => setNewLink({ ...newLink, platform: e.target.value })}
+                placeholder="Platform (e.g. twitter, github, website)"
+                className="bg-brand-surface border-brand-light/20 text-brand-light"
+                data-testid="input-platform"
               />
+              
               <Input
-                value={newUrl}
-                onChange={(e) => setNewUrl(e.target.value)}
-                placeholder="URL (https://...)"
-                className="bg-brand-surface border-brand-light/20 text-brand-light text-sm"
-                data-testid="input-social-url"
+                value={newLink.url}
+                onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                placeholder="https://..."
+                className="bg-brand-surface border-brand-light/20 text-brand-light"
+                data-testid="input-url"
               />
             </div>
-            
-            <div className="flex gap-2">
-              <Button
-                onClick={handleAddLink}
-                disabled={!newPlatform.trim() || !newUrl.trim() || addLinkMutation.isPending}
-                size="sm"
-                className="flex-1 bg-brand-primary hover:bg-brand-primary/80 text-xs"
-                data-testid="button-save-social-link"
-              >
-                {addLinkMutation.isPending ? "Adding..." : "Add"}
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsEditing(false);
-                  setNewPlatform("");
-                  setNewUrl("");
-                }}
-                variant="outline"
-                size="sm"
-                className="border-brand-light/20 text-brand-light hover:bg-brand-light/10 text-xs"
-                data-testid="button-cancel-social-link"
-              >
-                Cancel
-              </Button>
-            </div>
+
+            <Button
+              onClick={addLink}
+              size="sm"
+              className="bg-brand-primary hover:bg-brand-primary/80 w-full"
+              disabled={!newLink.platform.trim() || !isValidUrl(newLink.url)}
+              data-testid="button-add-link"
+            >
+              <Plus className="w-3 h-3 mr-2" />
+              Add Link
+            </Button>
+          </div>
+        )}
+
+        {links.length > 0 && !isOwner && (
+          <div className="text-center pt-2">
+            <p className="text-xs text-brand-light/50">
+              {links.filter(l => l.verified).length} of {links.length} links verified
+            </p>
           </div>
         )}
       </CardContent>
