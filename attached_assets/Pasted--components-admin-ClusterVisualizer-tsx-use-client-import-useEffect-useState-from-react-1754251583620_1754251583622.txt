@@ -1,0 +1,92 @@
+// components/admin/ClusterVisualizer.tsx
+"use client";
+import { useEffect, useState } from "react";
+import { Scatter } from "react-chartjs-2";
+import { Chart as ChartJS, PointElement, LinearScale, Tooltip, Legend } from "chart.js";
+ChartJS.register(PointElement, LinearScale, Tooltip, Legend);
+
+export default function ClusterVisualizer() {
+  const [data, setData] = useState<any[]>([]);
+  const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/clustered_capsules.csv")
+      .then((res) => res.text())
+      .then((csv) => {
+        const lines = csv.split("\n").slice(1);
+        const rows = lines.map((line) => {
+          const [id, title, desc, timestamp, year, cluster, x, y] = line.split(",");
+          return { id, title, desc, year: +year, cluster: +cluster, x: +x, y: +y };
+        });
+        setData(rows);
+      });
+  }, []);
+
+  const colors = ["#4f46e5", "#22c55e", "#f59e0b", "#ec4899", "#0ea5e9"];
+
+  const filtered = data.filter(d =>
+    (selectedCluster === null || d.cluster === selectedCluster) &&
+    (selectedYear === null || d.year === +selectedYear)
+  );
+
+  const scatterData = {
+    datasets: Array.from(new Set(filtered.map(d => d.cluster))).map((clusterId) => ({
+      label: `Cluster ${clusterId}`,
+      data: filtered.filter((d) => d.cluster === clusterId).map((d) => ({ x: d.x, y: d.y })),
+      backgroundColor: colors[clusterId % colors.length],
+      pointRadius: 6
+    }))
+  };
+
+  const years = Array.from(new Set(data.map(d => d.year))).sort();
+  const clusters = Array.from(new Set(data.map(d => d.cluster))).sort();
+
+  const options = {
+    scales: {
+      x: { title: { display: true, text: "Semantic Dimension X" } },
+      y: { title: { display: true, text: "Semantic Dimension Y" } },
+    },
+    plugins: {
+      legend: { position: "right" },
+      tooltip: {
+        callbacks: {
+          label: (ctx: any) => {
+            const point = filtered.find(d => d.x === ctx.raw.x && d.y === ctx.raw.y);
+            return `${point?.title} — ${point?.year}`;
+          }
+        }
+      }
+    }
+  };
+
+  return (
+    <div className="p-6 bg-slate-900 rounded-xl text-white space-y-4">
+      <h2 className="text-xl font-bold">🧬 Capsule Theme Clusters</h2>
+
+      <div className="flex gap-6 items-center">
+        <select
+          onChange={(e) => setSelectedCluster(e.target.value === "all" ? null : +e.target.value)}
+          className="bg-slate-800 text-white p-2 rounded"
+        >
+          <option value="all">All Clusters</option>
+          {clusters.map(c => (
+            <option key={c} value={c}>Cluster {c}</option>
+          ))}
+        </select>
+
+        <select
+          onChange={(e) => setSelectedYear(e.target.value === "all" ? null : e.target.value)}
+          className="bg-slate-800 text-white p-2 rounded"
+        >
+          <option value="all">All Years</option>
+          {years.map(y => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+      </div>
+
+      <Scatter data={scatterData} options={options} />
+    </div>
+  );
+}
