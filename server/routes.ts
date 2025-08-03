@@ -445,6 +445,135 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Multichain staking performance endpoint
+  app.get("/api/staking/multichain-performance", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const stakingData = {
+        totalValueLocked: 2847500,
+        totalRewards: 12450,
+        averageApr: 8.7,
+        activePools: 6,
+        attestations: 47,
+        pools: [
+          {
+            chain: "Ethereum",
+            chainId: 1,
+            totalStaked: 1250000,
+            apr: 7.2,
+            validators: 12,
+            myStake: 5000,
+            rewards: 360,
+            lockPeriod: "32 epochs",
+            status: "active"
+          },
+          {
+            chain: "Polygon",
+            chainId: 137,
+            totalStaked: 875000,
+            apr: 12.4,
+            validators: 8,
+            myStake: 2500,
+            rewards: 310,
+            lockPeriod: "14 days",
+            status: "active"
+          },
+          {
+            chain: "Base",
+            chainId: 8453,
+            totalStaked: 622500,
+            apr: 9.8,
+            validators: 6,
+            myStake: 1500,
+            rewards: 147,
+            lockPeriod: "7 days",
+            status: "active"
+          }
+        ]
+      };
+
+      res.json({
+        success: true,
+        data: stakingData,
+        timestamp: new Date().toISOString()
+      });
+
+      console.log(`⚡ Multichain staking performance data generated`);
+    } catch (error) {
+      console.error("❌ Failed to get staking performance:", error);
+      res.status(500).json({
+        error: "Failed to get staking performance",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // DAO audit logs endpoint
+  app.get("/api/audit/logs", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const auditData = {
+        summary: {
+          totalLogs: 1247,
+          pendingActions: 23,
+          criticalIssues: 2,
+          resolvedToday: 15,
+          validatorAttestations: 89
+        },
+        logs: [
+          {
+            id: "audit-001",
+            timestamp: new Date(Date.now() - 300000).toISOString(),
+            action: "Capsule Validation Failed",
+            actor: "validator-0x1234",
+            target: "capsule-789",
+            severity: "high",
+            status: "investigating",
+            details: "Truth verification score below threshold (0.65)",
+            txHash: "0xabc123...",
+            blockNumber: 18950234
+          },
+          {
+            id: "audit-002",
+            timestamp: new Date(Date.now() - 465000).toISOString(),
+            action: "GTT Yield Distribution",
+            actor: "dao-contract",
+            target: "yield-pool-4",
+            severity: "low",
+            status: "resolved",
+            details: "Weekly yield distribution completed successfully",
+            txHash: "0xdef456...",
+            blockNumber: 18950220
+          },
+          {
+            id: "audit-003",
+            timestamp: new Date(Date.now() - 630000).toISOString(),
+            action: "Multisig Transaction",
+            actor: "guardian-council",
+            target: "treasury-vault",
+            severity: "medium",
+            status: "pending",
+            details: "Requires 3/5 signatures for 50,000 GTT transfer",
+            txHash: "0x789abc...",
+            blockNumber: 18950210
+          }
+        ]
+      };
+
+      res.json({
+        success: true,
+        ...auditData,
+        timestamp: new Date().toISOString()
+      });
+
+      console.log(`🔍 DAO audit logs generated: ${auditData.logs.length} entries`);
+    } catch (error) {
+      console.error("❌ Failed to get audit logs:", error);
+      res.status(500).json({
+        error: "Failed to get audit logs",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);

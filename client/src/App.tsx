@@ -50,6 +50,8 @@ const StreamPage = lazy(() => import("@/pages/Stream"));
 const LineagePage = lazy(() => import("@/pages/Lineage"));
 const RewardsPage = lazy(() => import("@/pages/Rewards"));
 const MetricsPage = lazy(() => import("@/pages/Metrics"));
+const StakingPage = lazy(() => import("@/pages/Staking"));
+const AuditPage = lazy(() => import("@/pages/Audit"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -128,6 +130,8 @@ function Router() {
               <Route path="/lineage" component={LineagePage} />
               <Route path="/rewards" component={RewardsPage} />
               <Route path="/metrics" component={MetricsPage} />
+              <Route path="/staking" component={StakingPage} />
+              <Route path="/audit" component={AuditPage} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
