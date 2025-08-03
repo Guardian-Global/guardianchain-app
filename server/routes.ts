@@ -323,6 +323,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // GTT theme yield calculation endpoint
+  app.get("/api/gtt/theme-yield", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { calculateGTTThemeYield } = await import("../lib/gtt/calculateThemeYield");
+      const yieldData = await calculateGTTThemeYield();
+      
+      res.json({
+        success: true,
+        yields: yieldData,
+        timestamp: new Date().toISOString()
+      });
+
+      console.log(`💰 GTT theme yield calculated: ${yieldData.length} clusters`);
+    } catch (error) {
+      console.error("❌ Failed to calculate GTT theme yield:", error);
+      res.status(500).json({
+        error: "Failed to calculate theme yield",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);

@@ -21,6 +21,7 @@ import MemoryYieldChart from "./MemoryYieldChart";
 import LineageVisualizer from "../lineage/LineageVisualizer";
 import ClusterThemeVoting from "../dao/ClusterThemeVoting";
 import PublicClusterStream from "./PublicClusterStream";
+import ThemeYieldChart from "../gtt/ThemeYieldChart";
 
 interface ClusterTheme {
   theme_name: string;
@@ -345,6 +346,9 @@ export default function CapsuleClusteringDashboard() {
 
           {/* Public Truth Stream */}
           <PublicClusterStream />
+
+          {/* GTT Theme Yield Analysis */}
+          <ThemeYieldChart />
 
           {/* Selected Cluster Details */}
           {selectedCluster !== null && analysis.cluster_themes[selectedCluster] && (

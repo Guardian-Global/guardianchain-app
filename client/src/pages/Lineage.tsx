@@ -12,17 +12,35 @@ interface LineageStats {
   activeLineages: number;
 }
 
+interface LineageNode {
+  id: string;
+  depth?: number;
+  lineageId?: string;
+}
+
+interface LineageEdge {
+  id: string;
+}
+
+interface LineageGraphData {
+  success: boolean;
+  graph: {
+    nodes: LineageNode[];
+    edges: LineageEdge[];
+  };
+}
+
 export default function Lineage() {
   // Get lineage data for stats
-  const { data: lineageData } = useQuery({
+  const { data: lineageData } = useQuery<LineageGraphData>({
     queryKey: ["/api/lineage/graph"],
   });
 
   const stats: LineageStats = lineageData?.graph ? {
     totalNodes: lineageData.graph.nodes?.length || 0,
     totalConnections: lineageData.graph.edges?.length || 0,
-    maxDepth: Math.max(...(lineageData.graph.nodes?.map((n: any) => n.depth || 0) || [0])),
-    activeLineages: new Set(lineageData.graph.nodes?.map((n: any) => n.lineageId)).size || 0
+    maxDepth: Math.max(...(lineageData.graph.nodes?.map((n) => n.depth || 0) || [0])),
+    activeLineages: new Set(lineageData.graph.nodes?.map((n) => n.lineageId)).size || 0
   } : {
     totalNodes: 0,
     totalConnections: 0,
