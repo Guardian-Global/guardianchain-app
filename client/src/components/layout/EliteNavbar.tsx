@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
+import EnhancedMegaNavigation from '@/components/EnhancedMegaNavigation';
 import { 
   Menu, 
   X, 
@@ -24,8 +25,8 @@ import {
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-  { href: '/vault', label: 'Vault', icon: Vault },
-  { href: '/mint', label: 'Mint', icon: Sparkles },
+  { href: '/truth-genome', label: 'Truth Genome', icon: Sparkles },
+  { href: '/truth-net', label: 'Truth Net', icon: Users },
   { href: '/profile', label: 'Profile', icon: Users },
   { href: '/governance', label: 'DAO', icon: Crown },
 ];
@@ -56,6 +57,11 @@ export function EliteNavbar() {
               </span>
             </motion.div>
           </Link>
+
+          {/* Enhanced Mega Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            <EnhancedMegaNavigation />
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">

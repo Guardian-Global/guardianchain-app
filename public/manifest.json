@@ -1,60 +1,60 @@
 {
-  "name": "GuardianChain: Truth Vault Protocol",
-  "short_name": "GuardianChain",
-  "description": "Sovereign Web3 infrastructure for time-locked proof, grief-score yield, and truth capsule monetization with multi-chain NFT minting",
+  "name": "GuardianChain",
+  "short_name": "Guardian",
+  "description": "Sovereign Web3 Truth Vault Platform - Secure blockchain-based truth preservation and verification",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#8b5cf6",
   "orientation": "portrait-primary",
-  "categories": ["business", "finance", "productivity", "social"],
-  "lang": "en-US",
   "scope": "/",
+  "lang": "en",
+  "categories": ["productivity", "social", "utilities"],
   "icons": [
     {
-      "src": "/icons/icon-72x72.png",
+      "src": "/icons/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-96x96.png",
+      "src": "/icons/icon-96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-128x128.png",
+      "src": "/icons/icon-128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-144x144.png",
+      "src": "/icons/icon-144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-152x152.png",
+      "src": "/icons/icon-152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-384x384.png",
+      "src": "/icons/icon-384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -64,78 +64,39 @@
     {
       "name": "Create Capsule",
       "short_name": "Create",
-      "description": "Create a new truth capsule",
+      "description": "Submit a new truth capsule",
       "url": "/create",
-      "icons": [
-        {
-          "src": "/icons/shortcut-create.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]
     },
     {
       "name": "GTT Vault",
       "short_name": "Vault",
-      "description": "Access your GTT yield vault and claim rewards",
-      "url": "/vault",
-      "icons": [
-        {
-          "src": "/icons/shortcut-vault.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "description": "Access your GTT token vault",
+      "url": "/gtt-vault",
+      "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]
     },
     {
-      "name": "Guardian Map",
-      "short_name": "Map",
-      "description": "View global guardian network",
-      "url": "/guardian-map",
-      "icons": [
-        {
-          "src": "/icons/shortcut-map.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "SMRI Dashboard",
-      "short_name": "Reputation",
-      "description": "Check your reputation score",
-      "url": "/smri-dashboard",
-      "icons": [
-        {
-          "src": "/icons/shortcut-reputation.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "name": "Truth Genome",
+      "short_name": "Genome",
+      "description": "Analyze truth genetics",
+      "url": "/truth-genome",
+      "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]
     }
   ],
+  "related_applications": [],
+  "prefer_related_applications": false,
   "screenshots": [
     {
       "src": "/screenshots/desktop-1.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "form_factor": "wide",
-      "label": "Guardian Map - Desktop View"
+      "form_factor": "wide"
     },
     {
-      "src": "/screenshots/mobile-1.png",
-      "sizes": "750x1334",
+      "src": "/screenshots/mobile-1.png", 
+      "sizes": "375x812",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Truth Capsule Creation - Mobile View"
-    }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "protocol_handlers": [
-    {
-      "protocol": "web+guardianchain",
-      "url": "/capsule/%s"
+      "form_factor": "narrow"
     }
   ]
 }

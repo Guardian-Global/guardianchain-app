@@ -6025,6 +6025,54 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   });
 
   const httpServer = createServer(app);
+  // Truth Genome API routes
+  app.get("/api/truth-genome/:capsuleId", isDebugAuthenticated, async (req: any, res) => {
+    const { analyzeTruthGenome } = await import("./api/truth-genome");
+    await analyzeTruthGenome(req, res);
+  });
+
+  app.get("/api/truth-genome/:capsuleId/report", isDebugAuthenticated, async (req: any, res) => {
+    const { getTruthGenomeReport } = await import("./api/truth-genome");
+    await getTruthGenomeReport(req, res);
+  });
+
+  // Truth Net API routes
+  app.get("/api/truth-net", isDebugAuthenticated, async (req: any, res) => {
+    const { getTruthNetwork } = await import("./api/truth-net");
+    await getTruthNetwork(req, res);
+  });
+
+  app.get("/api/truth-net/analytics", isDebugAuthenticated, async (req: any, res) => {
+    const { getNetworkAnalytics } = await import("./api/truth-net");
+    await getNetworkAnalytics(req, res);
+  });
+
+  app.get("/api/truth-net/export", isDebugAuthenticated, async (req: any, res) => {
+    const { exportTruthNetwork } = await import("./api/truth-net");
+    await exportTruthNetwork(req, res);
+  });
+
+  // Notarization API routes
+  app.post("/api/notarize", isDebugAuthenticated, async (req: any, res) => {
+    const { notarizeCapsule } = await import("./api/notarize");
+    await notarizeCapsule(req, res);
+  });
+
+  app.post("/api/certificates/generate", isDebugAuthenticated, async (req: any, res) => {
+    const { generateLegalCertificate } = await import("./api/notarize");
+    await generateLegalCertificate(req, res);
+  });
+
+  app.get("/api/certificates/:certificateId/verify", async (req: any, res) => {
+    const { verifyCertificate } = await import("./api/notarize");
+    await verifyCertificate(req, res);
+  });
+
+  app.get("/api/certificates/registry", isDebugAuthenticated, async (req: any, res) => {
+    const { getCertificateRegistry } = await import("./api/notarize");
+    await getCertificateRegistry(req, res);
+  });
+
   return httpServer;
 }
 

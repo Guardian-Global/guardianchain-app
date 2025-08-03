@@ -13,6 +13,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",
     "@google-cloud/storage": "^7.16.0",
+    "@headlessui/react": "^2.2.7",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@lit-protocol/auth-helpers": "^7.2.1",
