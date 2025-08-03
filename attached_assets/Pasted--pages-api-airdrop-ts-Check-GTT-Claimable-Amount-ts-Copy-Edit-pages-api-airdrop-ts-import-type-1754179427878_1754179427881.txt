@@ -1,0 +1,88 @@
+ /pages/api/airdrop.ts — Check GTT Claimable Amount
+ts
+Copy
+Edit
+// pages/api/airdrop.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+
+// Temporary mock database
+const AIRDROP_SNAPSHOT: Record<string, number> = {
+  "0x123...abc": 150,
+  "0x456...def": 250,
+  // Add actual addresses and amounts after snapshot
+};
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { wallet } = req.query;
+  if (!wallet || typeof wallet !== "string") {
+    return res.status(400).json({ error: "Missing wallet" });
+  }
+
+  const amount = AIRDROP_SNAPSHOT[wallet.toLowerCase()] || 0;
+  res.status(200).json({ amount });
+}
+2️⃣ /pages/api/claim.ts — Claim Handler
+ts
+Copy
+Edit
+// pages/api/claim.ts
+import type { NextApiRequest, NextApiResponse } from "next";
+// Optionally connect to on-chain logic or database
+
+const claimedWallets = new Set<string>();
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "POST") return res.status(405).end();
+
+  const { wallet } = req.body;
+  if (!wallet || typeof wallet !== "string") {
+    return res.status(400).json({ error: "Missing wallet" });
+  }
+
+  const normalized = wallet.toLowerCase();
+  if (claimedWallets.has(normalized)) {
+    return res.status(200).json({ success: false, message: "Already claimed" });
+  }
+
+  // TODO: Add contract claim interaction here if needed
+  claimedWallets.add(normalized);
+  console.log("✅ Claimed by:", normalized);
+
+  return res.status(200).json({ success: true });
+}
+⚠️ Upgrade Option: Connect this to a Supabase table or run ethers interaction with your deployed airdrop smart contract.
+
+3️⃣ .env.base — Sample Config File
+dotenv
+Copy
+Edit
+# Base RPC
+NEXT_PUBLIC_BASE_RPC=https://mainnet.base.org
+NEXT_PUBLIC_BASESCAN=https://basescan.org
+
+# Smart Contract
+NEXT_PUBLIC_GTT_CONTRACT_BASE=0xYourGTTContractAddress
+
+# Wallet & Chain
+NEXT_PUBLIC_CHAIN_ID=8453
+PRIVATE_KEY=your_wallet_private_key
+
+# Supabase / Auth
+SUPABASE_URL=https://your.supabase.co
+SUPABASE_ANON_KEY=your_public_key
+4️⃣ veritas-sync/base.registry.ts — Veritas Chain Registry Module
+ts
+Copy
+Edit
+// veritas-sync/base.registry.ts
+export const BaseRegistry = {
+  network: "Base",
+  chainId: 8453,
+  griefScoreOracle: "0xOracleAddress",
+  capsuleContract: "0xCapsuleContractOnBase",
+  gttVault: "0xGTTVaultOnBase",
+  veritasRootCID: "QmIPFSCapsuleRoot",
+  explorer: "https://basescan.org/address",
+};
+Use this to route capsule creation, griefScore yield calculation, and sealing based on chainId dynamically across Polygon and Base.
+

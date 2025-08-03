@@ -41,18 +41,32 @@ export const getQueryFn: <T>(options: {
     return await res.json();
   };
 
+// Enhanced global queryFn that handles all API routes properly
+const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
+  const url = typeof queryKey[0] === "string" ? queryKey[0] : "/";
+  const res = await fetch(url, {
+    credentials: "include",
+  });
+  
+  if (!res.ok) {
+    throw new Error(`${res.status}: ${res.statusText}`);
+  }
+  
+  return res.json();
+};
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
+      queryFn: defaultQueryFn,
       refetchInterval: false,
       refetchOnWindowFocus: false,
-      refetchOnMount: false, // Prevent unnecessary refetches
-      refetchOnReconnect: false, // Prevent reconnect refetches
-      staleTime: 10 * 60 * 1000, // 10 minutes default
-      gcTime: 20 * 60 * 1000, // 20 minutes garbage collection
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 20 * 60 * 1000, // 20 minutes
       retry: false,
-      networkMode: "online", // Only query when online
+      networkMode: "online",
     },
     mutations: {
       retry: false,

@@ -47,7 +47,7 @@ const mockSupabaseClient = {
 const openai =
   typeof window === "undefined"
     ? new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY || "demo-key",
+        apiKey: import.meta.env.VITE_OPENAI_API_KEY || "demo-key",
       })
     : null;
 

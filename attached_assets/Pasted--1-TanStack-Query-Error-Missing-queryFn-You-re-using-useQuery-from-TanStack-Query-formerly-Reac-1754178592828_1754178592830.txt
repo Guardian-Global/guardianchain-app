@@ -1,0 +1,119 @@
+✅ 1. TanStack Query Error – Missing queryFn
+You're using useQuery from TanStack Query (formerly React Query) without providing a queryFn — and also not using a global default query function.
+
+🔥 The error:
+pgsql
+Copy
+Edit
+No queryFn was passed as an option, and no default queryFn was found
+✅ 🔧 FIX:
+Anywhere you use:
+
+ts
+Copy
+Edit
+useQuery(["/api/auth/user"])
+Replace it with:
+
+ts
+Copy
+Edit
+useQuery({
+  queryKey: ["/api/auth/user"],
+  queryFn: async () => {
+    const res = await fetch("/api/auth/user");
+    if (!res.ok) throw new Error("Failed to fetch user");
+    return res.json();
+  },
+})
+Do this also for:
+
+/api/token/live-data
+
+Any other API route
+
+✅ OPTIONAL: Set a Global queryFn (advanced)
+If you prefer not repeating the queryFn, set a default like this:
+
+ts
+Copy
+Edit
+import { QueryClient } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryFn: async ({ queryKey }) => {
+        const url = typeof queryKey[0] === "string" ? queryKey[0] : "/";
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Fetch failed");
+        return res.json();
+      },
+    },
+  },
+});
+Then wrap your app in:
+
+tsx
+Copy
+Edit
+<QueryClientProvider client={queryClient}>
+  <YourApp />
+</QueryClientProvider>
+✅ 2. MetaMask Connection Error
+pgsql
+Copy
+Edit
+Failed to connect to MetaMask
+🔗 Trying RPC: https://polygon-rpc.com
+This likely occurs because:
+
+User rejected the connection
+
+App tried to connect before MetaMask injected window.ethereum
+
+You’re calling connect() too early
+
+🔧 FIX: Debounced MetaMask connect with fallback + user guard
+ts
+Copy
+Edit
+import { useEffect } from "react";
+import { useAccount, useConnect } from "wagmi";
+
+export function useWalletConnect() {
+  const { address, isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
+
+  useEffect(() => {
+    const tryConnect = async () => {
+      if (!isConnected && window.ethereum) {
+        try {
+          await connect({ connector: connectors[0] });
+        } catch (err) {
+          console.warn("User rejected MetaMask:", err);
+        }
+      }
+    };
+
+    // Wait for window.ethereum to be injected
+    setTimeout(tryConnect, 500);
+  }, []);
+}
+Or use wagmi's autoConnect: true in config:
+
+ts
+Copy
+Edit
+createClient({
+  autoConnect: true,
+  connectors: [injected()],
+  provider: jsonRpcProvider({
+    rpc: () => ({ http: "https://polygon-rpc.com" }),
+  }),
+})
+✅ Final Fix Summary
+Problem	Fix
+No queryFn errors	Use explicit queryFn in all useQuery or set global
+MetaMask connect fail	Debounce connection or wait for window.ethereum injection
+/api/auth/user fails repeatedly	Check server-side /api/auth/user handler returns JSON with correct headers & 200

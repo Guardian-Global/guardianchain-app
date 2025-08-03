@@ -1,0 +1,141 @@
+1️⃣ /claim Portal UI — pages/claim.tsx
+tsx
+Copy
+Edit
+// pages/claim.tsx
+import { useEffect, useState } from "react";
+
+export default function ClaimGTT() {
+  const [wallet, setWallet] = useState("");
+  const [claimable, setClaimable] = useState(0);
+  const [status, setStatus] = useState("");
+
+  const fetchClaimable = async () => {
+    const res = await fetch(`/api/airdrop?wallet=${wallet}`);
+    const data = await res.json();
+    setClaimable(data.amount || 0);
+  };
+
+  const handleClaim = async () => {
+    const res = await fetch(`/api/claim`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ wallet }),
+    });
+    const data = await res.json();
+    setStatus(data.success ? "✅ Claimed!" : "❌ Error");
+  };
+
+  return (
+    <div className="p-8 max-w-md mx-auto">
+      <h1 className="text-xl font-bold mb-4">🎁 Claim GTT Airdrop</h1>
+      <input
+        type="text"
+        value={wallet}
+        onChange={(e) => setWallet(e.target.value)}
+        placeholder="Enter wallet address"
+        className="p-2 w-full border rounded mb-4"
+      />
+      <button onClick={fetchClaimable} className="px-4 py-2 bg-blue-600 text-white rounded">
+        Check Amount
+      </button>
+      {claimable > 0 && (
+        <div className="mt-4">
+          <p>💰 You can claim: {claimable} GTT</p>
+          <button onClick={handleClaim} className="mt-2 px-4 py-2 bg-green-600 text-white rounded">
+            Claim Now
+          </button>
+        </div>
+      )}
+      {status && <p className="mt-4 text-sm text-gray-600">{status}</p>}
+    </div>
+  );
+}
+2️⃣ Updated /capsules Page to Filter by chainId
+tsx
+Copy
+Edit
+// pages/capsules.tsx
+import { useState, useEffect } from "react";
+
+export default function Capsules() {
+  const [capsules, setCapsules] = useState([]);
+  const [chain, setChain] = useState("all");
+
+  useEffect(() => {
+    const url = chain === "all" ? "/api/capsules" : `/api/capsules?chain=${chain}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then(setCapsules);
+  }, [chain]);
+
+  return (
+    <div className="p-8">
+      <h1 className="text-xl font-bold mb-4">📦 Capsules</h1>
+      <select
+        value={chain}
+        onChange={(e) => setChain(e.target.value)}
+        className="mb-4 p-2 border rounded"
+      >
+        <option value="all">All Chains</option>
+        <option value="137">Polygon</option>
+        <option value="8453">Base</option>
+      </select>
+      <ul className="space-y-4">
+        {capsules.map((c) => (
+          <li key={c.id} className="p-4 border rounded">
+            <p>📌 {c.title}</p>
+            <p>🧠 Chain ID: {c.chain_id}</p>
+            <p>🗂️ griefScore: {c.grief_score}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+3️⃣ deployBaseGTT.ts — Smart Contract Deployer for Base
+ts
+Copy
+Edit
+// scripts/deployBaseGTT.ts
+import { ethers } from "hardhat";
+
+async function main() {
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying GTT with account:", deployer.address);
+
+  const GTT = await ethers.getContractFactory("GTT");
+  const gtt = await GTT.deploy();
+  await gtt.deployed();
+
+  console.log("GTT deployed to Base at:", gtt.address);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
+Make sure your hardhat.config.ts includes:
+
+ts
+Copy
+Edit
+base: {
+  url: "https://mainnet.base.org",
+  accounts: [process.env.PRIVATE_KEY],
+},
+🤖 REPLIT AI AGENT DEPLOYMENT PROMPT
+bash
+Copy
+Edit
+🧠 REPLIT AGENT COMMAND: BASECHAIN GUARDIAN EXPANSION
+
+1. Add `/pages/claim.tsx` — GTT airdrop claim portal UI
+2. Modify `/pages/capsules.tsx` to filter by `chainId` (Polygon = 137, Base = 8453)
+3. Create `scripts/deployBaseGTT.ts` — deploy GTT smart contract on Base
+4. Confirm hardhat.config.ts has Base network RPC and signer setup
+5. Ensure `.env` has `PRIVATE_KEY` and `NEXT_PUBLIC_BASE_RPC` configured
+6. Add `/api/airdrop` and `/api/claim` API endpoints to serve claim logic
+7. Push to Vercel / Replit with multi-chain mint and yield support enabled
+
+Objective: Launch GuardianChain on Base network with claim UI, capsule filtering, and token deployment ac

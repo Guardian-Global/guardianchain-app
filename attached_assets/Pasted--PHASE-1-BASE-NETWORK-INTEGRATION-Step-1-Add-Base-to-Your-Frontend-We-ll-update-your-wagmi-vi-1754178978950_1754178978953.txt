@@ -1,0 +1,103 @@
+🚀 PHASE 1: BASE NETWORK INTEGRATION
+✅ Step 1: Add Base to Your Frontend
+We'll update your wagmi, viem, or ethers config to support Base:
+
+ts
+Copy
+Edit
+// lib/chains.ts
+import { base } from "viem/chains";
+
+export const chains = [base, polygon]; // now multi-chain
+✅ Step 2: Add Coinbase Wallet Support
+If you're using RainbowKit or wagmi:
+
+ts
+Copy
+Edit
+import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
+
+const connectors = connectorsForWallets([
+  {
+    groupName: "Recommended",
+    wallets: [coinbaseWallet({ chains, appName: "GuardianChain" })],
+  },
+]);
+✅ Step 3: Set RPCs + ENV
+env
+Copy
+Edit
+NEXT_PUBLIC_BASE_RPC=https://mainnet.base.org
+NEXT_PUBLIC_BASESCAN=https://basescan.org
+NEXT_PUBLIC_COINBASE_API_KEY=your_key
+📦 PHASE 2: CONTRACT DEPLOYMENT ON BASE
+✅ Step 1: Update hardhat.config.ts
+ts
+Copy
+Edit
+import { defineConfig } from "hardhat/config";
+
+export default defineConfig({
+  solidity: "0.8.20",
+  networks: {
+    base: {
+      url: "https://mainnet.base.org",
+      accounts: [process.env.PRIVATE_KEY],
+    },
+  },
+});
+✅ Step 2: Deploy your GTT token or capsule contract
+bash
+Copy
+Edit
+npx hardhat run scripts/deploy.ts --network base
+You’ll get back your:
+
+GTT_BASE_ADDRESS
+
+CAPSULE_CONTRACT_BASE
+
+These get saved into .env and used in frontend/backend logic.
+
+🧠 PHASE 3: UI + YIELD + CAPSULE ADJUSTMENTS
+✅ Step 1: Auto-detect Chain for Yield + Unlock
+ts
+Copy
+Edit
+if (chain.id === base.id) {
+  // Load Base-specific vault logic
+}
+✅ Step 2: Adjust Capsule Minting Metadata
+json
+Copy
+Edit
+{
+  "network": "base",
+  "griefScore": 8,
+  "sealedBy": "VCW–00000",
+  "veritasLink": "ipfs://CID",
+  "chainId": 8453
+}
+✅ Step 3: Enable “Mint on Base” in UI toggle
+tsx
+Copy
+Edit
+<select onChange={(e) => setTargetChain(e.target.value)}>
+  <option value="polygon">Polygon</option>
+  <option value="base">Base</option>
+</select>
+📁 YOUR BASE INTEGRATION PACK
+✅ I’ll now generate your:
+
+deployBaseGTT.ts (smart contract deployer)
+
+base.config.ts (frontend settings)
+
+CapsuleMintBase.tsx (Base-aware capsule UI)
+
+.env.base template
+
+README_BASE_DEPLOY.md
+
+🧾 Optional: I can also write your Base grant application and Capsule Airdrop Campaign for Base if you say so.
+

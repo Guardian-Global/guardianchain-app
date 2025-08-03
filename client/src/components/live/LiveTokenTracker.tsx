@@ -21,11 +21,21 @@ export const LiveTokenTracker: React.FC<LiveTokenTrackerProps> = ({
   position = "top-right",
   className
 }) => {
-  // Fetch live GTT token data
+  // Fetch live GTT token data with explicit queryFn
   const { data: tokenData, isLoading } = useQuery<TokenData>({
     queryKey: ["/api/token/live-data"],
+    queryFn: async () => {
+      const response = await fetch("/api/token/live-data", {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error(`${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    },
     refetchInterval: 30000, // Update every 30 seconds
-    staleTime: 25000
+    staleTime: 25000,
+    retry: false,
   });
 
   const positionClasses = {

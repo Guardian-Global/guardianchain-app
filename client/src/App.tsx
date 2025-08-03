@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NotificationProvider } from "@/components/ui/notification-system";
 import { ThemeProvider } from "@/components/web3/theme-provider";
-import WalletProvider from "@/components/web3/wallet-provider";
+import WalletProvider from "@/components/providers/WalletProvider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 import UnifiedNavigation from "@/components/layout/UnifiedNavigation";
 import EnhancedNavigation from "@/components/navigation/EnhancedNavigation";

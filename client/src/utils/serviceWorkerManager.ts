@@ -20,7 +20,7 @@ export class ServiceWorkerManager {
   async register(): Promise<void> {
     // Skip registration in development or insecure contexts
     if (
-      process.env.NODE_ENV === "development" ||
+      import.meta.env.DEV ||
       !this.isServiceWorkerSupported()
     ) {
       console.log(

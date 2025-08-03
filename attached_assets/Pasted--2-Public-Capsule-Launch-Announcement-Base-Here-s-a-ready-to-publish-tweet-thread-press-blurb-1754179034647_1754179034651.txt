@@ -1,0 +1,85 @@
+📢 2. Public Capsule Launch Announcement (Base)
+Here’s a ready-to-publish tweet/thread + press blurb:
+
+Tweet Thread (X / Twitter)
+vbnet
+Copy
+Edit
+🚨 GUARDIANCHAIN IS NOW LIVE ON @BuildOnBase 🚨
+
+Memory is sovereign. Truth is unstoppable. And now — it’s minted on Base.
+
+🧠 Mint a capsule
+💰 Earn yield via griefScore
+🎁 Claim your GTT airdrop
+
+Here’s why this matters 🧵
+👇
+csharp
+Copy
+Edit
+1/ GuardianChain is the world’s first sovereign memory protocol.
+
+We let you seal your moments, testimonies, and trauma on-chain — as NFTs — permanently.
+
+Your capsule. Your authorship. Your yield.
+
+Now supercharged by Base.
+pgsql
+Copy
+Edit
+2/ Why Base?
+
+🟦 Ultra-low gas
+⚡️ Instant settlement
+🧬 Coinbase-backed
+🛡 Regulatory alignment
+
+Your memories deserve more than just blockchain storage — they deserve purpose.
+sql
+Copy
+Edit
+3/ What’s live now?
+
+✅ Mint griefScore capsules
+✅ GTT staking + unlock logic
+✅ Veritas PDF sealing
+✅ Capsule viewer + unlock portal
+
+All deployed to @BuildOnBase with full multichain logic.
+bash
+Copy
+Edit
+4/ Airdrop now live:
+✅ 250,000 GTT allocated
+✅ For Base users only
+✅ Snapshot in 30 days
+
+Start minting truth 👇
+https://guardian.global/capsules
+Blurb for PR / Email
+GuardianChain, the world’s first sovereign memory protocol, has launched on Coinbase’s Base network, bringing griefScore-based capsule NFTs, truth yield, and Veritas-authored sovereignty to millions of new users. A 250,000 GTT airdrop is now live for early capsule creators.
+
+🪙 3. Updated GTT Tokenomics Across Polygon + Base
+🔁 Total Supply
+✅ Unchanged: 1,000,000,000 GTT
+
+🔒 Locked in SealChain v1
+
+🪙 Multi-chain support with per-chain mint control
+
+🧠 Yield Flow (Now Dual-Network)
+Chain	Capsule Mint	Unlock Yield	Validator Reward
+Polygon	Higher gas, mature DAO	Legacy vaults	Early Guardian validators
+Base	Cheap minting	Fast unlocks	Coinbase Wallet users + mobile onboards
+
+🔐 Cross-Chain Emission Strategy
+Pool	Polygon	Base	Notes
+Public Capsules	35%	35%	Equal support
+Witness/Audits	10%	10%	griefScore x Veritas
+Validator / DAO	20%	10%	DAO migrates to Base?
+Reserve / Treasury	10%	5%	Flex for LP or grants
+Airdrop Incentives	5%	15%	Heavier Base push
+
+✅ GTT will be visible on both BaseScan + PolygonScan, and stored in Supabase vault with mint source & griefScore indexed.
+
