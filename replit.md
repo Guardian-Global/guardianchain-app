@@ -48,6 +48,7 @@ Preferred communication style: Simple, everyday language.
 - **DAO Governance**: GTT-weighted voting system, advanced DAO vault disbursement with automated weekly distribution, validator reward pools, and comprehensive incentive programs, including multichain staking.
 - **Financial Engine**: Tier management, treasury monitoring, AI business intelligence, compliance, and a donation platform, with sophisticated validator rewards tracking.
 - **Enhanced Analytics**: Dynamic capsule analytics dashboard with yield tracking, emotional resonance scoring, AI-powered insights, and an EnhancedEmotionHeatmap for community emotion visualization. Includes AI-powered capsule clustering.
+- **GTT Rewards System**: Comprehensive token economics with engagement + velocity × 1.5 yield calculation, live leaderboards showing theme performance rankings, and real-time reward distribution tracking across emotional clusters.
 - **Advanced AI Integration**: GPT-4o powered ecosystem for intelligent content generation (EnhancedCapsuleAIComposer), real-time transcription and emotional analysis (EnhancedVoiceCapsuleRecorder), recommendation engines, and content verification.
 - **Navigation**: Next-generation navigation with quantum-enhanced visual effects, floating sidebar, mobile bottom bar, role-based menu visibility, and real-time notifications.
 - **Reels System**: Curation of named capsule collections with voice summaries and multilingual support.
