@@ -6098,6 +6098,17 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   const enterpriseRoutes = await import("./routes/enterprise");
   app.use("/api/enterprise", enterpriseRoutes.default);
 
+  // Revenue sharing endpoints
+  app.get("/api/revenue-sharing/policy", async (req, res) => {
+    const { getRevenueSharingPolicy } = await import("./routes/revenue-sharing");
+    return getRevenueSharingPolicy(req, res);
+  });
+
+  app.post("/api/revenue-sharing/calculate", async (req, res) => {
+    const { calculatePotentialEarnings } = await import("./routes/revenue-sharing");
+    return calculatePotentialEarnings(req, res);
+  });
+
   const httpServer = createServer(app);
   // Truth Genome API routes
   app.get("/api/truth-genome/:capsuleId", isDebugAuthenticated, async (req: any, res) => {
