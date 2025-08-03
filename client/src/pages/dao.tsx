@@ -37,6 +37,8 @@ import ValidatorRegistry from "@/components/dao/ValidatorRegistry";
 import WitnessBoard from "@/components/dao/WitnessBoard";
 import LicenseVerifier from "@/components/dao/LicenseVerifier";
 import MultisigVault from "@/components/dao/MultisigVault";
+import MultichainStaking from "@/components/dao/MultichainStaking";
+import AuditLogs from "@/components/dao/AuditLogs";
 import { useAuth } from "@/hooks/useAuth";
 
 const proposalSchema = z.object({
@@ -185,54 +187,66 @@ export default function DAOPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="proposals" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-brand-surface text-xs">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 bg-brand-surface text-xs">
             <TabsTrigger
               value="proposals"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Proposals
             </TabsTrigger>
             <TabsTrigger
               value="rankings"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Rankings
             </TabsTrigger>
             <TabsTrigger
               value="yields"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Yields
             </TabsTrigger>
             <TabsTrigger
               value="redeem"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Redeem
             </TabsTrigger>
             <TabsTrigger
               value="validators"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Validators
             </TabsTrigger>
             <TabsTrigger
               value="witnesses"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Witnesses
             </TabsTrigger>
             <TabsTrigger
               value="licenses"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Licenses
             </TabsTrigger>
             <TabsTrigger
               value="vault"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
             >
               Vault
+            </TabsTrigger>
+            <TabsTrigger
+              value="staking"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
+            >
+              Staking
+            </TabsTrigger>
+            <TabsTrigger
+              value="audit"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-1"
+            >
+              Audit
             </TabsTrigger>
           </TabsList>
 
@@ -428,6 +442,14 @@ export default function DAOPage() {
 
           <TabsContent value="vault" className="space-y-6">
             <MultisigVault />
+          </TabsContent>
+
+          <TabsContent value="staking" className="space-y-6">
+            <MultichainStaking />
+          </TabsContent>
+
+          <TabsContent value="audit" className="space-y-6">
+            <AuditLogs />
           </TabsContent>
 
           <TabsContent value="certificates" className="space-y-6">

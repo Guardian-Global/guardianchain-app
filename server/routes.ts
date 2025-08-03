@@ -3735,6 +3735,235 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     }
   });
 
+  // Multichain Performance endpoint
+  app.get("/api/dao/multichain-performance", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🌐 Multichain performance requested");
+      
+      const mockMultichainData = [
+        {
+          name: "TruthSeeker Alpha",
+          chain: "Ethereum",
+          capsules: 1247,
+          reputation: 9850,
+          stakingRewards: 15420,
+          isActive: true
+        },
+        {
+          name: "VerityGuard Prime", 
+          chain: "Polygon",
+          capsules: 987,
+          reputation: 8920,
+          stakingRewards: 12890,
+          isActive: true
+        },
+        {
+          name: "ChainWarden Beta",
+          chain: "Base",
+          capsules: 756,
+          reputation: 7650,
+          stakingRewards: 9870,
+          isActive: false
+        },
+        {
+          name: "DataKeeper Gamma",
+          chain: "Arbitrum",
+          capsules: 623,
+          reputation: 6890,
+          stakingRewards: 7650,
+          isActive: true
+        },
+        {
+          name: "CryptoSentinel Delta",
+          chain: "Ethereum",
+          capsules: 1456,
+          reputation: 10120,
+          stakingRewards: 18750,
+          isActive: true
+        }
+      ];
+      
+      res.json(mockMultichainData);
+    } catch (error) {
+      console.error("❌ Failed to get multichain performance:", error);
+      res.status(500).json({ error: "Failed to fetch multichain performance" });
+    }
+  });
+
+  // Staking Statistics endpoint
+  app.get("/api/staking/stats", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📊 Staking statistics requested");
+      
+      const mockStakingStats = {
+        totalStaked: 847230,
+        rewardsDistributed: 156890,
+        activeValidators: 47,
+        supportedChains: 4,
+        aprRate: 12.5,
+        totalStakers: 2341
+      };
+      
+      res.json(mockStakingStats);
+    } catch (error) {
+      console.error("❌ Failed to get staking stats:", error);
+      res.status(500).json({ error: "Failed to fetch staking stats" });
+    }
+  });
+
+  // Staking Mint endpoint
+  app.post("/api/staking/mint", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { wallet, amount, chain } = req.body;
+      console.log("🪙 Staking mint requested:", { wallet: wallet.substring(0, 10) + "...", amount, chain });
+      
+      if (!wallet || !amount || amount <= 0) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Invalid staking parameters" 
+        });
+      }
+
+      // Mock staking logic
+      const stakingResult = {
+        success: true,
+        message: `Successfully staked ${amount} GTT on ${chain}`,
+        transactionHash: `0x${Math.random().toString(16).substring(2, 66)}`,
+        stakingId: `stake_${Date.now()}`,
+        estimatedRewards: Math.floor(amount * 0.125), // 12.5% APR
+        unlockDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      };
+      
+      res.json(stakingResult);
+    } catch (error) {
+      console.error("❌ Failed to process staking:", error);
+      res.status(500).json({ error: "Failed to process staking" });
+    }
+  });
+
+  // Audit Logs endpoint
+  app.get("/api/audit/logs", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📜 Audit logs requested");
+      
+      const mockAuditLogs = [
+        {
+          id: "audit_001",
+          event: "DAO Proposal #47 Approved",
+          timestamp: "2 hours ago",
+          validator: "TruthSeeker Alpha",
+          transactionHash: "0xa1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456",
+          eventType: "proposal",
+          chainId: "ethereum-1",
+          gasUsed: 145280,
+          details: "Proposal for validator reward increase passed with 87% approval",
+          severity: "medium"
+        },
+        {
+          id: "audit_002",
+          event: "Weekly Disbursement Executed",
+          timestamp: "6 hours ago",
+          validator: "MultisigVault Contract",
+          transactionHash: "0xb2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567a",
+          eventType: "disbursement",
+          chainId: "polygon-137",
+          gasUsed: 89760,
+          details: "125,000 GTT distributed to validator reward pool",
+          severity: "high"
+        },
+        {
+          id: "audit_003",
+          event: "License Verification Completed",
+          timestamp: "1 day ago",
+          validator: "LegalTech Validators",
+          transactionHash: "0xc3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567ab2",
+          eventType: "validation",
+          chainId: "base-8453",
+          gasUsed: 67340,
+          details: "Commercial license verified for capsule cap_abc123",
+          severity: "low"
+        },
+        {
+          id: "audit_004",
+          event: "Critical Security Alert",
+          timestamp: "2 days ago",
+          validator: "Security Monitor",
+          transactionHash: "0xd4e5f6789012345678901234567890abcdef1234567890abcdef1234567ab2c3",
+          eventType: "multisig",
+          chainId: "arbitrum-42161",
+          gasUsed: 234560,
+          details: "Suspicious multisig transaction detected and blocked",
+          severity: "critical"
+        },
+        {
+          id: "audit_005",
+          event: "Validator Reputation Update",
+          timestamp: "3 days ago",
+          validator: "ReputationOracle",
+          transactionHash: "0xe5f6789012345678901234567890abcdef1234567890abcdef1234567ab2c3d4",
+          eventType: "validation",
+          chainId: "ethereum-1",
+          gasUsed: 54320,
+          details: "Validator VerityGuard Prime reputation increased to 8920",
+          severity: "low"
+        },
+        {
+          id: "audit_006",
+          event: "Community Vote Recorded",
+          timestamp: "4 days ago",
+          validator: "VotingContract",
+          transactionHash: "0xf6789012345678901234567890abcdef1234567890abcdef1234567ab2c3d4e5",
+          eventType: "vote",
+          chainId: "polygon-137",
+          gasUsed: 43210,
+          details: "Vote cast on witness testimony witness_001 verification",
+          severity: "medium"
+        }
+      ];
+      
+      res.json(mockAuditLogs);
+    } catch (error) {
+      console.error("❌ Failed to get audit logs:", error);
+      res.status(500).json({ error: "Failed to fetch audit logs" });
+    }
+  });
+
+  // Attestation Sync endpoint  
+  app.get("/api/sync/attestations", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🔁 Attestation sync requested");
+      
+      const mockAttestations = [
+        {
+          capsuleId: "cap_abc123",
+          chains: ["Ethereum", "Polygon"],
+          validator: "TruthSeeker Alpha",
+          attestedAt: "2024-08-03T19:30:00Z",
+          crossChainVerified: true
+        },
+        {
+          capsuleId: "cap_def456",
+          chains: ["Base", "Arbitrum"],
+          validator: "VerityGuard Prime",
+          attestedAt: "2024-08-03T18:45:00Z",
+          crossChainVerified: true
+        },
+        {
+          capsuleId: "cap_ghi789",
+          chains: ["Ethereum", "Base", "Polygon"],
+          validator: "ChainWarden Beta",
+          attestedAt: "2024-08-03T17:20:00Z",
+          crossChainVerified: false
+        }
+      ];
+      
+      res.json(mockAttestations);
+    } catch (error) {
+      console.error("❌ Failed to get attestations:", error);
+      res.status(500).json({ error: "Failed to fetch attestations" });
+    }
+  });
+
   // Get all proposals with voting data
   app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
     console.log("🏛️ DAO proposals requested");
