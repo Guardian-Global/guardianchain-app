@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "wouter";
+import { Github } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -18,6 +19,17 @@ export default function Footer() {
             Learn More
           </span>
         </Link>
+        <span>•</span>
+        <a
+          href="https://guardian-global.github.io/guardianchain_app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-1 text-blue-400 hover:text-blue-200 transition-colors underline"
+          style={{ display: 'inline-flex' }}
+        >
+          <Github className="w-4 h-4" />
+          <span>📊 Partner Portal</span>
+        </a>
       </p>
     </footer>
   );
