@@ -25,8 +25,10 @@ import {
   TypingAnimation,
 } from "@/components/interactions/MicroInteractions";
 import { useUserTier } from "@/hooks/useUserTier";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function VaultPage() {
+  const { user, isAuthenticated } = useAuth();
   const { tier, tierDisplayName, isPremium, canAccessVeritasTools, gttLimit } =
     useUserTier();
 

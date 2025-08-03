@@ -45,6 +45,19 @@
 - **Limited Features**: Missing shortcuts, screenshots, and protocol handlers
 - **Poor Theme**: Generic yellow theme instead of GuardianChain's quantum purple/cyan
 
+## Vault Architecture Hierarchy (CONFIRMED SUPERIOR)
+
+### ✅ Primary Vault System
+1. **EnhancedVault.tsx** (/vault) - **MAIN INTERFACE** - Advanced yield calculations with grief score bonuses
+2. **vault.tsx** - **MARKETING PAGE** - Professional promotional content for unauthenticated users
+3. **memory-vault.tsx** - **SPECIALIZED** - Legacy memory features and time-locked content
+4. **truth-vault-dashboard.tsx** - **ANALYTICS** - Comprehensive yield analytics and dashboard
+5. **capsules/vault.tsx** - **ARCHIVE BROWSER** - Capsule browsing and search functionality
+
+### ❌ Eliminated Inferior Files
+- **yield-vault.tsx** - DELETED - Redundant functionality, consolidated into EnhancedVault
+- **lib/auth.ts** - DELETED - Inferior NextAuth patterns replaced by superior Replit Auth
+
 ## Technical Architecture Advantages
 
 ### GuardianChain's Superior Features:
@@ -53,6 +66,8 @@
 3. **Lit Protocol Integration**: Advanced encryption for time-locked content
 4. **Grief Score Mechanics**: Sophisticated yield calculations based on truth validation
 5. **Tier-based Access**: Progressive feature unlocking system
+6. **Superior Vault Hierarchy**: Specialized vault components for distinct use cases
+7. **Zero LSP Errors**: Clean codebase with proper authentication patterns
 6. **Professional UI/UX**: Enterprise-grade design with quantum effects
 7. **Comprehensive API**: RESTful endpoints with proper error handling
 
