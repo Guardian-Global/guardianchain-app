@@ -32,6 +32,9 @@ const TruthNet = lazy(() => import("@/pages/TruthNet"));
 const Explorer = lazy(() => import("@/pages/Explorer"));
 const Start = lazy(() => import("@/pages/Start"));
 const Terms = lazy(() => import("@/pages/Terms"));
+const Pricing = lazy(() => import("@/pages/Pricing"));
+const Subscribe = lazy(() => import("@/pages/Subscribe"));
+const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -55,6 +58,8 @@ function Router() {
         <Route path="/explorer" component={Explorer} />
         <Route path="/terms" component={Terms} />
         <Route path="/start" component={Start} />
+        <Route path="/pricing" component={Pricing} />
+        <Route path="/subscribe/:tier" component={Subscribe} />
         <Route component={CleanHomepage} />
       </Switch>
     );
@@ -83,6 +88,7 @@ function Router() {
           >
             <Switch>
               <Route path="/dashboard" component={EnhancedDashboard} />
+              <Route path="/enterprise" component={EnterpriseCenter} />
               <Route path="/create" component={CreateCapsule} />
               <Route path="/profile" component={Profile} />
               <Route path="/truth-genome" component={TruthGenome} />
@@ -90,6 +96,8 @@ function Router() {
               <Route path="/explorer" component={Explorer} />
               <Route path="/start" component={Start} />
               <Route path="/terms" component={Terms} />
+              <Route path="/pricing" component={Pricing} />
+              <Route path="/subscribe/:tier" component={Subscribe} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

@@ -16,7 +16,8 @@ import {
   BarChart3,
   Coins,
   Clock,
-  Star
+  Star,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -39,6 +40,7 @@ const navigation: NavItem[] = [
 ];
 
 const analytics: NavItem[] = [
+  { label: 'Enhanced Dashboard', href: '/dashboard', icon: Zap, badge: 'Pro' },
   { label: 'Unlocks', href: '/dashboard/unlocks', icon: Clock },
   { label: 'Yield', href: '/dashboard/yield', icon: Coins },
   { label: 'Funding', href: '/dashboard/funding', icon: TrendingUp },
@@ -46,6 +48,7 @@ const analytics: NavItem[] = [
 ];
 
 const advanced: NavItem[] = [
+  { label: 'Enterprise Center', href: '/enterprise', icon: Crown, badge: 'New', tier: 'CREATOR' },
   { label: 'Governance', href: '/governance', icon: Users, tier: 'SEEKER' },
   { label: 'Veritas Tools', href: '/veritas-seal', icon: Shield, tier: 'CREATOR' },
   { label: 'Compliance', href: '/compliance', icon: FileText, tier: 'SOVEREIGN' },

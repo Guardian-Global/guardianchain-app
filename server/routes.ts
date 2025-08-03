@@ -18,6 +18,7 @@ import nftRouter from "./routes/nft";
 import vaultRouter from "./routes/vault";
 import { analyzeVoiceFile } from "./ai/voice-analysis";
 import { composeCapsule } from "./ai/capsule-composer";
+import { registerSubscriptionRoutes } from "./routes/subscription";
 import multer from "multer";
 import {
   distributeReplayYield,
@@ -6085,6 +6086,17 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
     res.json(mockData);
   });
+
+  // Register subscription routes
+  registerSubscriptionRoutes(app);
+
+  // Register enhanced dashboard routes
+  const enhancedDashboardRoutes = await import("./routes/enhancedDashboard");
+  app.use("/api/dashboard", enhancedDashboardRoutes.default);
+
+  // Register enterprise routes
+  const enterpriseRoutes = await import("./routes/enterprise");
+  app.use("/api/enterprise", enterpriseRoutes.default);
 
   const httpServer = createServer(app);
   // Truth Genome API routes

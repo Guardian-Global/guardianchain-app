@@ -45,7 +45,6 @@ import {
   Flame,
 } from "lucide-react";
 import { ObjectUploader } from "@/components/ObjectUploader";
-import { apiRequest } from "@/lib/queryClient";
 import { CapsuleVaultTimeline } from "@/components/CapsuleVaultTimeline";
 import { SaveNotificationProvider } from "@/components/SaveNotificationProvider";
 import FeaturedCapsulesManager from "@/components/profile/FeaturedCapsulesManager";
