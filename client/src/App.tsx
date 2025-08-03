@@ -29,6 +29,7 @@ const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const Profile = lazy(() => import("@/pages/profile"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
 const TruthNet = lazy(() => import("@/pages/TruthNet"));
+const Explorer = lazy(() => import("@/pages/Explorer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -49,6 +50,7 @@ function Router() {
       <Switch>
         <Route path="/" component={CleanHomepage} />
         <Route path="/elite" component={EliteHomepage} />
+        <Route path="/explorer" component={Explorer} />
         <Route component={CleanHomepage} />
       </Switch>
     );
@@ -81,6 +83,7 @@ function Router() {
               <Route path="/profile" component={Profile} />
               <Route path="/truth-genome" component={TruthGenome} />
               <Route path="/truth-net" component={TruthNet} />
+              <Route path="/explorer" component={Explorer} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

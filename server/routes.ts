@@ -74,6 +74,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/capsules/:id/share", shareCapsule);
   app.get("/api/capsules/:id/unlock", unlockCapsule);
 
+  // Truth Genome API routes
+  app.get("/api/truth-genome/:capsuleId", async (req, res) => {
+    const { analyzeTruthGenome } = await import("./api/truth-genome");
+    await analyzeTruthGenome(req, res);
+  });
+  app.get("/api/truth-genome/:capsuleId/report", async (req, res) => {
+    const { getTruthGenomeReport } = await import("./api/truth-genome");
+    await getTruthGenomeReport(req, res);
+  });
+
+  // Truth Net API routes
+  app.get("/api/truth-net", async (req, res) => {
+    const { getTruthNetwork } = await import("./api/truth-net");
+    await getTruthNetwork(req, res);
+  });
+  app.get("/api/truth-net/analytics", async (req, res) => {
+    const { getNetworkAnalytics } = await import("./api/truth-net");
+    await getNetworkAnalytics(req, res);
+  });
+  app.get("/api/truth-net/export", async (req, res) => {
+    const { exportTruthNetwork } = await import("./api/truth-net");
+    await exportTruthNetwork(req, res);
+  });
+
+  // Notarization API routes
+  app.post("/api/notarize", async (req, res) => {
+    const { notarizeCapsule } = await import("./api/notarize");
+    await notarizeCapsule(req, res);
+  });
+  app.get("/api/notarize/:notarizationId/proof", async (req, res) => {
+    const { getNotarizationProof } = await import("./api/notarize");
+    await getNotarizationProof(req, res);
+  });
+  app.get("/api/notarize/registry", async (req, res) => {
+    const { getCertificateRegistry } = await import("./api/notarize");
+    await getCertificateRegistry(req, res);
+  });
+
+  // Certificate API routes
+  app.post("/api/certificates/generate", async (req, res) => {
+    const { generatePDFCertificate } = await import("./api/certificates");
+    await generatePDFCertificate(req, res);
+  });
+  app.get("/api/certificates/:notarizationId/preview", async (req, res) => {
+    const { generateCertificatePreview } = await import("./api/certificates");
+    await generateCertificatePreview(req, res);
+  });
+  app.post("/api/certificates/verify", async (req, res) => {
+    const { verifyCertificateFromPDF } = await import("./api/certificates");
+    await verifyCertificateFromPDF(req, res);
+  });
+  app.get("/api/certificates/stats", async (req, res) => {
+    const { getCertificateStats } = await import("./api/certificates");
+    await getCertificateStats(req, res);
+  });
+
+  // Explorer API routes (for public access)
+  app.get("/api/explorer/stats", async (req, res) => {
+    const { getNetworkAnalytics } = await import("./api/truth-net");
+    await getNetworkAnalytics(req, res);
+  });
+
   // Enhanced AI endpoints for voice analysis and capsule composition
   app.post("/api/ai/voice-analysis", upload.single('audio'), async (req, res) => {
     try {

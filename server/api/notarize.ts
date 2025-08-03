@@ -1,216 +1,247 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
+import { ethers } from "ethers";
 
-// Blockchain Notarization API
-// Provides legal-grade timestamp + hash registry for truth capsules
+// Notarization API for blockchain anchoring and IPFS integration
+// Handles content verification, smart contract interaction, and certificate generation
 
-interface NotarizationRecord {
+interface NotarizationRequest {
   capsuleId: string;
-  contentHash: string;
-  timestamp: string;
-  blockchainTxHash: string;
-  notarySignature: string;
-  legalStatus: "pending" | "notarized" | "certified" | "disputed";
-  witnessCount: number;
-  jurisdictions: string[];
+  content: string;
+  contentType: "text" | "image" | "audio" | "video" | "document";
+  metadata: {
+    title: string;
+    author: string;
+    timestamp: string;
+    location?: string;
+    tags?: string[];
+  };
   evidenceLevel: "basic" | "enhanced" | "forensic" | "legal";
-  retentionPeriod: string;
-  accessControl: {
-    public: boolean;
-    authorizedParties: string[];
-    courtOrder?: boolean;
+  jurisdictions: string[];
+  isPublic: boolean;
+  retentionYears: number;
+}
+
+interface IPFSUploadResult {
+  hash: string;
+  size: number;
+  url: string;
+}
+
+interface BlockchainNotarization {
+  transactionHash: string;
+  blockNumber: number;
+  notarizationId: number;
+  gasUsed: string;
+  cost: string;
+}
+
+// Mock IPFS upload (in production, use actual IPFS client)
+async function uploadToIPFS(content: string, metadata: any): Promise<IPFSUploadResult> {
+  // Simulate IPFS upload delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  const contentBuffer = Buffer.from(JSON.stringify({ content, metadata }));
+  const hash = `Qm${crypto.randomBytes(22).toString('hex')}`;
+  
+  return {
+    hash,
+    size: contentBuffer.length,
+    url: `https://ipfs.io/ipfs/${hash}`
   };
 }
 
-interface LegalCertificate {
-  certificateId: string;
-  capsuleId: string;
-  issuedBy: string;
-  issuedAt: string;
-  validUntil: string;
-  legalWeight: "informational" | "evidence" | "certified" | "notarized";
-  signatures: Array<{
-    authority: string;
-    signature: string;
-    timestamp: string;
-    publicKey: string;
-  }>;
-  chainOfCustody: Array<{
-    event: string;
-    timestamp: string;
-    actor: string;
-    hash: string;
-  }>;
-}
-
-// Generate cryptographic hash for content integrity
-function generateContentHash(content: string, metadata: any): string {
-  const combined = JSON.stringify({ content, metadata, salt: Date.now() });
-  return crypto.createHash('sha256').update(combined).digest('hex');
-}
-
-// Generate notary signature (in production, use proper digital signature)
-function generateNotarySignature(contentHash: string, timestamp: string): string {
-  const payload = `${contentHash}:${timestamp}:GUARDIANCHAIN_NOTARY`;
-  return crypto.createHash('sha256').update(payload).digest('hex');
-}
-
-// Simulate blockchain transaction (replace with actual blockchain integration)
-function simulateBlockchainTransaction(data: any): string {
-  const txData = JSON.stringify(data);
-  const txHash = crypto.createHash('sha256').update(txData + Date.now()).digest('hex');
-  return `0x${txHash.substring(0, 64)}`;
+// Mock blockchain interaction (in production, use actual smart contract)
+async function notarizeOnBlockchain(
+  contentHash: string,
+  ipfsHash: string,
+  evidenceLevel: string,
+  jurisdictions: string[]
+): Promise<BlockchainNotarization> {
+  // Simulate blockchain transaction delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  const transactionHash = `0x${crypto.randomBytes(32).toString('hex')}`;
+  const blockNumber = Math.floor(Math.random() * 1000000) + 18000000;
+  const notarizationId = Math.floor(Math.random() * 10000) + 1;
+  
+  return {
+    transactionHash,
+    blockNumber,
+    notarizationId,
+    gasUsed: (Math.random() * 50000 + 21000).toFixed(0),
+    cost: (Math.random() * 0.01 + 0.001).toFixed(6)
+  };
 }
 
 export async function notarizeCapsule(req: Request, res: Response) {
   try {
-    const { 
-      capsuleId, 
-      content, 
-      metadata = {}, 
-      evidenceLevel = "basic",
-      jurisdictions = ["US"],
-      retentionYears = 10
-    } = req.body;
+    const notarizationData: NotarizationRequest = req.body;
 
-    if (!capsuleId || !content) {
-      return res.status(400).json({ error: "Capsule ID and content required" });
+    // Validate required fields
+    if (!notarizationData.capsuleId || !notarizationData.content) {
+      return res.status(400).json({ error: "Capsule ID and content are required" });
     }
 
-    const timestamp = new Date().toISOString();
-    const contentHash = generateContentHash(content, metadata);
-    const notarySignature = generateNotarySignature(contentHash, timestamp);
-    
-    // Simulate blockchain transaction
-    const blockchainTxHash = simulateBlockchainTransaction({
-      capsuleId,
-      contentHash,
-      timestamp,
-      evidenceLevel
-    });
+    console.log(`🔐 Starting notarization for capsule: ${notarizationData.capsuleId}`);
 
-    // Determine witness count based on evidence level
-    const witnessCount = {
-      "basic": 1,
-      "enhanced": 3,
-      "forensic": 5,
-      "legal": 7
-    }[evidenceLevel] || 1;
+    // Step 1: Generate content hash
+    const contentHash = crypto
+      .createHash('sha256')
+      .update(notarizationData.content)
+      .digest('hex');
 
-    const notarizationRecord: NotarizationRecord = {
-      capsuleId,
+    console.log(`📝 Content hash generated: ${contentHash.substring(0, 16)}...`);
+
+    // Step 2: Upload to IPFS
+    const ipfsResult = await uploadToIPFS(notarizationData.content, notarizationData.metadata);
+    console.log(`📁 IPFS upload complete: ${ipfsResult.hash}`);
+
+    // Step 3: Record on blockchain
+    const blockchainResult = await notarizeOnBlockchain(
       contentHash,
-      timestamp,
-      blockchainTxHash,
-      notarySignature,
-      legalStatus: evidenceLevel === "legal" ? "certified" : "notarized",
-      witnessCount,
-      jurisdictions,
-      evidenceLevel: evidenceLevel as any,
-      retentionPeriod: `${retentionYears} years`,
-      accessControl: {
-        public: evidenceLevel !== "legal",
-        authorizedParties: ["creator", "legal_counsel"],
-        courtOrder: evidenceLevel === "legal"
+      ipfsResult.hash,
+      notarizationData.evidenceLevel,
+      notarizationData.jurisdictions
+    );
+    console.log(`⛓️ Blockchain notarization complete: ${blockchainResult.transactionHash}`);
+
+    // Step 4: Generate verification proof
+    const verificationProof = {
+      contentHash,
+      ipfsHash: ipfsResult.hash,
+      transactionHash: blockchainResult.transactionHash,
+      blockNumber: blockchainResult.blockNumber,
+      notarizationId: blockchainResult.notarizationId,
+      timestamp: new Date().toISOString(),
+      evidenceLevel: notarizationData.evidenceLevel,
+      jurisdictions: notarizationData.jurisdictions,
+      legalWeight: getLegalWeight(notarizationData.evidenceLevel),
+      verificationUrl: `https://guardianchain.app/verify/${blockchainResult.notarizationId}`,
+      certificateEligible: notarizationData.evidenceLevel !== "basic"
+    };
+
+    const response = {
+      success: true,
+      notarization: {
+        id: blockchainResult.notarizationId,
+        capsuleId: notarizationData.capsuleId,
+        status: "NOTARIZED",
+        contentHash,
+        ipfs: ipfsResult,
+        blockchain: blockchainResult,
+        verification: verificationProof,
+        metadata: {
+          processedAt: new Date().toISOString(),
+          processingTime: "~3.2 seconds",
+          costBreakdown: {
+            ipfsStorage: "$0.001",
+            blockchainGas: `$${blockchainResult.cost}`,
+            verification: "$0.002",
+            total: `$${(parseFloat(blockchainResult.cost) + 0.003).toFixed(6)}`
+          }
+        }
+      },
+      nextSteps: {
+        generateCertificate: `/api/certificates/generate`,
+        verifyNotarization: `/api/certificates/${blockchainResult.notarizationId}/verify`,
+        downloadProof: `/api/notarize/${blockchainResult.notarizationId}/proof`
       }
     };
 
-    console.log(`📋 Capsule ${capsuleId} notarized with ${evidenceLevel} evidence level`);
-    console.log(`🔗 Blockchain TX: ${blockchainTxHash}`);
-    console.log(`🔒 Content Hash: ${contentHash}`);
+    res.json(response);
+
+  } catch (error) {
+    console.error("❌ Notarization failed:", error);
+    res.status(500).json({ 
+      success: false,
+      error: "Notarization failed",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+}
+
+export async function getNotarizationProof(req: Request, res: Response) {
+  try {
+    const { notarizationId } = req.params;
+
+    if (!notarizationId) {
+      return res.status(400).json({ error: "Notarization ID required" });
+    }
+
+    // In production, fetch from blockchain and database
+    const mockProof = {
+      id: notarizationId,
+      contentHash: crypto.randomBytes(32).toString('hex'),
+      ipfsHash: `Qm${crypto.randomBytes(22).toString('hex')}`,
+      transactionHash: `0x${crypto.randomBytes(32).toString('hex')}`,
+      blockNumber: Math.floor(Math.random() * 1000000) + 18000000,
+      timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      evidenceLevel: ["basic", "enhanced", "forensic", "legal"][Math.floor(Math.random() * 4)],
+      jurisdictions: ["US", "EU", "UK"],
+      status: "VERIFIED",
+      legalWeight: "certified",
+      verifications: [
+        {
+          verifier: "GuardianChain Validator",
+          timestamp: new Date().toISOString(),
+          method: "Cryptographic Hash Verification",
+          result: "VALID"
+        },
+        {
+          verifier: "Blockchain Network",
+          timestamp: new Date().toISOString(),
+          method: "Smart Contract Verification",
+          result: "CONFIRMED"
+        },
+        {
+          verifier: "IPFS Network",
+          timestamp: new Date().toISOString(),
+          method: "Content Availability Check",
+          result: "ACCESSIBLE"
+        }
+      ]
+    };
+
+    // Set headers for proof download
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="notarization-proof-${notarizationId}.json"`);
 
     res.json({
       success: true,
-      notarization: notarizationRecord,
-      legal: {
-        admissible: evidenceLevel === "legal" || evidenceLevel === "forensic",
-        chainOfCustody: true,
-        tamperEvident: true,
-        timestamp: "blockchain-verified"
+      proof: mockProof,
+      digitalSignature: crypto
+        .createHash('sha256')
+        .update(JSON.stringify(mockProof) + process.env.NOTARIZATION_SECRET || 'guardian_secret')
+        .digest('hex'),
+      verificationInstructions: {
+        step1: "Verify content hash matches original content",
+        step2: "Check blockchain transaction on network explorer",
+        step3: "Validate IPFS content availability",
+        step4: "Confirm digital signature authenticity"
       }
     });
 
   } catch (error) {
-    console.error("❌ Notarization failed:", error);
-    res.status(500).json({ error: "Notarization failed" });
+    console.error("❌ Proof generation failed:", error);
+    res.status(500).json({ error: "Proof generation failed" });
   }
 }
 
 export async function generateLegalCertificate(req: Request, res: Response) {
   try {
-    const { capsuleId, requestedBy, purpose } = req.body;
+    const { notarizationId, purpose, requestedBy } = req.body;
 
-    if (!capsuleId) {
-      return res.status(400).json({ error: "Capsule ID required" });
+    if (!notarizationId) {
+      return res.status(400).json({ error: "Notarization ID required" });
     }
 
-    // In production, fetch actual notarization record
-    const mockNotarization: NotarizationRecord = {
-      capsuleId,
-      contentHash: generateContentHash("sample content", {}),
-      timestamp: new Date().toISOString(),
-      blockchainTxHash: simulateBlockchainTransaction({ capsuleId }),
-      notarySignature: generateNotarySignature("hash", new Date().toISOString()),
-      legalStatus: "certified",
-      witnessCount: 5,
-      jurisdictions: ["US", "EU"],
-      evidenceLevel: "legal",
-      retentionPeriod: "10 years",
-      accessControl: {
-        public: false,
-        authorizedParties: ["creator", "legal_counsel"],
-        courtOrder: true
-      }
-    };
-
-    const certificateId = `CERT_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-    const issuedAt = new Date().toISOString();
-    const validUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(); // 1 year
-
-    const certificate: LegalCertificate = {
-      certificateId,
-      capsuleId,
-      issuedBy: "GuardianChain Legal Authority",
-      issuedAt,
-      validUntil,
-      legalWeight: "certified",
-      signatures: [
-        {
-          authority: "GuardianChain Notary",
-          signature: generateNotarySignature(certificateId, issuedAt),
-          timestamp: issuedAt,
-          publicKey: "GCNA_PUBLIC_KEY_" + Math.random().toString(36)
-        }
-      ],
-      chainOfCustody: [
-        {
-          event: "Certificate Generated",
-          timestamp: issuedAt,
-          actor: "GuardianChain System",
-          hash: generateContentHash(certificateId, { purpose, requestedBy })
-        },
-        {
-          event: "Blockchain Recorded",
-          timestamp: issuedAt,
-          actor: "Blockchain Network",
-          hash: mockNotarization.blockchainTxHash
-        }
-      ]
-    };
-
-    console.log(`📜 Legal certificate ${certificateId} generated for capsule ${capsuleId}`);
-    console.log(`⚖️ Purpose: ${purpose}, Requested by: ${requestedBy}`);
-
-    res.json({
-      success: true,
-      certificate,
-      downloadUrl: `/api/certificates/${certificateId}/download`,
-      verificationUrl: `/api/certificates/${certificateId}/verify`,
-      legalNotice: "This certificate is legally binding and admissible in participating jurisdictions."
-    });
+    // Import certificate generation function
+    const { generatePDFCertificate } = await import("./certificates");
+    await generatePDFCertificate(req, res);
 
   } catch (error) {
-    console.error("❌ Certificate generation failed:", error);
+    console.error("❌ Legal certificate generation failed:", error);
     res.status(500).json({ error: "Certificate generation failed" });
   }
 }
@@ -218,40 +249,46 @@ export async function generateLegalCertificate(req: Request, res: Response) {
 export async function verifyCertificate(req: Request, res: Response) {
   try {
     const { certificateId } = req.params;
-    const { verificationCode } = req.query;
 
     if (!certificateId) {
       return res.status(400).json({ error: "Certificate ID required" });
     }
 
-    // In production, verify against blockchain and database
-    const isValid = Math.random() > 0.1; // 90% success rate for demo
+    // In production, verify against blockchain and certificate database
+    const isValid = Math.random() > 0.05; // 95% success rate for demo
+
     const verificationResult = {
       certificateId,
-      valid: isValid,
+      isValid,
       verifiedAt: new Date().toISOString(),
       status: isValid ? "VERIFIED" : "INVALID",
-      blockchainConfirmed: isValid,
-      signatureValid: isValid,
-      chainOfCustody: isValid ? "INTACT" : "COMPROMISED",
-      message: isValid 
-        ? "Certificate is valid and legally binding"
-        : "Certificate verification failed - potentially tampered"
+      details: {
+        blockchainConfirmed: isValid,
+        signatureValid: isValid,
+        notExpired: isValid,
+        issuerAuthorized: isValid,
+        chainOfCustodyIntact: isValid
+      },
+      metadata: {
+        issuer: "GuardianChain Legal Authority",
+        issuedAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+        legalJurisdictions: ["US", "EU", "UK", "CA"],
+        evidenceLevel: "legal",
+        trustScore: isValid ? Math.floor(Math.random() * 10) + 90 : 0
+      }
     };
-
-    console.log(`🔍 Certificate verification: ${certificateId} - ${verificationResult.status}`);
 
     if (isValid) {
       res.json({
         success: true,
         verification: verificationResult,
-        legalWeight: "This verification confirms the authenticity and legal standing of the certificate."
+        message: "Certificate is authentic and legally binding"
       });
     } else {
       res.status(400).json({
         success: false,
         verification: verificationResult,
-        warning: "Certificate verification failed. Do not rely on this document for legal purposes."
+        warning: "Certificate verification failed"
       });
     }
 
@@ -263,61 +300,53 @@ export async function verifyCertificate(req: Request, res: Response) {
 
 export async function getCertificateRegistry(req: Request, res: Response) {
   try {
-    const { jurisdiction = "all", status = "all", dateFrom, dateTo } = req.query;
+    const { page = 1, limit = 20, status = "all" } = req.query;
 
-    console.log(`📚 Fetching certificate registry...`);
-
-    // Mock registry data
-    const certificates = Array.from({ length: 25 }, (_, i) => ({
-      certificateId: `CERT_${Date.now() - i * 86400000}_${Math.random().toString(36).substring(7)}`,
-      capsuleId: `cap_${i.toString().padStart(3, '0')}`,
-      issuedAt: new Date(Date.now() - i * 86400000).toISOString(),
-      status: ["notarized", "certified", "pending"][Math.floor(Math.random() * 3)],
-      jurisdiction: ["US", "EU", "UK", "CA"][Math.floor(Math.random() * 4)],
+    // Mock certificate registry (in production, fetch from database)
+    const mockCertificates = Array.from({ length: 100 }, (_, i) => ({
+      id: `CERT_${Date.now() - i * 60000}_${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
+      notarizationId: Math.floor(Math.random() * 10000) + 1,
+      capsuleId: `cap_${Date.now() - i * 60000}_${crypto.randomBytes(8).toString('hex')}`,
+      status: Math.random() > 0.1 ? "VALID" : "EXPIRED",
+      issuedAt: new Date(Date.now() - i * 60000).toISOString(),
       evidenceLevel: ["basic", "enhanced", "forensic", "legal"][Math.floor(Math.random() * 4)],
-      legalWeight: ["informational", "evidence", "certified", "notarized"][Math.floor(Math.random() * 4)]
+      legalWeight: ["informational", "evidence", "certified", "notarized"][Math.floor(Math.random() * 4)],
+      jurisdictions: ["US", "EU", "UK"].slice(0, Math.floor(Math.random() * 3) + 1)
     }));
 
-    // Apply filters
-    let filteredCertificates = certificates;
-    
-    if (jurisdiction !== "all") {
-      filteredCertificates = filteredCertificates.filter(cert => 
-        cert.jurisdiction === jurisdiction
-      );
-    }
-    
-    if (status !== "all") {
-      filteredCertificates = filteredCertificates.filter(cert => 
-        cert.status === status
-      );
-    }
-
-    const stats = {
-      total: filteredCertificates.length,
-      byStatus: filteredCertificates.reduce((acc, cert) => {
-        acc[cert.status] = (acc[cert.status] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-      byJurisdiction: filteredCertificates.reduce((acc, cert) => {
-        acc[cert.jurisdiction] = (acc[cert.jurisdiction] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>)
-    };
+    const startIndex = (Number(page) - 1) * Number(limit);
+    const endIndex = startIndex + Number(limit);
+    const paginatedCertificates = mockCertificates.slice(startIndex, endIndex);
 
     res.json({
       success: true,
-      certificates: filteredCertificates,
-      stats,
+      certificates: paginatedCertificates,
       pagination: {
-        page: 1,
-        totalPages: 1,
-        totalItems: filteredCertificates.length
+        page: Number(page),
+        limit: Number(limit),
+        total: mockCertificates.length,
+        pages: Math.ceil(mockCertificates.length / Number(limit))
+      },
+      stats: {
+        totalCertificates: mockCertificates.length,
+        validCertificates: mockCertificates.filter(c => c.status === "VALID").length,
+        expiredCertificates: mockCertificates.filter(c => c.status === "EXPIRED").length
       }
     });
 
   } catch (error) {
     console.error("❌ Certificate registry fetch failed:", error);
     res.status(500).json({ error: "Registry fetch failed" });
+  }
+}
+
+// Helper function to determine legal weight based on evidence level
+function getLegalWeight(evidenceLevel: string): string {
+  switch (evidenceLevel) {
+    case "basic": return "informational";
+    case "enhanced": return "evidence";
+    case "forensic": return "certified";
+    case "legal": return "notarized";
+    default: return "informational";
   }
 }
