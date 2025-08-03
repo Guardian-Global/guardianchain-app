@@ -8,6 +8,14 @@ GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-sc
 
 Preferred communication style: Simple, everyday language.
 
+**Design Philosophy**: Strong preference for clean, minimal Next.js template structure approach:
+- Clean layout with Head component structure
+- max-w-4xl container with proper spacing
+- Yellow-400 titles, purple-300 headings, blue-400 links
+- White/5 background cards with border styling
+- Professional presentation for investor materials
+- Minimal, focused design without unnecessary complexity
+
 ## System Architecture
 
 ### Frontend
