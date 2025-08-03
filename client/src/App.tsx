@@ -45,6 +45,7 @@ const DAOPage = lazy(() => import("@/pages/dao"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
+const VotePage = lazy(() => import("@/pages/Vote"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -118,6 +119,7 @@ function Router() {
               <Route path="/partners" component={PartnersPage} />
               <Route path="/admin/timeline" component={AdminTimelineView} />
               <Route path="/analytics" component={AnalyticsPage} />
+              <Route path="/vote" component={VotePage} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
