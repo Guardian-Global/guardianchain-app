@@ -19,7 +19,7 @@ export default function PartnersPage() {
         <p className="mb-2 text-sm text-gray-300">View our full 6-page PDF describing GTT tokenomics, DAO structure, and compliant yield logic.</p>
         <a
           href="/GuardianChain_Revenue_Explainer_Deck.pdf"
-          className="text-blue-400 underline"
+          className="text-blue-400 underline hover:text-blue-300 transition-colors"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -29,8 +29,8 @@ export default function PartnersPage() {
 
       <div className="mt-10">
         <h2 className="text-xl font-semibold text-purple-300 mb-2">🤝 Contact Us</h2>
-        <p>Email: <a className="underline text-blue-400" href="mailto:compliance@guardianchain.app">compliance@guardianchain.app</a></p>
-        <p>Site: <a className="underline text-blue-400" href="https://guardianchain.app">guardianchain.app</a></p>
+        <p>Email: <a className="underline text-blue-400 hover:text-blue-300 transition-colors" href="mailto:compliance@guardianchain.app">compliance@guardianchain.app</a></p>
+        <p>Site: <a className="underline text-blue-400 hover:text-blue-300 transition-colors" href="https://guardianchain.app" target="_blank" rel="noopener noreferrer">guardianchain.app</a></p>
       </div>
     </div>
   );
