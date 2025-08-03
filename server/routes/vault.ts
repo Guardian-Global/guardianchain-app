@@ -1,147 +1,181 @@
 import { Router } from "express";
-import { storage } from "../storage";
 import { isDebugAuthenticated } from "../debugAuth";
+import { calculateCapsuleYield } from "../../client/src/utils/capsuleYield";
 
 const router = Router();
 
-// Get timeline entries for a user's capsule vault
-router.get("/timeline/:userId", isDebugAuthenticated, async (req, res) => {
+// Enhanced Vault API - Get claimable GTT yield for user
+router.get("/claimable", isDebugAuthenticated, async (req: any, res) => {
   try {
-    const { userId } = req.params;
-
-    // For now, return mock data since we're setting up the infrastructure
-    const mockTimelineEntries = [
-      {
-        id: "entry-1",
-        userId,
-        capsuleId: "capsule-1",
-        entryType: "media",
-        caption: "Just uploaded my first truth capsule!",
-        visibility: "public",
-        likesCount: 12,
-        commentsCount: 3,
-        sharesCount: 1,
-        isPinned: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        capsule: {
-          id: "capsule-1",
-          title: "My First Truth",
-          content: "This is my first truth capsule on GuardianChain.",
-          mediaType: "image",
-          mediaUrl: "/placeholder-image.jpg",
-          thumbnailUrl: "/placeholder-thumb.jpg",
-          nftTokenId: null,
-          isNftMinted: false,
-          isTruthVaultSealed: false,
-        },
-      },
-      {
-        id: "entry-2",
-        userId,
-        capsuleId: "capsule-2",
-        entryType: "post",
-        caption: "Sharing an important memory from my childhood.",
-        visibility: "public",
-        likesCount: 25,
-        commentsCount: 8,
-        sharesCount: 4,
-        isPinned: true,
-        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-        updatedAt: new Date(Date.now() - 86400000).toISOString(),
-        capsule: {
-          id: "capsule-2",
-          title: "Childhood Memory",
-          content:
-            "A precious memory from when I was seven years old, playing in my grandmother's garden.",
-          mediaType: null,
-          mediaUrl: null,
-          thumbnailUrl: null,
-          nftTokenId: "0x123...abc",
-          isNftMinted: true,
-          isTruthVaultSealed: true,
-        },
-      },
-    ];
-
-    res.json(mockTimelineEntries);
-  } catch (error) {
-    console.error("Error fetching timeline entries:", error);
-    res.status(500).json({ error: "Failed to fetch timeline entries" });
-  }
-});
-
-// Create a new timeline entry
-router.post("/timeline", isDebugAuthenticated, async (req, res) => {
-  try {
-    const { capsuleId, entryType, caption, visibility } = req.body;
     const userId = req.user?.id;
-
-    if (!capsuleId || !entryType) {
-      return res.status(400).json({
-        error: "Missing required fields: capsuleId, entryType",
-      });
+    const { owner } = req.query;
+    
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
     }
 
-    const timelineEntry = {
-      id: `entry-${Date.now()}`,
-      userId,
-      capsuleId,
-      entryType,
-      caption: caption || "",
-      visibility: visibility || "public",
-      likesCount: 0,
-      commentsCount: 0,
-      sharesCount: 0,
-      isPinned: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    // Use owner from query if provided, otherwise use authenticated user
+    const targetUserId = owner || userId;
+    
+    console.log("💰 Calculating claimable yield for user:", targetUserId);
+
+    // Mock capsules data - in production this would query Supabase
+    const mockCapsules = [
+      {
+        id: "cap_1754140001_abc123",
+        title: "Family Legacy Collection",
+        created_at: "2024-07-15T10:00:00Z",
+        truth_score: 95,
+        has_veritas_seal: true,
+        owner: targetUserId
+      },
+      {
+        id: "cap_1754140002_def456", 
+        title: "Corporate Whistleblower Report",
+        created_at: "2024-06-20T15:30:00Z",
+        truth_score: 98,
+        has_veritas_seal: true,
+        owner: targetUserId
+      },
+      {
+        id: "cap_1754140003_ghi789",
+        title: "Personal Memory Archive",
+        created_at: "2024-08-01T08:15:00Z", 
+        truth_score: 87,
+        has_veritas_seal: false,
+        owner: targetUserId
+      }
+    ];
+
+    // Calculate yield for each capsule using our advanced system
+    const yields = mockCapsules.map(capsule => {
+      const yieldData = calculateCapsuleYield(
+        capsule.created_at,
+        0.12, // 12% base APY
+        capsule.truth_score,
+        capsule.has_veritas_seal
+      );
+      
+      return {
+        capsuleId: capsule.id,
+        title: capsule.title,
+        currentYield: yieldData.currentYield,
+        dailyRate: yieldData.dailyRate,
+        apy: yieldData.apy,
+        daysActive: yieldData.daysActive
+      };
+    });
+
+    const totalYield = yields.reduce((sum, y) => sum + y.currentYield, 0);
+    const averageAPY = yields.reduce((sum, y) => sum + y.apy, 0) / yields.length;
+
+    const response = {
+      amount: totalYield.toFixed(6),
+      totalYield: totalYield,
+      averageAPY: averageAPY,
+      capsuleCount: yields.length,
+      breakdown: yields,
+      lastUpdated: new Date().toISOString()
     };
 
-    // In a real implementation, this would use storage.createCapsuleVaultEntry
-    // await storage.createCapsuleVaultEntry(timelineEntry);
+    console.log("💰 Claimable yield calculated:", response);
+    res.json(response);
 
-    res.status(201).json(timelineEntry);
   } catch (error) {
-    console.error("Error creating timeline entry:", error);
-    res.status(500).json({ error: "Failed to create timeline entry" });
+    console.error("Error calculating claimable yield:", error);
+    res.status(500).json({ 
+      error: "Failed to calculate claimable yield",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
   }
 });
 
-// Update a timeline entry
-router.put("/timeline/:entryId", isDebugAuthenticated, async (req, res) => {
+// Get yield history for analytics
+router.get("/history", isDebugAuthenticated, async (req: any, res) => {
   try {
-    const { entryId } = req.params;
-    const updateData = req.body;
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
-    // In a real implementation, this would use storage.updateCapsuleVaultEntry
-    // const updatedEntry = await storage.updateCapsuleVaultEntry(entryId, updateData);
+    // Mock yield history - in production this would be stored in database
+    const mockHistory = [
+      {
+        date: "2024-08-01",
+        totalYield: 15.234567,
+        capsuleCount: 3,
+        averageAPY: 15.8
+      },
+      {
+        date: "2024-08-02", 
+        totalYield: 15.456789,
+        capsuleCount: 3,
+        averageAPY: 15.9
+      },
+      {
+        date: "2024-08-03",
+        totalYield: 15.678901,
+        capsuleCount: 3,
+        averageAPY: 16.1
+      }
+    ];
 
-    const updatedEntry = {
-      id: entryId,
-      ...updateData,
-      updatedAt: new Date().toISOString(),
-    };
+    res.json({
+      history: mockHistory,
+      totalGrown: mockHistory[mockHistory.length - 1].totalYield - mockHistory[0].totalYield,
+      periodDays: mockHistory.length
+    });
 
-    res.json(updatedEntry);
   } catch (error) {
-    console.error("Error updating timeline entry:", error);
-    res.status(500).json({ error: "Failed to update timeline entry" });
+    console.error("Error fetching yield history:", error);
+    res.status(500).json({ error: "Failed to fetch yield history" });
   }
 });
 
-// Delete a timeline entry
-router.delete("/timeline/:entryId", isDebugAuthenticated, async (req, res) => {
+// Simulate claiming yield (blockchain integration ready)
+router.post("/claim", isDebugAuthenticated, async (req: any, res) => {
   try {
-    const { entryId } = req.params;
+    const userId = req.user?.id;
+    const { amount, capsuleIds } = req.body;
+    
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
-    // In a real implementation, this would use storage.deleteCapsuleVaultEntry
-    // await storage.deleteCapsuleVaultEntry(entryId);
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Invalid claim amount" });
+    }
 
-    res.status(204).send();
+    console.log("🎯 Processing yield claim:", { userId, amount, capsuleIds });
+
+    // In production, this would:
+    // 1. Verify the claimable amount matches calculation
+    // 2. Call the smart contract to mint GTT tokens
+    // 3. Update database with claim transaction
+    // 4. Send confirmation to user
+
+    // Mock successful claim
+    const mockTransaction = {
+      hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      amount: parseFloat(amount),
+      gasUsed: "0.001 MATIC",
+      gasPrice: "30 gwei",
+      blockNumber: Math.floor(Math.random() * 1000000) + 45000000,
+      timestamp: new Date().toISOString(),
+      status: "confirmed"
+    };
+
+    res.json({
+      success: true,
+      transaction: mockTransaction,
+      newBalance: parseFloat(amount) + 2547.89, // Mock existing balance
+      message: "GTT yield successfully claimed!"
+    });
+
   } catch (error) {
-    console.error("Error deleting timeline entry:", error);
-    res.status(500).json({ error: "Failed to delete timeline entry" });
+    console.error("Error processing yield claim:", error);
+    res.status(500).json({ error: "Failed to process yield claim" });
   }
 });
 

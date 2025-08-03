@@ -159,6 +159,7 @@ import Earnings from "./pages/earnings";
 import GameifiedOnboardingPage from "./pages/gamified-onboarding";
 import OnboardingProvider from "./components/onboarding/OnboardingProvider";
 import Vault from "./pages/Vault";
+import EnhancedVault from "./pages/EnhancedVault";
 
 import MintingTestPage from "./pages/minting-test";
 // LogoTestPage moved to archive
@@ -367,7 +368,8 @@ function Router() {
               path="/guardian-map"
               component={lazy(() => import("./pages/GuardianMap"))}
             />
-            <Route path="/vault" component={Vault} />
+            <Route path="/vault" component={EnhancedVault} />
+            <Route path="/vault-legacy" component={Vault} />
             <Route
               path="/capsule/:id"
               component={lazy(() => import("./components/CapsuleReplayView"))}
