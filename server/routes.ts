@@ -179,6 +179,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // DAO cluster theme voting endpoints
+  app.post("/api/dao/vote-cluster-theme", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { clusterId, theme } = req.body;
+      const userId = req.user?.id || 'debug-user-456';
+      
+      // Demo voting system (would use real database)
+      console.log(`✅ User ${userId} voted "${theme}" for cluster ${clusterId}`);
+      
+      res.json({
+        success: true,
+        message: "Vote recorded successfully",
+        clusterId,
+        theme,
+        userId
+      });
+    } catch (error) {
+      console.error("❌ Failed to record vote:", error);
+      res.status(500).json({
+        error: "Failed to record vote",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/dao/cluster-votes/:clusterId", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { clusterId } = req.params;
+      
+      // Demo vote data
+      const demoVotes = {
+        totalVotes: 15,
+        themeVotes: {
+          "Grief & Loss": 8,
+          "Family Memories": 4,
+          "Personal Growth": 3
+        },
+        topTheme: "Grief & Loss"
+      };
+      
+      res.json({
+        success: true,
+        votes: demoVotes,
+        clusterId: parseInt(clusterId)
+      });
+    } catch (error) {
+      console.error("❌ Failed to get cluster votes:", error);
+      res.status(500).json({
+        error: "Failed to get cluster votes",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);

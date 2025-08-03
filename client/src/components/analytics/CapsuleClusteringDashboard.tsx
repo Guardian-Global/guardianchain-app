@@ -19,6 +19,7 @@ import { apiRequest } from "@/lib/queryClient";
 import ClusterVisualizer from "./ClusterVisualizer";
 import MemoryYieldChart from "./MemoryYieldChart";
 import LineageVisualizer from "../lineage/LineageVisualizer";
+import ClusterThemeVoting from "../dao/ClusterThemeVoting";
 
 interface ClusterTheme {
   theme_name: string;
@@ -343,13 +344,14 @@ export default function CapsuleClusteringDashboard() {
 
           {/* Selected Cluster Details */}
           {selectedCluster !== null && analysis.cluster_themes[selectedCluster] && (
-            <Card className="bg-brand-secondary border-brand-accent">
-              <CardHeader>
-                <CardTitle className="text-brand-light flex items-center gap-2">
-                  <Users className="w-5 h-5 text-brand-accent" />
-                  Cluster Analysis: {analysis.cluster_themes[selectedCluster].theme_name}
-                </CardTitle>
-              </CardHeader>
+            <>
+              <Card className="bg-brand-secondary border-brand-accent">
+                <CardHeader>
+                  <CardTitle className="text-brand-light flex items-center gap-2">
+                    <Users className="w-5 h-5 text-brand-accent" />
+                    Cluster Analysis: {analysis.cluster_themes[selectedCluster].theme_name}
+                  </CardTitle>
+                </CardHeader>
               
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -410,6 +412,13 @@ export default function CapsuleClusteringDashboard() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* DAO Theme Voting */}
+            <ClusterThemeVoting
+              clusterId={selectedCluster}
+              currentTheme={analysis.cluster_themes[selectedCluster].theme_name}
+            />
+            </>
           )}
         </>
       )}

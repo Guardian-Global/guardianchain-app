@@ -203,3 +203,19 @@ export type LineageNode = typeof lineageNodes.$inferSelect;
 export type InsertLineageNode = typeof lineageNodes.$inferInsert;
 export type LineageEdge = typeof lineageEdges.$inferSelect;
 export type InsertLineageEdge = typeof lineageEdges.$inferInsert;
+
+// DAO cluster voting table
+export const clusterVotes = pgTable("cluster_votes", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  clusterId: numeric("cluster_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  theme: varchar("theme").notNull(),
+  votedAt: timestamp("voted_at").defaultNow(),
+}, (table) => [
+  index("idx_cluster_votes_cluster").on(table.clusterId),
+  index("idx_cluster_votes_user").on(table.userId)
+]);
+
+// Cluster vote types
+export type ClusterVote = typeof clusterVotes.$inferSelect;
+export type InsertClusterVote = typeof clusterVotes.$inferInsert;
