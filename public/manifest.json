@@ -1,7 +1,7 @@
 {
-  "name": "GuardianChain: Truth Vault",
+  "name": "GuardianChain: Truth Vault Protocol",
   "short_name": "GuardianChain",
-  "description": "Sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization",
+  "description": "Sovereign Web3 infrastructure for time-locked proof, grief-score yield, and truth capsule monetization with multi-chain NFT minting",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -69,6 +69,19 @@
       "icons": [
         {
           "src": "/icons/shortcut-create.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "GTT Vault",
+      "short_name": "Vault",
+      "description": "Access your GTT yield vault and claim rewards",
+      "url": "/vault",
+      "icons": [
+        {
+          "src": "/icons/shortcut-vault.png",
           "sizes": "96x96",
           "type": "image/png"
         }

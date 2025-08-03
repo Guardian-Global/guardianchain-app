@@ -122,7 +122,7 @@ const capsuleTypeIcons = {
   whistleblower: AlertTriangle,
 };
 
-export default function Vault() {
+export default function CapsuleBrowser() {
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string>("all");

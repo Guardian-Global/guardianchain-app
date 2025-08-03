@@ -158,7 +158,7 @@ import Referrals from "./pages/referrals";
 import Earnings from "./pages/earnings";
 import GameifiedOnboardingPage from "./pages/gamified-onboarding";
 import OnboardingProvider from "./components/onboarding/OnboardingProvider";
-import Vault from "./pages/Vault";
+import CapsuleBrowser from "./pages/CapsuleBrowser";
 import EnhancedVault from "./pages/EnhancedVault";
 
 import MintingTestPage from "./pages/minting-test";
@@ -231,7 +231,7 @@ import CrossTradingPage from "./pages/cross-trading";
 
 // Enhanced UI Pages
 import ReferralDashboard from "./pages/Referral";
-import VaultExplorer from "./pages/Vault";
+import VaultExplorer from "./pages/CapsuleBrowser";
 import RedemptionCapsulePage from "./pages/redemption-capsule";
 import LaunchDashboard from "./pages/launch-dashboard";
 import ExchangeListings from "./pages/exchange-listings";
@@ -369,7 +369,7 @@ function Router() {
               component={lazy(() => import("./pages/GuardianMap"))}
             />
             <Route path="/vault" component={EnhancedVault} />
-            <Route path="/vault-legacy" component={Vault} />
+            <Route path="/capsule-browser" component={CapsuleBrowser} />
             <Route
               path="/capsule/:id"
               component={lazy(() => import("./components/CapsuleReplayView"))}
