@@ -148,7 +148,7 @@ export type TruthAuction = typeof truthAuctions.$inferSelect;
 export type InsertTruthAuction = typeof truthAuctions.$inferInsert;
 
 // Extended types for UI compatibility
-export interface EnhancedCapsuleData extends Capsule {
+export interface EnhancedCapsuleData extends Omit<Capsule, 'content'> {
   isPrivate?: boolean;
   content?: {
     type: string;
@@ -181,3 +181,25 @@ export type InsertNewsletterSubscriberType = z.infer<
 export type InsertCapsuleType = z.infer<typeof insertCapsuleSchema>;
 export type InsertCapsuleVoteType = z.infer<typeof insertCapsuleVoteSchema>;
 export type InsertTruthAuctionType = z.infer<typeof insertTruthAuctionSchema>;
+
+// Lineage tracking tables for capsule relationships
+export const lineageNodes = pgTable("lineage_nodes", {
+  id: varchar("id").primaryKey(), // matches capsule ID
+  title: varchar("title").notNull(),
+  x: numeric("x").default("0"),
+  y: numeric("y").default("0"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const lineageEdges = pgTable("lineage_edges", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  source: varchar("source").notNull().references(() => lineageNodes.id),
+  target: varchar("target").notNull().references(() => lineageNodes.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Lineage types
+export type LineageNode = typeof lineageNodes.$inferSelect;
+export type InsertLineageNode = typeof lineageNodes.$inferInsert;
+export type LineageEdge = typeof lineageEdges.$inferSelect;
+export type InsertLineageEdge = typeof lineageEdges.$inferInsert;

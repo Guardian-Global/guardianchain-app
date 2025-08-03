@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import ClusterVisualizer from "./ClusterVisualizer";
 import MemoryYieldChart from "./MemoryYieldChart";
+import LineageVisualizer from "../lineage/LineageVisualizer";
 
 interface ClusterTheme {
   theme_name: string;
@@ -336,6 +337,9 @@ export default function CapsuleClusteringDashboard() {
 
           {/* GTT Yield Analysis */}
           <MemoryYieldChart />
+
+          {/* Truth Lineage Graph */}
+          <LineageVisualizer />
 
           {/* Selected Cluster Details */}
           {selectedCluster !== null && analysis.cluster_themes[selectedCluster] && (

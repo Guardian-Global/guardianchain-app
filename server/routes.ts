@@ -97,6 +97,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to fetch yield data" });
     }
   });
+
+  // Lineage system endpoints
+  app.get("/api/lineage/graph", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { getLineageGraph } = await import("../lib/lineage/getLineageGraph");
+      const graphData = await getLineageGraph();
+      
+      res.json({
+        success: true,
+        graph: graphData
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch lineage graph:", error);
+      res.status(500).json({
+        error: "Failed to fetch lineage graph",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/lineage/capsule/:capsuleId", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleId } = req.params;
+      const { getCapsuleLineage } = await import("../lib/lineage/getLineageGraph");
+      const lineageData = await getCapsuleLineage(capsuleId);
+      
+      res.json({
+        success: true,
+        lineage: lineageData
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch capsule lineage:", error);
+      res.status(500).json({
+        error: "Failed to fetch capsule lineage",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/lineage/add", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleId, title, parentIds } = req.body;
+      const { addCapsuleToLineage } = await import("../lib/lineage/addCapsuleToGraph");
+      
+      await addCapsuleToLineage({ capsuleId, title, parentIds });
+      
+      res.json({
+        success: true,
+        message: "Capsule added to lineage graph successfully",
+        capsuleId,
+        parentConnections: parentIds?.length || 0
+      });
+    } catch (error) {
+      console.error("❌ Failed to add capsule to lineage:", error);
+      res.status(500).json({
+        error: "Failed to add capsule to lineage",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
