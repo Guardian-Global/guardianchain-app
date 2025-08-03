@@ -6,7 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   Grid3X3,
   Calendar,
-  Timeline,
+  List,
   TrendingUp,
   Filter,
   Search,
@@ -64,7 +64,7 @@ export default function CapsuleWallToggle({
     {
       value: "timeline" as const,
       label: "Timeline",
-      icon: Timeline,
+      icon: List,
       description: "Chronological flow",
     },
     {

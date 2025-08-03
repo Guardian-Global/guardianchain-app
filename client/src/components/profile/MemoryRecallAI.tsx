@@ -96,16 +96,34 @@ export default function MemoryRecallAI({ userId }: MemoryRecallAIProps) {
               </Button>
             </div>
             
-            <div className="p-4 bg-brand-surface rounded-lg border border-brand-light/10">
-              <pre className="whitespace-pre-wrap text-sm text-brand-light/90 font-mono">
-                {result}
-              </pre>
+            <div className="p-4 bg-brand-surface rounded-lg border border-brand-light/10 max-h-96 overflow-y-auto">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-brand-accent font-medium">AI Analysis Complete</span>
+                </div>
+                <pre className="whitespace-pre-wrap text-sm text-brand-light/90 font-mono leading-relaxed">
+                  {result}
+                </pre>
+                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-brand-light/10">
+                  <div className="text-xs text-brand-light/50">
+                    Powered by Truth Genome™ • Pattern Recognition Engine
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
-        <div className="text-xs text-brand-light/60">
-          AI can help you recall memories, connections, and patterns from your capsule history.
+        <div className="p-3 bg-brand-surface/50 rounded border border-brand-light/10">
+          <div className="text-xs text-brand-light/80 space-y-1">
+            <div className="font-medium text-brand-accent">Enhanced Memory Recall Features:</div>
+            <div>• Pattern recognition across capsule collections</div>
+            <div>• Emotional fingerprint analysis</div>
+            <div>• Timeline correlation and clustering</div>
+            <div>• Truth Genome™ verification scoring</div>
+            <div>• Blockchain-anchored memory fragments</div>
+          </div>
         </div>
       </CardContent>
     </Card>

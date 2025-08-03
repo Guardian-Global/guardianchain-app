@@ -53,12 +53,37 @@ export default function ActivityTimeline({ userId }: ActivityTimelineProps) {
     }
   };
 
+  const formatTimeAgo = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+    
+    if (diffInHours < 1) return "Just now";
+    if (diffInHours < 24) return `${Math.floor(diffInHours)}h ago`;
+    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
+    return date.toLocaleDateString();
+  };
+
   if (isLoading) {
     return (
       <Card className="bg-brand-secondary border-brand-surface">
         <CardContent className="p-8 text-center">
-          <div className="animate-spin w-6 h-6 border-4 border-brand-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <div className="animate-spin w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-brand-light/60">Loading activity timeline...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <Card className="bg-brand-secondary border-brand-surface">
+        <CardContent className="p-8 text-center">
+          <Activity className="w-12 h-12 text-brand-light/30 mx-auto mb-4" />
+          <p className="text-brand-light/60">No recent activity</p>
+          <p className="text-xs text-brand-light/40 mt-2">
+            Your platform activities will appear here
+          </p>
         </CardContent>
       </Card>
     );
@@ -74,54 +99,63 @@ export default function ActivityTimeline({ userId }: ActivityTimelineProps) {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-96">
-          {events.length === 0 ? (
-            <div className="text-center py-8">
-              <Activity className="w-12 h-12 text-brand-light/30 mx-auto mb-4" />
-              <p className="text-brand-light/60">No activity recorded yet</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {events.map((event: TimelineEvent) => (
-                <div
-                  key={event.id}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-brand-surface border border-brand-light/10 hover:border-brand-light/20 transition-colors"
-                  data-testid={`timeline-event-${event.type}`}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    {getEventIcon(event.type)}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+          <div className="space-y-4">
+            {events.map((event: TimelineEvent, index: number) => (
+              <div
+                key={event.id}
+                className="flex items-start gap-4 p-3 bg-brand-surface rounded border border-brand-light/10 hover:border-brand-light/20 transition-colors"
+                data-testid={`timeline-event-${index}`}
+              >
+                {/* Event Icon */}
+                <div className="flex-shrink-0 w-10 h-10 bg-brand-secondary border border-brand-light/20 rounded-full flex items-center justify-center">
+                  {getEventIcon(event.type)}
+                </div>
+
+                {/* Event Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="text-sm text-brand-light font-medium">
+                        {event.description}
+                      </p>
+                      
+                      {event.metadata && (
+                        <div className="mt-2 space-y-1">
+                          {event.metadata.capsuleTitle && (
+                            <div className="text-xs text-brand-light/70">
+                              Capsule: {event.metadata.capsuleTitle}
+                            </div>
+                          )}
+                          {event.metadata.badgeName && (
+                            <div className="text-xs text-brand-light/70">
+                              Badge: {event.metadata.badgeName}
+                            </div>
+                          )}
+                          {event.metadata.friendName && (
+                            <div className="text-xs text-brand-light/70">
+                              Friend: {event.metadata.friendName}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="ml-4 text-right">
                       <Badge
                         variant="outline"
                         className={getEventColor(event.type)}
                       >
-                        {event.type.replace("_", " ")}
+                        {event.type.replace('_', ' ')}
                       </Badge>
-                      <span className="text-xs text-brand-light/50">
-                        {new Date(event.timestamp).toLocaleString()}
-                      </span>
-                    </div>
-                    
-                    <p className="text-sm text-brand-light/80">
-                      {event.description}
-                    </p>
-                    
-                    {event.metadata && (
-                      <div className="mt-2 text-xs text-brand-light/60">
-                        {Object.entries(event.metadata).map(([key, value]) => (
-                          <span key={key} className="mr-3">
-                            <span className="font-medium">{key}:</span> {String(value)}
-                          </span>
-                        ))}
+                      <div className="text-xs text-brand-light/50 mt-1">
+                        {formatTimeAgo(event.timestamp)}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </ScrollArea>
       </CardContent>
     </Card>
