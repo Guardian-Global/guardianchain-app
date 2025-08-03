@@ -2,19 +2,7 @@
 
 ## Overview
 
-GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization. The platform enables users to mint Veritas Capsules, earn $GTT yield based on GriefScore™, and submit legacy, trauma, or testimony capsules. Users can replay, verify, and unlock time-sealed capsules through an integrated Veritas Certificate Engine. The project aims to provide institutional-grade memory infrastructure for sealing truth and unlocking value through blockchain technology and AI-powered verification systems.
-
-**MAJOR UPDATE - August 3rd, 2025:** Successfully completed comprehensive Base Network expansion with GTT airdrop portal, multi-chain capsule filtering, and complete deployment infrastructure. Platform now supports ultra-low fee transactions on Coinbase's Base network alongside existing Polygon integration.
-
-**ARCHITECTURE SUPERIORITY CONFIRMED - August 3rd, 2025:** Analyzed additional NextAuth code patterns and confirmed GuardianChain's Replit Auth + Express system is vastly superior. Enhanced PWA manifest with GTT Vault shortcut, renamed legacy capsule browser to avoid confusion with advanced yield vault system, and eliminated all inferior legacy authentication files. Current system features 10x more sophisticated authentication, 5x better vault mechanics, and enterprise-grade UI/UX.
-
-**ENHANCED VOICE AND AI INTEGRATION - August 3rd, 2025:** Successfully integrated superior voice transcription, emotion analytics, and AI composition tools. Created 3 professional-grade enhanced components: EnhancedVoiceCapsuleRecorder.tsx (advanced voice recording with AI analysis), EnhancedEmotionHeatmap.tsx (community emotion visualization), and EnhancedCapsuleAIComposer.tsx (GPT-4o powered content generation). Added comprehensive API infrastructure with voice-analysis.ts and capsule-composer.ts server endpoints. Removed 9 inferior extracted components while maintaining zero LSP errors and GuardianChain's enterprise-grade architecture standards.
-
-**COMPLETE NOTARIZATION & ENHANCED UI SYSTEM - August 3rd, 2025:** Built comprehensive blockchain notarization system with TruthNotarization.sol smart contract, legal-grade PDF certificate generation, and public Explorer at /explorer route. Implemented enhanced navigation system with tier-based access control, advanced dashboard metrics with real-time achievements, and sophisticated capsule workflow with AI-powered truth analysis. Added complete API infrastructure for notarization, truth genome analysis, and truth network visualization. System now provides enterprise-grade UI/UX with quantum-themed design, multi-step workflows, and professional verification capabilities.
-
-**COMPREHENSIVE START PAGE & TRUTH NET COMPLETION - August 3rd, 2025:** Successfully created comprehensive Start page explaining GuardianChain's core concepts as "Library of Alexandria - fireproof, tamper-proof, uncancellable" with quantum-themed design, interactive sections covering capsules, GTT yield, AI verification, and sovereignty. Completed full Truth Net system with real-time global visualization, animated canvas, advanced filtering, analytics dashboard, and live metrics. Added DisclaimerBlock component with legal and protocol information. Both systems fully integrated into navigation with enhanced UI/UX and zero LSP errors.
-
-**COMPLETE ENHANCEMENT BUNDLE INTEGRATION - August 3rd, 2025:** Successfully integrated all enhancement bundles from provided zip files. Added comprehensive redemption portal with quantum-themed UI at /redeem route, advanced DAO vault disbursement system with weekly distribution mechanics, sophisticated validator rewards tracking with tier-based incentives, complete capsule backup/restore capabilities with encryption and verification, DAO incentives and governance system with multi-program support, and professional archive certificate generation with PDF/PNG/SVG formats. Enhanced server API with 15+ new endpoints for redemption, DAO vault management, validator rewards, backup operations, incentive programs, and certificate generation. Created enterprise-grade CLI tools for validator reward tracking and comprehensive export capabilities.
+GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization. It allows users to mint Veritas Capsules, earn $GTT yield based on GriefScore™, and submit legacy, trauma, or testimony. The platform enables replay, verification, and unlocking of time-sealed capsules via an integrated Veritas Certificate Engine. The project's vision is to establish institutional-grade memory infrastructure for sealing truth and unlocking value through blockchain technology and AI-powered verification systems, with a focus on expansion into the Base Network for ultra-low fee transactions.
 
 ## User Preferences
 
@@ -25,54 +13,48 @@ Preferred communication style: Simple, everyday language.
 ### Frontend
 
 - **Frameworks & Libraries**: React with TypeScript, Wouter, Tailwind CSS (with custom design system, Radix UI, shadcn/ui), React Query, React Hook Form with Zod, Framer Motion.
-- **Build Tool**: Vite.
-- **UI/UX**: Supports dark/light mode with quantum-themed next-generation visual effects, incorporates advanced micro-interactions and gamification elements, professional branding with holographic glass morphism, responsive design, and enterprise-grade UI/UX standards. Features a comprehensive design token system with quantum color palette (cyan, purple, golden gradients), premium visual identity using latest open source fonts (Space Grotesk, Inter, Fira Code), and PWA offline capabilities. Enhanced pages include homepage with quantum-enhanced hero section, advanced animations (morphic pulse, prismatic shift, data stream effects), and dashboard with NFT avatar customization and tier progress tracking.
-- **Next-Gen Components**: EnhancedButton with multiple variants (quantum, neural, holographic, glass, neon, gradient), AdvancedCard with animated background particles and glow effects, NextGenNavigation with floating sidebar and mobile bottom bar, all featuring cutting-edge open source UI patterns and advanced animation suites.
-- **Global RTL & Multilingual System**: Complete right-to-left layout support for 29 RTL languages with automatic layout switching, comprehensive LanguageSelector component supporting 22 languages with native scripts, user language preference storage, and auto-translation API integration.
-- **Enhanced Voice Interface**: Complete voice ecosystem with VoiceSummaryPlayer component, EnhancedVoiceCapsuleRecorder for professional recording with AI transcription, emotional analysis, and grief scoring. Auto-translation for multilingual users and LABELS-based interface localization.
-- **PWA Capabilities**: Full Progressive Web App functionality with service worker, offline support, install button, background sync, and enhanced manifest with GuardianChain branding.
+- **UI/UX**: Features a quantum-themed design with dark/light mode, advanced micro-interactions, gamification, holographic glass morphism, and responsive design. Utilizes a comprehensive design token system with a quantum color palette and premium open-source fonts. Includes advanced animations (morphic pulse, prismatic shift, data stream effects) and NFT avatar customization.
+- **Next-Gen Components**: EnhancedButton, AdvancedCard, and NextGenNavigation with cutting-edge UI patterns and animation suites.
+- **Global RTL & Multilingual System**: Supports 29 RTL languages with automatic layout switching and 22 languages via a LanguageSelector component, including auto-translation API integration.
+- **Enhanced Voice Interface**: A complete voice ecosystem supporting voice summary playback, professional recording with AI transcription, emotional analysis, and grief scoring, along with auto-translation and LABELS-based localization.
+- **PWA Capabilities**: Full Progressive Web App functionality with offline support, installability, and enhanced manifest.
 
 ### Backend
 
 - **Runtime & Language**: Node.js with Express.js, TypeScript.
 - **API Design**: RESTful API with structured error handling.
-- **Authentication**: Debug authentication system with OAuth integration (Google/GitHub via Passport.js) providing enterprise-grade user authentication and tier-based access control.
-- **Object Storage**: Google Cloud Storage integration with protected file uploading, public asset serving, and ACL policy management.
-- **Multi-Chain Infrastructure**: Complete Base Network integration with ultra-low fee transactions, GTT airdrop distribution, and cross-chain capsule filtering.
-- **Data Flow**: Automated IPFS integration for content storage, community-driven verification, and GTT token reward distribution.
+- **Authentication**: Debug authentication system with OAuth integration (Google/GitHub via Passport.js) for enterprise-grade user authentication and tier-based access control.
+- **Object Storage**: Google Cloud Storage integration for protected file uploading and public asset serving.
+- **Multi-Chain Infrastructure**: Integration with Base Network for ultra-low fee transactions and cross-chain capsule filtering.
+- **Data Flow**: Automated IPFS integration for content storage, community verification, and GTT token reward distribution.
 
 ### Database & ORM
 
 - **Database**: PostgreSQL (configured for Neon serverless).
 - **ORM**: Drizzle ORM.
 - **Schema Management**: Drizzle Kit.
-- **Lineage Infrastructure**: Complete capsule inheritance tracking with lineage table, grief flow, and influence scoring system.
+- **Lineage Infrastructure**: Capsule inheritance tracking with lineage table, grief flow, and influence scoring system.
 
 ### Core Entities & Features
 
-- **Users**: Streamlined debug authentication with comprehensive tier-based access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN), subscription management, and optimized API endpoints.
-- **Authentication System**: Full-featured tiered access control with TierGate component and SubscriptionManager.
-- **Subscription Tiers**: Four-tier system with progressive feature unlocking.
-- **Dashboard Flows**: Comprehensive authenticated user experience with real-time usage tracking and tier progress monitoring.
-- **Capsules**: Truth submissions through specialized portals, including 14 types, with content validation and verification status. Features EnhancedCapsuleUploader with 4-step workflow, AI-powered content analysis (emotional resonance, auto-tagging), and integrated NFT minting. Includes CapsuleAutotagger and CapsulePrivacyToggle with granular privacy controls. Advanced encryption via Lit Protocol enables time-locked content, token-gated access, and condition-based reveals. Complete redemption system with /redeem portal enabling users to unlock time-sealed capsules for GTT rewards based on grief scores and validation requirements.
-- **Truth Auctions**: Complete sealed disclosure capsule system with real GTT smart contract funding, live countdown timers, and unlock/download functionality. Features wagmi-based blockchain integration, custom contribution amounts, and automated disclosure reveal upon reserve fulfillment. Enables crowd-funding of investigations and direct rewards to whistleblowers, victims, and legacy holders through blockchain governance.
-- **Truth Lineage Protocol**: Advanced lineage tracking system with grief flow analytics, influence scoring, and capsule inheritance infrastructure. Includes visual lineage graph interface.
-- **Eternal Contracts**: Immutable declaration system with AI verification, permanent blockchain sealing, and optional unlock dates/beneficiaries.
-- **Verifications**: Community voting and professional-grade Veritas tools (Veritas Seal, Truth Bounty, Truth Redemption, Conspiracy Capsule).
-- **Transactions**: GTT token transfers and reward tracking.
-- **NFT System**: Authentic ERC-721 implementation with real blockchain minting using ethers.js, smart contract integration, and on-chain transaction verification. Features grief scoring, metadata storage, and social sharing with actual transaction hashes.
-- **DAO Governance**: GTT-weighted voting system for proposals with a dedicated governance interface. Advanced DAO vault disbursement system with automated weekly distribution, validator reward pools, community treasury management, and comprehensive incentive programs with multi-tier participation rewards.
-- **Financial Engine**: Tier management, real-time treasury monitoring, AI business intelligence, compliance oversight, and a donation platform. Enhanced with sophisticated validator rewards tracking system featuring tier-based multipliers (Bronze/Silver/Gold/Platinum/Diamond), performance bonuses, quality incentives, and comprehensive CLI tools for reward calculation and leaderboard management.
-- **Enhanced Analytics**: Dynamic capsule analytics dashboard with yield tracking, emotional resonance scoring, embeddable widgets, AI-powered insights, and EnhancedEmotionHeatmap providing real-time community emotion visualization with grief pattern analysis and blockchain-verified data trends.
-- **Advanced AI Integration**: GPT-4o powered ecosystem including EnhancedCapsuleAIComposer for intelligent content generation, EnhancedVoiceCapsuleRecorder with real-time transcription and emotional analysis, recommendation engine, AI-assisted onboarding, financial intelligence, emotional content classification, and hallucination guard for content verification. Includes comprehensive AI-powered content analysis with emotion detection, contextual summary generation, AI image generation, and voice-to-text processing with grief scoring.
-- **Asset Integration**: Comprehensive branding asset system with video backgrounds, NFT avatar options, logo strips, and GPU-accelerated visual effects.
-- **Navigation**: Next-generation navigation system with quantum-enhanced visual effects, floating desktop sidebar with holographic glass morphism, mobile bottom bar with expanded menu modal, dynamic badge indicators, role-based menu visibility, comprehensive mobile responsiveness, centralized navigation data, real-time notification system, and advanced tooltip system with contextual descriptions. Includes Truth Auction access in main navigation menu with premium indicators and animated hover states.
-- **Reels System**: Full reel curation functionality allowing users to create named collections from owned capsules with voice summaries and multilingual support.
-- **Sovereign Social Profiles**: Full-featured profile system with TruthGenomeCard showing personality traits, CapsuleWallToggle for multiple view modes, and public sharing via `/u/[username]` routes. Includes comprehensive media upload with auto-categorization and blockchain minting.
-- **Guardian Map**: Interactive global network visualization featuring real-time guardian locations, reputation tiers, activity levels, advanced search and filtering capabilities, multiple map visualization modes, comprehensive export tools, and network analysis.
-- **Smart Contract Suite**: Production-ready ERC-721 implementation with yield mechanics and validation systems (CapsuleNFT and GTTYieldVault).
-- **Backup & Archive System**: Complete capsule backup/restore capabilities with compression, encryption, selective filtering, incremental backups, and professional archive certificate generation in PDF/PNG/SVG formats with blockchain verification and QR codes.
-- **Enterprise CLI Tools**: Advanced validator CLI tools for reward tracking, leaderboard generation, vault status monitoring, and comprehensive data export with CSV/JSON formats and Discord integration.
+- **Users & Authentication**: Streamlined authentication with a four-tier access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN) and subscription management.
+- **Capsules**: Truth submissions via specialized portals (14 types) with content validation, AI-powered analysis (emotional resonance, auto-tagging), and integrated NFT minting. Includes advanced encryption via Lit Protocol for time-locked and token-gated content. Features a redemption system for unlocking time-sealed capsules for GTT rewards.
+- **Truth Auctions**: Sealed disclosure capsule system with GTT smart contract funding, live countdowns, and unlock functionality, enabling crowdfunding for investigations and direct rewards.
+- **Truth Lineage Protocol**: Advanced lineage tracking with grief flow analytics and influence scoring.
+- **Eternal Contracts**: Immutable declarations with AI verification and permanent blockchain sealing.
+- **Verifications**: Community voting and professional Veritas tools (Veritas Seal, Truth Bounty).
+- **NFT System**: ERC-721 implementation with real blockchain minting, grief scoring, and metadata storage.
+- **DAO Governance**: GTT-weighted voting system, advanced DAO vault disbursement with automated weekly distribution, validator reward pools, and comprehensive incentive programs.
+- **Financial Engine**: Tier management, treasury monitoring, AI business intelligence, compliance, and a donation platform, with sophisticated validator rewards tracking.
+- **Enhanced Analytics**: Dynamic capsule analytics dashboard with yield tracking, emotional resonance scoring, AI-powered insights, and an EnhancedEmotionHeatmap for community emotion visualization.
+- **Advanced AI Integration**: GPT-4o powered ecosystem for intelligent content generation (EnhancedCapsuleAIComposer), real-time transcription and emotional analysis (EnhancedVoiceCapsuleRecorder), recommendation engines, and content verification.
+- **Navigation**: Next-generation navigation with quantum-enhanced visual effects, floating sidebar, mobile bottom bar, role-based menu visibility, and real-time notifications.
+- **Reels System**: Curation of named capsule collections with voice summaries and multilingual support.
+- **Sovereign Social Profiles**: Full-featured profiles with TruthGenomeCard, CapsuleWallToggle, and public sharing.
+- **Guardian Map**: Interactive global network visualization of guardians with real-time locations, reputation, and activity levels.
+- **Smart Contract Suite**: Production-ready ERC-721 implementation with yield mechanics and validation systems (CapsuleNFT, GTTYieldVault, TruthNotarization.sol).
+- **Backup & Archive System**: Complete capsule backup/restore with encryption and professional archive certificate generation (PDF/PNG/SVG).
+- **Enterprise CLI Tools**: Advanced validator tools for reward tracking, leaderboard generation, and data export.
 
 ## External Dependencies
 
@@ -80,26 +62,22 @@ Preferred communication style: Simple, everyday language.
 
 - **Ethereum Integration**: ethers.js.
 - **Multi-chain Support**: Ethereum mainnet, Polygon mainnet, Base mainnet, and corresponding testnets.
-- **Base Network**: Coinbase L2 with ultra-low fees (~$0.01), 1.5x Coinbase Wallet bonuses, and mainstream adoption focus.
-- **Wallet Providers**: MetaMask, Coinbase Wallet with enhanced Base integration.
-- **Development**: Hardhat with comprehensive multi-chain configuration.
-- **Web3 Integration**: Wagmi/Viem with cross-chain switching capabilities.
-- **GTT Airdrop**: 250,000 GTT token distribution on Base network with eligibility portal.
+- **Wallet Providers**: MetaMask, Coinbase Wallet.
+- **Development**: Hardhat.
+- **Web3 Integration**: Wagmi/Viem.
 
 ### Third-party Services
 
 - **Payment Processing**: Stripe.
-- **Decentralized Storage**: IPFS.
+- **Decentralized Storage**: IPFS, Pinata (for IPFS pinning).
 - **Document Verification**: DocuSign.
-- **Database**: Supabase (PostgreSQL with real-time features).
-- **Blockchain Integration**: Ethereum/Polygon with ethers.js for authentic NFT minting.
-- **Encryption**: Lit Protocol for time-locked and condition-based content encryption.
+- **Database**: Supabase.
+- **Encryption**: Lit Protocol.
 - **AI Services**: OpenAI (GPT-4o), Anthropic (Claude).
-- **Email/Notifications**: ProtonMail (SMTP), Resend.
-- **Typography**: Google Fonts (Inter, Fira Code).
+- **Email/Notifications**: Resend.
+- **Typography**: Google Fonts.
 - **Icons**: Lucide React.
 - **UI Primitives**: Radix UI.
 - **Styling**: Tailwind CSS.
 - **Communication**: Twilio.
 - **Streaming**: Cloudflare.
-- **IPFS Pinning**: Pinata.
