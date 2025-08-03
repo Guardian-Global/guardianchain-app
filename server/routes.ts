@@ -16,6 +16,9 @@ import airdropRoutes from "./routes/airdrop";
 import ipfsRouter from "./routes/ipfs";
 import nftRouter from "./routes/nft";
 import vaultRouter from "./routes/vault";
+import { analyzeVoiceFile } from "./ai/voice-analysis";
+import { composeCapsule } from "./ai/capsule-composer";
+import multer from "multer";
 import {
   distributeReplayYield,
   calculateGriefYield,
@@ -52,6 +55,12 @@ function getReplayLogs(filters: any = {}) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Configure multer for file uploads
+  const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  });
+
   // New API endpoints for capsule stats, timeline, and validator bids
   app.get("/api/capsule/stats", getCapsuleStats);
   app.get("/api/capsules/timeline", getCapsuleTimeline);
@@ -64,6 +73,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/capsules/:id/like", likeCapsule);
   app.post("/api/capsules/:id/share", shareCapsule);
   app.get("/api/capsules/:id/unlock", unlockCapsule);
+
+  // Enhanced AI endpoints for voice analysis and capsule composition
+  app.post("/api/ai/voice-analysis", upload.single('audio'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No audio file provided" });
+      }
+      
+      const result = await analyzeVoiceFile(req.file.buffer);
+      res.json(result);
+    } catch (error) {
+      console.error("Voice analysis failed:", error);
+      res.status(500).json({ error: "Voice analysis failed" });
+    }
+  });
+
+  app.post("/api/ai/compose-capsule", async (req, res) => {
+    try {
+      const result = await composeCapsule(req.body);
+      res.json(result);
+    } catch (error) {
+      console.error("Capsule composition failed:", error);
+      res.status(500).json({ error: "AI composition failed" });
+    }
+  });
+
+  app.post("/api/capsules/voice", upload.single('audio'), isDebugAuthenticated, async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No audio file provided" });
+      }
+
+      // Mock voice capsule creation - in production this would store in database
+      const capsuleId = `voice_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      
+      const capsule = {
+        id: capsuleId,
+        type: "voice",
+        userId: req.user.id,
+        transcription: req.body.transcription,
+        emotionalAnalysis: JSON.parse(req.body.emotionalAnalysis || '{}'),
+        audioUrl: `/api/audio/${capsuleId}`, // Mock URL
+        createdAt: new Date().toISOString()
+      };
+
+      res.json(capsule);
+    } catch (error) {
+      console.error("Voice capsule creation failed:", error);
+      res.status(500).json({ error: "Failed to create voice capsule" });
+    }
+  });
+
+  // Analytics endpoint for emotion heatmap
+  app.get("/api/analytics/emotion-heatmap", async (req, res) => {
+    try {
+      const { timeRange = 'week' } = req.query;
+      
+      // Mock heatmap data - in production this would query the database
+      const mockData = {
+        days: timeRange === 'week' ? 
+          ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] :
+          timeRange === 'month' ?
+          ['Week 1', 'Week 2', 'Week 3', 'Week 4'] :
+          ['Q1', 'Q2', 'Q3', 'Q4'],
+        emotions: ['happy', 'sad', 'anger', 'fear', 'grief', 'hope', 'love'],
+        data: [
+          [2, 3, 4, 1, 2, 5, 3],
+          [4, 5, 2, 3, 1, 2, 4],
+          [1, 2, 8, 3, 4, 1, 2],
+          [3, 1, 2, 6, 2, 3, 1],
+          [6, 7, 5, 4, 8, 6, 5],
+          [2, 3, 1, 2, 3, 4, 6],
+          [3, 4, 2, 1, 2, 3, 5]
+        ],
+        metadata: {
+          totalCapsules: 247,
+          avgGriefScore: 6.3,
+          mostActiveDay: timeRange === 'week' ? 'Wednesday' : timeRange === 'month' ? 'Week 3' : 'Q3',
+          dominantEmotion: 'grief'
+        }
+      };
+
+      res.json(mockData);
+    } catch (error) {
+      console.error("Emotion heatmap failed:", error);
+      res.status(500).json({ error: "Failed to generate heatmap data" });
+    }
+  });
 
   // GET /api/capsules/multi-chain - Get capsules from multiple chains
   app.get("/api/capsules/multi-chain", isDebugAuthenticated, async (req: any, res) => {
