@@ -6125,6 +6125,42 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     return resetOnboardingProgress(req, res);
   });
 
+  // Enhanced validation system endpoints
+  app.get("/api/validation/ipfs-meta/:cid", async (req, res) => {
+    const { getIPFSMetadata } = await import("./api/enhanced-validation");
+    return getIPFSMetadata(req, res);
+  });
+
+  app.post("/api/validation/ipfs-meta/batch", async (req, res) => {
+    const { getBatchIPFSMetadata } = await import("./api/enhanced-validation");
+    return getBatchIPFSMetadata(req, res);
+  });
+
+  app.post("/api/validation/unlock-boost", isDebugAuthenticated, async (req, res) => {
+    const { checkUnlockBoost } = await import("./api/enhanced-validation");
+    return checkUnlockBoost(req, res);
+  });
+
+  app.post("/api/validation/zk-verify", isDebugAuthenticated, async (req, res) => {
+    const { verifyZKProof } = await import("./api/enhanced-validation");
+    return verifyZKProof(req, res);
+  });
+
+  app.post("/api/validation/zk-verify/batch", isDebugAuthenticated, async (req, res) => {
+    const { batchVerifyZKProofs } = await import("./api/enhanced-validation");
+    return batchVerifyZKProofs(req, res);
+  });
+
+  app.post("/api/validation/audit", isDebugAuthenticated, async (req, res) => {
+    const { runValidationAudit } = await import("./api/enhanced-validation");
+    return runValidationAudit(req, res);
+  });
+
+  app.post("/api/validation/test-discord", isDebugAuthenticated, async (req, res) => {
+    const { testDiscordWebhook } = await import("./api/enhanced-validation");
+    return testDiscordWebhook(req, res);
+  });
+
   const httpServer = createServer(app);
   // Truth Genome API routes
   app.get("/api/truth-genome/:capsuleId", isDebugAuthenticated, async (req: any, res) => {
