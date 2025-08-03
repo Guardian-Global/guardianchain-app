@@ -108,6 +108,32 @@ export const capsules = pgTable(
   ],
 );
 
+// DAO Proposals table for governance voting
+export const proposals = pgTable("proposals", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  status: varchar("status").default("open"), // open, closed, executed
+  createdAt: timestamp("created_at").defaultNow(),
+  endTime: timestamp("end_time"),
+});
+
+// DAO Votes table for proposal voting
+export const votes = pgTable("votes", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  proposalId: uuid("proposal_id")
+    .notNull()
+    .references(() => proposals.id, { onDelete: "cascade" }),
+  voterAddress: varchar("voter_address").notNull(),
+  choice: varchar("choice").notNull(), // support, reject, abstain
+  weight: numeric("weight").default("1"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Truth Auctions table for sealed disclosure capsules
 export const truthAuctions = pgTable(
   "truth_auctions",
@@ -219,3 +245,9 @@ export const clusterVotes = pgTable("cluster_votes", {
 // Cluster vote types
 export type ClusterVote = typeof clusterVotes.$inferSelect;
 export type InsertClusterVote = typeof clusterVotes.$inferInsert;
+
+// DAO types
+export type Proposal = typeof proposals.$inferSelect;
+export type InsertProposal = typeof proposals.$inferInsert;
+export type Vote = typeof votes.$inferSelect;
+export type InsertVote = typeof votes.$inferInsert;

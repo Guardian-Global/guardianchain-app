@@ -35,7 +35,7 @@ import {
   FileText,
   Music,
   Video,
-  Seal,
+  Award,
   Gem,
   Clock,
   Pin,
@@ -684,7 +684,7 @@ export default function SovereignSocialProfile() {
                 Upload
               </TabsTrigger>
               <TabsTrigger value="seals">
-                <Seal className="w-4 h-4 mr-2" />
+                <Award className="w-4 h-4 mr-2" />
                 Veritas Seals
               </TabsTrigger>
             </TabsList>
@@ -759,7 +759,7 @@ export default function SovereignSocialProfile() {
                   </p>
                   <div className="flex items-center gap-2 mt-4">
                     <Badge variant="outline" className="bg-green-50">
-                      <Seal className="w-3 h-3 mr-1" />
+                      <Award className="w-3 h-3 mr-1" />
                       {profile.veritasSealCount} Verified Seals
                     </Badge>
                   </div>
