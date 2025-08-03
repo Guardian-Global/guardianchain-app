@@ -47,6 +47,7 @@ const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
 const VotePage = lazy(() => import("@/pages/Vote"));
 const StreamPage = lazy(() => import("@/pages/Stream"));
+const LineagePage = lazy(() => import("@/pages/Lineage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -122,6 +123,7 @@ function Router() {
               <Route path="/analytics" component={AnalyticsPage} />
               <Route path="/vote" component={VotePage} />
               <Route path="/stream" component={StreamPage} />
+              <Route path="/lineage" component={LineagePage} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
