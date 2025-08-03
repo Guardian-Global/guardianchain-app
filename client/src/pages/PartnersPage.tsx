@@ -1,12 +1,12 @@
-import Head from "next/head";
+import { Helmet } from "react-helmet-async";
 
 export default function PartnersPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-16 text-gray-100">
-      <Head>
+      <Helmet>
         <title>Partners & Grants | GuardianChain</title>
         <meta name="description" content="Information for investors, partners, and grant organizations." />
-      </Head>
+      </Helmet>
 
       <h1 className="text-4xl font-bold text-yellow-400 mb-4">Partners & Grants</h1>
 
