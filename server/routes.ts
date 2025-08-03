@@ -5889,6 +5889,15 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   app.use("/api/nft", nftRoutes);
   app.use("/api/airdrop", airdropRoutes);
   app.use("/api/claim", airdropRoutes);
+  
+  // Enhanced wallet authentication routes
+  const walletAuthRoutes = await import("./routes/walletAuth");
+  app.use("/api/auth", walletAuthRoutes.default);
+  app.use("/api/token", walletAuthRoutes.default);
+
+  // Enhanced airdrop routes (replacing simple airdrop routes)
+  const enhancedAirdropRoutes = await import("./routes/airdropEnhanced");
+  app.use("/api", enhancedAirdropRoutes.default);
 
   // Live token data endpoint for LiveTokenTracker
   app.get("/api/token/live-data", (req, res) => {

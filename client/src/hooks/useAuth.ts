@@ -97,6 +97,27 @@ export function useAuth() {
     },
   });
 
+  const unlinkWalletMutation = useMutation({
+    mutationFn: async () => {
+      if (!user?.walletAddress) {
+        throw new Error("No wallet linked");
+      }
+      
+      const response = await fetch(`/api/auth/unlink/${user.walletAddress}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Wallet unlinking failed");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    },
+  });
+
   return {
     user: user as User | undefined,
     isLoading,
@@ -107,11 +128,13 @@ export function useAuth() {
     logout: logoutMutation.mutate,
     updateProfile: updateProfileMutation.mutate,
     linkWallet: linkWalletMutation.mutate,
+    unlinkWallet: unlinkWalletMutation.mutate,
     refetchUser: refetch,
     
     // Mutation states
     isLoggingOut: logoutMutation.isPending,
     isUpdatingProfile: updateProfileMutation.isPending,
     isLinkingWallet: linkWalletMutation.isPending,
+    isUnlinkingWallet: unlinkWalletMutation.isPending,
   };
 }
