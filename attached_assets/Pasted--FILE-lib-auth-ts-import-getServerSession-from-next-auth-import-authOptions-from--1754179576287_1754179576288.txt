@@ -1,0 +1,244 @@
+// ✅ FILE: lib/auth.ts
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+
+export const getUserFromSession = async (req: any, res: any) => {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return null;
+  return session.user;
+};
+
+
+// ✅ FILE: pages/api/auth/session.ts
+import { getServerSession } from "next-auth";
+import { authOptions } from "./[...nextauth]";
+
+export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  res.status(200).json(session.user);
+}
+
+
+// ✅ FILE: pages/api/auth/[...nextauth].ts
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+
+export const authOptions = {
+  providers: [
+    CredentialsProvider({
+      name: "Ethereum",
+      credentials: {
+        address: { label: "Wallet Address", type: "text" },
+      },
+      authorize: async (credentials) => {
+        if (!credentials?.address) return null;
+
+        // Auto-provision Supabase user
+        const { data, error } = await supabase.from("users").upsert(
+          { address: credentials.address.toLowerCase(), smri_rank: "N/A", capsule_count: 0 },
+          { onConflict: "address" }
+        );
+
+        return { id: credentials.address, name: credentials.address };
+      },
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.address = user.id;
+      return token;
+    },
+    async session({ session, token }) {
+      if (token?.address) session.user = { address: token.address };
+      return session;
+    },
+  },
+};
+
+export default NextAuth(authOptions);
+
+
+// ✅ FILE: middleware.ts
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+
+export async function middleware(req) {
+  const token = await getToken({ req });
+  if (!token) {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
+  }
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/vault", "/dashboard", "/mint"],
+};
+
+
+// ✅ FILE: components/WalletConnectProvider.tsx
+"use client";
+
+import { WagmiConfig, createConfig, configureChains } from "wagmi";
+import { polygon, base } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const { chains, publicClient } = configureChains(
+  [polygon, base],
+  [
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http:
+          chain.id === 137
+            ? "https://polygon-rpc.com"
+            : "https://mainnet.base.org",
+      }),
+    }),
+    publicProvider(),
+  ]
+);
+
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  publicClient,
+  connectors: [
+    new InjectedConnector({
+      chains,
+    }),
+  ],
+});
+
+const queryClient = new QueryClient();
+
+export default function WalletConnectProvider({ children }) {
+  return (
+    <WagmiConfig config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </WagmiConfig>
+  );
+}
+
+
+// ✅ FILE: hooks/useWallet.ts
+import { useAccount, useDisconnect } from "wagmi";
+
+export const useWallet = () => {
+  const { address, isConnected, connector } = useAccount();
+  const { disconnect } = useDisconnect();
+
+  return {
+    address,
+    isConnected,
+    connectorName: connector?.name || "None",
+    disconnect,
+  };
+};
+
+
+// ✅ FILE: hooks/useGTTBalance.ts
+import { useReadContract } from "wagmi";
+import { parseAbi } from "viem";
+
+const gttAddress = "0xYourGTTTokenAddress";
+const gttABI = parseAbi([
+  "function balanceOf(address owner) view returns (uint256)"
+]);
+
+export const useGTTBalance = (address: `0x${string}`) => {
+  return useReadContract({
+    address: gttAddress,
+    abi: gttABI,
+    functionName: "balanceOf",
+    args: [address],
+    watch: true,
+  });
+};
+
+
+// ✅ FILE: components/GuardedRoute.tsx
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useGTTBalance } from "@/hooks/useGTTBalance";
+
+export default function GuardedRoute({ children, requiredBalance = 1 }) {
+  const router = useRouter();
+
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["/api/auth/session"],
+    queryFn: async () => {
+      const res = await fetch("/api/auth/session");
+      if (!res.ok) throw new Error("Unauthorized");
+      return res.json();
+    },
+  });
+
+  const { data: balance } = useGTTBalance(user?.address);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!user?.address || (balance || 0n) < BigInt(requiredBalance)) {
+    router.push("/unauthorized");
+    return null;
+  }
+
+  return children;
+}
+
+
+// ✅ FILE: components/NavBar.tsx
+import Link from "next/link";
+import { useWallet } from "@/hooks/useWallet";
+
+export default function NavBar() {
+  const { address, isConnected, disconnect } = useWallet();
+
+  return (
+    <nav className="flex justify-between p-4 bg-white shadow">
+      <Link href="/">GuardianChain</Link>
+      <div className="flex gap-4">
+        <Link href="/dashboard">Dashboard</Link>
+        <Link href="/vault">Vault</Link>
+        <Link href="/mint">Mint</Link>
+        {isConnected ? (
+          <>
+            <span className="text-sm text-yellow-700 bg-yellow-100 px-3 py-1 rounded-full">
+              Verified {address.slice(0, 6)}...{address.slice(-4)} ✅
+            </span>
+            <button onClick={disconnect}>Disconnect</button>
+          </>
+        ) : (
+          <Link href="/connect">Connect</Link>
+        )}
+      </div>
+    </nav>
+  );
+}
+
+
+// ✅ FILE: pages/unauthorized.tsx
+export default function Unauthorized() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-yellow-50 text-center">
+      <div>
+        <h1 className="text-3xl font-bold text-yellow-800">Access Denied</h1>
+        <p className="mt-2 text-gray-600">You must own at least 1 GTT token to access this page.</p>
+        <a href="/" className="mt-6 inline-block text-yellow-700 underline">
+          Return to Home
+        </a>
+      </div>
+    </div>
+  );
+}

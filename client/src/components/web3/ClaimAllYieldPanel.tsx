@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useAccount, useBalance } from "wagmi";
 import { useEthersProvider, useEthersSigner } from "@/lib/ethers";
-import { getGTTBalance, formatGTTAmount } from "@/lib/gtt";
+import { getGTTBalance } from "@/lib/gtt";
 
 // YieldVault ABI for claiming functions
 const YIELD_VAULT_ABI = [
@@ -55,7 +55,6 @@ export default function ClaimAllYieldPanel() {
   const { data: gttBalance } = useBalance({
     address: address,
     token: GTT_TOKEN_ADDRESS as `0x${string}`,
-    watch: true,
   });
 
   const fetchYieldData = async () => {

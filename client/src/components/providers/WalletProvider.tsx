@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { polygon, base, polygonMumbai, baseGoerli } from "wagmi/chains";
-import { injected, metaMask, walletConnect } from "wagmi/connectors";
+import { injected, metaMask, walletConnect, coinbaseWallet } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Enhanced multi-chain configuration for GuardianChain using Wagmi v2
@@ -18,14 +18,18 @@ const wagmiConfig = createConfig({
   chains,
   connectors: [
     metaMask(),
+    coinbaseWallet({
+      appName: "GuardianChain",
+      appLogoUrl: "https://guardian.global/logo.png",
+    }),
     injected(),
     walletConnect({
       projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "placeholder",
     }),
   ],
   transports: {
-    [polygon.id]: http("https://polygon-rpc.com"),
-    [base.id]: http("https://mainnet.base.org"),
+    [polygon.id]: http(import.meta.env.VITE_POLYGON_RPC || "https://polygon-rpc.com"),
+    [base.id]: http(import.meta.env.VITE_BASE_RPC || "https://mainnet.base.org"),
     [polygonMumbai.id]: http("https://rpc-mumbai.maticvigil.com"),
     [baseGoerli.id]: http("https://goerli.base.org"),
   },

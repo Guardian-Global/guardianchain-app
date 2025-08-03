@@ -54,7 +54,7 @@ import TruthGenomeCard from "@/components/profile/TruthGenomeCard";
 import CapsuleWallToggle, {
   type ViewMode,
 } from "@/components/profile/CapsuleWallToggle";
-import EnhancedCapsuleUploader from "@/components/profile/EnhancedCapsuleUploader";
+import CapsuleMintBase from "@/components/web3/CapsuleMintBase";
 
 interface SovereignProfile {
   id: string;
@@ -727,14 +727,23 @@ export default function SovereignSocialProfile() {
 
             <TabsContent value="upload" className="mt-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <EnhancedCapsuleUploader
-                  onCapsuleCreated={(capsule) => {
-                    toast({
-                      title: "Capsule Added to Timeline",
-                      description:
-                        "Your new capsule is now live on your sovereign profile",
-                    });
+                <CapsuleMintBase
+                  onChainSelect={(chainId) => {
+                    console.log("Selected chain:", chainId);
                   }}
+                  onMint={async (chainId, metadata) => {
+                    try {
+                      console.log("Minting capsule on chain:", chainId, metadata);
+                      toast({
+                        title: "Capsule Added to Timeline",
+                        description: "Your new capsule is now live on your sovereign profile",
+                      });
+                    } catch (error) {
+                      console.error("Mint failed:", error);
+                      throw error;
+                    }
+                  }}
+                  className="w-full"
                 />
                 {renderMediaUploadPanel()}
               </div>
