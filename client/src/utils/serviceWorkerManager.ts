@@ -18,10 +18,11 @@ export class ServiceWorkerManager {
   }
 
   async register(): Promise<void> {
-    // Skip registration in development or insecure contexts
+    // Always skip registration in Replit development environment
     if (
       import.meta.env.DEV ||
-      !this.isServiceWorkerSupported()
+      !this.isServiceWorkerSupported() ||
+      window.location.hostname.includes('replit.dev')
     ) {
       console.log(
         "🔧 Service Worker registration skipped in development environment",

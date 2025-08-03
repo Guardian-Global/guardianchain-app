@@ -13,18 +13,29 @@ const chains = [
   ...(import.meta.env.DEV ? [polygonMumbai, baseGoerli] : [])
 ] as const;
 
-// Enhanced wagmi configuration with multiple connectors
+// Enhanced wagmi configuration with multiple connectors and better error handling
 const wagmiConfig = createConfig({
   chains,
   connectors: [
-    metaMask(),
+    metaMask({
+      dappMetadata: {
+        name: "GuardianChain",
+        url: "https://guardianchain.app",
+      },
+    }),
     coinbaseWallet({
       appName: "GuardianChain",
       appLogoUrl: "https://guardian.global/logo.png",
     }),
-    injected(),
+    injected({ shimDisconnect: true }),
     walletConnect({
-      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "placeholder",
+      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "7b0a4e44b01e7e6b2e3f9ac2d5c8b1f3",
+      metadata: {
+        name: "GuardianChain",
+        description: "Sovereign Web3 Truth Vault Platform",
+        url: "https://guardianchain.app",
+        icons: ["https://guardian.global/logo.png"]
+      },
     }),
   ],
   transports: {
