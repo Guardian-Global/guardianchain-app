@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import ClusterVisualizer from "./ClusterVisualizer";
+import MemoryYieldChart from "./MemoryYieldChart";
 
 interface ClusterTheme {
   theme_name: string;
@@ -332,6 +333,9 @@ export default function CapsuleClusteringDashboard() {
 
           {/* Interactive Cluster Visualization */}
           <ClusterVisualizer clusteringData={analysis} />
+
+          {/* GTT Yield Analysis */}
+          <MemoryYieldChart />
 
           {/* Selected Cluster Details */}
           {selectedCluster !== null && analysis.cluster_themes[selectedCluster] && (
