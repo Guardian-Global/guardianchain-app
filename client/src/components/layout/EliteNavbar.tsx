@@ -12,7 +12,8 @@ import {
   Settings,
   Sparkles,
   Crown,
-  ChevronDown
+  ChevronDown,
+  Handshake
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +30,7 @@ const navItems = [
   { href: '/truth-net', label: 'Truth Net', icon: Users },
   { href: '/profile', label: 'Profile', icon: Users },
   { href: '/governance', label: 'DAO', icon: Crown },
+  { href: '/partners', label: 'Partners', icon: Handshake },
 ];
 
 export function EliteNavbar() {
@@ -158,6 +160,11 @@ export function EliteNavbar() {
                       {item.href === '/governance' && (
                         <Badge variant="secondary" className="ml-auto text-xs">
                           New
+                        </Badge>
+                      )}
+                      {item.href === '/partners' && (
+                        <Badge variant="outline" className="ml-auto text-xs border-purple-400 text-purple-400">
+                          Revenue
                         </Badge>
                       )}
                     </div>

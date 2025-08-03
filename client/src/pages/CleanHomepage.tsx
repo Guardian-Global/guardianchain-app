@@ -125,6 +125,24 @@ export default function CleanHomepage() {
               )}
             </motion.div>
 
+            {/* Partners & Revenue Model Link */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.0 }}
+              className="mb-16"
+            >
+              <Link href="/partners">
+                <EnhancedButton 
+                  variant="glass" 
+                  size="lg"
+                  className="px-8 py-3 text-base font-semibold border-purple-400 text-purple-400 hover:text-white bg-purple-900/20 hover:bg-purple-800/40"
+                >
+                  📘 View Revenue Model & Partner Deck
+                </EnhancedButton>
+              </Link>
+            </motion.div>
+
             {/* Advanced Platform Stats */}
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
