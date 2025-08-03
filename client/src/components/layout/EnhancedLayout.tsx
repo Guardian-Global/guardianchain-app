@@ -116,11 +116,7 @@ const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
         {/* Interactive Background */}
         {showBackground && (
           <div className="fixed inset-0 z-0">
-            <InteractiveBackground 
-              variant="quantum" 
-              particleCount={60}
-              colors={["#06b6d4", "#8b5cf6", "#f59e0b", "#ef4444"]}
-            />
+            <InteractiveBackground />
           </div>
         )}
 

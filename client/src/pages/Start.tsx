@@ -1,6 +1,7 @@
 import React from "react";
 import { Shield, Coins, Zap, Brain, Lock, Globe } from "lucide-react";
 import DisclaimerBlock from "@/components/DisclaimerBlock";
+import Footer from "@/components/Footer";
 
 export default function Start() {
   return (
@@ -138,6 +139,9 @@ export default function Start() {
         {/* Legal Disclaimer */}
         <DisclaimerBlock />
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
