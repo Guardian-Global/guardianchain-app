@@ -3964,6 +3964,231 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     }
   });
 
+  // AI Memory Recall endpoint
+  app.post("/api/ai/recall", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { prompt, userId } = req.body;
+      console.log("🧠 AI memory recall requested for user:", userId);
+      
+      if (!prompt || !userId) {
+        return res.status(400).json({ error: "Missing prompt or userId" });
+      }
+
+      // Mock AI response for memory recall
+      const mockResponse = `Based on your capsule history and interactions, I found several relevant memories:
+
+• Timeline Connection: Around ${new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}, you created a capsule with similar themes.
+
+• Pattern Recognition: This query relates to ${Math.floor(Math.random() * 3) + 1} previous capsules in your collection.
+
+• Context Match: Your memory relates to emotional fingerprinting data showing ${Math.floor(Math.random() * 40) + 60}% resonance with community patterns.
+
+• Verification Status: ${Math.random() > 0.5 ? 'Verified' : 'Pending verification'} through Truth Genome analysis.
+
+Memory fragments retrieved from your personal truth vault with ${Math.floor(Math.random() * 20) + 80}% confidence score.`;
+
+      res.json({ result: mockResponse });
+    } catch (error) {
+      console.error("❌ AI recall error:", error);
+      res.status(500).json({ error: "Internal error recalling memory" });
+    }
+  });
+
+  // Profile endpoints
+  app.get("/api/profile/:wallet", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { wallet } = req.params;
+      console.log("👤 Profile requested for wallet:", wallet.substring(0, 10) + "...");
+      
+      const mockProfile = {
+        id: `profile_${wallet}`,
+        wallet: wallet,
+        username: `Guardian_${wallet.substring(2, 8)}`,
+        displayName: "Truth Seeker",
+        bio: "Dedicated to preserving truth and validating memories through blockchain technology.",
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${wallet}`,
+        coverImage: "/api/placeholder/800/200",
+        truthScore: Math.floor(Math.random() * 40) + 60,
+        reputation: Math.floor(Math.random() * 5000) + 1000,
+        joinedAt: "2024-01-15T00:00:00Z",
+        twitter: Math.random() > 0.5 ? `truthseeker_${wallet.substring(2, 6)}` : null,
+        website: Math.random() > 0.7 ? `https://${wallet.substring(2, 8)}.truth.app` : null,
+        email: Math.random() > 0.8 ? `guardian@${wallet.substring(2, 6)}.eth` : null,
+        ens: Math.random() > 0.6 ? `${wallet.substring(2, 8)}.eth` : null,
+        isVerified: Math.random() > 0.3,
+        badges: Math.floor(Math.random() * 10) + 5,
+        capsuleCount: Math.floor(Math.random() * 50) + 10,
+        friendCount: Math.floor(Math.random() * 100) + 20
+      };
+      
+      res.json(mockProfile);
+    } catch (error) {
+      console.error("❌ Failed to get profile:", error);
+      res.status(500).json({ error: "Failed to fetch profile" });
+    }
+  });
+
+  app.get("/api/profile/:wallet/capsules", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { wallet } = req.params;
+      console.log("📋 Profile capsules requested for:", wallet.substring(0, 10) + "...");
+      
+      const mockCapsules = Array.from({ length: Math.floor(Math.random() * 15) + 5 }, (_, i) => ({
+        id: `cap_${wallet}_${i + 1}`,
+        title: `Memory Capsule #${i + 1}`,
+        description: `A preserved memory containing important truth and emotional significance.`,
+        verified: Math.random() > 0.4,
+        verifiedAt: Math.random() > 0.4 ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString() : null,
+        verifiedBy: Math.random() > 0.4 ? "TruthValidator" : null,
+        truthScore: Math.floor(Math.random() * 40) + 60,
+        createdAt: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
+        isTimeSealed: Math.random() > 0.6,
+        unlockDate: Math.random() > 0.6 ? new Date(Date.now() + Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString() : null,
+        type: ["memory", "testimony", "legacy", "truth"][Math.floor(Math.random() * 4)]
+      }));
+      
+      res.json(mockCapsules);
+    } catch (error) {
+      console.error("❌ Failed to get profile capsules:", error);
+      res.status(500).json({ error: "Failed to fetch profile capsules" });
+    }
+  });
+
+  app.get("/api/profile/:wallet/badges", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { wallet } = req.params;
+      console.log("🏆 Profile badges requested for:", wallet.substring(0, 10) + "...");
+      
+      const badgeTypes = [
+        { name: "Truth Pioneer", icon: "/badges/pioneer.svg", description: "Early platform adopter" },
+        { name: "Memory Keeper", icon: "/badges/keeper.svg", description: "Preserved 10+ memories" },
+        { name: "Validator", icon: "/badges/validator.svg", description: "Community truth validator" },
+        { name: "Witness", icon: "/badges/witness.svg", description: "Provided testimony" },
+        { name: "Guardian", icon: "/badges/guardian.svg", description: "Platform guardian" },
+        { name: "Legacy Builder", icon: "/badges/legacy.svg", description: "Built family legacy" },
+        { name: "Truth Seeker", icon: "/badges/seeker.svg", description: "High truth score" },
+        { name: "Time Master", icon: "/badges/time.svg", description: "Time-sealed capsules" }
+      ];
+      
+      const earnedBadges = badgeTypes
+        .filter(() => Math.random() > 0.4)
+        .map((badge, i) => ({
+          id: `badge_${wallet}_${i}`,
+          ...badge,
+          earnedAt: new Date(Date.now() - Math.random() * 180 * 24 * 60 * 60 * 1000).toISOString(),
+          rarity: ["common", "rare", "epic", "legendary"][Math.floor(Math.random() * 4)]
+        }));
+      
+      res.json(earnedBadges);
+    } catch (error) {
+      console.error("❌ Failed to get profile badges:", error);
+      res.status(500).json({ error: "Failed to fetch profile badges" });
+    }
+  });
+
+  app.get("/api/profile/:wallet/friends", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { wallet } = req.params;
+      console.log("👥 Profile friends requested for:", wallet.substring(0, 10) + "...");
+      
+      const mockFriends = Array.from({ length: Math.floor(Math.random() * 20) + 5 }, (_, i) => ({
+        id: `friend_${wallet}_${i}`,
+        wallet: `0x${Math.random().toString(16).substring(2, 42)}`,
+        username: `Friend_${i + 1}`,
+        displayName: `Guardian Friend ${i + 1}`,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=friend${i}`,
+        truthScore: Math.floor(Math.random() * 40) + 60,
+        addedAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+        isOnline: Math.random() > 0.6,
+        lastSeen: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+      }));
+      
+      res.json(mockFriends);
+    } catch (error) {
+      console.error("❌ Failed to get profile friends:", error);
+      res.status(500).json({ error: "Failed to fetch profile friends" });
+    }
+  });
+
+  app.get("/api/profile/timeline/:userId", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      console.log("📅 Activity timeline requested for user:", userId);
+      
+      const eventTypes = [
+        "capsule_created",
+        "capsule_verified", 
+        "friend_added",
+        "badge_earned",
+        "truth_validated",
+        "witness_testimony",
+        "dao_proposal",
+        "vault_interaction"
+      ];
+      
+      const mockEvents = Array.from({ length: Math.floor(Math.random() * 30) + 10 }, (_, i) => {
+        const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+        return {
+          id: `event_${userId}_${i}`,
+          type: eventType,
+          description: getEventDescription(eventType),
+          timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+          metadata: getEventMetadata(eventType)
+        };
+      }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      
+      res.json(mockEvents);
+    } catch (error) {
+      console.error("❌ Failed to get activity timeline:", error);
+      res.status(500).json({ error: "Failed to fetch activity timeline" });
+    }
+  });
+
+  function getEventDescription(eventType: string): string {
+    switch (eventType) {
+      case "capsule_created":
+        return "Created a new truth capsule with encrypted memories";
+      case "capsule_verified":
+        return "Capsule verified by community validators";
+      case "friend_added":
+        return "Connected with a new guardian friend";
+      case "badge_earned":
+        return "Earned a new achievement badge";
+      case "truth_validated":
+        return "Validated truth for community verification";
+      case "witness_testimony":
+        return "Provided witness testimony for truth capsule";
+      case "dao_proposal":
+        return "Participated in DAO governance proposal";
+      case "vault_interaction":
+        return "Interacted with Truth Vault system";
+      default:
+        return "Performed platform activity";
+    }
+  }
+
+  function getEventMetadata(eventType: string): any {
+    switch (eventType) {
+      case "capsule_created":
+        return { 
+          capsuleType: ["memory", "legacy", "testimony"][Math.floor(Math.random() * 3)],
+          isTimeSealed: Math.random() > 0.5
+        };
+      case "badge_earned":
+        return { 
+          badgeName: "Truth Seeker",
+          rarity: ["common", "rare", "epic"][Math.floor(Math.random() * 3)]
+        };
+      case "dao_proposal":
+        return { 
+          proposalId: `prop_${Math.floor(Math.random() * 1000)}`,
+          vote: Math.random() > 0.5 ? "approve" : "reject"
+        };
+      default:
+        return {};
+    }
+  }
+
   // Get all proposals with voting data
   app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
     console.log("🏛️ DAO proposals requested");

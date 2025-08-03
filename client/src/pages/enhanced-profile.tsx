@@ -1,367 +1,170 @@
-import { useState } from "react";
-import { useParams } from "wouter";
-import { useAccount } from "wagmi";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Calendar,
-  MapPin,
-  Mail,
-  ExternalLink,
-  Award,
-  Trophy,
-  TrendingUp,
-  Edit,
-  Coins,
-  Shield,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import Layout from "@/components/layout/Layout";
+import PageHeader from "@/components/layout/PageHeader";
+import ProfileHeader from "@/components/profile/ProfileHeader";
+import ProfileStats from "@/components/profile/ProfileStats";
+import ProfileTabs from "@/components/profile/ProfileTabs";
+import CapsuleReels from "@/components/profile/CapsuleReels";
+import ProfileMediaUploader from "@/components/profile/ProfileMediaUploader";
+import FriendInviteCard from "@/components/profile/FriendInviteCard";
+import MemoryRecallAI from "@/components/profile/MemoryRecallAI";
+import ActivityTimeline from "@/components/profile/ActivityTimeline";
+import VerifiedCapsulesGrid from "@/components/profile/VerifiedCapsulesGrid";
+import SocialLinksCard from "@/components/profile/SocialLinksCard";
+import ProfileThemeToggle from "@/components/profile/ProfileThemeToggle";
+import { getUserProfile, getUserCapsules, getUserBadges, getFriends } from "@/lib/profile-api";
+import { useAuth } from "@/hooks/useAuth";
 
-const mockProfile = {
-  username: "TruthSeeker_007",
-  griefScore: 7314,
-  gttBalance: 1280,
-  capsulesOwned: 12,
-  sealsCreated: 9,
-  daoVotesCast: 4,
-  avatar: "/api/placeholder/150/150",
-  bio: "Dedicated guardian protecting truth in the digital age. Expert in verification and blockchain governance.",
-  location: "Decentralized Network",
-  email: "guardian@guardianchain.org",
-  joinedAt: "2024-01-15",
-  badges: [
-    "Genesis Verified",
-    "Top Voter",
-    "Seal Creator",
-    "Truth Pioneer",
-    "DAO Guardian",
-  ],
-};
+export default function EnhancedProfilePage() {
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("capsules");
+  
+  // For demo purposes, using a mock wallet address
+  const walletAddress = user?.id || "0x1234567890abcdef1234567890abcdef12345678";
 
-const mockNFTs = [
-  {
-    id: 1,
-    image: "/api/placeholder/300/300",
-    title: "Veritas Capsule #001",
-    griefScore: 95,
-    description: "First verified truth capsule",
-  },
-  {
-    id: 2,
-    image: "/api/placeholder/300/300",
-    title: "Guardian Seal #042",
-    griefScore: 88,
-    description: "DocuSign verified document",
-  },
-  {
-    id: 3,
-    image: "/api/placeholder/300/300",
-    title: "Truth Archive #156",
-    griefScore: 92,
-    description: "Community verified content",
-  },
-];
+  // Fetch profile data
+  const { data: profile } = useQuery({
+    queryKey: [`/api/profile/${walletAddress}`],
+    queryFn: () => getUserProfile(walletAddress),
+  });
 
-export default function EnhancedProfile() {
-  const params = useParams();
-  const { address } = useAccount();
-  const [profile, setProfile] = useState(mockProfile);
-  const [editing, setEditing] = useState(false);
-  const [usernameInput, setUsernameInput] = useState(profile.username);
-  const [bioInput, setBioInput] = useState(profile.bio);
+  const { data: capsules = [] } = useQuery({
+    queryKey: [`/api/profile/${walletAddress}/capsules`],
+    queryFn: () => getUserCapsules(walletAddress),
+  });
 
-  const saveProfile = () => {
-    setProfile({
-      ...profile,
-      username: usernameInput,
-      bio: bioInput,
-    });
-    setEditing(false);
-  };
+  const { data: badges = [] } = useQuery({
+    queryKey: [`/api/profile/${walletAddress}/badges`],
+    queryFn: () => getUserBadges(walletAddress),
+  });
 
-  const statCards = [
-    {
-      title: "GTT Balance",
-      value: `${profile.gttBalance.toLocaleString()}`,
-      subtitle: "GTT Tokens",
-      icon: Coins,
-      color: "from-yellow-600 to-yellow-500",
-      textColor: "text-yellow-400",
-    },
-    {
-      title: "Grief Score",
-      value: profile.griefScore.toLocaleString(),
-      subtitle: "Truth Rating",
-      icon: Shield,
-      color: "from-green-600 to-green-500",
-      textColor: "text-green-400",
-    },
-    {
-      title: "Capsules Owned",
-      value: profile.capsulesOwned.toString(),
-      subtitle: "NFT Collection",
-      icon: Trophy,
-      color: "from-blue-600 to-blue-500",
-      textColor: "text-blue-400",
-    },
-    {
-      title: "Seals Created",
-      value: profile.sealsCreated.toString(),
-      subtitle: "Verified Documents",
-      icon: Award,
-      color: "from-purple-600 to-purple-500",
-      textColor: "text-purple-400",
-    },
-    {
-      title: "DAO Votes",
-      value: profile.daoVotesCast.toString(),
-      subtitle: "Governance Participation",
-      icon: TrendingUp,
-      color: "from-red-600 to-red-500",
-      textColor: "text-red-400",
-    },
-  ];
+  const { data: friends = [] } = useQuery({
+    queryKey: [`/api/profile/${walletAddress}/friends`],
+    queryFn: () => getFriends(walletAddress),
+  });
+
+  if (!profile) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-brand-light">Loading enhanced profile...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  const verifiedCapsules = capsules.filter((c: any) => c.verified);
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* Profile Header with GuardianChain Branding */}
-        <Card className="mb-8 bg-gradient-to-br from-slate-800/90 to-slate-900/90 border-purple-500/30 shadow-lg shadow-purple-500/10">
-          <CardContent className="p-8">
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-purple-500/30">
-                  <AvatarImage src={profile.avatar} alt={profile.username} />
-                  <AvatarFallback className="text-3xl bg-gradient-to-br from-purple-600 to-blue-600 text-white">
-                    {profile.username[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900 flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-white" />
-                </div>
-              </div>
+    <Layout>
+      <div className="max-w-6xl mx-auto p-6 space-y-8">
+        <PageHeader 
+          title="Enhanced Profile"
+          description="Complete guardian profile with AI-powered features"
+        />
 
-              <div className="text-center md:text-left flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold text-white">
-                    {profile.username}
-                  </h1>
-                  <Badge className="bg-purple-600 text-white">Guardian</Badge>
-                </div>
-
-                <p className="text-slate-300 mb-4 max-w-2xl">{profile.bio}</p>
-
-                <div className="flex flex-wrap gap-4 text-sm text-slate-400">
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    {profile.location}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    Guardian since{" "}
-                    {new Date(profile.joinedAt).toLocaleDateString()}
-                  </div>
-                  {address && (
-                    <div className="flex items-center gap-1">
-                      <Shield className="w-4 h-4" />
-                      {address.slice(0, 6)}...{address.slice(-4)}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <Dialog open={editing} onOpenChange={setEditing}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white"
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="bg-slate-800 border-slate-700">
-                    <DialogHeader>
-                      <DialogTitle className="text-white">
-                        Edit Guardian Profile
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="username" className="text-slate-300">
-                          Username
-                        </Label>
-                        <Input
-                          id="username"
-                          value={usernameInput}
-                          onChange={(e) => setUsernameInput(e.target.value)}
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="bio" className="text-slate-300">
-                          Bio
-                        </Label>
-                        <Input
-                          id="bio"
-                          value={bioInput}
-                          onChange={(e) => setBioInput(e.target.value)}
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
-                      </div>
-                      <Button
-                        onClick={saveProfile}
-                        className="w-full bg-purple-600 hover:bg-purple-700"
-                      >
-                        Save Changes
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-
-                <Button
-                  variant="outline"
-                  className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white"
-                >
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
-              </div>
+        {/* Profile Header with Theme Toggle */}
+        <div className="space-y-4">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <ProfileHeader profile={profile} isOwnProfile={true} />
             </div>
-          </CardContent>
-        </Card>
+            <div className="ml-4 flex flex-col gap-4">
+              <ProfileThemeToggle />
+              <SocialLinksCard profile={profile} />
+            </div>
+          </div>
+        </div>
 
-        {/* Stats Grid with Enhanced Styling */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          {statCards.map((stat, index) => (
-            <Card
-              key={index}
-              className="bg-slate-800/50 border-slate-700 hover:border-purple-500/50 transition-colors"
-            >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
+        {/* Profile Stats */}
+        <ProfileStats capsules={capsules} badges={badges} friends={friends} />
+
+        {/* Profile Tabs */}
+        <ProfileTabs 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          isOwnProfile={true}
+        />
+
+        {/* Tab Content */}
+        <div className="min-h-[400px]">
+          {activeTab === "capsules" && (
+            <div className="space-y-8">
+              <CapsuleReels capsules={capsules} />
+              {verifiedCapsules.length > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-brand-light">Verified Capsules</h3>
+                  <VerifiedCapsulesGrid capsules={verifiedCapsules} />
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "media" && (
+            <div className="grid lg:grid-cols-2 gap-8">
+              <ProfileMediaUploader userId={profile.id} />
+              <MemoryRecallAI userId={profile.id} />
+            </div>
+          )}
+
+          {activeTab === "friends" && (
+            <FriendInviteCard friends={friends} userId={profile.id} />
+          )}
+
+          {activeTab === "badges" && (
+            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
+              {badges.length === 0 ? (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-brand-light/60">No badges earned yet</p>
+                  <p className="text-xs text-brand-light/40 mt-2">
+                    Complete activities to earn achievement badges
+                  </p>
+                </div>
+              ) : (
+                badges.map((badge: any) => (
                   <div
-                    className={`p-3 rounded-lg bg-gradient-to-br ${stat.color}`}
+                    key={badge.id}
+                    className="bg-brand-secondary border border-brand-surface rounded-xl p-4 text-center hover:border-brand-accent/50 transition-colors"
+                    data-testid={`badge-${badge.id}`}
                   >
-                    <stat.icon className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <div className={`text-3xl font-bold ${stat.textColor} mb-1`}>
-                  {stat.value}
-                </div>
-                <div className="text-sm text-slate-400">{stat.subtitle}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        <div className="grid gap-8 lg:grid-cols-3">
-          {/* Badges Section */}
-          <Card className="lg:col-span-2 bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Award className="w-5 h-5 text-yellow-400" />
-                Guardian Badges
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-3">
-                {profile.badges.map((badge, idx) => (
-                  <Badge
-                    key={idx}
-                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 text-sm font-medium"
-                  >
-                    {badge}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                Create Capsule
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white"
-              >
-                Verify Content
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-green-500 text-green-400 hover:bg-green-500 hover:text-white"
-              >
-                Mint NFT
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* NFT Capsule Gallery */}
-        <Card className="mt-8 bg-slate-800/50 border-slate-700">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Trophy className="w-5 w-5 text-gold-400" />
-              Veritas Capsule NFT Collection
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockNFTs.map((nft) => (
-                <Card
-                  key={nft.id}
-                  className="bg-slate-700/30 border-slate-600 hover:border-purple-500/50 transition-colors"
-                >
-                  <CardContent className="p-4">
-                    <div className="aspect-square rounded-lg overflow-hidden mb-4">
-                      <img
-                        src={nft.image}
-                        alt={nft.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h3 className="font-semibold text-white mb-2">
-                      {nft.title}
-                    </h3>
-                    <p className="text-sm text-slate-400 mb-3">
-                      {nft.description}
+                    <img
+                      src={badge.icon}
+                      alt={badge.name}
+                      className="mx-auto w-16 h-16 rounded-full shadow-md mb-3"
+                    />
+                    <p className="text-sm font-semibold text-brand-light mb-1">
+                      {badge.name}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-green-600 text-white">
-                        Score: {nft.griefScore}
-                      </Badge>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white"
-                      >
-                        View
-                      </Button>
+                    <p className="text-xs text-brand-light/60 mb-2">
+                      {badge.description}
+                    </p>
+                    <div className="text-xs text-brand-accent font-medium capitalize">
+                      {badge.rarity}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                ))
+              )}
             </div>
-          </CardContent>
-        </Card>
+          )}
+
+          {activeTab === "activity" && (
+            <ActivityTimeline userId={profile.id} />
+          )}
+
+          {activeTab === "settings" && (
+            <div className="text-center py-8">
+              <p className="text-brand-light/60">Profile settings coming soon</p>
+              <p className="text-xs text-brand-light/40 mt-2">
+                Advanced profile customization and privacy controls
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
