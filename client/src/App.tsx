@@ -41,6 +41,7 @@ const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
+const DAOPage = lazy(() => import("@/pages/dao"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -108,6 +109,7 @@ function Router() {
               <Route path="/subscribe/:tier" component={Subscribe} />
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
+              <Route path="/dao" component={DAOPage} />
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />
               <Route component={NotFound} />
