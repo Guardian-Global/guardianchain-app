@@ -13,6 +13,8 @@ import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
+import ipfsRouter from "./routes/ipfs";
+import nftRouter from "./routes/nft";
 import {
   distributeReplayYield,
   calculateGriefYield,
@@ -5888,6 +5890,8 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   app.use("/api/ai", aiRoutes);
   app.use("/api/nft", nftRoutes);
   app.use("/api/airdrop", airdropRoutes);
+  app.use("/api/ipfs", ipfsRouter);
+  app.use("/api/nft", nftRouter);
   app.use("/api/claim", airdropRoutes);
   
   // Enhanced wallet authentication routes

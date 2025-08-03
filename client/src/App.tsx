@@ -34,6 +34,7 @@ import Explore from "@/pages/explore";
 import Leaderboard from "@/pages/leaderboard";
 import Profile from "@/pages/profile";
 import CapsuleDetail from "@/pages/capsule-detail";
+import CapsuleDetailNew from "@/pages/CapsuleDetail";
 import Governance from "@/pages/governance";
 import PrivateFeed from "@/pages/private";
 // Dashboard moved to archive - using role-based dashboards
@@ -370,6 +371,10 @@ function Router() {
             <Route
               path="/capsule/:id"
               component={lazy(() => import("./components/CapsuleReplayView"))}
+            />
+            <Route
+              path="/capsule-detail/:id"
+              component={CapsuleDetailNew}
             />
             <Route
               path="/admin"
