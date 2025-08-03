@@ -44,6 +44,7 @@ const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
 const DAOPage = lazy(() => import("@/pages/dao"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
+const AnalyticsPage = lazy(() => import("@/pages/analytics"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -116,6 +117,7 @@ function Router() {
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />
               <Route path="/admin/timeline" component={AdminTimelineView} />
+              <Route path="/analytics" component={AnalyticsPage} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

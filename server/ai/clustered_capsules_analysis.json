@@ -1,0 +1,337 @@
+{
+  "clustering_summary": {
+    "total_capsules": 8,
+    "n_clusters": 5,
+    "clustering_algorithm": "KMeans with TF-IDF",
+    "embedding_model": "TF-IDF Vectorizer (Fallback)",
+    "analysis_timestamp": "2025-08-03T20:30:12.268429"
+  },
+  "cluster_themes": {
+    "2": {
+      "theme_name": "Joy & Celebration",
+      "size": 2,
+      "avg_emotional_score": 9.0,
+      "avg_grief_score": 1.4,
+      "common_tags": [
+        "family",
+        "tradition",
+        "cooking",
+        "grandmother",
+        "christmas"
+      ],
+      "era_range": "1995-1998",
+      "sample_titles": [
+        "Family Memory from 1995",
+        "First Love Letter"
+      ]
+    },
+    "4": {
+      "theme_name": "Grief & Loss",
+      "size": 1,
+      "avg_emotional_score": 3.2,
+      "avg_grief_score": 7.8,
+      "common_tags": [
+        "whistleblowing",
+        "fraud",
+        "corporate",
+        "evidence",
+        "legal"
+      ],
+      "era_range": "2020-2020",
+      "sample_titles": [
+        "Corporate Whistleblowing 2020"
+      ]
+    },
+    "0": {
+      "theme_name": "Grief & Loss",
+      "size": 2,
+      "avg_emotional_score": 4.15,
+      "avg_grief_score": 9.35,
+      "common_tags": [
+        "loss",
+        "friendship",
+        "grief",
+        "tribute",
+        "memory"
+      ],
+      "era_range": "2021-2024",
+      "sample_titles": [
+        "Loss of a Best Friend",
+        "Father's Final Words"
+      ]
+    },
+    "1": {
+      "theme_name": "Joy & Celebration",
+      "size": 2,
+      "avg_emotional_score": 9.45,
+      "avg_grief_score": 1.0,
+      "common_tags": [
+        "education",
+        "achievement",
+        "graduation",
+        "phd",
+        "success"
+      ],
+      "era_range": "2019-2023",
+      "sample_titles": [
+        "Graduation Day Achievement",
+        "Wedding Day Bliss"
+      ]
+    },
+    "3": {
+      "theme_name": "Grief & Loss",
+      "size": 1,
+      "avg_emotional_score": 4.7,
+      "avg_grief_score": 8.5,
+      "common_tags": [
+        "trauma",
+        "healing",
+        "therapy",
+        "courage",
+        "recovery"
+      ],
+      "era_range": "2022-2022",
+      "sample_titles": [
+        "Childhood Trauma Recovery"
+      ]
+    }
+  },
+  "capsule_data": [
+    {
+      "id": "cap_1754140001_abc123",
+      "title": "Family Memory from 1995",
+      "description": "A cherished moment when my grandmother taught me to bake her famous apple pie recipe during Christmas",
+      "content": "The kitchen smelled of cinnamon and love. She guided my small hands, showing me how to roll the dough just right.",
+      "emotional_score": 8.5,
+      "grief_score": 2.0,
+      "timestamp": "1995-12-24T15:30:00Z",
+      "category": "family",
+      "creator_id": "user_456",
+      "tags": [
+        "family",
+        "tradition",
+        "cooking",
+        "grandmother",
+        "christmas"
+      ],
+      "combined_text": "Family Memory from 1995: A cherished moment when my grandmother taught me to bake her famous apple pie recipe during Christmas The kitchen smelled of cinnamon and love. She guided my small hands, showing me how to roll the dough just right.",
+      "year": 1995,
+      "cluster": 2,
+      "x": 0.06558571048591746,
+      "y": 0.48129475780954106
+    },
+    {
+      "id": "cap_1754140002_def456",
+      "title": "Corporate Whistleblowing 2020",
+      "description": "Evidence of financial misconduct at TechCorp involving $2.3M in fraudulent transactions",
+      "content": "Internal emails reveal systematic manipulation of quarterly reports to inflate revenue figures.",
+      "emotional_score": 3.2,
+      "grief_score": 7.8,
+      "timestamp": "2020-06-15T09:45:00Z",
+      "category": "professional",
+      "creator_id": "user_789",
+      "tags": [
+        "whistleblowing",
+        "fraud",
+        "corporate",
+        "evidence",
+        "legal"
+      ],
+      "combined_text": "Corporate Whistleblowing 2020: Evidence of financial misconduct at TechCorp involving $2.3M in fraudulent transactions Internal emails reveal systematic manipulation of quarterly reports to inflate revenue figures.",
+      "year": 2020,
+      "cluster": 4,
+      "x": -0.22839419897352978,
+      "y": 0.1552898723037567
+    },
+    {
+      "id": "cap_1754140003_ghi789",
+      "title": "Loss of a Best Friend",
+      "description": "Tribute to Sarah, who passed away in a car accident last month",
+      "content": "Sarah had this infectious laugh that could light up any room. I miss our daily coffee conversations.",
+      "emotional_score": 2.1,
+      "grief_score": 9.2,
+      "timestamp": "2024-07-10T18:20:00Z",
+      "category": "grief",
+      "creator_id": "user_123",
+      "tags": [
+        "loss",
+        "friendship",
+        "grief",
+        "tribute",
+        "memory"
+      ],
+      "combined_text": "Loss of a Best Friend: Tribute to Sarah, who passed away in a car accident last month Sarah had this infectious laugh that could light up any room. I miss our daily coffee conversations.",
+      "year": 2024,
+      "cluster": 0,
+      "x": -0.4468045235579567,
+      "y": -0.3793145948070321
+    },
+    {
+      "id": "cap_1754140004_jkl012",
+      "title": "Graduation Day Achievement",
+      "description": "Finally earned my PhD in Computer Science after 6 years of hard work",
+      "content": "Walking across that stage, I thought of all the late nights and challenges that led to this moment.",
+      "emotional_score": 9.1,
+      "grief_score": 1.5,
+      "timestamp": "2023-05-18T14:00:00Z",
+      "category": "milestone",
+      "creator_id": "user_321",
+      "tags": [
+        "education",
+        "achievement",
+        "graduation",
+        "phd",
+        "success"
+      ],
+      "combined_text": "Graduation Day Achievement: Finally earned my PhD in Computer Science after 6 years of hard work Walking across that stage, I thought of all the late nights and challenges that led to this moment.",
+      "year": 2023,
+      "cluster": 1,
+      "x": 0.5291798800152614,
+      "y": -0.1555179528402875
+    },
+    {
+      "id": "cap_1754140005_mno345",
+      "title": "First Love Letter",
+      "description": "The handwritten letter that started our 25-year marriage",
+      "content": "Your eyes hold the universe, and in them I've found my home. Will you walk this journey with me?",
+      "emotional_score": 9.5,
+      "grief_score": 0.8,
+      "timestamp": "1998-02-14T20:30:00Z",
+      "category": "love",
+      "creator_id": "user_654",
+      "tags": [
+        "love",
+        "romance",
+        "marriage",
+        "letter",
+        "relationship"
+      ],
+      "combined_text": "First Love Letter: The handwritten letter that started our 25-year marriage Your eyes hold the universe, and in them I've found my home. Will you walk this journey with me?",
+      "year": 1998,
+      "cluster": 2,
+      "x": -0.20575025245268977,
+      "y": 0.6343956978283651
+    },
+    {
+      "id": "cap_1754140006_pqr678",
+      "title": "Childhood Trauma Recovery",
+      "description": "Finally confronting the abuse I suffered as a child and finding healing",
+      "content": "It took decades to find the courage to speak about what happened. Therapy has been life-changing.",
+      "emotional_score": 4.7,
+      "grief_score": 8.5,
+      "timestamp": "2022-09-12T16:45:00Z",
+      "category": "healing",
+      "creator_id": "user_987",
+      "tags": [
+        "trauma",
+        "healing",
+        "therapy",
+        "courage",
+        "recovery"
+      ],
+      "combined_text": "Childhood Trauma Recovery: Finally confronting the abuse I suffered as a child and finding healing It took decades to find the courage to speak about what happened. Therapy has been life-changing.",
+      "year": 2022,
+      "cluster": 3,
+      "x": 0.2011932033279517,
+      "y": -0.20425902047995273
+    },
+    {
+      "id": "cap_1754140007_stu901",
+      "title": "Wedding Day Bliss",
+      "description": "The most perfect day of my life, surrounded by family and friends",
+      "content": "When I saw her walking down the aisle, time stopped. Everything was exactly as we dreamed.",
+      "emotional_score": 9.8,
+      "grief_score": 0.5,
+      "timestamp": "2019-06-21T15:00:00Z",
+      "category": "celebration",
+      "creator_id": "user_456",
+      "tags": [
+        "wedding",
+        "love",
+        "celebration",
+        "family",
+        "joy"
+      ],
+      "combined_text": "Wedding Day Bliss: The most perfect day of my life, surrounded by family and friends When I saw her walking down the aisle, time stopped. Everything was exactly as we dreamed.",
+      "year": 2019,
+      "cluster": 1,
+      "x": 0.5317947047130064,
+      "y": -0.15257416500735693
+    },
+    {
+      "id": "cap_1754140008_vwx234",
+      "title": "Father's Final Words",
+      "description": "The last conversation I had with my dad before he passed from cancer",
+      "content": "He told me he was proud of who I'd become and that he'd always watch over me.",
+      "emotional_score": 6.2,
+      "grief_score": 9.5,
+      "timestamp": "2021-03-08T22:30:00Z",
+      "category": "loss",
+      "creator_id": "user_654",
+      "tags": [
+        "death",
+        "father",
+        "cancer",
+        "final",
+        "love"
+      ],
+      "combined_text": "Father's Final Words: The last conversation I had with my dad before he passed from cancer He told me he was proud of who I'd become and that he'd always watch over me.",
+      "year": 2021,
+      "cluster": 0,
+      "x": -0.44680452355796024,
+      "y": -0.3793145948070341
+    }
+  ],
+  "visualization_data": {
+    "x_coordinates": [
+      0.06558571048591746,
+      -0.22839419897352978,
+      -0.4468045235579567,
+      0.5291798800152614,
+      -0.20575025245268977,
+      0.2011932033279517,
+      0.5317947047130064,
+      -0.44680452355796024
+    ],
+    "y_coordinates": [
+      0.48129475780954106,
+      0.1552898723037567,
+      -0.3793145948070321,
+      -0.1555179528402875,
+      0.6343956978283651,
+      -0.20425902047995273,
+      -0.15257416500735693,
+      -0.3793145948070341
+    ],
+    "cluster_labels": [
+      2,
+      4,
+      0,
+      1,
+      2,
+      3,
+      1,
+      0
+    ],
+    "capsule_ids": [
+      "cap_1754140001_abc123",
+      "cap_1754140002_def456",
+      "cap_1754140003_ghi789",
+      "cap_1754140004_jkl012",
+      "cap_1754140005_mno345",
+      "cap_1754140006_pqr678",
+      "cap_1754140007_stu901",
+      "cap_1754140008_vwx234"
+    ],
+    "titles": [
+      "Family Memory from 1995",
+      "Corporate Whistleblowing 2020",
+      "Loss of a Best Friend",
+      "Graduation Day Achievement",
+      "First Love Letter",
+      "Childhood Trauma Recovery",
+      "Wedding Day Bliss",
+      "Father's Final Words"
+    ]
+  }
+}

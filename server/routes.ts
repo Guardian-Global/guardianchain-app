@@ -20,6 +20,7 @@ import { analyzeVoiceFile } from "./ai/voice-analysis";
 import { composeCapsule } from "./ai/capsule-composer";
 import { registerSubscriptionRoutes } from "./routes/subscription";
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
+import { runCapsuleClustering, getCachedClusteringResults, generateClusterInsights } from "./api/capsule-clustering";
 import multer from "multer";
 import {
   distributeReplayYield,
@@ -72,6 +73,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Media remixing endpoints
   app.post("/api/media/remix", isDebugAuthenticated, handleMediaRemix);
   app.get("/api/media/remix/status/:predictionId", isDebugAuthenticated, handleMediaRemixStatus);
+  
+  // Advanced AI clustering endpoints
+  app.post("/api/capsules/clustering/analyze", isDebugAuthenticated, runCapsuleClustering);
+  app.get("/api/capsules/clustering/results", isDebugAuthenticated, getCachedClusteringResults);
+  app.get("/api/capsules/clustering/insights/:clusterId/:userId", isDebugAuthenticated, generateClusterInsights);
   // Search endpoint is handled in server/index.ts via /api/search route
   app.post("/api/capsules", createCapsule);
   app.get("/api/capsules/:id", getCapsuleById);
