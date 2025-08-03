@@ -1,5 +1,6 @@
 import React from "react";
 import { Shield, Coins, Zap, Brain, Lock, Globe } from "lucide-react";
+import DisclaimerBlock from "@/components/DisclaimerBlock";
 
 export default function Start() {
   return (
@@ -133,6 +134,9 @@ export default function Start() {
             </div>
           </div>
         </div>
+
+        {/* Legal Disclaimer */}
+        <DisclaimerBlock />
       </div>
     </div>
   );
