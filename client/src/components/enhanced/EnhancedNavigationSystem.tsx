@@ -46,6 +46,16 @@ interface NavigationItem {
 const navigationItems: NavigationItem[] = [
   // Core Platform
   {
+    id: "start",
+    title: "Start Here",
+    icon: Star,
+    path: "/start",
+    description: "Learn about GuardianChain and truth capsules",
+    category: "Core",
+    tier: ["EXPLORER", "SEEKER", "CREATOR", "SOVEREIGN"],
+    isNew: true
+  },
+  {
     id: "dashboard",
     title: "Command Center",
     icon: Home,
@@ -61,8 +71,7 @@ const navigationItems: NavigationItem[] = [
     path: "/create",
     description: "Create and seal truth capsules",
     category: "Core",
-    tier: ["SEEKER", "CREATOR", "SOVEREIGN"],
-    isNew: true
+    tier: ["SEEKER", "CREATOR", "SOVEREIGN"]
   },
   {
     id: "profile",

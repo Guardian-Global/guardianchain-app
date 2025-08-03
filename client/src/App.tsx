@@ -30,6 +30,7 @@ const Profile = lazy(() => import("@/pages/profile"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
 const TruthNet = lazy(() => import("@/pages/TruthNet"));
 const Explorer = lazy(() => import("@/pages/Explorer"));
+const Start = lazy(() => import("@/pages/Start"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -84,6 +85,7 @@ function Router() {
               <Route path="/truth-genome" component={TruthGenome} />
               <Route path="/truth-net" component={TruthNet} />
               <Route path="/explorer" component={Explorer} />
+              <Route path="/start" component={Start} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
