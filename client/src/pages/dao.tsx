@@ -33,6 +33,10 @@ import ProposalList from "@/components/dao/ProposalList";
 import YieldGauge from "@/components/dao/YieldGauge";
 import DAORanking from "@/components/dao/DAORanking";
 import CapsuleRedeemer from "@/components/dao/CapsuleRedeemer";
+import ValidatorRegistry from "@/components/dao/ValidatorRegistry";
+import WitnessBoard from "@/components/dao/WitnessBoard";
+import LicenseVerifier from "@/components/dao/LicenseVerifier";
+import MultisigVault from "@/components/dao/MultisigVault";
 import { useAuth } from "@/hooks/useAuth";
 
 const proposalSchema = z.object({
@@ -181,36 +185,54 @@ export default function DAOPage() {
 
         {/* Main Content */}
         <Tabs defaultValue="proposals" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-brand-surface">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-brand-surface text-xs">
             <TabsTrigger
               value="proposals"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
             >
               Proposals
             </TabsTrigger>
             <TabsTrigger
               value="rankings"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
             >
               Rankings
             </TabsTrigger>
             <TabsTrigger
               value="yields"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
             >
               Yields
             </TabsTrigger>
             <TabsTrigger
               value="redeem"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
             >
               Redeem
             </TabsTrigger>
             <TabsTrigger
-              value="certificates"
-              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white"
+              value="validators"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
             >
-              Certificates
+              Validators
+            </TabsTrigger>
+            <TabsTrigger
+              value="witnesses"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+            >
+              Witnesses
+            </TabsTrigger>
+            <TabsTrigger
+              value="licenses"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+            >
+              Licenses
+            </TabsTrigger>
+            <TabsTrigger
+              value="vault"
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-white px-2"
+            >
+              Vault
             </TabsTrigger>
           </TabsList>
 
@@ -390,6 +412,22 @@ export default function DAOPage() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="validators" className="space-y-6">
+            <ValidatorRegistry />
+          </TabsContent>
+
+          <TabsContent value="witnesses" className="space-y-6">
+            <WitnessBoard />
+          </TabsContent>
+
+          <TabsContent value="licenses" className="space-y-6">
+            <LicenseVerifier />
+          </TabsContent>
+
+          <TabsContent value="vault" className="space-y-6">
+            <MultisigVault />
           </TabsContent>
 
           <TabsContent value="certificates" className="space-y-6">

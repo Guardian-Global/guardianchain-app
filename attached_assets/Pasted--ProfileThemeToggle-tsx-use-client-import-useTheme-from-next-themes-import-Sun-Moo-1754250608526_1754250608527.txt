@@ -1,0 +1,122 @@
+// ProfileThemeToggle.tsx
+"use client";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
+
+export default function ProfileThemeToggle() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <button
+      className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white shadow"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+    >
+      {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
+  );
+}
+
+// MemoryRecallAI.tsx
+"use client";
+import { useState } from "react";
+
+export default function MemoryRecallAI({ userId }: { userId: string }) {
+  const [prompt, setPrompt] = useState("");
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleRecall() {
+    setLoading(true);
+    const res = await fetch("/api/ai/recall", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, userId })
+    });
+    const data = await res.json();
+    setResult(data.result);
+    setLoading(false);
+  }
+
+  return (
+    <div className="p-6 bg-slate-800 rounded-xl space-y-4">
+      <h3 className="text-xl font-semibold">🧠 Memory Recall AI</h3>
+      <input
+        className="w-full rounded-md p-2 bg-slate-700 text-white"
+        placeholder="Describe the memory you're trying to recall..."
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+      />
+      <button
+        onClick={handleRecall}
+        className="px-4 py-2 bg-indigo-600 rounded-md text-white hover:bg-indigo-500"
+        disabled={loading}
+      >
+        {loading ? "Recalling..." : "Recall Memory"}
+      </button>
+      {result && (
+        <div className="mt-4 p-4 bg-slate-900 border border-slate-600 rounded">
+          <pre className="whitespace-pre-wrap text-sm text-white/90">{result}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// SocialLinksCard.tsx
+export default function SocialLinksCard({ profile }: { profile: any }) {
+  return (
+    <div className="flex gap-4 items-center">
+      {profile.twitter && (
+        <a
+          href={`https://twitter.com/${profile.twitter}`}
+          target="_blank"
+          className="text-blue-400 hover:underline"
+        >
+          @{profile.twitter}
+        </a>
+      )}
+      {profile.ens && <span className="text-sm text-white/70">{profile.ens}</span>}
+    </div>
+  );
+}
+
+// ActivityTimeline.tsx
+import { useEffect, useState } from "react";
+
+export default function ActivityTimeline({ userId }: { userId: string }) {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetch(`/api/profile/timeline?userId=${userId}`)
+      .then(res => res.json())
+      .then(data => setEvents(data));
+  }, [userId]);
+
+  return (
+    <div className="p-4 border-t border-slate-700">
+      <h3 className="text-lg font-semibold mb-4 text-white">📜 Activity Timeline</h3>
+      <ul className="space-y-3">
+        {events.map((event: any, idx) => (
+          <li key={idx} className="text-sm text-white/80">
+            <span className="font-medium text-indigo-400">{event.type}</span>: {event.description}
+            <span className="block text-xs text-white/50">{new Date(event.timestamp).toLocaleString()}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}  
+
+// VerifiedCapsulesGrid.tsx
+export default function VerifiedCapsulesGrid({ capsules }: { capsules: any[] }) {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4">
+      {capsules.map((cap) => (
+        <div key={cap.id} className="rounded-xl border bg-slate-900 p-4 shadow hover:shadow-lg">
+          <p className="text-white font-semibold">{cap.title}</p>
+          <p className="text-white/70 text-xs mt-1">{cap.description}</p>
+        </div>
+      ))}
+    </div>
+  );
+} 

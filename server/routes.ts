@@ -3502,6 +3502,239 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
     }
   });
 
+  // Validator Registry endpoint
+  app.get("/api/validators/registry", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("👥 Validator registry requested");
+      
+      const mockValidators = [
+        {
+          name: "TruthSeeker Alpha",
+          capsules: 1247,
+          reputation: 9850,
+          active: true,
+          gttEarned: 12450,
+          joinedDate: "Jan 2024",
+          specialization: "Financial Disclosures"
+        },
+        {
+          name: "VerityGuard Prime",
+          capsules: 987,
+          reputation: 8920,
+          active: true,
+          gttEarned: 9870,
+          joinedDate: "Feb 2024",
+          specialization: "Legal Documents"
+        },
+        {
+          name: "ChainWarden Beta",
+          capsules: 756,
+          reputation: 7650,
+          active: false,
+          gttEarned: 7560,
+          joinedDate: "Mar 2024",
+          specialization: "Medical Records"
+        },
+        {
+          name: "DataKeeper Gamma",
+          capsules: 623,
+          reputation: 6890,
+          active: true,
+          gttEarned: 6230,
+          joinedDate: "Apr 2024",
+          specialization: "Personal Testimonies"
+        }
+      ];
+      
+      res.json(mockValidators);
+    } catch (error) {
+      console.error("❌ Failed to get validator registry:", error);
+      res.status(500).json({ error: "Failed to fetch validator registry" });
+    }
+  });
+
+  // Witness Testimonies endpoint
+  app.get("/api/witnesses/testimonies", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📣 Witness testimonies requested");
+      
+      const mockTestimonies = [
+        {
+          id: "witness_001",
+          message: "I witnessed the corruption of funds in the city council meeting on December 15th. Documents were destroyed intentionally.",
+          author: "Anonymous Whistleblower",
+          timestamp: "2 hours ago",
+          votes: 47,
+          status: "verified",
+          category: "Government Corruption"
+        },
+        {
+          id: "witness_002", 
+          message: "Company XYZ has been dumping toxic waste into the river for months. I have photographic evidence and chemical analysis.",
+          author: "Environmental Activist",
+          timestamp: "5 hours ago",
+          votes: 23,
+          status: "pending",
+          category: "Environmental Crime"
+        },
+        {
+          id: "witness_003",
+          message: "The construction company used substandard materials in the school building. Children's safety is at risk.",
+          author: "Former Employee",
+          timestamp: "1 day ago",
+          votes: 156,
+          status: "disputed",
+          category: "Public Safety"
+        }
+      ];
+      
+      res.json(mockTestimonies);
+    } catch (error) {
+      console.error("❌ Failed to get witness testimonies:", error);
+      res.status(500).json({ error: "Failed to fetch witness testimonies" });
+    }
+  });
+
+  // Submit witness testimony
+  app.post("/api/witnesses/testimonies", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { message } = req.body;
+      console.log("📝 New witness testimony submitted:", message.substring(0, 50) + "...");
+      
+      const newTestimony = {
+        id: `witness_${Date.now()}`,
+        message,
+        author: "Anonymous User",
+        timestamp: "just now",
+        votes: 0,
+        status: "pending",
+        category: "General"
+      };
+      
+      res.json(newTestimony);
+    } catch (error) {
+      console.error("❌ Failed to submit testimony:", error);
+      res.status(500).json({ error: "Failed to submit testimony" });
+    }
+  });
+
+  // License Verifier endpoint
+  app.get("/api/explorer/verifiers", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🔍 License verifications requested");
+      
+      const mockVerifications = [
+        {
+          id: "lic_001",
+          capsuleId: "cap_abc123",
+          licenseType: "commercial",
+          status: "pending",
+          payoutAmount: 2500,
+          verifierName: "LegalTech Validators",
+          submittedDate: "2 hours ago",
+          processingTime: "24-48 hours"
+        },
+        {
+          id: "lic_002",
+          capsuleId: "cap_def456", 
+          licenseType: "exclusive",
+          status: "approved",
+          payoutAmount: 5000,
+          verifierName: "Premium Licensing Inc",
+          submittedDate: "1 day ago",
+          processingTime: "Completed"
+        },
+        {
+          id: "lic_003",
+          capsuleId: "cap_ghi789",
+          licenseType: "creative_commons",
+          status: "rejected",
+          payoutAmount: 750,
+          verifierName: "Open Source Validators",
+          submittedDate: "3 days ago",
+          processingTime: "Rejected after review"
+        }
+      ];
+      
+      res.json(mockVerifications);
+    } catch (error) {
+      console.error("❌ Failed to get license verifications:", error);
+      res.status(500).json({ error: "Failed to fetch license verifications" });
+    }
+  });
+
+  // Vault Stats endpoint
+  app.get("/api/vault/stats", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🏛️ Vault stats requested");
+      
+      const mockVaultStats = {
+        totalGTT: 2847650,
+        lastDisbursement: "2 hours ago",
+        pendingTxs: 4,
+        weeklyDisbursement: 125000,
+        validatorRewards: 45000,
+        treasuryHealth: 87
+      };
+      
+      res.json(mockVaultStats);
+    } catch (error) {
+      console.error("❌ Failed to get vault stats:", error);
+      res.status(500).json({ error: "Failed to fetch vault stats" });
+    }
+  });
+
+  // Pending Multisig Transactions endpoint
+  app.get("/api/vault/pending-transactions", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📋 Pending multisig transactions requested");
+      
+      const mockPendingTxs = [
+        {
+          id: "tx_001",
+          type: "disbursement",
+          amount: 125000,
+          recipient: "0x1234567890abcdef1234567890abcdef12345678",
+          description: "Weekly validator rewards distribution",
+          signatures: 3,
+          requiredSignatures: 5,
+          status: "pending",
+          createdAt: "2 hours ago",
+          signers: ["Guardian1", "Guardian2", "Guardian3"]
+        },
+        {
+          id: "tx_002",
+          type: "payout",
+          amount: 2500,
+          recipient: "0xabcdef1234567890abcdef1234567890abcdef12",
+          description: "License verification payout - Commercial License",
+          signatures: 2,
+          requiredSignatures: 3,
+          status: "pending",
+          createdAt: "4 hours ago",
+          signers: ["Validator1", "Validator2"]
+        },
+        {
+          id: "tx_003",
+          type: "governance",
+          amount: 50000,
+          recipient: "0x9876543210fedcba9876543210fedcba98765432",
+          description: "Emergency fund allocation for infrastructure upgrade",
+          signatures: 1,
+          requiredSignatures: 7,
+          status: "pending",
+          createdAt: "1 day ago",
+          signers: ["TreasuryManager"]
+        }
+      ];
+      
+      res.json(mockPendingTxs);
+    } catch (error) {
+      console.error("❌ Failed to get pending transactions:", error);
+      res.status(500).json({ error: "Failed to fetch pending transactions" });
+    }
+  });
+
   // Get all proposals with voting data
   app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
     console.log("🏛️ DAO proposals requested");

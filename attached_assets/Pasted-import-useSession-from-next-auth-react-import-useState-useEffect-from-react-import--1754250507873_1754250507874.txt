@@ -1,0 +1,96 @@
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import ProfileHeader from "@/components/profile/ProfileHeader";
+import ProfileStats from "@/components/profile/ProfileStats";
+import ProfileTabs from "@/components/profile/ProfileTabs";
+import CapsuleReels from "@/components/profile/CapsuleReels";
+import ProfileMediaUploader from "@/components/profile/ProfileMediaUploader";
+import FriendInviteCard from "@/components/profile/FriendInviteCard";
+import MemoryRecallAI from "@/components/profile/MemoryRecallAI";
+import ActivityTimeline from "@/components/profile/ActivityTimeline";
+import VerifiedCapsulesGrid from "@/components/profile/VerifiedCapsulesGrid";
+import SocialLinksCard from "@/components/profile/SocialLinksCard";
+import ProfileThemeToggle from "@/components/profile/ProfileThemeToggle";
+import { getUserProfile, getUserCapsules, getUserBadges, getFriends } from "@/lib/profile-api";
+
+export default function UserProfilePage() {
+  const { query } = useRouter();
+  const { data: session } = useSession();
+  const [profile, setProfile] = useState(null);
+  const [capsules, setCapsules] = useState([]);
+  const [badges, setBadges] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [activeTab, setActiveTab] = useState("capsules");
+
+  useEffect(() => {
+    if (!query.wallet) return;
+
+    const fetchData = async () => {
+      const [p, c, b, f] = await Promise.all([
+        getUserProfile(query.wallet),
+        getUserCapsules(query.wallet),
+        getUserBadges(query.wallet),
+        getFriends(query.wallet),
+      ]);
+      setProfile(p);
+      setCapsules(c);
+      setBadges(b);
+      setFriends(f);
+    };
+
+    fetchData();
+  }, [query.wallet]);
+
+  if (!profile) return <div className="p-6 text-center text-muted-foreground animate-pulse">Loading profile...</div>;
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 space-y-8 bg-gradient-to-b from-[#10141f] via-[#151f2e] to-[#0e111b] text-white rounded-2xl shadow-2xl">
+      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center">
+        <ProfileHeader profile={profile} />
+        <div className="mt-4 lg:mt-0 flex gap-4 items-center">
+          <ProfileThemeToggle />
+          <SocialLinksCard profile={profile} />
+        </div>
+      </div>
+
+      <ProfileStats capsules={capsules} badges={badges} friends={friends} />
+      <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      {activeTab === "capsules" && (
+        <>
+          <CapsuleReels capsules={capsules} />
+          <VerifiedCapsulesGrid capsules={capsules.filter(c => c.verified)} />
+        </>
+      )}
+
+      {activeTab === "media" && (
+        <div className="space-y-6">
+          <ProfileMediaUploader userId={profile.id} />
+          <MemoryRecallAI userId={profile.id} />
+        </div>
+      )}
+
+      {activeTab === "friends" && (
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <FriendInviteCard friends={friends} userId={profile.id} />
+        </div>
+      )}
+
+      {activeTab === "badges" && (
+        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
+          {badges.map((badge) => (
+            <div key={badge.id} className="rounded-2xl border border-slate-700 bg-gradient-to-br from-[#222f48] to-[#161e2f] p-4 text-center hover:scale-105 transform transition">
+              <img src={badge.icon} alt={badge.name} className="mx-auto w-16 h-16 rounded-full shadow-md" />
+              <p className="mt-2 text-sm font-semibold text-white/90">{badge.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="pt-8">
+        <ActivityTimeline userId={profile.id} />
+      </div>
+    </div>
+  );
+}
