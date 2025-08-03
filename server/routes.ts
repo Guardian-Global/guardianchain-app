@@ -6109,6 +6109,22 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     return calculatePotentialEarnings(req, res);
   });
 
+  // Onboarding system endpoints
+  app.post("/api/onboarding/complete-module", isDebugAuthenticated, async (req, res) => {
+    const { completeModule } = await import("./routes/onboarding");
+    return completeModule(req, res);
+  });
+
+  app.get("/api/onboarding/progress", isDebugAuthenticated, async (req, res) => {
+    const { getOnboardingProgress } = await import("./routes/onboarding");
+    return getOnboardingProgress(req, res);
+  });
+
+  app.post("/api/onboarding/reset", isDebugAuthenticated, async (req, res) => {
+    const { resetOnboardingProgress } = await import("./routes/onboarding");
+    return resetOnboardingProgress(req, res);
+  });
+
   const httpServer = createServer(app);
   // Truth Genome API routes
   app.get("/api/truth-genome/:capsuleId", isDebugAuthenticated, async (req: any, res) => {

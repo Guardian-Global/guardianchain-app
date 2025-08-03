@@ -35,6 +35,8 @@ const Terms = lazy(() => import("@/pages/Terms"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
 const Subscribe = lazy(() => import("@/pages/Subscribe"));
 const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
+const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
+const RevenueExplainer = lazy(() => import("@/pages/RevenueExplainer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -89,6 +91,8 @@ function Router() {
             <Switch>
               <Route path="/dashboard" component={EnhancedDashboard} />
               <Route path="/enterprise" component={EnterpriseCenter} />
+              <Route path="/tokenomics" component={Tokenomics} />
+              <Route path="/revenue-explainer" component={RevenueExplainer} />
               <Route path="/create" component={CreateCapsule} />
               <Route path="/profile" component={Profile} />
               <Route path="/truth-genome" component={TruthGenome} />

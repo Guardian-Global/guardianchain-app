@@ -1,29 +1,70 @@
 import { Request, Response } from 'express';
 
-// Revenue distribution percentages based on GuardianChain model
+// Enhanced Revenue distribution percentages with full compliance framework
 export const REVENUE_SPLITS = {
   capsuleMint: {
     creator: 70,
     dao: 20,
-    platform: 10
+    platform: 10,
+    description: "Revenue split for new capsule creation and NFT minting",
+    compliance: "Requires active capsule creation - not passive income"
   },
   capsuleUnlock: {
     creator: 50,
     referrer: 25, // if applicable
-    dao: 25
+    dao: 25,
+    description: "Revenue split when users unlock premium capsules",
+    compliance: "Earnings tied to content engagement and referral activity"
   },
   gttYield: {
     creator: 90,
-    dao: 10
+    dao: 10,
+    description: "GTT yield rewards from verified authorship and time-lock",
+    compliance: "Requires verified authorship and active participation"
   },
-  subscription: {
+  gatedContent: {
     creator: 60,
     platform: 30,
-    dao: 10
+    dao: 10,
+    description: "Subscription and gated content revenue distribution",
+    compliance: "Creator must maintain active content publishing"
   },
   storageVault: {
-    platform: 100 // cost recovery only
+    platform: 100, // transparent cost-recovery + 25% markup
+    description: "Vault hosting fees for premium storage tiers",
+    compliance: "Transparent cost-recovery plus 25% markup - platform operations"
   }
+};
+
+// DAO Treasury allocation flows
+export const DAO_TREASURY_FLOWS = {
+  grantPrograms: 30,
+  validatorIncentives: 25,
+  complianceAuditFund: 20,
+  emergencyLegalReserve: 15,
+  communityDevelopment: 10,
+  description: "How DAO treasury funds are allocated across key initiatives"
+};
+
+// GTT Token utility functions
+export const GTT_USE_CASES = [
+  "Capsule mint fee and unlock gate payments",
+  "Yield staking with capsule dividend sharing", 
+  "DAO governance participation and voting rights",
+  "Truth validation and capsule scoring incentives",
+  "Access to Sovereign AI, time-release, and remix tools"
+];
+
+// Legal compliance framework
+export const COMPLIANCE_FRAMEWORK = {
+  gttTokenStatus: "GTT is not a passive security - rewards require active capsule creation, staking, or sharing",
+  revenueDisclosure: "Full revenue disclosures published at guardianchain.app/revenue-sharing-policy",
+  kycAmlTiers: "Implemented for fiat off-ramp compliance with tiered verification",
+  legalSeparation: "Platform operations legally separated from DAO governance decisions", 
+  creatorAgreement: "All creators agree to Terms of Revenue Sharing during onboarding",
+  nonCustodial: "Non-custodial ownership with permanent NFT minting rights",
+  publicTreasury: "Public DAO Treasury with transparent fund allocation",
+  contact: "compliance@guardianchain.app for partnership, audit, or grant requests"
 };
 
 // Helper function to calculate revenue splits
@@ -50,23 +91,33 @@ export function calculateRevenueSplit(
   return result;
 }
 
-// API endpoint to get revenue sharing policy
+// API endpoint to get comprehensive revenue sharing policy
 export async function getRevenueSharingPolicy(req: Request, res: Response) {
   try {
     const policy = {
       splits: REVENUE_SPLITS,
-      description: {
-        capsuleMint: "Revenue from minting new capsules",
-        capsuleUnlock: "Fees from unlocking private capsules",
-        gttYield: "Yield rewards from GTT token staking",
-        subscription: "Monthly subscription revenue",
-        storageVault: "Storage infrastructure costs (transparent 25% markup)"
+      daoTreasuryFlows: DAO_TREASURY_FLOWS,
+      gttUseCases: GTT_USE_CASES,
+      compliance: COMPLIANCE_FRAMEWORK,
+      revenueModel: {
+        capsuleMinting: "70% Creator / 20% DAO / 10% Platform",
+        capsuleUnlock: "50% Creator / 25% Referrer / 25% DAO",
+        gttYieldRewards: "90% Creator / 10% DAO Reserve", 
+        gatedContent: "60% Creator / 30% Platform / 10% DAO",
+        vaultHostingFees: "100% Platform (cost recovery + 25% markup)"
       },
-      compliance: {
-        transparency: "All revenue splits are publicly disclosed",
-        governance: "DAO treasury funds are controlled by GTT token holders",
-        legal: "Compliant with regulatory requirements for revenue sharing",
-        auditability: "All transactions are recorded on-chain for verification"
+      treasuryFlow: "Revenue Event → DAO Treasury → Grant Programs, Validator Incentives, Compliance/Audit Fund, Emergency Legal Reserve",
+      legalDisclosures: {
+        noPassiveSecurity: "GTT rewards require active participation in capsule creation, staking, or sharing",
+        fullTransparency: "Complete revenue disclosures available at guardianchain.app/revenue-sharing-policy",
+        regulatoryCompliance: "KYC/AML tiers implemented for fiat off-ramp compliance",
+        legalSeparation: "Platform operations legally separated from DAO governance decisions",
+        mandatoryAgreement: "All creators must agree to Terms of Revenue Sharing during onboarding"
+      },
+      supportContact: {
+        compliance: "compliance@guardianchain.app",
+        website: "www.guardianchain.app",
+        services: "Partnership, audit, and grant request support available"
       },
       lastUpdated: "2025-08-03T00:00:00Z"
     };
