@@ -970,6 +970,434 @@ Verification Status: Authenticated via Veritas Certificate Engine
     },
   );
 
+  // Enhanced Redemption System API endpoints
+  app.get("/api/redeem/available", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🎁 Fetching available redemptions for user:", req.user.id);
+      
+      // Mock redeemable capsules - in production, query from database
+      const mockRedeemableCapusles = [
+        {
+          id: "cap_redeem_001",
+          title: "High-Value Truth Disclosure",
+          griefScore: 9,
+          unlockTimestamp: Date.now() - 3600000, // 1 hour ago (unlocked)
+          redeemed: false,
+          value: 75,
+          type: "whistle",
+          requirements: { minGriefScore: 8, timelock: true, verified: false }
+        },
+        {
+          id: "cap_redeem_002", 
+          title: "Community Testimony",
+          griefScore: 7,
+          unlockTimestamp: Date.now() - 1800000, // 30 minutes ago (unlocked)
+          redeemed: false,
+          value: 45,
+          type: "testimony",
+          requirements: { minGriefScore: 6, timelock: true, verified: false }
+        },
+        {
+          id: "cap_redeem_003",
+          title: "Legacy Archive",
+          griefScore: 6,
+          unlockTimestamp: Date.now() + 7200000, // 2 hours from now (locked)
+          redeemed: false,
+          value: 30,
+          type: "legacy",
+          requirements: { minGriefScore: 5, timelock: true, verified: false }
+        }
+      ];
+
+      res.json({
+        success: true,
+        capsules: mockRedeemableCapusles,
+        count: mockRedeemableCapusles.length
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch redeemable capsules:", error);
+      res.status(500).json({
+        error: "Failed to fetch redeemable capsules",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/redeem", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleId, wallet } = req.body;
+      console.log("🔓 Processing capsule redemption:", { capsuleId, wallet });
+
+      if (!capsuleId || !wallet) {
+        return res.status(400).json({
+          success: false,
+          reason: "Missing capsuleId or wallet address"
+        });
+      }
+
+      // Import redemption logic
+      const { redeemCapsule, isValidWalletAddress } = await import("../lib/redeemCapsule");
+
+      // Validate wallet address
+      if (!isValidWalletAddress(wallet)) {
+        return res.json({
+          success: false,
+          reason: "Invalid wallet address format"
+        });
+      }
+
+      // Mock capsule data - in production, fetch from database
+      const mockCapsule = {
+        id: capsuleId,
+        title: "Sample Capsule",
+        griefScore: 8,
+        unlockTimestamp: Date.now() - 3600000, // 1 hour ago
+        redeemed: false,
+        value: 50,
+        type: "truth",
+        owner: req.user.id,
+        metadata: {
+          emotionalResonance: 85,
+          truthConfidence: 92
+        }
+      };
+
+      // Process redemption
+      const unlockConditions = {
+        minGriefScore: 5,
+        requireVerification: false
+      };
+
+      const result = redeemCapsule(mockCapsule, wallet, unlockConditions);
+
+      if (result.success) {
+        // In production, update database to mark capsule as redeemed
+        console.log("✅ Capsule redeemed successfully:", result);
+        
+        // Record DAO vault contribution
+        const { daoVault } = await import("../lib/daoVaultDisbursement");
+        if (result.daoContribution && result.daoContribution > 0) {
+          daoVault.depositFromRedemption(
+            result.daoContribution,
+            capsuleId,
+            "validator_address_placeholder"
+          );
+        }
+
+        // Distribute validator rewards if applicable
+        if (result.validatorReward && result.validatorReward > 0) {
+          daoVault.distributeValidatorRewards(
+            "validator_address_placeholder",
+            result.validatorReward,
+            capsuleId
+          );
+        }
+      }
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Redemption failed:", error);
+      res.status(500).json({
+        success: false,
+        reason: "Internal server error during redemption"
+      });
+    }
+  });
+
+  // DAO Vault endpoints
+  app.get("/api/dao/vault/stats", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🏛️ Fetching DAO vault statistics");
+      
+      const { daoVault } = await import("../lib/daoVaultDisbursement");
+      const stats = daoVault.getVaultStats();
+
+      res.json({
+        success: true,
+        vault: stats
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch vault stats:", error);
+      res.status(500).json({
+        error: "Failed to fetch vault statistics",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/dao/vault/distribute", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("💰 Processing weekly DAO distribution");
+      
+      const { daoVault } = await import("../lib/daoVaultDisbursement");
+      const result = daoVault.processWeeklyDistribution();
+
+      res.json({
+        success: result.success,
+        ...result
+      });
+    } catch (error) {
+      console.error("❌ Failed to process distribution:", error);
+      res.status(500).json({
+        error: "Failed to process weekly distribution",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Validator Rewards endpoints
+  app.get("/api/validators/rewards/:validator", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { validator } = req.params;
+      console.log("🏆 Fetching validator rewards for:", validator);
+      
+      const { validatorRewards } = await import("../lib/validatorRewards");
+      const stats = validatorRewards.getValidatorStats(validator);
+      const projections = validatorRewards.calculateValidatorProjections(validator, 7);
+
+      res.json({
+        success: true,
+        validator: stats,
+        projections
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch validator rewards:", error);
+      res.status(500).json({
+        error: "Failed to fetch validator rewards",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/validators/record-event", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const eventData = req.body;
+      console.log("📊 Recording validator event:", eventData);
+      
+      const { validatorRewards } = await import("../lib/validatorRewards");
+      const event = validatorRewards.recordValidatorEvent(eventData);
+
+      res.json({
+        success: true,
+        event
+      });
+    } catch (error) {
+      console.error("❌ Failed to record validator event:", error);
+      res.status(500).json({
+        error: "Failed to record validator event",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/validators/leaderboard", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🥇 Fetching validator leaderboard");
+      
+      const { validatorRewards } = await import("../lib/validatorRewards");
+      const topValidators = validatorRewards.getTopValidators(20);
+      const summary = validatorRewards.getValidatorSummary();
+
+      res.json({
+        success: true,
+        leaderboard: topValidators,
+        summary
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch validator leaderboard:", error);
+      res.status(500).json({
+        error: "Failed to fetch validator leaderboard",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // DAO Incentives endpoints
+  app.get("/api/dao/incentives/programs", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("🎯 Fetching active incentive programs");
+      
+      const { daoIncentives } = await import("../lib/daoIncentives");
+      const programs = daoIncentives.getActivePrograms();
+
+      res.json({
+        success: true,
+        programs,
+        count: programs.length
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch incentive programs:", error);
+      res.status(500).json({
+        error: "Failed to fetch incentive programs",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/dao/incentives/join", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { programId } = req.body;
+      console.log("🎯 User joining incentive program:", programId);
+      
+      const { daoIncentives } = await import("../lib/daoIncentives");
+      const result = daoIncentives.joinIncentiveProgram(req.user.id, programId);
+
+      if (result) {
+        res.json({
+          success: true,
+          incentive: result
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          error: "Unable to join program - may be inactive or already joined"
+        });
+      }
+    } catch (error) {
+      console.error("❌ Failed to join incentive program:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to join incentive program",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/dao/incentives/status", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📊 Fetching user incentive status");
+      
+      const { daoIncentives } = await import("../lib/daoIncentives");
+      const status = daoIncentives.getUserIncentiveStatus(req.user.id);
+
+      res.json({
+        success: true,
+        status
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch incentive status:", error);
+      res.status(500).json({
+        error: "Failed to fetch incentive status",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.get("/api/dao/analytics", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      console.log("📈 Fetching DAO analytics");
+      
+      const { daoIncentives } = await import("../lib/daoIncentives");
+      const analytics = daoIncentives.getDAOAnalytics();
+
+      res.json({
+        success: true,
+        analytics
+      });
+    } catch (error) {
+      console.error("❌ Failed to fetch DAO analytics:", error);
+      res.status(500).json({
+        error: "Failed to fetch DAO analytics",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Archive Certificate endpoints
+  app.post("/api/certificates/generate", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { capsuleData, options = {} } = req.body;
+      console.log("📜 Generating archive certificate for capsule:", capsuleData?.capsuleId);
+      
+      const { archiveCertificateGenerator } = await import("../scripts/generateArchiveCert");
+      const result = await archiveCertificateGenerator.generateCertificate(capsuleData, options);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Certificate generation failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Certificate generation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/certificates/verify", async (req: any, res) => {
+    try {
+      const { certificateHash, capsuleId } = req.body;
+      console.log("🔍 Verifying certificate:", certificateHash);
+      
+      const { archiveCertificateGenerator } = await import("../scripts/generateArchiveCert");
+      const result = await archiveCertificateGenerator.verifyCertificate(certificateHash, capsuleId);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Certificate verification failed:", error);
+      res.status(500).json({
+        valid: false,
+        error: "Certificate verification failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Backup System endpoints
+  app.post("/api/capsules/backup", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { options = {} } = req.body;
+      console.log("💾 Creating capsule backup with options:", options);
+      
+      // Mock capsules for backup - in production, fetch user's capsules from database
+      const mockCapsules = [
+        {
+          id: "cap_backup_001",
+          title: "Sample Truth Capsule",
+          content: "This is a sample truth capsule for backup testing",
+          griefScore: 8,
+          author: req.user.id,
+          timestamp: Date.now() - 86400000,
+          type: "truth",
+          metadata: {
+            emotionalResonance: 75,
+            truthConfidence: 88
+          }
+        }
+      ];
+
+      const { capsuleBackup } = await import("../scripts/backupCapsules");
+      const result = await capsuleBackup.backupCapsules(mockCapsules, options);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Backup failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Backup operation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/capsules/restore", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { backupPath, options = {} } = req.body;
+      console.log("🔄 Restoring capsules from backup:", backupPath);
+      
+      const { capsuleBackup } = await import("../scripts/backupCapsules");
+      const result = await capsuleBackup.restoreCapsules(backupPath, options);
+
+      res.json(result);
+    } catch (error) {
+      console.error("❌ Restore failed:", error);
+      res.status(500).json({
+        success: false,
+        error: "Restore operation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Sovereign Social Profile endpoints
   app.put("/api/user/profile", isDebugAuthenticated, (req: any, res) => {
     console.log("📝 Profile update requested:", req.body);

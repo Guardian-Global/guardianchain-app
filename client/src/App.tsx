@@ -38,6 +38,7 @@ const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
 const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
 const RevenueExplainer = lazy(() => import("@/pages/RevenueExplainer"));
 const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
+const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -104,6 +105,7 @@ function Router() {
               <Route path="/pricing" component={Pricing} />
               <Route path="/subscribe/:tier" component={Subscribe} />
               <Route path="/validator" component={ValidatorPage} />
+              <Route path="/redeem" component={RedeemPage} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
