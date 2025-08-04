@@ -13,6 +13,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
+import { EnhancedCapsuleGallery } from "@/components/capsules/EnhancedCapsuleGallery";
 
 interface DashboardStats {
   truthScore: number;
@@ -534,6 +535,17 @@ export default function EnhancedDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Enhanced Capsule Gallery Integration */}
+      <div className="mt-8">
+        <EnhancedCapsuleGallery 
+          title="Recent Truth Capsules"
+          subtitle="Latest verified submissions from the Guardian community"
+          limit={6}
+          showFilters={false}
+          showViewModes={true}
+        />
+      </div>
     </div>
   );
 }

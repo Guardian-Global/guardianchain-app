@@ -118,7 +118,6 @@ function Router() {
               <Route path="/profile" component={Profile} />
               <Route path="/truth-genome" component={TruthGenome} />
               <Route path="/truth-net" component={TruthNet} />
-              <Route path="/explorer" component={Explorer} />
               <Route path="/start" component={Start} />
               <Route path="/terms" component={Terms} />
               <Route path="/pricing" component={Pricing} />
@@ -143,6 +142,7 @@ function Router() {
               <Route path="/social" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
+              <Route path="/test-preview" component={() => import("@/pages/CapsulePreviewTest").then(m => m.default)} />
               <Route path="/social-profile">
                 {() => {
                   const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));

@@ -324,10 +324,20 @@ export function EnhancedCapsuleCard({
             <div className="flex items-center gap-2">
               <Button 
                 size="sm" 
-                onClick={() => onVerify?.(capsule.id)}
+                onClick={() => onView?.(capsule.id)}
                 className="bg-[#00ffe1] text-[#0d1117] hover:bg-[#00e5cb]"
+                data-testid={`button-preview-${capsule.id}`}
               >
-                <Zap className="w-4 h-4 mr-1" />
+                <Eye className="w-4 h-4 mr-1" />
+                Preview
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={() => onVerify?.(capsule.id)}
+                variant="outline"
+                className="border-[#30363d] text-[#8b949e] hover:border-[#ff00d4] hover:text-[#ff00d4]"
+              >
+                <Shield className="w-4 h-4 mr-1" />
                 Verify
               </Button>
               <Button size="sm" variant="outline" className="border-[#30363d] text-[#8b949e]">
