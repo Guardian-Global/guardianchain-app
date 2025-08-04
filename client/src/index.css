@@ -52,17 +52,17 @@
   :root {
     /* Cyberpunk High-Contrast System */
     --background: hsl(218, 54%, 6%); /* Dark cyberpunk bg #0d1117 */
-    --foreground: hsl(0, 0%, 96%); /* Light text #f0f6fc */
+    --foreground: hsl(0, 0%, 98%); /* Very light text #fafbfc */
     --card: hsl(218, 54%, 9%); /* Card background #161b22 */
-    --card-foreground: hsl(0, 0%, 96%);
+    --card-foreground: hsl(0, 0%, 98%);
     --popover: hsl(218, 54%, 9%);
-    --popover-foreground: hsl(0, 0%, 96%);
+    --popover-foreground: hsl(0, 0%, 98%);
     --primary: hsl(180, 100%, 50%); /* Cyberpunk cyan #00ffe1 */
     --primary-foreground: hsl(218, 54%, 6%);
     --secondary: hsl(330, 100%, 50%); /* Cyberpunk magenta #ff00d4 */
-    --secondary-foreground: hsl(0, 0%, 96%);
+    --secondary-foreground: hsl(0, 0%, 98%);
     --muted: hsl(215, 23%, 19%); /* Muted border #30363d */
-    --muted-foreground: hsl(215, 13%, 55%); /* Muted text #8b949e */
+    --muted-foreground: hsl(215, 13%, 82%); /* High contrast muted text #e6edf3 */
     --accent: hsl(285, 100%, 65%); /* Purple accent #7c3aed */
     --accent-foreground: hsl(218, 54%, 6%);
     --destructive: hsl(0, 84%, 60%); /* Error Red #f85149 */
@@ -93,21 +93,21 @@
   
   .dark {
     --background: hsl(218, 54%, 6%); /* Cyberpunk dark #0d1117 */
-    --foreground: hsl(0, 0%, 96%); /* Cyberpunk light #f0f6fc */
+    --foreground: hsl(0, 0%, 98%); /* Very light text #fafbfc */
     --card: hsl(218, 54%, 9%); /* Cyberpunk card #161b22 */
-    --card-foreground: hsl(0, 0%, 96%);
+    --card-foreground: hsl(0, 0%, 98%);
     --popover: hsl(218, 54%, 9%);
-    --popover-foreground: hsl(0, 0%, 96%);
+    --popover-foreground: hsl(0, 0%, 98%);
     --primary: hsl(180, 100%, 50%); /* Cyberpunk cyan #00ffe1 */
     --primary-foreground: hsl(218, 54%, 6%);
     --secondary: hsl(330, 100%, 50%); /* Cyberpunk magenta #ff00d4 */
-    --secondary-foreground: hsl(0, 0%, 96%);
+    --secondary-foreground: hsl(0, 0%, 98%);
     --muted: hsl(215, 23%, 19%); /* Cyberpunk muted #30363d */
-    --muted-foreground: hsl(215, 13%, 55%); /* Cyberpunk muted text #8b949e */
+    --muted-foreground: hsl(215, 13%, 82%); /* High contrast muted text #e6edf3 */
     --accent: hsl(285, 100%, 65%); /* Cyberpunk purple #7c3aed */
     --accent-foreground: hsl(218, 54%, 6%);
     --destructive: hsl(0, 84%, 60%); /* Cyberpunk red #f85149 */
-    --destructive-foreground: hsl(0, 0%, 96%);
+    --destructive-foreground: hsl(0, 0%, 98%);
     --border: hsl(215, 23%, 19%); /* Cyberpunk border #30363d */
     --input: hsl(218, 54%, 9%); /* Cyberpunk input #161b22 */
     --ring: hsl(180, 100%, 50%); /* Cyberpunk cyan ring */
@@ -123,6 +123,7 @@
     font-variation-settings: "slnt" 0;
     background: linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%));
     min-height: 100vh;
+    color: hsl(0, 0%, 98%) !important; /* Force high contrast text */
   }
   
   /* Next-Gen Typography Suite */

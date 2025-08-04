@@ -1,13 +1,13 @@
 export default function CyberHero() {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-[#0d1117] text-[#f5f5f5] p-8 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[#0d1117] text-[#fafbfc] p-8 relative overflow-hidden">
       {/* Neon gradient blur backdrop */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#00ffe1]/10 to-[#ff00d4]/10 blur-3xl" />
 
-      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-center font-[Orbitron] drop-shadow-[0_0_15px_rgba(0,255,225,0.4)]">
+      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-center font-[Orbitron] bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(0,255,225,0.5)]">
         GuardianChain
       </h1>
-      <p className="mt-6 text-xl md:text-2xl max-w-2xl text-center text-[#94a3b8]">
+      <p className="mt-6 text-xl md:text-2xl max-w-2xl text-center text-[#c9d1d9]">
         The sovereign memory chain. Immutable. AI-powered. Yours forever.
       </p>
 
