@@ -15,7 +15,7 @@ import { LiveTokenTracker } from "@/components/live/LiveTokenTracker";
 import WelcomeTour from "@/components/WelcomeTour";
 import { GuardianBootHook } from "@/components/GuardianBootHook";
 import EliteHomepage from "@/pages/EliteHomepage";
-import CleanHomepage from "@/pages/CleanHomepage";
+import CyberHomepage from "@/pages/CyberHomepage";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import { useAuth } from "./hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
@@ -41,7 +41,7 @@ const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
-const DAOPage = lazy(() => import("@/pages/dao"));
+const DAOPage = lazy(() => import("@/pages/DAO"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
@@ -72,14 +72,14 @@ function Router() {
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={CleanHomepage} />
+        <Route path="/" component={CyberHomepage} />
         <Route path="/elite" component={EliteHomepage} />
         <Route path="/explorer" component={Explorer} />
         <Route path="/terms" component={Terms} />
         <Route path="/start" component={Start} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/subscribe/:tier" component={Subscribe} />
-        <Route component={CleanHomepage} />
+        <Route component={CyberHomepage} />
       </Switch>
     );
   }
@@ -87,7 +87,7 @@ function Router() {
   return (
     <Switch>
       {/* Homepage - Full screen without layout */}
-      <Route path="/" component={CleanHomepage} />
+      <Route path="/" component={CyberHomepage} />
       <Route path="/elite" component={EliteHomepage} />
       
       {/* All other routes get the layout wrapper */}

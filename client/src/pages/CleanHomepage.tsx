@@ -4,8 +4,9 @@ import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { Shield, Play, TrendingUp, Users, CheckCircle, Coins, Globe, Award, Rocket, Star, Zap } from "lucide-react";
-import { EnhancedButton } from "@/components/ui/enhanced-button";
-import { AdvancedCard, AdvancedCardContent, AdvancedCardHeader, AdvancedCardTitle } from "@/components/ui/advanced-card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CyberHero from "@/components/CyberHero";
 import OptimizedImage from "@/components/layout/OptimizedImage";
 import InteractiveBackground from "@/components/ui/interactive-background";
 import FloatingActionMenu from "@/components/layout/FloatingActionMenu";
@@ -25,31 +26,21 @@ export default function CleanHomepage() {
         <meta property="og:url" content="https://guardianchain.app" />
       </Helmet>
 
-      <main className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-slate-900 via-purple-900 to-black text-white overflow-hidden">
-        {/* Hero Section with Advanced Animations */}
-        <section className="relative px-6 py-20 text-center overflow-hidden">
-          {/* Interactive Background */}
-          <InteractiveBackground 
-            variant="quantum" 
-            particleCount={80}
-            colors={["#06b6d4", "#8b5cf6", "#f59e0b", "#ef4444"]}
-          />
-          
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-cyan-500/20 to-yellow-500/20" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.3),transparent)] animate-pulse" />
-          
-          <div className="relative max-w-6xl mx-auto z-10">
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="uppercase text-sm tracking-widest font-semibold text-cyan-400 mb-6 flex items-center justify-center gap-2"
-            >
-              <Rocket className="w-4 h-4" />
-              Revolutionary Web3 Truth Platform
-              <Star className="w-4 h-4" />
-            </motion.p>
+      <main className="min-h-screen flex flex-col justify-between bg-[#0d1117] text-[#f0f6fc] overflow-hidden">
+        {/* Cyberpunk Hero Section */}
+        <CyberHero />
+        
+        {/* Features Section */}
+        <section className="relative px-6 py-20 bg-gradient-to-br from-[#161b22] to-[#0d1117]">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center">
+              <h2 className="text-4xl font-bold text-[#00ffe1] font-[Orbitron] mb-4 drop-shadow-[0_0_10px_rgba(0,255,225,0.3)]">
+                Features
+              </h2>
+              <p className="text-xl text-[#8b949e] mb-12">
+                Revolutionary Web3 infrastructure for truth preservation
+              </p>
+            </div>
             
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}

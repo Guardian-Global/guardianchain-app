@@ -1,0 +1,138 @@
+✅ Your next-gen cyberpunk UI stack is now ready:
+
+1. theme.ts — Cyberpunk Palette Config
+→ Sets up all core colors, glows, gradients, and fonts
+📄 File created: Theme Cyberpunk Config
+
+2. CyberHero.tsx — Futuristic Homepage Hero Block
+→ Full-screen section with:
+
+Gradient neon background blur
+
+Animated glow heading (Orbitron font)
+
+CTA buttons: launch app + grant PDF
+📄 File created: Cyberpunk Hero Homepage
+
+✅ Next Step (Beginner-Safe):
+Would you like me to generate:
+
+Tailwind globals.css update to include Orbitron + base dark styling?
+
+A minimal /pages/index.tsx to display this hero section on GitHub Pages?
+
+Just say the word and I’ll send one file at a time, starting with the font and style setup.
+
+
+
+
+
+You said:
+make better and make sure we have instruction and code and instructions to hand ove to replit agent
+
+
+ChatGPT said:
+Cyberpunk Hero Homepage
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+// components/CyberHero.tsx — Cyberpunk Homepage Hero UI
+// Instructions for Replit Agent:
+// 1. Ensure Tailwind CSS is installed and configured
+// 2. Add Orbitron font via Google Fonts in _document.tsx or index.html
+// 3. Use this component on /pages/index.tsx for homepage
+// 4. Place static PDF files under /public/docs/ to match links
+
+export default function CyberHero() {
+  return (
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[#0d1117] text-[#f5f5f5] p-8 relative overflow-hidden">
+      {/* Neon gradient blur backdrop */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#00ffe1]/10 to-[#ff00d4]/10 blur-3xl" />
+
+      <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-center font-[Orbitron] drop-shadow-[0_0_15px_rgba(0,255,225,0.4)]">
+        GuardianChain
+      </h1>
+      <p className="mt-6 text-xl md:text-2xl max-w-2xl text-center text-[#94a3b8]">
+        The sovereign memory chain. Immutable. AI-powered. Yours forever.
+      </p>
+
+      <div className="mt-10 flex flex-wrap gap-4">
+        <a
+          href="https://guardianchain.app"
+          className="px-6 py-3 text-lg font-bold rounded-full bg-[#00ffe1] text-[#0d1117] hover:bg-[#00e5cb] shadow-[0_0_15px_#00ffe1] transition"
+        >
+          Launch App
+        </a>
+        <a
+          href="/docs/Grant_Applicant_FAQ.pdf"
+          className="px-6 py-3 text-lg font-bold rounded-full border border-[#ff00d4] text-[#ff00d4] hover:bg-[#ff00d4]/10 shadow-[0_0_12px_#ff00d4] transition"
+        >
+          Grant FAQ ↗
+        </a>
+      </div>
+    </div>
+  );
+}
+
+Edited Cyberpunk Hero Homepage
+✅ CyberHero.tsx is now upgraded and Replit-agent-ready.
+
+🧠 Replit Agent Instructions (included in file header):
+Tailwind CSS must be installed and working.
+
+Orbitron font must be imported via Google Fonts:
+
+html
+Copy
+Edit
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+Place in _document.tsx or index.html.
+
+Mount this component at /pages/index.tsx.
+
+Store PDFs in /public/docs/ so the links work:
+
+/docs/Grant_Applicant_FAQ.pdf
+
+/docs/Validator_Onboarding_Guide.pdf
+
+✅ Next Step?
+Would you like me to generate /pages/index.tsx to plug this in and fully power your GitHub Pages or Replit homepage?
+
+Just say: generate index.tsx for homepage and I’ll drop the next file safely.
