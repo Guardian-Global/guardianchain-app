@@ -1,0 +1,45 @@
+The above error occurred in the <TruthGenomeCard> component:
+
+    at TruthGenomeCard (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/profile/TruthGenomeCard.tsx:36:3)
+    at div
+    at div
+    at div
+    at div
+    at Card (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/ui/card.tsx:17:24)
+    at div
+    at div
+    at div
+    at SaveNotificationProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/SaveNotificationProvider.tsx:47:3)
+    at SovereignSocialProfile (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/profile/SovereignSocialProfile.tsx:58:37)
+    at Profile
+    at Route (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=64dfefff:206:16)
+    at Switch (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=64dfefff:262:17)
+    at Suspense
+    at main
+    at MotionComponent (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/framer-motion.js?v=64dfefff:945:40)
+    at div
+    at EliteLayout (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/layout/EliteLayout.tsx:22:31)
+    at Route (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=64dfefff:206:16)
+    at Switch (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=64dfefff:262:17)
+    at Router (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/App.tsx?v=qjzTZgWRqGlqqI88rJnOh:101:48)
+    at main
+    at NotificationProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/ui/notification-system.tsx:23:40)
+    at Provider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-6CYQPTYK.js?v=64dfefff:38:15)
+    at TooltipProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=64dfefff:65:5)
+    at AssetProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/assets/AssetProvider.tsx:31:3)
+    at ThemeProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/web3/theme-provider.tsx:25:3)
+    at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-VXI6URMN.js?v=64dfefff:2934:3)
+    at Hydrate (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wagmi.js?v=64dfefff:287:11)
+    at WagmiProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wagmi.js?v=64dfefff:311:11)
+    at WalletProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/providers/WalletProvider.tsx:92:42)
+    at MascotProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/mascot/MascotProvider.tsx:31:34)
+    at HelpProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/help/HelpProvider.tsx:29:32)
+    at OnboardingProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/components/onboarding/OnboardingProvider.tsx:48:3)
+    at TierProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/src/context/TierContext.tsx:36:32)
+    at QueryClientProvider (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-VXI6URMN.js?v=64dfefff:2934:3)
+    at _a (https://338c8e9f-0943-40b0-adea-fd24febf08d6-00-2ummnobf1j0nb.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-helmet-async.js?v=64dfefff:624:5)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+Cannot read properties of undefined (reading 'trend')

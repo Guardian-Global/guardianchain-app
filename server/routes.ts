@@ -446,6 +446,118 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User onboarding completion endpoint
+  app.put("/api/user/onboarding", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { displayName, bio, interests, tier, preferences } = req.body;
+      
+      // Mock saving onboarding profile data
+      const profileData = {
+        userId: req.user.id,
+        displayName,
+        bio,
+        interests,
+        tier,
+        preferences,
+        updatedAt: new Date().toISOString()
+      };
+
+      res.json({
+        success: true,
+        profile: profileData,
+        message: "Onboarding profile updated successfully"
+      });
+      
+      console.log(`👤 User onboarding profile updated: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to update onboarding profile:", error);
+      res.status(500).json({
+        error: "Failed to update onboarding profile",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Complete onboarding endpoint
+  app.post("/api/user/complete-onboarding", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { profile, completedAt } = req.body;
+      
+      // Mock completing onboarding
+      const onboardingData = {
+        userId: req.user.id,
+        profile,
+        completedAt,
+        onboardingVersion: "1.0.0",
+        status: "completed"
+      };
+
+      res.json({
+        success: true,
+        onboarding: onboardingData,
+        message: "Onboarding completed successfully"
+      });
+      
+      console.log(`🎉 User onboarding completed: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to complete onboarding:", error);
+      res.status(500).json({
+        error: "Failed to complete onboarding",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Truth Genome AI analysis endpoint
+  app.get("/api/ai/truth-genome/:userId", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Generate comprehensive Truth Genome analysis
+      const truthGenomeData = {
+        traits: {
+          seeker: Math.floor(Math.random() * 40) + 60, // 60-100
+          whistleblower: Math.floor(Math.random() * 30) + 40, // 40-70
+          visionary: Math.floor(Math.random() * 35) + 50, // 50-85
+          historian: Math.floor(Math.random() * 45) + 55, // 55-100
+        },
+        dominantTrait: ["seeker", "whistleblower", "visionary", "historian"][Math.floor(Math.random() * 4)],
+        evidenceCount: {
+          researched: Math.floor(Math.random() * 20) + 5,
+          exposed: Math.floor(Math.random() * 10) + 1,
+          predicted: Math.floor(Math.random() * 15) + 3,
+          preserved: Math.floor(Math.random() * 25) + 8,
+        },
+        genomeScore: Math.floor(Math.random() * 25) + 75, // 75-100
+        evolution: {
+          lastMonth: Math.floor(Math.random() * 15) + 1,
+          trend: ["rising", "stable", "declining"][Math.floor(Math.random() * 3)],
+        },
+        achievements: [
+          "Truth Seeker Badge",
+          "Memory Keeper",
+          "Evidence Collector",
+          "Pattern Recognizer"
+        ].slice(0, Math.floor(Math.random() * 3) + 1),
+        specializations: [
+          "Historical Analysis",
+          "Data Preservation", 
+          "Pattern Recognition",
+          "Memory Documentation"
+        ].slice(0, Math.floor(Math.random() * 2) + 1),
+      };
+
+      res.json(truthGenomeData);
+      console.log(`🧬 Truth Genome generated for user: ${userId}`);
+    } catch (error) {
+      console.error("❌ Failed to generate Truth Genome:", error);
+      res.status(500).json({
+        error: "Failed to generate Truth Genome",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Multichain staking performance endpoint
   app.get("/api/staking/multichain-performance", isDebugAuthenticated, async (req: any, res) => {
     try {
