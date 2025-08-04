@@ -78,6 +78,8 @@ export default function GuardianMascot() {
   const [currentMessage, setCurrentMessage] = useState<MascotMessage | null>(null);
   const [mascotState, setMascotState] = useState(mascotStates[0]);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
+  
+  console.log('🛡️ GuardianMascot rendering...', { isAuthenticated, user: user?.firstName });
 
   // Show welcome message for new users
   useEffect(() => {

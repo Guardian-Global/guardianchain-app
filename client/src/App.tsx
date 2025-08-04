@@ -41,7 +41,7 @@ const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
-const DAOPage = lazy(() => import("@/pages/DAO"));
+const DAO = lazy(() => import("@/pages/DAO"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
@@ -60,6 +60,7 @@ const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
+const MascotDebug = lazy(() => import("@/components/MascotDebug"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -127,7 +128,7 @@ function Router() {
               <Route path="/subscribe/:tier" component={Subscribe} />
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
-              <Route path="/dao" component={DAOPage} />
+              <Route path="/dao" component={DAO} />
               <Route path="/profile" component={EnhancedProfilePage} />
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />
@@ -158,11 +159,6 @@ function Router() {
             </Switch>
           </Suspense>
         </EliteLayout>
-        
-        {/* Guardian Mascot - Available on all authenticated pages */}
-        <Suspense fallback={null}>
-          <GuardianMascot />
-        </Suspense>
       </Route>
     </Switch>
   );
@@ -192,6 +188,16 @@ export default function App() {
                             <PWAInstallPrompt />
                             <OfflineIndicator />
                           </main>
+                          
+                          {/* Guardian Mascot - Available on all pages */}
+                          <Suspense fallback={null}>
+                            <GuardianMascot />
+                          </Suspense>
+                          
+                          {/* Debug Mascot to test visibility */}
+                          <Suspense fallback={null}>
+                            <MascotDebug />
+                          </Suspense>
                           <Suspense fallback={<div className="h-20 bg-slate-900" />}>
                             <GuardianMascotFooter />
                           </Suspense>
