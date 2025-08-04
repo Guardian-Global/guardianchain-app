@@ -162,6 +162,94 @@
   }
 }
 
+/* Enhanced Cyberpunk Color Variables */
+:root {
+  /* Primary cyberpunk colors */
+  --cyber-cyan: hsl(180, 100%, 50%);
+  --cyber-magenta: hsl(320, 100%, 50%);
+  --cyber-purple: hsl(258, 63%, 58%);
+  --cyber-green: hsl(158, 64%, 52%);
+  --cyber-orange: hsl(32, 95%, 55%);
+  --cyber-blue: hsl(210, 100%, 60%);
+  --cyber-red: hsl(348, 100%, 61%);
+  --cyber-yellow: hsl(50, 100%, 60%);
+  --cyber-pink: hsl(330, 100%, 70%);
+  --cyber-teal: hsl(171, 100%, 41%);
+  --cyber-indigo: hsl(238, 85%, 65%);
+  --cyber-lime: hsl(84, 81%, 44%);
+  --cyber-rose: hsl(351, 100%, 86%);
+  --cyber-emerald: hsl(160, 84%, 39%);
+  --cyber-sky: hsl(199, 89%, 48%);
+  --cyber-violet: hsl(262, 83%, 58%);
+  --cyber-amber: hsl(45, 96%, 64%);
+  --cyber-fuchsia: hsl(292, 84%, 61%);
+  
+  /* Background variations */
+  --cyber-bg-primary: hsl(218, 54%, 9%);
+  --cyber-bg-secondary: hsl(220, 26%, 14%);
+  --cyber-bg-tertiary: hsl(215, 14%, 20%);
+  --cyber-bg-accent: hsl(212, 23%, 26%);
+  --cyber-bg-hover: hsl(210, 18%, 32%);
+  --cyber-bg-glass: hsla(180, 100%, 50%, 0.05);
+  
+  /* Text colors for maximum contrast */
+  --cyber-text-primary: hsl(180, 100%, 90%);
+  --cyber-text-secondary: hsl(216, 12%, 84%);
+  --cyber-text-muted: hsl(217, 10%, 64%);
+  --cyber-text-accent: hsl(180, 100%, 75%);
+  
+  /* Border and shadow effects */
+  --cyber-border-primary: hsl(180, 100%, 50%);
+  --cyber-border-secondary: hsl(320, 100%, 50%);
+  --cyber-shadow-cyan: 0 0 20px rgba(0, 255, 225, 0.3);
+  --cyber-shadow-magenta: 0 0 20px rgba(255, 0, 212, 0.3);
+  --cyber-shadow-purple: 0 0 20px rgba(124, 58, 237, 0.3);
+  
+  /* Gradient combinations */
+  --cyber-gradient-primary: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta));
+  --cyber-gradient-secondary: linear-gradient(135deg, var(--cyber-purple), var(--cyber-blue));
+  --cyber-gradient-accent: linear-gradient(135deg, var(--cyber-green), var(--cyber-teal));
+}
+
+/* Guardian Mascot Animations */
+@keyframes animate-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: animate-spin-slow 3s linear infinite;
+}
+
+/* Enhanced utility classes for social features */
+.cyber-glow-text {
+  text-shadow: 0 0 10px rgba(0, 255, 225, 0.3);
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 255, 225, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 225, 0.6), 0 0 30px rgba(255, 0, 212, 0.4);
+  }
+}
+
+.text-gradient-neural {
+  background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* 2026 Viral-Ready Utility Classes */
 .text-gradient-quantum {
   background: linear-gradient(135deg, hsl(180, 100%, 50%), hsl(285, 100%, 65%), hsl(120, 100%, 50%));

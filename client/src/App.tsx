@@ -54,7 +54,9 @@ const StakingPage = lazy(() => import("@/pages/Staking"));
 const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
 const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
+const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -136,6 +138,13 @@ function Router() {
               <Route path="/audit" component={AuditPage} />
               <Route path="/onboarding" component={NewUserOnboarding} />
               <Route path="/viral-showcase" component={ViralShowcase} />
+              <Route path="/social" component={SocialHub} />
+              <Route path="/social-profile">
+                {() => {
+                  const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));
+                  return <EnhancedSocialProfile />;
+                }}
+              </Route>
               <Route component={NotFound} />
             </Switch>
           </Suspense>
@@ -169,6 +178,9 @@ export default function App() {
                             <PWAInstallPrompt />
                             <OfflineIndicator />
                           </main>
+                          <Suspense fallback={<div className="h-20 bg-slate-900" />}>
+                            <GuardianMascotFooter />
+                          </Suspense>
                         </NotificationProvider>
                         <Toaster />
                       </TooltipProvider>
