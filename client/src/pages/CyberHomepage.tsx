@@ -57,18 +57,50 @@ export default function CyberHomepage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                <Card className="bg-[#161b22]/90 border-[#30363d] hover:border-[#00ffe1]/50 transition-all duration-300 group backdrop-blur-md shadow-[0_8px_32px_rgba(0,255,225,0.1)]">
+                <Card className="bg-[#161b22]/90 border-[#30363d] hover:border-[#00ffe1]/50 transition-all duration-300 group backdrop-blur-md shadow-[0_8px_32px_rgba(0,255,225,0.1)] overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src="/public-objects/nft/cyberpunk-capsule-art.png" 
+                      alt="Neural Capsule Technology"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80"
+                      onError={(e) => {
+                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23161b22'/%3E%3Cg transform='translate(200,100)'%3E%3Ccircle r='40' fill='none' stroke='%2300ffe1' stroke-width='2' opacity='0.8'/%3E%3Ccircle r='25' fill='none' stroke='%23ff00d4' stroke-width='1.5' opacity='0.6'/%3E%3Ccircle r='10' fill='%237c3aed' opacity='0.4'/%3E%3C/g%3E%3Ctext x='200' y='170' text-anchor='middle' fill='%2300ffe1' font-family='monospace' font-size='12'%3ENeural Capsule Matrix%3C/text%3E%3C/svg%3E";
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#161b22] via-transparent to-transparent opacity-60" />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-[#00ffe1]/90 text-[#0d1117] backdrop-blur-sm font-bold">Neural Core</Badge>
+                    </div>
+                  </div>
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-br from-[#00ffe1]/20 to-[#00ffe1]/10 rounded-xl flex items-center justify-center mb-6 group-hover:from-[#00ffe1]/30 group-hover:to-[#00ffe1]/20 transition-all duration-300 shadow-[0_0_20px_rgba(0,255,225,0.2)]">
                       <Database className="w-8 h-8 text-[#00ffe1]" />
                     </div>
-                    <CardTitle className="text-[#fafbfc] text-2xl font-bold">Truth Capsules</CardTitle>
-                    <Badge className="bg-[#00ffe1]/10 text-[#00ffe1] border-[#00ffe1]/30 w-fit">Core Feature</Badge>
+                    <CardTitle className="text-[#fafbfc] text-2xl font-bold">Neural Truth Capsules</CardTitle>
+                    <Badge className="bg-[#00ffe1]/10 text-[#00ffe1] border-[#00ffe1]/30 w-fit">Quantum Core</Badge>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-4">
                     <p className="text-[#c9d1d9] text-lg leading-relaxed">
-                      Create immutable truth capsules with AI-powered verification, emotional analysis, and quantum-resistant time-locked encryption.
+                      Revolutionary immutable memory containers powered by quantum-resistant encryption and AI consciousness verification.
                     </p>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#00ffe1] rounded-full animate-pulse" />
+                        <span className="text-[#c9d1d9]">Time-locked sealing</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#ff00d4] rounded-full animate-pulse" />
+                        <span className="text-[#c9d1d9]">Neural verification</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#7c3aed] rounded-full animate-pulse" />
+                        <span className="text-[#c9d1d9]">Emotional scoring</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-[#00ffe1] rounded-full animate-pulse" />
+                        <span className="text-[#c9d1d9]">Legacy creation</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -79,18 +111,46 @@ export default function CyberHomepage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                <Card className="bg-[#161b22]/90 border-[#30363d] hover:border-[#ff00d4]/50 transition-all duration-300 group backdrop-blur-md shadow-[0_8px_32px_rgba(255,0,212,0.1)]">
+                <Card className="bg-[#161b22]/90 border-[#30363d] hover:border-[#ff00d4]/50 transition-all duration-300 group backdrop-blur-md shadow-[0_8px_32px_rgba(255,0,212,0.1)] overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src="/public-objects/nft/quantum-token-matrix.png" 
+                      alt="GTT Quantum Token Matrix"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80"
+                      onError={(e) => {
+                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23161b22'/%3E%3Cdefs%3E%3ClinearGradient id='tokenGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ff00d4' stop-opacity='0.8'/%3E%3Cstop offset='100%25' stop-color='%237c3aed' stop-opacity='0.6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(200,100)'%3E%3Cpolygon points='-30,-30 30,-30 40,0 30,30 -30,30 -40,0' fill='url(%23tokenGrad)' stroke='%23ff00d4' stroke-width='2'/%3E%3Ctext y='8' text-anchor='middle' fill='%23fafbfc' font-family='monospace' font-size='16' font-weight='bold'%3EGTT%3C/text%3E%3C/g%3E%3Ctext x='200' y='170' text-anchor='middle' fill='%23ff00d4' font-family='monospace' font-size='12'%3EQuantum Yield Matrix%3C/text%3E%3C/svg%3E";
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#161b22] via-transparent to-transparent opacity-60" />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-[#ff00d4]/90 text-[#0d1117] backdrop-blur-sm font-bold">Yield Core</Badge>
+                    </div>
+                  </div>
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-br from-[#ff00d4]/20 to-[#ff00d4]/10 rounded-xl flex items-center justify-center mb-6 group-hover:from-[#ff00d4]/30 group-hover:to-[#ff00d4]/20 transition-all duration-300 shadow-[0_0_20px_rgba(255,0,212,0.2)]">
                       <Coins className="w-8 h-8 text-[#ff00d4]" />
                     </div>
-                    <CardTitle className="text-[#fafbfc] text-2xl font-bold">GTT Rewards</CardTitle>
-                    <Badge className="bg-[#ff00d4]/10 text-[#ff00d4] border-[#ff00d4]/30 w-fit">Yield System</Badge>
+                    <CardTitle className="text-[#fafbfc] text-2xl font-bold">Quantum GTT Rewards</CardTitle>
+                    <Badge className="bg-[#ff00d4]/10 text-[#ff00d4] border-[#ff00d4]/30 w-fit">Neural Mining</Badge>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-4">
                     <p className="text-[#c9d1d9] text-lg leading-relaxed">
-                      Earn Guardian Truth Tokens through grief scoring, community verification, and sophisticated yield calculation algorithms.
+                      Revolutionary blockchain yield farming through grief-score algorithms, neural verification, and quantum truth staking.
                     </p>
+                    <div className="bg-[#0d1117]/60 rounded-lg p-4 space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#c9d1d9] text-sm">Current APY</span>
+                        <span className="text-[#ff00d4] font-bold text-lg">847.2%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#c9d1d9] text-sm">Truth Mining Rate</span>
+                        <span className="text-[#00ffe1] font-bold">0.0375 GTT/hr</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#c9d1d9] text-sm">Grief Multiplier</span>
+                        <span className="text-[#7c3aed] font-bold">2.87x</span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -101,18 +161,57 @@ export default function CyberHomepage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <Card className="bg-[#161b22]/90 border-[#30363d] hover:border-[#7c3aed]/50 transition-all duration-300 group backdrop-blur-md shadow-[0_8px_32px_rgba(124,58,237,0.1)]">
+                <Card className="bg-[#161b22]/90 border-[#30363d] hover:border-[#7c3aed]/50 transition-all duration-300 group backdrop-blur-md shadow-[0_8px_32px_rgba(124,58,237,0.1)] overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src="/public-objects/nft/multichain-fortress.png" 
+                      alt="Quantum Security Matrix"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80"
+                      onError={(e) => {
+                        e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23161b22'/%3E%3Cdefs%3E%3ClinearGradient id='shieldGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%237c3aed' stop-opacity='0.8'/%3E%3Cstop offset='100%25' stop-color='%2300ffe1' stop-opacity='0.6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(200,100)'%3E%3Cpath d='M0,-40 L-25,-10 L-25,20 L0,40 L25,20 L25,-10 Z' fill='url(%23shieldGrad)' stroke='%237c3aed' stroke-width='3'/%3E%3Ccircle r='15' fill='none' stroke='%2300ffe1' stroke-width='2' opacity='0.8'/%3E%3Cpath d='M-8,-5 L-3,5 L8,-10' stroke='%23fafbfc' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/g%3E%3Ctext x='200' y='170' text-anchor='middle' fill='%237c3aed' font-family='monospace' font-size='12'%3EQuantum Shield Network%3C/text%3E%3C/svg%3E";
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#161b22] via-transparent to-transparent opacity-60" />
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-[#7c3aed]/90 text-[#0d1117] backdrop-blur-sm font-bold">Fortress</Badge>
+                    </div>
+                  </div>
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-br from-[#7c3aed]/20 to-[#7c3aed]/10 rounded-xl flex items-center justify-center mb-6 group-hover:from-[#7c3aed]/30 group-hover:to-[#7c3aed]/20 transition-all duration-300 shadow-[0_0_20px_rgba(124,58,237,0.2)]">
                       <Shield className="w-8 h-8 text-[#7c3aed]" />
                     </div>
-                    <CardTitle className="text-[#fafbfc] text-2xl font-bold">Blockchain Security</CardTitle>
-                    <Badge className="bg-[#7c3aed]/10 text-[#7c3aed] border-[#7c3aed]/30 w-fit">Multi-Chain</Badge>
+                    <CardTitle className="text-[#fafbfc] text-2xl font-bold">Quantum Fortress</CardTitle>
+                    <Badge className="bg-[#7c3aed]/10 text-[#7c3aed] border-[#7c3aed]/30 w-fit">Neural Defense</Badge>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-4">
                     <p className="text-[#c9d1d9] text-lg leading-relaxed">
-                      Multi-chain infrastructure with quantum-resistant encryption, decentralized storage, and enterprise-grade validation.
+                      Impenetrable multi-chain security matrix with quantum-resistant encryption and neural threat detection algorithms.
                     </p>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#c9d1d9] text-sm">Security Rating</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-24 h-2 bg-[#0d1117] rounded-full overflow-hidden">
+                            <div className="w-full h-full bg-gradient-to-r from-[#7c3aed] to-[#00ffe1] animate-pulse" />
+                          </div>
+                          <span className="text-[#00ffe1] font-bold text-sm">99.97%</span>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-xs text-center">
+                        <div className="bg-[#0d1117]/60 rounded-md p-2">
+                          <div className="text-[#00ffe1] font-bold">EVM</div>
+                          <div className="text-[#c9d1d9]">Compatible</div>
+                        </div>
+                        <div className="bg-[#0d1117]/60 rounded-md p-2">
+                          <div className="text-[#ff00d4] font-bold">L2</div>
+                          <div className="text-[#c9d1d9]">Optimized</div>
+                        </div>
+                        <div className="bg-[#0d1117]/60 rounded-md p-2">
+                          <div className="text-[#7c3aed] font-bold">ZK</div>
+                          <div className="text-[#c9d1d9]">Proven</div>
+                        </div>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
