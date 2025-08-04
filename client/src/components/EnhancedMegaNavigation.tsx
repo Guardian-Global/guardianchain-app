@@ -10,19 +10,19 @@ const navigationCategories = [
     icon: Home,
     items: [
       { name: "Dashboard", href: "/dashboard", description: "Your control center", icon: Home },
+      { name: "Capsule Explorer", href: "/explorer", description: "Discover and verify truth capsules", icon: Search },
+      { name: "Social Hub", href: "/social", description: "Connect with guardians", icon: User },
       { name: "Create Capsule", href: "/create", description: "Submit truth capsules", icon: Zap },
-      { name: "Explore", href: "/explore", description: "Discover content", icon: Globe },
-      { name: "Profile", href: "/profile", description: "Manage your account", icon: User },
     ]
   },
   {
     name: "Truth Tools",
     icon: Shield,
     items: [
-      { name: "Veritas Seal", href: "/veritas-seal", description: "Official verification", icon: Shield },
+      { name: "Truth Genome", href: "/truth-genome", description: "Emotion & authenticity analysis", icon: Zap },
+      { name: "Capsule Viewer", href: "/capsule/demo", description: "Detailed capsule analysis", icon: Shield },
       { name: "Truth Auctions", href: "/truth-auctions", description: "Crowdfund disclosures", icon: Coins },
       { name: "Lineage Tracker", href: "/lineage", description: "Follow truth origins", icon: TrendingUp },
-      { name: "Truth Genome", href: "/truth-genome", description: "Emotion & authenticity analysis", icon: Zap },
     ]
   },
   {

@@ -55,6 +55,8 @@ const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
 const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
+const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
+const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 
@@ -139,6 +141,8 @@ function Router() {
               <Route path="/onboarding" component={NewUserOnboarding} />
               <Route path="/viral-showcase" component={ViralShowcase} />
               <Route path="/social" component={SocialHub} />
+              <Route path="/explorer" component={CapsuleExplorer} />
+              <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/social-profile">
                 {() => {
                   const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));

@@ -13,7 +13,8 @@ import {
   Sparkles,
   Crown,
   ChevronDown,
-  Handshake
+  Handshake,
+  Search
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,9 +27,9 @@ import {
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+  { href: '/explorer', label: 'Capsule Explorer', icon: Search },
   { href: '/truth-genome', label: 'Truth Genome', icon: Sparkles },
-  { href: '/truth-net', label: 'Truth Net', icon: Users },
-  { href: '/profile', label: 'Profile', icon: Users },
+  { href: '/social', label: 'Social Hub', icon: Users },
   { href: '/governance', label: 'DAO', icon: Crown },
   { href: '/partners', label: 'Partners', icon: Handshake },
 ];
