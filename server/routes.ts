@@ -5838,6 +5838,349 @@ This report demonstrates our commitment to transparency and accountability to al
     });
   });
 
+  // Authentication Endpoints
+  app.post("/api/auth/register", async (req, res) => {
+    console.log("🔐 Registration attempt:", req.body.email);
+    
+    try {
+      const { firstName, lastName, email, password, selectedPlan, interests, displayName, bio, location } = req.body;
+      
+      // In a real app, you would hash the password and store in database
+      const newUser = {
+        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        email,
+        firstName,
+        lastName,
+        displayName: displayName || `${firstName} ${lastName}`,
+        bio: bio || "",
+        location: location || "",
+        interests: interests || [],
+        tier: selectedPlan?.toUpperCase() || 'EXPLORER',
+        truthScore: 0,
+        gttEarned: 0,
+        capsulesCreated: 0,
+        verification: {
+          email: false,
+          phone: false,
+          identity: false,
+          wallet: false
+        },
+        privacy: {
+          profilePublic: true,
+          showEmail: false,
+          showStats: true,
+          allowMessages: true
+        },
+        preferences: {
+          notifications: true,
+          newsletter: false,
+          darkMode: true,
+          language: 'en'
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      console.log("✅ User registered successfully:", newUser.id);
+      res.json({ user: newUser, token: "mock-jwt-token" });
+      
+    } catch (error) {
+      console.error("❌ Registration error:", error);
+      res.status(400).json({ error: "Registration failed" });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    console.log("🔐 Login attempt:", req.body.email);
+    
+    try {
+      const { email, password } = req.body;
+      
+      // For demo purposes, accept any login that matches debug user or test credentials
+      if (email === 'debug@guardianchain.app' || email.includes('@')) {
+        const user = {
+          id: 'debug-user-456',
+          email: email,
+          firstName: 'Debug',
+          lastName: 'User',
+          displayName: 'Debug User',
+          tier: 'EXPLORER',
+          truthScore: 87,
+          gttEarned: 12547,
+          capsulesCreated: 23
+        };
+        
+        console.log("✅ Login successful:", user.id);
+        res.json({ user, token: "mock-jwt-token" });
+      } else {
+        res.status(401).json({ error: "Invalid credentials" });
+      }
+      
+    } catch (error) {
+      console.error("❌ Login error:", error);
+      res.status(400).json({ error: "Login failed" });
+    }
+  });
+
+  // User Profile Endpoints
+  app.get("/api/profile", isDebugAuthenticated, async (req, res) => {
+    console.log("👤 Profile requested for user:", req.user?.id);
+    
+    const profileData = {
+      id: req.user?.id || 'debug-user-456',
+      email: req.user?.email || 'debug@guardianchain.app',
+      firstName: req.user?.firstName || 'Debug',
+      lastName: req.user?.lastName || 'User',
+      displayName: 'Debug User',
+      bio: 'Truth seeker and blockchain enthusiast committed to preserving authentic narratives for future generations.',
+      location: 'San Francisco, CA',
+      website: '',
+      twitter: '',
+      linkedin: '',
+      avatar: '',
+      banner: '',
+      tier: req.user?.tier || 'EXPLORER',
+      truthScore: 87,
+      gttEarned: 12547,
+      capsulesCreated: 23,
+      verification: {
+        email: true,
+        phone: false,
+        identity: false,
+        wallet: true
+      },
+      privacy: {
+        profilePublic: true,
+        showEmail: false,
+        showStats: true,
+        allowMessages: true
+      },
+      preferences: {
+        notifications: true,
+        newsletter: false,
+        darkMode: true,
+        language: 'en'
+      },
+      createdAt: '2024-01-15T10:30:00Z',
+      updatedAt: new Date().toISOString()
+    };
+    
+    res.json(profileData);
+  });
+
+  app.put("/api/profile", isDebugAuthenticated, async (req, res) => {
+    console.log("👤 Profile update requested:", req.body);
+    
+    try {
+      // In a real app, you would update the database
+      const updatedProfile = {
+        ...req.body,
+        id: req.user?.id,
+        updatedAt: new Date().toISOString()
+      };
+      
+      console.log("✅ Profile updated successfully");
+      res.json(updatedProfile);
+      
+    } catch (error) {
+      console.error("❌ Profile update error:", error);
+      res.status(400).json({ error: "Profile update failed" });
+    }
+  });
+
+  app.get("/api/capsules/user", isDebugAuthenticated, async (req, res) => {
+    console.log("📋 User capsules requested");
+    
+    const userCapsules = [
+      {
+        id: "cap_user_001",
+        title: "My Family Legacy Collection",
+        description: "Personal stories and memories from my family history",
+        category: "legacy",
+        status: "verified",
+        createdAt: "2024-07-15T14:30:00Z",
+        truthScore: 94
+      },
+      {
+        id: "cap_user_002", 
+        title: "Corporate Transparency Evidence",
+        description: "Documentation of workplace misconduct and evidence",
+        category: "evidence",
+        status: "pending",
+        createdAt: "2024-07-20T09:15:00Z",
+        truthScore: 0
+      }
+    ];
+    
+    res.json(userCapsules);
+  });
+
+  app.get("/api/user/detailed-stats", isDebugAuthenticated, async (req, res) => {
+    console.log("📊 Detailed user stats requested");
+    
+    const detailedStats = {
+      totalViews: 1547,
+      totalLikes: 324,
+      totalShares: 87,
+      averageEngagement: 73.2,
+      topCategories: ["legacy", "evidence", "truth"],
+      monthlyActivity: {
+        capsules: 8,
+        verifications: 15,
+        earnings: 2340
+      },
+      achievements: [
+        { id: "first_capsule", name: "First Truth", unlocked: true },
+        { id: "verified_member", name: "Verified Member", unlocked: true },
+        { id: "truth_seeker", name: "Truth Seeker", unlocked: false }
+      ]
+    };
+    
+    res.json(detailedStats);
+  });
+
+  // Dashboard Customization Endpoints
+  app.get("/api/dashboard/config", isDebugAuthenticated, async (req, res) => {
+    console.log("🎛️ Dashboard config requested for user:", req.user?.id);
+    
+    const defaultConfig = {
+      userId: req.user?.id || 'debug-user-456',
+      layout: 'grid',
+      theme: 'cyberpunk',
+      isPublic: false,
+      widgets: [
+        {
+          id: 'truth-score',
+          name: 'Truth Score',
+          description: 'Your current truth verification score',
+          component: 'TruthScoreWidget',
+          enabled: true,
+          position: 0,
+          size: 'small',
+          category: 'stats',
+          icon: 'Trophy'
+        },
+        {
+          id: 'gtt-balance',
+          name: 'GTT Balance',
+          description: 'Your Guardian Truth Token balance',
+          component: 'GTTBalanceWidget',
+          enabled: true,
+          position: 1,
+          size: 'small',
+          category: 'stats',
+          icon: 'Sparkles'
+        },
+        {
+          id: 'recent-capsules',
+          name: 'Recent Capsules',
+          description: 'Your latest truth capsules',
+          component: 'RecentCapsulesWidget',
+          enabled: true,
+          position: 2,
+          size: 'large',
+          category: 'content',
+          icon: 'FileText'
+        },
+        {
+          id: 'activity-feed',
+          name: 'Activity Feed',
+          description: 'Recent platform activities',
+          component: 'ActivityFeedWidget',
+          enabled: false,
+          position: 3,
+          size: 'medium',
+          category: 'social',
+          icon: 'Users'
+        }
+      ],
+      lastUpdated: new Date().toISOString()
+    };
+    
+    res.json(defaultConfig);
+  });
+
+  app.put("/api/dashboard/config", isDebugAuthenticated, async (req, res) => {
+    console.log("🎛️ Dashboard config update requested:", req.body);
+    
+    try {
+      // Validate that the user can only update their own dashboard
+      if (req.body.userId && req.body.userId !== req.user?.id) {
+        return res.status(403).json({ error: "Unauthorized: Cannot modify another user's dashboard" });
+      }
+      
+      // In a real app, you would validate and save to database
+      const updatedConfig = {
+        ...req.body,
+        userId: req.user?.id,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      console.log("✅ Dashboard config updated successfully");
+      res.json(updatedConfig);
+      
+    } catch (error) {
+      console.error("❌ Dashboard config update error:", error);
+      res.status(400).json({ error: "Dashboard configuration update failed" });
+    }
+  });
+
+  app.post("/api/dashboard/config/reset", isDebugAuthenticated, async (req, res) => {
+    console.log("🔄 Dashboard config reset requested for user:", req.user?.id);
+    
+    try {
+      const defaultConfig = {
+        userId: req.user?.id || 'debug-user-456',
+        layout: 'grid',
+        theme: 'cyberpunk',
+        isPublic: false,
+        widgets: [
+          {
+            id: 'truth-score',
+            name: 'Truth Score',
+            description: 'Your current truth verification score',
+            component: 'TruthScoreWidget',
+            enabled: true,
+            position: 0,
+            size: 'small',
+            category: 'stats',
+            icon: 'Trophy'
+          },
+          {
+            id: 'gtt-balance',
+            name: 'GTT Balance',
+            description: 'Your Guardian Truth Token balance',
+            component: 'GTTBalanceWidget',
+            enabled: true,
+            position: 1,
+            size: 'small',
+            category: 'stats',
+            icon: 'Sparkles'
+          },
+          {
+            id: 'recent-capsules',
+            name: 'Recent Capsules',
+            description: 'Your latest truth capsules',
+            component: 'RecentCapsulesWidget',
+            enabled: true,
+            position: 2,
+            size: 'large',
+            category: 'content',
+            icon: 'FileText'
+          }
+        ],
+        lastUpdated: new Date().toISOString()
+      };
+      
+      console.log("✅ Dashboard config reset to default");
+      res.json(defaultConfig);
+      
+    } catch (error) {
+      console.error("❌ Dashboard config reset error:", error);
+      res.status(400).json({ error: "Dashboard configuration reset failed" });
+    }
+  });
+
   // --- AI SERVICES ENDPOINTS ---
 
   // Enhanced AI Image Generation

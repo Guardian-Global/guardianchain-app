@@ -72,18 +72,20 @@ function Router() {
     );
   }
 
-  // Show elite landing page for unauthenticated users
+  // Show landing page for unauthenticated users
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={CyberHomepage} />
+        <Route path="/" component={() => import("@/pages/LandingPage").then(m => m.default)} />
+        <Route path="/onboarding" component={() => import("@/pages/OnboardingFlow").then(m => m.default)} />
+        <Route path="/login" component={() => import("@/pages/LoginPage").then(m => m.default)} />
         <Route path="/elite" component={EliteHomepage} />
         <Route path="/explorer" component={Explorer} />
         <Route path="/terms" component={Terms} />
         <Route path="/start" component={Start} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/subscribe/:tier" component={Subscribe} />
-        <Route component={CyberHomepage} />
+        <Route component={() => import("@/pages/LandingPage").then(m => m.default)} />
       </Switch>
     );
   }
@@ -144,6 +146,7 @@ function Router() {
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/test-preview" component={() => import("@/pages/CapsulePreviewTest").then(m => m.default)} />
               <Route path="/enhancements" component={() => import("@/pages/EnhancementShowcase").then(m => m.default)} />
+              <Route path="/profile" component={() => import("@/pages/UserProfile").then(m => m.default)} />
               <Route path="/social-profile">
                 {() => {
                   const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));
