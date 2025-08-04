@@ -52,16 +52,33 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Web3 Custom Colors
-        "neon-cyan": "hsl(var(--neon-cyan))",
-        "neon-purple": "hsl(var(--neon-purple))",
-        "neon-pink": "hsl(var(--neon-pink))",
-        "blockchain-blue": "hsl(var(--blockchain-blue))",
-        "ethereum-purple": "hsl(var(--ethereum-purple))",
-        "polygon-purple": "hsl(var(--polygon-purple))",
-        "truth-gold": "hsl(var(--truth-gold))",
-        "grief-red": "hsl(var(--grief-red))",
-        "capsule-green": "hsl(var(--capsule-green))",
+        // 2026 Futuristic High-Contrast Colors
+        neon: {
+          cyan: "hsl(180, 100%, 50%)",
+          purple: "hsl(285, 100%, 65%)",
+          green: "hsl(120, 100%, 50%)",
+          pink: "hsl(315, 100%, 70%)",
+          yellow: "hsl(60, 100%, 60%)",
+          blue: "hsl(220, 100%, 60%)",
+        },
+        cosmic: {
+          void: "hsl(240, 100%, 3%)",
+          deep: "hsl(240, 100%, 5%)",
+          nebula: "hsl(260, 80%, 6%)",
+          surface: "hsl(240, 50%, 8%)",
+          border: "hsl(240, 50%, 20%)",
+        },
+        glass: {
+          light: "hsla(240, 50%, 15%, 0.8)",
+          medium: "hsla(260, 40%, 12%, 0.9)",
+          dark: "hsla(240, 100%, 5%, 0.95)",
+        },
+        viral: {
+          electric: "hsl(285, 100%, 65%)",
+          quantum: "hsl(120, 100%, 50%)",
+          plasma: "hsl(315, 100%, 70%)",
+          laser: "hsl(180, 100%, 50%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

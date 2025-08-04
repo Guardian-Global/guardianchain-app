@@ -53,6 +53,7 @@ const MetricsPage = lazy(() => import("@/pages/Metrics"));
 const StakingPage = lazy(() => import("@/pages/Staking"));
 const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
+const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function Router() {
@@ -134,6 +135,7 @@ function Router() {
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
               <Route path="/onboarding" component={NewUserOnboarding} />
+              <Route path="/viral-showcase" component={ViralShowcase} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
