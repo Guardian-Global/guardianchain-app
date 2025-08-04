@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Vote, Users, DollarSign, Shield, Clock, Zap } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface Proposal {
   id: string;
@@ -28,44 +30,40 @@ interface DAOStats {
 
 export default function DAO() {
   const [selectedTab, setSelectedTab] = useState("proposals");
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: proposals } = useQuery({
-    queryKey: ["/api/dao/proposals"],
-    queryFn: () => Promise.resolve([
-      {
-        id: "prop-1",
-        title: "Increase Validator Rewards",
-        description: "Proposal to increase validator rewards by 15% to incentivize network security.",
-        status: "active" as const,
-        votesFor: 12500,
-        votesAgainst: 3200,
-        totalVotes: 15700,
-        endDate: "2025-08-10",
-        requiredGTT: 1000
-      },
-      {
-        id: "prop-2", 
-        title: "New Truth Portal Integration",
-        description: "Add support for academic research submissions with specialized verification.",
-        status: "active" as const,
-        votesFor: 8900,
-        votesAgainst: 2100,
-        totalVotes: 11000,
-        endDate: "2025-08-08",
-        requiredGTT: 500
-      }
-    ])
+    queryKey: ["/api/dao/proposals"]
   });
 
   const { data: stats } = useQuery({
-    queryKey: ["/api/dao/stats"],
-    queryFn: () => Promise.resolve({
-      totalMembers: 2847,
-      totalGTT: 156780,
-      activeProposals: 3,
-      treasuryBalance: 89340
-    })
+    queryKey: ["/api/dao/stats"]
   });
+
+  const voteMutation = useMutation({
+    mutationFn: async ({ proposalId, vote, gttAmount }: { proposalId: string; vote: string; gttAmount: number }) => {
+      return await apiRequest("POST", "/api/dao/vote", { proposalId, vote, gttAmount });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/dao/proposals"] });
+      toast({
+        title: "Vote Cast Successfully",
+        description: "Your vote has been recorded on the blockchain.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Vote Failed",
+        description: "Failed to cast your vote. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleVote = (proposalId: string, vote: 'for' | 'against') => {
+    voteMutation.mutate({ proposalId, vote, gttAmount: 100 });
+  };
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#f0f6fc] p-6">
@@ -217,12 +215,16 @@ export default function DAO() {
                         <Button 
                           variant="outline" 
                           className="border-[#10b981] text-[#10b981] hover:bg-[#10b981]/10"
+                          onClick={() => handleVote(proposal.id, 'for')}
+                          disabled={voteMutation.isPending}
                         >
                           Vote For
                         </Button>
                         <Button 
                           variant="outline" 
                           className="border-[#f85149] text-[#f85149] hover:bg-[#f85149]/10"
+                          onClick={() => handleVote(proposal.id, 'against')}
+                          disabled={voteMutation.isPending}
                         >
                           Vote Against
                         </Button>

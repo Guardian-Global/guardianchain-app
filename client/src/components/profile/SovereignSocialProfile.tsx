@@ -218,10 +218,7 @@ export default function SovereignSocialProfile() {
   const saveProfile = async () => {
     try {
       // Save profile changes
-      await apiRequest("/api/user/profile", {
-        method: "PUT",
-        body: JSON.stringify(profile),
-      });
+      await apiRequest("PUT", "/api/user/profile", profile);
 
       setHasUnsavedChanges(false);
       setIsEditing(false);

@@ -478,6 +478,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile update endpoint
+  app.put("/api/user/profile", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { displayName, bio, backgroundImageUrl, avatarUrl, preferences, truthGenome, metadata } = req.body;
+      
+      // Mock saving profile data
+      const profileData = {
+        userId: req.user.id,
+        displayName,
+        bio,
+        backgroundImageUrl,
+        avatarUrl,
+        preferences,
+        truthGenome,
+        metadata,
+        updatedAt: new Date().toISOString()
+      };
+
+      res.json({
+        success: true,
+        profile: profileData,
+        message: "Profile updated successfully"
+      });
+      
+      console.log(`👤 User profile updated: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to update profile:", error);
+      res.status(500).json({
+        error: "Failed to update profile",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Complete onboarding endpoint
   app.post("/api/user/complete-onboarding", isDebugAuthenticated, async (req: any, res) => {
     try {
@@ -503,6 +537,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("❌ Failed to complete onboarding:", error);
       res.status(500).json({
         error: "Failed to complete onboarding",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // DAO proposals endpoint
+  app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const proposals = [
+        {
+          id: "prop-1",
+          title: "Increase Validator Rewards",
+          description: "Proposal to increase validator rewards by 15% to incentivize network security.",
+          status: "active",
+          votesFor: 12500,
+          votesAgainst: 3200,
+          totalVotes: 15700,
+          endDate: "2025-08-10",
+          requiredGTT: 1000
+        },
+        {
+          id: "prop-2", 
+          title: "New Truth Portal Integration",
+          description: "Add support for academic research submissions with specialized verification.",
+          status: "active",
+          votesFor: 8900,
+          votesAgainst: 2100,
+          totalVotes: 11000,
+          endDate: "2025-08-08",
+          requiredGTT: 500
+        }
+      ];
+
+      res.json(proposals);
+      console.log(`🗳️ DAO proposals retrieved: ${proposals.length} active`);
+    } catch (error) {
+      console.error("❌ Failed to get DAO proposals:", error);
+      res.status(500).json({
+        error: "Failed to get DAO proposals",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // DAO stats endpoint
+  app.get("/api/dao/stats", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const stats = {
+        totalMembers: 2847,
+        totalGTT: 156780,
+        activeProposals: 3,
+        treasuryBalance: 89340
+      };
+
+      res.json(stats);
+      console.log(`📊 DAO stats retrieved`);
+    } catch (error) {
+      console.error("❌ Failed to get DAO stats:", error);
+      res.status(500).json({
+        error: "Failed to get DAO stats",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // DAO vote endpoint
+  app.post("/api/dao/vote", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const { proposalId, vote, gttAmount } = req.body;
+      
+      // Mock voting logic
+      const voteData = {
+        userId: req.user.id,
+        proposalId,
+        vote, // 'for' or 'against'
+        gttAmount,
+        timestamp: new Date().toISOString()
+      };
+
+      res.json({
+        success: true,
+        vote: voteData,
+        message: "Vote cast successfully"
+      });
+      
+      console.log(`🗳️ DAO vote cast by ${req.user.id} on proposal ${proposalId}: ${vote}`);
+    } catch (error) {
+      console.error("❌ Failed to cast DAO vote:", error);
+      res.status(500).json({
+        error: "Failed to cast vote",
         details: error instanceof Error ? error.message : "Unknown error"
       });
     }
