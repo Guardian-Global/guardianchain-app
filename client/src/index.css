@@ -1032,10 +1032,147 @@
 /* Figma Component Tokens */
 .primary-button {
   background-color: var(--brand-primary);
-  color: white;
-  border-radius: 0.5rem;
-  font-family: var(--font-brand);
-  transition: all 0.3s ease;
+  color: hsl(180, 100%, 90%);
+}
+
+/* CYBERPUNK COLOR SCHEME OVERRIDE - REPLACE ALL WHITE COLORS */
+
+/* Universal color replacements */
+body,
+html,
+* {
+  color: hsl(180, 100%, 90%) !important;
+}
+
+/* Specific white color class replacements */
+.text-white, 
+.text-gray-50,
+.text-slate-50,
+.text-zinc-50,
+.text-neutral-50,
+.text-stone-50,
+[class*="text-white"] {
+  color: hsl(180, 100%, 90%) !important;
+}
+
+/* Background white replacements */
+.bg-white,
+.bg-gray-50,
+.bg-slate-50,
+.bg-zinc-50,
+.bg-neutral-50,
+.bg-stone-50,
+[class*="bg-white"] {
+  background-color: hsl(218, 54%, 9%) !important;
+}
+
+/* Border white replacements */
+.border-white,
+.border-gray-50,
+.border-slate-50,
+.border-zinc-50,
+.border-neutral-50,
+.border-stone-50,
+[class*="border-white"] {
+  border-color: hsl(180, 100%, 50%) !important;
+}
+
+/* Override light mode styles completely */
+.light {
+  --background: hsl(218, 54%, 6%) !important;
+  --foreground: hsl(180, 100%, 90%) !important;
+  --card: hsl(218, 54%, 9%) !important;
+  --card-foreground: hsl(180, 100%, 90%) !important;
+  --popover: hsl(218, 54%, 9%) !important;
+  --popover-foreground: hsl(180, 100%, 90%) !important;
+  --primary: hsl(180, 100%, 50%) !important;
+  --primary-foreground: hsl(218, 54%, 6%) !important;
+  --secondary: hsl(330, 100%, 50%) !important;
+  --secondary-foreground: hsl(180, 100%, 90%) !important;
+  --muted: hsl(215, 23%, 19%) !important;
+  --muted-foreground: hsl(180, 70%, 70%) !important;
+  --accent: hsl(285, 100%, 65%) !important;
+  --accent-foreground: hsl(218, 54%, 6%) !important;
+  --destructive: hsl(0, 84%, 60%) !important;
+  --destructive-foreground: hsl(180, 100%, 90%) !important;
+  --border: hsl(240, 50%, 20%) !important;
+  --input: hsl(240, 50%, 8%) !important;
+  --ring: hsl(180, 100%, 50%) !important;
+}
+
+/* Component-specific overrides */
+button {
+  color: hsl(180, 100%, 90%) !important;
+}
+
+input, textarea, select {
+  color: hsl(180, 100%, 90%) !important;
+  background-color: hsl(218, 54%, 9%) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: hsl(180, 100%, 90%) !important;
+}
+
+a {
+  color: hsl(180, 100%, 80%) !important;
+}
+
+a:hover {
+  color: hsl(300, 100%, 80%) !important;
+}
+
+::placeholder {
+  color: hsl(180, 50%, 60%) !important;
+}
+
+::selection {
+  background-color: hsl(300, 100%, 50%) !important;
+  color: hsl(218, 54%, 9%) !important;
+}
+
+svg {
+  color: hsl(180, 100%, 90%) !important;
+  fill: currentColor !important;
+}
+
+/* Override any remaining white colors in components */
+.holographic-glass {
+  background: linear-gradient(135deg, 
+    rgba(0, 255, 225, 0.1) 0%,
+    rgba(0, 255, 225, 0.05) 50%,
+    rgba(0, 255, 225, 0.1) 100%
+  ) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(0, 255, 225, 0.2) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(0, 255, 225, 0.3),
+    0 0 0 1px rgba(0, 255, 225, 0.1) !important;
+}
+
+/* Update gradient hero to use cyberpunk colors */
+.gradient-hero {
+  background: linear-gradient(to right, 
+    hsl(180, 100%, 90%), 
+    hsl(180, 70%, 70%), 
+    hsl(180, 50%, 60%)
+  ) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* Update any other white-based gradients */
+.btn-hover-glow::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 225, 0.1),
+    transparent
+  ) !important;
 }
 
 .surface-card {

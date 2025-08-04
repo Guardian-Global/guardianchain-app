@@ -9,10 +9,13 @@ Preferred communication style: Simple, everyday language.
 **Design Philosophy**: Strong preference for clean, minimal Next.js template structure approach:
 - Clean layout with Head component structure
 - max-w-4xl container with proper spacing
-- Yellow-400 titles, purple-300 headings, blue-400 links
-- White/5 background cards with border styling
+- **CRITICAL: ALL white colors must be replaced with cyberpunk color scheme**
+- Cyberpunk cyan (#00ffe1), magenta (#ff00d4), and purple (#7c3aed) color palette
+- High-contrast text visibility with hsl(180, 100%, 90%) for maximum readability
+- Dark cyberpunk backgrounds with hsl(218, 54%, 9%) surface colors
 - Professional presentation for investor materials
 - Minimal, focused design without unnecessary complexity
+- **COMPLETED: Comprehensive CSS override system implemented for all white color replacements**
 
 ## System Architecture
 
