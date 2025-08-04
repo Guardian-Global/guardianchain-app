@@ -59,6 +59,7 @@ const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
+const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -157,6 +158,11 @@ function Router() {
             </Switch>
           </Suspense>
         </EliteLayout>
+        
+        {/* Guardian Mascot - Available on all authenticated pages */}
+        <Suspense fallback={null}>
+          <GuardianMascot />
+        </Suspense>
       </Route>
     </Switch>
   );
