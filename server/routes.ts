@@ -5802,6 +5802,42 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
+  // AI Recommendation Engine Endpoints
+  app.get("/api/ai/capsule-recommendations", isDebugAuthenticated, (req, res) => {
+    const { mockRecommendationData } = require("./mockData/aiRecommendations");
+    res.json(mockRecommendationData);
+  });
+
+  // Truth Score Achievement System Endpoints  
+  app.get("/api/achievements/truth-score", isDebugAuthenticated, (req, res) => {
+    const { mockAchievementData } = require("./mockData/aiRecommendations");
+    res.json(mockAchievementData);
+  });
+
+  // Enhanced Dashboard Analytics
+  app.get("/api/analytics/dashboard", isDebugAuthenticated, (req, res) => {
+    res.json({
+      capsuleAnalytics: {
+        totalViews: 15847,
+        averageEngagement: 73.2,
+        topPerformingCategories: ["truth", "evidence", "legacy"],
+        monthlyGrowth: 24.5
+      },
+      userEngagement: {
+        dailyActiveUsers: 1247,
+        averageSessionTime: "8m 32s",
+        retentionRate: 82.4,
+        topFeatures: ["capsule-creation", "verification", "social-sharing"]
+      },
+      platformHealth: {
+        uptime: 99.8,
+        averageResponseTime: "142ms",
+        errorRate: 0.03,
+        lastIncident: "2024-07-28T14:20:00Z"
+      }
+    });
+  });
+
   // --- AI SERVICES ENDPOINTS ---
 
   // Enhanced AI Image Generation

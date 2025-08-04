@@ -143,6 +143,7 @@ function Router() {
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/test-preview" component={() => import("@/pages/CapsulePreviewTest").then(m => m.default)} />
+              <Route path="/enhancements" component={() => import("@/pages/EnhancementShowcase").then(m => m.default)} />
               <Route path="/social-profile">
                 {() => {
                   const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));

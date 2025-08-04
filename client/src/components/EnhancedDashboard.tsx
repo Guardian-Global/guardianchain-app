@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { EnhancedCapsuleGallery } from "@/components/capsules/EnhancedCapsuleGallery";
+import { AnimatedCapsuleInteraction } from "@/components/animations/AnimatedCapsuleInteraction";
 
 interface DashboardStats {
   truthScore: number;
@@ -538,13 +539,18 @@ export default function EnhancedDashboard() {
 
       {/* Enhanced Capsule Gallery Integration */}
       <div className="mt-8">
-        <EnhancedCapsuleGallery 
-          title="Recent Truth Capsules"
-          subtitle="Latest verified submissions from the Guardian community"
-          limit={6}
-          showFilters={false}
-          showViewModes={true}
-        />
+        <AnimatedCapsuleInteraction
+          capsuleId="dashboard-gallery"
+          onInteraction={(type, id) => console.log(`Dashboard interaction: ${type} on ${id}`)}
+        >
+          <EnhancedCapsuleGallery 
+            title="Recent Truth Capsules"
+            subtitle="Latest verified submissions from the Guardian community"
+            limit={6}
+            showFilters={false}
+            showViewModes={true}
+          />
+        </AnimatedCapsuleInteraction>
       </div>
     </div>
   );
