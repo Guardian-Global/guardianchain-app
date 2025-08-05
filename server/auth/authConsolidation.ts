@@ -92,7 +92,7 @@ export const consolidatedAuth: RequestHandler = (req: any, res, next) => {
     profileImageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
     walletAddress: undefined,
     isWalletVerified: false,
-    onboardingCompleted: process.env.NODE_ENV === "production",
+    onboardingCompleted: false, // Always start with incomplete onboarding to test flow
     subscriptionStatus: "active",
     subscriptionTier: "SEEKER",
     subscriptionPlan: "monthly",

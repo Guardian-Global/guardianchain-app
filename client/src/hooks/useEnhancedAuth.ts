@@ -295,7 +295,13 @@ export function useEnhancedAuth() {
 
   // Computed values
   const isAuthenticated = !!user && !isError;
-  const needsOnboarding = isAuthenticated && user && !user.onboardingCompleted;
+  const needsOnboarding = isAuthenticated && user && (
+    !user.onboardingCompleted || 
+    !user.firstName || 
+    !user.lastName || 
+    !user.username ||
+    !user.emailVerified
+  );
   const needsEmailVerification = isAuthenticated && user && !user.emailVerified;
   const canUpgrade = isAuthenticated && user?.subscription?.canUpgrade;
   const hasActiveSubscription = isAuthenticated && user?.subscriptionStatus === "active";

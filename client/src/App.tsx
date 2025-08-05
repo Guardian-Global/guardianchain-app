@@ -65,6 +65,8 @@ const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
 const MascotDebug = lazy(() => import("@/components/MascotDebug"));
 const AuthDebugPanel = lazy(() => import("@/components/auth/AuthDebugPanel"));
 const OnboardingStatusChecker = lazy(() => import("@/components/onboarding/OnboardingStatusChecker"));
+const ComprehensiveAuthFlow = lazy(() => import("@/components/auth/ComprehensiveAuthFlow"));
+const FullAppDebugger = lazy(() => import("@/components/debug/FullAppDebugger"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -212,9 +214,19 @@ export default function App() {
                             <AuthDebugPanel />
                           </Suspense>
                           
+                          {/* Comprehensive Authentication Flow */}
+                          <Suspense fallback={null}>
+                            <ComprehensiveAuthFlow />
+                          </Suspense>
+                          
                           {/* Onboarding Status Checker */}
                           <Suspense fallback={null}>
                             <OnboardingStatusChecker />
+                          </Suspense>
+
+                          {/* Full App Debugger */}
+                          <Suspense fallback={null}>
+                            <FullAppDebugger />
                           </Suspense>
                           <Suspense fallback={<div className="h-20 bg-slate-900" />}>
                             <GuardianMascotFooter />
