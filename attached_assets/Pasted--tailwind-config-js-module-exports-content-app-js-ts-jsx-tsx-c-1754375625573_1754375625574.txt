@@ -1,0 +1,132 @@
+// tailwind.config.js
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "#000814",
+        primary: "#00FFE0",
+        secondary: "#1E293B",
+        accent: "#38BDF8"
+      },
+      fontFamily: {
+        sans: ["Space Grotesk", "sans-serif"]
+      },
+      boxShadow: {
+        glow: "0 0 20px #00FFE0",
+        inset: "inset 0 2px 8px #00FFE088"
+      }
+    }
+  },
+  plugins: []
+};
+
+// styles/globals.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-background text-white font-sans antialiased;
+}
+
+// app/_app.tsx
+import "@/styles/globals.css";
+import Layout from "@/components/Layout";
+
+export default function App({ Component, pageProps }) {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+}
+
+// components/Layout.tsx
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+
+export default function Layout({ children }) {
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Navbar />
+      <main className="flex-1 px-6 py-10 max-w-7xl mx-auto">{children}</main>
+      <Footer />
+    </div>
+  );
+}
+
+// components/Navbar.tsx
+export default function Navbar() {
+  return (
+    <header className="w-full py-4 px-6 shadow-glow">
+      <h1 className="text-2xl font-bold text-primary">GUARDIANCHAIN</h1>
+    </header>
+  );
+}
+
+// components/Footer.tsx
+export default function Footer() {
+  return (
+    <footer className="py-6 px-6 text-sm text-slate-400 text-center">
+      &copy; 2025 GuardianChain. Sovereign Memory Infrastructure.
+    </footer>
+  );
+}
+
+// components/HeroSection.tsx
+export default function HeroSection() {
+  return (
+    <section className="text-center mt-20">
+      <h2 className="text-5xl font-extrabold text-primary drop-shadow-glow">
+        GuardianChain
+      </h2>
+      <p className="mt-4 text-xl text-slate-300">
+        The sovereign memory chain. Immutable. AI-powered. Yours forever.
+      </p>
+    </section>
+  );
+}
+
+// components/CoreFeatures.tsx
+export default function CoreFeatures() {
+  return (
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 text-center">
+      <div className="bg-secondary p-6 rounded-xl shadow-inset">
+        <h3 className="text-xl font-bold text-accent">Quantum Truth</h3>
+        <p className="text-slate-300 mt-2">
+          Quantum-secured truth preservation & zero-trust testimony logs.
+        </p>
+      </div>
+      <div className="bg-secondary p-6 rounded-xl shadow-inset">
+        <h3 className="text-xl font-bold text-accent">AI Authorship</h3>
+        <p className="text-slate-300 mt-2">
+          Veritas-powered capsule authorship with grief score authentication.
+        </p>
+      </div>
+      <div className="bg-secondary p-6 rounded-xl shadow-inset">
+        <h3 className="text-xl font-bold text-accent">Multi-Chain</h3>
+        <p className="text-slate-300 mt-2">
+          Deployed across Base, Polygon, and Arbitrum with GTT-powered yield.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// pages/index.tsx
+import HeroSection from "@/components/HeroSection";
+import CoreFeatures from "@/components/CoreFeatures";
+
+export default function HomePage() {
+  return (
+    <>
+      <HeroSection />
+      <CoreFeatures />
+    </>
+  );
+}
