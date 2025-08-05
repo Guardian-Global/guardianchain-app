@@ -7,9 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Twitter, Github, Linkedin, Instagram, Youtube, Twitch, TikTok, Discord,
-  Facebook, Snapchat, Reddit, Pinterest, Medium, Dribbble, Behance, 
-  Globe, Mail, Phone, MapPin, Calendar, Camera, Edit3, Save, 
+  Twitter, Github, Linkedin, Instagram, Youtube, Twitch, Video, MessageSquare,
+  Facebook, Camera, ExternalLink, Image, FileText, Dribbble, Palette, 
+  Globe, Mail, Phone, MapPin, Calendar, Clock, Edit3, Save, 
   Users, Heart, MessageCircle, Share2, Trophy, Star, Award,
   Verified, Shield, Crown, Zap, Gem
 } from "lucide-react";
@@ -51,15 +51,15 @@ const socialPlatforms = [
   { name: "Instagram", icon: Instagram, color: "#e4405f", placeholder: "@username" },
   { name: "YouTube", icon: Youtube, color: "#ff0000", placeholder: "@channel" },
   { name: "Twitch", icon: Twitch, color: "#9146ff", placeholder: "username" },
-  { name: "TikTok", icon: TikTok, color: "#000", placeholder: "@username" },
-  { name: "Discord", icon: Discord, color: "#5865f2", placeholder: "username#0000" },
+  { name: "TikTok", icon: Video, color: "#000", placeholder: "@username" },
+  { name: "Discord", icon: MessageSquare, color: "#5865f2", placeholder: "username#0000" },
   { name: "Facebook", icon: Facebook, color: "#1877f2", placeholder: "username" },
-  { name: "Snapchat", icon: Snapchat, color: "#fffc00", placeholder: "@username" },
-  { name: "Reddit", icon: Reddit, color: "#ff4500", placeholder: "u/username" },
-  { name: "Pinterest", icon: Pinterest, color: "#bd081c", placeholder: "@username" },
-  { name: "Medium", icon: Medium, color: "#00ab6c", placeholder: "@username" },
+  { name: "Snapchat", icon: Camera, color: "#fffc00", placeholder: "@username" },
+  { name: "Reddit", icon: ExternalLink, color: "#ff4500", placeholder: "u/username" },
+  { name: "Pinterest", icon: Image, color: "#bd081c", placeholder: "@username" },
+  { name: "Medium", icon: FileText, color: "#00ab6c", placeholder: "@username" },
   { name: "Dribbble", icon: Dribbble, color: "#ea4c89", placeholder: "username" },
-  { name: "Behance", icon: Behance, color: "#1769ff", placeholder: "username" },
+  { name: "Behance", icon: Palette, color: "#1769ff", placeholder: "username" },
 ];
 
 export function EnhancedSocialProfile() {
