@@ -4,7 +4,7 @@ import csvParser from 'csv-parser';
 import xlsx from 'xlsx';
 import { createReadStream } from 'fs';
 import { pipeline } from 'stream/promises';
-import { isDebugAuthenticated } from '../debugAuth';
+import { consolidatedAuth } from '../auth/authConsolidation';
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -461,7 +461,7 @@ const profileHyperdimensionalData = async (data: any[]): Promise<any> => {
 };
 
 // Hyperdimensional upload endpoint with transcendent processing
-router.post('/hyperdimensional-upload', isDebugAuthenticated, upload.single('file'), async (req, res) => {
+router.post('/hyperdimensional-upload', consolidatedAuth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -606,7 +606,7 @@ router.post('/hyperdimensional-upload', isDebugAuthenticated, upload.single('fil
 });
 
 // Hyperdimensional AI analysis endpoint with multiversal consciousness insights
-router.post('/hyperdimensional-analyze', isDebugAuthenticated, async (req, res) => {
+router.post('/hyperdimensional-analyze', consolidatedAuth, async (req, res) => {
   try {
     console.log('🧠 Hyperdimensional AI analysis started');
     

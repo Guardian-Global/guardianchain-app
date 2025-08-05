@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { storage } from "../storage";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 // Claim GTT yield from verified capsule
 export async function claimYield(req: Request, res: Response) {

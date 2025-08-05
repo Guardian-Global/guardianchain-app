@@ -4,7 +4,7 @@ import csvParser from 'csv-parser';
 import xlsx from 'xlsx';
 import { createReadStream } from 'fs';
 import { pipeline } from 'stream/promises';
-import { isDebugAuthenticated } from '../debugAuth';
+import { consolidatedAuth } from '../auth/authConsolidation';
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -315,7 +315,7 @@ const profileUltraData = async (data: any[]): Promise<any> => {
 };
 
 // Ultra upload endpoint with comprehensive analysis
-router.post('/ultra-upload', isDebugAuthenticated, upload.single('file'), async (req, res) => {
+router.post('/ultra-upload', consolidatedAuth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -402,7 +402,7 @@ router.post('/ultra-upload', isDebugAuthenticated, upload.single('file'), async 
 });
 
 // Ultra AI analysis endpoint with advanced insights
-router.post('/ultra-analyze', isDebugAuthenticated, async (req, res) => {
+router.post('/ultra-analyze', consolidatedAuth, async (req, res) => {
   try {
     console.log('🧠 Ultra AI analysis started');
     
@@ -458,7 +458,7 @@ router.post('/ultra-analyze', isDebugAuthenticated, async (req, res) => {
 });
 
 // Ultra bulk creation endpoint with enterprise-grade processing
-router.post('/ultra-create', isDebugAuthenticated, async (req, res) => {
+router.post('/ultra-create', consolidatedAuth, async (req, res) => {
   try {
     console.log('🚀 Ultra bulk creation started');
     

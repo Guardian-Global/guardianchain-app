@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { storage } from "../storage";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
 // Get detailed user profile
 router.get(
   "/detailed/:userId?",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req: any, res) => {
     try {
       const userId = req.params.userId || req.user?.id;
@@ -47,7 +47,7 @@ router.get(
 );
 
 // Update user profile
-router.put("/update", isDebugAuthenticated, async (req: any, res) => {
+router.put("/update", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user?.id;
 
@@ -74,7 +74,7 @@ router.put("/update", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Upload profile image
-router.post("/upload-image", isDebugAuthenticated, async (req: any, res) => {
+router.post("/upload-image", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user?.id;
 
@@ -100,7 +100,7 @@ router.post("/upload-image", isDebugAuthenticated, async (req: any, res) => {
 // Get user achievements
 router.get(
   "/achievements/:userId?",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req: any, res) => {
     try {
       const userId = req.params.userId || req.user?.id;
@@ -122,7 +122,7 @@ router.get(
 // Award achievement to user
 router.post(
   "/award-achievement",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req: any, res) => {
     try {
       const userId = req.user?.id;
@@ -147,7 +147,7 @@ router.post(
 // Get user activity feed
 router.get(
   "/activity/:userId?",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req: any, res) => {
     try {
       const userId = req.params.userId || req.user?.id;
@@ -171,7 +171,7 @@ router.get(
 // Get user connections/followers
 router.get(
   "/connections/:userId?",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req: any, res) => {
     try {
       const userId = req.params.userId || req.user?.id;
@@ -191,7 +191,7 @@ router.get(
 );
 
 // Follow/unfollow user
-router.post("/follow", isDebugAuthenticated, async (req: any, res) => {
+router.post("/follow", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user?.id;
     const { targetUserId, action } = req.body; // action: 'follow' | 'unfollow'

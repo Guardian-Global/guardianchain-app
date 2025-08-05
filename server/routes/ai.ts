@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import OpenAI from "openai";
 
 const router = Router();
@@ -15,7 +15,7 @@ try {
 }
 
 // Analyze capsule content with AI
-router.post("/analyze-capsule", isDebugAuthenticated, async (req, res) => {
+router.post("/analyze-capsule", consolidatedAuth, async (req, res) => {
   try {
     const {
       capsuleId,
@@ -115,7 +115,7 @@ Respond with JSON in this exact format:
 });
 
 // Generate truth genome data
-router.get("/truth-genome/:userId?", isDebugAuthenticated, async (req, res) => {
+router.get("/truth-genome/:userId?", consolidatedAuth, async (req, res) => {
   try {
     const userId = req.params.userId || "current";
 
@@ -167,7 +167,7 @@ router.get("/truth-genome/:userId?", isDebugAuthenticated, async (req, res) => {
 });
 
 // Auto-translate text
-router.post("/translate", isDebugAuthenticated, async (req, res) => {
+router.post("/translate", consolidatedAuth, async (req, res) => {
   try {
     const { text, targetLanguage, sourceLanguage = "auto" } = req.body;
 

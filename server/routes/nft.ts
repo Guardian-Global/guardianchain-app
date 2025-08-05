@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import { ethers } from "ethers";
 
 const router = Router();
@@ -7,7 +7,7 @@ const router = Router();
 /**
  * Initiate NFT minting process
  */
-router.post("/mint", isDebugAuthenticated, async (req: any, res) => {
+router.post("/mint", consolidatedAuth, async (req: any, res) => {
   try {
     const { 
       walletAddress, 

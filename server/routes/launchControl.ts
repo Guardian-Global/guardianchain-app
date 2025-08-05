@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs/promises";
@@ -116,7 +116,7 @@ const mockLaunchStatus = {
 };
 
 // Get current launch status
-router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
+router.get("/launch-status", consolidatedAuth, async (req, res) => {
   try {
     // Load actual deployment status from files
     const deploymentsDir = path.join(process.cwd(), "deployments");
@@ -270,7 +270,7 @@ router.get("/launch-status", isDebugAuthenticated, async (req, res) => {
 });
 
 // Deploy to specific network
-router.post("/deploy-network", isDebugAuthenticated, async (req, res) => {
+router.post("/deploy-network", consolidatedAuth, async (req, res) => {
   try {
     const { network } = req.body;
 
@@ -307,7 +307,7 @@ router.post("/deploy-network", isDebugAuthenticated, async (req, res) => {
 });
 
 // Add liquidity to DEX
-router.post("/add-liquidity", isDebugAuthenticated, async (req, res) => {
+router.post("/add-liquidity", consolidatedAuth, async (req, res) => {
   try {
     const { network, dex, amounts } = req.body;
 
@@ -350,7 +350,7 @@ router.post("/add-liquidity", isDebugAuthenticated, async (req, res) => {
 // Submit exchange application
 router.post(
   "/submit-exchange-application",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req, res) => {
     try {
       const { exchange } = req.body;
@@ -393,7 +393,7 @@ router.post(
 );
 
 // Configure cross-chain bridge
-router.post("/configure-bridge", isDebugAuthenticated, async (req, res) => {
+router.post("/configure-bridge", consolidatedAuth, async (req, res) => {
   try {
     const { bridge, sourceNetwork, targetNetwork } = req.body;
 
@@ -434,7 +434,7 @@ router.post("/configure-bridge", isDebugAuthenticated, async (req, res) => {
 });
 
 // Test bridge functionality
-router.post("/test-bridge", isDebugAuthenticated, async (req, res) => {
+router.post("/test-bridge", consolidatedAuth, async (req, res) => {
   try {
     const { bridge, sourceNetwork, targetNetwork, amount } = req.body;
 
@@ -469,7 +469,7 @@ router.post("/test-bridge", isDebugAuthenticated, async (req, res) => {
 // Get deployment logs
 router.get(
   "/deployment-logs/:network",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req, res) => {
     try {
       const { network } = req.params;
@@ -494,7 +494,7 @@ router.get(
 );
 
 // Emergency pause functionality
-router.post("/emergency-pause", isDebugAuthenticated, async (req, res) => {
+router.post("/emergency-pause", consolidatedAuth, async (req, res) => {
   try {
     const { network, reason } = req.body;
 

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { ObjectStorageService } from "../objectStorage";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
 // Get upload URL for media files
-router.post("/upload-url", isDebugAuthenticated, async (req, res) => {
+router.post("/upload-url", consolidatedAuth, async (req, res) => {
   try {
     const { fileName, fileType, uploadType } = req.body;
 
@@ -26,7 +26,7 @@ router.post("/upload-url", isDebugAuthenticated, async (req, res) => {
 });
 
 // Handle post-upload metadata
-router.post("/upload-complete", isDebugAuthenticated, async (req, res) => {
+router.post("/upload-complete", consolidatedAuth, async (req, res) => {
   try {
     const { mediaUrl, fileName, fileType, fileSize, uploadType } = req.body;
     const userId = req.user?.id;

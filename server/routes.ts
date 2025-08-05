@@ -9,9 +9,7 @@ import { createCapsule, getCapsuleById } from "./api/capsules";
 import { mintCapsule, likeCapsule, shareCapsule } from "./api/capsule-actions";
 import { unlockCapsule } from "./api/capsule-unlock";
 import { registerGTTContractRoutes } from "./routes/gttContract";
-// DISABLED: No debug authentication bypass allowed
-// import { setupDebugAuth, consolidatedAuth } from "./debugAuth";
-import { setupEnhancedAuth, enhancedAuth } from "./auth/enhancedAuth";
+// All legacy authentication systems removed - only consolidated auth remains
 import { consolidatedAuth } from "./auth/authConsolidation";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
@@ -1542,9 +1540,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   const { setupConsolidatedAuth } = await import("./auth/authConsolidation.js");
   setupConsolidatedAuth(app);
   
-  // Legacy auth systems for compatibility
-  // Debug auth disabled - real authentication required
-  setupEnhancedAuth(app);
+  // Only consolidated authentication system is active
 
   // Register bulk upload routes
   registerBulkRoutes(app);
@@ -9041,10 +9037,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   app.use("/api/vault", vaultRouter);
   app.use("/api/claim", airdropRoutes);
   
-  // Enhanced wallet authentication routes
-  const walletAuthRoutes = await import("./routes/walletAuth");
-  app.use("/api/auth", walletAuthRoutes.default);
-  app.use("/api/token", walletAuthRoutes.default);
+  // Wallet authentication consolidated into main auth system
 
   // Enhanced airdrop routes (replacing simple airdrop routes)
   const enhancedAirdropRoutes = await import("./routes/airdropEnhanced");

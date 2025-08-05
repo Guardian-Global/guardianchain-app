@@ -4,7 +4,7 @@ import csvParser from 'csv-parser';
 import xlsx from 'xlsx';
 import { createReadStream } from 'fs';
 import { pipeline } from 'stream/promises';
-import { isDebugAuthenticated } from '../debugAuth';
+import { consolidatedAuth } from '../auth/authConsolidation';
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -408,7 +408,7 @@ const profileQuantumData = async (data: any[]): Promise<any> => {
 };
 
 // Quantum upload endpoint with revolutionary processing
-router.post('/quantum-upload', isDebugAuthenticated, upload.single('file'), async (req, res) => {
+router.post('/quantum-upload', consolidatedAuth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -535,7 +535,7 @@ router.post('/quantum-upload', isDebugAuthenticated, upload.single('file'), asyn
 });
 
 // Quantum AI analysis endpoint with multidimensional insights
-router.post('/quantum-analyze', isDebugAuthenticated, async (req, res) => {
+router.post('/quantum-analyze', consolidatedAuth, async (req, res) => {
   try {
     console.log('🧠 Quantum AI analysis started');
     

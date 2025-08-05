@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import Stripe from "stripe";
 import { z } from "zod";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
@@ -80,7 +80,7 @@ export function registerSubscriptionRoutes(app: Express) {
   });
 
   // Create subscription checkout session
-  app.post("/api/subscription/create-checkout", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/subscription/create-checkout", consolidatedAuth, async (req, res) => {
     try {
       const validatedData = createSubscriptionSchema.parse(req.body);
       const { planTier, billingCycle, successUrl, cancelUrl } = validatedData;
@@ -166,7 +166,7 @@ export function registerSubscriptionRoutes(app: Express) {
   });
 
   // Get current user subscription
-  app.get("/api/subscription/current", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/subscription/current", consolidatedAuth, async (req, res) => {
     try {
       const user = req.user as any;
       
@@ -197,7 +197,7 @@ export function registerSubscriptionRoutes(app: Express) {
   });
 
   // Update subscription
-  app.post("/api/subscription/update", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/subscription/update", consolidatedAuth, async (req, res) => {
     try {
       const validatedData = updateSubscriptionSchema.parse(req.body);
       const { newPlanTier } = validatedData;
@@ -220,7 +220,7 @@ export function registerSubscriptionRoutes(app: Express) {
   });
 
   // Cancel subscription
-  app.post("/api/subscription/cancel", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/subscription/cancel", consolidatedAuth, async (req, res) => {
     try {
       const user = req.user as any;
       

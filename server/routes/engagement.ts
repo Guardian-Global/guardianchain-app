@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 interface SessionData {
   sessionId: string;
@@ -53,7 +53,7 @@ export function registerEngagementRoutes(app: Express) {
   // Track user session
   app.post(
     "/api/engagement/track-session",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -101,7 +101,7 @@ export function registerEngagementRoutes(app: Express) {
   // Get daily challenges
   app.get(
     "/api/engagement/daily-challenges",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -123,7 +123,7 @@ export function registerEngagementRoutes(app: Express) {
   // Complete daily challenge
   app.post(
     "/api/engagement/complete-challenge/:challengeId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -157,7 +157,7 @@ export function registerEngagementRoutes(app: Express) {
   // Get user personalization profile
   app.get(
     "/api/personalization/profile",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -175,7 +175,7 @@ export function registerEngagementRoutes(app: Express) {
   // Track user behavior for personalization
   app.post(
     "/api/personalization/track",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;

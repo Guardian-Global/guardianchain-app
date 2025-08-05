@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import multer from "multer";
 
 const router = Router();
@@ -15,7 +15,7 @@ const upload = multer({
 /**
  * Pin capsule metadata to IPFS
  */
-router.post("/pin", isDebugAuthenticated, async (req: any, res) => {
+router.post("/pin", consolidatedAuth, async (req: any, res) => {
   try {
     const { metadata, name } = req.body;
     
@@ -57,7 +57,7 @@ router.post("/pin", isDebugAuthenticated, async (req: any, res) => {
 /**
  * Pin media file to IPFS
  */
-router.post("/pin-media", isDebugAuthenticated, upload.single("file"), async (req: any, res) => {
+router.post("/pin-media", consolidatedAuth, upload.single("file"), async (req: any, res) => {
   try {
     const file = req.file;
     const { name } = req.body;

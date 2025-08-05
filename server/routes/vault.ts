@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import { calculateCapsuleYield } from "../../client/src/utils/capsuleYield";
 
 const router = Router();
 
 // Enhanced Vault API - Get claimable GTT yield for user
-router.get("/claimable", isDebugAuthenticated, async (req: any, res) => {
+router.get("/claimable", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user?.id;
     const { owner } = req.query;
@@ -91,7 +91,7 @@ router.get("/claimable", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Get yield history for analytics
-router.get("/history", isDebugAuthenticated, async (req: any, res) => {
+router.get("/history", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user?.id;
     
@@ -134,7 +134,7 @@ router.get("/history", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Simulate claiming yield (blockchain integration ready)
-router.post("/claim", isDebugAuthenticated, async (req: any, res) => {
+router.post("/claim", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user?.id;
     const { amount, capsuleIds } = req.body;

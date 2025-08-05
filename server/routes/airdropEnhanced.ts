@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ethers } from "ethers";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
@@ -38,7 +38,7 @@ const ELIGIBILITY_CONFIG = {
 /**
  * Check GTT claimable amount for a wallet
  */
-router.get("/airdrop/check/:wallet", isDebugAuthenticated, async (req: any, res) => {
+router.get("/airdrop/check/:wallet", consolidatedAuth, async (req: any, res) => {
   try {
     const { wallet } = req.params;
     
@@ -116,7 +116,7 @@ router.get("/airdrop/check/:wallet", isDebugAuthenticated, async (req: any, res)
 /**
  * Claim GTT airdrop tokens
  */
-router.post("/airdrop/claim", isDebugAuthenticated, async (req: any, res) => {
+router.post("/airdrop/claim", consolidatedAuth, async (req: any, res) => {
   try {
     const { walletAddress, signature, network } = req.body;
     const userId = req.user.id;
@@ -202,7 +202,7 @@ router.post("/airdrop/claim", isDebugAuthenticated, async (req: any, res) => {
 /**
  * Get airdrop statistics and leaderboard
  */
-router.get("/airdrop/stats", isDebugAuthenticated, async (req: any, res) => {
+router.get("/airdrop/stats", consolidatedAuth, async (req: any, res) => {
   try {
     console.log("📊 Airdrop statistics requested");
 
@@ -273,7 +273,7 @@ router.get("/airdrop/stats", isDebugAuthenticated, async (req: any, res) => {
 /**
  * Verify airdrop claim signature
  */
-router.post("/airdrop/verify", isDebugAuthenticated, async (req: any, res) => {
+router.post("/airdrop/verify", consolidatedAuth, async (req: any, res) => {
   try {
     const { walletAddress, message, signature } = req.body;
     
@@ -328,7 +328,7 @@ router.post("/airdrop/verify", isDebugAuthenticated, async (req: any, res) => {
 /**
  * Get user's airdrop history
  */
-router.get("/airdrop/history", isDebugAuthenticated, async (req: any, res) => {
+router.get("/airdrop/history", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     

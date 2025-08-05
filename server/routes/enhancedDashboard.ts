@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
 // Enhanced dashboard analytics endpoint
-router.get("/enhanced/:period?", isDebugAuthenticated, async (req: any, res) => {
+router.get("/enhanced/:period?", consolidatedAuth, async (req: any, res) => {
   try {
     const { period = "30d" } = req.params;
     const userId = req.user.id;
@@ -158,7 +158,7 @@ router.get("/enhanced/:period?", isDebugAuthenticated, async (req: any, res) => 
 });
 
 // Advanced analytics endpoint
-router.get("/analytics/advanced", isDebugAuthenticated, async (req: any, res) => {
+router.get("/analytics/advanced", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -216,7 +216,7 @@ router.get("/analytics/advanced", isDebugAuthenticated, async (req: any, res) =>
 });
 
 // AI-powered insights endpoint
-router.get("/insights/ai", isDebugAuthenticated, async (req: any, res) => {
+router.get("/insights/ai", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -284,7 +284,7 @@ router.get("/insights/ai", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Performance benchmarking endpoint
-router.get("/benchmark", isDebugAuthenticated, async (req: any, res) => {
+router.get("/benchmark", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     

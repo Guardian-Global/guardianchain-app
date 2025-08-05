@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
 // AI Onboarding suggestions endpoint
-router.post("/onboarding-suggestions", isDebugAuthenticated, async (req, res) => {
+router.post("/onboarding-suggestions", consolidatedAuth, async (req, res) => {
   try {
     const { step, userInput, context } = req.body;
 

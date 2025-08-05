@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import multer from 'multer';
 import csv from 'csv-parser';
 import { Readable } from 'stream';
@@ -197,7 +197,7 @@ function calculateTruthScore(content: string): number {
 
 export function registerBulkRoutes(app: Express) {
   // Upload and parse data file
-  app.post('/api/capsules/bulk-upload', isDebugAuthenticated, upload.single('file'), async (req, res) => {
+  app.post('/api/capsules/bulk-upload', consolidatedAuth, upload.single('file'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
@@ -254,7 +254,7 @@ export function registerBulkRoutes(app: Express) {
   });
 
   // Process bulk capsule creation
-  app.post('/api/capsules/bulk-process', isDebugAuthenticated, async (req, res) => {
+  app.post('/api/capsules/bulk-process', consolidatedAuth, async (req, res) => {
     try {
       const { preview, mapping, template, batchSize = 50, selectedRows } = req.body;
 
@@ -335,7 +335,7 @@ export function registerBulkRoutes(app: Express) {
   });
 
   // Get bulk processing status (for real-time updates)
-  app.get('/api/capsules/bulk-status/:jobId', isDebugAuthenticated, async (req, res) => {
+  app.get('/api/capsules/bulk-status/:jobId', consolidatedAuth, async (req, res) => {
     try {
       const { jobId } = req.params;
       

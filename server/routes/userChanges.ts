@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { storage } from "../storage";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
 // Save user changes
-router.post("/save-changes", isDebugAuthenticated, async (req, res) => {
+router.post("/save-changes", consolidatedAuth, async (req, res) => {
   try {
     const { changes, sessionId } = req.body;
     const userId = req.user?.id;
@@ -53,7 +53,7 @@ router.post("/save-changes", isDebugAuthenticated, async (req, res) => {
 });
 
 // Get user's saved changes
-router.get("/saved-changes/:userId", isDebugAuthenticated, async (req, res) => {
+router.get("/saved-changes/:userId", consolidatedAuth, async (req, res) => {
   try {
     const { userId } = req.params;
     const { sessionId } = req.query;
@@ -74,7 +74,7 @@ router.get("/saved-changes/:userId", isDebugAuthenticated, async (req, res) => {
 // Clear all saved changes for a user
 router.delete(
   "/saved-changes/:userId",
-  isDebugAuthenticated,
+  consolidatedAuth,
   async (req, res) => {
     try {
       const { userId } = req.params;

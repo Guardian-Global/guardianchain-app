@@ -1,13 +1,13 @@
 import type { Express } from "express";
 import { GTTYieldVaultService, CONTRACT_CONFIG } from "../web3/contracts";
 import { ethers } from "ethers";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 export function registerGTTContractRoutes(app: Express) {
   // User-initiated GTT yield claiming endpoint
   app.post(
     "/api/gtt/vault/claim",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { griefTier } = req.body;
@@ -95,7 +95,7 @@ export function registerGTTContractRoutes(app: Express) {
   // Production GTT yield distribution endpoint
   app.post(
     "/api/gtt/vault/distribute",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { authorAddress, griefTier } = req.body;
@@ -184,7 +184,7 @@ export function registerGTTContractRoutes(app: Express) {
   // Get GTT Yield Vault contract information
   app.get(
     "/api/gtt/vault/info",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         if (
@@ -240,7 +240,7 @@ export function registerGTTContractRoutes(app: Express) {
   // Update vault admin (admin only)
   app.post(
     "/api/gtt/vault/update-admin",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { newAdminAddress } = req.body;

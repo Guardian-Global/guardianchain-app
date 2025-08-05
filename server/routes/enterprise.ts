@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = Router();
 
 // Enterprise metrics endpoint
-router.get("/metrics", isDebugAuthenticated, async (req: any, res) => {
+router.get("/metrics", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -34,7 +34,7 @@ router.get("/metrics", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Infrastructure status endpoint
-router.get("/infrastructure", isDebugAuthenticated, async (req: any, res) => {
+router.get("/infrastructure", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -80,7 +80,7 @@ router.get("/infrastructure", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // AI systems status endpoint
-router.get("/ai-systems", isDebugAuthenticated, async (req: any, res) => {
+router.get("/ai-systems", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -126,7 +126,7 @@ router.get("/ai-systems", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Security status endpoint
-router.get("/security", isDebugAuthenticated, async (req: any, res) => {
+router.get("/security", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -174,7 +174,7 @@ router.get("/security", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Compliance status endpoint
-router.get("/compliance", isDebugAuthenticated, async (req: any, res) => {
+router.get("/compliance", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -230,7 +230,7 @@ router.get("/compliance", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // Developer API status endpoint
-router.get("/developer-apis", isDebugAuthenticated, async (req: any, res) => {
+router.get("/developer-apis", consolidatedAuth, async (req: any, res) => {
   try {
     const userId = req.user.id;
     
@@ -294,7 +294,7 @@ router.get("/developer-apis", isDebugAuthenticated, async (req: any, res) => {
 });
 
 // System health check endpoint
-router.get("/health", isDebugAuthenticated, async (req: any, res) => {
+router.get("/health", consolidatedAuth, async (req: any, res) => {
   try {
     const healthStatus = {
       overall: "Healthy",

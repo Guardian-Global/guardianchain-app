@@ -4,7 +4,7 @@ import csvParser from 'csv-parser';
 import xlsx from 'xlsx';
 import { createReadStream } from 'fs';
 import { pipeline } from 'stream/promises';
-import { isDebugAuthenticated } from '../debugAuth';
+import { consolidatedAuth } from '../auth/authConsolidation';
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -183,7 +183,7 @@ const profileData = async (data: any[]): Promise<any> => {
 };
 
 // Super upload endpoint
-router.post('/super-upload', isDebugAuthenticated, upload.single('file'), async (req, res) => {
+router.post('/super-upload', consolidatedAuth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -258,7 +258,7 @@ router.post('/super-upload', isDebugAuthenticated, upload.single('file'), async 
 });
 
 // Super AI analysis endpoint
-router.post('/super-analyze', isDebugAuthenticated, async (req, res) => {
+router.post('/super-analyze', consolidatedAuth, async (req, res) => {
   try {
     console.log('🧠 Super AI analysis started');
     
@@ -282,7 +282,7 @@ router.post('/super-analyze', isDebugAuthenticated, async (req, res) => {
 });
 
 // Super bulk creation endpoint
-router.post('/super-create', isDebugAuthenticated, async (req, res) => {
+router.post('/super-create', consolidatedAuth, async (req, res) => {
   try {
     console.log('🚀 Super bulk creation started');
     
