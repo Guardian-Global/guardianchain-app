@@ -40,10 +40,12 @@ export default function MediaGallery({ userId }: MediaGalleryProps) {
   const { toast } = useToast();
 
   // Fetch user's media files
-  const { data: mediaFiles = [], isLoading, refetch } = useQuery<MediaFile[]>({
+  const { data: response, isLoading, refetch } = useQuery({
     queryKey: ['/api/profile', userId, 'media'],
     enabled: !!userId
   });
+  
+  const mediaFiles = (response as any)?.media || [];
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';

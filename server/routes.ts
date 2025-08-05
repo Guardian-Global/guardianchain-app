@@ -1948,6 +1948,37 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
+  // Media API endpoints for profile gallery
+  app.post('/api/media', consolidatedAuth, async (req: any, res) => {
+    try {
+      const mediaData = req.body;
+      const mediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Store media record (in production this would be in database)
+      if (!global.uploadedFiles) {
+        global.uploadedFiles = [];
+      }
+      
+      const mediaRecord = {
+        id: mediaId,
+        ...mediaData,
+        uploadedAt: new Date().toISOString()
+      };
+      
+      global.uploadedFiles.push(mediaRecord);
+      
+      res.json({
+        success: true,
+        media: mediaRecord
+      });
+      
+      console.log(`✅ Media record created: ${mediaId}`);
+    } catch (error) {
+      console.error('❌ Failed to create media record:', error);
+      res.status(500).json({ error: 'Failed to create media record' });
+    }
+  });
+
   // Auth middleware - Setup consolidated authentication system
   // Add cookie parser middleware for session handling
   const cookieParser = await import("cookie-parser");

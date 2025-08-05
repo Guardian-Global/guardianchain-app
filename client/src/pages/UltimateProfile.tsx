@@ -97,7 +97,6 @@ import {
   RefreshCw,
   Search,
   Filter as FilterIcon,
-  Sort,
   Grid,
   List,
   Maximize,
@@ -118,7 +117,6 @@ import {
   Tag,
   Clock,
   Timer,
-  Stopwatch,
   AlarmClock,
   Watch,
   Hourglass
