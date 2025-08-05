@@ -10,6 +10,7 @@ import { mintCapsule, likeCapsule, shareCapsule } from "./api/capsule-actions";
 import { unlockCapsule } from "./api/capsule-unlock";
 import { registerGTTContractRoutes } from "./routes/gttContract";
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
+import { setupEnhancedAuth, enhancedAuth } from "./auth/enhancedAuth";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
@@ -1459,6 +1460,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
+  setupEnhancedAuth(app);
 
   // Register bulk upload routes
   registerBulkRoutes(app);

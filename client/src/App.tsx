@@ -116,6 +116,7 @@ function Router() {
             }
           >
             <Switch>
+              <Route path="/enhanced-onboarding" component={() => import("@/pages/enhanced-onboarding").then(m => m.default)} />
               <Route path="/dashboard" component={EnhancedDashboard} />
               <Route path="/enterprise" component={EnterpriseCenter} />
               <Route path="/tokenomics" component={Tokenomics} />
