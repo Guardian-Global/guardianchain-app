@@ -24,11 +24,11 @@ export default function EnhancementShowcase() {
   };
 
   return (
-    <div className="min-h-screen animated-gradient p-4 md:p-6">
+    <div className="min-h-screen p-4 md:p-6" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite'}}>
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12 glass-card p-8 rounded-3xl neon-glow-cyan">
+        <header className="text-center mb-12 p-8 rounded-3xl" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsla(0, 0%, 100%, 0.1)', boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.37), 0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3)', borderColor: 'hsl(180, 100%, 50%)'}}>
           <div className="inline-flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-full animated-gradient flex items-center justify-center neon-glow-purple pulse-neon">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite, neon-pulse 2s ease-in-out infinite alternate', boxShadow: '0 0 20px hsla(285, 100%, 65%, 0.5), 0 0 40px hsla(285, 100%, 65%, 0.3)', border: '1px solid hsl(285, 100%, 65%)'}}>
               <span className="text-3xl animate-pulse">⚡</span>
             </div>
             <h1 className="text-6xl font-display bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent animate-pulse">
@@ -39,13 +39,13 @@ export default function EnhancementShowcase() {
             Revolutionary AI-powered remixing, NFT minting, and community engagement platform
           </p>
           <div className="flex justify-center gap-6 mt-8">
-            <div className="px-6 py-3 glass-card neon-glow-cyan rounded-full text-base text-[#00ffe1] font-quantum card-hover">
+            <div className="px-6 py-3 rounded-full text-base text-[#00ffe1] font-quantum transition-all duration-300 hover:scale-105" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(180, 100%, 50%)', boxShadow: '0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3)'}}>
               ✨ AI-Powered
             </div>
-            <div className="px-6 py-3 glass-card neon-glow-magenta rounded-full text-base text-[#ff00d4] font-quantum card-hover">
+            <div className="px-6 py-3 rounded-full text-base text-[#ff00d4] font-quantum transition-all duration-300 hover:scale-105" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(330, 100%, 50%)', boxShadow: '0 0 20px hsla(330, 100%, 50%, 0.5), 0 0 40px hsla(330, 100%, 50%, 0.3)'}}>
               🔗 Blockchain Ready
             </div>
-            <div className="px-6 py-3 glass-card neon-glow-purple rounded-full text-base text-[#7c3aed] font-quantum card-hover">
+            <div className="px-6 py-3 rounded-full text-base text-[#7c3aed] font-quantum transition-all duration-300 hover:scale-105" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(285, 100%, 65%)', boxShadow: '0 0 20px hsla(285, 100%, 65%, 0.5), 0 0 40px hsla(285, 100%, 65%, 0.3)'}}>
               🎨 Creative Tools
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function EnhancementShowcase() {
 
         <Tabs defaultValue="analytics" className="space-y-10">
           <div className="flex justify-center mb-8">
-            <TabsList className="enhanced-tabs glass-card neon-glow-cyan inline-flex h-16 items-center justify-center rounded-2xl p-2 shadow-2xl">
+            <TabsList className="inline-flex h-16 items-center justify-center rounded-2xl p-2" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(180, 100%, 50%)', boxShadow: '0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3), 0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
               <div className="grid grid-cols-5 lg:grid-cols-10 gap-2">
                 <TabsTrigger 
                   value="analytics" 
@@ -122,10 +122,10 @@ export default function EnhancementShowcase() {
           <TabsContent value="analytics" className="space-y-8">
             <div className="grid gap-8 lg:grid-cols-2">
               <CapsuleStatsGraph capsuleId="demo-capsule-1" />
-              <Card className="glass-card neon-glow-cyan card-hover">
+              <Card className="transition-all duration-300 hover:scale-105" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(180, 100%, 50%)', boxShadow: '0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3), 0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
                 <CardHeader className="pb-6">
                   <CardTitle className="text-[#00ffe1] font-quantum text-2xl flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full animated-gradient flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite'}}>
                       <span className="text-lg">📊</span>
                     </div>
                     Real-time Analytics
@@ -136,17 +136,17 @@ export default function EnhancementShowcase() {
                     Interactive charts with secure increment operations, weekly trends, and comprehensive engagement metrics.
                   </p>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center p-4 glass-card rounded-xl">
+                    <div className="flex justify-between items-center p-4 rounded-xl" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsla(0, 0%, 100%, 0.1)', boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
                       <span className="text-[#8b949e] font-medium">Views</span>
                       <span className="text-[#00ffe1] font-quantum text-xl">2,143</span>
                     </div>
-                    <div className="flex justify-between items-center p-4 glass-card rounded-xl">
+                    <div className="flex justify-between items-center p-4 rounded-xl" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsla(0, 0%, 100%, 0.1)', boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
                       <span className="text-[#8b949e] font-medium">Engagement Rate</span>
                       <span className="text-[#00ffe1] font-quantum text-xl">87.3%</span>
                     </div>
-                    <div className="flex justify-between items-center p-4 glass-card rounded-xl neon-glow-purple">
+                    <div className="flex justify-between items-center p-4 rounded-xl" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(285, 100%, 65%)', boxShadow: '0 0 20px hsla(285, 100%, 65%, 0.5), 0 0 40px hsla(285, 100%, 65%, 0.3), 0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
                       <span className="text-[#8b949e] font-medium">Weekly Growth</span>
-                      <span className="text-[#00ff88] font-quantum text-xl pulse-neon">+12.5%</span>
+                      <span className="text-[#00ff88] font-quantum text-xl" style={{animation: 'neon-pulse 2s ease-in-out infinite alternate'}}>+12.5%</span>
                     </div>
                   </div>
                 </CardContent>
