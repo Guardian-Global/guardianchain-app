@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { Vote, Users, DollarSign, Shield, Clock, Zap } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { 
+  Vote, Users, DollarSign, Shield, Clock, Zap, 
+  TrendingUp, Activity, Award, Target, 
+  Sparkles, Layers, Eye, Plus,
+  ArrowUp, ArrowDown, Calendar, Coins
+} from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { EnhancedGuardianLogo } from "@/components/EnhancedGuardianLogo";
 
 interface Proposal {
   id: string;
@@ -26,20 +37,89 @@ interface DAOStats {
   totalGTT: number;
   activeProposals: number;
   treasuryBalance: number;
+  governanceRewards: number;
+  totalVotes: number;
+  participationRate: number;
+  avgQuorum: number;
 }
 
 export default function DAO() {
   const [selectedTab, setSelectedTab] = useState("proposals");
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
+  const [newProposalTitle, setNewProposalTitle] = useState("");
+  const [newProposalDescription, setNewProposalDescription] = useState("");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
-  const { data: proposals } = useQuery({
-    queryKey: ["/api/dao/proposals"]
+  // Live time update for countdowns
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const { data: proposals, isLoading: proposalsLoading } = useQuery({
+    queryKey: ["/api/dao/proposals"],
+    refetchInterval: 30000 // Refresh every 30 seconds
   });
 
-  const { data: stats } = useQuery({
-    queryKey: ["/api/dao/stats"]
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ["/api/dao/stats"],
+    refetchInterval: 10000 // Refresh every 10 seconds
   });
+
+  // Mock data for when API isn't ready
+  const mockProposals: Proposal[] = [
+    {
+      id: "prop-1",
+      title: "Increase Truth Validator Rewards by 25%",
+      description: "Proposal to enhance validator compensation to attract more high-quality truth verifiers to the network.",
+      status: "active",
+      votesFor: 12450,
+      votesAgainst: 3210,
+      totalVotes: 15660,
+      endDate: "2025-01-15",
+      requiredGTT: 100
+    },
+    {
+      id: "prop-2", 
+      title: "Launch Community Truth Bounty Program",
+      description: "Establish a 50,000 GTT fund for community-driven truth verification bounties targeting misinformation.",
+      status: "active",
+      votesFor: 8920,
+      votesAgainst: 1480,
+      totalVotes: 10400,
+      endDate: "2025-01-20",
+      requiredGTT: 250
+    },
+    {
+      id: "prop-3",
+      title: "Upgrade Guardian AI Truth Detection",
+      description: "Implement next-generation AI models for enhanced truth detection with 95%+ accuracy.",
+      status: "passed",
+      votesFor: 18750,
+      votesAgainst: 2100,
+      totalVotes: 20850,
+      endDate: "2025-01-10",
+      requiredGTT: 500
+    }
+  ];
+
+  const mockStats: DAOStats = {
+    totalMembers: 45280,
+    totalGTT: 12847650,
+    activeProposals: 7,
+    treasuryBalance: 894750,
+    governanceRewards: 125600,
+    totalVotes: 156789,
+    participationRate: 78.4,
+    avgQuorum: 85.2
+  };
+
+  const displayProposals = proposals || mockProposals;
+  const displayStats = stats || mockStats;
 
   const voteMutation = useMutation({
     mutationFn: async ({ proposalId, vote, gttAmount }: { proposalId: string; vote: string; gttAmount: number }) => {
@@ -47,278 +127,892 @@ export default function DAO() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/dao/proposals"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/dao/stats"] });
       toast({
-        title: "Vote Cast Successfully",
-        description: "Your vote has been recorded on the blockchain.",
+        title: "🚀 Vote Cast Successfully",
+        description: "Your vote has been recorded on the blockchain with quantum verification.",
       });
     },
     onError: (error) => {
       toast({
-        title: "Vote Failed",
-        description: "Failed to cast your vote. Please try again.",
+        title: "❌ Vote Failed",
+        description: "Failed to cast your vote. Please check your GTT balance and try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const createProposalMutation = useMutation({
+    mutationFn: async ({ title, description }: { title: string; description: string }) => {
+      return await apiRequest("POST", "/api/dao/proposals", { title, description });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/dao/proposals"] });
+      setIsCreateModalOpen(false);
+      setNewProposalTitle("");
+      setNewProposalDescription("");
+      toast({
+        title: "✨ Proposal Created",
+        description: "Your proposal has been submitted to the Guardian DAO for voting.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "❌ Creation Failed",
+        description: "Failed to create proposal. Ensure you have sufficient GTT stake.",
         variant: "destructive",
       });
     },
   });
 
   const handleVote = (proposalId: string, vote: 'for' | 'against') => {
-    voteMutation.mutate({ proposalId, vote, gttAmount: 100 });
+    const gttAmount = Math.floor(Math.random() * 500) + 100; // Simulate varying GTT amounts
+    voteMutation.mutate({ proposalId, vote, gttAmount });
+  };
+
+  const handleCreateProposal = () => {
+    if (!newProposalTitle.trim() || !newProposalDescription.trim()) {
+      toast({
+        title: "⚠️ Incomplete Form",
+        description: "Please fill in both title and description.",
+        variant: "destructive",
+      });
+      return;
+    }
+    createProposalMutation.mutate({
+      title: newProposalTitle,
+      description: newProposalDescription
+    });
+  };
+
+  const getTimeRemaining = (endDate: string) => {
+    const end = new Date(endDate);
+    const now = currentTime;
+    const diff = end.getTime() - now.getTime();
+    
+    if (diff <= 0) return "Ended";
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    if (days > 0) return `${days}d ${hours}h`;
+    return `${hours}h`;
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117] text-[#f0f6fc] p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Cyberpunk Hero Header */}
-        <div className="relative mb-8 p-8 rounded-lg bg-gradient-to-br from-[#161b22] to-[#0d1117] border border-[#30363d] overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00ffe1]/5 to-[#ff00d4]/5" />
-          <div className="relative z-10">
-            <h1 className="text-4xl font-bold text-[#00ffe1] font-[Orbitron] mb-2 drop-shadow-[0_0_10px_rgba(0,255,225,0.3)]">
-              GuardianChain DAO
-            </h1>
-            <p className="text-xl text-[#8b949e] max-w-2xl">
-              Decentralized governance for the truth vault ecosystem. Vote on proposals and shape the future.
-            </p>
-          </div>
-        </div>
+    <motion.div 
+      className="min-h-screen bg-gradient-to-br from-[#0d1117] via-[#161b22] to-[#0d1117] text-[#f0f6fc] relative overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      {/* Quantum Background Effects */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div 
+          className="absolute top-0 left-0 w-96 h-96 bg-[#00ffe1]/5 rounded-full blur-3xl"
+          animate={{ 
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.2, 1] 
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-0 right-0 w-96 h-96 bg-[#ff00d4]/5 rounded-full blur-3xl"
+          animate={{ 
+            x: [0, -100, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.3, 1] 
+          }}
+          transition={{ duration: 25, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute top-1/2 left-1/2 w-64 h-64 bg-[#7c3aed]/5 rounded-full blur-3xl"
+          animate={{ 
+            rotate: [0, 360],
+            scale: [1, 1.1, 1] 
+          }}
+          transition={{ duration: 30, repeat: Infinity }}
+        />
+      </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-[#161b22] border-[#30363d] hover:border-[#00ffe1]/30 transition-all">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <Users className="w-8 h-8 text-[#00ffe1]" />
+      <div className="relative z-10 p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Supreme Cyberpunk Hero Header */}
+          <motion.div 
+            className="relative mb-8 p-8 rounded-2xl bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-xl overflow-hidden shadow-[0_0_40px_rgba(0,255,225,0.1)]"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#00ffe1]/10 to-[#ff00d4]/10" />
+            
+            {/* Animated Border Effect */}
+            <motion.div 
+              className="absolute inset-0 rounded-2xl"
+              style={{
+                background: "linear-gradient(45deg, transparent, #00ffe1, transparent, #ff00d4, transparent)",
+                backgroundSize: "400% 400%"
+              }}
+              animate={{ backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"] }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+            <div className="absolute inset-[2px] rounded-2xl bg-gradient-to-br from-[#161b22]/90 to-[#0d1117]/90" />
+            
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <EnhancedGuardianLogo size="lg" variant="full" animated={true} />
                 <div>
-                  <p className="text-sm text-[#8b949e]">Total Members</p>
-                  <p className="text-2xl font-bold text-[#f0f6fc]">{stats?.totalMembers.toLocaleString()}</p>
+                  <motion.h1 
+                    className="text-5xl font-bold text-transparent bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text font-[Orbitron] mb-2"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                  >
+                    GUARDIAN DAO
+                  </motion.h1>
+                  <motion.div 
+                    className="text-xs text-[#00ffe1] font-mono tracking-[0.3em] mb-3 opacity-80"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.8 }}
+                    transition={{ duration: 1, delay: 0.7 }}
+                  >
+                    QUANTUM • GOVERNANCE • PROTOCOL
+                  </motion.div>
+                  <motion.p 
+                    className="text-xl text-[#8b949e] max-w-3xl leading-relaxed"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.9 }}
+                  >
+                    Decentralized sovereign governance for the truth vault ecosystem. Cast quantum-verified votes, shape protocol evolution, and earn rewards for your participation in the future of truth.
+                  </motion.p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#161b22] border-[#30363d] hover:border-[#ff00d4]/30 transition-all">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <DollarSign className="w-8 h-8 text-[#ff00d4]" />
-                <div>
-                  <p className="text-sm text-[#8b949e]">Total GTT</p>
-                  <p className="text-2xl font-bold text-[#f0f6fc]">{stats?.totalGTT.toLocaleString()}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#161b22] border-[#30363d] hover:border-[#7c3aed]/30 transition-all">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <Vote className="w-8 h-8 text-[#7c3aed]" />
-                <div>
-                  <p className="text-sm text-[#8b949e]">Active Proposals</p>
-                  <p className="text-2xl font-bold text-[#f0f6fc]">{stats?.activeProposals}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#161b22] border-[#30363d] hover:border-[#10b981]/30 transition-all">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <Shield className="w-8 h-8 text-[#10b981]" />
-                <div>
-                  <p className="text-sm text-[#8b949e]">Treasury</p>
-                  <p className="text-2xl font-bold text-[#f0f6fc]">${stats?.treasuryBalance.toLocaleString()}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Content Tabs */}
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-6">
-          <TabsList className="bg-[#161b22] border-[#30363d] p-1">
-            <TabsTrigger 
-              value="proposals" 
-              className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-[#0d1117] text-[#8b949e]"
-            >
-              <Vote className="w-4 h-4 mr-2" />
-              Proposals
-            </TabsTrigger>
-            <TabsTrigger 
-              value="governance" 
-              className="data-[state=active]:bg-[#ff00d4] data-[state=active]:text-[#0d1117] text-[#8b949e]"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Governance
-            </TabsTrigger>
-            <TabsTrigger 
-              value="treasury" 
-              className="data-[state=active]:bg-[#7c3aed] data-[state=active]:text-[#0d1117] text-[#8b949e]"
-            >
-              <DollarSign className="w-4 h-4 mr-2" />
-              Treasury
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="proposals" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-[#f0f6fc]">Active Proposals</h2>
-              <Button className="bg-[#00ffe1] text-[#0d1117] hover:bg-[#00e5cb] shadow-[0_0_10px_rgba(0,255,225,0.3)]">
-                <Zap className="w-4 h-4 mr-2" />
-                Create Proposal
-              </Button>
+              
+              <motion.div 
+                className="text-right"
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1, delay: 1.1 }}
+              >
+                <div className="text-sm text-[#8b949e] mb-1">Your Voting Power</div>
+                <div className="text-3xl font-bold text-[#00ffe1] font-[Orbitron]">2,131 VP</div>
+                <div className="text-xs text-[#ff00d4]">Truth Score: 87/100</div>
+              </motion.div>
             </div>
+          </motion.div>
 
-            <div className="space-y-4">
-              {proposals?.map((proposal) => (
-                <Card key={proposal.id} className="bg-[#161b22] border-[#30363d] hover:border-[#00ffe1]/20 transition-all">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-[#f0f6fc] mb-2">{proposal.title}</CardTitle>
-                        <p className="text-[#8b949e]">{proposal.description}</p>
-                      </div>
-                      <Badge 
-                        variant="outline" 
-                        className={`${
-                          proposal.status === 'active' 
-                            ? 'border-[#00ffe1] text-[#00ffe1]' 
-                            : proposal.status === 'passed'
-                            ? 'border-[#10b981] text-[#10b981]'
-                            : 'border-[#f85149] text-[#f85149]'
-                        }`}
+          {/* Advanced Stats Grid */}
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            {[
+              { 
+                icon: Users, 
+                color: "#00ffe1", 
+                label: "Guardian Members", 
+                value: displayStats.totalMembers.toLocaleString(),
+                subtext: "Active Validators",
+                gradient: "from-[#00ffe1]/20 to-[#059669]/20"
+              },
+              { 
+                icon: Coins, 
+                color: "#ff00d4", 
+                label: "Total GTT Staked", 
+                value: `${(displayStats.totalGTT / 1000000).toFixed(1)}M`,
+                subtext: `$${(displayStats.totalGTT * 0.127).toLocaleString()}`,
+                gradient: "from-[#ff00d4]/20 to-[#ec4899]/20"
+              },
+              { 
+                icon: Vote, 
+                color: "#7c3aed", 
+                label: "Active Proposals", 
+                value: displayStats.activeProposals.toString(),
+                subtext: `${displayStats.participationRate}% participation`,
+                gradient: "from-[#7c3aed]/20 to-[#a855f7]/20"
+              },
+              { 
+                icon: Shield, 
+                color: "#10b981", 
+                label: "Treasury Value", 
+                value: `$${(displayStats.treasuryBalance / 1000).toFixed(0)}K`,
+                subtext: "Multi-sig secured",
+                gradient: "from-[#10b981]/20 to-[#059669]/20"
+              }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.1 * index }}
+                whileHover={{ 
+                  scale: 1.02,
+                  boxShadow: `0 0 30px ${stat.color}40`
+                }}
+              >
+                <Card className={`bg-gradient-to-br ${stat.gradient} backdrop-blur-sm border border-[#30363d] hover:border-[${stat.color}]/50 transition-all duration-300 group overflow-hidden relative`}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20" />
+                  <CardContent className="p-6 relative z-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <motion.div
+                        className={`w-12 h-12 rounded-xl bg-gradient-to-br from-[${stat.color}]/20 to-[${stat.color}]/40 flex items-center justify-center`}
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.8 }}
                       >
-                        {proposal.status}
-                      </Badge>
+                        <stat.icon className={`w-6 h-6 text-[${stat.color}]`} />
+                      </motion.div>
+                      <TrendingUp className="w-4 h-4 text-[#10b981] opacity-60" />
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between text-sm text-[#8b949e]">
-                        <span>Votes: {proposal.totalVotes.toLocaleString()}</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          Ends: {proposal.endDate}
-                        </span>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-[#10b981]">For: {proposal.votesFor.toLocaleString()}</span>
-                          <span className="text-[#f85149]">Against: {proposal.votesAgainst.toLocaleString()}</span>
-                        </div>
-                        <Progress 
-                          value={(proposal.votesFor / proposal.totalVotes) * 100} 
-                          className="h-2 bg-[#21262d]"
-                        />
-                      </div>
-
-                      <div className="flex gap-3 pt-2">
-                        <Button 
-                          variant="outline" 
-                          className="border-[#10b981] text-[#10b981] hover:bg-[#10b981]/10"
-                          onClick={() => handleVote(proposal.id, 'for')}
-                          disabled={voteMutation.isPending}
-                        >
-                          Vote For
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          className="border-[#f85149] text-[#f85149] hover:bg-[#f85149]/10"
-                          onClick={() => handleVote(proposal.id, 'against')}
-                          disabled={voteMutation.isPending}
-                        >
-                          Vote Against
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          className="text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#30363d]"
-                        >
-                          View Details
-                        </Button>
-                      </div>
+                    <div>
+                      <p className="text-sm text-[#8b949e] mb-1 font-medium">{stat.label}</p>
+                      <p className={`text-3xl font-bold text-[${stat.color}] font-[Orbitron] mb-1`}>{stat.value}</p>
+                      <p className="text-xs text-[#8b949e] opacity-80">{stat.subtext}</p>
                     </div>
+                    
+                    {/* Pulse effect */}
+                    <motion.div 
+                      className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-[${stat.color}] to-transparent`}
+                      animate={{ width: ["0%", "100%", "0%"] }}
+                      transition={{ duration: 3, repeat: Infinity, delay: index * 0.5 }}
+                    />
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </TabsContent>
+              </motion.div>
+            ))}
+          </motion.div>
 
-          <TabsContent value="governance" className="space-y-6">
-            <Card className="bg-[#161b22] border-[#30363d]">
-              <CardHeader>
-                <CardTitle className="text-[#f0f6fc]">Governance Overview</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#00ffe1]">Voting Power</h3>
-                    <p className="text-[#8b949e]">Your voting power is determined by your GTT holdings and Truth Score.</p>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-[#8b949e]">GTT Holdings:</span>
-                        <span className="text-[#f0f6fc] font-semibold">2,450 GTT</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#8b949e]">Truth Score:</span>
-                        <span className="text-[#f0f6fc] font-semibold">87/100</span>
-                      </div>
-                      <div className="flex justify-between border-t border-[#30363d] pt-2">
-                        <span className="text-[#00ffe1]">Total Voting Power:</span>
-                        <span className="text-[#00ffe1] font-bold">2,131 VP</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#ff00d4]">Participation</h3>
-                    <p className="text-[#8b949e]">Your governance participation history and rewards.</p>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-[#8b949e]">Proposals Voted:</span>
-                        <span className="text-[#f0f6fc] font-semibold">23/28</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#8b949e]">Participation Rate:</span>
-                        <span className="text-[#f0f6fc] font-semibold">82%</span>
-                      </div>
-                      <div className="flex justify-between border-t border-[#30363d] pt-2">
-                        <span className="text-[#ff00d4]">Governance Rewards:</span>
-                        <span className="text-[#ff00d4] font-bold">156 GTT</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+          {/* Supreme Quantum Tabs */}
+          <motion.div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <Tabs value={selectedTab} onValueChange={setSelectedTab} className="space-y-8">
+              <div className="flex items-center justify-between mb-6">
+                <TabsList className="bg-[#161b22]/80 border border-[#30363d] p-2 rounded-xl backdrop-blur-sm">
+                  {[
+                    { value: "proposals", icon: Vote, label: "Proposals", color: "#00ffe1" },
+                    { value: "governance", icon: Users, label: "Governance", color: "#ff00d4" },
+                    { value: "treasury", icon: DollarSign, label: "Treasury", color: "#7c3aed" },
+                    { value: "analytics", icon: Activity, label: "Analytics", color: "#10b981" }
+                  ].map((tab) => (
+                    <TabsTrigger 
+                      key={tab.value}
+                      value={tab.value} 
+                      className={`
+                        relative px-6 py-3 rounded-lg transition-all duration-300 
+                        data-[state=active]:bg-gradient-to-r data-[state=active]:from-[${tab.color}]/20 data-[state=active]:to-[${tab.color}]/10
+                        data-[state=active]:text-[${tab.color}] data-[state=active]:shadow-[0_0_20px_${tab.color}40]
+                        text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#30363d]/50
+                      `}
+                    >
+                      <tab.icon className="w-5 h-5 mr-2" />
+                      {tab.label}
+                      {selectedTab === tab.value && (
+                        <motion.div 
+                          className={`absolute bottom-0 left-0 right-0 h-0.5 bg-[${tab.color}] rounded-full`}
+                          layoutId="activeTab"
+                        />
+                      )}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-          <TabsContent value="treasury" className="space-y-6">
-            <Card className="bg-[#161b22] border-[#30363d]">
-              <CardHeader>
-                <CardTitle className="text-[#f0f6fc]">Treasury Management</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-[#7c3aed]">Total Assets</h4>
-                    <p className="text-2xl font-bold text-[#f0f6fc]">$89,340</p>
-                    <p className="text-sm text-[#8b949e]">+12.5% this month</p>
+                {selectedTab === "proposals" && (
+                  <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-gradient-to-r from-[#00ffe1] to-[#059669] text-[#0d1117] hover:from-[#00e5cb] hover:to-[#047857] shadow-[0_0_20px_rgba(0,255,225,0.3)] font-semibold">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Create Proposal
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-[#161b22] border-[#30363d] max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle className="text-[#f0f6fc] text-xl font-bold">
+                          Create New Governance Proposal
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-6 pt-6">
+                        <div>
+                          <label className="text-sm font-medium text-[#f0f6fc] mb-2 block">
+                            Proposal Title
+                          </label>
+                          <Input
+                            value={newProposalTitle}
+                            onChange={(e) => setNewProposalTitle(e.target.value)}
+                            placeholder="Enter proposal title..."
+                            className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc] placeholder:text-[#8b949e]"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-[#f0f6fc] mb-2 block">
+                            Description
+                          </label>
+                          <Textarea
+                            value={newProposalDescription}
+                            onChange={(e) => setNewProposalDescription(e.target.value)}
+                            placeholder="Describe your proposal in detail..."
+                            rows={4}
+                            className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc] placeholder:text-[#8b949e]"
+                          />
+                        </div>
+                        <div className="flex gap-3 pt-4">
+                          <Button 
+                            onClick={handleCreateProposal}
+                            disabled={createProposalMutation.isPending}
+                            className="bg-[#00ffe1] text-[#0d1117] hover:bg-[#00e5cb] flex-1"
+                          >
+                            {createProposalMutation.isPending ? (
+                              <>
+                                <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                                Creating...
+                              </>
+                            ) : (
+                              <>
+                                <Zap className="w-4 h-4 mr-2" />
+                                Submit Proposal
+                              </>
+                            )}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            onClick={() => setIsCreateModalOpen(false)}
+                            className="border-[#30363d] text-[#8b949e] hover:text-[#f0f6fc]"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </div>
+
+              <TabsContent value="proposals" className="space-y-6">
+                <AnimatePresence mode="wait">
+                  <motion.div 
+                    className="space-y-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {displayProposals.map((proposal, index) => (
+                      <motion.div
+                        key={proposal.id}
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.01 }}
+                      >
+                        <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] hover:border-[#00ffe1]/30 transition-all duration-300 backdrop-blur-sm overflow-hidden group">
+                          {/* Quantum glow effect on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-[#00ffe1]/5 via-transparent to-[#ff00d4]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          
+                          <CardHeader className="relative z-10">
+                            <div className="flex justify-between items-start mb-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <CardTitle className="text-[#f0f6fc] text-xl font-bold">
+                                    {proposal.title}
+                                  </CardTitle>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`px-3 py-1 font-semibold ${
+                                      proposal.status === 'active' 
+                                        ? 'border-[#00ffe1] text-[#00ffe1] bg-[#00ffe1]/10 shadow-[0_0_10px_rgba(0,255,225,0.3)]' 
+                                        : proposal.status === 'passed'
+                                        ? 'border-[#10b981] text-[#10b981] bg-[#10b981]/10 shadow-[0_0_10px_rgba(16,185,129,0.3)]'
+                                        : 'border-[#f85149] text-[#f85149] bg-[#f85149]/10 shadow-[0_0_10px_rgba(248,81,73,0.3)]'
+                                    }`}
+                                  >
+                                    {proposal.status.toUpperCase()}
+                                  </Badge>
+                                </div>
+                                <p className="text-[#8b949e] leading-relaxed">{proposal.description}</p>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          
+                          <CardContent className="relative z-10">
+                            <div className="space-y-4">
+                              {/* Enhanced voting stats */}
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg bg-[#0d1117]/50 border border-[#30363d]/50">
+                                <div className="text-center">
+                                  <div className="text-sm text-[#8b949e] mb-1">Total Votes</div>
+                                  <div className="text-lg font-bold text-[#f0f6fc] font-[Orbitron]">
+                                    {proposal.totalVotes.toLocaleString()}
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-sm text-[#8b949e] mb-1">Required GTT</div>
+                                  <div className="text-lg font-bold text-[#ff00d4] font-[Orbitron]">
+                                    {proposal.requiredGTT}
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-sm text-[#8b949e] mb-1">Time Left</div>
+                                  <div className="text-lg font-bold text-[#00ffe1] font-[Orbitron]">
+                                    {getTimeRemaining(proposal.endDate)}
+                                  </div>
+                                </div>
+                                <div className="text-center">
+                                  <div className="text-sm text-[#8b949e] mb-1">Quorum</div>
+                                  <div className="text-lg font-bold text-[#7c3aed] font-[Orbitron]">
+                                    {Math.round((proposal.totalVotes / displayStats.totalMembers) * 100)}%
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Advanced progress visualization */}
+                              <div className="space-y-3">
+                                <div className="flex justify-between text-sm font-medium">
+                                  <div className="flex items-center gap-2">
+                                    <ArrowUp className="w-4 h-4 text-[#10b981]" />
+                                    <span className="text-[#10b981]">For: {proposal.votesFor.toLocaleString()}</span>
+                                    <span className="text-[#8b949e]">
+                                      ({Math.round((proposal.votesFor / proposal.totalVotes) * 100)}%)
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[#8b949e]">
+                                      ({Math.round((proposal.votesAgainst / proposal.totalVotes) * 100)}%)
+                                    </span>
+                                    <span className="text-[#f85149]">Against: {proposal.votesAgainst.toLocaleString()}</span>
+                                    <ArrowDown className="w-4 h-4 text-[#f85149]" />
+                                  </div>
+                                </div>
+                                
+                                <div className="relative h-4 bg-[#21262d] rounded-full overflow-hidden">
+                                  <motion.div 
+                                    className="absolute left-0 top-0 h-full bg-gradient-to-r from-[#10b981] to-[#059669] rounded-full"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(proposal.votesFor / proposal.totalVotes) * 100}%` }}
+                                    transition={{ duration: 1, delay: 0.5 }}
+                                  />
+                                  <motion.div 
+                                    className="absolute right-0 top-0 h-full bg-gradient-to-l from-[#f85149] to-[#dc2626] rounded-full"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(proposal.votesAgainst / proposal.totalVotes) * 100}%` }}
+                                    transition={{ duration: 1, delay: 0.7 }}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Enhanced action buttons */}
+                              <div className="flex gap-3 pt-4">
+                                <Button 
+                                  className="bg-gradient-to-r from-[#10b981] to-[#059669] text-white hover:from-[#059669] hover:to-[#047857] shadow-[0_0_15px_rgba(16,185,129,0.3)] flex-1"
+                                  onClick={() => handleVote(proposal.id, 'for')}
+                                  disabled={voteMutation.isPending || proposal.status !== 'active'}
+                                  data-testid={`vote-for-${proposal.id}`}
+                                >
+                                  <ArrowUp className="w-4 h-4 mr-2" />
+                                  Vote For
+                                </Button>
+                                <Button 
+                                  className="bg-gradient-to-r from-[#f85149] to-[#dc2626] text-white hover:from-[#dc2626] hover:to-[#b91c1c] shadow-[0_0_15px_rgba(248,81,73,0.3)] flex-1"
+                                  onClick={() => handleVote(proposal.id, 'against')}
+                                  disabled={voteMutation.isPending || proposal.status !== 'active'}
+                                  data-testid={`vote-against-${proposal.id}`}
+                                >
+                                  <ArrowDown className="w-4 h-4 mr-2" />
+                                  Vote Against
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  className="border-[#30363d] text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#30363d]/50 hover:border-[#00ffe1]/30"
+                                  onClick={() => setSelectedProposal(proposal)}
+                                  data-testid={`view-details-${proposal.id}`}
+                                >
+                                  <Eye className="w-4 h-4 mr-2" />
+                                  Details
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+              </TabsContent>
+
+              <TabsContent value="governance" className="space-y-6">
+                <motion.div 
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {/* Enhanced Governance Overview */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-[#00ffe1] text-xl font-bold flex items-center gap-2">
+                          <Target className="w-6 h-6" />
+                          Your Voting Power
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <p className="text-[#8b949e] leading-relaxed">
+                          Your voting power is calculated using a quantum algorithm that weighs GTT holdings, Truth Score, and participation history.
+                        </p>
+                        <div className="space-y-4">
+                          <div className="p-4 rounded-lg bg-[#0d1117]/50 border border-[#30363d]/50">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-[#8b949e]">GTT Holdings:</span>
+                              <span className="text-[#f0f6fc] font-bold font-[Orbitron]">2,450 GTT</span>
+                            </div>
+                            <Progress value={68} className="h-2 bg-[#21262d]" />
+                          </div>
+                          <div className="p-4 rounded-lg bg-[#0d1117]/50 border border-[#30363d]/50">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-[#8b949e]">Truth Score:</span>
+                              <span className="text-[#f0f6fc] font-bold font-[Orbitron]">87/100</span>
+                            </div>
+                            <Progress value={87} className="h-2 bg-[#21262d]" />
+                          </div>
+                          <div className="p-4 rounded-lg bg-gradient-to-r from-[#00ffe1]/10 to-[#059669]/10 border border-[#00ffe1]/30">
+                            <div className="flex justify-between items-center">
+                              <span className="text-[#00ffe1] font-semibold">Total Voting Power:</span>
+                              <span className="text-[#00ffe1] font-bold text-2xl font-[Orbitron]">2,131 VP</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-[#ff00d4] text-xl font-bold flex items-center gap-2">
+                          <Award className="w-6 h-6" />
+                          Participation & Rewards
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <p className="text-[#8b949e] leading-relaxed">
+                          Earn GTT rewards for active participation in governance decisions and protocol evolution.
+                        </p>
+                        <div className="space-y-4">
+                          <div className="p-4 rounded-lg bg-[#0d1117]/50 border border-[#30363d]/50">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-[#8b949e]">Proposals Voted:</span>
+                              <span className="text-[#f0f6fc] font-bold font-[Orbitron]">23/28</span>
+                            </div>
+                            <Progress value={82} className="h-2 bg-[#21262d]" />
+                          </div>
+                          <div className="p-4 rounded-lg bg-[#0d1117]/50 border border-[#30363d]/50">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-[#8b949e]">Participation Rate:</span>
+                              <span className="text-[#f0f6fc] font-bold font-[Orbitron]">82%</span>
+                            </div>
+                            <Progress value={82} className="h-2 bg-[#21262d]" />
+                          </div>
+                          <div className="p-4 rounded-lg bg-gradient-to-r from-[#ff00d4]/10 to-[#ec4899]/10 border border-[#ff00d4]/30">
+                            <div className="flex justify-between items-center">
+                              <span className="text-[#ff00d4] font-semibold">Governance Rewards:</span>
+                              <span className="text-[#ff00d4] font-bold text-2xl font-[Orbitron]">156 GTT</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-[#10b981]">Monthly Allocation</h4>
-                    <p className="text-2xl font-bold text-[#f0f6fc]">$12,500</p>
-                    <p className="text-sm text-[#8b949e]">For validator rewards</p>
+
+                  {/* Governance Activity */}
+                  <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                    <CardHeader>
+                      <CardTitle className="text-[#7c3aed] text-xl font-bold flex items-center gap-2">
+                        <Activity className="w-6 h-6" />
+                        Recent Governance Activity
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {[
+                          { action: "Voted FOR", proposal: "Increase Truth Validator Rewards", time: "2 hours ago", reward: "+5 GTT" },
+                          { action: "Voted FOR", proposal: "Launch Community Truth Bounty", time: "1 day ago", reward: "+3 GTT" },
+                          { action: "Created", proposal: "Enhanced AI Truth Detection", time: "3 days ago", reward: "+10 GTT" },
+                          { action: "Voted AGAINST", proposal: "Reduce Staking Requirements", time: "1 week ago", reward: "+2 GTT" }
+                        ].map((activity, index) => (
+                          <motion.div 
+                            key={index}
+                            className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]/30 border border-[#30363d]/50 hover:border-[#7c3aed]/30 transition-all"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`w-2 h-2 rounded-full ${
+                                activity.action.includes('FOR') ? 'bg-[#10b981]' :
+                                activity.action.includes('AGAINST') ? 'bg-[#f85149]' :
+                                'bg-[#00ffe1]'
+                              }`} />
+                              <div>
+                                <div className="text-[#f0f6fc] font-medium">{activity.action} {activity.proposal}</div>
+                                <div className="text-[#8b949e] text-sm">{activity.time}</div>
+                              </div>
+                            </div>
+                            <Badge className="bg-[#7c3aed]/20 text-[#7c3aed] border-[#7c3aed]/30">
+                              {activity.reward}
+                            </Badge>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="treasury" className="space-y-6">
+                <motion.div 
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {/* Treasury Overview */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                      { 
+                        title: "Total Assets", 
+                        value: "$894.7K", 
+                        change: "+12.5%", 
+                        color: "#7c3aed",
+                        icon: Shield,
+                        description: "Multi-sig secured"
+                      },
+                      { 
+                        title: "Monthly Allocation", 
+                        value: "$125.6K", 
+                        change: "This month", 
+                        color: "#10b981",
+                        icon: DollarSign,
+                        description: "Validator rewards & development"
+                      },
+                      { 
+                        title: "Reserve Fund", 
+                        value: "$450K", 
+                        change: "Emergency", 
+                        color: "#f79009",
+                        icon: Shield,
+                        description: "Protocol security buffer"
+                      }
+                    ].map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                      >
+                        <Card className={`bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] hover:border-[${item.color}]/50 transition-all duration-300 backdrop-blur-sm`}>
+                          <CardContent className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                              <item.icon className={`w-8 h-8 text-[${item.color}]`} />
+                              <TrendingUp className="w-4 h-4 text-[#10b981] opacity-60" />
+                            </div>
+                            <div>
+                              <h4 className={`font-semibold text-[${item.color}] mb-2`}>{item.title}</h4>
+                              <p className={`text-3xl font-bold text-[${item.color}] font-[Orbitron] mb-1`}>{item.value}</p>
+                              <p className="text-sm text-[#8b949e] mb-2">{item.change}</p>
+                              <p className="text-xs text-[#8b949e] opacity-80">{item.description}</p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-[#f79009]">Reserve Fund</h4>
-                    <p className="text-2xl font-bold text-[#f0f6fc]">$45,000</p>
-                    <p className="text-sm text-[#8b949e]">Emergency reserves</p>
+
+                  {/* Treasury Breakdown */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-[#00ffe1] text-xl font-bold flex items-center gap-2">
+                          <Layers className="w-6 h-6" />
+                          Asset Allocation
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {[
+                          { asset: "GTT Tokens", amount: "60%", value: "$536.8K", color: "#00ffe1" },
+                          { asset: "USDC Stablecoin", amount: "25%", value: "$223.7K", color: "#10b981" },
+                          { asset: "ETH Holdings", amount: "10%", value: "$89.5K", color: "#627eea" },
+                          { asset: "Other Assets", amount: "5%", value: "$44.7K", color: "#ff00d4" }
+                        ].map((asset, index) => (
+                          <motion.div 
+                            key={index}
+                            className="flex items-center justify-between p-3 rounded-lg bg-[#0d1117]/30 border border-[#30363d]/50"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`w-3 h-3 rounded-full bg-[${asset.color}]`} />
+                              <div>
+                                <div className="text-[#f0f6fc] font-medium">{asset.asset}</div>
+                                <div className="text-[#8b949e] text-sm">{asset.value}</div>
+                              </div>
+                            </div>
+                            <div className={`text-[${asset.color}] font-bold font-[Orbitron]`}>
+                              {asset.amount}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                      <CardHeader>
+                        <CardTitle className="text-[#ff00d4] text-xl font-bold flex items-center gap-2">
+                          <Calendar className="w-6 h-6" />
+                          Recent Transactions
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {[
+                          { type: "Validator Rewards", amount: "-$15.2K", time: "2 hours ago", status: "completed" },
+                          { type: "GTT Buyback", amount: "-$8.5K", time: "1 day ago", status: "completed" },
+                          { type: "Dev Fund Allocation", amount: "-$25K", time: "3 days ago", status: "completed" },
+                          { type: "Community Grant", amount: "-$5K", time: "1 week ago", status: "completed" }
+                        ].map((tx, index) => (
+                          <motion.div 
+                            key={index}
+                            className="flex items-center justify-between p-3 rounded-lg bg-[#0d1117]/30 border border-[#30363d]/50 hover:border-[#ff00d4]/30 transition-all"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="w-2 h-2 rounded-full bg-[#10b981]" />
+                              <div>
+                                <div className="text-[#f0f6fc] font-medium">{tx.type}</div>
+                                <div className="text-[#8b949e] text-sm">{tx.time}</div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-[#f85149] font-bold font-[Orbitron]">{tx.amount}</div>
+                              <div className="text-[#10b981] text-xs">{tx.status}</div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </CardContent>
+                    </Card>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                </motion.div>
+              </TabsContent>
+
+              {/* Analytics Tab */}
+              <TabsContent value="analytics" className="space-y-6">
+                <motion.div 
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {/* Key Metrics */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[
+                      { label: "Total Votes Cast", value: "156.8K", change: "+15%", color: "#00ffe1" },
+                      { label: "Avg Participation", value: "78.4%", change: "+5%", color: "#10b981" },
+                      { label: "Proposals Passed", value: "67%", change: "+3%", color: "#7c3aed" },
+                      { label: "Avg Quorum", value: "85.2%", change: "+8%", color: "#ff00d4" }
+                    ].map((metric, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                      >
+                        <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                          <CardContent className="p-6 text-center">
+                            <div className={`text-3xl font-bold text-[${metric.color}] font-[Orbitron] mb-2`}>
+                              {metric.value}
+                            </div>
+                            <div className="text-[#8b949e] text-sm mb-1">{metric.label}</div>
+                            <div className="text-[#10b981] text-xs">{metric.change} vs last month</div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Governance Trends */}
+                  <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 border border-[#30363d] backdrop-blur-sm">
+                    <CardHeader>
+                      <CardTitle className="text-[#00ffe1] text-xl font-bold flex items-center gap-2">
+                        <Activity className="w-6 h-6" />
+                        Governance Activity Trends
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                          <h4 className="text-[#ff00d4] font-semibold">Voting Patterns</h4>
+                          {[
+                            { category: "Protocol Upgrades", votes: 12450, percentage: 85 },
+                            { category: "Treasury Allocation", votes: 9870, percentage: 72 },
+                            { category: "Validator Changes", votes: 8920, percentage: 68 },
+                            { category: "Community Grants", votes: 7650, percentage: 63 }
+                          ].map((pattern, index) => (
+                            <motion.div 
+                              key={index}
+                              className="space-y-2"
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                            >
+                              <div className="flex justify-between text-sm">
+                                <span className="text-[#f0f6fc]">{pattern.category}</span>
+                                <span className="text-[#8b949e]">{pattern.votes.toLocaleString()} votes</span>
+                              </div>
+                              <Progress value={pattern.percentage} className="h-2 bg-[#21262d]" />
+                            </motion.div>
+                          ))}
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <h4 className="text-[#7c3aed] font-semibold">Member Engagement</h4>
+                          <div className="space-y-3">
+                            {[
+                              { tier: "Sovereign Members", count: 1250, engagement: 95 },
+                              { tier: "Creator Members", count: 8940, engagement: 82 },
+                              { tier: "Seeker Members", count: 18760, engagement: 71 },
+                              { tier: "Explorer Members", count: 16330, engagement: 45 }
+                            ].map((tier, index) => (
+                              <motion.div 
+                                key={index}
+                                className="p-3 rounded-lg bg-[#0d1117]/30 border border-[#30363d]/50"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: index * 0.1 }}
+                              >
+                                <div className="flex justify-between items-center mb-2">
+                                  <span className="text-[#f0f6fc] text-sm font-medium">{tier.tier}</span>
+                                  <span className="text-[#8b949e] text-sm">{tier.count.toLocaleString()}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Progress value={tier.engagement} className="h-1.5 bg-[#21262d] flex-1" />
+                                  <span className="text-[#7c3aed] text-sm font-bold">{tier.engagement}%</span>
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+            </Tabs>
+          </motion.div>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
