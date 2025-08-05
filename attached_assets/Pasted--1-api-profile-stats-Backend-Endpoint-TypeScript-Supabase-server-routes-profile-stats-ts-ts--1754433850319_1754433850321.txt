@@ -1,0 +1,95 @@
+ 1. /api/profile/stats Backend Endpoint (TypeScript + Supabase)
+/server/routes/profile/stats.ts
+
+ts
+Copy
+Edit
+import express from "express";
+import { supabase } from "../../lib/supabaseClient";
+
+const router = express.Router();
+
+router.get("/stats/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  const { data, error } = await supabase
+    .from("profile_stats")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching stats:", error);
+    return res.status(500).json({ error: "Failed to load profile stats" });
+  }
+
+  res.json({
+    totalViews: data.total_views || 0,
+    totalLikes: data.total_likes || 0,
+    followers: data.followers || 0,
+  });
+});
+
+export default router;
+Add to server/index.ts:
+
+ts
+Copy
+Edit
+import profileStatsRoute from "./routes/profile/stats";
+app.use("/api/profile", profileStatsRoute);
+✅ 2. Loading Skeletons (Frontend Fallback UI)
+Enhance your profile with a cyberpunk-styled skeleton loader:
+
+Inside UnifiedProfile.tsx:
+
+tsx
+Copy
+Edit
+if (!stats) {
+  return (
+    <div className="p-6 bg-[#0d0d0d] text-white rounded-xl shadow-inner animate-pulse space-y-4">
+      <div className="h-5 w-1/2 bg-[#222] rounded"></div>
+      <div className="h-5 w-1/3 bg-[#222] rounded"></div>
+      <div className="h-5 w-2/3 bg-[#222] rounded"></div>
+    </div>
+  );
+}
+Optional: Replace Loading profile statistics... with this block.
+
+✅ 3. Sync with PostHog (Optional Analytics Tracking)
+Add to server/hooks/posthog.ts:
+
+ts
+Copy
+Edit
+import posthog from "posthog-node";
+posthog.init(process.env.POSTHOG_API_KEY, { host: process.env.POSTHOG_HOST });
+
+export const trackProfileView = (userId: string) => {
+  posthog.capture({
+    distinctId: userId,
+    event: "profile_viewed",
+  });
+};
+Trigger it in /stats/:userId:
+
+ts
+Copy
+Edit
+import { trackProfileView } from "../../hooks/posthog";
+// ...
+trackProfileView(userId);
+Or do this on the client-side via useEffect when profile loads.
+
+✅ Optional: Supabase SQL Schema (for profile_stats)
+sql
+Copy
+Edit
+create table if not exists profile_stats (
+  user_id uuid primary key,
+  total_views int default 0,
+  total_likes int default 0,
+  followers int default 0,
+  updated_at timestamp default now()
+);

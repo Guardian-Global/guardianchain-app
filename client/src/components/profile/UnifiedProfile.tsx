@@ -586,7 +586,11 @@ export default function UnifiedProfile() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {statsLoading ? (
-                    <div className="text-[#8b949e] text-center">Loading real-time stats...</div>
+                    <div className="p-6 bg-[#0d0d0d] text-white rounded-xl shadow-inner animate-pulse space-y-4">
+                      <div className="h-5 w-1/2 bg-[#222] rounded"></div>
+                      <div className="h-5 w-1/3 bg-[#222] rounded"></div>
+                      <div className="h-5 w-2/3 bg-[#222] rounded"></div>
+                    </div>
                   ) : statsError ? (
                     <div className="text-red-400 text-center">Failed to load stats</div>
                   ) : (
