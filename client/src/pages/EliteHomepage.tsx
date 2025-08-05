@@ -39,6 +39,7 @@ import QuantumCard from '@/components/ui/QuantumCard';
 import Web3Button from '@/components/ui/Web3Button';
 import EnhancedButton from '@/components/ui/EnhancedButton';
 import AdvancedCard from '@/components/ui/AdvancedCard';
+import CapsuleLauncherButton from '@/components/ui/CapsuleLauncherButton';
 
 // Platform Stats Component with Live Data
 function LivePlatformStats() {
@@ -206,6 +207,8 @@ function HeroSection() {
             >
               Watch Demo
             </EnhancedButton>
+            
+            <CapsuleLauncherButton />
           </div>
 
           {/* Trust Indicators */}

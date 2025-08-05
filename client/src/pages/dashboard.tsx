@@ -13,6 +13,7 @@ import {
 import CapsuleDrawer from "@/components/CapsuleDrawer";
 import CapsuleList from "@/components/CapsuleList";
 import LanguageSelector from "@/components/LanguageSelector";
+import CapsuleLauncherButton from "@/components/ui/CapsuleLauncherButton";
 import { detectUserLanguage, getRTLContainerProps } from "@/lib/rtlSupport";
 
 export default function DashboardPage() {
@@ -37,7 +38,8 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <LanguageSelector variant="button" />
+              <CapsuleLauncherButton />
+              <LanguageSelector />
               <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2">
                 <Crown className="w-4 h-4 mr-2" />
                 Pro Access
