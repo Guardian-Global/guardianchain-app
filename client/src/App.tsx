@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/web3/theme-provider";
 import WalletProvider from "@/components/providers/WalletProvider";
 import { AssetProvider } from "@/components/assets/AssetProvider";
 import EliteLayout from "@/components/layout/EliteLayout";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import OfflineIndicator from "@/components/OfflineIndicator";
 import { LiveTokenTracker } from "@/components/live/LiveTokenTracker";
 import WelcomeTour from "@/components/WelcomeTour";
@@ -85,6 +84,7 @@ const AuthDebugPanel = lazy(() => import("@/components/auth/AuthDebugPanel"));
 const OnboardingStatusChecker = lazy(() => import("@/components/onboarding/OnboardingStatusChecker"));
 const ComprehensiveAuthFlow = lazy(() => import("@/components/auth/ComprehensiveAuthFlow"));
 const FullAppDebugger = lazy(() => import("@/components/debug/FullAppDebugger"));
+const PWAInstallPrompt = lazy(() => import("@/components/ui/PWAInstallPrompt"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -121,6 +121,7 @@ function Router() {
         <EliteLayout>
           <WelcomeTour />
           <LiveTokenTracker position="top" />
+          <PWAInstallPrompt />
           <Suspense
             fallback={
               <div className="flex items-center justify-center min-h-screen">
