@@ -253,7 +253,20 @@ export function setupConsolidatedAuth(app: Express) {
         updatedAt: new Date().toISOString()
       };
 
+      // Create session token and set cookie for signup too
+      const sessionToken = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Set session cookie with secure options
+      res.cookie('session', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        path: '/'
+      });
+
       console.log("✅ Consolidated Auth: User account created successfully");
+      console.log("✅ Consolidated Auth: Session token created:", sessionToken);
       
       res.json({
         success: true,
@@ -270,7 +283,7 @@ export function setupConsolidatedAuth(app: Express) {
     }
   });
 
-  // Login endpoint
+  // Login endpoint - authenticates existing user and creates session
   app.post("/api/auth/login", async (req: any, res) => {
     console.log("🔐 Consolidated Auth: Login attempt");
     
@@ -340,7 +353,20 @@ export function setupConsolidatedAuth(app: Express) {
         updatedAt: new Date().toISOString()
       };
 
+      // Create session token and set cookie
+      const sessionToken = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Set session cookie with secure options
+      res.cookie('session', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        path: '/'
+      });
+
       console.log("✅ Consolidated Auth: User logged in successfully");
+      console.log("✅ Consolidated Auth: Session token created:", sessionToken);
       
       res.json({
         success: true,

@@ -1535,6 +1535,10 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Auth middleware - Setup consolidated authentication system
+  // Add cookie parser middleware for session handling
+  const cookieParser = await import("cookie-parser");
+  app.use(cookieParser.default());
+  
   const { setupConsolidatedAuth } = await import("./auth/authConsolidation.js");
   setupConsolidatedAuth(app);
   
