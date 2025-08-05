@@ -1,0 +1,84 @@
+✅ Admin & Mint Endpoint Security Integration for GuardianChain
+
+---
+
+### 🔐 `/admin` Panel Access Control
+
+**Protect routes using tiered role logic (master/admin only):**
+```ts
+// middleware/requireAdmin.ts
+import { Request, Response, NextFunction } from 'express';
+
+export function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const { user } = req;
+  if (!user || user.tier !== 'ADMIN') {
+    return res.status(403).json({ message: 'Forbidden – Admins only' });
+  }
+  next();
+}
+```
+
+**Apply to admin routes:**
+```ts
+// routes/admin.ts
+import { requireAdmin } from '../middleware/requireAdmin';
+router.use(requireAdmin);
+```
+
+**Add ADMIN tier to database:**
+```sql
+ALTER TABLE users ADD COLUMN tier TEXT DEFAULT 'SEEKER';
+UPDATE users SET tier = 'ADMIN' WHERE email = 'you@example.com';
+```
+
+---
+
+### 🧬 `/capsule/mint` Capsule Verification Logic
+
+**Secure POST request with ownership check:**
+```ts
+// routes/capsule.ts
+router.post('/mint', requireAuth, async (req, res) => {
+  const { user } = req;
+  const { capsuleId, mediaUrl } = req.body;
+
+  const existing = await db.capsule.findUnique({ where: { id: capsuleId } });
+  if (!existing || existing.userId !== user.id) {
+    return res.status(403).json({ error: 'Unauthorized or invalid capsule' });
+  }
+
+  // Logic for minting NFT
+  const txHash = await mintCapsuleToChain(existing, mediaUrl);
+  res.status(200).json({ success: true, txHash });
+});
+```
+
+**Track minting attempts and logs:**
+```sql
+CREATE TABLE capsule_mint_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id),
+  capsule_id UUID REFERENCES capsules(id),
+  status TEXT,
+  tx_hash TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);
+```
+
+---
+
+### ✅ Replit AI Agent Instructions
+
+**Tasks:**
+1. Confirm `tier` exists on `users` table and `ADMIN` tier is flagged.
+2. Protect all `/admin/*` routes with `requireAdmin` middleware.
+3. Add capsule ownership validation in `/capsule/mint`.
+4. Record mint attempts to `capsule_mint_logs` table.
+5. Add JSON error responses for all 4xx errors.
+
+---
+
+Would you like to:
+- Add DAO approval layer before mint?
+- Include automated truth verification pipeline pre-mint?
+- Sync this with SMRI metadata badges?

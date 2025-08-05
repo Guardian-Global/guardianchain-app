@@ -32,6 +32,7 @@ Preferred communication style: Simple, everyday language.
 - **Global RTL & Multilingual System**: Supports 29 RTL languages with auto-layout switching and 22 languages via LanguageSelector component, including auto-translation API.
 - **Enhanced Voice Interface**: A complete voice ecosystem supporting summary playback, professional recording with AI transcription, emotional analysis, and grief scoring, along with auto-translation and LABELS-based localization.
 - **PWA Capabilities**: Full Progressive Web App functionality with offline support and installability.
+- **Guardian Terminal CLI**: Command-line interface for developer access to capsule operations, supporting mint and send operations with wallet integration.
 
 ### Backend
 - **Runtime & Language**: Node.js with Express.js, TypeScript.

@@ -1,0 +1,30 @@
+{
+  "name": "guardianchain-terminal",
+  "version": "1.0.0",
+  "description": "Command-line interface for GuardianChain capsule operations",
+  "main": "guardian-terminal.ts",
+  "scripts": {
+    "start": "tsx guardian-terminal.ts",
+    "build": "tsc guardian-terminal.ts --outDir dist",
+    "dev": "tsx --watch guardian-terminal.ts"
+  },
+  "keywords": [
+    "guardianchain",
+    "capsule",
+    "blockchain",
+    "cli",
+    "terminal"
+  ],
+  "author": "GuardianChain Team",
+  "license": "MIT",
+  "dependencies": {
+    "readline": "^1.3.0",
+    "dotenv": "^16.0.3",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import terminalRoutes from "./routes/terminal";
 import { getCapsuleStats } from "./api/capsule-stats";
 import { getCapsuleTimeline } from "./api/timeline";
 import { getValidatorBids } from "./api/validator-bids";
@@ -2085,6 +2086,10 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   // DAO routes with authentication
   app.use("/api/dao", consolidatedAuth, daoRoutes);
+  
+  // Terminal API routes
+  app.use('/api/terminal', terminalRoutes);
+  console.log("✅ Terminal API routes registered successfully");
   
   // Only consolidated authentication system is active
 
@@ -10087,3 +10092,5 @@ function extractEmotions(content: string): string[] {
 
   return detectedEmotions.length > 0 ? detectedEmotions : ["neutral"];
 }
+
+
