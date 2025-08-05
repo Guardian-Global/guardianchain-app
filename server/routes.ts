@@ -24,6 +24,7 @@ import { composeCapsule } from "./ai/capsule-composer";
 import { registerSubscriptionRoutes } from "./routes/subscription";
 
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
+import { ObjectStorageService } from "./objectStorage";
 import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
 import ultraBulkRoutes from "./routes/ultra-bulk";
@@ -1160,11 +1161,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { userId } = req.params;
       console.log(`🖼️ Profile media gallery requested for user: ${userId}`);
       
-      // In production, this would fetch from database:
-      // const mediaFiles = await db.select().from(mediaFiles).where(eq(mediaFiles.userId, userId));
+      // Mock media gallery data that includes any recently uploaded files
+      // In production, this would fetch from database: await db.select().from(mediaFiles).where(eq(mediaFiles.userId, userId));
+      const mockUploadedFiles = global.uploadedFiles || [];
+      const userFiles = mockUploadedFiles.filter((file: any) => file.userId === userId);
       
-      // Mock media gallery data representing database records
-      const mediaGallery = [
+      const baseMediaGallery = [
         {
           id: "media_1704823200000_abc123",
           type: "image",
@@ -1203,6 +1205,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           isPublic: false
         }
       ];
+      
+      // Combine uploaded files with base gallery
+      const mediaGallery = [...userFiles, ...baseMediaGallery];
       
       res.json({
         success: true,
@@ -1268,7 +1273,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const mediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const fileName = `${mediaId}_${originalName}`;
       
-      // Insert into database (using mock data structure for now)
+      // Save to temporary global storage (in production this would be database)
+      if (!global.uploadedFiles) {
+        global.uploadedFiles = [];
+      }
+      
       const mediaRecord = {
         id: mediaId,
         userId,
@@ -1283,6 +1292,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isPublic: false,
         uploadedAt: new Date().toISOString()
       };
+      
+      // Store the uploaded file record
+      global.uploadedFiles.push(mediaRecord);
       
       // Track user activity
       console.log(`📝 Logging media upload activity for user: ${userId}`);
@@ -9745,6 +9757,25 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
         error: "Failed to update profile",
         details: error instanceof Error ? error.message : "Unknown error"
       });
+    }
+  });
+
+  // Media serving endpoint for uploaded files - CRITICAL FOR MEDIA VIEWING
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    try {
+      const objectPath = `/${req.params.objectPath}`;
+      console.log(`🖼️ Serving media object: ${objectPath}`);
+      
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(`/objects${objectPath}`);
+      
+      // Stream the file directly to user
+      await objectStorageService.downloadObject(objectFile, res);
+      
+      console.log(`✅ Media object served successfully: ${objectPath}`);
+    } catch (error) {
+      console.error(`❌ Failed to serve media object: ${req.params.objectPath}`, error);
+      res.status(404).json({ error: "Media not found" });
     }
   });
 
