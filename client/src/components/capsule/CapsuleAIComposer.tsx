@@ -34,7 +34,8 @@ import {
   AlertCircle,
   Star,
   Flame,
-  BarChart3
+  BarChart3,
+  Lightbulb
 } from 'lucide-react';
 
 interface AIComposerSettings {
@@ -111,12 +112,13 @@ export default function CapsuleAIComposer({
     mutationFn: async (data: { prompt: string; settings: AIComposerSettings }) => {
       return apiRequest('POST', '/api/ai/compose-capsule', data);
     },
-    onSuccess: (response) => {
-      setGeneratedContent(response);
-      onContentGenerated(response);
+    onSuccess: async (response) => {
+      const generatedData = await response.json();
+      setGeneratedContent(generatedData);
+      onContentGenerated(generatedData);
       toast({
         title: "Content Generated Successfully!",
-        description: `Created ${response.content.length} character capsule with ${response.estimatedGTT} GTT potential.`,
+        description: `Created ${generatedData.content.length} character capsule with ${generatedData.estimatedGTT} GTT potential.`,
       });
     },
     onError: (error: any) => {
@@ -132,9 +134,10 @@ export default function CapsuleAIComposer({
     mutationFn: async (data: { content: string; refinement: string }) => {
       return apiRequest('POST', '/api/ai/refine-capsule', data);
     },
-    onSuccess: (response) => {
-      setGeneratedContent(response);
-      onContentGenerated(response);
+    onSuccess: async (response) => {
+      const refinedData = await response.json();
+      setGeneratedContent(refinedData);
+      onContentGenerated(refinedData);
     },
   });
 
