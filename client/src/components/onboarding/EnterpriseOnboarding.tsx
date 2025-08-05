@@ -18,6 +18,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useEnhancedAuth } from "@/hooks/useEnhancedAuth";
 import ProfileCompletion from "./steps/ProfileCompletion";
 import IdentityVerification from "./steps/IdentityVerification";
 import WalletConnection from "./steps/WalletConnection";
@@ -36,8 +37,13 @@ interface OnboardingStep {
   completed: boolean;
 }
 
-export default function EnterpriseOnboarding() {
+interface EnterpriseOnboardingProps {
+  onComplete?: () => void;
+}
+
+export default function EnterpriseOnboarding({ onComplete }: EnterpriseOnboardingProps) {
   const { toast } = useToast();
+  const { user, needsOnboarding } = useEnhancedAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingData, setOnboardingData] = useState({
     profileCompleted: false,
@@ -85,13 +91,6 @@ export default function EnterpriseOnboarding() {
     },
   ];
 
-  // Check if user needs onboarding
-  const needsOnboarding =
-    !user?.emailVerified ||
-    !user?.firstName ||
-    !user?.lastName ||
-    currentStep < steps.length;
-
   const completedSteps = steps.filter((step) => step.completed).length;
   const progress = (completedSteps / steps.length) * 100;
 
@@ -123,9 +122,36 @@ export default function EnterpriseOnboarding() {
     setCurrentStep(stepIndex);
   };
 
+  // Handle onboarding completion
+  const handleOnboardingComplete = () => {
+    if (onComplete) {
+      onComplete();
+    }
+  };
+
   // If user doesn't need onboarding, don't show the component
   if (!needsOnboarding) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-6">
+        <div className="text-center">
+          <div className="mx-auto w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+            <CheckCircle className="h-10 w-10 text-green-400" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-4">
+            Onboarding Complete!
+          </h1>
+          <p className="text-slate-300 mb-6">
+            Your account is fully set up and ready to use.
+          </p>
+          <Button
+            onClick={handleOnboardingComplete}
+            className="bg-purple-600 hover:bg-purple-700 text-white"
+          >
+            Continue to Dashboard
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   const currentStepData = steps[currentStep];

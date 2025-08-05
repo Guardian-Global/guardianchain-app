@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Mail, User, Building, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useEnhancedAuth } from "@/hooks/useEnhancedAuth";
 
 const profileSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -39,6 +40,7 @@ export default function ProfileCompletion({
   onComplete,
 }: ProfileCompletionProps) {
   const { toast } = useToast();
+  const { user, updateProfile } = useEnhancedAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [emailVerificationSent, setEmailVerificationSent] = useState(false);
 
@@ -70,21 +72,17 @@ export default function ProfileCompletion({
   const onSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
     try {
-      const success = await updateProfile({
+      updateProfile({
         firstName: data.firstName,
         lastName: data.lastName,
         // Additional profile data would be stored in a separate profile table
       });
 
-      if (success) {
-        toast({
-          title: "Profile Updated!",
-          description: "Your profile has been successfully completed.",
-        });
-        onComplete();
-      } else {
-        throw new Error("Failed to update profile");
-      }
+      toast({
+        title: "Profile Updated!",
+        description: "Your profile has been successfully completed.",
+      });
+      onComplete();
     } catch (error) {
       toast({
         title: "Update Failed",
