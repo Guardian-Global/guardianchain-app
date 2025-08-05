@@ -158,6 +158,8 @@ function Router() {
               <Route path="/social" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
+              <Route path="/dao" component={DAO} />
+              <Route path="/profile" component={Profile} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

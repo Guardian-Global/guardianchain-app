@@ -12,6 +12,7 @@ import { registerGTTContractRoutes } from "./routes/gttContract";
 // All legacy authentication systems removed - only consolidated auth remains
 import { consolidatedAuth } from "./auth/authConsolidation";
 import authCompleteRoutes from "./routes/auth-complete";
+import daoRoutes from "./routes/dao";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
@@ -1543,6 +1544,9 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   // Complete authentication system
   app.use("/api/auth-complete", authCompleteRoutes);
+  
+  // DAO routes with authentication
+  app.use("/api/dao", consolidatedAuth, daoRoutes);
   
   // Only consolidated authentication system is active
 

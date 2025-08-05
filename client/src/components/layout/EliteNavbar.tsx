@@ -29,7 +29,8 @@ const navItems = [
   { href: '/explorer', label: 'Capsule Explorer', icon: Search },
   { href: '/truth-genome', label: 'Truth Genome', icon: Sparkles },
   { href: '/social', label: 'Social Hub', icon: Users },
-  { href: '/governance', label: 'DAO', icon: Crown },
+  { href: '/dao', label: 'DAO', icon: Crown },
+  { href: '/profile', label: 'Profile', icon: Settings },
   { href: '/partners', label: 'Partners', icon: Handshake },
 ];
 
