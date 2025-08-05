@@ -1,5 +1,5 @@
-import SovereignSocialProfile from "@/components/profile/SovereignSocialProfile";
+import EnhancedCustomizableProfile from "@/components/profile/EnhancedCustomizableProfile";
 
 export default function Profile() {
-  return <SovereignSocialProfile />;
+  return <EnhancedCustomizableProfile />;
 }
