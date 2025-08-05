@@ -172,14 +172,10 @@ const EnhancedNavigation: React.FC = () => {
         <AdvancedCard variant="glass" className="w-full p-6 flex flex-col">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <EnhancedGuardianLogo size="md" variant="full" animated={true} />
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="font-bold text-white">GuardianChain</h2>
-                <p className="text-xs text-gray-400">Sovereign Memory</p>
+            <div className="flex flex-col items-center mb-2">
+              <EnhancedGuardianLogo size="lg" variant="full" animated={true} />
+              <div className="text-center mt-3">
+                <p className="text-xs text-gray-400 font-medium tracking-wider">SOVEREIGN TRUTH NETWORK</p>
               </div>
             </div>
             

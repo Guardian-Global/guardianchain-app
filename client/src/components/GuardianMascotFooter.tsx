@@ -99,11 +99,14 @@ export default function GuardianMascotFooter() {
               </div>
             </div>
             
-            <h3 className="text-3xl font-bold text-[#00ffe1] mt-6 font-[Orbitron] tracking-wider">
-              Guardian Sentinel AI
+            <h3 className="text-4xl font-bold text-transparent bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text mt-6 font-[Orbitron] tracking-wider">
+              GUARDIAN SENTINEL AI
             </h3>
-            <p className="text-[#8b949e] max-w-lg mx-auto mt-3 text-lg">
-              Your advanced digital truth protector, wielding quantum-enhanced verification protocols to safeguard memories and validate authenticity across the blockchain multiverse.
+            <div className="text-xs text-[#00ffe1] font-mono tracking-[0.2em] mt-2 opacity-70">
+              QUANTUM-ENHANCED • TRUTH VERIFICATION • BLOCKCHAIN SECURED
+            </div>
+            <p className="text-[#8b949e] max-w-2xl mx-auto mt-4 text-lg leading-relaxed">
+              Your advanced digital truth protector, wielding quantum-enhanced verification protocols and neural network intelligence to safeguard memories, validate authenticity, and secure the future of truth across the blockchain multiverse.
             </p>
             
             {/* Status Indicators */}

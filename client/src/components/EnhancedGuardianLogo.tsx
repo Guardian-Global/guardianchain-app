@@ -83,23 +83,45 @@ export default function EnhancedGuardianLogo({
           transition={{ duration: 4, repeat: Infinity }}
         />
         
-        {/* Neural Network Pattern */}
+        {/* Advanced Neural Network Pattern */}
         <motion.g
-          animate={animated ? { opacity: [0.3, 0.8, 0.3] } : {}}
-          transition={{ duration: 5, repeat: Infinity }}
+          animate={animated ? { opacity: [0.4, 0.9, 0.4] } : {}}
+          transition={{ duration: 4, repeat: Infinity }}
         >
-          {/* Horizontal Lines */}
-          <path d="M28 32 L50 38 L72 32" stroke="#00ffe1" strokeWidth="1.8" fill="none" opacity="0.7" />
-          <path d="M25 48 L50 52 L75 48" stroke="#ff00d4" strokeWidth="2" fill="none" opacity="0.8" />
-          <path d="M28 64 L50 68 L72 64" stroke="#7c3aed" strokeWidth="1.8" fill="none" opacity="0.7" />
+          {/* Primary Network Lines */}
+          <path d="M28 30 L50 36 L72 30" stroke="url(#logoNetworkGradient1)" strokeWidth="2.2" fill="none" opacity="0.8" />
+          <path d="M25 46 L50 50 L75 46" stroke="url(#logoNetworkGradient2)" strokeWidth="2.5" fill="none" opacity="0.9" />
+          <path d="M28 62 L50 66 L72 62" stroke="url(#logoNetworkGradient3)" strokeWidth="2.2" fill="none" opacity="0.8" />
           
-          {/* Connection Nodes */}
-          <circle cx="35" cy="34" r="2" fill="#00ffe1" opacity="0.8" />
-          <circle cx="65" cy="34" r="2" fill="#00ffe1" opacity="0.8" />
-          <circle cx="32" cy="50" r="2.5" fill="#ff00d4" opacity="0.9" />
-          <circle cx="68" cy="50" r="2.5" fill="#ff00d4" opacity="0.9" />
-          <circle cx="35" cy="66" r="2" fill="#7c3aed" opacity="0.8" />
-          <circle cx="65" cy="66" r="2" fill="#7c3aed" opacity="0.8" />
+          {/* Secondary Connection Web */}
+          <path d="M35 32 L35 48 L35 64" stroke="#00ffe1" strokeWidth="1.2" fill="none" opacity="0.6" />
+          <path d="M65 32 L65 48 L65 64" stroke="#7c3aed" strokeWidth="1.2" fill="none" opacity="0.6" />
+          
+          {/* Enhanced Connection Nodes */}
+          <motion.circle cx="35" cy="32" r="2.5" fill="#00ffe1" opacity="0.9"
+            animate={animated ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 3, repeat: Infinity, delay: 0 }}
+          />
+          <motion.circle cx="65" cy="32" r="2.5" fill="#00ffe1" opacity="0.9"
+            animate={animated ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+          />
+          <motion.circle cx="32" cy="48" r="3" fill="#ff00d4" opacity="1"
+            animate={animated ? { scale: [1, 1.4, 1] } : {}}
+            transition={{ duration: 2.5, repeat: Infinity, delay: 1 }}
+          />
+          <motion.circle cx="68" cy="48" r="3" fill="#ff00d4" opacity="1"
+            animate={animated ? { scale: [1, 1.4, 1] } : {}}
+            transition={{ duration: 2.5, repeat: Infinity, delay: 1.5 }}
+          />
+          <motion.circle cx="35" cy="64" r="2.5" fill="#7c3aed" opacity="0.9"
+            animate={animated ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 3, repeat: Infinity, delay: 2 }}
+          />
+          <motion.circle cx="65" cy="64" r="2.5" fill="#7c3aed" opacity="0.9"
+            animate={animated ? { scale: [1, 1.3, 1] } : {}}
+            transition={{ duration: 3, repeat: Infinity, delay: 2.5 }}
+          />
         </motion.g>
         
         {/* Central Quantum Core */}
@@ -206,6 +228,24 @@ export default function EnhancedGuardianLogo({
             <stop offset="0%" stopColor="#00ffe1" />
             <stop offset="100%" stopColor="#059669" />
           </linearGradient>
+          
+          <linearGradient id="logoNetworkGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#00ffe1" />
+            <stop offset="50%" stopColor="#059669" />
+            <stop offset="100%" stopColor="#00ffe1" />
+          </linearGradient>
+          
+          <linearGradient id="logoNetworkGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ff00d4" />
+            <stop offset="50%" stopColor="#ec4899" />
+            <stop offset="100%" stopColor="#ff00d4" />
+          </linearGradient>
+          
+          <linearGradient id="logoNetworkGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#7c3aed" />
+            <stop offset="50%" stopColor="#a855f7" />
+            <stop offset="100%" stopColor="#7c3aed" />
+          </linearGradient>
         </defs>
       </svg>
       
@@ -223,15 +263,44 @@ export default function EnhancedGuardianLogo({
   );
 
   const LogoText = () => (
-    <motion.div
-      className={`font-[Orbitron] font-bold tracking-wider ${textSize} bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent`}
-      animate={animated ? {
-        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-      } : {}}
-      transition={{ duration: 5, repeat: Infinity }}
-      style={{ backgroundSize: '200% 200%' }}
-    >
-      GuardianChain
+    <motion.div className="relative">
+      <motion.div
+        className={`font-[Orbitron] font-bold tracking-wider ${textSize} bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent relative z-10`}
+        animate={animated ? {
+          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+        } : {}}
+        transition={{ duration: 4, repeat: Infinity }}
+        style={{ backgroundSize: '300% 300%' }}
+      >
+        GuardianChain
+      </motion.div>
+      
+      {/* Quantum Glow Effect */}
+      {animated && (
+        <>
+          <motion.div
+            className={`absolute inset-0 font-[Orbitron] font-bold tracking-wider ${textSize} text-[#00ffe1] blur-sm opacity-50`}
+            animate={{
+              opacity: [0.3, 0.7, 0.3],
+              scale: [1, 1.02, 1]
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            GuardianChain
+          </motion.div>
+          
+          <motion.div
+            className={`absolute inset-0 font-[Orbitron] font-bold tracking-wider ${textSize} text-[#ff00d4] blur-md opacity-30`}
+            animate={{
+              opacity: [0.2, 0.5, 0.2],
+              scale: [1, 1.04, 1]
+            }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          >
+            GuardianChain
+          </motion.div>
+        </>
+      )}
     </motion.div>
   );
 

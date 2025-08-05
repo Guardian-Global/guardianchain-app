@@ -87,7 +87,7 @@ const EnhancedGuardianMascot = ({ state = 'idle', size = 80 }: { state?: string;
       viewBox="0 0 100 100"
       className="drop-shadow-[0_0_20px_rgba(0,255,225,0.5)]"
     >
-      {/* Outer Glow Ring */}
+      {/* Outer Quantum Ring */}
       <motion.circle
         cx="50"
         cy="50"
@@ -98,6 +98,19 @@ const EnhancedGuardianMascot = ({ state = 'idle', size = 80 }: { state?: string;
         opacity="0.6"
         animate={{ rotate: 360 }}
         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+      
+      {/* Middle Energy Ring */}
+      <motion.circle
+        cx="50"
+        cy="50"
+        r="38"
+        fill="none"
+        stroke="url(#glowGradient)"
+        strokeWidth="1"
+        opacity="0.4"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
       />
       
       {/* Main Shield Body */}
@@ -126,18 +139,33 @@ const EnhancedGuardianMascot = ({ state = 'idle', size = 80 }: { state?: string;
         <path d="M35 60 L50 65 L65 60" stroke="#7c3aed" strokeWidth="1.5" fill="none" />
       </motion.g>
       
-      {/* Central Eye/Core */}
-      <motion.circle
-        cx="50"
-        cy="45"
-        r="8"
-        fill="url(#coreGradient)"
-        animate={{
-          scale: state === 'thinking' ? [1, 1.2, 1] : [1, 1.1, 1],
-          opacity: [0.8, 1, 0.8]
-        }}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
+      {/* Central Quantum Core */}
+      <motion.g>
+        <motion.circle
+          cx="50"
+          cy="45"
+          r="10"
+          fill="url(#coreGradient)"
+          animate={{
+            scale: state === 'thinking' ? [1, 1.3, 1] : [1, 1.15, 1],
+            opacity: [0.8, 1, 0.8]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <motion.circle
+          cx="50"
+          cy="45"
+          r="6"
+          fill="#00ffe1"
+          opacity="0.7"
+          animate={{
+            scale: [0.8, 1.2, 0.8],
+            opacity: [0.7, 0.3, 0.7]
+          }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        />
+        <circle cx="50" cy="45" r="2" fill="#ffffff" opacity="0.9" />
+      </motion.g>
       
       {/* Data Streams */}
       {[...Array(6)].map((_, i) => (
@@ -295,11 +323,30 @@ export default function GuardianMascot() {
         >
           <Button
             onClick={handleMascotClick}
-            className="w-16 h-16 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] hover:from-[#00e5cb] hover:to-[#6d28d9] shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden"
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] hover:from-[#00e5cb] hover:to-[#6d28d9] shadow-[0_0_25px_rgba(0,255,225,0.4)] hover:shadow-[0_0_35px_rgba(255,0,212,0.6)] transition-all duration-300 relative overflow-hidden border-2 border-white/20"
             data-testid="mascot-button"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full" />
-            <EnhancedGuardianMascot state={mascotState.name} size={48} />
+            
+            {/* Quantum Pulse Effect */}
+            <motion.div 
+              className="absolute inset-0 rounded-full border-2 border-[#00ffe1]"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0, 0.6, 0]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            
+            <motion.div 
+              className="absolute inset-0 rounded-full border border-[#ff00d4]"
+              animate={{
+                scale: [1, 1.4, 1],
+                opacity: [0, 0.4, 0]
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            />
+            <EnhancedGuardianMascot state={mascotState.name} size={56} />
             
             {/* Activity indicator */}
             {currentMessage && !isOpen && (
