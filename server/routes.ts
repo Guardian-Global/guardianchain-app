@@ -9248,6 +9248,232 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // AI Assistant routes
   app.use(assistantRoutes);
 
+  // Wallet connection logging
+  app.post("/api/wallet-connections", async (req: any, res) => {
+    try {
+      const { wallet, lastSeen } = req.body;
+      
+      if (!wallet) {
+        return res.status(400).json({ error: "Wallet address is required" });
+      }
+
+      // Log wallet connection (in production, this would save to database)
+      console.log(`🔗 Wallet connected: ${wallet} at ${lastSeen}`);
+      
+      res.status(200).json({ 
+        success: true, 
+        message: "Wallet connection logged",
+        wallet 
+      });
+    } catch (error) {
+      console.error("Error logging wallet connection:", error);
+      res.status(500).json({ error: "Failed to log wallet connection" });
+    }
+  });
+
+  // User media endpoint for profile pages
+  app.get("/api/user-media", async (req: any, res) => {
+    try {
+      const wallet = req.query.wallet as string;
+      
+      if (!wallet) {
+        return res.status(400).json({ error: "Wallet address is required" });
+      }
+
+      // Mock data for demo (in production, this would query the database)
+      const mockMedia = [
+        {
+          id: `${wallet}-capsule-1`,
+          name: "Family Heritage",
+          description: "Precious family memories preserved forever on the blockchain",
+          image_url: "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400",
+          ipfs_url: `https://ipfs.io/ipfs/Qm${wallet.slice(2, 10)}Family`,
+          creator: wallet,
+          timestamp: new Date().toISOString(),
+          yieldAmount: 2.5
+        },
+        {
+          id: `${wallet}-capsule-2`,
+          name: "Life Milestone",
+          description: "Important achievements and life moments sealed in truth",
+          image_url: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=400",
+          ipfs_url: `https://ipfs.io/ipfs/Qm${wallet.slice(2, 10)}Milestone`,
+          creator: wallet,
+          timestamp: new Date(Date.now() - 86400000).toISOString(),
+          yieldAmount: 3.2
+        }
+      ];
+
+      res.status(200).json(mockMedia);
+    } catch (error) {
+      console.error("Error fetching user media:", error);
+      res.status(500).json({ error: "Failed to fetch user media" });
+    }
+  });
+
+  // Voice search endpoint
+  app.post("/api/voice-search", async (req: any, res) => {
+    try {
+      const { query, wallet } = req.body;
+      
+      if (!query) {
+        return res.status(400).json({ error: "Search query is required" });
+      }
+
+      console.log(`🎤 Voice search: "${query}" for wallet: ${wallet}`);
+
+      // Mock voice search results (in production, this would use OpenAI embeddings)
+      const mockResults = [
+        {
+          id: "voice-result-1",
+          name: "Voice Search Result",
+          description: `Search result for: "${query}"`,
+          image_url: "https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?w=400",
+          ipfs_url: `https://ipfs.io/ipfs/QmVoiceSearch${Date.now()}`,
+          creator: wallet,
+          timestamp: new Date().toISOString(),
+          yieldAmount: 1.8
+        }
+      ];
+
+      res.status(200).json(mockResults);
+    } catch (error) {
+      console.error("Error processing voice search:", error);
+      res.status(500).json({ error: "Failed to process voice search" });
+    }
+  });
+
+  // Enhanced capsules endpoint with filtering
+  app.get("/api/capsules", async (req: any, res) => {
+    try {
+      const { search, category, sort } = req.query;
+
+      console.log(`📋 Capsules requested with filters - search: ${search}, category: ${category}, sort: ${sort}`);
+
+      // Mock capsule data with variety (in production, this would query the database)
+      const mockCapsules = [
+        {
+          id: "capsule-explore-1",
+          name: "Scientific Breakthrough",
+          description: "Revolutionary research findings in quantum computing preserved for humanity",
+          image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400",
+          ipfsUrl: "https://ipfs.io/ipfs/QmScience123",
+          creator: "0x742d35Cc6634C0532925a3b8D2a1416d4b2bb1eb",
+          timestamp: new Date().toISOString(),
+          yieldAmount: 8.5,
+          category: "science"
+        },
+        {
+          id: "capsule-explore-2",
+          name: "Artistic Expression",
+          description: "A collection of paintings and creative works documenting human experience",
+          image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400",
+          ipfsUrl: "https://ipfs.io/ipfs/QmArt456",
+          creator: "0x8ba1f109551bD432803012645Hac136c5D6a8B6E1",
+          timestamp: new Date(Date.now() - 172800000).toISOString(),
+          yieldAmount: 4.2,
+          category: "creative"
+        },
+        {
+          id: "capsule-explore-3",
+          name: "Family Wisdom",
+          description: "Generational knowledge and life lessons passed down through time",
+          image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+          ipfsUrl: "https://ipfs.io/ipfs/QmWisdom789",
+          creator: "0x9F0CC69F63fbA0E2Be89a894E2A0B8e3d7b5B8A9",
+          timestamp: new Date(Date.now() - 259200000).toISOString(),
+          yieldAmount: 6.7,
+          category: "wisdom"
+        },
+        {
+          id: "capsule-explore-4",
+          name: "Truth Testimony",
+          description: "Witness account of important historical events sealed with integrity",
+          image: "https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?w=400",
+          ipfsUrl: "https://ipfs.io/ipfs/QmTestimony012",
+          creator: "0x1A2B3C4D5E6F7890123456789ABCDEF01234567",
+          timestamp: new Date(Date.now() - 345600000).toISOString(),
+          yieldAmount: 9.1,
+          category: "testimony"
+        }
+      ];
+
+      // Apply filters (basic implementation for demo)
+      let filteredCapsules = mockCapsules;
+
+      if (search) {
+        filteredCapsules = filteredCapsules.filter(capsule =>
+          capsule.name.toLowerCase().includes(search.toLowerCase()) ||
+          capsule.description.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      if (category && category !== 'all') {
+        filteredCapsules = filteredCapsules.filter(capsule =>
+          capsule.category === category
+        );
+      }
+
+      // Apply sorting
+      if (sort === 'yield') {
+        filteredCapsules.sort((a, b) => b.yieldAmount - a.yieldAmount);
+      } else if (sort === 'popular') {
+        filteredCapsules.sort((a, b) => b.yieldAmount - a.yieldAmount); // Using yield as popularity proxy
+      } else {
+        filteredCapsules.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      }
+
+      res.status(200).json(filteredCapsules);
+    } catch (error) {
+      console.error("Error fetching capsules:", error);
+      res.status(500).json({ error: "Failed to fetch capsules" });
+    }
+  });
+
+  // Export ledger endpoint
+  app.get("/api/export-ledger", async (req: any, res) => {
+    try {
+      // Mock DAO mint log data (in production, this would query the database)
+      const mockLedgerData = [
+        {
+          id: 1,
+          wallet: "0x742d35Cc6634C0532925a3b8D2a1416d4b2bb1eb",
+          amount: 100,
+          transaction_hash: "0x1234567890abcdef...",
+          timestamp: new Date().toISOString(),
+          type: "mint"
+        },
+        {
+          id: 2,
+          wallet: "0x8ba1f109551bD432803012645Hac136c5D6a8B6E1",
+          amount: 250,
+          transaction_hash: "0xabcdef1234567890...",
+          timestamp: new Date(Date.now() - 86400000).toISOString(),
+          type: "yield"
+        }
+      ];
+
+      const csvHeaders = ['ID', 'Wallet', 'Amount', 'Transaction Hash', 'Timestamp', 'Type'];
+      const csvRows = mockLedgerData.map(row => [
+        row.id,
+        row.wallet,
+        row.amount,
+        row.transaction_hash,
+        row.timestamp,
+        row.type
+      ]);
+
+      const csvContent = [csvHeaders, ...csvRows].map(row => row.join(',')).join('\n');
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename=dao_mint_ledger.csv');
+      res.status(200).send(csvContent);
+    } catch (error) {
+      console.error("Error exporting ledger:", error);
+      res.status(500).json({ error: "Failed to export ledger" });
+    }
+  });
+
   return httpServer;
 }
 

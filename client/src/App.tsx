@@ -66,6 +66,8 @@ const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 const SectionPage = lazy(() => import("@/pages/section/[id]"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const ExplorePage = lazy(() => import("@/pages/explore"));
+const ProfilePage = lazy(() => import("@/pages/profile/[wallet]"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
 const MascotDebug = lazy(() => import("@/components/MascotDebug"));
@@ -174,6 +176,8 @@ function Router() {
               <Route path="/onboarding" component={NewUserOnboarding} />
               <Route path="/viral-showcase" component={ViralShowcase} />
               <Route path="/social" component={SocialHub} />
+              <Route path="/explore" component={ExplorePage} />
+              <Route path="/profile/:wallet" component={ProfilePage} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/section/:id" component={SectionPage} />

@@ -13,6 +13,7 @@ import {
 import CapsuleDrawer from "@/components/CapsuleDrawer";
 import CapsuleList from "@/components/CapsuleList";
 import LanguageSelector from "@/components/LanguageSelector";
+import MetaMaskConnect from "@/components/MetaMaskConnect";
 import { detectUserLanguage, getRTLContainerProps } from "@/lib/rtlSupport";
 
 export default function DashboardPage() {
@@ -86,6 +87,19 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* MetaMask Connection */}
+          <Card className="bg-slate-800 border-slate-700 mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-cyan-400" />
+                Web3 Wallet Connection
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MetaMaskConnect />
+            </CardContent>
+          </Card>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pro Features */}

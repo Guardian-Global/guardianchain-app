@@ -1,0 +1,60 @@
+// ✅ Auto-Sync Embeddings on Upload — pages/api/editor.ts (append at end)
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+
+const embeddings = new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY });
+const embedded = await embeddings.embedQuery(content);
+await supabase.from('capsule_embeddings').upsert({
+  capsule_id: id,
+  name: `Capsule ${id}`,
+  image_url: '',
+  embedding: embedded
+});
+
+// ✅ Export DAO Mint Logs as CSV — pages/api/export-ledger.ts
+import { parse } from 'json2csv';
+
+export default async function handler(req, res) {
+  const { data, error } = await supabase.from('dao_mint_log').select('*');
+  if (error) return res.status(500).json({ error: error.message });
+
+  const csv = parse(data);
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename=dao_mint_ledger.csv');
+  res.status(200).send(csv);
+}
+
+// ✅ /explore Page for Public Capsule Discovery — pages/explore.tsx
+import { useEffect, useState } from 'react';
+import CapsuleEmbed from '@/components/CapsuleEmbed';
+
+export default function ExplorePage() {
+  const [capsules, setCapsules] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/capsules').then(res => res.json()).then(data => setCapsules(data));
+  }, []);
+
+  return (
+    <div className="max-w-6xl mx-auto p-10">
+      <h1 className="text-4xl font-bold text-white mb-6">🌍 Explore Capsules</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {capsules.map((c, i) => (
+          <CapsuleEmbed key={i} {...c} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ✅ Supporting API Endpoint — pages/api/capsules.ts
+export default async function handler(req, res) {
+  const { data, error } = await supabase.from('capsule_embeddings').select('capsule_id, name, image_url');
+  if (error) return res.status(500).json({ error: error.message });
+  const withIpfs = data.map(c => ({
+    name: c.name,
+    description: 'Minted capsule memory on-chain',
+    image: c.image_url,
+    ipfsUrl: `https://ipfs.io/ipfs/${c.capsule_id}`
+  }));
+  res.status(200).json(withIpfs);
+}
