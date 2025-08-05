@@ -4,6 +4,9 @@ import EnhancedLayout from '@/components/layout/EnhancedLayout';
 import AuthGuard from '@/components/auth/AuthGuard';
 import EnhancedCapsuleCreator from '@/components/capsule/EnhancedCapsuleCreator';
 import CapsuleCreationWizard from '@/components/capsule/CapsuleCreationWizard';
+import QuickCreateCapsule from '@/components/capsule/QuickCreateCapsule';
+import CapsulePreviewModal from '@/components/capsule/CapsulePreviewModal';
+import CapsuleAnalytics from '@/components/capsule/CapsuleAnalytics';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -98,6 +101,7 @@ const CreateCapsule: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const [showModeSelection, setShowModeSelection] = useState(true);
   const [activeTab, setActiveTab] = useState('create');
+  const [analyticsTimeframe, setAnalyticsTimeframe] = useState<'week' | 'month' | 'year'>('week');
   
   const { user } = useAuth();
   const { toast } = useToast();
@@ -110,6 +114,11 @@ const CreateCapsule: React.FC = () => {
   const { data: capsuleInsights } = useQuery({
     queryKey: ['/api/insights/creation'],
     enabled: !!user
+  });
+
+  const { data: analyticsData } = useQuery({
+    queryKey: ['/api/analytics/capsules', analyticsTimeframe],
+    enabled: !!user && activeTab === 'analytics'
   });
 
   const quickStats: QuickStat[] = [
@@ -199,29 +208,10 @@ const CreateCapsule: React.FC = () => {
                   <EnhancedCapsuleCreator />
                 )}
                 {selectedMode === 'quick' && (
-                  <div className="max-w-4xl mx-auto">
-                    <Card className="bg-black/50 backdrop-blur-lg border-gray-600">
-                      <CardHeader>
-                        <CardTitle className="text-white flex items-center">
-                          <Zap className="w-5 h-5 mr-2 text-green-400" />
-                          Quick Create Mode
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-center text-gray-400 py-8">
-                          Quick Create mode coming soon...
-                          <br />
-                          <Button 
-                            onClick={handleCreationCancel} 
-                            className="mt-4"
-                            data-testid="back-to-selection"
-                          >
-                            Back to Mode Selection
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                  <QuickCreateCapsule
+                    onComplete={handleCreationComplete}
+                    onCancel={handleCreationCancel}
+                  />
                 )}
               </motion.div>
             </AnimatePresence>
@@ -288,7 +278,7 @@ const CreateCapsule: React.FC = () => {
             </motion.div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-gray-800/50">
+              <TabsList className="grid w-full grid-cols-4 bg-gray-800/50">
                 <TabsTrigger 
                   value="create" 
                   className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
@@ -304,6 +294,14 @@ const CreateCapsule: React.FC = () => {
                 >
                   <Brain className="w-4 h-4 mr-2" />
                   AI Insights
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="analytics" 
+                  className="data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-300"
+                  data-testid="tab-analytics"
+                >
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Analytics
                 </TabsTrigger>
                 <TabsTrigger 
                   value="help" 
@@ -445,7 +443,9 @@ const CreateCapsule: React.FC = () => {
                           'Use specific details and emotions for higher impact scores',
                           'Include supporting evidence to boost truth verification',
                           'Write from personal experience for authenticity',
-                          'Consider your audience when setting privacy levels'
+                          'Consider your audience when setting privacy levels',
+                          'Add voice notes to increase engagement by 40%',
+                          'Time-locked capsules generate 25% more GTT rewards'
                         ].map((tip, index) => (
                           <div key={index} className="flex items-start gap-3">
                             <Lightbulb className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
@@ -466,24 +466,131 @@ const CreateCapsule: React.FC = () => {
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Avg. GTT per Capsule</span>
-                            <span className="text-cyan-300 font-medium">24.5</span>
+                            <span className="text-cyan-300 font-medium">
+                              {capsuleInsights?.avgGTT || '24.5'}
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Best Performing Type</span>
-                            <span className="text-green-300 font-medium">Truth</span>
+                            <span className="text-green-300 font-medium">
+                              {capsuleInsights?.bestType || 'Truth'}
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Optimal Length</span>
-                            <span className="text-purple-300 font-medium">200-500 chars</span>
+                            <span className="text-purple-300 font-medium">
+                              {capsuleInsights?.optimalLength || '200-500 chars'}
+                            </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Peak Activity</span>
-                            <span className="text-yellow-300 font-medium">6-9 PM</span>
+                            <span className="text-yellow-300 font-medium">
+                              {capsuleInsights?.peakTime || '6-9 PM'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-400">Success Rate</span>
+                            <span className="text-green-300 font-medium">
+                              {capsuleInsights?.successRate || '94.2%'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-400">Community Engagement</span>
+                            <span className="text-pink-300 font-medium">
+                              {capsuleInsights?.engagement || '87%'}
+                            </span>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
+
+                  {/* Trending Topics */}
+                  <Card className="bg-black/30 backdrop-blur-lg border-gray-600">
+                    <CardHeader>
+                      <CardTitle className="text-orange-300 flex items-center">
+                        <TrendingUp className="w-5 h-5 mr-2" />
+                        Trending Topics
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {[
+                          { topic: 'AI Ethics', boost: '+45%', icon: Brain },
+                          { topic: 'Climate Truth', boost: '+38%', icon: Globe },
+                          { topic: 'Personal Stories', boost: '+52%', icon: Heart },
+                          { topic: 'Future Tech', boost: '+41%', icon: Zap }
+                        ].map((trend, index) => (
+                          <div key={index} className="text-center p-3 bg-gray-800/50 rounded border border-gray-600">
+                            <trend.icon className="w-6 h-6 mx-auto text-orange-400 mb-2" />
+                            <div className="text-white font-medium text-sm">{trend.topic}</div>
+                            <Badge className="bg-orange-600 text-xs mt-1">{trend.boost}</Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Recent Success Stories */}
+                  <Card className="bg-black/30 backdrop-blur-lg border-gray-600">
+                    <CardHeader>
+                      <CardTitle className="text-green-300 flex items-center">
+                        <Star className="w-5 h-5 mr-2" />
+                        Recent Success Stories
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {[
+                        {
+                          title: 'Climate Whistleblower Truth',
+                          gtt: 156,
+                          engagement: '2.4K',
+                          type: 'Truth'
+                        },
+                        {
+                          title: 'Childhood Memory Collection',
+                          gtt: 89,
+                          engagement: '1.8K',
+                          type: 'Memory'
+                        },
+                        {
+                          title: 'Tech Industry Prediction',
+                          gtt: 134,
+                          engagement: '3.1K',
+                          type: 'Prediction'
+                        }
+                      ].map((story, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-800/30 rounded border border-gray-600">
+                          <div>
+                            <div className="text-white font-medium text-sm">{story.title}</div>
+                            <Badge variant="secondary" className="text-xs mt-1">{story.type}</Badge>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-yellow-300 font-bold">{story.gtt} GTT</div>
+                            <div className="text-xs text-gray-400">{story.engagement} views</div>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="analytics" className="space-y-6">
+                <motion.div variants={itemVariants}>
+                  {analyticsData ? (
+                    <CapsuleAnalytics
+                      data={analyticsData}
+                      timeframe={analyticsTimeframe}
+                      onTimeframeChange={setAnalyticsTimeframe}
+                    />
+                  ) : (
+                    <div className="text-center py-12">
+                      <BarChart3 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                      <h3 className="text-xl font-semibold text-white mb-2">Analytics Loading</h3>
+                      <p className="text-gray-400">Analyzing your capsule performance data...</p>
+                    </div>
+                  )}
                 </motion.div>
               </TabsContent>
 
