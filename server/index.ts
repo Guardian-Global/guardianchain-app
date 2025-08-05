@@ -146,6 +146,10 @@ app.use("/api/ai", aiRoutes);
 import capsuleStatsRoutes from "./routes/capsule/stats.js";
 app.use("/api/capsule", capsuleStatsRoutes);
 
+// Advanced capsule analytics routes
+import capsuleAnalyticsRoutes from "./routes/capsule/analytics.js";
+app.use("/api/capsule/analytics", capsuleAnalyticsRoutes);
+
 // Stripe checkout routes
 import checkoutRoutes from "./routes/checkout.js";
 app.use("/api/checkout", checkoutRoutes);

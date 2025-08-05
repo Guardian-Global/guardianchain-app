@@ -54,6 +54,7 @@ import { Link } from "wouter";
 import ActivityTimeline from "./ActivityTimeline";
 import ProfileMediaUploader from "./ProfileMediaUploader";
 import CapsuleEngagementStats from './CapsuleEngagementStats';
+import UserInteractionExplorer from '../analytics/UserInteractionExplorer';
 import { EnhancedSocialProfile } from "./EnhancedSocialProfile";
 
 // Import new interactive components
@@ -662,35 +663,40 @@ export default function UnifiedProfile() {
           </TabsContent>
 
           <TabsContent value="activity" className="space-y-6">
-            <Card className="bg-[#161b22] border-[#30363d]">
-              <CardHeader>
-                <CardTitle className="text-[#f0f6fc] flex items-center">
-                  <Calendar className="h-5 w-5 mr-2" />
-                  Recent Activity
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {activitiesLoading ? (
-                  <div className="text-center py-8">
-                    <div className="animate-spin w-8 h-8 border-4 border-[#00ffe1] border-t-transparent rounded-full mx-auto"></div>
-                    <p className="text-[#8b949e] mt-2">Loading activities...</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {mockActivities.map((activity) => (
-                      <div key={activity.id} className="flex items-center space-x-3 p-3 rounded-lg bg-[#0d1117] hover:bg-[#161b22] transition-colors">
-                        {getActivityIcon(activity.type)}
-                        <div className="flex-1">
-                          <div className="font-medium text-[#f0f6fc]">{activity.action}</div>
-                          <div className="text-sm text-[#8b949e]">{activity.details}</div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="bg-[#161b22] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#f0f6fc] flex items-center">
+                    <Calendar className="h-5 w-5 mr-2" />
+                    Recent Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {activitiesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin w-8 h-8 border-4 border-[#00ffe1] border-t-transparent rounded-full mx-auto"></div>
+                      <p className="text-[#8b949e] mt-2">Loading activities...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {mockActivities.map((activity) => (
+                        <div key={activity.id} className="flex items-center space-x-3 p-3 rounded-lg bg-[#0d1117] hover:bg-[#161b22] transition-colors">
+                          {getActivityIcon(activity.type)}
+                          <div className="flex-1">
+                            <div className="font-medium text-[#f0f6fc]">{activity.action}</div>
+                            <div className="text-sm text-[#8b949e]">{activity.details}</div>
+                          </div>
+                          <div className="text-sm text-[#8b949e]">{activity.timestamp}</div>
                         </div>
-                        <div className="text-sm text-[#8b949e]">{activity.timestamp}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* User Interaction Analytics */}
+              <UserInteractionExplorer userId={user.id} />
+            </div>
           </TabsContent>
 
           <TabsContent value="media" className="space-y-6">

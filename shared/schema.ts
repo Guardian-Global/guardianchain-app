@@ -346,6 +346,60 @@ export const capsuleStats = pgTable("capsule_stats", {
   index("idx_capsule_stats_last_viewed").on(table.lastViewedAt),
 ]);
 
+// Capsule activity log for detailed audit tracking
+export const capsuleActivityLog = pgTable("capsule_activity_log", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id").notNull(),
+  userId: uuid("user_id"),
+  action: varchar("action").notNull(), // 'viewed', 'shared', 'unlocked', 'minted'
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_capsule_activity_capsule").on(table.capsuleId),
+  index("idx_capsule_activity_user").on(table.userId),
+  index("idx_capsule_activity_action").on(table.action),
+  index("idx_capsule_activity_created").on(table.createdAt),
+]);
+
+// User capsule interactions for behavioral analysis
+export const userCapsuleInteractions = pgTable("user_capsule_interactions", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull(),
+  capsuleId: uuid("capsule_id").notNull(),
+  action: varchar("action").notNull(), // 'view', 'share', 'unlock', 'mint'
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_user_interactions_user").on(table.userId),
+  index("idx_user_interactions_capsule").on(table.capsuleId),
+  index("idx_user_interactions_action").on(table.action),
+]);
+
+// Capsule behavior labels for AI-powered insights
+export const capsuleBehaviorLabels = pgTable("capsule_behavior_labels", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id").notNull().unique(),
+  label: varchar("label").notNull(), // 'viral', 'dormant', 'spike', 'gradual'
+  confidence: numeric("confidence").default("0.8"),
+  metadata: jsonb("metadata"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_behavior_labels_capsule").on(table.capsuleId),
+  index("idx_behavior_labels_label").on(table.label),
+]);
+
+// Interaction spikes detection
+export const capsuleInteractionSpikes = pgTable("capsule_interaction_spikes", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id").notNull(),
+  spikeDate: timestamp("spike_date").notNull(),
+  cause: varchar("cause").default("Abnormal activity"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_interaction_spikes_capsule").on(table.capsuleId),
+  index("idx_interaction_spikes_date").on(table.spikeDate),
+]);
+
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
 export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect;
@@ -365,6 +419,22 @@ export type InsertTruthAuction = typeof truthAuctions.$inferInsert;
 // Capsule stats types
 export type CapsuleStats = typeof capsuleStats.$inferSelect;
 export type InsertCapsuleStats = typeof capsuleStats.$inferInsert;
+
+// Activity log types
+export type CapsuleActivityLog = typeof capsuleActivityLog.$inferSelect;
+export type InsertCapsuleActivityLog = typeof capsuleActivityLog.$inferInsert;
+
+// User interaction types
+export type UserCapsuleInteraction = typeof userCapsuleInteractions.$inferSelect;
+export type InsertUserCapsuleInteraction = typeof userCapsuleInteractions.$inferInsert;
+
+// Behavior label types
+export type CapsuleBehaviorLabel = typeof capsuleBehaviorLabels.$inferSelect;
+export type InsertCapsuleBehaviorLabel = typeof capsuleBehaviorLabels.$inferInsert;
+
+// Spike detection types
+export type CapsuleInteractionSpike = typeof capsuleInteractionSpikes.$inferSelect;
+export type InsertCapsuleInteractionSpike = typeof capsuleInteractionSpikes.$inferInsert;
 
 // Extended types for UI compatibility
 export interface EnhancedCapsuleData extends Omit<Capsule, 'content'> {
