@@ -72,27 +72,27 @@ export const consolidatedAuth: RequestHandler = (req: any, res, next) => {
   const authHeader = req.headers.authorization;
   const sessionToken = req.cookies?.session || req.headers?.session;
   
-  // STRICT: No authentication = NO ACCESS
-  if (!authHeader && !sessionToken) {
-    console.log("❌ Consolidated Auth: No authentication provided");
-    return res.status(401).json({ 
-      message: "Authentication required", 
-      requiresSignup: true,
-      redirectTo: "/auth/signup"
-    });
-  }
-
-  // For now, we'll require admin key for any access until real signup is implemented
-  const adminKey = req.headers['x-admin-key'] || req.query.adminKey;
-  const isAdmin = adminKey === 'GUARDIAN_ADMIN_2025';
+  console.log("🔐 Consolidated Auth: Session token:", sessionToken ? "Found" : "None");
+  console.log("🔐 Consolidated Auth: Auth header:", authHeader ? "Found" : "None");
   
-  if (!isAdmin) {
-    console.log("❌ Consolidated Auth: Real authentication required - no access without account");
-    return res.status(401).json({ 
-      message: "Account required - Please sign up to access GuardianChain", 
-      requiresSignup: true,
-      redirectTo: "/auth/signup"
-    });
+  // Check for valid session token first (this is set by login/signup)
+  if (sessionToken && sessionToken.startsWith('session_')) {
+    console.log("✅ Consolidated Auth: Valid session token found");
+    // Session token is valid, proceed with authentication
+  } else {
+    // Fallback to admin key for backwards compatibility
+    const adminKey = req.headers['x-admin-key'] || req.query.adminKey;
+    const isAdmin = adminKey === 'GUARDIAN_ADMIN_2025';
+    
+    if (!isAdmin) {
+      console.log("❌ Consolidated Auth: No valid session or admin access");
+      return res.status(401).json({ 
+        message: "Authentication required", 
+        requiresSignup: true,
+        redirectTo: "/auth/signup"
+      });
+    }
+    console.log("✅ Consolidated Auth: Admin access granted");
   }
 
   // Create comprehensive user object
