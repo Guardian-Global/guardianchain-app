@@ -20,6 +20,7 @@ import vaultRouter from "./routes/vault";
 import { analyzeVoiceFile } from "./ai/voice-analysis";
 import { composeCapsule } from "./ai/capsule-composer";
 import { registerSubscriptionRoutes } from "./routes/subscription";
+
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
@@ -8954,6 +8955,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   app.use("/api/ai", aiRoutes);
   app.use("/api/nft", nftRoutes);
   app.use("/api/airdrop", airdropRoutes);
+
   app.use("/api/ipfs", ipfsRouter);
   app.use("/api/nft", nftRouter);
   app.use("/api/vault", vaultRouter);
@@ -8992,6 +8994,75 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   // Register subscription routes
   registerSubscriptionRoutes(app);
+
+  // Payment processing routes
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.warn('⚠️ STRIPE_SECRET_KEY not found - payment routes will not be available');
+  } else {
+    const { default: Stripe } = await import("stripe");
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    // Create payment intent for one-time payments
+    app.post("/api/payment/create-payment-intent", async (req, res) => {
+      try {
+        const { amount } = req.body;
+        
+        if (!amount || amount <= 0) {
+          return res.status(400).json({ error: "Invalid amount" });
+        }
+
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: Math.round(amount * 100), // Convert to cents
+          currency: "usd",
+        });
+
+        res.json({ clientSecret: paymentIntent.client_secret });
+        console.log(`💳 Payment intent created: $${amount}`);
+      } catch (error: any) {
+        console.error("❌ Error creating payment intent:", error);
+        res.status(500).json({ error: "Failed to create payment intent" });
+      }
+    });
+
+    // Create subscription for recurring payments
+    app.post("/api/payment/create-subscription", async (req, res) => {
+      try {
+        const { email, plan } = req.body;
+        
+        if (!email || !plan) {
+          return res.status(400).json({ error: "Email and plan are required" });
+        }
+
+        // Create customer
+        const customer = await stripe.customers.create({
+          email: email,
+        });
+
+        // Create subscription (you'll need to set up price IDs in Stripe dashboard)
+        const subscription = await stripe.subscriptions.create({
+          customer: customer.id,
+          items: [{
+            price: plan, // This should be a price ID from Stripe
+          }],
+          payment_behavior: 'default_incomplete',
+          expand: ['latest_invoice.payment_intent'],
+        });
+
+        const invoice = subscription.latest_invoice as any;
+        res.json({
+          subscriptionId: subscription.id,
+          clientSecret: invoice.payment_intent.client_secret,
+        });
+
+        console.log(`🔄 Subscription created for ${email}: ${plan}`);
+      } catch (error: any) {
+        console.error("❌ Error creating subscription:", error);
+        res.status(500).json({ error: "Failed to create subscription" });
+      }
+    });
+
+    console.log('💳 Stripe payment routes registered successfully');
+  }
 
   // Register enhanced dashboard routes
   const enhancedDashboardRoutes = await import("./routes/enhancedDashboard");

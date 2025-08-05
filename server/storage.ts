@@ -21,6 +21,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  updateUser(id: string, updates: Partial<User>): Promise<User>;
 
   // Capsule operations
   getCapsule(id: string): Promise<Capsule | undefined>;
@@ -42,6 +43,8 @@ export interface IStorage {
   subscribeToNewsletter(
     subscriber: InsertNewsletterSubscriber,
   ): Promise<NewsletterSubscriber>;
+
+
 }
 
 export class DatabaseStorage implements IStorage {
@@ -178,6 +181,18 @@ export class DatabaseStorage implements IStorage {
     return vote;
   }
 
+  async updateUser(id: string, updates: Partial<User>): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+
   // Newsletter operations
   async subscribeToNewsletter(
     subscriberData: InsertNewsletterSubscriber,
@@ -191,6 +206,8 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return subscriber;
   }
+
+
 }
 
 export const storage = new DatabaseStorage();
