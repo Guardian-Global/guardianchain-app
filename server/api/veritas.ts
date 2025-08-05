@@ -1,12 +1,12 @@
 import express from "express";
 import multer from "multer";
-import { isDebugAuthenticated } from "../debugAuth"";
+import { isDebugAuthenticated } from "../debugAuth";
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Veritas Seal API - Apply DocuSign verification to truth capsules
-router.post("/seal", authenticateToken, async (req, res) => {
+router.post("/seal", isDebugAuthenticated, async (req, res) => {
   try {
     const { capsuleId, reason } = req.body;
     const userId = req.user?.id;

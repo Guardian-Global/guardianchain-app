@@ -1,10 +1,10 @@
 import express from "express";
-import { isDebugAuthenticated } from "../debugAuth"";
+import { isDebugAuthenticated } from "../debugAuth";
 
 const router = express.Router();
 
 // Create new truth bounty
-router.post("/", authenticateToken, async (req, res) => {
+router.post("/", isDebugAuthenticated, async (req, res) => {
   try {
     const { title, description, rewardAmount, deadline, category } = req.body;
     const userId = req.user?.id;

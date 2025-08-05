@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { isDebugAuthenticated } from "../debugAuth"";
+import { isDebugAuthenticated } from "../debugAuth";
 
 const router = Router();
 

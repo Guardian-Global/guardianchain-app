@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { isDebugAuthenticated } from "../debugAuth"-routes";
+import { isDebugAuthenticated } from "../debugAuth";
 
 const router = Router();
 
@@ -46,7 +46,7 @@ const upload = multer({
 });
 
 // Profile media upload endpoint
-router.post("/profile-media", authenticateToken, upload.single('file'), async (req, res) => {
+router.post("/profile-media", isDebugAuthenticated, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
