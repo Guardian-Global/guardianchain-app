@@ -114,10 +114,10 @@ export function isValidTier(id: string): boolean {
 /**
  * Get the next tier in progression
  */
-export function getNextTier(currentTierId: string): Tier | null {
+export function getNextTier(currentTierId: string): Tier | undefined {
   const currentIndex = TIERS.findIndex((t) => t.id === currentTierId);
   if (currentIndex === -1 || currentIndex === TIERS.length - 1) {
-    return null;
+    return undefined;
   }
   return TIERS[currentIndex + 1];
 }

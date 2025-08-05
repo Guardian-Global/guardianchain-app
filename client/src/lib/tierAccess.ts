@@ -143,15 +143,15 @@ export function calculateMonthlyCost(tierName: string): number {
   return tier?.priceUSD || 0;
 }
 
-export function getNextTier(currentTier: string): TierConfig | null {
+export function getNextTier(currentTier: string): TierConfig | undefined {
   const currentIndex = TIERS.findIndex((t) => t.name === currentTier);
-  if (currentIndex === -1 || currentIndex === TIERS.length - 1) return null;
+  if (currentIndex === -1 || currentIndex === TIERS.length - 1) return undefined;
 
   return TIERS[currentIndex + 1];
 }
 
-export function getTierByPrice(priceUSD: number): TierConfig | null {
-  return TIERS.find((t) => t.priceUSD === priceUSD) || null;
+export function getTierByPrice(priceUSD: number): TierConfig | undefined {
+  return TIERS.find((t) => t.priceUSD === priceUSD);
 }
 
 export function getUserTierStatus(user: User) {
