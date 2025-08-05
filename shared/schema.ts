@@ -33,6 +33,10 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  tier: varchar("tier").default("EXPLORER"), // EXPLORER, SEEKER, CREATOR, SOVEREIGN
+  subscriptionStatus: varchar("subscription_status").default("inactive"), // inactive, active, past_due, canceled
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -229,6 +233,29 @@ export type LineageNode = typeof lineageNodes.$inferSelect;
 export type InsertLineageNode = typeof lineageNodes.$inferInsert;
 export type LineageEdge = typeof lineageEdges.$inferSelect;
 export type InsertLineageEdge = typeof lineageEdges.$inferInsert;
+
+// Payment types
+export type Payment = typeof payments.$inferSelect;
+export type InsertPayment = typeof payments.$inferInsert;
+
+// Payments table for transaction tracking
+export const payments = pgTable("payments", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id),
+  stripePaymentIntentId: varchar("stripe_payment_intent_id"),
+  stripeSessionId: varchar("stripe_session_id"),
+  amount: numeric("amount").notNull(), // in cents
+  currency: varchar("currency").default("usd"),
+  status: varchar("status").default("pending"), // pending, succeeded, failed, canceled
+  paymentType: varchar("payment_type").notNull(), // subscription, one_time, storage_capsule
+  metadata: jsonb("metadata"), // Additional payment info
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_payments_user").on(table.userId),
+  index("idx_payments_status").on(table.status),
+  index("idx_payments_type").on(table.paymentType),
+]);
 
 // DAO cluster voting table
 export const clusterVotes = pgTable("cluster_votes", {

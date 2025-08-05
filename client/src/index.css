@@ -901,6 +901,12 @@
   }
 }
 
+@layer utilities {
+  .border-border {
+    border-color: hsl(var(--border));
+  }
+}
+
 @layer components {
   .gradient-primary {
     @apply bg-gradient-to-r from-primary to-secondary;
