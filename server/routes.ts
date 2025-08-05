@@ -24,6 +24,7 @@ import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
 import ultraBulkRoutes from "./routes/ultra-bulk";
 import quantumBulkRoutes from "./routes/quantum-bulk";
+import hyperdimensionalBulkRoutes from "./routes/hyperdimensional-bulk";
 import { runCapsuleClustering, getCachedClusteringResults, generateClusterInsights } from "./api/capsule-clustering";
 import multer from "multer";
 import {
@@ -1470,6 +1471,9 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   // Register quantum bulk routes
   app.use('/api/bulk', quantumBulkRoutes);
+  
+  // Register hyperdimensional bulk routes
+  app.use('/api/bulk', hyperdimensionalBulkRoutes);
 
   // Simple subscription status - no database calls
   app.get(
