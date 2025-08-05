@@ -23,8 +23,13 @@ export function useAuth() {
     queryFn: async () => {
       const response = await fetch("/api/auth/user", {
         credentials: "include",
+        // No admin key - require real authentication
       });
       if (!response.ok) {
+        // Return null for 401 to indicate no authenticated user
+        if (response.status === 401) {
+          return null;
+        }
         throw new Error(`${response.status}: ${response.statusText}`);
       }
       return response.json();

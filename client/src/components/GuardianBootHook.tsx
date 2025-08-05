@@ -16,8 +16,8 @@ export function GuardianBootHook() {
 
   const { user, isAuthenticated } = useAuth();
   const { data: capsules = [], isLoading: capsulesLoading } = useCapsules();
-  const { data: recentCapsule } = useRecentCapsule();
-  const { data: reels = [] } = useReels();
+  const { data: recentCapsule = {} } = useRecentCapsule();
+  const { data: reels = [] } = useReels(); 
   const { data: userStats } = useUserStats();
 
   // Dynamic thread mapping with dependency array fix
@@ -27,7 +27,7 @@ export function GuardianBootHook() {
     const newThreadMap = new Map();
 
     // Map capsule threads
-    if (capsules) {
+    if (Array.isArray(capsules)) {
       capsules.forEach((capsule: any) => {
         newThreadMap.set(`capsule-${capsule.id}`, {
           type: "capsule",
@@ -40,7 +40,7 @@ export function GuardianBootHook() {
     }
 
     // Map reel threads
-    if (reels) {
+    if (Array.isArray(reels)) {
       reels.forEach((reel: any) => {
         newThreadMap.set(`reel-${reel.id}`, {
           type: "reel",
@@ -65,7 +65,7 @@ export function GuardianBootHook() {
     }
 
     // Map recent capsule thread
-    if (recentCapsule) {
+    if (recentCapsule && recentCapsule.id) {
       newThreadMap.set("recent-capsule", {
         type: "recent",
         id: "recent-capsule",

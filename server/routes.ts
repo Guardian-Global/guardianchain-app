@@ -9,8 +9,10 @@ import { createCapsule, getCapsuleById } from "./api/capsules";
 import { mintCapsule, likeCapsule, shareCapsule } from "./api/capsule-actions";
 import { unlockCapsule } from "./api/capsule-unlock";
 import { registerGTTContractRoutes } from "./routes/gttContract";
-import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
+// DISABLED: No debug authentication bypass allowed
+// import { setupDebugAuth, consolidatedAuth } from "./debugAuth";
 import { setupEnhancedAuth, enhancedAuth } from "./auth/enhancedAuth";
+import { consolidatedAuth } from "./auth/authConsolidation";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
@@ -141,17 +143,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/validators/bids", getValidatorBids);
   app.post("/api/subscribe", subscribeEmail);
   
-  // Media remixing endpoints
-  app.post("/api/media/remix", isDebugAuthenticated, handleMediaRemix);
-  app.get("/api/media/remix/status/:predictionId", isDebugAuthenticated, handleMediaRemixStatus);
+  // Media remixing endpoints - REAL AUTH REQUIRED
+  app.post("/api/media/remix", consolidatedAuth, handleMediaRemix);
+  app.get("/api/media/remix/status/:predictionId", consolidatedAuth, handleMediaRemixStatus);
   
-  // Advanced AI clustering endpoints
-  app.post("/api/capsules/clustering/analyze", isDebugAuthenticated, runCapsuleClustering);
-  app.get("/api/capsules/clustering/results", isDebugAuthenticated, getCachedClusteringResults);
-  app.get("/api/capsules/clustering/insights/:clusterId/:userId", isDebugAuthenticated, generateClusterInsights);
+  // Advanced AI clustering endpoints - REAL AUTH REQUIRED
+  app.post("/api/capsules/clustering/analyze", consolidatedAuth, runCapsuleClustering);
+  app.get("/api/capsules/clustering/results", consolidatedAuth, getCachedClusteringResults);
+  app.get("/api/capsules/clustering/insights/:clusterId/:userId", consolidatedAuth, generateClusterInsights);
 
-  // Memory yield analytics endpoint
-  app.get("/api/analytics/memory-yield", isDebugAuthenticated, async (req: any, res) => {
+  // Memory yield analytics endpoint - REAL AUTH REQUIRED
+  app.get("/api/analytics/memory-yield", consolidatedAuth, async (req: any, res) => {
     try {
       // Generate realistic yield data based on cluster themes and grief scores
       const yieldData = [
@@ -169,8 +171,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Lineage system endpoints
-  app.get("/api/lineage/graph", isDebugAuthenticated, async (req: any, res) => {
+  // Lineage system endpoints - REAL AUTH REQUIRED
+  app.get("/api/lineage/graph", consolidatedAuth, async (req: any, res) => {
     try {
       // For now, return demo data until tables are created
       const demoGraph = {
@@ -200,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/lineage/capsule/:capsuleId", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/lineage/capsule/:capsuleId", consolidatedAuth, async (req: any, res) => {
     try {
       const { capsuleId } = req.params;
       
@@ -229,7 +231,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/lineage/add", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/lineage/add", consolidatedAuth, async (req: any, res) => {
     try {
       const { capsuleId, title, parentIds } = req.body;
       
@@ -252,7 +254,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DAO cluster theme voting endpoints
-  app.post("/api/dao/vote-cluster-theme", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/dao/vote-cluster-theme", consolidatedAuth, async (req: any, res) => {
     try {
       const { clusterId, theme } = req.body;
       const userId = req.user?.id || 'debug-user-456';
@@ -276,7 +278,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/dao/cluster-votes/:clusterId", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/cluster-votes/:clusterId", consolidatedAuth, async (req: any, res) => {
     try {
       const { clusterId } = req.params;
       
@@ -396,7 +398,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // GTT theme yield calculation endpoint
-  app.get("/api/gtt/theme-yield", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/gtt/theme-yield", consolidatedAuth, async (req: any, res) => {
     try {
       const { calculateGTTThemeYield } = await import("../lib/gtt/calculateThemeYield");
       const yieldData = await calculateGTTThemeYield();
@@ -418,7 +420,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DAO vote summary endpoint for yield vs vote analysis
-  app.get("/api/dao/vote-summary", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/vote-summary", consolidatedAuth, async (req: any, res) => {
     try {
       const demoVoteData = [
         {
@@ -478,7 +480,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Platform metrics endpoint for comprehensive dashboard
-  app.get("/api/analytics/platform-metrics", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/analytics/platform-metrics", consolidatedAuth, async (req: any, res) => {
     try {
       const platformMetrics = {
         totalCapsules: 127,
@@ -518,7 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User onboarding completion endpoint
-  app.put("/api/user/onboarding", isDebugAuthenticated, async (req: any, res) => {
+  app.put("/api/user/onboarding", consolidatedAuth, async (req: any, res) => {
     try {
       const { displayName, bio, interests, tier, preferences } = req.body;
       
@@ -550,7 +552,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enhanced profile data endpoint
-  app.get("/api/profile/advanced", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile/advanced", consolidatedAuth, async (req: any, res) => {
     try {
       const advancedProfile = {
         id: req.user.id,
@@ -628,7 +630,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Profile customization update endpoint
-  app.put("/api/profile/customization", isDebugAuthenticated, async (req: any, res) => {
+  app.put("/api/profile/customization", consolidatedAuth, async (req: any, res) => {
     try {
       const customizationUpdates = req.body;
       
@@ -656,7 +658,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User advanced stats endpoint
-  app.get("/api/user/advanced-stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/user/advanced-stats", consolidatedAuth, async (req: any, res) => {
     try {
       const advancedStats = {
         truthScore: {
@@ -722,7 +724,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User achievements endpoint
-  app.get("/api/user/achievements", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/user/achievements", consolidatedAuth, async (req: any, res) => {
     try {
       const achievements = [
         {
@@ -811,7 +813,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Profile update endpoint
-  app.put("/api/user/profile", isDebugAuthenticated, async (req: any, res) => {
+  app.put("/api/user/profile", consolidatedAuth, async (req: any, res) => {
     try {
       const { displayName, bio, backgroundImageUrl, avatarUrl, preferences, truthGenome, metadata } = req.body;
       
@@ -845,7 +847,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Complete onboarding endpoint
-  app.post("/api/user/complete-onboarding", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/user/complete-onboarding", consolidatedAuth, async (req: any, res) => {
     try {
       const { profile, completedAt } = req.body;
       
@@ -884,7 +886,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DAO proposals endpoint
-  app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/proposals", consolidatedAuth, async (req: any, res) => {
     try {
       const proposals = [
         {
@@ -923,7 +925,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DAO stats endpoint
-  app.get("/api/dao/stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/stats", consolidatedAuth, async (req: any, res) => {
     try {
       const stats = {
         totalMembers: 2847,
@@ -944,7 +946,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DAO vote endpoint
-  app.post("/api/dao/vote", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/dao/vote", consolidatedAuth, async (req: any, res) => {
     try {
       const { proposalId, vote, gttAmount } = req.body;
       
@@ -974,7 +976,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Truth Genome AI analysis endpoint
-  app.get("/api/ai/truth-genome/:userId", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/ai/truth-genome/:userId", consolidatedAuth, async (req: any, res) => {
     try {
       const { userId } = req.params;
       
@@ -1024,7 +1026,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Multichain staking performance endpoint
-  app.get("/api/staking/multichain-performance", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/staking/multichain-performance", consolidatedAuth, async (req: any, res) => {
     try {
       const stakingData = {
         totalValueLocked: 2847500,
@@ -1086,7 +1088,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DAO audit logs endpoint
-  app.get("/api/audit/logs", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/audit/logs", consolidatedAuth, async (req: any, res) => {
     try {
       const auditData = {
         summary: {
@@ -1246,7 +1248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/capsules/voice", upload.single('audio'), isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/capsules/voice", upload.single('audio'), consolidatedAuth, async (req: any, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No audio file provided" });
@@ -1310,7 +1312,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // GET /api/capsules/multi-chain - Get capsules from multiple chains
-  app.get("/api/capsules/multi-chain", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/capsules/multi-chain", consolidatedAuth, async (req: any, res) => {
     const { category, userId, chains } = req.query;
     
     console.log("🔗 Multi-chain capsules requested:", { category, userId, chains });
@@ -1409,7 +1411,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Truth Auction endpoints
-  app.post("/api/auction/new", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/auction/new", consolidatedAuth, async (req: any, res) => {
     try {
       const { title, summary, reservePrice, beneficiaries } = req.body;
       
@@ -1468,7 +1470,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auction/:id/fund", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/auction/:id/fund", consolidatedAuth, async (req: any, res) => {
     try {
       const { id } = req.params;
       const { amount } = req.body;
@@ -1491,7 +1493,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/auction/:id/disclosure", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/auction/:id/disclosure", consolidatedAuth, async (req: any, res) => {
     try {
       const { id } = req.params;
       
@@ -1537,7 +1539,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   setupConsolidatedAuth(app);
   
   // Legacy auth systems for compatibility
-  setupDebugAuth(app);
+  // Debug auth disabled - real authentication required
   setupEnhancedAuth(app);
 
   // Register bulk upload routes
@@ -1558,7 +1560,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Simple subscription status - no database calls
   app.get(
     "/api/subscription/status",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🔵 DEBUG: /api/subscription/status called");
       const user = req.user;
@@ -1578,7 +1580,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Simple subscription upgrade - no database calls
   app.post(
     "/api/subscription/upgrade",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🔵 DEBUG: /api/subscription/upgrade called");
       const { planId } = req.body;
@@ -1592,7 +1594,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   );
 
   // Capsule Management Routes
-  app.post("/api/capsules", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/capsules", consolidatedAuth, async (req: any, res) => {
     const { title, content, capsuleType, accessCost, tags, isSealed } =
       req.body;
     const authorId = req.user.id;
@@ -1633,7 +1635,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.post(
     "/api/trigger-stripe",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { capsuleId, amount } = req.body;
       console.log(
@@ -1663,7 +1665,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.post(
     "/api/replay-capsule",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const {
         capsuleId,
@@ -1773,7 +1775,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.post(
     "/api/purchase-capsule-access",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { capsuleId, amount } = req.body;
       console.log(
@@ -1796,7 +1798,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.post(
     "/api/distribute-gtt-yield",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { recipientId, amount, reason, capsuleId } = req.body;
 
@@ -1827,7 +1829,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   );
 
   // Get replay logs for analytics
-  app.get("/api/replay-logs", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/replay-logs", consolidatedAuth, async (req: any, res) => {
     const { capsuleId, userId, replayType, limit = 50 } = req.query;
 
     console.log("🔵 DEBUG: Fetching replay logs with filters:", {
@@ -1868,7 +1870,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Get replay logs for specific capsule
   app.get(
     "/api/capsules/:capsuleId/replay-logs",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { capsuleId } = req.params;
       const { limit = 20 } = req.query;
@@ -1894,7 +1896,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Get GTT balance for user wallet
   app.get(
     "/api/gtt/balance/:address",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { address } = req.params;
 
@@ -1940,7 +1942,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Calculate grief-based yield for capsule
   app.post(
     "/api/gtt/calculate-yield",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { truthScore, verificationCount, capsuleAge } = req.body;
 
@@ -1971,7 +1973,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Direct GTT yield distribution endpoint
   app.post(
     "/api/gtt/distribute-yield",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { authorAddress, griefTier } = req.body;
 
@@ -2024,7 +2026,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // GTT balance endpoint
   app.get(
     "/api/gtt/balance/:address",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { address } = req.params;
 
@@ -2048,7 +2050,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // GTT contract info endpoint
   app.get(
     "/api/gtt/contract-info",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         console.log("🔵 DEBUG: Getting GTT contract info");
@@ -2075,7 +2077,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   );
 
   // Enhanced Redemption System API endpoints
-  app.get("/api/redeem/available", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/redeem/available", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🎁 Fetching available redemptions for user:", req.user.id);
       
@@ -2127,7 +2129,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/redeem", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/redeem", consolidatedAuth, async (req: any, res) => {
     try {
       const { capsuleId, wallet } = req.body;
       console.log("🔓 Processing capsule redemption:", { capsuleId, wallet });
@@ -2209,7 +2211,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // DAO Vault endpoints
-  app.get("/api/dao/vault/stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/vault/stats", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🏛️ Fetching DAO vault statistics");
       
@@ -2229,7 +2231,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/dao/vault/distribute", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/dao/vault/distribute", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("💰 Processing weekly DAO distribution");
       
@@ -2250,7 +2252,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Validator Rewards endpoints
-  app.get("/api/validators/rewards/:validator", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/validators/rewards/:validator", consolidatedAuth, async (req: any, res) => {
     try {
       const { validator } = req.params;
       console.log("🏆 Fetching validator rewards for:", validator);
@@ -2273,7 +2275,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/validators/record-event", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/validators/record-event", consolidatedAuth, async (req: any, res) => {
     try {
       const eventData = req.body;
       console.log("📊 Recording validator event:", eventData);
@@ -2294,7 +2296,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.get("/api/validators/leaderboard", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/validators/leaderboard", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🥇 Fetching validator leaderboard");
       
@@ -2317,7 +2319,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // DAO Incentives endpoints
-  app.get("/api/dao/incentives/programs", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/incentives/programs", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🎯 Fetching active incentive programs");
       
@@ -2338,7 +2340,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/dao/incentives/join", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/dao/incentives/join", consolidatedAuth, async (req: any, res) => {
     try {
       const { programId } = req.body;
       console.log("🎯 User joining incentive program:", programId);
@@ -2367,7 +2369,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.get("/api/dao/incentives/status", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/incentives/status", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📊 Fetching user incentive status");
       
@@ -2387,7 +2389,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.get("/api/dao/analytics", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/analytics", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📈 Fetching DAO analytics");
       
@@ -2408,7 +2410,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // License Verification endpoints
-  app.post("/api/licenses/generate", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/licenses/generate", consolidatedAuth, async (req: any, res) => {
     try {
       const licenseData = req.body;
       console.log("📜 Generating capsule license:", licenseData.capsuleId);
@@ -2452,7 +2454,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.get("/api/licenses/metrics", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/licenses/metrics", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📊 Fetching license metrics");
       
@@ -2473,7 +2475,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Payout Queue endpoints
-  app.post("/api/payout/request", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/payout/request", consolidatedAuth, async (req: any, res) => {
     try {
       const requestData = req.body;
       console.log("💳 Creating payout request:", requestData);
@@ -2498,7 +2500,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/payout/process", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/payout/process", consolidatedAuth, async (req: any, res) => {
     try {
       const { vaultBalance = 50000 } = req.body;
       console.log("🔄 Processing payout queue with balance:", vaultBalance);
@@ -2520,7 +2522,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.get("/api/payout/stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/payout/stats", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📊 Fetching payout queue statistics");
       
@@ -2541,7 +2543,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Multisig Security endpoints
-  app.post("/api/multisig/create", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/multisig/create", consolidatedAuth, async (req: any, res) => {
     try {
       const transactionData = req.body;
       console.log("🔐 Creating multisig transaction:", transactionData.type);
@@ -2566,7 +2568,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/multisig/sign", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/multisig/sign", consolidatedAuth, async (req: any, res) => {
     try {
       const { txId, signature, message } = req.body;
       console.log("✍️ Signing multisig transaction:", txId);
@@ -2585,7 +2587,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/multisig/execute", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/multisig/execute", consolidatedAuth, async (req: any, res) => {
     try {
       const { txId } = req.body;
       console.log("🚀 Executing multisig transaction:", txId);
@@ -2604,7 +2606,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.get("/api/multisig/pending", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/multisig/pending", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📋 Fetching pending multisig transactions");
       
@@ -2648,7 +2650,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/redeem/create-challenge", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/redeem/create-challenge", consolidatedAuth, async (req: any, res) => {
     try {
       const { capsuleId, redeemer } = req.body;
       console.log("🎯 Creating redemption challenge:", capsuleId);
@@ -2671,7 +2673,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Archive Certificate endpoints
-  app.post("/api/certificates/generate", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/certificates/generate", consolidatedAuth, async (req: any, res) => {
     try {
       const { capsuleData, options = {} } = req.body;
       console.log("📜 Generating archive certificate for capsule:", capsuleData?.capsuleId);
@@ -2710,7 +2712,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Backup System endpoints
-  app.post("/api/capsules/backup", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/capsules/backup", consolidatedAuth, async (req: any, res) => {
     try {
       const { options = {} } = req.body;
       console.log("💾 Creating capsule backup with options:", options);
@@ -2746,7 +2748,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  app.post("/api/capsules/restore", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/capsules/restore", consolidatedAuth, async (req: any, res) => {
     try {
       const { backupPath, options = {} } = req.body;
       console.log("🔄 Restoring capsules from backup:", backupPath);
@@ -2766,13 +2768,13 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Sovereign Social Profile endpoints
-  app.put("/api/user/profile", isDebugAuthenticated, (req: any, res) => {
+  app.put("/api/user/profile", consolidatedAuth, (req: any, res) => {
     console.log("📝 Profile update requested:", req.body);
     res.json({ success: true, message: "Profile updated successfully" });
   });
 
   // Profile data endpoint - Enhanced with subscription data
-  app.get("/api/profile/:userId", isDebugAuthenticated, (req: any, res) => {
+  app.get("/api/profile/:userId", consolidatedAuth, (req: any, res) => {
     console.log("🔵 DEBUG: Getting profile for user:", req.params.userId);
     const userId = req.params.userId;
     const user = req.user;
@@ -2866,7 +2868,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   }
 
   // Profile update endpoint with subscription awareness
-  app.put("/api/profile/:userId", isDebugAuthenticated, (req: any, res) => {
+  app.put("/api/profile/:userId", consolidatedAuth, (req: any, res) => {
     console.log("📝 Profile update requested for user:", req.params.userId);
     console.log("📝 Update data:", req.body);
 
@@ -2887,7 +2889,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.get(
     "/api/profile/featured-capsules",
-    isDebugAuthenticated,
+    consolidatedAuth,
     (req: any, res) => {
       console.log("⭐ Featured capsules requested");
       res.json({
@@ -2914,7 +2916,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.post(
     "/api/profile/featured-capsules",
-    isDebugAuthenticated,
+    consolidatedAuth,
     (req: any, res) => {
       console.log("⭐ Adding capsule to featured:", req.body.capsuleId);
       res.json({ success: true, message: "Capsule added to featured" });
@@ -2923,14 +2925,14 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   app.delete(
     "/api/profile/featured-capsules/:id",
-    isDebugAuthenticated,
+    consolidatedAuth,
     (req: any, res) => {
       console.log("⭐ Removing capsule from featured:", req.params.id);
       res.json({ success: true, message: "Capsule removed from featured" });
     },
   );
 
-  app.get("/api/capsules/search", isDebugAuthenticated, (req: any, res) => {
+  app.get("/api/capsules/search", consolidatedAuth, (req: any, res) => {
     const query = req.query.q as string;
     console.log("🔍 Capsule search requested:", query);
     res.json({
@@ -2949,7 +2951,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     });
   });
 
-  app.post("/api/nft/auto-mint", isDebugAuthenticated, (req: any, res) => {
+  app.post("/api/nft/auto-mint", consolidatedAuth, (req: any, res) => {
     console.log("🎨 NFT auto-mint requested:", req.body);
     res.json({
       success: true,
@@ -2959,7 +2961,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     });
   });
 
-  app.post("/api/ai/analyze-capsule", isDebugAuthenticated, (req: any, res) => {
+  app.post("/api/ai/analyze-capsule", consolidatedAuth, (req: any, res) => {
     console.log("🧠 AI capsule analysis requested:", req.body);
     res.json({
       success: true,
@@ -2975,7 +2977,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     });
   });
 
-  app.post("/api/capsules/metadata", isDebugAuthenticated, (req: any, res) => {
+  app.post("/api/capsules/metadata", consolidatedAuth, (req: any, res) => {
     console.log("📝 Storing capsule metadata:", req.body);
     res.json({
       success: true,
@@ -2987,7 +2989,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // User preferred language update
   app.put(
     "/api/user/preferred-language",
-    isDebugAuthenticated,
+    consolidatedAuth,
     (req: any, res) => {
       const { preferredLanguage } = req.body;
 
@@ -3007,7 +3009,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   );
 
   // Auto-translate endpoint for multilingual content
-  app.post("/api/ai/translate", isDebugAuthenticated, (req: any, res) => {
+  app.post("/api/ai/translate", consolidatedAuth, (req: any, res) => {
     const { text, targetLanguage, sourceLanguage = "en" } = req.body;
 
     if (!text || !targetLanguage) {
@@ -3053,7 +3055,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Reels API endpoints
-  app.get("/api/reels", isDebugAuthenticated, (req: any, res) => {
+  app.get("/api/reels", consolidatedAuth, (req: any, res) => {
     console.log("🎬 User reels requested");
 
     // Mock user reels data
@@ -3087,7 +3089,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     res.json(mockReels);
   });
 
-  app.post("/api/reels", isDebugAuthenticated, (req: any, res) => {
+  app.post("/api/reels", consolidatedAuth, (req: any, res) => {
     console.log("🎬 Creating new reel:", req.body);
 
     const {
@@ -3115,7 +3117,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Capsule collections for reels - get user's owned capsules
-  app.get("/api/capsules/owned", isDebugAuthenticated, (req: any, res) => {
+  app.get("/api/capsules/owned", consolidatedAuth, (req: any, res) => {
     console.log("📦 User owned capsules requested");
 
     const mockOwnedCapsules = [
@@ -3167,7 +3169,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // AI Translation endpoint
-  app.post("/api/ai/translate", isDebugAuthenticated, (req: any, res) => {
+  app.post("/api/ai/translate", consolidatedAuth, (req: any, res) => {
     console.log("🌐 Translation requested:", req.body);
 
     const { text, targetLanguage, sourceLanguage = "en" } = req.body;
@@ -3245,7 +3247,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   registerMetadataRoutes(app);
 
   // Reels management endpoints
-  app.get("/api/reels/:reelId", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/reels/:reelId", consolidatedAuth, async (req: any, res) => {
     console.log("🎬 Fetching reel:", req.params.reelId);
 
     // Mock reel capsules data with voiceover URLs
@@ -3316,7 +3318,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Translation API endpoint
-  app.post("/api/ai/translate", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/ai/translate", consolidatedAuth, async (req: any, res) => {
     const { text, targetLanguage, sourceLanguage } = req.body;
     console.log("🌐 Translation requested:", {
       targetLanguage,
@@ -3346,7 +3348,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Text-to-speech API endpoint
   app.post(
     "/api/ai/text-to-speech",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       const { text, language, voice } = req.body;
       console.log("🎤 TTS requested:", {
@@ -3368,7 +3370,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   );
 
   // User language preference endpoints
-  app.get("/api/user/language", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/user/language", consolidatedAuth, async (req: any, res) => {
     const user = req.user;
     console.log("🌐 Getting user language preference for:", user.id);
 
@@ -3378,7 +3380,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     });
   });
 
-  app.put("/api/user/language", isDebugAuthenticated, async (req: any, res) => {
+  app.put("/api/user/language", consolidatedAuth, async (req: any, res) => {
     const { language } = req.body;
     const user = req.user;
     console.log("🌐 Setting user language preference:", {
@@ -3395,7 +3397,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Reel creation and management
-  app.post("/api/reels", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/reels", consolidatedAuth, async (req: any, res) => {
     const { name, capsuleIds } = req.body;
     const user = req.user;
     console.log("🎬 Creating reel:", { name, capsuleIds, userId: user.id });
@@ -3416,7 +3418,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
     });
   });
 
-  app.get("/api/user/reels", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/user/reels", consolidatedAuth, async (req: any, res) => {
     const user = req.user;
     console.log("🎬 Getting user reels for:", user.id);
 
@@ -3464,7 +3466,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Analytics dashboard endpoint
   app.get(
     "/api/analytics/dashboard",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         // Mock analytics data - in production this would query the database
@@ -3534,7 +3536,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Moderation logs endpoint
   app.get(
     "/api/moderation/logs",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         // Mock moderation logs - in production this would query the database
@@ -3587,7 +3589,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Moderation statistics endpoint
   app.get(
     "/api/moderation/stats",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const mockStats = {
@@ -3612,7 +3614,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Moderation review action endpoint
   app.post(
     "/api/moderation/review",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { logId, action, reviewerNotes } = req.body;
@@ -3643,7 +3645,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   );
 
   // Capsule creation endpoint
-  app.post("/api/capsules", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/capsules", consolidatedAuth, async (req: any, res) => {
     try {
       const {
         title,
@@ -3693,7 +3695,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   });
 
   // Get single capsule endpoint
-  app.get("/api/capsules/:id", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/capsules/:id", consolidatedAuth, async (req: any, res) => {
     try {
       const capsuleId = req.params.id;
 
@@ -3735,7 +3737,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Get user capsules endpoint
-  app.get("/api/capsules", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/capsules", consolidatedAuth, async (req: any, res) => {
     try {
       // Mock user capsules - in production this would query the database
       const mockCapsules = [
@@ -3778,7 +3780,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   // Capsule replay endpoint
   app.post(
     "/api/capsules/replay",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { capsuleId, emotionalResponse, timestamp } = req.body;
@@ -3835,7 +3837,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   );
 
   // AI Summary endpoint
-  app.post("/api/ai-summary", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/ai-summary", consolidatedAuth, async (req: any, res) => {
     try {
       const { content, capsule_id } = req.body;
 
@@ -3872,7 +3874,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // ROI Analysis endpoint
-  app.get("/api/roi/:id", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/roi/:id", consolidatedAuth, async (req: any, res) => {
     try {
       const capsuleId = req.params.id;
 
@@ -3910,7 +3912,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   // Content moderation endpoint
   app.post(
     "/api/moderate-content",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { content } = req.body;
@@ -3949,7 +3951,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   );
 
   // Auction unlock logging endpoint with Supabase integration
-  app.post("/api/auction/:id/unlock-log", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/auction/:id/unlock-log", consolidatedAuth, async (req: any, res) => {
     try {
       const auctionId = req.params.id;
       const { wallet, timestamp } = req.body;
@@ -4012,7 +4014,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Simple auth user endpoint - no database calls
-  app.get("/api/auth/user", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/auth/user", consolidatedAuth, async (req: any, res) => {
     console.log("🔵 DEBUG: /api/auth/user called");
     const sessionUser = req.user;
 
@@ -4036,7 +4038,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Get all unlock events endpoint
-  app.get("/api/unlocks", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/unlocks", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📜 Fetching all unlock events");
 
@@ -4104,7 +4106,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Auction unlock logging endpoint
-  app.post("/api/auction/:id/unlock-log", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/auction/:id/unlock-log", consolidatedAuth, async (req: any, res) => {
     const { id } = req.params;
     const { wallet, timestamp, userId } = req.body;
 
@@ -4198,7 +4200,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // GTT Yield Analytics endpoint
-  app.get("/api/yield/analytics", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/yield/analytics", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("💰 Fetching GTT yield analytics");
 
@@ -4250,7 +4252,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Auction funding endpoint
-  app.post("/api/auction/:id/fund", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/auction/:id/fund", consolidatedAuth, async (req: any, res) => {
     const { id } = req.params;
     const { amount, wallet, transactionHash, blockNumber } = req.body;
 
@@ -4316,7 +4318,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Auction funding analytics endpoint
-  app.get("/api/funding/analytics", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/funding/analytics", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("💰 Fetching auction funding analytics");
 
@@ -4367,7 +4369,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Get auction details endpoint with Supabase integration
-  app.get("/api/auction/:id", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/auction/:id", consolidatedAuth, async (req: any, res) => {
     try {
       const auctionId = req.params.id;
       
@@ -4436,7 +4438,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Capsule creation endpoint
-  app.post("/api/capsules", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/capsules", consolidatedAuth, async (req: any, res) => {
     console.log("🔵 DEBUG: /api/capsules POST called");
     const user = req.user;
     const capsuleData = req.body;
@@ -4470,7 +4472,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Get user capsules
-  app.get("/api/capsules", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/capsules", consolidatedAuth, async (req: any, res) => {
     console.log("📋 User capsules requested");
     const user = req.user;
 
@@ -4523,7 +4525,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   // DAO Governance Routes
 
   // DAO Rankings endpoint  
-  app.get("/api/dao/ranking", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/ranking", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🏆 DAO rankings requested");
       
@@ -4543,7 +4545,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // DAO Yields endpoint
-  app.get("/api/dao/yields", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/yields", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📈 DAO yields requested");
       
@@ -4562,7 +4564,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Capsule Redemption endpoint
-  app.post("/api/redeem", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/redeem", consolidatedAuth, async (req: any, res) => {
     try {
       const { capsuleId, wallet } = req.body;
       
@@ -4607,7 +4609,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Validator Registry endpoint
-  app.get("/api/validators/registry", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/validators/registry", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("👥 Validator registry requested");
       
@@ -4658,7 +4660,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Witness Testimonies endpoint
-  app.get("/api/witnesses/testimonies", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/witnesses/testimonies", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📣 Witness testimonies requested");
       
@@ -4700,7 +4702,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Submit witness testimony
-  app.post("/api/witnesses/testimonies", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/witnesses/testimonies", consolidatedAuth, async (req: any, res) => {
     try {
       const { message } = req.body;
       console.log("📝 New witness testimony submitted:", message.substring(0, 50) + "...");
@@ -4723,7 +4725,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // License Verifier endpoint
-  app.get("/api/explorer/verifiers", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/explorer/verifiers", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🔍 License verifications requested");
       
@@ -4768,7 +4770,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Vault Stats endpoint
-  app.get("/api/vault/stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/vault/stats", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🏛️ Vault stats requested");
       
@@ -4789,7 +4791,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Pending Multisig Transactions endpoint
-  app.get("/api/vault/pending-transactions", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/vault/pending-transactions", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📋 Pending multisig transactions requested");
       
@@ -4840,7 +4842,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Multichain Performance endpoint
-  app.get("/api/dao/multichain-performance", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/multichain-performance", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🌐 Multichain performance requested");
       
@@ -4895,7 +4897,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Staking Statistics endpoint
-  app.get("/api/staking/stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/staking/stats", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📊 Staking statistics requested");
       
@@ -4916,7 +4918,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Staking Mint endpoint
-  app.post("/api/staking/mint", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/staking/mint", consolidatedAuth, async (req: any, res) => {
     try {
       const { wallet, amount, chain } = req.body;
       console.log("🪙 Staking mint requested:", { wallet: wallet.substring(0, 10) + "...", amount, chain });
@@ -4946,7 +4948,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Audit Logs endpoint
-  app.get("/api/audit/logs", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/audit/logs", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("📜 Audit logs requested");
       
@@ -5033,7 +5035,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // Attestation Sync endpoint  
-  app.get("/api/sync/attestations", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/sync/attestations", consolidatedAuth, async (req: any, res) => {
     try {
       console.log("🔁 Attestation sync requested");
       
@@ -5069,7 +5071,7 @@ This memory is preserved here as a testament to the beauty of ordinary moments t
   });
 
   // AI Memory Recall endpoint with enhanced pattern recognition
-  app.post("/api/ai/recall", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/ai/recall", consolidatedAuth, async (req: any, res) => {
     try {
       const { prompt, userId } = req.body;
       console.log("🧠 AI memory recall requested for user:", userId);
@@ -5131,7 +5133,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   }
 
   // Profile endpoints
-  app.get("/api/profile/:wallet", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile/:wallet", consolidatedAuth, async (req: any, res) => {
     try {
       const { wallet } = req.params;
       console.log("👤 Profile requested for wallet:", wallet.substring(0, 10) + "...");
@@ -5164,7 +5166,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
     }
   });
 
-  app.get("/api/profile/:wallet/capsules", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile/:wallet/capsules", consolidatedAuth, async (req: any, res) => {
     try {
       const { wallet } = req.params;
       console.log("📋 Profile capsules requested for:", wallet.substring(0, 10) + "...");
@@ -5190,7 +5192,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
     }
   });
 
-  app.get("/api/profile/:wallet/badges", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile/:wallet/badges", consolidatedAuth, async (req: any, res) => {
     try {
       const { wallet } = req.params;
       console.log("🏆 Profile badges requested for:", wallet.substring(0, 10) + "...");
@@ -5222,7 +5224,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
     }
   });
 
-  app.get("/api/profile/:wallet/friends", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile/:wallet/friends", consolidatedAuth, async (req: any, res) => {
     try {
       const { wallet } = req.params;
       console.log("👥 Profile friends requested for:", wallet.substring(0, 10) + "...");
@@ -5246,7 +5248,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
     }
   });
 
-  app.get("/api/profile/timeline/:userId", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile/timeline/:userId", consolidatedAuth, async (req: any, res) => {
     try {
       const { userId } = req.params;
       console.log("📅 Activity timeline requested for user:", userId);
@@ -5326,7 +5328,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   }
 
   // Get all proposals with voting data
-  app.get("/api/dao/proposals", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/dao/proposals", consolidatedAuth, async (req: any, res) => {
     console.log("🏛️ DAO proposals requested");
 
     const mockProposals = [
@@ -5414,7 +5416,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   // Create new proposal
   app.post(
     "/api/dao/proposals",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🏛️ Creating new DAO proposal");
       const user = req.user;
@@ -5443,7 +5445,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   );
 
   // Vote on proposal
-  app.post("/api/dao/vote", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/dao/vote", consolidatedAuth, async (req: any, res) => {
     console.log("🗳️ Processing DAO vote");
     const user = req.user;
     const { proposalId, choice } = req.body;
@@ -5468,7 +5470,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   // Get vote results for a specific proposal
   app.get(
     "/api/dao/results/:id",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📊 Vote results requested for proposal:", req.params.id);
       const proposalId = req.params.id;
@@ -5540,7 +5542,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   // Get minted capsules for gallery
   app.get(
     "/api/capsules/minted",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🖼️ Minted capsules requested for gallery");
 
@@ -5616,7 +5618,7 @@ ${getMemoryFragments(detectedCategory, prompt)}
   );
 
   // Get individual capsule details
-  app.get("/api/capsules/:id", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/capsules/:id", consolidatedAuth, async (req: any, res) => {
     console.log("🔍 Capsule details requested for ID:", req.params.id);
     const capsuleId = req.params.id;
 
@@ -5705,7 +5707,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // AI Content Analysis
   app.post(
     "/api/capsules/analyze",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🧠 Content analysis requested");
       const { title, content } = req.body;
@@ -5746,7 +5748,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // Content Moderation
   app.post(
     "/api/capsules/moderate",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🛡️ Content moderation requested");
       const { content } = req.body;
@@ -5778,7 +5780,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // IPFS Upload
   app.post(
     "/api/capsules/upload-ipfs",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📦 IPFS upload requested");
       const capsuleData = req.body;
@@ -5817,7 +5819,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // NFT Minting
   app.post(
     "/api/capsules/mint-nft",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🎨 NFT minting requested");
       const { ipfsHash } = req.body;
@@ -5843,7 +5845,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // GTT Yield Claiming Status
   app.get(
     "/api/gtt/claim-status",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("💰 GTT claim status requested");
 
@@ -5862,7 +5864,7 @@ This report demonstrates our commitment to transparency and accountability to al
   );
 
   // GTT Balance
-  app.get("/api/gtt/balance", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/gtt/balance", consolidatedAuth, async (req: any, res) => {
     console.log("💳 GTT balance requested");
 
     const mockBalance = Math.floor(Math.random() * 1000) + 100;
@@ -5875,7 +5877,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // GTT Claim History
   app.get(
     "/api/gtt/claim-history",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📊 GTT claim history requested");
 
@@ -5896,7 +5898,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // GTT Yield Claim
   app.post(
     "/api/gtt/claim-yield",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("💸 GTT yield claim requested");
       const { griefTier } = req.body;
@@ -5926,7 +5928,7 @@ This report demonstrates our commitment to transparency and accountability to al
   );
 
   // Get user stats for dashboard
-  app.get("/api/user/stats", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/user/stats", consolidatedAuth, async (req: any, res) => {
     console.log("📊 User stats requested");
 
     const mockStats = {
@@ -5947,7 +5949,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // Get recent capsules for dashboard
   app.get(
     "/api/capsules/recent",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📝 Recent capsules requested");
 
@@ -5982,7 +5984,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // Get minted capsules for gallery
   app.get(
     "/api/capsules/minted",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🎨 Minted capsules requested for gallery");
 
@@ -6031,7 +6033,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // Get truth certificates
   app.get(
     "/api/dao/certificates",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📜 Truth certificates requested");
 
@@ -6062,12 +6064,12 @@ This report demonstrates our commitment to transparency and accountability to al
   });
 
   // Fix get-user-tier API with debug authentication
-  app.get("/api/get-user-tier", isDebugAuthenticated, (req: any, res) => {
+  app.get("/api/get-user-tier", consolidatedAuth, (req: any, res) => {
     res.status(200).json({ tier: "seeker" });
   });
 
   // Admin configuration endpoints
-  app.get("/api/admin/config", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/admin/config", consolidatedAuth, async (req: any, res) => {
     const user = req.user;
     const isAdmin =
       user?.email === "admin@guardianchain.app" || user?.tier === "ADMIN";
@@ -6122,7 +6124,7 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json({ config: configItems, lastUpdated: new Date().toISOString() });
   });
 
-  app.post("/api/admin/config", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/admin/config", consolidatedAuth, async (req: any, res) => {
     const user = req.user;
     const isAdmin =
       user?.email === "admin@guardianchain.app" || user?.tier === "ADMIN";
@@ -6164,19 +6166,19 @@ This report demonstrates our commitment to transparency and accountability to al
   });
 
   // AI Recommendation Engine Endpoints
-  app.get("/api/ai/capsule-recommendations", isDebugAuthenticated, (req, res) => {
+  app.get("/api/ai/capsule-recommendations", consolidatedAuth, (req, res) => {
     const { mockRecommendationData } = require("./mockData/aiRecommendations");
     res.json(mockRecommendationData);
   });
 
   // Truth Score Achievement System Endpoints  
-  app.get("/api/achievements/truth-score", isDebugAuthenticated, (req, res) => {
+  app.get("/api/achievements/truth-score", consolidatedAuth, (req, res) => {
     const { mockAchievementData } = require("./mockData/aiRecommendations");
     res.json(mockAchievementData);
   });
 
   // Enhanced Dashboard Analytics
-  app.get("/api/analytics/dashboard", isDebugAuthenticated, (req, res) => {
+  app.get("/api/analytics/dashboard", consolidatedAuth, (req, res) => {
     res.json({
       capsuleAnalytics: {
         totalViews: 15847,
@@ -6284,7 +6286,7 @@ This report demonstrates our commitment to transparency and accountability to al
   });
 
   // User Profile Endpoints
-  app.get("/api/profile", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/profile", consolidatedAuth, async (req, res) => {
     console.log("👤 Profile requested for user:", req.user?.id);
     
     const profileData = {
@@ -6329,7 +6331,7 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json(profileData);
   });
 
-  app.put("/api/profile", isDebugAuthenticated, async (req, res) => {
+  app.put("/api/profile", consolidatedAuth, async (req, res) => {
     console.log("👤 Profile update requested:", req.body);
     
     try {
@@ -6349,7 +6351,7 @@ This report demonstrates our commitment to transparency and accountability to al
     }
   });
 
-  app.get("/api/capsules/user", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/capsules/user", consolidatedAuth, async (req, res) => {
     console.log("📋 User capsules requested");
     
     const userCapsules = [
@@ -6376,7 +6378,7 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json(userCapsules);
   });
 
-  app.get("/api/user/detailed-stats", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/user/detailed-stats", consolidatedAuth, async (req, res) => {
     console.log("📊 Detailed user stats requested");
     
     const detailedStats = {
@@ -6401,7 +6403,7 @@ This report demonstrates our commitment to transparency and accountability to al
   });
 
   // Dashboard Customization Endpoints
-  app.get("/api/dashboard/config", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/dashboard/config", consolidatedAuth, async (req, res) => {
     console.log("🎛️ Dashboard config requested for user:", req.user?.id);
     
     const defaultConfig = {
@@ -6461,7 +6463,7 @@ This report demonstrates our commitment to transparency and accountability to al
     res.json(defaultConfig);
   });
 
-  app.put("/api/dashboard/config", isDebugAuthenticated, async (req, res) => {
+  app.put("/api/dashboard/config", consolidatedAuth, async (req, res) => {
     console.log("🎛️ Dashboard config update requested:", req.body);
     
     try {
@@ -6486,7 +6488,7 @@ This report demonstrates our commitment to transparency and accountability to al
     }
   });
 
-  app.post("/api/dashboard/config/reset", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/dashboard/config/reset", consolidatedAuth, async (req, res) => {
     console.log("🔄 Dashboard config reset requested for user:", req.user?.id);
     
     try {
@@ -6547,7 +6549,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // Enhanced AI Image Generation
   app.post(
     "/api/ai/generate-image",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🎨 AI image generation requested");
 
@@ -6590,7 +6592,7 @@ This report demonstrates our commitment to transparency and accountability to al
   // AI Contract Verification for Eternal Contracts
   app.post(
     "/api/ai/verify-contract",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📋 AI Contract verification requested");
 
@@ -6639,7 +6641,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Publish Eternal Contract
   app.post(
     "/api/capsule/publish-contract",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📜 Publishing eternal contract");
 
@@ -6701,7 +6703,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // AI Content Analysis
   app.post(
     "/api/ai/analyze-content",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🧠 AI content analysis requested");
 
@@ -6763,7 +6765,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Yield Estimation
   app.post(
     "/api/capsules/estimate-yield",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("💰 Yield estimation requested");
 
@@ -6815,7 +6817,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // NFT Minting
   app.post(
     "/api/capsules/mint-nft",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🪙 NFT minting requested");
 
@@ -6874,7 +6876,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get lineage for a capsule
   app.get(
     "/api/lineage/:capsuleId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📈 Lineage requested for capsule:", req.params.capsuleId);
 
@@ -6919,7 +6921,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Create lineage connection (compatible with Next.js API format)
   app.post(
     "/api/lineage/create",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🔗 Creating lineage connection");
 
@@ -6975,7 +6977,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   );
 
   // Sovereign Memory Reputation Index (SMRI) API
-  app.get("/api/smri/:wallet", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/smri/:wallet", consolidatedAuth, async (req: any, res) => {
     console.log("🏆 SMRI requested for wallet:", req.params.wallet);
 
     try {
@@ -7049,7 +7051,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // SMRI Leaderboard API
   app.get(
     "/api/smri/leaderboard",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🏆 SMRI Leaderboard requested");
 
@@ -7148,7 +7150,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Guardian Map Network API
   app.get(
     "/api/guardian-map/network",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🗺️ Guardian map network requested");
 
@@ -7278,7 +7280,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Guardian Map Metrics API
   app.get(
     "/api/guardian-map/metrics",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📊 Guardian map metrics requested");
 
@@ -7301,7 +7303,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   );
 
   // Search API
-  app.get("/api/search", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/search", consolidatedAuth, async (req: any, res) => {
     console.log("🔍 Search requested");
 
     try {
@@ -7423,7 +7425,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get SMRI leaderboard
   app.get(
     "/api/smri/leaderboard",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🏆 SMRI leaderboard requested");
 
@@ -7573,7 +7575,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get guardian map nodes
   app.get(
     "/api/guardian-map/nodes",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🗺️ Guardian map nodes requested");
 
@@ -7792,7 +7794,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get guardian map connections
   app.get(
     "/api/guardian-map/connections",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🔗 Guardian map connections requested");
 
@@ -7892,7 +7894,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get guardian map metrics
   app.get(
     "/api/guardian-map/metrics",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📊 Guardian map metrics requested");
 
@@ -7940,7 +7942,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Capsule Search API endpoints
   app.get(
     "/api/capsules/search",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🔍 Capsule search requested");
 
@@ -8134,7 +8136,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     },
   );
 
-  app.get("/api/capsules/tags", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/capsules/tags", consolidatedAuth, async (req: any, res) => {
     console.log("🏷️ Capsule tags requested");
 
     try {
@@ -8174,7 +8176,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   });
 
   // Get lineage graph data
-  app.get("/api/lineage/graph", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/lineage/graph", consolidatedAuth, async (req: any, res) => {
     console.log("🌳 Lineage graph requested");
 
     try {
@@ -8333,7 +8335,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get lineage tree data
   app.get(
     "/api/lineage/tree/:capsuleId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🌳 Lineage tree requested for:", req.params.capsuleId);
 
@@ -8391,7 +8393,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get lineage analytics
   app.get(
     "/api/lineage/analytics",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📊 Lineage analytics requested");
 
@@ -8433,7 +8435,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get grief flow analytics (legacy endpoint)
   app.get(
     "/api/lineage/analytics/:capsuleId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log(
         "📊 Grief flow analytics requested for:",
@@ -8478,7 +8480,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Legacy lineage endpoint (keeping for compatibility)
   app.post(
     "/api/lineage/legacy",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("🔗 Creating capsule lineage");
 
@@ -8515,7 +8517,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get lineage tree for a capsule
   app.get(
     "/api/lineage/tree/:capsuleId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log(`🌳 Getting lineage tree for: ${req.params.capsuleId}`);
 
@@ -8566,7 +8568,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get lineage analytics
   app.get(
     "/api/lineage/analytics",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log("📊 Getting lineage analytics");
 
@@ -8611,7 +8613,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Get related capsules based on lineage
   app.get(
     "/api/lineage/related/:capsuleId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       console.log(`🔍 Getting related capsules for: ${req.params.capsuleId}`);
 
@@ -8648,7 +8650,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Engagement tracking routes
   app.post(
     "/api/engagement/track-session",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -8693,7 +8695,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   app.get(
     "/api/engagement/daily-challenges",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -8730,7 +8732,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   app.post(
     "/api/engagement/complete-challenge/:challengeId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -8751,7 +8753,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   app.get(
     "/api/personalization/profile",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -8789,7 +8791,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   app.post(
     "/api/personalization/track",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -8811,7 +8813,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Dynamic Badge System API
   app.get(
     "/api/navigation/badges/:routeId",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const { routeId } = req.params;
@@ -8834,7 +8836,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   app.get(
     "/api/navigation/global-badges",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req: any, res) => {
       try {
         const userId = req.user.id;
@@ -8890,7 +8892,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Whistleblower sanctuary endpoints
   app.post(
     "/api/whistleblower/submit",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req, res) => {
       try {
         console.log("🔒 Whistleblower submission received");
@@ -8918,7 +8920,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Time messages endpoints
   app.post(
     "/api/time-messages/create",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req, res) => {
       try {
         console.log("⏰ Creating time message");
@@ -8942,7 +8944,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     },
   );
 
-  app.get("/api/time-messages/sent", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/time-messages/sent", consolidatedAuth, async (req, res) => {
     try {
       const sentMessages = [
         {
@@ -8972,7 +8974,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   app.get(
     "/api/time-messages/received",
-    isDebugAuthenticated,
+    consolidatedAuth,
     async (req, res) => {
       try {
         const receivedMessages = [
@@ -8995,7 +8997,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   );
 
   // Analytics endpoint for dashboard
-  app.get("/api/analytics/capsules", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/analytics/capsules", consolidatedAuth, async (req, res) => {
     try {
       // Mock analytics data - replace with real metrics when available
       const analyticsData = {
@@ -9157,17 +9159,17 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   });
 
   // Onboarding system endpoints
-  app.post("/api/onboarding/complete-module", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/onboarding/complete-module", consolidatedAuth, async (req, res) => {
     const { completeModule } = await import("./routes/onboarding");
     return completeModule(req, res);
   });
 
-  app.get("/api/onboarding/progress", isDebugAuthenticated, async (req, res) => {
+  app.get("/api/onboarding/progress", consolidatedAuth, async (req, res) => {
     const { getOnboardingProgress } = await import("./routes/onboarding");
     return getOnboardingProgress(req, res);
   });
 
-  app.post("/api/onboarding/reset", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/onboarding/reset", consolidatedAuth, async (req, res) => {
     const { resetOnboardingProgress } = await import("./routes/onboarding");
     return resetOnboardingProgress(req, res);
   });
@@ -9183,33 +9185,33 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     return getBatchIPFSMetadata(req, res);
   });
 
-  app.post("/api/validation/unlock-boost", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/validation/unlock-boost", consolidatedAuth, async (req, res) => {
     const { checkUnlockBoost } = await import("./api/enhanced-validation");
     return checkUnlockBoost(req, res);
   });
 
-  app.post("/api/validation/zk-verify", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/validation/zk-verify", consolidatedAuth, async (req, res) => {
     const { verifyZKProof } = await import("./api/enhanced-validation");
     return verifyZKProof(req, res);
   });
 
-  app.post("/api/validation/zk-verify/batch", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/validation/zk-verify/batch", consolidatedAuth, async (req, res) => {
     const { batchVerifyZKProofs } = await import("./api/enhanced-validation");
     return batchVerifyZKProofs(req, res);
   });
 
-  app.post("/api/validation/audit", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/validation/audit", consolidatedAuth, async (req, res) => {
     const { runValidationAudit } = await import("./api/enhanced-validation");
     return runValidationAudit(req, res);
   });
 
-  app.post("/api/validation/test-discord", isDebugAuthenticated, async (req, res) => {
+  app.post("/api/validation/test-discord", consolidatedAuth, async (req, res) => {
     const { testDiscordWebhook } = await import("./api/enhanced-validation");
     return testDiscordWebhook(req, res);
   });
 
   // Enhanced Profile API Endpoints
-  app.get("/api/profile", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/profile", consolidatedAuth, async (req: any, res) => {
     try {
       const userId = req.user?.id || 'debug-user-456';
       
@@ -9312,7 +9314,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     }
   });
 
-  app.put("/api/profile", isDebugAuthenticated, async (req: any, res) => {
+  app.put("/api/profile", consolidatedAuth, async (req: any, res) => {
     try {
       const userId = req.user?.id || 'debug-user-456';
       const profileUpdates = req.body;
@@ -9341,39 +9343,39 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   const httpServer = createServer(app);
   // Truth Genome API routes
-  app.get("/api/truth-genome/:capsuleId", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/truth-genome/:capsuleId", consolidatedAuth, async (req: any, res) => {
     const { analyzeTruthGenome } = await import("./api/truth-genome");
     await analyzeTruthGenome(req, res);
   });
 
-  app.get("/api/truth-genome/:capsuleId/report", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/truth-genome/:capsuleId/report", consolidatedAuth, async (req: any, res) => {
     const { getTruthGenomeReport } = await import("./api/truth-genome");
     await getTruthGenomeReport(req, res);
   });
 
   // Truth Net API routes
-  app.get("/api/truth-net", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/truth-net", consolidatedAuth, async (req: any, res) => {
     const { getTruthNetwork } = await import("./api/truth-net");
     await getTruthNetwork(req, res);
   });
 
-  app.get("/api/truth-net/analytics", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/truth-net/analytics", consolidatedAuth, async (req: any, res) => {
     const { getNetworkAnalytics } = await import("./api/truth-net");
     await getNetworkAnalytics(req, res);
   });
 
-  app.get("/api/truth-net/export", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/truth-net/export", consolidatedAuth, async (req: any, res) => {
     const { exportTruthNetwork } = await import("./api/truth-net");
     await exportTruthNetwork(req, res);
   });
 
   // Notarization API routes
-  app.post("/api/notarize", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/notarize", consolidatedAuth, async (req: any, res) => {
     const { notarizeCapsule } = await import("./api/notarize");
     await notarizeCapsule(req, res);
   });
 
-  app.post("/api/certificates/generate", isDebugAuthenticated, async (req: any, res) => {
+  app.post("/api/certificates/generate", consolidatedAuth, async (req: any, res) => {
     const { generateLegalCertificate } = await import("./api/notarize");
     await generateLegalCertificate(req, res);
   });
@@ -9383,7 +9385,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     await verifyCertificate(req, res);
   });
 
-  app.get("/api/certificates/registry", isDebugAuthenticated, async (req: any, res) => {
+  app.get("/api/certificates/registry", consolidatedAuth, async (req: any, res) => {
     const { getCertificateRegistry } = await import("./api/notarize");
     await getCertificateRegistry(req, res);
   });

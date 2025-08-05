@@ -24,6 +24,11 @@ import { MascotProvider } from "./components/mascot/MascotProvider";
 import { HelpProvider } from "@/components/help/HelpProvider";
 import OnboardingProvider from "./components/onboarding/OnboardingProvider";
 
+// Direct import auth pages to avoid suspension issues
+import Signup from "@/pages/auth/Signup";
+import Login from "@/pages/auth/Login";
+import SimpleLanding from "@/pages/SimpleLanding";
+
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
@@ -75,26 +80,20 @@ function Router() {
   // Show loading state while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-gradient-to-br from-hsl(218,54%,9%) via-hsl(220,39%,11%) to-hsl(222,47%,11%) flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
-  // Show landing page for unauthenticated users
+  // Show authentication pages for unauthenticated users
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={EliteHomepage} />
-        <Route path="/onboarding" component={NewUserOnboarding} />
-        <Route path="/login" component={EliteHomepage} />
-        <Route path="/elite" component={EliteHomepage} />
-        <Route path="/explorer" component={Explorer} />
+        <Route path="/auth/signup" component={Signup} />
+        <Route path="/auth/login" component={Login} />
         <Route path="/terms" component={Terms} />
-        <Route path="/start" component={Start} />
-        <Route path="/pricing" component={Pricing} />
-        <Route path="/subscribe/:tier" component={Subscribe} />
-        <Route component={EliteHomepage} />
+        <Route path="*" component={SimpleLanding} />
       </Switch>
     );
   }
@@ -200,7 +199,6 @@ export default function App() {
                     <AssetProvider>
                       <TooltipProvider>
                         <NotificationProvider>
-                          <GuardianBootHook />
                           <main className="flex-1">
                             <Router />
                             <PWAInstallPrompt />
