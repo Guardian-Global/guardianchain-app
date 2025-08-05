@@ -1,0 +1,96 @@
+🎶 Mint Playlist as NFT
+1. Smart Contract (ERC-721 or ERC-1155)
+Use an existing CapsulePlaylistNFT.sol or extend your CapsuleNFT contract:
+
+solidity
+Copy
+Edit
+function mintPlaylistNFT(address to, string memory uri) public returns (uint256) {
+    uint256 tokenId = _tokenIdCounter.current();
+    _mint(to, tokenId);
+    _setTokenURI(tokenId, uri);
+    _tokenIdCounter.increment();
+    return tokenId;
+}
+2. API Route /api/playlist/mint
+ts
+Copy
+Edit
+POST /api/playlist/mint
+{
+  playlistId,
+  userWallet,
+  metadata: { name, description, image, capsules }
+}
+Connect with thirdweb, alchemy-sdk, or your custom mint logic.
+
+3. Frontend Button
+tsx
+Copy
+Edit
+<button onClick={handleMint} className="bg-gradient-to-r from-purple-700 to-pink-500 text-white p-2 rounded">
+  🎶 Mint Playlist as NFT
+</button>
+🏆 Reaction Leaderboard
+Supabase View
+sql
+Copy
+Edit
+create view capsule_reaction_leaderboard as
+select
+  capsule_id,
+  count(*) as total_reactions
+from capsule_reactions
+group by capsule_id
+order by total_reactions desc;
+Leaderboard UI Component
+tsx
+Copy
+Edit
+export default function ReactionLeaderboard() {
+  const { data } = useSWR('/api/leaderboard/reactions', fetcher);
+
+  return (
+    <div className="p-4 bg-black text-white">
+      <h2 className="text-2xl mb-4">🔥 Reaction Leaderboard</h2>
+      {data?.map((item, i) => (
+        <div key={i} className="flex justify-between py-2">
+          <span>#{i + 1} Capsule {item.capsule_id.slice(0, 6)}...</span>
+          <span>{item.total_reactions} 💬</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+🎨 Capsule AI Remixer
+Let users remix capsule content with AI for new visual/audio versions.
+
+1. Upload & Trigger AI
+ts
+Copy
+Edit
+POST /api/capsule/remix
+{
+  capsuleId,
+  style: "cyberpunk" | "oil-painting" | "vaporwave"
+}
+2. AI API (e.g., Replicate or Stability)
+ts
+Copy
+Edit
+const remix = await replicate.run("stability-ai/stable-diffusion", {
+  input: {
+    image: capsuleMediaUrl,
+    prompt: `Reimagine this in ${style} style`
+  }
+});
+3. UI Example
+tsx
+Copy
+Edit
+<button
+  onClick={() => remixCapsule("cyberpunk")}
+  className="bg-cyan-600 text-white px-4 py-2 rounded"
+>
+  🌀 Remix Capsule (Cyberpunk)
+</button>

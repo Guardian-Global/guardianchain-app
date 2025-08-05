@@ -73,6 +73,7 @@ const CapsuleAnalyticsPage = lazy(() => import("./pages/CapsuleAnalyticsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const EnhancementDemo = lazy(() => import("./pages/EnhancementDemo"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
@@ -184,8 +185,7 @@ function Router() {
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/capsule/:id/analytics" component={CapsuleAnalyticsPage} />
               <Route path="/analytics-demo" component={CapsuleAnalyticsDemo} />
-              <Route path="/dao" component={DAO} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/enhancement-demo" component={EnhancementDemo} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

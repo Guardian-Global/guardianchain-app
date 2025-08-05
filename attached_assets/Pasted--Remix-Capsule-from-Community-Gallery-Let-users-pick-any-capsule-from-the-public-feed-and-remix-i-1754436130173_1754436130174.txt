@@ -1,0 +1,94 @@
+🖼️ Remix Capsule from Community Gallery
+Let users pick any capsule from the public feed and remix it instantly.
+
+1. Enable Remix Button on CapsuleCard
+tsx
+Copy
+Edit
+<CapsuleCard capsule={capsule}>
+  <button
+    className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded px-2 py-1 mt-2"
+    onClick={() => router.push(`/capsule/remix/${capsule.id}`)}
+  >
+    🎨 Remix Capsule
+  </button>
+</CapsuleCard>
+🏆 Capsule Remix Contest Mode
+Enable a “Contest Week” feature where all remixes are entered into a leaderboard.
+
+1. Supabase Table
+sql
+Copy
+Edit
+create table if not exists remix_contests (
+  id uuid primary key default gen_random_uuid(),
+  name text,
+  description text,
+  start_time timestamptz,
+  end_time timestamptz,
+  is_active boolean default true
+);
+
+create table if not exists remix_contest_entries (
+  id uuid primary key default gen_random_uuid(),
+  remix_id uuid references capsule_remixes(id),
+  contest_id uuid references remix_contests(id),
+  votes int default 0
+);
+2. API: Submit Entry
+ts
+Copy
+Edit
+POST /api/remix/contest/submit
+{
+  remixId,
+  contestId
+}
+3. UI Example
+tsx
+Copy
+Edit
+<button
+  onClick={() => submitRemixToContest(remix.id, activeContest.id)}
+  className="bg-rose-600 text-white px-4 py-2 mt-3 rounded"
+>
+  🚀 Submit to Remix Contest
+</button>
+📊 Remix Voting & Leaderboard
+1. API: Vote Endpoint
+ts
+Copy
+Edit
+POST /api/remix/contest/vote
+{
+  remixId,
+  userId
+}
+(Secure this with user auth + voting limits)
+
+2. Leaderboard View
+tsx
+Copy
+Edit
+function RemixLeaderboard({ contestId }) {
+  const { data } = useSWR(`/api/remix/contest/leaderboard?contestId=${contestId}`, fetcher);
+
+  return (
+    <div className="p-4 bg-black rounded-lg text-white">
+      <h3 className="text-xl mb-2">🏆 Remix Leaderboard</h3>
+      {data?.entries.map((entry, i) => (
+        <div key={entry.id} className="flex justify-between border-b border-gray-700 py-2">
+          <span>#{i + 1} Remix by {entry.user_name}</span>
+          <span>{entry.votes} 🔥 votes</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+✅ Delivered:
+
+Public remix button from community gallery
+
+Full remix contest engine with leaderboard + entries
+
+Voting system with Supabase + user validation

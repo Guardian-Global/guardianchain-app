@@ -3,10 +3,10 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./client/src/**/*.{js,ts,jsx,tsx}",
-    "./client/src/pages/**/*.{js,ts,jsx,tsx}",
-    "./client/src/components/**/*.{js,ts,jsx,tsx}",
-    "./client/src/app/**/*.{js,ts,jsx,tsx}",
+    "./client/src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./client/src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./client/src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./client/src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   prefix: "",
   theme: {
@@ -52,44 +52,11 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // 2026 Futuristic High-Contrast Colors
-        neon: {
-          cyan: "hsl(180, 100%, 50%)",
-          purple: "hsl(285, 100%, 65%)",
-          green: "hsl(120, 100%, 50%)",
-          pink: "hsl(315, 100%, 70%)",
-          yellow: "hsl(60, 100%, 60%)",
-          blue: "hsl(220, 100%, 60%)",
-        },
-        cosmic: {
-          void: "hsl(240, 100%, 3%)",
-          deep: "hsl(240, 100%, 5%)",
-          nebula: "hsl(260, 80%, 6%)",
-          surface: "hsl(240, 50%, 8%)",
-          border: "hsl(240, 50%, 20%)",
-        },
-        glass: {
-          light: "hsla(240, 50%, 15%, 0.8)",
-          medium: "hsla(260, 40%, 12%, 0.9)",
-          dark: "hsla(240, 100%, 5%, 0.95)",
-        },
-        viral: {
-          electric: "hsl(285, 100%, 65%)",
-          quantum: "hsl(120, 100%, 50%)",
-          plasma: "hsl(315, 100%, 70%)",
-          laser: "hsl(180, 100%, 50%)",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["Fira Code", "JetBrains Mono", "monospace"],
-        display: ["Space Grotesk", "system-ui", "sans-serif"],
-        cyber: ["Orbitron", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -100,50 +67,14 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
-        "fade-out": {
-          "0%": { opacity: "1" },
-          "100%": { opacity: "0" },
-        },
-        "slide-in-from-top": {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(0)" },
-        },
-        "slide-in-from-bottom": {
-          "0%": { transform: "translateY(100%)" },
-          "100%": { transform: "translateY(0)" },
-        },
-        "slide-in-from-left": {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(0)" },
-        },
-        "slide-in-from-right": {
-          "0%": { transform: "translateX(100%)" },
-          "100%": { transform: "translateX(0)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.5s ease-out",
-        "fade-out": "fade-out 0.5s ease-out",
-        "slide-in-from-top": "slide-in-from-top 0.5s ease-out",
-        "slide-in-from-bottom": "slide-in-from-bottom 0.5s ease-out",
-        "slide-in-from-left": "slide-in-from-left 0.5s ease-out",
-        "slide-in-from-right": "slide-in-from-right 0.5s ease-out",
-      },
-      backgroundImage: {
-        "quantum-gradient": "var(--quantum-gradient)",
-      },
-      backdropFilter: {
-        "glass": "var(--glass-backdrop)",
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
 export default config;
