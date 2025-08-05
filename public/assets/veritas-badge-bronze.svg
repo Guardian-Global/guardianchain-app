@@ -1,0 +1,32 @@
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bronzeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#CD7F32;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#B8860B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="75" cy="75" r="70" fill="url(#bronzeGradient)" stroke="#8B4513" stroke-width="2" filter="url(#glow)"/>
+  
+  <!-- Inner Circle -->
+  <circle cx="75" cy="75" r="50" fill="none" stroke="#8B4513" stroke-width="2"/>
+  
+  <!-- Shield Icon -->
+  <path d="M75 30 L95 40 L95 65 Q95 80 75 90 Q55 80 55 65 L55 40 Z" fill="#654321" stroke="#4A2C17" stroke-width="1"/>
+  
+  <!-- Check Mark -->
+  <path d="M68 60 L72 64 L82 54" stroke="#32CD32" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Text -->
+  <text x="75" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#654321">VERITAS</text>
+  <text x="75" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#654321">VERIFIED</text>
+</svg>

@@ -37,6 +37,7 @@ const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
 const Profile = lazy(() => import("@/pages/profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
+const VeritasBadges = lazy(() => import("@/pages/VeritasBadges"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
 const TruthNet = lazy(() => import("@/pages/TruthNet"));
 const Explorer = lazy(() => import("@/pages/Explorer"));
@@ -139,15 +140,17 @@ function Router() {
               <Route path="/create" component={CreateCapsule} />
               <Route path="/bulk-upload" component={BulkUpload} />
               <Route path="/profile" component={Profile} />
+              <Route path="/profile/ultimate" component={UltimateProfile} />
+              <Route path="/profile/enhanced" component={EnhancedProfilePage} />
+              <Route path="/profile/:username" component={PublicProfile} />
+              <Route path="/badges" component={VeritasBadges} />
+              <Route path="/veritas-badges" component={VeritasBadges} />
               <Route path="/settings" component={Settings} />
               <Route path="/admin-dashboard" component={AdminDashboard} />
               <Route path="/admin" component={Admin} />
               <Route path="/capsule-stats" component={CapsuleStats} />
               <Route path="/capsule-browser" component={CapsuleBrowser} />
               <Route path="/claim" component={Claim} />
-              <Route path="/profile/ultimate" component={UltimateProfile} />
-              <Route path="/profile/enhanced" component={EnhancedProfilePage} />
-              <Route path="/profile/:username" component={PublicProfile} />
               <Route path="/truth-genome" component={TruthGenome} />
               <Route path="/truth-net" component={TruthNet} />
               <Route path="/start" component={Start} />

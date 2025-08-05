@@ -176,11 +176,11 @@ export default function DashboardPage() {
                   <span className="text-sm font-medium">Truth Bounty</span>
                 </button>
                 <button
-                  onClick={() => (window.location.href = "/analytics")}
-                  className="p-4 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 rounded-lg text-center transition-all"
+                  onClick={() => (window.location.href = "/badges")}
+                  className="p-4 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 rounded-lg text-center transition-all"
                 >
-                  <BarChart3 className="w-6 h-6 mx-auto mb-2" />
-                  <span className="text-sm font-medium">Analytics</span>
+                  <Shield className="w-6 h-6 mx-auto mb-2" />
+                  <span className="text-sm font-medium">My Badges</span>
                 </button>
               </div>
             </CardContent>

@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UnifiedProfile from "@/components/profile/UnifiedProfile";
 import ProfileMediaSection from "@/components/profile/ProfileMediaSection";
+import VeritasBadgeSection from "@/components/profile/VeritasBadgeSection";
 import { useAuth } from "@/hooks/useAuth";
 import { 
   User, 
   Image as ImageIcon, 
   FileText, 
-  Activity
+  Activity,
+  Shield
 } from "lucide-react";
 
 export default function Profile() {
@@ -18,7 +20,7 @@ export default function Profile() {
     <div className="min-h-screen bg-brand-dark">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-brand-surface max-w-md mx-auto">
+          <TabsList className="grid w-full grid-cols-4 bg-brand-surface max-w-2xl mx-auto">
             <TabsTrigger 
               value="profile" 
               className="data-[state=active]:bg-brand-primary data-[state=active]:text-brand-dark"
@@ -36,6 +38,14 @@ export default function Profile() {
               Media
             </TabsTrigger>
             <TabsTrigger 
+              value="badges" 
+              className="data-[state=active]:bg-brand-primary data-[state=active]:text-brand-dark"
+              data-testid="badges-tab"
+            >
+              <Shield className="w-4 h-4 mr-2" />
+              Badges
+            </TabsTrigger>
+            <TabsTrigger 
               value="activity" 
               className="data-[state=active]:bg-brand-primary data-[state=active]:text-brand-dark"
               data-testid="activity-tab"
@@ -51,6 +61,10 @@ export default function Profile() {
 
           <TabsContent value="media" className="space-y-6">
             <ProfileMediaSection userId={user?.id || "dev-user-123"} />
+          </TabsContent>
+
+          <TabsContent value="badges" className="space-y-6">
+            <VeritasBadgeSection userId={user?.id || "dev-user-123"} />
           </TabsContent>
 
           <TabsContent value="activity" className="space-y-6">
