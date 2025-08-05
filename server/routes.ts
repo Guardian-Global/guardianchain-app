@@ -1070,6 +1070,192 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile capsules endpoint
+  app.get("/api/profile/capsules/:userId", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      console.log(`📦 Profile capsules retrieved for user: ${userId}`);
+      
+      const mockCapsules = [
+        {
+          id: 'capsule-1',
+          title: 'Personal Memory: First Day at School',
+          author: 'Guardian User',
+          createdAt: '2024-01-15T10:30:00Z',
+          verified: true,
+          daoCertified: true,
+          tier: 'seeker',
+          isTimeSealed: false,
+          gttEarned: 45,
+          viewCount: 127,
+          hasLineage: true
+        },
+        {
+          id: 'capsule-2',
+          title: 'Truth Declaration: Corporate Whistleblowing',
+          author: 'Guardian User',
+          createdAt: '2024-01-20T14:45:00Z',
+          verified: true,
+          daoCertified: false,
+          tier: 'creator',
+          isTimeSealed: true,
+          unlockDate: '2024-12-31T23:59:59Z',
+          gttEarned: 120,
+          viewCount: 89,
+          hasLineage: false
+        },
+        {
+          id: 'capsule-3',
+          title: 'Family Legacy: Grandmother\'s Stories',
+          author: 'Guardian User',
+          createdAt: '2024-02-01T09:15:00Z',
+          verified: false,
+          daoCertified: false,
+          tier: 'explorer',
+          isTimeSealed: false,
+          gttEarned: 12,
+          viewCount: 34,
+          hasLineage: true
+        }
+      ];
+      
+      res.json(mockCapsules);
+    } catch (error) {
+      console.error("❌ Failed to get profile capsules:", error);
+      res.status(500).json({
+        error: "Failed to get profile capsules",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Profile capsule stats endpoint
+  app.get("/api/profile/capsule-stats/:userId", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      console.log(`📊 Profile capsule stats retrieved for user: ${userId}`);
+      
+      res.json({
+        totalCapsules: 24,
+        verifiedCapsules: 18,
+        daoCertifiedCapsules: 8,
+        totalGttEarned: 1247,
+        capsulesWithLineage: 12
+      });
+    } catch (error) {
+      console.error("❌ Failed to get profile capsule stats:", error);
+      res.status(500).json({
+        error: "Failed to get profile capsule stats",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // User lineage summary endpoint
+  app.get("/api/capsule/user/:userId/lineage-summary", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      console.log(`🔗 User lineage summary retrieved for: ${userId}`);
+      
+      res.json({
+        totalCapsules: 24,
+        capsulesWithLineage: 12,
+        verifiedCapsules: 18,
+        daoCertifiedCapsules: 8,
+        lineageStats: [
+          {
+            capsuleId: 'capsule-1',
+            title: 'Personal Memory: First Day at School',
+            parentCount: 0,
+            childCount: 3
+          },
+          {
+            capsuleId: 'capsule-4',
+            title: 'Truth Declaration: Environmental Impact',
+            parentCount: 1,
+            childCount: 2
+          }
+        ]
+      });
+    } catch (error) {
+      console.error("❌ Failed to get user lineage summary:", error);
+      res.status(500).json({
+        error: "Failed to get user lineage summary",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Capsule lineage endpoint
+  app.get("/api/capsule/:capsuleId/lineage", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { capsuleId } = req.params;
+      
+      console.log(`🔗 Capsule lineage retrieved for: ${capsuleId}`);
+      
+      const mockLineageData = {
+        nodes: [
+          {
+            id: capsuleId,
+            title: 'Personal Memory: First Day at School',
+            author: 'Guardian User',
+            createdAt: '2024-01-15T10:30:00Z',
+            verified: true,
+            daoCertified: true
+          },
+          {
+            id: 'capsule-child-1',
+            title: 'Verification: School Records Confirmed',
+            author: 'Verifier Guardian',
+            createdAt: '2024-01-16T11:00:00Z',
+            verified: true,
+            daoCertified: false
+          },
+          {
+            id: 'capsule-child-2',
+            title: 'Related Memory: Meeting Best Friend',
+            author: 'Guardian User',
+            createdAt: '2024-01-18T16:20:00Z',
+            verified: false,
+            daoCertified: false
+          }
+        ],
+        relationships: [
+          {
+            from: capsuleId,
+            to: 'capsule-child-1',
+            relationship: 'verification',
+            strength: 0.9
+          },
+          {
+            from: capsuleId,
+            to: 'capsule-child-2',
+            relationship: 'reference',
+            strength: 0.7
+          }
+        ],
+        stats: {
+          totalNodes: 3,
+          verifiedNodes: 2,
+          daoCertifiedNodes: 1,
+          maxDepth: 2
+        },
+        centerNode: capsuleId
+      };
+      
+      res.json(mockLineageData);
+    } catch (error) {
+      console.error("❌ Failed to get capsule lineage:", error);
+      res.status(500).json({
+        error: "Failed to get capsule lineage",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Profile update endpoint
   app.put("/api/profile/update", consolidatedAuth, async (req: any, res) => {
     try {
