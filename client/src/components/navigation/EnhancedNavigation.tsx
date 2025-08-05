@@ -70,7 +70,7 @@ const EnhancedNavigation: React.FC = () => {
       color: "text-orange-400"
     },
     {
-      path: "/governance",
+      path: "/dao",
       label: "DAO",
       icon: Users,
       color: "text-blue-400",
@@ -208,6 +208,18 @@ const EnhancedNavigation: React.FC = () => {
 
           {/* Footer */}
           <div className="pt-4 border-t border-white/10">
+            <Link href="/profile">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
+                <User size={20} className="text-gray-400" />
+                <span className="text-gray-300">My Profile</span>
+              </div>
+            </Link>
+            <Link href="/profile/enhanced">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
+                <Crown size={20} className="text-purple-400" />
+                <span className="text-gray-300">Enhanced Profile</span>
+              </div>
+            </Link>
             <Link href="/settings">
               <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
                 <Settings size={20} className="text-gray-400" />

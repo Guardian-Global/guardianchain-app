@@ -85,16 +85,16 @@ function Router() {
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={() => import("@/pages/LandingPage").then(m => m.default)} />
-        <Route path="/onboarding" component={() => import("@/pages/OnboardingFlow").then(m => m.default)} />
-        <Route path="/login" component={() => import("@/pages/LoginPage").then(m => m.default)} />
+        <Route path="/" component={EliteHomepage} />
+        <Route path="/onboarding" component={NewUserOnboarding} />
+        <Route path="/login" component={EliteHomepage} />
         <Route path="/elite" component={EliteHomepage} />
         <Route path="/explorer" component={Explorer} />
         <Route path="/terms" component={Terms} />
         <Route path="/start" component={Start} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/subscribe/:tier" component={Subscribe} />
-        <Route component={() => import("@/pages/LandingPage").then(m => m.default)} />
+        <Route component={EliteHomepage} />
       </Switch>
     );
   }
@@ -121,7 +121,7 @@ function Router() {
             }
           >
             <Switch>
-              <Route path="/enhanced-onboarding" component={() => import("@/pages/enhanced-onboarding").then(m => m.default)} />
+              <Route path="/onboarding" component={NewUserOnboarding} />
               <Route path="/dashboard" component={EnhancedDashboard} />
               <Route path="/enterprise" component={EnterpriseCenter} />
               <Route path="/tokenomics" component={Tokenomics} />
@@ -141,7 +141,6 @@ function Router() {
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
               <Route path="/dao" component={DAO} />
-              <Route path="/profile" component={EnhancedProfilePage} />
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />
               <Route path="/admin/timeline" component={AdminTimelineView} />
@@ -153,20 +152,10 @@ function Router() {
               <Route path="/metrics" component={MetricsPage} />
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
-              <Route path="/onboarding" component={NewUserOnboarding} />
               <Route path="/viral-showcase" component={ViralShowcase} />
               <Route path="/social" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
-              <Route path="/test-preview" component={() => import("@/pages/CapsulePreviewTest").then(m => m.default)} />
-              <Route path="/enhancements" component={() => import("@/pages/EnhancementShowcase").then(m => m.default)} />
-              <Route path="/profile" component={() => import("@/pages/UserProfile").then(m => m.default)} />
-              <Route path="/social-profile">
-                {() => {
-                  const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));
-                  return <EnhancedSocialProfile />;
-                }}
-              </Route>
               <Route component={NotFound} />
             </Switch>
           </Suspense>
