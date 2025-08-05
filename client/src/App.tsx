@@ -29,6 +29,9 @@ import Signup from "@/pages/auth/Signup";
 import Login from "@/pages/auth/Login";
 import SimpleLanding from "@/pages/SimpleLanding";
 
+// Complete Authentication System Import
+const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
+
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
@@ -36,10 +39,10 @@ const Profile = lazy(() => import("@/pages/profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
 const TruthNet = lazy(() => import("@/pages/TruthNet"));
-const Explorer = lazy(() => import("@/pages/explorer"));
+const Explorer = lazy(() => import("@/pages/Explorer"));
 const Start = lazy(() => import("@/pages/Start"));
-const Terms = lazy(() => import("@/pages/terms"));
-const Pricing = lazy(() => import("@/pages/pricing"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const Pricing = lazy(() => import("@/pages/Pricing"));
 const Subscribe = lazy(() => import("@/pages/subscribe"));
 const Checkout = lazy(() => import("@/pages/checkout"));
 const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
@@ -49,7 +52,7 @@ const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
-const DAO = lazy(() => import("@/pages/dao"));
+const DAO = lazy(() => import("@/pages/DAO"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));

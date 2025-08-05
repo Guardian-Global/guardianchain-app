@@ -24,18 +24,66 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// User storage table
+// User storage table with complete profile system
 export const users = pgTable("users", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  email: varchar("email").unique(),
+  email: varchar("email").unique().notNull(),
+  emailVerified: boolean("email_verified").default(false),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
+  username: varchar("username").unique(),
   profileImageUrl: varchar("profile_image_url"),
+  bio: text("bio"),
+  location: varchar("location"),
+  website: varchar("website"),
+  twitter: varchar("twitter"),
+  github: varchar("github"),
+  linkedin: varchar("linkedin"),
+  tier: varchar("tier").default("EXPLORER"), // EXPLORER, SEEKER, CREATOR, SOVEREIGN
+  subscriptionStatus: varchar("subscription_status").default("inactive"),
+  onboardingCompleted: boolean("onboarding_completed").default(false),
+  lastLoginAt: timestamp("last_login_at"),
+  isActive: boolean("is_active").default(true),
+  preferences: jsonb("preferences"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+// Email verification tokens
+export const emailVerificationTokens = pgTable("email_verification_tokens", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  token: varchar("token").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User activity tracking for complete audit trail
+export const userActivities = pgTable("user_activities", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  action: varchar("action").notNull(), // login, logout, create_capsule, vote, etc.
+  resourceType: varchar("resource_type"), // capsule, vote, profile, etc.
+  resourceId: uuid("resource_id"),
+  metadata: jsonb("metadata"), // Additional action data
+  ipAddress: varchar("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_user_activities_user").on(table.userId),
+  index("idx_user_activities_action").on(table.action),
+  index("idx_user_activities_created_at").on(table.createdAt),
+]);
 
 // Newsletter subscribers table for email subscriptions
 export const newsletterSubscribers = pgTable("newsletter_subscribers", {
@@ -163,6 +211,10 @@ export const truthAuctions = pgTable(
 // Type definitions
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
+export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect;
+export type InsertEmailVerificationToken = typeof emailVerificationTokens.$inferInsert;
+export type UserActivity = typeof userActivities.$inferSelect;
+export type InsertUserActivity = typeof userActivities.$inferInsert;
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
 export type InsertNewsletterSubscriber =
   typeof newsletterSubscribers.$inferInsert;
@@ -193,12 +245,35 @@ export interface EnhancedCapsuleData extends Omit<Capsule, 'content'> {
 
 // Validation schemas
 export const insertUserSchema = createInsertSchema(users);
+export const insertEmailVerificationTokenSchema = createInsertSchema(emailVerificationTokens);
+export const insertUserActivitySchema = createInsertSchema(userActivities);
 export const insertNewsletterSubscriberSchema = createInsertSchema(
   newsletterSubscribers,
 );
 export const insertCapsuleSchema = createInsertSchema(capsules);
 export const insertCapsuleVoteSchema = createInsertSchema(capsuleVotes);
 export const insertTruthAuctionSchema = createInsertSchema(truthAuctions);
+
+// User registration and profile schemas
+export const userRegistrationSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  username: z.string().min(3, "Username must be at least 3 characters").max(30, "Username must be less than 30 characters"),
+});
+
+export const userProfileUpdateSchema = z.object({
+  firstName: z.string().min(1, "First name is required").optional(),
+  lastName: z.string().min(1, "Last name is required").optional(),
+  username: z.string().min(3, "Username must be at least 3 characters").max(30, "Username must be less than 30 characters").optional(),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  location: z.string().max(100, "Location must be less than 100 characters").optional(),
+  website: z.string().url("Invalid website URL").or(z.string().length(0)).optional(),
+  twitter: z.string().max(50, "Twitter handle must be less than 50 characters").optional(),
+  github: z.string().max(50, "GitHub username must be less than 50 characters").optional(),
+  linkedin: z.string().max(100, "LinkedIn profile must be less than 100 characters").optional(),
+  profileImageUrl: z.string().url("Invalid profile image URL").optional(),
+});
 
 export type InsertUserType = z.infer<typeof insertUserSchema>;
 export type InsertNewsletterSubscriberType = z.infer<

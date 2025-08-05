@@ -11,6 +11,7 @@ import { unlockCapsule } from "./api/capsule-unlock";
 import { registerGTTContractRoutes } from "./routes/gttContract";
 // All legacy authentication systems removed - only consolidated auth remains
 import { consolidatedAuth } from "./auth/authConsolidation";
+import authCompleteRoutes from "./routes/auth-complete";
 import aiRoutes from "./routes/ai";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
@@ -1539,6 +1540,9 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   const { setupConsolidatedAuth } = await import("./auth/authConsolidation.js");
   setupConsolidatedAuth(app);
+  
+  // Complete authentication system
+  app.use("/api/auth-complete", authCompleteRoutes);
   
   // Only consolidated authentication system is active
 
