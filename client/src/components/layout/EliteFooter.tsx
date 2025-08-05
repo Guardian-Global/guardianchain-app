@@ -32,7 +32,7 @@ const footerLinks = {
 
 const socialLinks = [
   { href: 'https://twitter.com/guardianchain', icon: Twitter, label: 'Twitter' },
-  { href: 'https://github.com/guardianchain', icon: Github, label: 'GitHub' },
+  { href: 'https://github.com/Guardian-Global/guardianchain_app', icon: Github, label: 'GitHub' },
   { href: 'https://discord.gg/guardianchain', icon: MessageCircle, label: 'Discord' },
   { href: 'https://guardianchain.global', icon: Globe, label: 'Website' },
 ];

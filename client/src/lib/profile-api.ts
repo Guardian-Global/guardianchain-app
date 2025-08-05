@@ -119,7 +119,7 @@ export async function getUserProfile(walletAddress: string): Promise<UserProfile
       {
         id: "social-2",
         platform: "github",
-        url: "https://github.com/guardianchain",
+        url: "https://github.com/Guardian-Global/guardianchain_app",
         verified: true,
       },
     ],
