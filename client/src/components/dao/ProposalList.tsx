@@ -57,7 +57,7 @@ export default function ProposalList({
   };
 
   const hasUserVoted = (proposal: ProposalWithVotes) => {
-    return proposal.votes.some((vote) => vote.voterAddress === userAddress);
+    return proposal.votes?.some((vote) => vote.voterAddress === userAddress) || false;
   };
 
   if (isLoading) {
@@ -105,16 +105,16 @@ export default function ProposalList({
         <div className="space-y-4">
           {proposals.map((proposal) => {
             const supportPercent = getVotePercentage(
-              proposal.supportVotes,
-              proposal.totalWeight,
+              proposal.supportVotes || 0,
+              proposal.totalWeight || 0,
             );
             const rejectPercent = getVotePercentage(
-              proposal.rejectVotes,
-              proposal.totalWeight,
+              proposal.rejectVotes || 0,
+              proposal.totalWeight || 0,
             );
             const abstainPercent = getVotePercentage(
-              proposal.abstainVotes,
-              proposal.totalWeight,
+              proposal.abstainVotes || 0,
+              proposal.totalWeight || 0,
             );
             const userVoted = hasUserVoted(proposal);
             const isActive =
@@ -146,21 +146,26 @@ export default function ProposalList({
                       <Calendar className="w-4 h-4" />
                       <span>
                         Created{" "}
-                        {formatDistanceToNow(new Date(proposal.createdAt!))} ago
+                        {proposal.createdAt ? formatDistanceToNow(new Date(proposal.createdAt)) : 'recently'} ago
                       </span>
                     </div>
                     {proposal.endTime && (
                       <div className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
                         <span>
-                          Ends {formatDistanceToNow(new Date(proposal.endTime))}{" "}
-                          from now
+                          Ends {(() => {
+                            try {
+                              return formatDistanceToNow(new Date(proposal.endTime)) + " from now";
+                            } catch {
+                              return "soon";
+                            }
+                          })()}
                         </span>
                       </div>
                     )}
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
-                      <span>{proposal.votes.length} votes</span>
+                      <span>{proposal.votes?.length || 0} votes</span>
                     </div>
                   </div>
                 </CardHeader>
