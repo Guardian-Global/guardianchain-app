@@ -44,7 +44,7 @@ const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
-const DAO = lazy(() => import("@/pages/DAO"));
+const DAO = lazy(() => import("@/pages/dao"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
@@ -181,6 +181,23 @@ export default function App() {
   import("./lib/web3/safeProvider").then(({ safeWeb3Provider }) => {
     safeWeb3Provider.safeInit().catch(console.warn);
   });
+
+  // Register service worker for PWA features
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        if (location.protocol === 'https:' || location.hostname === 'localhost') {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('✅ Service Worker registered:', registration);
+          }).catch(err => {
+            console.warn('❌ Service Worker registration failed:', err);
+          });
+        } else {
+          console.warn('⚠️ Skipping service worker — insecure origin');
+        }
+      });
+    }
+  }, []);
 
   return (
     <HelmetProvider>

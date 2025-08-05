@@ -1,54 +1,52 @@
 // GuardianChain Service Worker
-// Provides offline functionality and background sync
+// Provides PWA functionality and caching
 
 const CACHE_NAME = 'guardianchain-v1';
-const STATIC_CACHE = 'guardianchain-static-v1';
-
-const STATIC_ASSETS = [
+const CACHE_URLS = [
   '/',
   '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/favicon.ico'
 ];
 
-// Install event - cache static assets
+// Install event - cache essential resources  
 self.addEventListener('install', (event) => {
-  console.log('🔧 Service Worker installing...');
-  
+  console.log('[ServiceWorker] Install');
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('[ServiceWorker] Caching app shell');
+        return cache.addAll(CACHE_URLS);
+      })
+      .catch((error) => {
+        console.warn('[ServiceWorker] Cache install failed:', error);
+      })
   );
+  self.skipWaiting();
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('✅ Service Worker activated');
-  
+  console.log('[ServiceWorker] Activate');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME && cacheName !== STATIC_CACHE) {
-            console.log('🗑️ Deleting old cache:', cacheName);
+          if (cacheName !== CACHE_NAME) {
+            console.log('[ServiceWorker] Removing old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
-    }).then(() => self.clients.claim())
+    })
   );
+  return self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - serve from cache when possible
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
-
-  // Skip API requests - let them go to network
-  if (event.request.url.includes('/api/')) {
+  // Skip non-GET requests and external resources
+  if (event.request.method !== 'GET' || 
+      !event.request.url.startsWith(self.location.origin)) {
     return;
   }
 
@@ -56,26 +54,30 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request)
       .then((response) => {
         // Return cached version or fetch from network
-        return response || fetch(event.request)
-          .then((fetchResponse) => {
-            // Don't cache non-successful responses
-            if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
-              return fetchResponse;
+        if (response) {
+          return response;
+        }
+        
+        return fetch(event.request)
+          .then((response) => {
+            // Don't cache if not a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
             }
 
-            // Clone the response for caching
-            const responseToCache = fetchResponse.clone();
+            // Clone the response
+            const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
               .then((cache) => {
                 cache.put(event.request, responseToCache);
               });
 
-            return fetchResponse;
+            return response;
           });
       })
       .catch(() => {
-        // Return offline page for navigation requests
+        // Return a fallback for navigation requests
         if (event.request.mode === 'navigate') {
           return caches.match('/');
         }
@@ -83,76 +85,30 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Background sync for offline capsule creation
+// Background sync for offline capabilities
 self.addEventListener('sync', (event) => {
-  console.log('🔄 Background sync triggered:', event.tag);
+  console.log('[ServiceWorker] Background sync:', event.tag);
   
-  if (event.tag === 'capsule-upload') {
-    event.waitUntil(syncCapsules());
+  if (event.tag === 'background-sync') {
+    event.waitUntil(
+      // Handle offline actions when back online
+      console.log('[ServiceWorker] Performing background sync')
+    );
   }
 });
 
-// Push notifications
+// Push notifications support
 self.addEventListener('push', (event) => {
+  console.log('[ServiceWorker] Push received');
+  
   const options = {
-    body: event.data ? event.data.text() : 'New truth verification available',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-72.png',
-    tag: 'guardianchain-notification',
-    requireInteraction: false
+    body: event.data ? event.data.text() : 'New update available',
+    icon: '/favicon.ico',
+    badge: '/favicon.ico',
+    tag: 'guardianchain-notification'
   };
 
   event.waitUntil(
     self.registration.showNotification('GuardianChain', options)
   );
 });
-
-// Notification click handling
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  event.waitUntil(
-    clients.openWindow('/')
-  );
-});
-
-// Helper function to sync offline capsules
-async function syncCapsules() {
-  try {
-    // Get offline capsules from IndexedDB or localStorage
-    const offlineCapsules = await getOfflineCapsules();
-    
-    for (const capsule of offlineCapsules) {
-      try {
-        const response = await fetch('/api/capsules', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(capsule)
-        });
-
-        if (response.ok) {
-          // Remove from offline storage
-          await removeOfflineCapsule(capsule.id);
-          console.log('✅ Capsule synced:', capsule.id);
-        }
-      } catch (error) {
-        console.error('❌ Failed to sync capsule:', capsule.id, error);
-      }
-    }
-  } catch (error) {
-    console.error('❌ Background sync failed:', error);
-  }
-}
-
-// Placeholder functions for offline storage
-async function getOfflineCapsules() {
-  // Implement IndexedDB or localStorage retrieval
-  return [];
-}
-
-async function removeOfflineCapsule(id) {
-  // Implement removal from offline storage
-  console.log('Removing offline capsule:', id);
-}
