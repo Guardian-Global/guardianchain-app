@@ -520,7 +520,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User onboarding completion endpoint
+  // Guardian onboarding completion endpoint
+  app.post("/api/auth/complete-onboarding", consolidatedAuth, async (req: any, res) => {
+    try {
+      const guardianProfile = req.body;
+      
+      console.log("🛡️ Guardian Setup: Completing onboarding for user:", req.user.id);
+      console.log("🛡️ Guardian Profile:", guardianProfile);
+      
+      // Mock saving guardian profile data
+      const completedProfile = {
+        userId: req.user.id,
+        guardianName: guardianProfile.guardianName,
+        realName: guardianProfile.realName,
+        bio: guardianProfile.bio,
+        expertise: guardianProfile.expertise,
+        truthFocus: guardianProfile.truthFocus,
+        verificationStyle: guardianProfile.verificationStyle,
+        selectedTier: guardianProfile.selectedTier,
+        defaultPrivacy: guardianProfile.defaultPrivacy,
+        notificationSettings: guardianProfile.notificationSettings,
+        securitySettings: {
+          twoFactorEnabled: guardianProfile.twoFactorEnabled,
+          backupEnabled: guardianProfile.backupEnabled,
+          walletConnected: guardianProfile.walletConnected
+        },
+        onboardingCompleted: true,
+        completedAt: new Date().toISOString()
+      };
+
+      res.json({
+        success: true,
+        message: "Guardian onboarding completed successfully",
+        guardianProfile: completedProfile
+      });
+      
+      console.log(`🛡️ Guardian Setup Complete: ${guardianProfile.guardianName} (${req.user.id})`);
+    } catch (error) {
+      console.error("❌ Failed to complete Guardian onboarding:", error);
+      res.status(500).json({
+        error: "Failed to complete Guardian onboarding",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // User onboarding completion endpoint (legacy)
   app.put("/api/user/onboarding", consolidatedAuth, async (req: any, res) => {
     try {
       const { displayName, bio, interests, tier, preferences } = req.body;
