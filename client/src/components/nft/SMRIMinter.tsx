@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Brain, Award, Zap } from 'lucide-react';
 import { mintSMRIBadge, analyzeCapsuleForSMRI, type SMRITraits } from '@/lib/nft/smriMinter';
 import { useToast } from '@/hooks/use-toast';
+import { MetaMaskConnectionGuide } from '@/components/ui/MetaMaskConnectionGuide';
 
 interface SMRIMinterProps {
   capsuleText?: string;
@@ -17,6 +18,7 @@ export function SMRIMinter({ capsuleText, recipientAddress, onMintSuccess }: SMR
   const [isMinting, setIsMinting] = useState(false);
   const [traits, setTraits] = useState<SMRITraits | null>(null);
   const [mintResult, setMintResult] = useState<any>(null);
+  const [connectionError, setConnectionError] = useState<string>('');
   const { toast } = useToast();
 
   const handleAnalyze = async () => {
@@ -70,11 +72,17 @@ export function SMRIMinter({ capsuleText, recipientAddress, onMintSuccess }: SMR
       });
     } catch (error) {
       console.error('Minting failed:', error);
-      toast({
-        title: "Minting Failed",
-        description: error instanceof Error ? error.message : "Failed to mint SMRI badge",
-        variant: "destructive"
-      });
+      const errorMessage = error instanceof Error ? error.message : "Failed to mint SMRI badge";
+      
+      if (errorMessage.includes('preview mode') || errorMessage.includes('new tab') || errorMessage.includes('MetaMask not detected')) {
+        setConnectionError(errorMessage);
+      } else {
+        toast({
+          title: "Minting Failed",
+          description: errorMessage,
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsMinting(false);
     }
@@ -105,6 +113,11 @@ export function SMRIMinter({ capsuleText, recipientAddress, onMintSuccess }: SMR
     
     return colorMap[value] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
   };
+
+  // Show MetaMask connection guide if there's a connection error
+  if (connectionError) {
+    return <MetaMaskConnectionGuide error={connectionError} onRetry={() => setConnectionError('')} />;
+  }
 
   return (
     <Card className="w-full max-w-2xl mx-auto">

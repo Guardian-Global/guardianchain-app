@@ -20,10 +20,34 @@ export const isMetaMaskInstalled = (): boolean => {
 };
 
 export const connectWallet = async (): Promise<WalletConnection> => {
+  // Check if we're in a browser extension-accessible context
+  if (typeof window === "undefined") {
+    return {
+      success: false,
+      error: "Not running in a browser environment.",
+    };
+  }
+
+  // Check if we're in an iframe (Replit preview)
+  try {
+    if (window.parent !== window) {
+      return {
+        success: false,
+        error: "MetaMask not accessible in preview mode. Please open the app in a new tab to connect your wallet.",
+      };
+    }
+  } catch (e) {
+    // Cross-origin iframe
+    return {
+      success: false,
+      error: "Please open the app in a new browser tab to access MetaMask.",
+    };
+  }
+
   if (!isMetaMaskInstalled()) {
     return {
       success: false,
-      error: "MetaMask is not installed. Please install MetaMask to continue.",
+      error: "MetaMask is not installed. Please install MetaMask browser extension and try again.",
     };
   }
 

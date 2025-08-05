@@ -24,6 +24,8 @@ Preferred communication style: Simple, everyday language.
 - **COMPREHENSIVE AUTH ENHANCEMENT COMPLETE**: Full authentication and onboarding subscription flow implemented with debugging system
 - **Base Network Optimized**: Ultra-low fee transactions ($0.01 vs $20+ Ethereum), 2-second confirmations, Web3 configuration complete
 - **Build Status**: Clean compilation, all 40+ pages rendering correctly with cyberpunk theme
+- **MetaMask Integration**: Fixed preview iframe limitations with user-friendly guidance for full browser tab access
+- **Service Worker**: Production-only registration with proper HTTPS and iframe detection
 - **Debug System**: Full app debugger with real-time monitoring accessible via Ctrl+Shift+D
 
 ### Frontend

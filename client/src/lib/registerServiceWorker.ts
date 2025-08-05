@@ -1,23 +1,39 @@
 // lib/registerServiceWorker.ts
 export default function registerServiceWorker() {
-  if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
+  // Only register in production mode with HTTPS
+  if (
+    typeof window === "undefined" || 
+    !("serviceWorker" in navigator) ||
+    !import.meta.env.PROD ||
+    window.location.protocol !== 'https:' ||
+    window.location.hostname === 'localhost'
+  ) {
+    console.log("🔧 Service Worker registration skipped - not in production HTTPS environment");
+    return;
+  }
 
-  // Only register in production or when explicitly enabled
-  const isProduction = import.meta.env.PROD;
-  const isDevelopment = import.meta.env.DEV;
-  
-  if (isDevelopment && window.location.hostname === 'localhost') {
-    console.log("🔧 Service Worker registration skipped in development");
+  // Check if we're in a valid scope (not an iframe or restricted context)
+  try {
+    if (window.parent !== window) {
+      console.log("🔧 Service Worker registration skipped - running in iframe");
+      return;
+    }
+  } catch (e) {
+    // Cross-origin iframe, skip registration
+    console.log("🔧 Service Worker registration skipped - cross-origin context");
     return;
   }
 
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js")
-      .then((reg) => console.log("✅ Service Worker registered:", reg.scope))
+      .then((reg) => {
+        console.log("✅ Service Worker registered:", reg.scope);
+      })
       .catch((err) => {
-        if (isProduction) {
-          console.error("❌ SW registration failed:", err);
+        // Only log in production, silently fail in development
+        if (import.meta.env.PROD) {
+          console.warn("Service Worker registration failed:", err.message);
         }
       });
   });

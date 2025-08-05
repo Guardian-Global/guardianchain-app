@@ -119,9 +119,23 @@ export async function mintSMRIBadge(
   traits: SMRITraits
 ): Promise<{ tokenId: string; txHash: string; metadataUrl: string }> {
   try {
+    // Check if we're in a browser extension-accessible context
+    if (typeof window === "undefined") {
+      throw new Error('Not running in browser environment');
+    }
+
+    // Check if we're in an iframe (Replit preview)
+    try {
+      if (window.parent !== window) {
+        throw new Error('MetaMask not accessible in preview mode. Please open the app in a new tab to mint SMRI badges.');
+      }
+    } catch (e) {
+      throw new Error('Please open the app in a new browser tab to access MetaMask for minting.');
+    }
+
     // Check if window.ethereum is available
     if (!window.ethereum) {
-      throw new Error('MetaMask or Web3 wallet not detected');
+      throw new Error('MetaMask not detected. Please install MetaMask browser extension and try again.');
     }
 
     const provider = new (ethers as any).providers.Web3Provider(window.ethereum);
