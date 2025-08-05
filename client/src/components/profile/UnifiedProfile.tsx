@@ -46,6 +46,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
+
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 
@@ -111,18 +112,25 @@ export default function UnifiedProfile() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Fetch user stats
-  const { data: userStats = {} as UserStats, isLoading: statsLoading } = useQuery({
+  // Real-time data fetching with enhanced React Query configuration
+  const { data: userStats = {} as UserStats, error: statsError, isLoading: statsLoading } = useQuery({
     queryKey: ["/api/profile/stats"],
     enabled: !!user,
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    staleTime: 30 * 1000, // 30 seconds for real-time feel
+    refetchInterval: 30 * 1000, // Auto-refresh every 30 seconds
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: 3,
+    retryDelay: 5000,
   });
 
-  // Fetch user activities
-  const { data: activities = [] as Activity[], isLoading: activitiesLoading } = useQuery({
+  const { data: activities = [] as Activity[], error: activitiesError, isLoading: activitiesLoading } = useQuery({
     queryKey: ["/api/profile/activities"],
     enabled: !!user,
-    staleTime: 2 * 60 * 1000 // 2 minutes
+    staleTime: 60 * 1000, // 1 minute
+    refetchInterval: 60 * 1000, // Auto-refresh every minute
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   // Update profile mutation
@@ -577,18 +585,28 @@ export default function UnifiedProfile() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#8b949e]">Total Views</span>
-                    <span className="text-[#00ffe1] font-bold">{mockUserStats.totalViews?.toLocaleString?.() || "0"}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#8b949e]">Total Shares</span>
-                    <span className="text-purple-400 font-bold">{mockUserStats.totalShares}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-[#8b949e]">Active Streak</span>
-                    <span className="text-[#ff00d4] font-bold">{mockUserStats.streakDays} days</span>
-                  </div>
+                  {statsLoading ? (
+                    <div className="text-[#8b949e] text-center">Loading real-time stats...</div>
+                  ) : statsError ? (
+                    <div className="text-red-400 text-center">Failed to load stats</div>
+                  ) : (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#8b949e]">Total Views</span>
+                        <span className="text-[#00ffe1] font-bold">
+                          {mockUserStats.totalViews?.toLocaleString?.() || "0"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#8b949e]">Total Shares</span>
+                        <span className="text-purple-400 font-bold">{mockUserStats.totalShares || 0}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[#8b949e]">Active Streak</span>
+                        <span className="text-[#ff00d4] font-bold">{mockUserStats.streakDays || 0} days</span>
+                      </div>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
