@@ -13,13 +13,15 @@ interface EliteLayoutProps {
 
 export function EliteLayout({ children, className = '', showBackground = true }: EliteLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative">
       {showBackground && <InteractiveBackground />}
       
       <EliteNavbar />
       
+      {/* Main content area - full width layout */}
       <motion.main 
-        className={`flex-grow relative z-10 ${className}`}
+        className={`relative z-10 w-full ${className}`}
+        style={{ paddingTop: '80px' }} // Account for fixed navbar height
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
