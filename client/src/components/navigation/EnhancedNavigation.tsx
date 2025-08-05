@@ -23,7 +23,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { AdvancedCard } from "@/components/ui/advanced-card";
-import EnhancedGuardianLogo from "@/components/EnhancedGuardianLogo";
 
 interface NavigationItem {
   path: string;
@@ -172,10 +171,13 @@ const EnhancedNavigation: React.FC = () => {
         <AdvancedCard variant="glass" className="w-full p-6 flex flex-col">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex flex-col items-center mb-2">
-              <EnhancedGuardianLogo size="lg" variant="full" animated={true} />
-              <div className="text-center mt-3">
-                <p className="text-xs text-gray-400 font-medium tracking-wider">SOVEREIGN TRUTH NETWORK</p>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="font-bold text-white">GuardianChain</h2>
+                <p className="text-xs text-gray-400">Sovereign Memory</p>
               </div>
             </div>
             
@@ -236,11 +238,14 @@ const EnhancedNavigation: React.FC = () => {
         >
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <EnhancedGuardianLogo size="sm" variant="full" animated={true} />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center">
+                <Shield className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-white">GuardianChain</span>
             </div>
 
             <EnhancedButton
-              variant="quantum"
+              variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >

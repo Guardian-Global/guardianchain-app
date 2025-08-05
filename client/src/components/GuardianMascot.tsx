@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
+import guardianMascotImg from '@assets/guardian_mascot_1754361002591.png';
 import { 
   MessageCircle, 
   X, 
@@ -15,10 +16,7 @@ import {
   Heart,
   Star,
   Coffee,
-  Lightbulb,
-  Eye,
-  Brain,
-  Cpu
+  Lightbulb
 } from 'lucide-react';
 
 interface MascotMessage {
@@ -67,171 +65,12 @@ const mascotMessages: MascotMessage[] = [
   }
 ];
 
-// Enhanced SVG Mascot Component
-const EnhancedGuardianMascot = ({ state = 'idle', size = 80 }: { state?: string; size?: number }) => (
-  <motion.div
-    className="relative"
-    animate={{
-      scale: state === 'celebrating' ? [1, 1.1, 1] : 1,
-      rotate: state === 'thinking' ? [0, -5, 5, 0] : 0,
-    }}
-    transition={{
-      duration: 2,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }}
-  >
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 100 100"
-      className="drop-shadow-[0_0_20px_rgba(0,255,225,0.5)]"
-    >
-      {/* Outer Quantum Ring */}
-      <motion.circle
-        cx="50"
-        cy="50"
-        r="45"
-        fill="none"
-        stroke="url(#glowGradient)"
-        strokeWidth="2"
-        opacity="0.6"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-      />
-      
-      {/* Middle Energy Ring */}
-      <motion.circle
-        cx="50"
-        cy="50"
-        r="38"
-        fill="none"
-        stroke="url(#glowGradient)"
-        strokeWidth="1"
-        opacity="0.4"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-      />
-      
-      {/* Main Shield Body */}
-      <motion.path
-        d="M50 10 L25 25 L25 50 Q25 75 50 90 Q75 75 75 50 L75 25 Z"
-        fill="url(#mainGradient)"
-        stroke="url(#borderGradient)"
-        strokeWidth="2"
-        animate={{
-          filter: state === 'celebrating' ? [
-            "drop-shadow(0 0 10px #00ffe1)",
-            "drop-shadow(0 0 20px #ff00d4)",
-            "drop-shadow(0 0 10px #00ffe1)"
-          ] : "drop-shadow(0 0 10px #00ffe1)"
-        }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-      />
-      
-      {/* Inner Circuit Pattern */}
-      <motion.g
-        animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      >
-        <path d="M35 30 L50 35 L65 30" stroke="#00ffe1" strokeWidth="1.5" fill="none" />
-        <path d="M30 45 L50 50 L70 45" stroke="#ff00d4" strokeWidth="1.5" fill="none" />
-        <path d="M35 60 L50 65 L65 60" stroke="#7c3aed" strokeWidth="1.5" fill="none" />
-      </motion.g>
-      
-      {/* Central Quantum Core */}
-      <motion.g>
-        <motion.circle
-          cx="50"
-          cy="45"
-          r="10"
-          fill="url(#coreGradient)"
-          animate={{
-            scale: state === 'thinking' ? [1, 1.3, 1] : [1, 1.15, 1],
-            opacity: [0.8, 1, 0.8]
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <motion.circle
-          cx="50"
-          cy="45"
-          r="6"
-          fill="#00ffe1"
-          opacity="0.7"
-          animate={{
-            scale: [0.8, 1.2, 0.8],
-            opacity: [0.7, 0.3, 0.7]
-          }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        />
-        <circle cx="50" cy="45" r="2" fill="#ffffff" opacity="0.9" />
-      </motion.g>
-      
-      {/* Data Streams */}
-      {[...Array(6)].map((_, i) => (
-        <motion.circle
-          key={i}
-          cx={35 + (i * 6)}
-          cy={20 + Math.sin(i) * 5}
-          r="1"
-          fill="#00ffe1"
-          animate={{
-            y: [0, 20, 0],
-            opacity: [0, 1, 0]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            delay: i * 0.2
-          }}
-        />
-      ))}
-      
-      {/* Gradient Definitions */}
-      <defs>
-        <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#0d1117" />
-          <stop offset="50%" stopColor="#161b22" />
-          <stop offset="100%" stopColor="#21262d" />
-        </linearGradient>
-        <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00ffe1" />
-          <stop offset="50%" stopColor="#ff00d4" />
-          <stop offset="100%" stopColor="#7c3aed" />
-        </linearGradient>
-        <radialGradient id="coreGradient" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#00ffe1" />
-          <stop offset="100%" stopColor="#059669" />
-        </radialGradient>
-        <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00ffe1" opacity="0.3" />
-          <stop offset="50%" stopColor="#ff00d4" opacity="0.5" />
-          <stop offset="100%" stopColor="#7c3aed" opacity="0.3" />
-        </linearGradient>
-      </defs>
-    </svg>
-    
-    {/* State Indicator */}
-    <motion.div
-      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 flex items-center justify-center text-xs"
-      animate={{ scale: [1, 1.2, 1] }}
-      transition={{ duration: 1, repeat: Infinity }}
-    >
-      {state === 'thinking' && <Brain className="w-3 h-3 text-white" />}
-      {state === 'celebrating' && <Sparkles className="w-3 h-3 text-white" />}
-      {state === 'talking' && <MessageCircle className="w-3 h-3 text-white" />}
-      {state === 'idle' && <Eye className="w-3 h-3 text-white" />}
-      {state === 'happy' && <Heart className="w-3 h-3 text-white" />}
-    </motion.div>
-  </motion.div>
-);
-
 const mascotStates = [
-  { name: 'idle', component: EnhancedGuardianMascot, animation: 'bounce' },
-  { name: 'talking', component: EnhancedGuardianMascot, animation: 'pulse' },
-  { name: 'celebrating', component: EnhancedGuardianMascot, animation: 'spin' },
-  { name: 'thinking', component: EnhancedGuardianMascot, animation: 'wiggle' },
-  { name: 'happy', component: EnhancedGuardianMascot, animation: 'heartbeat' }
+  { name: 'idle', emoji: '🛡️', animation: 'bounce' },
+  { name: 'talking', emoji: '💬', animation: 'pulse' },
+  { name: 'celebrating', emoji: '🎉', animation: 'spin' },
+  { name: 'thinking', emoji: '🤔', animation: 'wiggle' },
+  { name: 'happy', emoji: '😊', animation: 'heartbeat' }
 ];
 
 export default function GuardianMascot() {
@@ -323,30 +162,15 @@ export default function GuardianMascot() {
         >
           <Button
             onClick={handleMascotClick}
-            className="w-16 h-16 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] hover:from-[#00e5cb] hover:to-[#6d28d9] shadow-[0_0_25px_rgba(0,255,225,0.4)] hover:shadow-[0_0_35px_rgba(255,0,212,0.6)] transition-all duration-300 relative overflow-hidden border-2 border-white/20"
+            className="w-16 h-16 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] hover:from-[#00e5cb] hover:to-[#6d28d9] shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden"
             data-testid="mascot-button"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full" />
-            
-            {/* Quantum Pulse Effect */}
-            <motion.div 
-              className="absolute inset-0 rounded-full border-2 border-[#00ffe1]"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0, 0.6, 0]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
+            <img 
+              src={guardianMascotImg} 
+              alt="Guardian Mascot" 
+              className="w-12 h-12 relative z-10 rounded-full object-cover"
             />
-            
-            <motion.div 
-              className="absolute inset-0 rounded-full border border-[#ff00d4]"
-              animate={{
-                scale: [1, 1.4, 1],
-                opacity: [0, 0.4, 0]
-              }}
-              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-            />
-            <EnhancedGuardianMascot state={mascotState.name} size={56} />
             
             {/* Activity indicator */}
             {currentMessage && !isOpen && (
@@ -435,7 +259,11 @@ export default function GuardianMascot() {
                 <div className="flex items-center justify-between p-4 border-b border-[#30363d]">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] flex items-center justify-center overflow-hidden">
-                      <EnhancedGuardianMascot state="idle" size={32} />
+                      <img 
+                        src={guardianMascotImg} 
+                        alt="Guardian Mascot" 
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
                     </div>
                     <div>
                       <h3 className="font-semibold text-[#f0f6fc]">Guardian Assistant</h3>

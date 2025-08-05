@@ -5,125 +5,20 @@ export default function GuardianMascotFooter() {
   return (
     <footer className="bg-gradient-to-br from-[#0d1117] via-[#161b22] to-[#21262d] border-t border-[#30363d] mt-20">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Enhanced Guardian Mascot Section */}
+        {/* Guardian Mascot Section */}
         <div className="text-center mb-12">
           <div className="relative inline-block">
-            {/* Enhanced SVG Guardian */}
-            <div className="relative flex justify-center">
-              <svg
-                width="120"
-                height="120"
-                viewBox="0 0 100 100"
-                className="drop-shadow-[0_0_30px_rgba(0,255,225,0.6)]"
-              >
-                {/* Outer Energy Ring */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="48"
-                  fill="none"
-                  stroke="url(#footerGlowGradient)"
-                  strokeWidth="1"
-                  opacity="0.4"
-                  className="animate-spin-slow"
-                />
-                
-                {/* Main Guardian Shield */}
-                <path
-                  d="M50 5 L20 20 L20 50 Q20 80 50 95 Q80 80 80 50 L80 20 Z"
-                  fill="url(#footerMainGradient)"
-                  stroke="url(#footerBorderGradient)"
-                  strokeWidth="2"
-                  className="animate-pulse"
-                />
-                
-                {/* Circuit Patterns */}
-                <g opacity="0.8">
-                  <path d="M30 25 L50 30 L70 25" stroke="#00ffe1" strokeWidth="2" fill="none" />
-                  <path d="M25 45 L50 50 L75 45" stroke="#ff00d4" strokeWidth="2" fill="none" />
-                  <path d="M30 65 L50 70 L70 65" stroke="#7c3aed" strokeWidth="2" fill="none" />
-                </g>
-                
-                {/* Central Core */}
-                <circle
-                  cx="50"
-                  cy="45"
-                  r="12"
-                  fill="url(#footerCoreGradient)"
-                  className="animate-pulse"
-                />
-                
-                {/* Power Streams */}
-                <g>
-                  {[...Array(8)].map((_, i) => (
-                    <circle
-                      key={i}
-                      cx={30 + (i * 5)}
-                      cy={15 + Math.sin(i) * 3}
-                      r="0.8"
-                      fill="#00ffe1"
-                      opacity="0.6"
-                      className="animate-bounce"
-                      style={{ animationDelay: `${i * 0.2}s` }}
-                    />
-                  ))}
-                </g>
-                
-                {/* Gradient Definitions */}
-                <defs>
-                  <linearGradient id="footerMainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0d1117" />
-                    <stop offset="50%" stopColor="#161b22" />
-                    <stop offset="100%" stopColor="#21262d" />
-                  </linearGradient>
-                  <linearGradient id="footerBorderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00ffe1" />
-                    <stop offset="50%" stopColor="#ff00d4" />
-                    <stop offset="100%" stopColor="#7c3aed" />
-                  </linearGradient>
-                  <radialGradient id="footerCoreGradient" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#00ffe1" />
-                    <stop offset="100%" stopColor="#059669" />
-                  </radialGradient>
-                  <linearGradient id="footerGlowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00ffe1" opacity="0.3" />
-                    <stop offset="50%" stopColor="#ff00d4" opacity="0.5" />
-                    <stop offset="100%" stopColor="#7c3aed" opacity="0.3" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              
-              {/* Floating Power Indicators */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center animate-pulse">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-              </div>
+            {/* Animated Guardian Shield */}
+            <div className="relative">
+              <Shield className="w-24 h-24 text-[#00ffe1] mx-auto animate-pulse drop-shadow-[0_0_20px_rgba(0,255,225,0.5)]" />
+              <div className="absolute inset-0 w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-[#00ffe1]/20 to-[#ff00d4]/20 animate-spin-slow" />
             </div>
-            
-            <h3 className="text-4xl font-bold text-transparent bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text mt-6 font-[Orbitron] tracking-wider">
-              GUARDIAN SENTINEL AI
+            <h3 className="text-2xl font-bold text-[#00ffe1] mt-4 font-[Orbitron]">
+              Guardian Sentinel
             </h3>
-            <div className="text-xs text-[#00ffe1] font-mono tracking-[0.2em] mt-2 opacity-70">
-              QUANTUM-ENHANCED • TRUTH VERIFICATION • BLOCKCHAIN SECURED
-            </div>
-            <p className="text-[#8b949e] max-w-2xl mx-auto mt-4 text-lg leading-relaxed">
-              Your advanced digital truth protector, wielding quantum-enhanced verification protocols and neural network intelligence to safeguard memories, validate authenticity, and secure the future of truth across the blockchain multiverse.
+            <p className="text-[#8b949e] max-w-md mx-auto mt-2">
+              Your digital truth protector, safeguarding memories and validating authenticity across the blockchain.
             </p>
-            
-            {/* Status Indicators */}
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 rounded-full border border-green-500/30">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-400 font-medium">ONLINE</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1 bg-cyan-500/20 rounded-full border border-cyan-500/30">
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-cyan-400 font-medium">SECURING</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1 bg-purple-500/20 rounded-full border border-purple-500/30">
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-purple-400 font-medium">VALIDATING</span>
-              </div>
-            </div>
           </div>
         </div>
 

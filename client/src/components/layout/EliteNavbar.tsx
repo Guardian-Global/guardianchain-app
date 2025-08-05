@@ -25,11 +25,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const navItems = [
-  { href: '/', label: 'Home', icon: BarChart3 },
-  { href: '/capsules', label: 'Capsules', icon: Search },
-  { href: '/dao', label: 'DAO', icon: Crown },
-  { href: '/vault', label: 'Vault', icon: Vault },
-  { href: '/social', label: 'Social', icon: Users },
+  { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+  { href: '/explorer', label: 'Capsule Explorer', icon: Search },
+  { href: '/truth-genome', label: 'Truth Genome', icon: Sparkles },
+  { href: '/social', label: 'Social Hub', icon: Users },
+  { href: '/governance', label: 'DAO', icon: Crown },
   { href: '/partners', label: 'Partners', icon: Handshake },
 ];
 
@@ -39,12 +39,7 @@ export function EliteNavbar() {
 
   return (
     <motion.nav 
-      className="sticky top-0 z-50 backdrop-blur-md border-b"
-      style={{ 
-        background: 'linear-gradient(135deg, hsl(218, 54%, 9%)/80, hsl(215, 23%, 19%)/60)',
-        borderColor: 'hsl(215, 23%, 19%)',
-        color: 'hsl(0, 0%, 98%)'
-      }}
+      className="sticky top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
@@ -63,8 +58,8 @@ export function EliteNavbar() {
                 alt="Guardian Mascot" 
                 className="h-8 w-8 rounded-full object-cover border border-yellow-400/30"
               />
-              <span className="text-2xl font-bold text-primary tracking-wide shadow-glow">
-                GUARDIANCHAIN
+              <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                GuardianChain
               </span>
             </motion.div>
           </Link>

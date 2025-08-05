@@ -20,47 +20,37 @@ export default function TermsOfService() {
           <BrandedText size="3xl" />
         </div>
 
-        <div className="prose prose-invert max-w-none bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
           <h1 className="text-3xl font-bold mb-6 text-white">
             Terms of Service
           </h1>
-          <p className="text-slate-300 mb-6">By using GuardianChain, you agree to uphold all community trust, sovereign truth principles, and capsule integrity outlined in Veritas Protocol.</p>
+          <p className="text-slate-300 mb-6">Last Updated: January 19, 2025</p>
 
           <div className="space-y-8 text-slate-300">
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-primary">
-                Core Principles
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                1. Platform Overview
               </h2>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>No tampering of chain-stored memory</li>
-                <li>Zero tolerance for impersonation or forgery</li>
-                <li>Usage is subject to immutable authorship records</li>
-                <li>All content must comply with truth verification standards</li>
-                <li>Respect for intellectual property and digital sovereignty</li>
-              </ul>
+              <p className="mb-4">
+                GUARDIANCHAIN is a decentralized truth verification protocol
+                that enables users to create immutable truth capsules, verify
+                content through community governance, and earn GTT tokens
+                through the yield system.
+              </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-primary">
-                Platform Responsibilities
+              <h2 className="text-2xl font-semibold mb-4 text-green-400">
+                2. User Responsibilities
               </h2>
               <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Maintain blockchain integrity and security</li>
-                <li>Ensure fair GTT token distribution</li>
-                <li>Provide transparent DAO governance mechanisms</li>
-                <li>Protect user privacy through decentralized architecture</li>
-              </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4 text-primary">
-                User Obligations
-              </h2>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Submit only truthful and verifiable content</li>
-                <li>Participate in good faith verification processes</li>
-                <li>Respect community guidelines and consensus</li>
-                <li>Maintain account security and wallet protection</li>
+                <li>Provide accurate and truthful content in capsules</li>
+                <li>Respect intellectual property rights</li>
+                <li>Comply with all applicable laws and regulations</li>
+                <li>Maintain the security of your wallet and private keys</li>
+                <li>
+                  Use the platform for legitimate truth verification purposes
+                </li>
               </ul>
             </section>
 
