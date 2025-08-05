@@ -1,0 +1,144 @@
+ Capsule Reaction Emojis
+1. Supabase Table
+sql
+Copy
+Edit
+create table if not exists capsule_reactions (
+  id uuid primary key default gen_random_uuid(),
+  capsule_id uuid references capsules(id),
+  user_id uuid references users(id),
+  emoji text check (emoji in ('❤️','🔥','😂','😢','👏','🤯')),
+  created_at timestamptz default now()
+);
+2. API Endpoint /api/capsule/react
+ts
+Copy
+Edit
+export async function POST(req: NextRequest) {
+  const { capsuleId, emoji, userId } = await req.json();
+  const { error } = await supabase
+    .from("capsule_reactions")
+    .insert({ capsule_id: capsuleId, emoji, user_id: userId });
+
+  return NextResponse.json({ success: !error, error });
+}
+3. ReactEmojiBar.tsx
+tsx
+Copy
+Edit
+const emojis = ['❤️','🔥','😂','😢','👏','🤯'];
+
+export default function ReactEmojiBar({ capsuleId }) {
+  const [reactions, setReactions] = useState({});
+
+  useEffect(() => {
+    fetch(`/api/capsule/reactions/${capsuleId}`)
+      .then(res => res.json())
+      .then(setReactions);
+  }, []);
+
+  const handleReact = async (emoji) => {
+    await fetch('/api/capsule/react', {
+      method: 'POST',
+      body: JSON.stringify({ capsuleId, emoji, userId }),
+    });
+    setReactions(prev => ({ ...prev, [emoji]: (prev[emoji] || 0) + 1 }));
+  };
+
+  return (
+    <div className="flex gap-2">
+      {emojis.map(emoji => (
+        <button
+          key={emoji}
+          onClick={() => handleReact(emoji)}
+          className="text-xl hover:scale-125 transition"
+        >
+          {emoji} {reactions[emoji] || 0}
+        </button>
+      ))}
+    </div>
+  );
+}
+📼 Shared Capsule Playlist
+1. Supabase Schema
+sql
+Copy
+Edit
+create table if not exists capsule_playlists (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid,
+  name text,
+  created_at timestamptz default now()
+);
+
+create table if not exists capsule_playlist_items (
+  id uuid primary key default gen_random_uuid(),
+  playlist_id uuid references capsule_playlists(id),
+  capsule_id uuid references capsules(id),
+  added_by uuid,
+  created_at timestamptz default now()
+);
+2. Playlist UI
+tsx
+Copy
+Edit
+export default function PlaylistCreator({ userId }) {
+  const [name, setName] = useState('');
+  const handleCreate = async () => {
+    await fetch('/api/playlist/create', {
+      method: 'POST',
+      body: JSON.stringify({ name, userId }),
+    });
+  };
+
+  return (
+    <div className="flex gap-2">
+      <input
+        className="bg-black text-white border px-2 py-1"
+        placeholder="My Playlist"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <button onClick={handleCreate} className="bg-green-600 px-3 py-1 rounded">
+        ➕ Create
+      </button>
+    </div>
+  );
+}
+🧮 Capsule Value Calculator
+Formula:
+ts
+Copy
+Edit
+const calcCapsuleValue = ({
+  views,
+  reactions,
+  unlocks,
+  verifications,
+  timeLockedDays,
+}) => {
+  const baseValue = views * 0.01 + reactions * 0.05 + unlocks * 0.2 + verifications * 0.25;
+  const multiplier = 1 + (timeLockedDays / 365); // bonus for long-term locking
+  return parseFloat((baseValue * multiplier).toFixed(2));
+};
+UI: CapsuleValue.tsx
+tsx
+Copy
+Edit
+export default function CapsuleValue({ capsuleStats }) {
+  const value = calcCapsuleValue(capsuleStats);
+
+  return (
+    <div className="bg-gradient-to-r from-yellow-300 to-orange-500 text-black p-3 rounded-lg shadow-lg">
+      <p className="text-xl font-bold">💰 Capsule Value:</p>
+      <p className="text-3xl font-mono">${value}</p>
+    </div>
+  );
+}
+✅ Delivered:
+
+✅ Real-time emoji reactions
+
+✅ Curated community playlists
+
+✅ Capsule worth tracker

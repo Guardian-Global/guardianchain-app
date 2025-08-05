@@ -1,0 +1,126 @@
+Capsule Sentiment Scanner (AI)
+1. Supabase Table
+sql
+Copy
+Edit
+create table if not exists capsule_sentiment (
+  capsule_id uuid primary key,
+  sentiment text check (sentiment in ('positive', 'neutral', 'negative')),
+  confidence float,
+  analyzed_at timestamptz default now()
+);
+2. Backend: /api/capsule/sentiment/[capsuleId]
+ts
+Copy
+Edit
+const { data: capsule } = await supabase
+  .from("capsules")
+  .select("content")
+  .eq("id", capsuleId)
+  .single();
+
+const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "gpt-4",
+    messages: [{
+      role: "user",
+      content: `Analyze the following memory and return its sentiment (positive, neutral, negative): "${capsule.content}"`
+    }]
+  })
+});
+
+const label = await aiResponse.json();
+const sentiment = parseSentiment(label);
+
+await supabase.from("capsule_sentiment").upsert({
+  capsule_id: capsuleId,
+  sentiment,
+  confidence: 0.95
+});
+3. UI: SentimentBadge.tsx
+tsx
+Copy
+Edit
+const colorMap = {
+  positive: "bg-green-600",
+  neutral: "bg-slate-500",
+  negative: "bg-red-600"
+};
+
+export default function SentimentBadge({ sentiment }) {
+  return (
+    <span className={`text-white px-2 py-1 rounded-full text-xs ${colorMap[sentiment]}`}>
+      🧠 {sentiment.toUpperCase()}
+    </span>
+  );
+}
+🧬 Mint Capsule Directly from Profile Gallery
+1. New Button on ProfileGallery.tsx
+tsx
+Copy
+Edit
+<Button onClick={() => handleMint(capsule.id)} className="bg-cyan-500 text-white">
+  ⛓ Mint as NFT
+</Button>
+2. Function: handleMint
+ts
+Copy
+Edit
+async function handleMint(capsuleId) {
+  const { data: capsule } = await supabase.from("capsules").select("*").eq("id", capsuleId).single();
+  const tx = await contract.write.mintCapsuleNFT([capsuleId, capsule.media_url, capsule.owner_wallet]);
+  alert(`Transaction sent! Hash: ${tx.hash}`);
+}
+Requires: thirdweb or viem integration and capsule NFT contract with mintCapsuleNFT.
+
+🏆 Public Leaderboard of Top Capsules
+1. SQL View or API
+sql
+Copy
+Edit
+select
+  c.id,
+  c.title,
+  u.username,
+  cr.tier,
+  sum(ci.score) as total_score
+from capsules c
+join capsule_reputation cr on cr.capsule_id = c.id
+join user_capsule_interactions ci on ci.capsule_id = c.id
+join users u on u.id = c.user_id
+group by c.id, u.username, cr.tier
+order by total_score desc
+limit 25;
+2. UI Component: TopCapsulesLeaderboard.tsx
+tsx
+Copy
+Edit
+export default function TopCapsulesLeaderboard() {
+  const { data } = useSWR("/api/leaderboard/capsules");
+
+  return (
+    <div className="bg-gradient-to-br from-black to-slate-900 p-6 rounded-xl shadow-xl">
+      <h3 className="text-2xl font-bold text-cyan-400">🏆 Capsule Leaderboard</h3>
+      <ul className="mt-4 space-y-3">
+        {data?.map((capsule, idx) => (
+          <li key={capsule.id} className="flex justify-between items-center">
+            <span className="text-white font-semibold">{idx + 1}. {capsule.title}</span>
+            <span className="text-emerald-400">Score: {capsule.total_score}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+✅ Complete:
+
+AI-powered emotional labeling of capsules
+
+Mint NFT directly from gallery
+
+Global ranking of most impactful capsules

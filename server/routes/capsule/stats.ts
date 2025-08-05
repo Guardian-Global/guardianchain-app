@@ -1,7 +1,7 @@
 import express from "express";
 import { db } from "../../db";
 import { capsuleStats } from "../../../shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const router = express.Router();
 
@@ -128,6 +128,58 @@ router.post("/stats/:capsuleId/increment", async (req, res) => {
   } catch (error) {
     console.error("Capsule stats increment error:", error);
     res.status(500).json({ error: "Failed to increment capsule stats." });
+  }
+});
+
+// Secure increment using stored procedures
+router.post("/secure-increment/:capsuleId", async (req, res) => {
+  try {
+    const { capsuleId } = req.params;
+    const { type } = req.body;
+
+    if (!['views', 'shares', 'unlocks'].includes(type)) {
+      return res.status(400).json({ error: "Invalid increment type" });
+    }
+
+    // Use secure stored procedures for atomic increments
+    let functionName;
+    switch (type) {
+      case 'views':
+        functionName = 'increment_capsule_view';
+        break;
+      case 'shares':
+        functionName = 'increment_capsule_share';
+        break;
+      case 'unlocks':
+        functionName = 'increment_capsule_unlock';
+        break;
+    }
+
+    // Call the stored procedure with proper parameter binding
+    await db.execute(
+      sql`SELECT ${sql.raw(functionName)}(${capsuleId}::varchar)`
+    );
+
+    // Return updated stats
+    const [updatedStats] = await db
+      .select()
+      .from(capsuleStats)
+      .where(eq(capsuleStats.capsuleId, capsuleId));
+
+    res.json({
+      success: true,
+      type,
+      capsuleId,
+      stats: {
+        views: updatedStats?.views || 0,
+        shares: updatedStats?.shares || 0,
+        unlocks: updatedStats?.unlocks || 0,
+        lastViewedAt: updatedStats?.lastViewedAt || new Date(),
+      }
+    });
+  } catch (error) {
+    console.error("Failed to increment capsule stats securely:", error);
+    res.status(500).json({ error: "Failed to increment stats" });
   }
 });
 

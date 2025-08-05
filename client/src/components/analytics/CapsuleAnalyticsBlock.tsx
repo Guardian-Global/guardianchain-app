@@ -6,6 +6,8 @@ import CapsuleTrendGraph from './CapsuleTrendGraph';
 import EngagementHeatmap from './EngagementHeatmap';
 import CapsuleAuditExport from './CapsuleAuditExport';
 import BehaviorLabels from './BehaviorLabels';
+import CapsuleStatsGraph from './CapsuleStatsGraph';
+import WeeklyTrendViewer from './WeeklyTrendViewer';
 
 interface CapsuleAnalyticsBlockProps {
   capsuleId: string;
@@ -27,11 +29,14 @@ export default function CapsuleAnalyticsBlock({ capsuleId }: CapsuleAnalyticsBlo
           <CardHeader>
             <CardTitle className="text-[#00ffe1] flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Live Engagement
+              Live Analytics Dashboard
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CapsuleEngagementStats capsuleId={capsuleId} />
+            <div className="space-y-4">
+              <CapsuleStatsGraph capsuleId={capsuleId} />
+              <CapsuleEngagementStats capsuleId={capsuleId} />
+            </div>
           </CardContent>
         </Card>
 
@@ -49,19 +54,9 @@ export default function CapsuleAnalyticsBlock({ capsuleId }: CapsuleAnalyticsBlo
         </Card>
       </div>
 
-      {/* Trend Analysis */}
+      {/* Weekly Trend Analysis */}
       <div className="mt-6">
-        <Card className="bg-[#0d1117] border-[#30363d]">
-          <CardHeader>
-            <CardTitle className="text-[#00ffe1] flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Daily Interaction Trends
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CapsuleTrendGraph capsuleId={capsuleId} />
-          </CardContent>
-        </Card>
+        <WeeklyTrendViewer capsuleId={capsuleId} />
       </div>
 
       {/* Engagement Heatmap */}
