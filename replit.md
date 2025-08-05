@@ -31,14 +31,15 @@ Preferred communication style: Simple, everyday language.
 - **API Design**: RESTful API with structured error handling.
 - **Authentication**: Debug authentication system with OAuth integration (Google/GitHub via Passport.js) for enterprise-grade user authentication and tier-based access control.
 - **Object Storage**: Google Cloud Storage integration for protected file uploading and public asset serving.
-- **Multi-Chain Infrastructure**: Integration with Base Network for ultra-low fee transactions and cross-chain capsule filtering.
+- **Multi-Chain Infrastructure**: Full Base Network integration complete - optimized for ultra-low fee transactions ($0.01 vs $20+), 2-second confirmations, and Ethereum compatibility.
 - **Data Flow**: Automated IPFS integration for content storage, community verification, and GTT token reward distribution.
 
 ### Database & ORM
-- **Database**: PostgreSQL (configured for Neon serverless).
+- **Database**: Supabase PostgreSQL with robust fallback systems.
 - **ORM**: Drizzle ORM.
 - **Schema Management**: Drizzle Kit.
 - **Lineage Infrastructure**: Capsule inheritance tracking with lineage table, grief flow, and influence scoring system.
+- **Connection Status**: All database queries optimized and working, including recent capsule endpoints.
 
 ### Core Entities & Features
 - **Users & Authentication**: Streamlined authentication with a four-tier access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN) and subscription management.
@@ -72,11 +73,12 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### Blockchain & Web3
-- **Ethereum Integration**: ethers.js.
-- **Multi-chain Support**: Ethereum mainnet, Polygon mainnet, Base mainnet, and corresponding testnets.
-- **Wallet Providers**: MetaMask, Coinbase Wallet.
-- **Development**: Hardhat.
-- **Web3 Integration**: Wagmi/Viem.
+- **Primary Network**: Base Network (Ethereum L2) - deployment ready.
+- **Multi-chain Support**: Base mainnet/testnet (primary), Ethereum, Polygon networks.
+- **Wallet Providers**: MetaMask, Coinbase Wallet, WalletConnect - all configured.
+- **Development**: Hardhat with Base Network integration.
+- **Web3 Integration**: Wagmi/Viem with optimized Base transport layers.
+- **Gas Optimization**: Ultra-low fee configuration for Base Network transactions.
 
 ### Third-party Services
 - **Payment Processing**: Stripe.
