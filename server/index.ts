@@ -1,3 +1,6 @@
+// Set development environment for now
+process.env.NODE_ENV = 'development';
+
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import session from "express-session";

@@ -87,14 +87,17 @@ export default function ProfileCapsulesView({
     );
   }
 
+  // Ensure capsules is an array before filtering
+  const capsulesArray = Array.isArray(capsules) ? capsules : [];
+  
   // Filter capsules by status
-  const verifiedCapsules = capsules.filter(c => c.verified);
-  const daoCertifiedCapsules = capsules.filter(c => c.daoCertified);
+  const verifiedCapsules = capsulesArray.filter(c => c.verified);
+  const daoCertifiedCapsules = capsulesArray.filter(c => c.daoCertified);
   const capsulesByTier = {
-    explorer: capsules.filter(c => c.tier === 'explorer'),
-    seeker: capsules.filter(c => c.tier === 'seeker'),
-    creator: capsules.filter(c => c.tier === 'creator'),
-    sovereign: capsules.filter(c => c.tier === 'sovereign'),
+    explorer: capsulesArray.filter(c => c.tier === 'explorer'),
+    seeker: capsulesArray.filter(c => c.tier === 'seeker'),
+    creator: capsulesArray.filter(c => c.tier === 'creator'),
+    sovereign: capsulesArray.filter(c => c.tier === 'sovereign'),
   };
 
   return (
@@ -164,7 +167,7 @@ export default function ProfileCapsulesView({
         <TabsList className="grid w-full grid-cols-4 lg:grid-cols-6 bg-slate-800 border-slate-700">
           <TabsTrigger value="all" className="flex items-center gap-2">
             <Archive className="w-4 h-4" />
-            All ({capsules.length})
+            All ({capsulesArray.length})
           </TabsTrigger>
           <TabsTrigger value="verified" className="flex items-center gap-2">
             <Award className="w-4 h-4" />
@@ -190,7 +193,7 @@ export default function ProfileCapsulesView({
 
         <TabsContent value="all" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {capsules.map((capsule) => (
+            {capsulesArray.map((capsule) => (
               <CapsuleCard
                 key={capsule.id}
                 capsule={capsule}
@@ -341,7 +344,7 @@ export default function ProfileCapsulesView({
                 <CardContent className="p-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-cyan-400">
-                      {Math.round((verifiedCapsules.length / capsules.length) * 100)}%
+                      {Math.round((verifiedCapsules.length / capsulesArray.length) * 100)}%
                     </div>
                     <div className="text-xs text-slate-400">Verification Rate</div>
                   </div>
@@ -352,7 +355,7 @@ export default function ProfileCapsulesView({
                 <CardContent className="p-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-purple-400">
-                      {Math.round((daoCertifiedCapsules.length / capsules.length) * 100)}%
+                      {Math.round((daoCertifiedCapsules.length / capsulesArray.length) * 100)}%
                     </div>
                     <div className="text-xs text-slate-400">DAO Certification Rate</div>
                   </div>
@@ -363,7 +366,7 @@ export default function ProfileCapsulesView({
                 <CardContent className="p-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-yellow-400">
-                      {Math.round((stats?.totalGttEarned || 0) / Math.max(capsules.length, 1))}
+                      {Math.round((stats?.totalGttEarned || 0) / Math.max(capsulesArray.length, 1))}
                     </div>
                     <div className="text-xs text-slate-400">Avg GTT per Capsule</div>
                   </div>
@@ -374,7 +377,7 @@ export default function ProfileCapsulesView({
                 <CardContent className="p-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-magenta-400">
-                      {Math.round(((stats?.capsulesWithLineage || 0) / Math.max(capsules.length, 1)) * 100)}%
+                      {Math.round(((stats?.capsulesWithLineage || 0) / Math.max(capsulesArray.length, 1)) * 100)}%
                     </div>
                     <div className="text-xs text-slate-400">Lineage Coverage</div>
                   </div>
