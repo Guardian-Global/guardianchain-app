@@ -366,7 +366,7 @@ export default function CyberHomepage() {
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="flex items-center space-x-4 mb-6 md:mb-0">
                 <img 
-                  src="/assets/mascot/guardian_mascot.png" 
+                  src="/guardian-mascot.png" 
                   alt="Guardian Mascot" 
                   className="w-16 h-16 rounded-full border-2 border-[#00ffe1] shadow-[0_0_15px_rgba(0,255,225,0.3)]"
                 />

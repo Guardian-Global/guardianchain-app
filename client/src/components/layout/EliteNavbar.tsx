@@ -5,7 +5,6 @@ import EnhancedMegaNavigation from '@/components/EnhancedMegaNavigation';
 import { 
   Menu, 
   X, 
-  Shield, 
   Vault, 
   BarChart3, 
   Users, 
@@ -54,7 +53,11 @@ export function EliteNavbar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Shield className="h-8 w-8 text-yellow-400" />
+              <img 
+                src="/guardian-mascot.png" 
+                alt="Guardian Mascot" 
+                className="h-8 w-8 rounded-full object-cover border border-yellow-400/30"
+              />
               <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                 GuardianChain
               </span>

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  Shield,
   Zap,
   Globe,
   TrendingUp,
@@ -212,7 +211,11 @@ function HeroSection() {
           {/* Trust Indicators */}
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-cyan-300/80 mb-8">
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-green-400" />
+              <img 
+                src="/guardian-mascot.png" 
+                alt="Guardian" 
+                className="w-4 h-4 rounded-full object-cover border border-green-400/30"
+              />
               Blockchain Secured
             </div>
             <div className="flex items-center gap-2">
@@ -496,9 +499,13 @@ export default function EliteHomepage() {
               <div className="absolute top-4 right-4 w-1 h-1 bg-blue-400/60 rounded-full animate-particle-float animation-delay-300"></div>
               <div className="absolute bottom-6 left-6 w-2 h-2 bg-cyan-400/40 rounded-full animate-particle-float animation-delay-700"></div>
               
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl animate-epic-glow relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl animate-epic-glow relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 animate-holographic rounded-2xl"></div>
-                <Shield className="w-8 h-8 text-white relative z-10" />
+                <img 
+                  src="/guardian-mascot.png" 
+                  alt="Guardian Mascot" 
+                  className="w-10 h-10 rounded-full relative z-10 object-cover border border-white/30"
+                />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-lg">Truth Capsules</h3>
               <p className="text-slate-400 mb-6 leading-relaxed">
