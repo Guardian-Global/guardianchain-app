@@ -20,6 +20,7 @@ import { analyzeVoiceFile } from "./ai/voice-analysis";
 import { composeCapsule } from "./ai/capsule-composer";
 import { registerSubscriptionRoutes } from "./routes/subscription";
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
+import { registerBulkRoutes } from "./routes/bulk";
 import { runCapsuleClustering, getCachedClusteringResults, generateClusterInsights } from "./api/capsule-clustering";
 import multer from "multer";
 import {
@@ -1454,6 +1455,9 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   // Auth middleware - Setup Debug Auth for immediate testing
   setupDebugAuth(app);
+
+  // Register bulk upload routes
+  registerBulkRoutes(app);
 
   // Simple subscription status - no database calls
   app.get(

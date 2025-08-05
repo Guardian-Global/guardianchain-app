@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Link } from 'wouter';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery } from '@tanstack/react-query';
@@ -43,7 +44,8 @@ import {
   ChevronRight,
   Play,
   BookOpen,
-  HelpCircle
+  HelpCircle,
+  Database
 } from 'lucide-react';
 
 interface CreationMode {
@@ -242,15 +244,30 @@ const CreateCapsule: React.FC = () => {
                 Seal your truth in an immutable capsule for eternity
               </p>
               
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                <Shield className="w-4 h-4" />
-                <span>Blockchain Secured</span>
-                <span>•</span>
-                <Star className="w-4 h-4" />
-                <span>AI Enhanced</span>
-                <span>•</span>
-                <Globe className="w-4 h-4" />
-                <span>Globally Accessible</span>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Shield className="w-4 h-4" />
+                  <span>Blockchain Secured</span>
+                  <span>•</span>
+                  <Star className="w-4 h-4" />
+                  <span>AI Enhanced</span>
+                  <span>•</span>
+                  <Globe className="w-4 h-4" />
+                  <span>Globally Accessible</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-center">
+                <Link href="/bulk-upload">
+                  <Button 
+                    variant="outline"
+                    className="border-purple-500 text-purple-300 hover:bg-purple-500/20"
+                    data-testid="bulk-upload-link"
+                  >
+                    <Database className="w-4 h-4 mr-2" />
+                    Need to upload multiple capsules? Try Bulk Upload
+                  </Button>
+                </Link>
               </div>
             </motion.div>
 

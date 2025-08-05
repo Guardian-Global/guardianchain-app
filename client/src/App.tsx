@@ -26,6 +26,7 @@ import OnboardingProvider from "./components/onboarding/OnboardingProvider";
 
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
+const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
 const Profile = lazy(() => import("@/pages/profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
@@ -120,6 +121,7 @@ function Router() {
               <Route path="/tokenomics" component={Tokenomics} />
               <Route path="/revenue-explainer" component={RevenueExplainer} />
               <Route path="/create" component={CreateCapsule} />
+              <Route path="/bulk-upload" component={BulkUpload} />
               <Route path="/profile" component={Profile} />
               <Route path="/profile/ultimate" component={UltimateProfile} />
               <Route path="/profile/enhanced" component={EnhancedProfilePage} />
