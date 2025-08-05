@@ -145,6 +145,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register playlist routes
   app.use("/api/playlist", (await import("./routes/playlist/create")).default);
+  app.use("/api/playlist", (await import("./routes/playlist/mint")).default);
+  
+  // Register remix routes
+  app.use("/api/capsule", (await import("./routes/capsule/remix")).default);
+  app.use("/api/remix/contest", (await import("./routes/remix/contest")).default);
   // Configure multer for file uploads
   const upload = multer({ 
     storage: multer.memoryStorage(),

@@ -9,6 +9,10 @@ import SentimentBadge from '../sentiment/SentimentBadge';
 import CapsuleValueCalculator from '../value/CapsuleValueCalculator';
 import PlaylistCreator from '../playlist/PlaylistCreator';
 import CapsuleStatsGraph from '../analytics/CapsuleStatsGraph';
+import PlaylistNFTMinter from '../remix/PlaylistNFTMinter';
+import CapsuleRemixer from '../remix/CapsuleRemixer';
+import RemixLeaderboard from '../remix/RemixLeaderboard';
+import RemixProfileBadges from '../profile/RemixProfileBadges';
 
 export default function EnhancementShowcase() {
   const sampleStats = {
@@ -32,7 +36,7 @@ export default function EnhancementShowcase() {
         </header>
 
         <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid grid-cols-4 lg:grid-cols-8 bg-[#161b22] border-[#30363d]">
+          <TabsList className="grid grid-cols-4 lg:grid-cols-10 bg-[#161b22] border-[#30363d]">
             <TabsTrigger value="analytics" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
               Analytics
             </TabsTrigger>
@@ -50,6 +54,12 @@ export default function EnhancementShowcase() {
             </TabsTrigger>
             <TabsTrigger value="playlist" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
               Playlists
+            </TabsTrigger>
+            <TabsTrigger value="remix" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              AI Remix
+            </TabsTrigger>
+            <TabsTrigger value="contest" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              Contest
             </TabsTrigger>
             <TabsTrigger value="interactions" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
               Activity
@@ -173,26 +183,52 @@ export default function EnhancementShowcase() {
               <PlaylistCreator />
               <Card className="bg-[#0d1117] border-[#30363d]">
                 <CardHeader>
-                  <CardTitle className="text-[#00ffe1]">Playlist Features</CardTitle>
+                  <CardTitle className="text-[#00ffe1]">NFT Minting</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-[#8b949e]">
+                <CardContent className="space-y-4">
+                  <PlaylistNFTMinter 
+                    playlistId="demo-playlist-1"
+                    playlistName="My Truth Collection"
+                    capsuleCount={12}
+                  />
+                  <ul className="space-y-2 text-[#8b949e] text-sm">
                     <li className="flex items-center gap-2">
-                      ✅ <span>Create custom capsule collections</span>
+                      ✅ <span>Mint playlists as ERC-721 NFTs</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      ✅ <span>Share playlists with community</span>
+                      ✅ <span>Showcase collection metadata</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      ✅ <span>Collaborative playlist building</span>
+                      ✅ <span>Trade on OpenSea marketplace</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      ✅ <span>Voice summaries and descriptions</span>
+                      ✅ <span>Earn royalties from sales</span>
                     </li>
                   </ul>
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="remix" className="space-y-6">
+            <div className="grid gap-6">
+              <CapsuleRemixer capsuleId="demo-capsule-1" />
+              <Card className="bg-[#0d1117] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#00ffe1]">Profile Remix Stats</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <RemixProfileBadges remixCount={5} remixAwards={2} />
+                  <p className="text-[#8b949e] mt-4 text-sm">
+                    Track your remix journey from beginner to master. Earn badges, win contests, and claim exclusive NFT rewards for your creative contributions.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contest" className="space-y-6">
+            <RemixLeaderboard />
           </TabsContent>
 
           <TabsContent value="interactions" className="space-y-6">
