@@ -87,17 +87,17 @@ export default function ProfileCapsulesView({
     );
   }
 
-  // Ensure capsules is an array before filtering
+  // Ensure capsules is an array before filtering - comprehensive validation
   const capsulesArray = Array.isArray(capsules) ? capsules : [];
   
-  // Filter capsules by status
-  const verifiedCapsules = capsulesArray.filter(c => c.verified);
-  const daoCertifiedCapsules = capsulesArray.filter(c => c.daoCertified);
+  // Filter capsules by status with additional safety checks
+  const verifiedCapsules = capsulesArray.filter(c => c && c.verified);
+  const daoCertifiedCapsules = capsulesArray.filter(c => c && c.daoCertified);
   const capsulesByTier = {
-    explorer: capsulesArray.filter(c => c.tier === 'explorer'),
-    seeker: capsulesArray.filter(c => c.tier === 'seeker'),
-    creator: capsulesArray.filter(c => c.tier === 'creator'),
-    sovereign: capsulesArray.filter(c => c.tier === 'sovereign'),
+    explorer: capsulesArray.filter(c => c && c.tier === 'explorer'),
+    seeker: capsulesArray.filter(c => c && c.tier === 'seeker'),
+    creator: capsulesArray.filter(c => c && c.tier === 'creator'),
+    sovereign: capsulesArray.filter(c => c && c.tier === 'sovereign'),
   };
 
   return (

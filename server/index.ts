@@ -1,4 +1,4 @@
-// Set development environment for now
+// Set development environment
 process.env.NODE_ENV = 'development';
 
 import express from "express";

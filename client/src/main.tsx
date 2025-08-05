@@ -1,3 +1,6 @@
+// Disable Lit development mode warnings
+(globalThis as any).litIssuedWarnings = new Set();
+
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
