@@ -211,20 +211,20 @@ export default function UnifiedProfile() {
     );
   }
 
-  // Mock stats for display (will be replaced by real data from API)
-  const mockUserStats: UserStats = userStats || {
-    capsulesCreated: 24,
-    gttEarned: 1247,
-    truthScore: 88,
-    verificationsPerformed: 156,
-    communityRank: 42,
-    streakDays: 12,
-    totalViews: 3245,
-    totalShares: 89,
-    accuracy: 92
+  // Safe stats with defaults to prevent crashes
+  const mockUserStats: UserStats = {
+    capsulesCreated: (userStats as any)?.capsulesCreated || 24,
+    gttEarned: (userStats as any)?.gttEarned || 1247,
+    truthScore: (userStats as any)?.truthScore || 88,
+    verificationsPerformed: (userStats as any)?.verificationsPerformed || 156,
+    communityRank: (userStats as any)?.communityRank || 42,
+    streakDays: (userStats as any)?.streakDays || 12,
+    totalViews: (userStats as any)?.totalViews || 3245,
+    totalShares: (userStats as any)?.totalShares || 89,
+    accuracy: (userStats as any)?.accuracy || 92
   };
 
-  const mockActivities: Activity[] = activities || [
+  const mockActivities: Activity[] = Array.isArray(activities) ? activities : [
     { id: 1, action: "Created Truth Capsule", timestamp: "2 hours ago", details: "Environmental Impact Report", type: "creation" },
     { id: 2, action: "Verified Capsule", timestamp: "1 day ago", details: "Community Safety Report", type: "verification" },
     { id: 3, action: "Earned GTT Reward", timestamp: "2 days ago", details: "+25 GTT from verification", type: "reward" },
@@ -579,7 +579,7 @@ export default function UnifiedProfile() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-[#8b949e]">Total Views</span>
-                    <span className="text-[#00ffe1] font-bold">{mockUserStats.totalViews.toLocaleString()}</span>
+                    <span className="text-[#00ffe1] font-bold">{mockUserStats.totalViews?.toLocaleString?.() || "0"}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-[#8b949e]">Total Shares</span>
@@ -691,7 +691,7 @@ export default function UnifiedProfile() {
             <CapsuleWallToggle 
               viewMode="grid"
               onViewModeChange={(mode) => {}}
-              sortBy="created"
+              sortBy="newest"
               onSortChange={(sort) => {}}
               filterBy="all"
               onFilterChange={(filter) => {}}
@@ -712,7 +712,7 @@ export default function UnifiedProfile() {
               <div className="space-y-6">
                 <SovereignAIAssistant 
                   userId={user.id}
-                  userTier={user.tier}
+                  userTier={user.tier || "EXPLORER"}
                   gttBalance={500}
                 />
                 <GTTPortfolioManager />
@@ -723,8 +723,8 @@ export default function UnifiedProfile() {
           <TabsContent value="achievements" className="space-y-6">
             <ProfileAchievementSystem 
               achievements={[]}
-              totalGTT={userStats.gttEarned || 0}
-              truthScore={userStats.truthScore || 0}
+              totalGTT={mockUserStats.gttEarned || 0}
+              truthScore={mockUserStats.truthScore || 0}
             />
           </TabsContent>
 
