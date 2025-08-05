@@ -1160,23 +1160,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { userId } = req.params;
       console.log(`🖼️ Profile media gallery requested for user: ${userId}`);
       
-      // Mock media gallery data
+      // Mock media gallery data with uploaded files
       const mediaGallery = [
         {
           id: "media-1",
           type: "image",
-          url: "/api/media/sample1.jpg",
-          thumbnail: "/api/media/thumb1.jpg",
+          url: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800",
+          thumbnail: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=200",
           uploadedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          title: "Truth Capsule Evidence"
+          title: "Truth Capsule Evidence",
+          size: 2048576
         },
         {
           id: "media-2", 
           type: "video",
-          url: "/api/media/sample2.mp4",
-          thumbnail: "/api/media/thumb2.jpg",
+          url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+          thumbnail: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200",
           uploadedAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-          title: "Verification Process"
+          title: "Verification Process",
+          size: 15728640,
+          duration: 120
+        },
+        {
+          id: "media-3",
+          type: "image", 
+          url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800",
+          thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=200",
+          uploadedAt: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
+          title: "Digital Evidence Archive",
+          size: 1536000
         }
       ];
       
@@ -1191,6 +1203,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("❌ Failed to get profile media:", error);
       res.status(500).json({
         error: "Failed to get profile media",  
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Media upload endpoint
+  app.post("/api/profile/upload-media", consolidatedAuth, async (req: any, res) => {
+    try {
+      const userId = req.user?.id;
+      
+      // Mock file upload response (replace with actual file handling)
+      const mockMediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const mockFileUrl = `/api/media/${mockMediaId}.jpg`;
+      
+      console.log(`📸 Media upload for user: ${userId}`);
+      
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      res.json({
+        success: true,
+        media: {
+          id: mockMediaId,
+          url: mockFileUrl,
+          thumbnail: mockFileUrl,
+          type: req.body.type || 'image',
+          uploadedAt: new Date().toISOString()
+        },
+        message: "Media uploaded successfully"
+      });
+      
+      console.log(`✅ Media uploaded successfully: ${mockMediaId}`);
+    } catch (error) {
+      console.error("❌ Failed to upload media:", error);
+      res.status(500).json({
+        error: "Failed to upload media",  
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Media deletion endpoint
+  app.delete("/api/profile/media/:mediaId", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { mediaId } = req.params;
+      const userId = req.user?.id;
+      
+      console.log(`🗑️ Media deletion requested: ${mediaId} by user: ${userId}`);
+      
+      // Mock deletion (replace with actual file deletion)
+      res.json({
+        success: true,
+        message: "Media deleted successfully"
+      });
+      
+      console.log(`✅ Media deleted successfully: ${mediaId}`);
+    } catch (error) {
+      console.error("❌ Failed to delete media:", error);
+      res.status(500).json({
+        error: "Failed to delete media",  
         details: error instanceof Error ? error.message : "Unknown error"
       });
     }

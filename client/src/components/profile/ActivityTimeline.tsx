@@ -95,7 +95,7 @@ export default function ActivityTimeline({ userId }: ActivityTimelineProps) {
 
   return (
     <div className="space-y-4">
-      {timelineEvents.map((event, index) => (
+      {Array.isArray(timelineEvents) && timelineEvents.map((event, index) => (
         <Card
           key={event.id}
           className="bg-brand-secondary border-brand-surface hover:border-brand-accent/50 transition-all duration-200"
