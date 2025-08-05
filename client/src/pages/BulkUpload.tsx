@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import UltraEnhancedBulkProcessor from '@/components/capsule/UltraEnhancedBulkProcessor';
+import QuantumEnhancedBulkProcessor from '@/components/capsule/QuantumEnhancedBulkProcessor';
 import { useAuth } from '@/hooks/useAuth';
 import { Link } from 'wouter';
 import {
@@ -139,7 +139,7 @@ export default function BulkUpload() {
 
           {/* Main Upload Component */}
           <motion.div variants={itemVariants}>
-            <UltraEnhancedBulkProcessor />
+            <QuantumEnhancedBulkProcessor />
           </motion.div>
 
           {/* Use Cases */}
