@@ -40,13 +40,76 @@ export function NextGenNavigation() {
 
   return (
     <>
-      {/* Desktop Navigation - Floating Sidebar */}
+      {/* Desktop Navigation - Floating Sidebar - DISABLED TO FIX LAYOUT */}
+      {/* 
       <motion.nav
         className="hidden lg:flex fixed left-6 top-1/2 transform -translate-y-1/2 z-50"
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        <div className="holographic-glass backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-2 max-h-[80vh] overflow-y-auto">
+          <div className="space-y-1">
+            {navigationItems.map((item, index) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+              
+              return (
+                <motion.div
+                  key={item.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Link href={item.href}>
+                    <motion.div
+                      className={cn(
+                        'group relative flex items-center px-3 py-3 rounded-xl transition-all duration-300 cursor-pointer',
+                        active 
+                          ? 'quantum-field text-black shadow-lg shadow-yellow-500/25' 
+                          : 'text-cyan-300 hover:text-cyan-100 hover:bg-white/5'
+                      )}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Icon className={cn(
+                        'w-5 h-5 transition-all duration-300',
+                        active ? 'text-black' : 'text-cyan-400 group-hover:text-cyan-300'
+                      )} />
+                      
+                      <div className={cn(
+                        'ml-3 transition-all duration-300 overflow-hidden',
+                        isExpanded ? 'w-32 opacity-100' : 'w-0 opacity-0'
+                      )}>
+                        <div className="font-quantum text-sm whitespace-nowrap">{item.label}</div>
+                        {item.description && (
+                          <div className="text-xs opacity-70 whitespace-nowrap">{item.description}</div>
+                        )}
+                      </div>
+                      
+                      {item.badge && (
+                        <motion.span
+                          className="absolute -top-1 -right-1 px-1.5 py-0.5 text-xs rounded-full quantum-field text-black font-medium"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.2 }}
+                        >
+                          {item.badge}
+                        </motion.span>
+                      )}
+                      
+                      {item.premium && (
+                        <Star className="w-3 h-3 ml-auto text-yellow-400" />
+                      )}
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </motion.nav>
+      */}
         <div className="holographic-glass backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-2 max-h-[80vh] overflow-y-auto">
           <div className="space-y-1">
             {navigationItems.map((item, index) => {
