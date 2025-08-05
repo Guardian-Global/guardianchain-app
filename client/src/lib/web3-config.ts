@@ -1,6 +1,7 @@
 import { createConfig, http } from "wagmi";
 import { mainnet, sepolia, polygon, polygonAmoy } from "wagmi/chains";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
+import { baseMainnet, baseTestnet } from "./base.config";
 
 // Local Hardhat development chain
 const hardhat = {
@@ -28,6 +29,8 @@ export const CONTRACTS = {
     [sepolia.id]: "0x0000000000000000000000000000000000000000", // Testnet GTT
     [polygon.id]: "0x0000000000000000000000000000000000000000", // Polygon GTT
     [polygonAmoy.id]: "0x0000000000000000000000000000000000000000", // Polygon testnet GTT
+    [baseMainnet.id]: "0x0000000000000000000000000000000000000000", // Base mainnet GTT
+    [baseTestnet.id]: "0x0000000000000000000000000000000000000000", // Base testnet GTT
     [hardhat.id]: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // Local hardhat GTT
   },
   TRUTH_VAULT: {
@@ -35,6 +38,8 @@ export const CONTRACTS = {
     [sepolia.id]: "0x0000000000000000000000000000000000000000", // Testnet TruthVault
     [polygon.id]: "0x0000000000000000000000000000000000000000", // Polygon TruthVault
     [polygonAmoy.id]: "0x0000000000000000000000000000000000000000", // Polygon testnet TruthVault
+    [baseMainnet.id]: "0x0000000000000000000000000000000000000000", // Base mainnet TruthVault
+    [baseTestnet.id]: "0x0000000000000000000000000000000000000000", // Base testnet TruthVault
     [hardhat.id]: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", // Local hardhat TruthVault
   },
 } as const;
@@ -171,9 +176,9 @@ export const TRUTH_VAULT_ABI = [
   },
 ] as const;
 
-// Wagmi configuration
+// Wagmi configuration with Base Network support
 export const wagmiConfig = createConfig({
-  chains: [hardhat, mainnet, sepolia, polygon, polygonAmoy],
+  chains: [hardhat, mainnet, sepolia, polygon, polygonAmoy, baseMainnet, baseTestnet],
   connectors: [
     injected({
       shimDisconnect: true,
@@ -231,6 +236,8 @@ export const wagmiConfig = createConfig({
         import.meta.env.VITE_ALCHEMY_API_KEY || "demo"
       }`,
     ),
+    [baseMainnet.id]: http("https://mainnet.base.org"),
+    [baseTestnet.id]: http("https://sepolia.base.org"),
   },
 });
 
@@ -259,6 +266,8 @@ export const NETWORK_NAMES = {
   [sepolia.id]: "Sepolia Testnet",
   [polygon.id]: "Polygon",
   [polygonAmoy.id]: "Polygon Amoy Testnet",
+  [baseMainnet.id]: "Base",
+  [baseTestnet.id]: "Base Sepolia",
 } as const;
 
 // Support check for networks

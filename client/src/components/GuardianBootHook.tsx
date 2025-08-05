@@ -20,7 +20,7 @@ export function GuardianBootHook() {
   const { data: reels = [] } = useReels();
   const { data: userStats } = useUserStats();
 
-  // Dynamic thread mapping
+  // Dynamic thread mapping with dependency array fix
   useEffect(() => {
     if (capsulesLoading) return;
 
