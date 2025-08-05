@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
+import guardianMascotImg from '@assets/guardian_mascot_1754361002591.png';
 import { 
   MessageCircle, 
   X, 
@@ -165,7 +166,11 @@ export default function GuardianMascot() {
             data-testid="mascot-button"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full" />
-            <span className="text-2xl relative z-10">{mascotState.emoji}</span>
+            <img 
+              src={guardianMascotImg} 
+              alt="Guardian Mascot" 
+              className="w-12 h-12 relative z-10 rounded-full object-cover"
+            />
             
             {/* Activity indicator */}
             {currentMessage && !isOpen && (
@@ -253,8 +258,12 @@ export default function GuardianMascot() {
               <Card className="bg-[#161b22] border-[#30363d] shadow-2xl">
                 <div className="flex items-center justify-between p-4 border-b border-[#30363d]">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] flex items-center justify-center">
-                      <span className="text-xl">🛡️</span>
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#7c3aed] flex items-center justify-center overflow-hidden">
+                      <img 
+                        src={guardianMascotImg} 
+                        alt="Guardian Mascot" 
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
                     </div>
                     <div>
                       <h3 className="font-semibold text-[#f0f6fc]">Guardian Assistant</h3>
