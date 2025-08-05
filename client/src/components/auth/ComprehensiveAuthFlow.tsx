@@ -53,12 +53,21 @@ export default function ComprehensiveAuthFlow() {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
+    console.log("🔐 ComprehensiveAuthFlow: Effect triggered", {
+      isAuthenticated,
+      needsOnboarding,
+      user: user?.id,
+      onboardingCompleted: user?.onboardingCompleted
+    });
+    
     if (isAuthenticated && needsOnboarding) {
+      console.log("✅ ComprehensiveAuthFlow: Showing onboarding flow");
       setShowFlow(true);
     } else {
+      console.log("❌ ComprehensiveAuthFlow: Hiding onboarding flow");
       setShowFlow(false);
     }
-  }, [isAuthenticated, needsOnboarding]);
+  }, [isAuthenticated, needsOnboarding, user]);
 
   if (!showFlow || !user) return null;
 

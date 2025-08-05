@@ -268,9 +268,11 @@ export function useEnhancedAuth() {
   // Complete onboarding mutation
   const completeOnboardingMutation = useMutation({
     mutationFn: async (onboardingData: any) => {
+      console.log("🔐 useEnhancedAuth: Starting onboarding completion...", onboardingData);
       return apiRequest("POST", "/api/auth/complete-onboarding", onboardingData);
     },
     onSuccess: (data) => {
+      console.log("✅ useEnhancedAuth: Onboarding completed successfully", data);
       toast({
         title: "Welcome to GuardianChain! 🎉",
         description: "Your account setup is complete.",
@@ -281,10 +283,17 @@ export function useEnhancedAuth() {
       
       // Redirect to dashboard after onboarding completion
       if (data?.redirectTo) {
+        console.log("🔀 useEnhancedAuth: Redirecting to:", data.redirectTo);
         window.location.href = data.redirectTo;
+      } else {
+        console.log("🏠 useEnhancedAuth: Redirecting to dashboard");
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 2000);
       }
     },
     onError: (error: any) => {
+      console.error("❌ useEnhancedAuth: Onboarding failed:", error);
       toast({
         title: "Setup Failed",
         description: error.message || "Failed to complete onboarding.",

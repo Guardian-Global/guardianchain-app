@@ -92,7 +92,7 @@ export const consolidatedAuth: RequestHandler = (req: any, res, next) => {
     profileImageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
     walletAddress: undefined,
     isWalletVerified: false,
-    onboardingCompleted: false, // Always start with incomplete onboarding to test flow
+    onboardingCompleted: false, // Start with incomplete onboarding to trigger comprehensive flow
     subscriptionStatus: "active",
     subscriptionTier: "SEEKER",
     subscriptionPlan: "monthly",
@@ -165,6 +165,7 @@ export function setupConsolidatedAuth(app: Express) {
     const user = req.user;
     
     console.log("✅ Consolidated Auth: Returning comprehensive user data");
+  console.log("✅ Consolidated Auth: Onboarding needed:", !req.user.onboardingCompleted);
     res.json(user);
   });
 
@@ -257,7 +258,13 @@ export function setupConsolidatedAuth(app: Express) {
           "Basic verification access",
           "Community support",
           "Standard yield rate"
-        ]
+        ],
+        limits: {
+          capsulesPerMonth: 5,
+          storageGB: 1,
+          verificationVotes: 5,
+          gttRewardMultiplier: 1.0
+        }
       },
       {
         tier: "SEEKER",
@@ -270,7 +277,13 @@ export function setupConsolidatedAuth(app: Express) {
           "Priority verification queue",
           "Basic analytics dashboard",
           "Email support"
-        ]
+        ],
+        limits: {
+          capsulesPerMonth: 25,
+          storageGB: 5,
+          verificationVotes: 25,
+          gttRewardMultiplier: 1.05
+        }
       },
       {
         tier: "CREATOR",
@@ -284,7 +297,13 @@ export function setupConsolidatedAuth(app: Express) {
           "Custom verification seals",
           "Priority support",
           "Creator marketplace access"
-        ]
+        ],
+        limits: {
+          capsulesPerMonth: 100,
+          storageGB: 25,
+          verificationVotes: 100,
+          gttRewardMultiplier: 1.10
+        }
       },
       {
         tier: "SOVEREIGN",
@@ -300,7 +319,13 @@ export function setupConsolidatedAuth(app: Express) {
           "Early feature access",
           "API access",
           "Bulk operations"
-        ]
+        ],
+        limits: {
+          capsulesPerMonth: 500,
+          storageGB: 100,
+          verificationVotes: 500,
+          gttRewardMultiplier: 1.25
+        }
       }
     ];
     

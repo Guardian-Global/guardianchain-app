@@ -1,142 +1,217 @@
 {
-  "testSuite": "GuardianChain Capsule-to-Yield System",
-  "timestamp": "2025-08-02T12:08:30.000Z",
-  "capsuleId": "cap_001",
-  "griefTier": 3,
-  "yieldSent": 30,
-  "replayCount": 1,
-  "testResults": {
-    "capsuleSubmission": {
-      "status": "PASS",
-      "details": "CapsuleDrawer integration functional with Stripe payment session support",
-      "supabaseInsert": true,
-      "stripeTriggered": true
-    },
-    "capsuleReplay": {
-      "status": "PASS",
-      "details": "Replay endpoint functional with comprehensive yield calculation",
-      "replayLogCreated": true,
-      "yieldCalculation": {
-        "baseYield": 2.5,
-        "truthMultiplier": 1,
-        "verificationBonus": 0.1,
-        "ageBonus": 1.5,
-        "totalYield": 6.88
-      },
-      "web3Distribution": {
-        "success": true,
-        "authorTxHash": "0xa04cf96d7722bd1d4f2670326827017f9673758b9db8811fc81c320de3a3e572",
-        "viewerTxHash": "0x30a5b5ef485185842bf2930ac5748cc9b2dfdbdbc999015ff95a75ca722121f3",
-        "authorShare": "4.816",
-        "viewerShare": "2.064",
-        "totalDistributed": "6.88"
-      }
-    },
-    "gttContract": {
-      "status": "PASS",
-      "details": "GTT yield distribution functional with grief tier-based calculations",
-      "yieldDistribution": {
-        "griefTier": 3,
-        "expectedYield": 30,
-        "actualYield": 30,
-        "transactionHash": "0x14dfc6d093b41",
-        "network": "Polygon",
-        "blockNumber": 50398213
-      },
-      "balanceCheck": {
-        "success": true,
-        "balance": "125.50",
-        "symbol": "GTT"
-      },
-      "contractEndpoints": {
-        "distributeYield": "OPERATIONAL",
-        "getBalance": "OPERATIONAL",
-        "calculateYield": "OPERATIONAL"
-      }
-    },
-    "security": {
-      "status": "PASS",
-      "details": "Authentication middleware and security measures active",
-      "authenticationRequired": true,
-      "userEndpointProtected": true,
-      "noPrivateKeysExposed": true,
-      "stripeServerSide": true
-    }
+  "summary": {
+    "total": 34,
+    "passed": 18,
+    "failed": 3,
+    "warnings": 0,
+    "info": 13,
+    "successRate": "85.7%"
   },
-  "systemFunctionality": {
-    "triggerGTTYield": {
-      "implemented": true,
-      "tested": true,
-      "status": "OPERATIONAL",
-      "example": "await triggerGTTYield('0xAuthorAddressHere', 3) // Returns transaction hash"
+  "timestamp": "2025-08-05T05:55:22.187Z",
+  "results": [
+    {
+      "testName": "Authentication User Endpoint",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.891Z"
     },
-    "capsuleToYieldFlow": {
-      "capsuleSubmission": "PASS",
-      "replayTracking": "PASS",
-      "yieldCalculation": "PASS",
-      "web3Distribution": "PASS",
-      "logging": "PASS"
+    {
+      "testName": "Authentication Status Endpoint",
+      "status": "FAIL",
+      "details": "Authentication status not properly returned",
+      "timestamp": "2025-08-05T05:55:21.904Z"
     },
-    "uiComponents": {
-      "GTTYieldButton": "OPERATIONAL",
-      "GTTBalanceWidget": "OPERATIONAL",
-      "CapsuleDrawer": "ENHANCED_WITH_GTT",
-      "GTTDemo": "ACCESSIBLE_AT_/gtt-demo"
+    {
+      "testName": "Debug User Endpoint",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.915Z"
+    },
+    {
+      "testName": "Onboarding Completion Endpoint",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.933Z"
+    },
+    {
+      "testName": "Onboarding Status",
+      "status": "INFO",
+      "details": "User onboarding needed (expected for testing)",
+      "timestamp": "2025-08-05T05:55:21.937Z"
+    },
+    {
+      "testName": "User Onboarding Status Validation",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.937Z"
+    },
+    {
+      "testName": "Subscription Plans Endpoint",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.940Z"
+    },
+    {
+      "testName": "Subscription Plan Structure Validation",
+      "status": "FAIL",
+      "details": "Plan 0 missing required field: limits",
+      "timestamp": "2025-08-05T05:55:21.945Z"
+    },
+    {
+      "testName": "Current User Tier",
+      "status": "INFO",
+      "details": "SEEKER (active)",
+      "timestamp": "2025-08-05T05:55:21.952Z"
+    },
+    {
+      "testName": "User Subscription Status",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.952Z"
+    },
+    {
+      "testName": "Response Time: /api/auth/user",
+      "status": "INFO",
+      "details": "2ms",
+      "timestamp": "2025-08-05T05:55:21.955Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/auth/user",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.955Z"
+    },
+    {
+      "testName": "Response Time: /api/auth/status",
+      "status": "INFO",
+      "details": "7ms",
+      "timestamp": "2025-08-05T05:55:21.962Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/auth/status",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.962Z"
+    },
+    {
+      "testName": "Response Time: /api/debug/user",
+      "status": "INFO",
+      "details": "9ms",
+      "timestamp": "2025-08-05T05:55:21.972Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/debug/user",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.972Z"
+    },
+    {
+      "testName": "Response Time: /api/subscription/plans",
+      "status": "INFO",
+      "details": "2ms",
+      "timestamp": "2025-08-05T05:55:21.974Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/subscription/plans",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.974Z"
+    },
+    {
+      "testName": "Response Time: /api/capsules",
+      "status": "INFO",
+      "details": "7ms",
+      "timestamp": "2025-08-05T05:55:21.981Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/capsules",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.983Z"
+    },
+    {
+      "testName": "Response Time: /api/user/stats",
+      "status": "INFO",
+      "details": "5ms",
+      "timestamp": "2025-08-05T05:55:21.988Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/user/stats",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.989Z"
+    },
+    {
+      "testName": "Response Time: /api/reels",
+      "status": "INFO",
+      "details": "2ms",
+      "timestamp": "2025-08-05T05:55:21.991Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/reels",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.991Z"
+    },
+    {
+      "testName": "Response Time: /api/get-user-tier",
+      "status": "INFO",
+      "details": "2ms",
+      "timestamp": "2025-08-05T05:55:21.993Z"
+    },
+    {
+      "testName": "Endpoint Health: /api/get-user-tier",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:21.993Z"
+    },
+    {
+      "testName": "Authentication Flow Integration",
+      "status": "FAIL",
+      "details": "Status endpoint shows user not authenticated but user endpoint works",
+      "timestamp": "2025-08-05T05:55:22.014Z"
+    },
+    {
+      "testName": "Onboarding Detection Logic",
+      "status": "INFO",
+      "details": "needsOnboarding: true",
+      "timestamp": "2025-08-05T05:55:22.023Z"
+    },
+    {
+      "testName": "Auth Flow Trigger",
+      "status": "PASS",
+      "details": "Will show comprehensive onboarding flow",
+      "timestamp": "2025-08-05T05:55:22.023Z"
+    },
+    {
+      "testName": "Onboarding State Consistency",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:22.023Z"
+    },
+    {
+      "testName": "Concurrent Performance",
+      "status": "INFO",
+      "details": "10 requests in 73ms",
+      "timestamp": "2025-08-05T05:55:22.099Z"
+    },
+    {
+      "testName": "Concurrent Request Handling",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:22.100Z"
+    },
+    {
+      "testName": "Memory Stability",
+      "status": "INFO",
+      "details": "20 sequential requests completed",
+      "timestamp": "2025-08-05T05:55:22.187Z"
+    },
+    {
+      "testName": "Memory Usage Stability",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-08-05T05:55:22.187Z"
     }
-  },
-  "technicalValidation": {
-    "endpoints": {
-      "/api/gtt/distribute-yield": "PASS",
-      "/api/gtt/balance/:address": "PASS",
-      "/api/gtt/calculate-yield": "PASS",
-      "/api/replay-capsule": "PASS",
-      "/api/auth/user": "PASS"
-    },
-    "web3Integration": {
-      "polygonNetwork": "CONNECTED",
-      "contractInteraction": "SIMULATED_DEV_MODE",
-      "transactionHashing": "FUNCTIONAL",
-      "yieldDistribution": "OPERATIONAL"
-    },
-    "database": {
-      "replayLogging": "ACTIVE",
-      "userAuthentication": "FUNCTIONAL",
-      "sessionManagement": "OPERATIONAL"
-    }
-  },
-  "businessLogic": {
-    "griefTierSystem": {
-      "tier1": "10 GTT",
-      "tier2": "20 GTT",
-      "tier3": "30 GTT",
-      "tier4": "40 GTT",
-      "tier5": "50 GTT"
-    },
-    "yieldCalculation": {
-      "baseYield": 2.5,
-      "truthScoreMultiplier": "0.75-1.25x",
-      "verificationBonus": "0.1x per verification",
-      "ageBonus": "Time-weighted bonus",
-      "implemented": true
-    },
-    "distributionMechanism": {
-      "authorShare": "70%",
-      "viewerShare": "30%",
-      "totalDistribution": "100%",
-      "functional": true
-    }
-  },
-  "overallStatus": "OPERATIONAL",
-  "recommendations": [
-    "GTT yield system fully functional in development mode",
-    "Ready for mainnet deployment with real contract addresses",
-    "All core functionality validated and tested",
-    "UI components operational and user-friendly"
-  ],
-  "nextSteps": [
-    "Deploy GTT contract to Polygon mainnet",
-    "Configure production contract addresses",
-    "Enable real token distributions",
-    "Monitor yield distribution metrics"
   ]
 }
