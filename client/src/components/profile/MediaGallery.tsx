@@ -1,355 +1,284 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Image as ImageIcon, 
   Video, 
-  Play, 
-  Download, 
+  Play,
+  Download,
+  Eye,
   Trash2,
-  Grid3X3,
-  List,
-  Calendar,
-  Eye
+  Upload
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import MediaUploader from "./MediaUploader";
 
-interface MediaItem {
+interface MediaFile {
   id: string;
-  type: 'image' | 'video';
+  type: string;
   url: string;
-  thumbnail: string;
+  thumbnail?: string;
   title: string;
+  originalName: string;
+  size: number;
+  mimeType: string;
   uploadedAt: string;
-  size?: number;
+  isPublic: boolean;
   duration?: number;
 }
 
 interface MediaGalleryProps {
   userId: string;
-  onSelectMedia?: (media: MediaItem) => void;
-  selectable?: boolean;
 }
 
-export default function MediaGallery({ userId, onSelectMedia, selectable = false }: MediaGalleryProps) {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
+export default function MediaGallery({ userId }: MediaGalleryProps) {
+  const [showUploader, setShowUploader] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState<MediaFile | null>(null);
+  const { toast } = useToast();
 
-  const { data: mediaData, isLoading, refetch } = useQuery({
-    queryKey: [`/api/profile/${userId}/media`],
-    queryFn: async () => {
-      const response = await fetch(`/api/profile/${userId}/media`, {
-        credentials: 'include'
-      });
-      if (!response.ok) throw new Error('Failed to fetch media');
-      return response.json();
-    },
+  // Fetch user's media files
+  const { data: mediaFiles = [], isLoading, refetch } = useQuery<MediaFile[]>({
+    queryKey: ['/api/profile', userId, 'media'],
+    enabled: !!userId
   });
 
-  const media: MediaItem[] = mediaData?.media || [];
-
-  const handleMediaClick = (item: MediaItem) => {
-    if (selectable && onSelectMedia) {
-      onSelectMedia(item);
-    } else {
-      setSelectedMedia(item);
-      setPreviewOpen(true);
-    }
-  };
-
-  const handleDelete = async (mediaId: string) => {
-    try {
-      const response = await fetch(`/api/profile/media/${mediaId}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        refetch();
-      }
-    } catch (error) {
-      console.error('Failed to delete media:', error);
-    }
-  };
-
-  const formatDate = (timestamp: string) => {
-    return new Date(timestamp).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   const formatFileSize = (bytes: number) => {
-    const mb = bytes / (1024 * 1024);
-    return `${mb.toFixed(1)} MB`;
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const renderMediaPreview = (media: MediaFile) => {
+    const isVideo = media.type === 'video' || media.mimeType.startsWith('video/');
+    const isImage = media.type === 'image' || media.mimeType.startsWith('image/');
+
+    return (
+      <div className="relative group">
+        <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+          {isImage ? (
+            <img
+              src={media.url}
+              alt={media.title}
+              className="w-full h-full object-cover transition-transform group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : isVideo ? (
+            <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 relative">
+              {media.thumbnail ? (
+                <img
+                  src={media.thumbnail}
+                  alt={media.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Video className="w-12 h-12 text-gray-400" />
+              )}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                <Play className="w-8 h-8 text-white" />
+              </div>
+              {media.duration && (
+                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                  {Math.floor(media.duration / 60)}:{(media.duration % 60).toString().padStart(2, '0')}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+              <ImageIcon className="w-12 h-12 text-gray-400" />
+            </div>
+          )}
+        </div>
+
+        {/* Overlay with actions */}
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center space-x-2">
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setSelectedMedia(media)}
+            data-testid={`button-view-media-${media.id}`}
+          >
+            <Eye className="w-4 h-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => window.open(media.url, '_blank')}
+            data-testid={`button-download-media-${media.id}`}
+          >
+            <Download className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Media info */}
+        <div className="mt-2">
+          <p className="text-sm font-medium truncate" data-testid={`text-media-title-${media.id}`}>
+            {media.title}
+          </p>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-xs text-gray-500">
+              {formatFileSize(media.size)}
+            </span>
+            <Badge variant={media.isPublic ? "default" : "secondary"} className="text-xs">
+              {media.isPublic ? "Public" : "Private"}
+            </Badge>
+          </div>
+          <p className="text-xs text-gray-400">
+            {format(new Date(media.uploadedAt), 'MMM d, yyyy')}
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const handleUploadComplete = () => {
+    setShowUploader(false);
+    refetch();
+    toast({
+      title: "Upload Complete",
+      description: "Your media files have been uploaded successfully.",
+    });
   };
 
   if (isLoading) {
     return (
-      <Card className="bg-brand-secondary border-brand-surface">
-        <CardContent className="p-8 text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-brand-light/60">Loading media gallery...</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (media.length === 0) {
-    return (
-      <Card className="bg-brand-secondary border-brand-surface">
-        <CardContent className="p-8 text-center">
-          <ImageIcon className="w-12 h-12 text-brand-light/30 mx-auto mb-4" />
-          <p className="text-brand-light/60">No media uploaded yet</p>
-          <p className="text-xs text-brand-light/40 mt-2">
-            Upload photos and videos to see them here
-          </p>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <ImageIcon className="w-5 h-5" />
+            <span>Media Gallery</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="aspect-square rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
+            ))}
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <>
-      <Card className="bg-brand-secondary border-brand-surface">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-brand-light flex items-center gap-2">
-              <ImageIcon className="w-5 h-5" />
-              Media Gallery ({media.length})
-            </CardTitle>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                onClick={() => setViewMode('grid')}
-                className="px-2"
-                data-testid="view-grid-button"
-              >
-                <Grid3X3 className="w-4 h-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                onClick={() => setViewMode('list')}
-                className="px-2"
-                data-testid="view-list-button"
-              >
-                <List className="w-4 h-4" />
-              </Button>
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center space-x-2">
+            <ImageIcon className="w-5 h-5" />
+            <span>Media Gallery</span>
+            <Badge variant="outline">{mediaFiles.length}</Badge>
+          </CardTitle>
+          <Button 
+            onClick={() => setShowUploader(true)}
+            data-testid="button-open-uploader"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Upload Media
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {mediaFiles.length === 0 ? (
+          <div className="text-center py-12">
+            <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+              No media files yet
+            </h3>
+            <p className="text-gray-500 mb-4">
+              Upload your first photo or video to get started
+            </p>
+            <Button 
+              onClick={() => setShowUploader(true)}
+              data-testid="button-upload-first-media"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Upload Media
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {mediaFiles.map((media: MediaFile) => (
+              <div key={media.id}>
+                {renderMediaPreview(media)}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Media Uploader Modal */}
+        {showUploader && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Upload Media Files</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowUploader(false)}
+                  data-testid="button-close-uploader"
+                >
+                  ×
+                </Button>
+              </div>
+              <MediaUploader
+                userId={userId}
+                onUploadComplete={handleUploadComplete}
+                maxFiles={5}
+              />
             </div>
           </div>
-        </CardHeader>
+        )}
 
-        <CardContent className="space-y-4">
-          {viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {media.map((item) => (
-                <div
-                  key={item.id}
-                  className={`relative group cursor-pointer rounded-lg overflow-hidden border border-brand-light/10 hover:border-brand-accent/50 transition-all duration-200 ${
-                    selectable ? 'hover:ring-2 hover:ring-brand-primary' : ''
-                  }`}
-                  onClick={() => handleMediaClick(item)}
-                  data-testid={`media-item-${item.id}`}
+        {/* Media Viewer Modal */}
+        {selectedMedia && (
+          <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
+            <div className="max-w-4xl max-h-[90vh] w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-white text-lg font-semibold">
+                  {selectedMedia.title}
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedMedia(null)}
+                  className="text-white hover:bg-white/20"
+                  data-testid="button-close-viewer"
                 >
-                  <div className="aspect-square bg-brand-dark">
-                    {item.type === 'image' ? (
-                      <img
-                        src={item.thumbnail}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center relative">
-                        <img
-                          src={item.thumbnail}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                          <Play className="w-8 h-8 text-white" />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <div className="absolute bottom-2 left-2 right-2">
-                      <p className="text-white text-xs truncate">{item.title}</p>
-                      <div className="flex items-center justify-between mt-1">
-                        <Badge variant="secondary" className="text-xs">
-                          {item.type === 'image' ? <ImageIcon className="w-3 h-3" /> : <Video className="w-3 h-3" />}
-                        </Badge>
-                        {!selectable && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(item.id);
-                            }}
-                            className="text-white hover:text-red-400 p-1 h-auto"
-                            data-testid={`delete-media-${item.id}`}
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {media.map((item) => (
-                <div
-                  key={item.id}
-                  className={`flex items-center gap-3 p-3 bg-brand-surface rounded-lg border border-brand-light/10 hover:border-brand-accent/50 transition-all duration-200 cursor-pointer ${
-                    selectable ? 'hover:bg-brand-primary/10' : ''
-                  }`}
-                  onClick={() => handleMediaClick(item)}
-                  data-testid={`media-list-item-${item.id}`}
-                >
-                  {/* Thumbnail */}
-                  <div className="flex-shrink-0 w-16 h-16 bg-brand-dark rounded overflow-hidden">
-                    {item.type === 'image' ? (
-                      <img
-                        src={item.thumbnail}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center relative">
-                        <img
-                          src={item.thumbnail}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <Play className="w-4 h-4 text-white absolute" />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-brand-light truncate">{item.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" className="text-xs">
-                        {item.type === 'image' ? (
-                          <><ImageIcon className="w-3 h-3 mr-1" />Image</>
-                        ) : (
-                          <><Video className="w-3 h-3 mr-1" />Video</>
-                        )}
-                      </Badge>
-                      <span className="text-xs text-brand-light/60 flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {formatDate(item.uploadedAt)}
-                      </span>
-                      {item.size && (
-                        <span className="text-xs text-brand-light/60">
-                          {formatFileSize(item.size)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  {!selectable && (
-                    <div className="flex items-center gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          window.open(item.url, '_blank');
-                        }}
-                        className="text-brand-light/60 hover:text-brand-accent p-2"
-                        data-testid={`download-media-${item.id}`}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(item.id);
-                        }}
-                        className="text-brand-light/60 hover:text-red-400 p-2"
-                        data-testid={`delete-media-${item.id}`}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Preview Dialog */}
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-4xl bg-brand-secondary border-brand-surface">
-          <DialogHeader>
-            <DialogTitle className="text-brand-light flex items-center gap-2">
-              <Eye className="w-5 h-5" />
-              {selectedMedia?.title}
-            </DialogTitle>
-          </DialogHeader>
-          
-          {selectedMedia && (
-            <div className="space-y-4">
-              <div className="max-h-96 bg-brand-dark rounded-lg overflow-hidden">
-                {selectedMedia.type === 'image' ? (
+                  ×
+                </Button>
+              </div>
+              <div className="bg-black rounded-lg overflow-hidden">
+                {selectedMedia.mimeType.startsWith('image/') ? (
                   <img
                     src={selectedMedia.url}
                     alt={selectedMedia.title}
-                    className="w-full h-full object-contain"
+                    className="w-full h-auto max-h-[70vh] object-contain"
                   />
                 ) : (
                   <video
                     src={selectedMedia.url}
                     controls
-                    className="w-full h-full"
-                    data-testid="video-preview"
-                  />
+                    className="w-full h-auto max-h-[70vh]"
+                    data-testid="video-player"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
                 )}
               </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-sm text-brand-light/70">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {formatDate(selectedMedia.uploadedAt)}
-                  </span>
-                  {selectedMedia.size && (
-                    <span>{formatFileSize(selectedMedia.size)}</span>
-                  )}
-                </div>
-                
-                <Button
-                  variant="outline"
-                  onClick={() => window.open(selectedMedia.url, '_blank')}
-                  data-testid="download-preview-button"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
+              <div className="mt-4 text-white text-sm">
+                <p><strong>File:</strong> {selectedMedia.originalName}</p>
+                <p><strong>Size:</strong> {formatFileSize(selectedMedia.size)}</p>
+                <p><strong>Uploaded:</strong> {format(new Date(selectedMedia.uploadedAt), 'PPP')}</p>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

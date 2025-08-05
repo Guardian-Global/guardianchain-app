@@ -123,6 +123,7 @@ import {
   Watch,
   Hourglass
 } from 'lucide-react';
+import MediaGallery from '@/components/profile/MediaGallery';
 
 interface ProfileCustomization {
   theme: 'cyberpunk' | 'minimal' | 'cosmic' | 'neon' | 'matrix' | 'royal';
@@ -730,22 +731,7 @@ export default function UltimateProfile() {
 
               {/* Media Tab */}
               <TabsContent value="media" className="space-y-6">
-                <Card className="bg-black/50 backdrop-blur-lg border-cyan-500/30">
-                  <CardHeader>
-                    <CardTitle className="text-cyan-300">Media Gallery</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                      <h3 className="text-xl font-semibold text-white mb-2">Upload Media</h3>
-                      <p className="text-gray-400 mb-4">Share your photos, videos, and audio files</p>
-                      <Button className="bg-gradient-to-r from-cyan-500 to-purple-500">
-                        <Camera className="w-4 h-4 mr-2" />
-                        Add Media
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <MediaGallery userId={user?.id || 'dev-user-123'} />
               </TabsContent>
 
               {/* Social Tab */}
