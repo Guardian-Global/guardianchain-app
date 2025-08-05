@@ -108,32 +108,37 @@ export default function CapsuleRemixer({ capsuleId, className }: CapsuleRemixerP
 
   return (
     <div className={`space-y-6 ${className}`}>
-      <Card className="bg-[#0d1117] border-[#30363d]">
-        <CardHeader>
-          <CardTitle className="text-[#00ffe1] flex items-center gap-2">
-            <Palette className="h-5 w-5" />
+      <Card className="bg-gradient-to-br from-[#0d1117] to-[#161b22] border-[#30363d] shadow-2xl backdrop-blur-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-[#00ffe1] flex items-center gap-3 text-xl">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#ff00d4] flex items-center justify-center">
+              <Palette className="h-4 w-4 text-black" />
+            </div>
             AI Capsule Remixer
             {activeContest?.contest && (
-              <Badge className="bg-gradient-to-r from-purple-600 to-pink-500 text-white ml-2">
+              <Badge className="bg-gradient-to-r from-purple-600 to-pink-500 text-white ml-2 animate-pulse">
                 <Trophy className="h-3 w-3 mr-1" />
-                Contest Active
+                Contest Live
               </Badge>
             )}
           </CardTitle>
+          <p className="text-[#8b949e] text-sm mt-2">
+            Transform your capsules with AI-powered artistic styles
+          </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm text-[#8b949e]">Choose Remix Style</label>
+        <CardContent className="space-y-6">
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-[#f0f6fc]">Choose Remix Style</label>
             <Select value={selectedStyle} onValueChange={setSelectedStyle}>
-              <SelectTrigger className="bg-[#161b22] border-[#30363d] text-[#f0f6fc]" data-testid="style-selector">
-                <SelectValue placeholder="Select a style..." />
+              <SelectTrigger className="bg-[#161b22] border-[#30363d] text-[#f0f6fc] h-12 hover:border-[#00ffe1]/50 transition-colors" data-testid="style-selector">
+                <SelectValue placeholder="🎨 Select an artistic style..." />
               </SelectTrigger>
-              <SelectContent className="bg-[#161b22] border-[#30363d]">
+              <SelectContent className="bg-[#161b22] border-[#30363d] shadow-2xl">
                 {remixStyles.map((style) => (
-                  <SelectItem key={style.value} value={style.value} className="text-[#f0f6fc] focus:bg-[#0d1117]">
-                    <span className="flex items-center gap-2">
-                      <span>{style.emoji}</span>
-                      <span>{style.label}</span>
+                  <SelectItem key={style.value} value={style.value} className="text-[#f0f6fc] focus:bg-[#0d1117] hover:bg-[#30363d]/50 py-3">
+                    <span className="flex items-center gap-3">
+                      <span className="text-lg">{style.emoji}</span>
+                      <span className="font-medium">{style.label}</span>
                     </span>
                   </SelectItem>
                 ))}
@@ -144,30 +149,33 @@ export default function CapsuleRemixer({ capsuleId, className }: CapsuleRemixerP
           <Button
             onClick={handleRemix}
             disabled={remixMutation.isPending || !selectedStyle}
-            className="w-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:opacity-90"
+            className="w-full h-12 bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:hover:scale-100"
             data-testid="create-remix-button"
           >
             {remixMutation.isPending ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                Creating Remix...
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-3"></div>
+                <span className="font-medium">Creating Remix...</span>
               </>
             ) : (
               <>
-                <Sparkles className="h-4 w-4 mr-2" />
-                Create AI Remix
+                <Sparkles className="h-5 w-5 mr-3" />
+                <span className="font-medium">Create AI Remix</span>
               </>
             )}
           </Button>
 
           {activeContest?.contest && (
-            <div className="p-3 bg-[#161b22] rounded-lg border border-[#30363d]">
-              <div className="flex items-center gap-2 text-sm">
-                <Trophy className="h-4 w-4 text-[#ff00d4]" />
-                <span className="text-[#f0f6fc] font-medium">{activeContest.contest.name}</span>
+            <div className="p-4 bg-gradient-to-r from-[#161b22] to-[#1a1f36] rounded-xl border border-[#30363d] shadow-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#ff00d4] to-[#7c3aed] flex items-center justify-center">
+                  <Trophy className="h-3 w-3 text-white" />
+                </div>
+                <span className="text-[#f0f6fc] font-semibold">{activeContest.contest.name}</span>
+                <Badge className="bg-[#ff00d4] text-white text-xs animate-pulse">LIVE</Badge>
               </div>
-              <p className="text-xs text-[#8b949e] mt-1">
-                Submit your remix to earn GTT and win exclusive NFT rewards!
+              <p className="text-sm text-[#8b949e] leading-relaxed">
+                Submit your remix to earn GTT tokens and win exclusive NFT rewards! 🏆
               </p>
             </div>
           )}
@@ -176,34 +184,49 @@ export default function CapsuleRemixer({ capsuleId, className }: CapsuleRemixerP
 
       {/* Remix History */}
       {remixHistory?.remixes && remixHistory.remixes.length > 0 && (
-        <Card className="bg-[#0d1117] border-[#30363d]">
-          <CardHeader>
-            <CardTitle className="text-[#00ffe1] flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Remix Gallery ({remixHistory.remixes.length})
+        <Card className="bg-gradient-to-br from-[#0d1117] to-[#161b22] border-[#30363d] shadow-2xl">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-[#00ffe1] flex items-center gap-3 text-xl">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#7c3aed] to-[#ff00d4] flex items-center justify-center">
+                <Users className="h-4 w-4 text-white" />
+              </div>
+              Remix Gallery
+              <Badge className="bg-[#30363d] text-[#f0f6fc] px-2 py-1">
+                {remixHistory.remixes.length} Remixes
+              </Badge>
             </CardTitle>
+            <p className="text-[#8b949e] text-sm mt-2">
+              Community creations in various artistic styles
+            </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {remixHistory.remixes.map((remix: any) => (
-                <div key={remix.id} className="relative group">
-                  <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-3 border border-[#30363d]">
-                    <div className="aspect-square bg-[#161b22] rounded mb-2 flex items-center justify-center">
-                      <Palette className="h-8 w-8 text-[#8b949e]" />
+                <div key={remix.id} className="group">
+                  <div className="bg-gradient-to-br from-[#161b22] to-[#1a1f36] rounded-xl p-4 border border-[#30363d] transition-all duration-300 hover:border-[#00ffe1]/50 hover:shadow-lg hover:shadow-[#00ffe1]/10 hover:scale-105">
+                    <div className="aspect-square bg-[#0d1117] rounded-lg mb-3 flex items-center justify-center border border-[#30363d] group-hover:border-[#00ffe1]/30 transition-colors">
+                      <Palette className="h-10 w-10 text-[#8b949e] group-hover:text-[#00ffe1] transition-colors" />
                     </div>
-                    <div className="text-xs">
-                      <p className="text-[#00ffe1] font-medium">🎨 {remix.remix_style}</p>
-                      <p className="text-[#8b949e]">by {remix.username}</p>
+                    <div className="space-y-2">
+                      <p className="text-[#00ffe1] font-semibold flex items-center gap-2">
+                        <span className="text-base">🎨</span>
+                        <span className="capitalize">{remix.remix_style}</span>
+                      </p>
+                      <p className="text-[#8b949e] text-sm">by {remix.username}</p>
                     </div>
                     {activeContest?.contest && (
                       <Button
                         size="sm"
                         onClick={() => submitToContestMutation.mutate(remix.id)}
                         disabled={submitToContestMutation.isPending}
-                        className="w-full mt-2 bg-rose-600 text-white hover:bg-rose-700 text-xs"
+                        className="w-full mt-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white hover:from-rose-500 hover:to-pink-500 transition-all duration-300 text-sm font-medium"
                         data-testid={`submit-contest-${remix.id}`}
                       >
-                        🚀 Submit to Contest
+                        {submitToContestMutation.isPending ? (
+                          <div className="animate-spin rounded-full h-3 w-3 border border-white border-t-transparent mr-2"></div>
+                        ) : (
+                          <>🚀 Submit to Contest</>
+                        )}
                       </Button>
                     )}
                   </div>

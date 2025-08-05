@@ -24,50 +24,100 @@ export default function EnhancementShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117] p-6">
-      <div className="max-w-6xl mx-auto">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#00ffe1] mb-2">
-            GuardianChain Enhancement Suite
-          </h1>
-          <p className="text-[#8b949e] text-lg">
-            Advanced analytics, engagement tracking, and community features
+    <div className="min-h-screen bg-gradient-to-br from-[#0d1117] to-[#161b22] p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        <header className="text-center mb-12">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#ff00d4] flex items-center justify-center">
+              <span className="text-2xl">⚡</span>
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent">
+              Enhancement Suite
+            </h1>
+          </div>
+          <p className="text-[#8b949e] text-xl max-w-2xl mx-auto leading-relaxed">
+            Advanced analytics, AI-powered remixing, NFT minting, and community engagement features
           </p>
+          <div className="flex justify-center gap-4 mt-6">
+            <div className="px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm text-[#00ffe1]">
+              ✨ AI-Powered
+            </div>
+            <div className="px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm text-[#ff00d4]">
+              🔗 Blockchain Ready
+            </div>
+            <div className="px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm text-[#7c3aed]">
+              🎨 Creative Tools
+            </div>
+          </div>
         </header>
 
-        <Tabs defaultValue="analytics" className="space-y-6">
-          <TabsList className="grid grid-cols-4 lg:grid-cols-10 bg-[#161b22] border-[#30363d]">
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger value="reactions" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Reactions
-            </TabsTrigger>
-            <TabsTrigger value="leaderboard" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Leaderboard
-            </TabsTrigger>
-            <TabsTrigger value="reputation" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Reputation
-            </TabsTrigger>
-            <TabsTrigger value="value" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Value
-            </TabsTrigger>
-            <TabsTrigger value="playlist" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Playlists
-            </TabsTrigger>
-            <TabsTrigger value="remix" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              AI Remix
-            </TabsTrigger>
-            <TabsTrigger value="contest" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Contest
-            </TabsTrigger>
-            <TabsTrigger value="interactions" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              Activity
-            </TabsTrigger>
-            <TabsTrigger value="sentiment" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              AI
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="analytics" className="space-y-8">
+          <div className="flex justify-center">
+            <TabsList className="inline-flex h-12 items-center justify-center rounded-xl bg-[#161b22] border border-[#30363d] p-1 shadow-lg backdrop-blur-sm">
+              <div className="grid grid-cols-5 lg:grid-cols-10 gap-1">
+                <TabsTrigger 
+                  value="analytics" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  📊 Analytics
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="reactions" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  😍 Reactions
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="leaderboard" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  🏆 Leaders
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="reputation" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  ⭐ Reputation
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="value" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  💎 Value
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="playlist" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  🎵 Playlists
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="remix" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  🎨 AI Remix
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="contest" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  🏅 Contest
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="interactions" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  📈 Activity
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="sentiment" 
+                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                >
+                  🤖 AI Insights
+                </TabsTrigger>
+              </div>
+            </TabsList>
+          </div>
 
           <TabsContent value="analytics" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-2">

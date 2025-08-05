@@ -31,9 +31,9 @@ export default function RemixProfileBadges({
   }
 
   return (
-    <Card className={`bg-[#0d1117] border-[#30363d] ${className}`}>
-      <CardContent className="p-4">
-        <div className="flex flex-wrap gap-2">
+    <Card className={`bg-gradient-to-br from-[#0d1117] to-[#161b22] border-[#30363d] shadow-lg ${className}`}>
+      <CardContent className="p-6">
+        <div className="flex flex-wrap gap-3">
           {/* Remix Count Badge */}
           {remixCount > 0 && (
             <Badge 
@@ -87,14 +87,14 @@ export default function RemixProfileBadges({
         </div>
 
         {/* Stats Summary */}
-        <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
-          <div className="text-center">
-            <div className="text-[#00ffe1] font-bold text-lg">{remixCount}</div>
-            <div className="text-[#8b949e]">Total Remixes</div>
+        <div className="mt-6 grid grid-cols-2 gap-6">
+          <div className="text-center p-4 bg-[#161b22] rounded-lg border border-[#30363d]">
+            <div className="text-[#00ffe1] font-bold text-2xl">{remixCount}</div>
+            <div className="text-[#8b949e] text-sm mt-1">Total Remixes</div>
           </div>
-          <div className="text-center">
-            <div className="text-[#ff00d4] font-bold text-lg">{remixAwards}</div>
-            <div className="text-[#8b949e]">Contest Wins</div>
+          <div className="text-center p-4 bg-[#161b22] rounded-lg border border-[#30363d]">
+            <div className="text-[#ff00d4] font-bold text-2xl">{remixAwards}</div>
+            <div className="text-[#8b949e] text-sm mt-1">Contest Wins</div>
           </div>
         </div>
 

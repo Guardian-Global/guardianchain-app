@@ -92,12 +92,17 @@ export default function PlaylistNFTMinter({
           Mint as NFT
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]">
-        <DialogHeader>
-          <DialogTitle className="text-[#00ffe1] flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
+      <DialogContent className="bg-gradient-to-br from-[#0d1117] to-[#161b22] border-[#30363d] text-[#f0f6fc] shadow-2xl max-w-md">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-[#00ffe1] flex items-center gap-3 text-xl">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#ff00d4] flex items-center justify-center">
+              <Sparkles className="h-4 w-4 text-black" />
+            </div>
             Mint Playlist NFT
           </DialogTitle>
+          <p className="text-[#8b949e] text-sm">
+            Convert your playlist into a tradeable NFT on the blockchain
+          </p>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
