@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import AdminLogin from "../admin/AdminLogin";
 import {
   CheckCircle,
   AlertTriangle,
@@ -49,6 +50,7 @@ export default function ComprehensiveAuthFlow() {
   
   const { toast } = useToast();
   const [showFlow, setShowFlow] = useState(false);
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 

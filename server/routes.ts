@@ -62,6 +62,70 @@ function getReplayLogs(filters: any = {}) {
       return false;
     return true;
   });
+
+  // Admin login endpoint - switch to admin user
+  app.post("/api/auth/admin-login", (req: any, res) => {
+    console.log("🔐 Admin Login: Switching to admin user");
+    const { adminKey } = req.body;
+    
+    // Simple admin key check
+    if (adminKey === "GUARDIAN_ADMIN_2025") {
+      console.log("✅ Admin Login: Access granted");
+      res.json({
+        success: true,
+        message: "Admin access granted - please refresh the page",
+        user: {
+          id: "admin-guardian-001",
+          email: "admin@guardianchain.app",
+          firstName: "Admin",
+          lastName: "Guardian",
+          tier: "SOVEREIGN",
+          role: "ADMIN",
+          subscriptionStatus: "lifetime",
+          subscriptionTier: "SOVEREIGN",
+          subscriptionPlan: "lifetime",
+          onboardingCompleted: true,
+          needsOnboarding: false,
+          permissions: [
+            "CREATE_UNLIMITED",
+            "MINT_UNLIMITED", 
+            "ADMIN_ACCESS",
+            "FULL_ANALYTICS",
+            "USER_MANAGEMENT",
+            "DAO_ADMIN",
+            "CAPSULE_MODERATION",
+            "SYSTEM_CONFIG"
+          ]
+        }
+      });
+    } else {
+      console.log("❌ Admin Login: Access denied");
+      res.status(401).json({
+        success: false,
+        message: "Invalid admin key"
+      });
+    }
+  });
+
+  // Force complete onboarding endpoint
+  app.post("/api/auth/force-complete-onboarding", (req: any, res) => {
+    console.log("🔐 Force Complete Onboarding: Bypassing onboarding flow");
+    
+    res.json({
+      success: true,
+      message: "Onboarding bypassed successfully",
+      user: {
+        id: "dev-user-123",
+        email: "dev@guardianchain.app",
+        firstName: "Dev",
+        lastName: "User",
+        tier: "SEEKER",
+        onboardingCompleted: true,
+        needsOnboarding: false
+      },
+      redirectTo: "/dashboard"
+    });
+  });
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -785,6 +849,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { profile, completedAt } = req.body;
       
+      // Update user onboarding status
+      req.user.onboardingCompleted = true;
+      req.user.needsOnboarding = false;
+      
       // Mock completing onboarding
       const onboardingData = {
         userId: req.user.id,
@@ -797,7 +865,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         onboarding: onboardingData,
-        message: "Onboarding completed successfully"
+        message: "Onboarding completed successfully",
+        user: {
+          ...req.user,
+          onboardingCompleted: true,
+          needsOnboarding: false
+        }
       });
       
       console.log(`🎉 User onboarding completed: ${req.user.id}`);
