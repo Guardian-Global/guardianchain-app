@@ -114,7 +114,7 @@
   }
   
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
   
   body {
@@ -882,7 +882,7 @@
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
 
   body {
@@ -898,12 +898,6 @@
 
   code {
     font-family: "Fira Code", "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  }
-}
-
-@layer utilities {
-  .border-border {
-    border-color: hsl(var(--border));
   }
 }
 

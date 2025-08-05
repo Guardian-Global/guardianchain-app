@@ -899,44 +899,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Wallet connections logging endpoint
-  app.post("/api/wallet-connections", isDebugAuthenticated, async (req: any, res) => {
-    try {
-      const { wallet, lastSeen } = req.body;
-      
-      if (!wallet) {
-        return res.status(400).json({ error: "Wallet address is required" });
-      }
-
-      // Log wallet connection with timestamp
-      const connectionData = {
-        wallet: wallet.toLowerCase(),
-        lastSeen: lastSeen || new Date().toISOString(),
-        userId: req.user.id,
-        userAgent: req.get('User-Agent'),
-        ipAddress: req.ip
-      };
-
-      // In a real implementation, this would save to Supabase
-      // For now, we'll log and return success
-      console.log(`🔗 Wallet connection logged:`, connectionData);
-
-      res.json({
-        success: true,
-        message: "Wallet connection logged successfully",
-        wallet: wallet.toLowerCase(),
-        timestamp: connectionData.lastSeen
-      });
-
-    } catch (error) {
-      console.error("❌ Failed to log wallet connection:", error);
-      res.status(500).json({
-        error: "Failed to log wallet connection",
-        details: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
   // Truth Genome AI analysis endpoint
   app.get("/api/ai/truth-genome/:userId", isDebugAuthenticated, async (req: any, res) => {
     try {

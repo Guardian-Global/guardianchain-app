@@ -3,13 +3,12 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./client/src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./client/index.html",
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./app/**/*.{js,ts,jsx,tsx}",
+    "./client/src/**/*.{js,ts,jsx,tsx}",
+    "./client/src/pages/**/*.{js,ts,jsx,tsx}",
+    "./client/src/components/**/*.{js,ts,jsx,tsx}",
+    "./client/src/app/**/*.{js,ts,jsx,tsx}",
   ],
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -53,16 +52,33 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Web3 and GuardianChain specific colors
-        "neon-cyan": "hsl(var(--neon-cyan))",
-        "neon-purple": "hsl(var(--neon-purple))",
-        "neon-pink": "hsl(var(--neon-pink))",
-        "blockchain-blue": "hsl(var(--blockchain-blue))",
-        "ethereum-purple": "hsl(var(--ethereum-purple))",
-        "polygon-purple": "hsl(var(--polygon-purple))",
-        "truth-gold": "hsl(var(--truth-gold))",
-        "grief-red": "hsl(var(--grief-red))",
-        "capsule-green": "hsl(var(--capsule-green))",
+        // 2026 Futuristic High-Contrast Colors
+        neon: {
+          cyan: "hsl(180, 100%, 50%)",
+          purple: "hsl(285, 100%, 65%)",
+          green: "hsl(120, 100%, 50%)",
+          pink: "hsl(315, 100%, 70%)",
+          yellow: "hsl(60, 100%, 60%)",
+          blue: "hsl(220, 100%, 60%)",
+        },
+        cosmic: {
+          void: "hsl(240, 100%, 3%)",
+          deep: "hsl(240, 100%, 5%)",
+          nebula: "hsl(260, 80%, 6%)",
+          surface: "hsl(240, 50%, 8%)",
+          border: "hsl(240, 50%, 20%)",
+        },
+        glass: {
+          light: "hsla(240, 50%, 15%, 0.8)",
+          medium: "hsla(260, 40%, 12%, 0.9)",
+          dark: "hsla(240, 100%, 5%, 0.95)",
+        },
+        viral: {
+          electric: "hsl(285, 100%, 65%)",
+          quantum: "hsl(120, 100%, 50%)",
+          plasma: "hsl(315, 100%, 70%)",
+          laser: "hsl(180, 100%, 50%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -70,130 +86,64 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        quantum: ["Space Grotesk", "Inter", "sans-serif"],
-        cyber: ["Fira Code", "JetBrains Mono", "monospace"],
-        web3: ["Inter", "Space Grotesk", "sans-serif"],
-        display: ["Space Grotesk", "sans-serif"],
-        code: ["Fira Code", "monospace"],
-      },
-      animation: {
-        "spin-slow": "spin 3s linear infinite",
-        "float": "float 6s ease-in-out infinite",
-        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
-        "morphic-pulse": "morphic-pulse 4s ease-in-out infinite",
-        "prismatic-shift": "prismatic-shift 6s linear infinite",
-        "data-stream": "data-stream 3s linear infinite",
-        "epic-glow": "epic-glow 2s ease-in-out infinite",
-        "rainbow-glow": "rainbow-glow 3s linear infinite",
-        "particle-float": "particle-float 8s ease-in-out infinite",
-        "neural-pulse": "neural-pulse 2s ease-in-out infinite",
-        "quantum-pulse": "quantum-pulse 3s ease-in-out infinite",
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["Fira Code", "JetBrains Mono", "monospace"],
+        display: ["Space Grotesk", "system-ui", "sans-serif"],
+        cyber: ["Orbitron", "monospace"],
       },
       keyframes: {
-        float: {
-          "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
-          "25%": { transform: "translateY(-10px) rotate(1deg)" },
-          "50%": { transform: "translateY(-20px) rotate(0deg)" },
-          "75%": { transform: "translateY(-15px) rotate(-1deg)" },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
-        "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(0, 255, 255, 0.3)" },
-          "50%": { boxShadow: "0 0 40px rgba(0, 255, 255, 0.6), 0 0 60px rgba(0, 255, 255, 0.3)" },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
-        "morphic-pulse": {
-          "0%, 100%": {
-            transform: "scale(1) rotate(0deg)",
-            borderRadius: "12px",
-            boxShadow: "0 0 20px rgba(0, 255, 255, 0.4)",
-          },
-          "33%": {
-            transform: "scale(1.02) rotate(1deg)",
-            borderRadius: "16px",
-            boxShadow: "0 0 30px rgba(138, 43, 226, 0.6)",
-          },
-          "66%": {
-            transform: "scale(0.98) rotate(-1deg)",
-            borderRadius: "8px",
-            boxShadow: "0 0 25px rgba(255, 215, 0, 0.5)",
-          },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
-        "prismatic-shift": {
-          "0%": { filter: "hue-rotate(0deg) saturate(1) brightness(1)" },
-          "25%": { filter: "hue-rotate(90deg) saturate(1.2) brightness(1.1)" },
-          "50%": { filter: "hue-rotate(180deg) saturate(1.4) brightness(1.2)" },
-          "75%": { filter: "hue-rotate(270deg) saturate(1.2) brightness(1.1)" },
-          "100%": { filter: "hue-rotate(360deg) saturate(1) brightness(1)" },
+        "fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
-        "data-stream": {
-          "0%": { 
-            backgroundPosition: "0% 0%",
-            opacity: "0.3",
-          },
-          "50%": { 
-            backgroundPosition: "100% 100%",
-            opacity: "0.8",
-          },
-          "100%": { 
-            backgroundPosition: "200% 200%",
-            opacity: "0.3",
-          },
+        "slide-in-from-top": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
         },
-        "epic-glow": {
-          "0%, 100%": {
-            boxShadow: "0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor",
-          },
-          "50%": {
-            boxShadow: "0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor, 0 0 80px currentColor",
-          },
+        "slide-in-from-bottom": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
         },
-        "rainbow-glow": {
-          "0%": { filter: "hue-rotate(0deg)" },
-          "100%": { filter: "hue-rotate(360deg)" },
+        "slide-in-from-left": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
         },
-        "particle-float": {
-          "0%, 100%": { 
-            transform: "translateY(0px) translateX(0px) scale(1)",
-            opacity: "0.6",
-          },
-          "25%": { 
-            transform: "translateY(-20px) translateX(10px) scale(1.1)",
-            opacity: "0.9",
-          },
-          "50%": { 
-            transform: "translateY(-40px) translateX(-5px) scale(1.2)",
-            opacity: "1",
-          },
-          "75%": { 
-            transform: "translateY(-30px) translateX(-10px) scale(1.1)",
-            opacity: "0.9",
-          },
+        "slide-in-from-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
         },
-        "neural-pulse": {
-          "0%, 100%": {
-            opacity: "1",
-            transform: "scale(1)",
-            filter: "hue-rotate(0deg) brightness(1)",
-          },
-          "50%": {
-            opacity: "0.8",
-            transform: "scale(1.05)",
-            filter: "hue-rotate(90deg) brightness(1.2)",
-          },
-        },
-        "quantum-pulse": {
-          "0%, 100%": { 
-            boxShadow: "0 0 40px hsla(51 100% 50% / 0.8), 0 0 80px hsla(51 100% 50% / 0.4), inset 0 2px 0 hsla(51 100% 70% / 0.5), 0 8px 32px rgba(0, 0, 0, 0.3)",
-            transform: "scale(1)",
-          },
-          "50%": { 
-            boxShadow: "0 0 60px hsla(51 100% 50% / 1), 0 0 120px hsla(51 100% 50% / 0.6), inset 0 2px 0 hsla(51 100% 70% / 0.7), 0 12px 48px rgba(0, 0, 0, 0.4)",
-            transform: "scale(1.02)",
-          },
-        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.5s ease-out",
+        "fade-out": "fade-out 0.5s ease-out",
+        "slide-in-from-top": "slide-in-from-top 0.5s ease-out",
+        "slide-in-from-bottom": "slide-in-from-bottom 0.5s ease-out",
+        "slide-in-from-left": "slide-in-from-left 0.5s ease-out",
+        "slide-in-from-right": "slide-in-from-right 0.5s ease-out",
+      },
+      backgroundImage: {
+        "quantum-gradient": "var(--quantum-gradient)",
+      },
+      backdropFilter: {
+        "glass": "var(--glass-backdrop)",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-};
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+} satisfies Config;
 
 export default config;
