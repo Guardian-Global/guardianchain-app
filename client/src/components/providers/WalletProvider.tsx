@@ -20,7 +20,7 @@ const wagmiConfig = createConfig({
     metaMask({
       dappMetadata: {
         name: "GuardianChain",
-        url: "https://guardianchain.app",
+        url: typeof window !== 'undefined' ? window.location.origin : "https://guardianchain.app",
       },
     }),
     coinbaseWallet({
@@ -29,13 +29,14 @@ const wagmiConfig = createConfig({
     }),
     injected({ shimDisconnect: true }),
     walletConnect({
-      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "7b0a4e44b01e7e6b2e3f9ac2d5c8b1f3",
+      projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || import.meta.env.VITE_REOWN_PROJECT_ID || "7b0a4e44b01e7e6b2e3f9ac2d5c8b1f3",
       metadata: {
         name: "GuardianChain",
         description: "Sovereign Web3 Truth Vault Platform",
-        url: "https://guardianchain.app",
+        url: typeof window !== 'undefined' ? window.location.origin : "https://guardianchain.app",
         icons: ["https://guardian.global/logo.png"]
       },
+      showQrModal: true,
     }),
   ],
   transports: {
