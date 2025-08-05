@@ -83,10 +83,11 @@
 
     <!-- Service Worker Registration -->
     <script>
-      if ("serviceWorker" in navigator) {
+      // Only register Service Worker in production or when explicitly enabled
+      if ("serviceWorker" in navigator && location.hostname !== 'localhost') {
         window.addEventListener("load", () => {
           navigator.serviceWorker
-            .register("/sw.js")
+            .register("/service-worker.js")
             .then((registration) => {
               console.log(
                 "✅ Service Worker registered successfully:",
@@ -97,6 +98,8 @@
               console.log("❌ Service Worker registration failed:", error);
             });
         });
+      } else {
+        console.log("🔧 Service Worker skipped in development mode");
       }
     </script>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->

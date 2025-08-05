@@ -1,22 +1,33 @@
 {
-  "name": "GuardianChain",
-  "short_name": "Guardian",
+  "name": "GuardianChain: Truth Vault",
+  "short_name": "GuardianChain",
+  "description": "Sovereign Web3 infrastructure for time-locked proof, grief-score yield, and capsule monetization",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A0B",
-  "theme_color": "#00D4FF",
-  "description": "Advanced Web3 platform for content verification and decentralized governance",
+  "background_color": "#0a0a0a",
+  "theme_color": "#7c3aed",
   "orientation": "portrait-primary",
+  "scope": "/",
   "icons": [
     {
       "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "sizes": "16x16 32x32"
+    },
+    {
+      "src": "/logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "categories": ["business", "productivity", "utilities"],
-  "lang": "en",
-  "dir": "ltr",
-  "scope": "/",
-  "prefer_related_applications": false
+  "categories": ["productivity", "business", "finance"],
+  "lang": "en-US",
+  "dir": "ltr"
 }
