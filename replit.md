@@ -42,7 +42,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Core Entities & Features
 - **Users & Authentication**: Streamlined authentication with a four-tier access system (EXPLORER/SEEKER/CREATOR/SOVEREIGN) and subscription management.
-- **Capsules**: Truth submissions via specialized portals (14 types) with content validation, AI-powered analysis (emotional resonance, auto-tagging), and integrated NFT minting. Includes advanced encryption via Lit Protocol for time-locked and token-gated content, and a redemption system for unlocking time-sealed capsules for GTT rewards.
+- **Enhanced Capsule Creation System**: Comprehensive truth submission system with three creation modes (Guided Wizard for beginners, Advanced Creator for experts, Quick Create for streamlined flow). Features AI-powered content analysis, real-time GTT estimation, voice recording, file attachments, template selection, verification levels, time-locking, NFT minting, and blockchain sealing. Includes advanced encryption via Lit Protocol for time-locked and token-gated content, and a redemption system for unlocking time-sealed capsules for GTT rewards.
 - **Truth Auctions**: Sealed disclosure capsule system with GTT smart contract funding, live countdowns, and unlock functionality.
 - **Truth Lineage Protocol**: Advanced lineage tracking with grief flow analytics and influence scoring.
 - **Eternal Contracts**: Immutable declarations with AI verification and permanent blockchain sealing.
