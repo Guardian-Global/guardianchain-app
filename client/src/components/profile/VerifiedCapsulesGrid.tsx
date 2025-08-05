@@ -25,7 +25,7 @@ export default function VerifiedCapsulesGrid({ userId }: VerifiedCapsulesGridPro
     queryFn: () => getUserCapsules(userId),
   });
 
-  const verifiedCapsules = capsules.filter(capsule => capsule.verified);
+  const verifiedCapsules = Array.isArray(capsules) ? capsules.filter(capsule => capsule.status === 'verified' || capsule.truthScore >= 80) : [];
 
   const formatDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleDateString("en-US", {
@@ -125,7 +125,7 @@ export default function VerifiedCapsulesGrid({ userId }: VerifiedCapsulesGridPro
                   </div>
                 )}
 
-                {capsule.isTimeSealed && (
+                {capsule.status === 'sealed' && (
                   <Badge variant="outline" className="text-purple-400 border-purple-500">
                     <Clock className="w-3 h-3 mr-1" />
                     Sealed
@@ -139,16 +139,10 @@ export default function VerifiedCapsulesGrid({ userId }: VerifiedCapsulesGridPro
                   <span>Created: {formatDate(capsule.createdAt)}</span>
                 </div>
                 
-                {capsule.verificationDate && (
+                {capsule.status === 'verified' && (
                   <div className="flex items-center gap-2">
                     <Shield className="w-3 h-3 text-green-400" />
-                    <span>Verified: {formatDate(capsule.verificationDate)}</span>
-                  </div>
-                )}
-
-                {capsule.verifiedBy && (
-                  <div className="text-green-400">
-                    Verified by: {capsule.verifiedBy}
+                    <span>Verified Community</span>
                   </div>
                 )}
               </div>
@@ -163,7 +157,7 @@ export default function VerifiedCapsulesGrid({ userId }: VerifiedCapsulesGridPro
                 >
                   <Link href={`/capsule/${capsule.id}`}>
                     <Eye className="w-3 h-3 mr-2" />
-                    {capsule.isTimeSealed ? "Preview" : "View"}
+                    {capsule.status === 'sealed' ? "Preview" : "View"}
                   </Link>
                 </Button>
               </div>
