@@ -11,6 +11,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import ProfileCustomizationPanels from './ProfileCustomizationPanels';
+import ProfileAchievementSystem from './ProfileAchievementSystem';
+import EnhancedProfilePrivacySettings from './EnhancedProfilePrivacySettings';
+import ProfileSocialIntegration from './ProfileSocialIntegration';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Bell } from 'lucide-react';
 import { 
   User, 
   Settings, 
@@ -40,6 +47,7 @@ import {
   Download,
   Upload,
   Eye,
+  EyeOff,
   Lock,
   Unlock,
   Sparkles,
@@ -454,138 +462,400 @@ export default function EnhancedCustomizableProfile() {
 
               {/* Customization Tab */}
               <TabsContent value="customization">
-                <ProfileCustomizationPanels
-                  customization={profileData.customization || {}}
-                  onCustomizationChange={handleCustomizationChange}
-                />
+                <div className="space-y-8">
+                  {/* Enhanced Theme Options */}
+                  <Card className="bg-black/50 backdrop-blur-lg border-cyan-500/30 mb-6">
+                    <CardHeader>
+                      <CardTitle className="text-cyan-300 flex items-center">
+                        <Palette className="w-5 h-5 mr-2" />
+                        Enhanced Theme Gallery
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {[
+                          { key: 'cyberpunk', name: 'Cyberpunk Elite', preview: 'from-slate-900 via-purple-900 to-slate-900' },
+                          { key: 'matrix', name: 'Matrix Code', preview: 'from-black via-green-900 to-black' },
+                          { key: 'cosmic', name: 'Cosmic Voyager', preview: 'from-purple-900 via-blue-900 to-indigo-900' },
+                          { key: 'neon', name: 'Neon Nights', preview: 'from-gray-900 via-gray-800 to-black' },
+                          { key: 'royal', name: 'Royal Gold', preview: 'from-amber-900 via-red-900 to-yellow-900' },
+                          { key: 'holographic', name: 'Holographic', preview: 'from-pink-500 via-cyan-500 to-yellow-500' },
+                          { key: 'quantum', name: 'Quantum Field', preview: 'from-blue-900 via-purple-800 to-cyan-900' },
+                          { key: 'minimal', name: 'Pure Minimal', preview: 'from-gray-50 to-gray-100' }
+                        ].map(({ key, name, preview }) => (
+                          <button
+                            key={key}
+                            onClick={() => handleCustomizationChange('theme', key)}
+                            className={`p-3 rounded-lg border-2 transition-all hover:scale-105 ${
+                              profileData.customization?.theme === key 
+                                ? 'border-cyan-400 bg-cyan-400/20' 
+                                : 'border-gray-600 hover:border-gray-400'
+                            }`}
+                            data-testid={`theme-${key}`}
+                          >
+                            <div className={`h-12 rounded bg-gradient-to-r ${preview} mb-2 relative overflow-hidden`}>
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" />
+                            </div>
+                            <div className="text-xs font-medium text-white text-center">{name}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <ProfileCustomizationPanels
+                    customization={profileData.customization || {}}
+                    onCustomizationChange={handleCustomizationChange}
+                  />
+                  
+                  {/* Enhanced Profile Customization */}
+                  <div className="mt-8 pt-8 border-t border-gray-600">
+                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                      <Settings className="w-6 h-6 mr-3 text-cyan-400" />
+                      Enhanced Profile Options
+                    </h2>
+                    
+                    {/* Social Links Management */}
+                    <Card className="bg-black/50 backdrop-blur-lg border-blue-500/30 mb-6">
+                      <CardHeader>
+                        <CardTitle className="text-blue-300 flex items-center">
+                          <Users className="w-5 h-5 mr-2" />
+                          Social Networks & Contact
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {[
+                            { key: 'twitter', label: 'Twitter/X', placeholder: 'https://twitter.com/username' },
+                            { key: 'github', label: 'GitHub', placeholder: 'https://github.com/username' },
+                            { key: 'linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/in/username' },
+                            { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/username' },
+                            { key: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/@username' },
+                            { key: 'discord', label: 'Discord', placeholder: 'username#1234' }
+                          ].map(({ key, label, placeholder }) => (
+                            <div key={key}>
+                              <label className="text-sm font-medium text-gray-400 mb-2 block">
+                                {label}
+                              </label>
+                              <Input
+                                placeholder={placeholder}
+                                value={profileData.customization?.socialLinks?.[key] || ''}
+                                onChange={(e) => handleCustomizationChange('socialLinks', { 
+                                  ...profileData.customization?.socialLinks, 
+                                  [key]: e.target.value 
+                                })}
+                                className="bg-black/50 border-gray-600 text-white"
+                                data-testid={`input-social-${key}`}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Advanced Display Settings */}
+                    <Card className="bg-black/50 backdrop-blur-lg border-purple-500/30 mb-6">
+                      <CardHeader>
+                        <CardTitle className="text-purple-300 flex items-center">
+                          <Eye className="w-5 h-5 mr-2" />
+                          Advanced Display Settings
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-4">
+                            <h4 className="text-white font-medium">Theme Effects</h4>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Sparkles className="w-4 h-4 text-purple-300" />
+                                <span className="text-white text-sm">Holographic Effects</span>
+                              </div>
+                              <Switch
+                                checked={profileData.customization?.holographicEffects || false}
+                                onCheckedChange={(checked) => handleCustomizationChange('holographicEffects', checked)}
+                                data-testid="switch-holographic-effects"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Zap className="w-4 h-4 text-purple-300" />
+                                <span className="text-white text-sm">Lightning Borders</span>
+                              </div>
+                              <Switch
+                                checked={profileData.customization?.lightningBorders || false}
+                                onCheckedChange={(checked) => handleCustomizationChange('lightningBorders', checked)}
+                                data-testid="switch-lightning-borders"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Star className="w-4 h-4 text-purple-300" />
+                                <span className="text-white text-sm">Floating Elements</span>
+                              </div>
+                              <Switch
+                                checked={profileData.customization?.floatingElements || false}
+                                onCheckedChange={(checked) => handleCustomizationChange('floatingElements', checked)}
+                                data-testid="switch-floating-elements"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <h4 className="text-white font-medium">Interactive Features</h4>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Heart className="w-4 h-4 text-purple-300" />
+                                <span className="text-white text-sm">Heart Reactions</span>
+                              </div>
+                              <Switch
+                                checked={profileData.customization?.heartReactions !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('heartReactions', checked)}
+                                data-testid="switch-heart-reactions"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Share2 className="w-4 h-4 text-purple-300" />
+                                <span className="text-white text-sm">Quick Share</span>
+                              </div>
+                              <Switch
+                                checked={profileData.customization?.quickShare !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('quickShare', checked)}
+                                data-testid="switch-quick-share"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Download className="w-4 h-4 text-purple-300" />
+                                <span className="text-white text-sm">Profile Export</span>
+                              </div>
+                              <Switch
+                                checked={profileData.customization?.profileExport !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('profileExport', checked)}
+                                data-testid="switch-profile-export"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Personal Branding */}
+                    <Card className="bg-black/50 backdrop-blur-lg border-yellow-500/30 mb-6">
+                      <CardHeader>
+                        <CardTitle className="text-yellow-300 flex items-center">
+                          <Crown className="w-5 h-5 mr-2" />
+                          Personal Branding
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium text-gray-400 mb-2 block">
+                              Professional Title
+                            </label>
+                            <Input
+                              placeholder="e.g., Senior Guardian Developer"
+                              value={profileData.customization?.professionalTitle || ''}
+                              onChange={(e) => handleCustomizationChange('professionalTitle', e.target.value)}
+                              className="bg-black/50 border-gray-600 text-white"
+                              data-testid="input-professional-title"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-400 mb-2 block">
+                              Organization
+                            </label>
+                            <Input
+                              placeholder="e.g., GuardianChain Foundation"
+                              value={profileData.customization?.organization || ''}
+                              onChange={(e) => handleCustomizationChange('organization', e.target.value)}
+                              className="bg-black/50 border-gray-600 text-white"
+                              data-testid="input-organization"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-400 mb-2 block">
+                              Personal Website
+                            </label>
+                            <Input
+                              placeholder="https://yoursite.com"
+                              value={profileData.customization?.personalWebsite || ''}
+                              onChange={(e) => handleCustomizationChange('personalWebsite', e.target.value)}
+                              className="bg-black/50 border-gray-600 text-white"
+                              data-testid="input-personal-website"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-400 mb-2 block">
+                              Contact Email
+                            </label>
+                            <Input
+                              placeholder="contact@example.com"
+                              value={profileData.customization?.contactEmail || ''}
+                              onChange={(e) => handleCustomizationChange('contactEmail', e.target.value)}
+                              className="bg-black/50 border-gray-600 text-white"
+                              data-testid="input-contact-email"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="text-sm font-medium text-gray-400 mb-2 block">
+                            Professional Bio
+                          </label>
+                          <Textarea
+                            placeholder="Tell us about your professional background and expertise..."
+                            value={profileData.customization?.professionalBio || ''}
+                            onChange={(e) => handleCustomizationChange('professionalBio', e.target.value)}
+                            className="bg-black/50 border-gray-600 text-white resize-none"
+                            rows={4}
+                            maxLength={500}
+                            data-testid="textarea-professional-bio"
+                          />
+                          <div className="text-xs text-gray-400 mt-1">
+                            {(profileData.customization?.professionalBio || '').length}/500 characters
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Notification & Communication Settings */}
+                    <Card className="bg-black/50 backdrop-blur-lg border-green-500/30">
+                      <CardHeader>
+                        <CardTitle className="text-green-300 flex items-center">
+                          <Bell className="w-5 h-5 mr-2" />
+                          Notifications & Communication
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-4">
+                            <h4 className="text-white font-medium">Email Notifications</h4>
+                            <div className="flex items-center justify-between">
+                              <span className="text-white text-sm">New Followers</span>
+                              <Switch
+                                checked={profileData.customization?.emailNotifications?.followers !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('emailNotifications', { 
+                                  ...profileData.customization?.emailNotifications, 
+                                  followers: checked 
+                                })}
+                                data-testid="switch-email-followers"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-white text-sm">Direct Messages</span>
+                              <Switch
+                                checked={profileData.customization?.emailNotifications?.messages !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('emailNotifications', { 
+                                  ...profileData.customization?.emailNotifications, 
+                                  messages: checked 
+                                })}
+                                data-testid="switch-email-messages"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-white text-sm">Weekly Digest</span>
+                              <Switch
+                                checked={profileData.customization?.emailNotifications?.digest !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('emailNotifications', { 
+                                  ...profileData.customization?.emailNotifications, 
+                                  digest: checked 
+                                })}
+                                data-testid="switch-email-digest"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <h4 className="text-white font-medium">Privacy Controls</h4>
+                            <div className="flex items-center justify-between">
+                              <span className="text-white text-sm">Profile Search</span>
+                              <Switch
+                                checked={profileData.customization?.searchable !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('searchable', checked)}
+                                data-testid="switch-searchable"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-white text-sm">Analytics Tracking</span>
+                              <Switch
+                                checked={profileData.customization?.analyticsTracking !== false}
+                                onCheckedChange={(checked) => handleCustomizationChange('analyticsTracking', checked)}
+                                data-testid="switch-analytics"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-white text-sm">Data Export</span>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-gray-600 text-gray-300 hover:border-gray-400"
+                                data-testid="button-export-data"
+                              >
+                                <Download className="w-4 h-4 mr-2" />
+                                Export
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
               </TabsContent>
 
               {/* Achievements Tab */}
               <TabsContent value="achievements" className="space-y-6">
-                {achievements && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="achievements-grid">
-                    {achievements.achievements?.map((achievement: any, index: number) => (
-                      <Card key={index} className={`bg-black/50 backdrop-blur-lg ${achievement.earned ? 'border-yellow-500/50' : 'border-gray-600/30'}`} data-testid={`achievement-${achievement.id}`}>
-                        <CardContent className="p-6 text-center">
-                          <div className={`w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full ${achievement.earned ? 'bg-yellow-500/20' : 'bg-gray-600/20'}`}>
-                            {achievement.icon === 'target' && <Target className={`w-6 h-6 ${achievement.earned ? 'text-yellow-400' : 'text-gray-400'}`} />}
-                            {achievement.icon === 'users' && <Users className={`w-6 h-6 ${achievement.earned ? 'text-yellow-400' : 'text-gray-400'}`} />}
-                            {achievement.icon === 'heart' && <Heart className={`w-6 h-6 ${achievement.earned ? 'text-yellow-400' : 'text-gray-400'}`} />}
-                            {achievement.icon === 'shield' && <Shield className={`w-6 h-6 ${achievement.earned ? 'text-yellow-400' : 'text-gray-400'}`} />}
-                            {achievement.icon === 'coins' && <Coins className={`w-6 h-6 ${achievement.earned ? 'text-yellow-400' : 'text-gray-400'}`} />}
-                            {achievement.icon === 'crown' && <Crown className={`w-6 h-6 ${achievement.earned ? 'text-yellow-400' : 'text-gray-400'}`} />}
-                          </div>
-                          <h3 className={`font-semibold mb-2 ${achievement.earned ? 'text-yellow-300' : 'text-gray-300'}`} data-testid={`achievement-title-${achievement.id}`}>
-                            {achievement.title}
-                          </h3>
-                          <p className="text-sm text-gray-400 mb-3" data-testid={`achievement-description-${achievement.id}`}>
-                            {achievement.description}
-                          </p>
-                          {achievement.earned ? (
-                            <Badge className="bg-yellow-500/20 text-yellow-300" data-testid={`achievement-earned-${achievement.id}`}>
-                              <Trophy className="w-3 h-3 mr-1" />
-                              Earned
-                            </Badge>
-                          ) : achievement.progress !== undefined ? (
-                            <div className="space-y-2">
-                              <Progress value={(achievement.progress / achievement.target) * 100} className="h-2" />
-                              <p className="text-xs text-gray-500" data-testid={`achievement-progress-${achievement.id}`}>
-                                {achievement.progress} / {achievement.target}
-                              </p>
-                            </div>
-                          ) : null}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
+                <ProfileAchievementSystem
+                  achievements={achievements?.achievements || []}
+                  totalGTT={userStats?.gttEarned || 0}
+                  truthScore={userStats?.truthScore?.current || 0}
+                />
               </TabsContent>
 
               {/* Privacy Tab */}
               <TabsContent value="privacy" className="space-y-6">
-                <Card className="bg-black/50 backdrop-blur-lg border-red-500/30" data-testid="card-privacy-settings">
-                  <CardHeader>
-                    <CardTitle className="text-red-300 flex items-center">
-                      <Shield className="w-5 h-5 mr-2" />
-                      Privacy Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
-                          <div>
-                            <h4 className="text-white font-medium">Public Profile</h4>
-                            <p className="text-sm text-gray-400">Allow others to view your profile</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {profileData.privacy?.profilePublic ? (
-                              <Eye className="w-4 h-4 text-green-400" />
-                            ) : (
-                              <EyeOff className="w-4 h-4 text-red-400" />
-                            )}
-                            <span className="text-sm text-gray-300" data-testid="privacy-public-profile">
-                              {profileData.privacy?.profilePublic ? 'Public' : 'Private'}
-                            </span>
-                          </div>
-                        </div>
+                <EnhancedProfilePrivacySettings
+                  privacySettings={profileData.privacy?.settings || []}
+                  onSettingChange={(settingId, enabled) => {
+                    handleCustomizationChange('privacySettings', {
+                      ...profileData.privacy?.settings,
+                      [settingId]: { ...profileData.privacy?.settings?.[settingId], enabled }
+                    });
+                  }}
+                  onLevelChange={(settingId, level) => {
+                    handleCustomizationChange('privacySettings', {
+                      ...profileData.privacy?.settings,
+                      [settingId]: { ...profileData.privacy?.settings?.[settingId], level }
+                    });
+                  }}
+                />
+              </TabsContent>
 
-                        <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
-                          <div>
-                            <h4 className="text-white font-medium">Show Statistics</h4>
-                            <p className="text-sm text-gray-400">Display your stats publicly</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {profileData.privacy?.showStats ? (
-                              <BarChart3 className="w-4 h-4 text-green-400" />
-                            ) : (
-                              <BarChart3 className="w-4 h-4 text-red-400" />
-                            )}
-                            <span className="text-sm text-gray-300" data-testid="privacy-show-stats">
-                              {profileData.privacy?.showStats ? 'Visible' : 'Hidden'}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
-                          <div>
-                            <h4 className="text-white font-medium">Direct Messages</h4>
-                            <p className="text-sm text-gray-400">Allow others to message you</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {profileData.privacy?.allowMessages ? (
-                              <MessageCircle className="w-4 h-4 text-green-400" />
-                            ) : (
-                              <MessageCircle className="w-4 h-4 text-red-400" />
-                            )}
-                            <span className="text-sm text-gray-300" data-testid="privacy-allow-messages">
-                              {profileData.privacy?.allowMessages ? 'Enabled' : 'Disabled'}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
-                          <div>
-                            <h4 className="text-white font-medium">Activity Feed</h4>
-                            <p className="text-sm text-gray-400">Show your recent activity</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {profileData.privacy?.showActivityFeed ? (
-                              <BarChart3 className="w-4 h-4 text-green-400" />
-                            ) : (
-                              <BarChart3 className="w-4 h-4 text-red-400" />
-                            )}
-                            <span className="text-sm text-gray-300" data-testid="privacy-activity-feed">
-                              {profileData.privacy?.showActivityFeed ? 'Public' : 'Private'}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* Social Integration Tab */}
+              <TabsContent value="social" className="space-y-6">
+                <ProfileSocialIntegration
+                  socialConnections={profileData.socialConnections || []}
+                  onConnect={(platformId, username) => {
+                    const updatedConnections = [...(profileData.socialConnections || [])];
+                    const platformIndex = updatedConnections.findIndex(p => p.id === platformId);
+                    if (platformIndex >= 0) {
+                      updatedConnections[platformIndex] = { ...updatedConnections[platformIndex], connected: true, username };
+                    }
+                    handleCustomizationChange('socialConnections', updatedConnections);
+                  }}
+                  onDisconnect={(platformId) => {
+                    const updatedConnections = [...(profileData.socialConnections || [])];
+                    const platformIndex = updatedConnections.findIndex(p => p.id === platformId);
+                    if (platformIndex >= 0) {
+                      updatedConnections[platformIndex] = { ...updatedConnections[platformIndex], connected: false, username: undefined };
+                    }
+                    handleCustomizationChange('socialConnections', updatedConnections);
+                  }}
+                  publicProfile={profileData.publicProfile !== false}
+                  onPublicProfileChange={(enabled) => handleCustomizationChange('publicProfile', enabled)}
+                />
               </TabsContent>
             </motion.div>
           </AnimatePresence>
