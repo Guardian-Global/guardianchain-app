@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import BulkDataDumpCapsule from '@/components/capsule/BulkDataDumpCapsule';
+import EnhancedBulkDataDumpCapsule from '@/components/capsule/EnhancedBulkDataDumpCapsule';
 import { useAuth } from '@/hooks/useAuth';
 import { Link } from 'wouter';
 import {
@@ -139,7 +139,7 @@ export default function BulkUpload() {
 
           {/* Main Upload Component */}
           <motion.div variants={itemVariants}>
-            <BulkDataDumpCapsule onComplete={handleBulkComplete} />
+            <EnhancedBulkDataDumpCapsule />
           </motion.div>
 
           {/* Use Cases */}
