@@ -63,7 +63,7 @@ const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
-const MascotDebug = lazy(() => import("@/components/MascotDebug"));
+
 const AuthDebugPanel = lazy(() => import("@/components/auth/AuthDebugPanel"));
 const OnboardingStatusChecker = lazy(() => import("@/components/onboarding/OnboardingStatusChecker"));
 const ComprehensiveAuthFlow = lazy(() => import("@/components/auth/ComprehensiveAuthFlow"));
@@ -212,10 +212,7 @@ export default function App() {
                             <GuardianMascot />
                           </Suspense>
                           
-                          {/* Debug Mascot to test visibility */}
-                          <Suspense fallback={null}>
-                            <MascotDebug />
-                          </Suspense>
+
                           
                           {/* Auth Debug Panel for development */}
                           <Suspense fallback={null}>

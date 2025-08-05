@@ -235,9 +235,7 @@ export function setupConsolidatedAuth(app: Express) {
     console.log("🔐 Consolidated Auth: Complete onboarding endpoint called");
     const user = req.user;
     
-    // Mark onboarding as complete and update all user references
-    mockUser.onboardingCompleted = true;
-    mockUser.needsOnboarding = false;
+    // Mark onboarding as complete
     user.onboardingCompleted = true;
     user.needsOnboarding = false;
     user.updatedAt = new Date().toISOString();
@@ -247,7 +245,7 @@ export function setupConsolidatedAuth(app: Express) {
       success: true, 
       message: "Onboarding completed successfully",
       user: {
-        ...mockUser,
+        ...user,
         onboardingCompleted: true,
         needsOnboarding: false
       },
