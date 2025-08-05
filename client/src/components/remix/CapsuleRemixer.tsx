@@ -107,38 +107,38 @@ export default function CapsuleRemixer({ capsuleId, className }: CapsuleRemixerP
   };
 
   return (
-    <div className={`space-y-6 ${className}`}>
-      <Card className="bg-gradient-to-br from-[#0d1117] to-[#161b22] border-[#30363d] shadow-2xl backdrop-blur-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-[#00ffe1] flex items-center gap-3 text-xl">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#ff00d4] flex items-center justify-center">
-              <Palette className="h-4 w-4 text-black" />
+    <div className={`space-y-8 ${className}`}>
+      <Card className="glass-card neon-glow-cyan card-hover">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-[#00ffe1] flex items-center gap-4 text-2xl font-quantum">
+            <div className="w-12 h-12 rounded-full animated-gradient flex items-center justify-center pulse-neon">
+              <Palette className="h-6 w-6 text-black" />
             </div>
             AI Capsule Remixer
             {activeContest?.contest && (
-              <Badge className="bg-gradient-to-r from-purple-600 to-pink-500 text-white ml-2 animate-pulse">
-                <Trophy className="h-3 w-3 mr-1" />
+              <Badge className="enhanced-badge ml-4 px-4 py-2 text-base">
+                <Trophy className="h-4 w-4 mr-2" />
                 Contest Live
               </Badge>
             )}
           </CardTitle>
-          <p className="text-[#8b949e] text-sm mt-2">
-            Transform your capsules with AI-powered artistic styles
+          <p className="text-[#e6edf3] text-lg mt-4 font-web3">
+            Transform your capsules with AI-powered artistic styles and compete for GTT rewards
           </p>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-3">
-            <label className="text-sm font-medium text-[#f0f6fc]">Choose Remix Style</label>
+        <CardContent className="space-y-8">
+          <div className="space-y-4">
+            <label className="text-lg font-quantum text-[#00ffe1]">Choose Remix Style</label>
             <Select value={selectedStyle} onValueChange={setSelectedStyle}>
-              <SelectTrigger className="bg-[#161b22] border-[#30363d] text-[#f0f6fc] h-12 hover:border-[#00ffe1]/50 transition-colors" data-testid="style-selector">
+              <SelectTrigger className="glass-card neon-glow-purple text-[#f0f6fc] h-16 hover:neon-glow-cyan transition-all focus-glow font-web3 text-lg" data-testid="style-selector">
                 <SelectValue placeholder="🎨 Select an artistic style..." />
               </SelectTrigger>
-              <SelectContent className="bg-[#161b22] border-[#30363d] shadow-2xl">
+              <SelectContent className="glass-card neon-glow-magenta shadow-2xl">
                 {remixStyles.map((style) => (
-                  <SelectItem key={style.value} value={style.value} className="text-[#f0f6fc] focus:bg-[#0d1117] hover:bg-[#30363d]/50 py-3">
-                    <span className="flex items-center gap-3">
-                      <span className="text-lg">{style.emoji}</span>
-                      <span className="font-medium">{style.label}</span>
+                  <SelectItem key={style.value} value={style.value} className="text-[#f0f6fc] focus:glass-card hover:neon-glow-cyan py-4 text-lg font-web3">
+                    <span className="flex items-center gap-4">
+                      <span className="text-2xl">{style.emoji}</span>
+                      <span className="font-quantum">{style.label}</span>
                     </span>
                   </SelectItem>
                 ))}
@@ -149,33 +149,33 @@ export default function CapsuleRemixer({ capsuleId, className }: CapsuleRemixerP
           <Button
             onClick={handleRemix}
             disabled={remixMutation.isPending || !selectedStyle}
-            className="w-full h-12 bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:hover:scale-100"
+            className="enhanced-button w-full h-16 animated-gradient text-black hover:scale-110 transition-all duration-500 shadow-2xl hover:shadow-cyan-500/50 disabled:opacity-50 disabled:hover:scale-100 neon-glow-cyan font-quantum text-xl"
             data-testid="create-remix-button"
           >
             {remixMutation.isPending ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-3"></div>
-                <span className="font-medium">Creating Remix...</span>
+                <div className="animate-spin rounded-full h-6 w-6 border-3 border-black border-t-transparent mr-4"></div>
+                <span className="font-display">Creating Remix...</span>
               </>
             ) : (
               <>
-                <Sparkles className="h-5 w-5 mr-3" />
-                <span className="font-medium">Create AI Remix</span>
+                <Sparkles className="h-6 w-6 mr-4" />
+                <span className="font-display">Create AI Remix</span>
               </>
             )}
           </Button>
 
           {activeContest?.contest && (
-            <div className="p-4 bg-gradient-to-r from-[#161b22] to-[#1a1f36] rounded-xl border border-[#30363d] shadow-lg">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#ff00d4] to-[#7c3aed] flex items-center justify-center">
-                  <Trophy className="h-3 w-3 text-white" />
+            <div className="glass-card neon-glow-magenta p-6 rounded-2xl card-hover">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full animated-gradient flex items-center justify-center pulse-neon">
+                  <Trophy className="h-5 w-5 text-black" />
                 </div>
-                <span className="text-[#f0f6fc] font-semibold">{activeContest.contest.name}</span>
-                <Badge className="bg-[#ff00d4] text-white text-xs animate-pulse">LIVE</Badge>
+                <span className="text-[#f0f6fc] font-quantum text-xl">{activeContest.contest.name}</span>
+                <Badge className="enhanced-badge text-base px-4 py-2 pulse-slow">LIVE</Badge>
               </div>
-              <p className="text-sm text-[#8b949e] leading-relaxed">
-                Submit your remix to earn GTT tokens and win exclusive NFT rewards! 🏆
+              <p className="text-lg text-[#e6edf3] leading-relaxed font-web3">
+                Submit your remix to earn GTT tokens and win exclusive NFT rewards! 🏆✨
               </p>
             </div>
           )}

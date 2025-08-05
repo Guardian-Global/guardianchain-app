@@ -24,94 +24,94 @@ export default function EnhancementShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0d1117] to-[#161b22] p-4 md:p-6">
+    <div className="min-h-screen animated-gradient p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#00ffe1] to-[#ff00d4] flex items-center justify-center">
-              <span className="text-2xl">⚡</span>
+        <header className="text-center mb-12 glass-card p-8 rounded-3xl neon-glow-cyan">
+          <div className="inline-flex items-center gap-4 mb-6">
+            <div className="w-16 h-16 rounded-full animated-gradient flex items-center justify-center neon-glow-purple pulse-neon">
+              <span className="text-3xl animate-pulse">⚡</span>
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent">
+            <h1 className="text-6xl font-display bg-gradient-to-r from-[#00ffe1] via-[#ff00d4] to-[#7c3aed] bg-clip-text text-transparent animate-pulse">
               Enhancement Suite
             </h1>
           </div>
-          <p className="text-[#8b949e] text-xl max-w-2xl mx-auto leading-relaxed">
-            Advanced analytics, AI-powered remixing, NFT minting, and community engagement features
+          <p className="text-[#e6edf3] text-2xl max-w-3xl mx-auto leading-relaxed font-web3 mb-8">
+            Revolutionary AI-powered remixing, NFT minting, and community engagement platform
           </p>
-          <div className="flex justify-center gap-4 mt-6">
-            <div className="px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm text-[#00ffe1]">
+          <div className="flex justify-center gap-6 mt-8">
+            <div className="px-6 py-3 glass-card neon-glow-cyan rounded-full text-base text-[#00ffe1] font-quantum card-hover">
               ✨ AI-Powered
             </div>
-            <div className="px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm text-[#ff00d4]">
+            <div className="px-6 py-3 glass-card neon-glow-magenta rounded-full text-base text-[#ff00d4] font-quantum card-hover">
               🔗 Blockchain Ready
             </div>
-            <div className="px-4 py-2 bg-[#161b22] border border-[#30363d] rounded-full text-sm text-[#7c3aed]">
+            <div className="px-6 py-3 glass-card neon-glow-purple rounded-full text-base text-[#7c3aed] font-quantum card-hover">
               🎨 Creative Tools
             </div>
           </div>
         </header>
 
-        <Tabs defaultValue="analytics" className="space-y-8">
-          <div className="flex justify-center">
-            <TabsList className="inline-flex h-12 items-center justify-center rounded-xl bg-[#161b22] border border-[#30363d] p-1 shadow-lg backdrop-blur-sm">
-              <div className="grid grid-cols-5 lg:grid-cols-10 gap-1">
+        <Tabs defaultValue="analytics" className="space-y-10">
+          <div className="flex justify-center mb-8">
+            <TabsList className="enhanced-tabs glass-card neon-glow-cyan inline-flex h-16 items-center justify-center rounded-2xl p-2 shadow-2xl">
+              <div className="grid grid-cols-5 lg:grid-cols-10 gap-2">
                 <TabsTrigger 
                   value="analytics" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
                 >
                   📊 Analytics
                 </TabsTrigger>
                 <TabsTrigger 
                   value="reactions" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-magenta hover:glass-card rounded-xl"
                 >
                   😍 Reactions
                 </TabsTrigger>
                 <TabsTrigger 
                   value="leaderboard" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-purple hover:glass-card rounded-xl"
                 >
                   🏆 Leaders
                 </TabsTrigger>
                 <TabsTrigger 
                   value="reputation" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
                 >
                   ⭐ Reputation
                 </TabsTrigger>
                 <TabsTrigger 
                   value="value" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-magenta hover:glass-card rounded-xl"
                 >
                   💎 Value
                 </TabsTrigger>
                 <TabsTrigger 
                   value="playlist" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-purple hover:glass-card rounded-xl"
                 >
                   🎵 Playlists
                 </TabsTrigger>
                 <TabsTrigger 
                   value="remix" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
                 >
                   🎨 AI Remix
                 </TabsTrigger>
                 <TabsTrigger 
                   value="contest" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-magenta hover:glass-card rounded-xl"
                 >
                   🏅 Contest
                 </TabsTrigger>
                 <TabsTrigger 
                   value="interactions" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-purple hover:glass-card rounded-xl"
                 >
                   📈 Activity
                 </TabsTrigger>
                 <TabsTrigger 
                   value="sentiment" 
-                  className="px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#00ffe1] data-[state=active]:to-[#00d4aa] data-[state=active]:text-black data-[state=active]:shadow-lg hover:bg-[#30363d]/50"
+                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
                 >
                   🤖 AI Insights
                 </TabsTrigger>
@@ -119,29 +119,34 @@ export default function EnhancementShowcase() {
             </TabsList>
           </div>
 
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
+          <TabsContent value="analytics" className="space-y-8">
+            <div className="grid gap-8 lg:grid-cols-2">
               <CapsuleStatsGraph capsuleId="demo-capsule-1" />
-              <Card className="bg-[#0d1117] border-[#30363d]">
-                <CardHeader>
-                  <CardTitle className="text-[#00ffe1]">Real-time Analytics</CardTitle>
+              <Card className="glass-card neon-glow-cyan card-hover">
+                <CardHeader className="pb-6">
+                  <CardTitle className="text-[#00ffe1] font-quantum text-2xl flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full animated-gradient flex items-center justify-center">
+                      <span className="text-lg">📊</span>
+                    </div>
+                    Real-time Analytics
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-[#8b949e]">
+                  <p className="text-[#e6edf3] font-web3 text-lg mb-6">
                     Interactive charts with secure increment operations, weekly trends, and comprehensive engagement metrics.
                   </p>
-                  <div className="mt-4 space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[#8b949e]">Views</span>
-                      <span className="text-[#00ffe1]">2,143</span>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-4 glass-card rounded-xl">
+                      <span className="text-[#8b949e] font-medium">Views</span>
+                      <span className="text-[#00ffe1] font-quantum text-xl">2,143</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[#8b949e]">Engagement Rate</span>
-                      <span className="text-[#00ffe1]">87.3%</span>
+                    <div className="flex justify-between items-center p-4 glass-card rounded-xl">
+                      <span className="text-[#8b949e] font-medium">Engagement Rate</span>
+                      <span className="text-[#00ffe1] font-quantum text-xl">87.3%</span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[#8b949e]">Weekly Growth</span>
-                      <span className="text-green-400">+12.5%</span>
+                    <div className="flex justify-between items-center p-4 glass-card rounded-xl neon-glow-purple">
+                      <span className="text-[#8b949e] font-medium">Weekly Growth</span>
+                      <span className="text-[#00ff88] font-quantum text-xl pulse-neon">+12.5%</span>
                     </div>
                   </div>
                 </CardContent>

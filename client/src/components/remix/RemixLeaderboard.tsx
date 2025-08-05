@@ -106,21 +106,21 @@ export default function RemixLeaderboard({ contestId, className }: RemixLeaderbo
   };
 
   return (
-    <Card className={`bg-gradient-to-br from-[#0d1117] to-[#161b22] border-[#30363d] shadow-2xl backdrop-blur-sm ${className}`}>
-      <CardHeader className="pb-4">
+    <Card className={`glass-card neon-glow-magenta card-hover ${className}`}>
+      <CardHeader className="pb-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-[#00ffe1] flex items-center gap-3 text-xl">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#ff00d4] to-[#7c3aed] flex items-center justify-center">
-              <Flame className="h-4 w-4 text-black" />
+          <CardTitle className="text-[#00ffe1] flex items-center gap-4 text-2xl font-quantum">
+            <div className="w-12 h-12 rounded-full animated-gradient flex items-center justify-center pulse-neon">
+              <Flame className="h-6 w-6 text-black" />
             </div>
             Contest Leaderboard
           </CardTitle>
-          <Badge className="bg-gradient-to-r from-[#ff00d4] to-[#7c3aed] text-white px-3 py-1">
-            <Users className="h-3 w-3 mr-1" />
+          <Badge className="enhanced-badge px-4 py-2 text-lg">
+            <Users className="h-4 w-4 mr-2" />
             {entries.length} Entries
           </Badge>
         </div>
-        <p className="text-[#8b949e] text-sm mt-2">
+        <p className="text-[#e6edf3] text-lg mt-4 font-web3">
           Vote for your favorite remixes and help creators win GTT rewards
         </p>
       </CardHeader>
@@ -135,10 +135,10 @@ export default function RemixLeaderboard({ contestId, className }: RemixLeaderbo
             {entries.map((entry: any, index: number) => (
               <div
                 key={entry.remix_id}
-                className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 hover:scale-[1.02] ${
+                className={`flex items-center justify-between p-6 rounded-2xl transition-all duration-300 card-hover ${
                   index < 3 
-                    ? 'bg-gradient-to-r from-[#161b22] via-[#1a1f36] to-[#161b22] border-[#00ffe1]/30 shadow-lg shadow-[#00ffe1]/10' 
-                    : 'bg-[#161b22] border-[#30363d] hover:border-[#00ffe1]/20 hover:shadow-md'
+                    ? 'glass-card neon-glow-cyan animated-gradient text-black font-quantum' 
+                    : 'glass-card neon-glow-purple hover:neon-glow-cyan'
                 }`}
               >
                 <div className="flex items-center gap-4">
