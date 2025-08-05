@@ -6,13 +6,13 @@ const router = Router();
 // Real GTT contract configuration
 const GTT_CONTRACT_ADDRESS = "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C";
 
-// Alternative Polygon RPC endpoints for reliability
+// Enhanced RPC endpoints with Alchemy integration
 const POLYGON_RPC_URLS = [
+  process.env.POLYGON_RPC_URL || "https://polygon-mainnet.g.alchemy.com/v2/demo",
   "https://polygon-rpc.com",
   "https://rpc-mainnet.matic.network",
   "https://polygon-mainnet.public.blastapi.io",
   "https://polygon.llamarpc.com",
-  "https://1rpc.io/matic",
 ];
 
 // Standard ERC20 ABI for token data

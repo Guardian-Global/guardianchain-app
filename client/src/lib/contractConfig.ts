@@ -6,23 +6,22 @@
 export const GTT_CONTRACT_ADDRESS =
   "0x742d35Cc66535C0532925a3b8d0E9B01d9c5d9A6C";
 
-// Alternative reliable Polygon RPC endpoints for mainnet data
+// Enhanced Alchemy-powered RPC endpoints for mainnet data
 export const POLYGON_RPC_URLS = [
-  "https://polygon-rpc.com",
+  process.env.POLYGON_RPC_URL || "https://polygon-mainnet.g.alchemy.com/v2/demo",
+  "https://polygon-rpc.com", 
   "https://rpc-mainnet.matic.network",
   "https://polygon-mainnet.public.blastapi.io",
   "https://polygon.llamarpc.com",
-  "https://1rpc.io/matic",
 ];
 
 // Network Configuration
 export const SUPPORTED_NETWORKS = {
   ETHEREUM_MAINNET: {
     chainId: 1,
-    name: "Ethereum Mainnet",
+    name: "Ethereum Mainnet", 
     rpcUrls: [
-      "https://eth-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_KEY", // TODO: Add real Alchemy key
-      "https://mainnet.infura.io/v3/YOUR_INFURA_KEY", // TODO: Add real Infura key
+      process.env.ETHEREUM_RPC_URL || "https://eth-mainnet.g.alchemy.com/v2/demo",
       "https://ethereum.publicnode.com",
       "https://rpc.ankr.com/eth",
     ],
@@ -32,11 +31,21 @@ export const SUPPORTED_NETWORKS = {
     chainId: 137,
     name: "Polygon Mainnet",
     rpcUrls: [
+      process.env.POLYGON_RPC_URL || "https://polygon-mainnet.g.alchemy.com/v2/demo",
       "https://polygon-rpc.com",
       "https://rpc-mainnet.matic.network",
-      "https://polygon-mainnet.infura.io/v3/YOUR_INFURA_KEY", // TODO: Add real Infura key
     ],
     blockExplorerUrls: ["https://polygonscan.com"],
+  },
+  BASE_MAINNET: {
+    chainId: 8453,
+    name: "Base Mainnet", 
+    rpcUrls: [
+      process.env.BASE_RPC_URL || "https://base-mainnet.g.alchemy.com/v2/demo",
+      "https://mainnet.base.org",
+      "https://base.publicnode.com",
+    ],
+    blockExplorerUrls: ["https://basescan.org"],
   },
 };
 

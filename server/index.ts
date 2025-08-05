@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
+import enhancedBlockchainRoutes from "./routes/enhanced-blockchain";
 import { setupVite, serveStatic, log } from "./vite";
 // Temporarily disabled middleware imports to fix startup
 // import {
@@ -149,6 +150,9 @@ app.use("/api/upload", uploadRoutes);
 // Web3 testing routes
 import web3Routes from "./routes/web3.js";
 app.use("/api/web3", web3Routes);
+
+// Enhanced blockchain routes with Alchemy integration
+app.use("/api/blockchain", enhancedBlockchainRoutes);
 
 // Search routes
 import searchRoutes from "./api/search.js";
