@@ -9969,6 +9969,10 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
   // Register capsule minting routes  
   app.use('/api/mint', (await import('./routes/capsuleMint')).default);
   console.log('✅ Capsule minting API routes registered successfully');
+  
+  // Register capsule lineage routes
+  app.use('/api/capsule', (await import('./routes/api/capsule-lineage')).default);
+  console.log('✅ Capsule lineage API routes registered successfully');
 
   return httpServer;
 }
