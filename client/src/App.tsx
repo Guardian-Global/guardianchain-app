@@ -27,6 +27,7 @@ import OnboardingProvider from "./components/onboarding/OnboardingProvider";
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const Profile = lazy(() => import("@/pages/profile"));
+const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
 const TruthNet = lazy(() => import("@/pages/TruthNet"));
 const Explorer = lazy(() => import("@/pages/explorer"));
@@ -120,6 +121,8 @@ function Router() {
               <Route path="/revenue-explainer" component={RevenueExplainer} />
               <Route path="/create" component={CreateCapsule} />
               <Route path="/profile" component={Profile} />
+              <Route path="/profile/ultimate" component={UltimateProfile} />
+              <Route path="/profile/enhanced" component={EnhancedProfilePage} />
               <Route path="/truth-genome" component={TruthGenome} />
               <Route path="/truth-net" component={TruthNet} />
               <Route path="/start" component={Start} />

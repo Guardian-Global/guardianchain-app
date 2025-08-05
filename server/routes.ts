@@ -478,6 +478,267 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Enhanced profile data endpoint
+  app.get("/api/profile/advanced", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const advancedProfile = {
+        id: req.user.id,
+        email: req.user.email,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        displayName: `${req.user.firstName} ${req.user.lastName}`,
+        bio: "Guardian of truth, builder of the decentralized future",
+        location: "Decentralized Network",
+        website: "https://guardianchain.app",
+        avatar: req.user.profileImageUrl || "/guardian-mascot.png",
+        banner: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=300&fit=crop",
+        tier: req.user.tier || "EXPLORER",
+        truthScore: 87,
+        gttEarned: 12547,
+        capsulesCreated: 42,
+        verification: {
+          email: true,
+          phone: false,
+          identity: true,
+          wallet: true
+        },
+        customization: {
+          theme: 'cyberpunk',
+          accentColor: '#00ffe1',
+          backgroundImage: '',
+          musicPlayer: true,
+          particleEffects: true,
+          animationsEnabled: true,
+          profileLayout: 'grid',
+          showActivityFeed: true,
+          showCapsulesPublic: true,
+          showStatsPublic: true,
+          allowDirectMessages: true,
+          displayMode: 'professional',
+          statusMessage: 'Building the future of truth',
+          availabilityStatus: 'online',
+          customBadges: ['Truth Seeker', 'Capsule Creator', 'Community Builder'],
+          socialLinks: {
+            twitter: 'https://twitter.com/guardianchain',
+            github: 'https://github.com/guardianchain',
+            linkedin: '',
+            discord: 'https://discord.gg/guardianchain'
+          },
+          achievements: ['truth_seeker', 'community_builder', 'social_butterfly'],
+          favoriteQuote: 'Truth is the ultimate currency',
+          skillTags: ['Blockchain', 'AI', 'Web3', 'Decentralization'],
+          interests: ['Technology', 'Innovation', 'Truth Preservation', 'Community Building'],
+          languages: ['English', 'JavaScript', 'Solidity'],
+          timezone: 'UTC',
+          pronouns: 'they/them',
+          occupation: 'Guardian Developer',
+          company: 'GuardianChain Foundation'
+        },
+        privacy: {
+          profilePublic: true,
+          showEmail: false,
+          showStats: true,
+          allowMessages: true,
+          showActivityFeed: true
+        },
+        createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      res.json(advancedProfile);
+      console.log(`🔮 Advanced profile data sent for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to get advanced profile:", error);
+      res.status(500).json({
+        error: "Failed to get advanced profile",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Profile customization update endpoint
+  app.put("/api/profile/customization", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const customizationUpdates = req.body;
+      
+      // Mock saving customization data
+      const savedCustomization = {
+        userId: req.user.id,
+        ...customizationUpdates,
+        updatedAt: new Date().toISOString()
+      };
+
+      res.json({
+        success: true,
+        customization: savedCustomization,
+        message: "Profile customization updated successfully"
+      });
+      
+      console.log(`🎨 Profile customization updated for user: ${req.user.id}`, Object.keys(customizationUpdates));
+    } catch (error) {
+      console.error("❌ Failed to update profile customization:", error);
+      res.status(500).json({
+        error: "Failed to update profile customization",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // User advanced stats endpoint
+  app.get("/api/user/advanced-stats", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const advancedStats = {
+        truthScore: {
+          current: 87,
+          trend: +5,
+          breakdown: {
+            accuracy: 92,
+            community: 85,
+            verification: 84
+          }
+        },
+        gttTokens: {
+          earned: 12547,
+          spent: 2340,
+          staked: 8000,
+          available: 2207
+        },
+        capsules: {
+          total: 42,
+          verified: 38,
+          pending: 4,
+          categories: {
+            personal: 15,
+            professional: 12,
+            academic: 8,
+            creative: 7
+          }
+        },
+        engagement: {
+          views: 15420,
+          likes: 2850,
+          shares: 840,
+          comments: 1250
+        },
+        achievements: {
+          unlocked: 8,
+          total: 15,
+          recent: ['community_builder', 'truth_seeker', 'social_butterfly']
+        },
+        activity: {
+          capsulesCratedThisWeek: 3,
+          verificationsDone: 28,
+          communityInteractions: 156,
+          streakDays: 21
+        },
+        rewards: {
+          weeklyEarning: 247,
+          monthlyEarning: 1050,
+          totalLifetime: 12547,
+          nextReward: '2025-08-06T12:00:00Z'
+        }
+      };
+
+      res.json(advancedStats);
+      console.log(`📊 Advanced stats sent for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to get advanced stats:", error);
+      res.status(500).json({
+        error: "Failed to get advanced stats",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // User achievements endpoint
+  app.get("/api/user/achievements", isDebugAuthenticated, async (req: any, res) => {
+    try {
+      const achievements = [
+        {
+          id: 'truth_seeker',
+          title: 'Truth Seeker',
+          description: 'Created your first capsule',
+          icon: 'target',
+          earned: true,
+          earnedAt: '2025-07-15T10:30:00Z',
+          rarity: 'common',
+          points: 100
+        },
+        {
+          id: 'community_builder',
+          title: 'Community Builder',
+          description: 'Invited 10 friends to the platform',
+          icon: 'users',
+          earned: true,
+          earnedAt: '2025-07-22T14:15:00Z',
+          rarity: 'uncommon',
+          points: 250
+        },
+        {
+          id: 'social_butterfly',
+          title: 'Social Butterfly',
+          description: 'Connected all social media accounts',
+          icon: 'heart',
+          earned: true,
+          earnedAt: '2025-07-28T09:45:00Z',
+          rarity: 'common',
+          points: 150
+        },
+        {
+          id: 'verification_master',
+          title: 'Verification Master',
+          description: 'Successfully verified 100 capsules',
+          icon: 'shield',
+          earned: false,
+          progress: 28,
+          target: 100,
+          rarity: 'rare',
+          points: 500
+        },
+        {
+          id: 'gtt_collector',
+          title: 'GTT Collector',
+          description: 'Accumulated 50,000 GTT tokens',
+          icon: 'coins',
+          earned: false,
+          progress: 12547,
+          target: 50000,
+          rarity: 'epic',
+          points: 1000
+        },
+        {
+          id: 'elite_guardian',
+          title: 'Elite Guardian',
+          description: 'Reached sovereign tier status',
+          icon: 'crown',
+          earned: false,
+          progress: 0,
+          target: 1,
+          rarity: 'legendary',
+          points: 2500
+        }
+      ];
+
+      res.json({
+        achievements,
+        summary: {
+          total: achievements.length,
+          earned: achievements.filter(a => a.earned).length,
+          totalPoints: achievements.filter(a => a.earned).reduce((sum, a) => sum + a.points, 0),
+          nextAchievement: achievements.find(a => !a.earned)
+        }
+      });
+      
+      console.log(`🏆 Achievements data sent for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to get achievements:", error);
+      res.status(500).json({
+        error: "Failed to get achievements",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Profile update endpoint
   app.put("/api/user/profile", isDebugAuthenticated, async (req: any, res) => {
     try {
