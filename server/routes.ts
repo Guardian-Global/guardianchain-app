@@ -2090,6 +2090,11 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Terminal API routes
   app.use('/api/terminal', terminalRoutes);
   console.log("✅ Terminal API routes registered successfully");
+
+  // SMRI API routes
+  const smriRoutes = await import('./routes/smri.js');
+  app.use('/api/smri', smriRoutes.default);
+  console.log("✅ SMRI API routes registered successfully");
   
   // Only consolidated authentication system is active
 

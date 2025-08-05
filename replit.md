@@ -33,6 +33,8 @@ Preferred communication style: Simple, everyday language.
 - **Enhanced Voice Interface**: A complete voice ecosystem supporting summary playback, professional recording with AI transcription, emotional analysis, and grief scoring, along with auto-translation and LABELS-based localization.
 - **PWA Capabilities**: Full Progressive Web App functionality with offline support and installability.
 - **Guardian Terminal CLI**: Command-line interface for developer access to capsule operations, supporting mint and send operations with wallet integration.
+- **SMRI NFT Minter**: Subjective Memory Resonance Index badge generator with AI-powered trait analysis and blockchain minting.
+- **FastAPI Veritas Node**: High-performance async backend for capsule management, validation, and yield distribution.
 
 ### Backend
 - **Runtime & Language**: Node.js with Express.js, TypeScript.
