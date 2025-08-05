@@ -81,25 +81,7 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Service Worker Registration -->
-    <script>
-      // Register Service Worker with proper error handling
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/service-worker.js")
-            .then((registration) => {
-              console.log("✅ Service Worker registered:", registration.scope);
-            })
-            .catch((error) => {
-              // Don't log errors in development - expected behavior
-              if (location.hostname !== 'localhost') {
-                console.log("❌ Service Worker registration failed:", error);
-              }
-            });
-        });
-      }
-    </script>
+    <!-- Service Worker will be registered via TypeScript module -->
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script
       type="text/javascript"
