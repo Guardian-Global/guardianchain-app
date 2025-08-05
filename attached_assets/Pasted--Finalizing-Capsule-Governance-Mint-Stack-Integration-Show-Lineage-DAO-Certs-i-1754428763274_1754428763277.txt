@@ -1,0 +1,76 @@
+✅ Finalizing Capsule Governance & Mint Stack Integration
+
+---
+
+### 🧬 Show Lineage + DAO Certs in `/profile` View
+
+**Component:**
+```tsx
+// /components/profile/ProfileCapsuleLineage.tsx
+import CapsuleLineageGraph from '../CapsuleLineageGraph';
+
+export default function ProfileCapsuleLineage({ capsuleId }) {
+  const { data, isLoading } = useSWR(`/api/capsule/lineage/${capsuleId}`, fetcher);
+  if (isLoading) return <p>Loading graph...</p>;
+  return <CapsuleLineageGraph data={data} />;
+}
+```
+
+**Badge Indicator:**
+```tsx
+// Inside CapsuleCard.tsx or ProfileCapsuleItem.tsx
+{capsule.dao_certified && <span className="badge badge-success">DAO Certified ✅</span>}
+```
+
+**API:**
+```ts
+// /api/capsule/lineage/[id].ts
+const lineage = await db.capsule_lineage.findMany({
+  where: { parent_capsule: id },
+  include: { child: true },
+});
+res.json(lineage);
+```
+
+---
+
+### 🔗 GTT Token Contract Transfer on Mint
+
+**Smart Contract Snippet (Solidity):**
+```solidity
+function mintCapsule(address user, string memory cid) public returns (uint256) {
+  require(balanceOf(user) >= mintPrice, "Insufficient GTT");
+  _burn(user, mintPrice);
+  uint256 tokenId = _mint(user, cid);
+  emit CapsuleMinted(user, tokenId, cid);
+  return tokenId;
+}
+```
+
+**Frontend Call (ethers.js):**
+```ts
+const contract = new ethers.Contract(GTT_CONTRACT_ADDRESS, ABI, signer);
+const tx = await contract.mintCapsule(userAddress, ipfsCID);
+await tx.wait();
+```
+
+---
+
+### 📦 Export Capsule Minting System (for GitHub or ZIP)
+
+**Files to export:**
+- `routes/capsule.ts` — capsule mint logic (with cert + GTT)
+- `components/MintCapsuleButton.tsx` — UI logic for tier, payment, or chain
+- `components/CapsuleLineageGraph.tsx` — visual graph
+- `components/profile/ProfileCapsuleLineage.tsx` — profile injection
+- `contracts/GTTCapsule.sol` — mint contract w/ burn logic
+- `sql/capsule_lineage.sql` — lineage schema + triggers
+
+✅ GitHub-ready, or bundled for ZIP export.
+
+---
+
+Would you like me to:
+- Generate all files + README into a full ZIP bundle now?
+- Push directly to GitHub with full commit logs?
+- Add DAO voting hooks or GTT staking multipliers before export?

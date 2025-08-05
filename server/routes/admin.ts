@@ -1,175 +1,189 @@
-import { Router } from "express";
-import { isAuthenticated } from "../auth/middleware";
+import { Router } from 'express';
+import { requireAdmin, requireSovereign } from '../middleware/requireAdmin';
+import { adminRateLimiter } from '../middleware/rateLimiter';
+import { db } from '../db';
+import { users, capsules } from '@shared/schema';
+import { eq, desc, count } from 'drizzle-orm';
 
 const router = Router();
 
-// Mock configuration data - in production this would come from database
-const configItems = [
-  {
-    key: "projectName",
-    value: "GuardianChain",
-    type: "string" as const,
-    editable: false,
-  },
-  {
-    key: "defaultTier",
-    value: "guest",
-    type: "string" as const,
-    editable: true,
-  },
-  {
-    key: "projectStatus",
-    value: "production",
-    type: "string" as const,
-    editable: true,
-  },
-  {
-    key: "veritasSealRequired",
-    value: "true",
-    type: "boolean" as const,
-    editable: true,
-  },
-  {
-    key: "stripeEnabled",
-    value: "true",
-    type: "boolean" as const,
-    editable: true,
-  },
-  {
-    key: "capsuleReplayFee",
-    value: "2.50",
-    type: "number" as const,
-    editable: true,
-  },
-  {
-    key: "griefScoreEnabled",
-    value: "true",
-    type: "boolean" as const,
-    editable: true,
-  },
-  {
-    key: "aiModeration",
-    value: "on",
-    type: "string" as const,
-    editable: true,
-  },
-  {
-    key: "ipfsPinning",
-    value: "pinata",
-    type: "string" as const,
-    editable: true,
-  },
-  {
-    key: "network",
-    value: "polygon-mainnet",
-    type: "string" as const,
-    editable: false,
-  },
-];
+// Apply admin rate limiting to all admin routes
+router.use(adminRateLimiter);
 
-// Store for dynamic config changes (in production, use database)
-let runtimeConfig = new Map(configItems.map((item) => [item.key, item.value]));
+// Apply admin authentication to all routes
+router.use(requireAdmin);
 
-// Middleware to check admin access
-const requireAdmin = (req: any, res: any, next: any) => {
-  const user = req.user;
-  const isAdmin =
-    user?.email === "admin@guardianchain.app" ||
-    user?.tier === "ADMIN" ||
-    user?.tier === "DAO_OWNER";
-
-  if (!isAdmin) {
-    return res.status(403).json({
-      error: "Admin access required",
-      userTier: user?.tier || "guest",
-    });
-  }
-
-  next();
-};
-
-// Get configuration
-router.get("/config", isAuthenticated, requireAdmin, (req, res) => {
+// Admin dashboard stats
+router.get('/stats', async (req, res) => {
   try {
-    const enrichedConfig = configItems.map((item) => ({
-      ...item,
-      value: runtimeConfig.get(item.key) || item.value,
-    }));
+    const [totalUsers] = await db.select({ count: count() }).from(users);
+    const [totalCapsules] = await db.select({ count: count() }).from(capsules);
+    
+    const recentUsers = await db
+      .select()
+      .from(users)
+      .orderBy(desc(users.createdAt))
+      .limit(10);
+
+    const usersByTier = await db
+      .select({
+        tier: users.tier,
+        count: count()
+      })
+      .from(users)
+      .groupBy(users.tier);
 
     res.json({
-      config: enrichedConfig,
-      lastUpdated: new Date().toISOString(),
+      totalUsers: totalUsers.count,
+      totalCapsules: totalCapsules.count,
+      recentUsers,
+      usersByTier,
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error("Error fetching admin config:", error);
-    res.status(500).json({ error: "Failed to fetch configuration" });
+    console.error('Admin stats error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch admin statistics',
+      code: 'ADMIN_STATS_ERROR' 
+    });
   }
 });
 
-// Update configuration
-router.post("/config", isAuthenticated, requireAdmin, (req, res) => {
+// User management
+router.get('/users', async (req, res) => {
   try {
-    const { updates } = req.body;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 50;
+    const offset = (page - 1) * limit;
 
-    if (!updates || typeof updates !== "object") {
-      return res.status(400).json({ error: "Invalid updates format" });
+    const allUsers = await db
+      .select()
+      .from(users)
+      .orderBy(desc(users.createdAt))
+      .limit(limit)
+      .offset(offset);
+
+    res.json({
+      users: allUsers,
+      page,
+      limit,
+      total: allUsers.length
+    });
+  } catch (error) {
+    console.error('Admin users error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch users',
+      code: 'ADMIN_USERS_ERROR' 
+    });
+  }
+});
+
+// Update user tier (admin only)
+router.patch('/users/:userId/tier', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { tier } = req.body;
+
+    const validTiers = ['EXPLORER', 'SEEKER', 'CREATOR', 'SOVEREIGN', 'ADMIN'];
+    if (!validTiers.includes(tier)) {
+      return res.status(400).json({ 
+        error: 'Invalid tier specified',
+        code: 'INVALID_TIER',
+        validTiers 
+      });
     }
 
-    // Validate and apply updates
-    const appliedUpdates: string[] = [];
-    const errors: string[] = [];
-
-    for (const [key, value] of Object.entries(updates)) {
-      const configItem = configItems.find((item) => item.key === key);
-
-      if (!configItem) {
-        errors.push(`Unknown config key: ${key}`);
-        continue;
-      }
-
-      if (!configItem.editable) {
-        errors.push(`Config key '${key}' is read-only`);
-        continue;
-      }
-
-      // Type validation
-      if (configItem.type === "boolean") {
-        if (value !== "true" && value !== "false") {
-          errors.push(`Config key '${key}' must be 'true' or 'false'`);
-          continue;
-        }
-      } else if (configItem.type === "number") {
-        if (isNaN(Number(value))) {
-          errors.push(`Config key '${key}' must be a valid number`);
-          continue;
-        }
-      }
-
-      // Apply update
-      runtimeConfig.set(key, value as string);
-      appliedUpdates.push(key);
+    // Prevent non-sovereign users from creating admin accounts
+    if (tier === 'ADMIN' && req.user?.tier !== 'SOVEREIGN') {
+      return res.status(403).json({ 
+        error: 'Only Sovereign users can create Admin accounts',
+        code: 'SOVEREIGN_REQUIRED' 
+      });
     }
 
+    const [updatedUser] = await db
+      .update(users)
+      .set({ 
+        tier, 
+        updatedAt: new Date() 
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    if (!updatedUser) {
+      return res.status(404).json({ 
+        error: 'User not found',
+        code: 'USER_NOT_FOUND' 
+      });
+    }
+
+    console.log(`🔐 Admin ${req.user?.email} updated user ${updatedUser.email} tier to ${tier}`);
+    
     res.json({
       success: true,
-      appliedUpdates,
-      errors,
-      updatedAt: new Date().toISOString(),
+      user: updatedUser,
+      message: `User tier updated to ${tier}`
     });
   } catch (error) {
-    console.error("Error updating admin config:", error);
-    res.status(500).json({ error: "Failed to update configuration" });
+    console.error('Update user tier error:', error);
+    res.status(500).json({ 
+      error: 'Failed to update user tier',
+      code: 'UPDATE_TIER_ERROR' 
+    });
   }
 });
 
-// Get current configuration as JSON (public endpoint for fallback)
-router.get("/config/public", (req, res) => {
+// System health check (sovereign only)
+router.get('/system/health', requireSovereign, async (req, res) => {
   try {
-    const publicConfig = Object.fromEntries(runtimeConfig.entries());
-    res.json(publicConfig);
+    // Check database connectivity
+    const [dbCheck] = await db.select({ count: count() }).from(users);
+    
+    // System metrics
+    const systemHealth = {
+      database: {
+        status: 'healthy',
+        totalUsers: dbCheck.count
+      },
+      server: {
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        nodeVersion: process.version
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    res.json(systemHealth);
   } catch (error) {
-    console.error("Error fetching public config:", error);
-    res.status(500).json({ error: "Failed to fetch configuration" });
+    console.error('System health check error:', error);
+    res.status(500).json({ 
+      error: 'System health check failed',
+      code: 'HEALTH_CHECK_ERROR' 
+    });
+  }
+});
+
+// Admin logs (sovereign only)
+router.get('/logs', requireSovereign, async (req, res) => {
+  try {
+    // This would typically integrate with a logging service
+    // For now, return basic system information
+    const logs = {
+      recent_actions: [
+        { action: 'User tier updated', timestamp: new Date().toISOString() },
+        { action: 'Admin dashboard accessed', timestamp: new Date().toISOString() }
+      ],
+      system_status: 'operational',
+      timestamp: new Date().toISOString()
+    };
+
+    res.json(logs);
+  } catch (error) {
+    console.error('Admin logs error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch admin logs',
+      code: 'ADMIN_LOGS_ERROR' 
+    });
   }
 });
 

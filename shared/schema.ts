@@ -41,7 +41,13 @@ export const users = pgTable("users", {
   twitter: varchar("twitter"),
   github: varchar("github"),
   linkedin: varchar("linkedin"),
-  tier: varchar("tier").default("EXPLORER"), // EXPLORER, SEEKER, CREATOR, SOVEREIGN
+  tier: varchar("tier").default("EXPLORER"), // EXPLORER, SEEKER, CREATOR, SOVEREIGN, ADMIN
+  role: varchar("role").default("user"), // user, admin, moderator
+  emailConfirmed: boolean("email_confirmed").default(false),
+  phoneConfirmed: boolean("phone_confirmed").default(false),
+  twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  loginAttempts: varchar("login_attempts").default("0"),
+  lockedUntil: timestamp("locked_until"),
   subscriptionStatus: varchar("subscription_status").default("inactive"),
   onboardingCompleted: boolean("onboarding_completed").default(false),
   lastLoginAt: timestamp("last_login_at"),

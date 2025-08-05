@@ -72,6 +72,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Admin = lazy(() => import("./pages/Admin"));
+const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
 const CapsuleBrowser = lazy(() => import("./pages/CapsuleBrowser"));
 const CapsuleDetail = lazy(() => import("./pages/CapsuleDetail"));
@@ -149,6 +150,7 @@ function Router() {
               <Route path="/settings" component={Settings} />
               <Route path="/admin-dashboard" component={AdminDashboard} />
               <Route path="/admin" component={Admin} />
+              <Route path="/admin/panel" component={AdminPanel} />
               <Route path="/capsule-stats" component={CapsuleStats} />
               <Route path="/capsule-browser" component={CapsuleBrowser} />
               <Route path="/claim" component={Claim} />
