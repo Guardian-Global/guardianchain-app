@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
-import guardianMascotImg from '@assets/guardian_mascot_1754361002591.png';
+const guardianMascotImg = '/guardian-mascot.png';
 import { 
   MessageCircle, 
   X, 
