@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import CapsuleCard from './CapsuleCard';
 import ProfileCapsuleLineage from './ProfileCapsuleLineage';
 import { 
-  Capsule, 
+  Archive, 
   Award, 
   GitBranch, 
   Coins,
@@ -55,12 +55,12 @@ export default function ProfileCapsulesView({
   });
 
   // Fetch profile stats
-  const { data: stats } = useQuery<ProfileStats>({
+  const { data: stats = {} as ProfileStats } = useQuery<ProfileStats>({
     queryKey: ['/api/profile/capsule-stats', userId],
   });
 
   // Fetch lineage summary
-  const { data: lineageSummary } = useQuery({
+  const { data: lineageSummary = {} as any } = useQuery({
     queryKey: ['/api/capsule/user', userId, 'lineage-summary'],
   });
 
@@ -163,7 +163,7 @@ export default function ProfileCapsulesView({
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-4 lg:grid-cols-6 bg-slate-800 border-slate-700">
           <TabsTrigger value="all" className="flex items-center gap-2">
-            <Capsule className="w-4 h-4" />
+            <Archive className="w-4 h-4" />
             All ({capsules.length})
           </TabsTrigger>
           <TabsTrigger value="verified" className="flex items-center gap-2">

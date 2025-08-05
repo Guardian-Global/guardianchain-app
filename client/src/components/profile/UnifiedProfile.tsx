@@ -112,14 +112,14 @@ export default function UnifiedProfile() {
   const queryClient = useQueryClient();
 
   // Fetch user stats
-  const { data: userStats, isLoading: statsLoading } = useQuery({
+  const { data: userStats = {} as UserStats, isLoading: statsLoading } = useQuery({
     queryKey: ["/api/profile/stats"],
     enabled: !!user,
     staleTime: 5 * 60 * 1000 // 5 minutes
   });
 
   // Fetch user activities
-  const { data: activities, isLoading: activitiesLoading } = useQuery({
+  const { data: activities = [] as Activity[], isLoading: activitiesLoading } = useQuery({
     queryKey: ["/api/profile/activities"],
     enabled: !!user,
     staleTime: 2 * 60 * 1000 // 2 minutes
@@ -298,16 +298,16 @@ export default function UnifiedProfile() {
                     Verified Guardian
                   </Badge>
                 </div>
-                <p className="text-[#8b949e] text-xl">@{user.username || user.firstName?.toLowerCase()}</p>
+                <p className="text-[#8b949e] text-xl">@{(user as any).username || user.firstName?.toLowerCase()}</p>
                 <div className="flex items-center space-x-6 mt-3 text-sm text-[#8b949e]">
                   <span className="flex items-center">
                     <Mail className="h-4 w-4 mr-1" />
                     {user.email}
                   </span>
-                  {user.location && (
+                  {(user as any).location && (
                     <span className="flex items-center">
                       <MapPin className="h-4 w-4 mr-1" />
-                      {user.location}
+                      {(user as any).location}
                     </span>
                   )}
                   <span className="flex items-center">
@@ -319,8 +319,8 @@ export default function UnifiedProfile() {
                     Following 847
                   </span>
                 </div>
-                {user.bio && (
-                  <p className="text-[#f0f6fc] mt-3 text-lg max-w-2xl">{user.bio}</p>
+                {(user as any).bio && (
+                  <p className="text-[#f0f6fc] mt-3 text-lg max-w-2xl">{(user as any).bio}</p>
                 )}
               </div>
             </div>
@@ -448,7 +448,7 @@ export default function UnifiedProfile() {
                       <Label htmlFor="location" className="text-[#f0f6fc]">Location</Label>
                       <Input
                         id="location"
-                        value={profileData.location || user.location || ''}
+                        value={profileData.location || (user as any).location || ''}
                         onChange={(e) => handleInputChange('location', e.target.value)}
                         className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]"
                         placeholder="Enter your location"
@@ -458,7 +458,7 @@ export default function UnifiedProfile() {
                       <Label htmlFor="website" className="text-[#f0f6fc]">Website</Label>
                       <Input
                         id="website"
-                        value={profileData.website || user.website || ''}
+                        value={profileData.website || (user as any).website || ''}
                         onChange={(e) => handleInputChange('website', e.target.value)}
                         className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]"
                         placeholder="https://your-website.com"
@@ -468,7 +468,7 @@ export default function UnifiedProfile() {
                       <Label htmlFor="bio" className="text-[#f0f6fc]">Bio</Label>
                       <Textarea
                         id="bio"
-                        value={profileData.bio || user.bio || ''}
+                        value={profileData.bio || (user as any).bio || ''}
                         onChange={(e) => handleInputChange('bio', e.target.value)}
                         className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]"
                         rows={4}
@@ -478,37 +478,37 @@ export default function UnifiedProfile() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {user.bio && (
+                    {(user as any).bio && (
                       <div>
                         <h4 className="font-semibold text-[#f0f6fc] mb-1">Bio</h4>
-                        <p className="text-[#8b949e]">{user.bio}</p>
+                        <p className="text-[#8b949e]">{(user as any).bio}</p>
                       </div>
                     )}
                     <div className="flex flex-wrap gap-4">
-                      {user.website && (
-                        <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} 
+                      {(user as any).website && (
+                        <a href={(user as any).website.startsWith('http') ? (user as any).website : `https://${(user as any).website}`} 
                            target="_blank" rel="noopener noreferrer" 
                            className="flex items-center text-[#00ffe1] hover:underline">
                           <LinkIcon className="h-4 w-4 mr-1" />
                           Website
                         </a>
                       )}
-                      {user.github && (
-                        <a href={`https://github.com/${user.github}`} target="_blank" rel="noopener noreferrer"
+                      {(user as any).github && (
+                        <a href={`https://github.com/${(user as any).github}`} target="_blank" rel="noopener noreferrer"
                            className="flex items-center text-[#00ffe1] hover:underline">
                           <Github className="h-4 w-4 mr-1" />
                           GitHub
                         </a>
                       )}
-                      {user.twitter && (
-                        <a href={`https://twitter.com/${user.twitter}`} target="_blank" rel="noopener noreferrer"
+                      {(user as any).twitter && (
+                        <a href={`https://twitter.com/${(user as any).twitter}`} target="_blank" rel="noopener noreferrer"
                            className="flex items-center text-[#00ffe1] hover:underline">
                           <Twitter className="h-4 w-4 mr-1" />
                           Twitter
                         </a>
                       )}
-                      {user.linkedin && (
-                        <a href={`https://linkedin.com/in/${user.linkedin}`} target="_blank" rel="noopener noreferrer"
+                      {(user as any).linkedin && (
+                        <a href={`https://linkedin.com/in/${(user as any).linkedin}`} target="_blank" rel="noopener noreferrer"
                            className="flex items-center text-[#00ffe1] hover:underline">
                           <Linkedin className="h-4 w-4 mr-1" />
                           LinkedIn
@@ -688,7 +688,15 @@ export default function UnifiedProfile() {
               <FeaturedCapsulesManager />
               <VerifiedCapsulesGrid userId={user.id} />
             </div>
-            <CapsuleWallToggle />
+            <CapsuleWallToggle 
+              viewMode="grid"
+              onViewModeChange={(mode) => {}}
+              sortBy="created"
+              onSortChange={(sort) => {}}
+              filterBy="all"
+              onFilterChange={(filter) => {}}
+              capsules={[]}
+            />
           </TabsContent>
 
           <TabsContent value="timeline" className="space-y-6">
@@ -702,14 +710,22 @@ export default function UnifiedProfile() {
                 <TruthGenomeCard />
               </div>
               <div className="space-y-6">
-                <SovereignAIAssistant />
+                <SovereignAIAssistant 
+                  userId={user.id}
+                  userTier={user.tier}
+                  gttBalance={500}
+                />
                 <GTTPortfolioManager />
               </div>
             </div>
           </TabsContent>
 
           <TabsContent value="achievements" className="space-y-6">
-            <ProfileAchievementSystem />
+            <ProfileAchievementSystem 
+              achievements={[]}
+              totalGTT={userStats.gttEarned || 0}
+              truthScore={userStats.truthScore || 0}
+            />
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-6">
@@ -780,7 +796,10 @@ export default function UnifiedProfile() {
                   </CardContent>
                 </Card>
                 
-                <ProfileThemeSelector />
+                <ProfileThemeSelector 
+                  currentTheme="dark"
+                  onThemeChange={(theme) => {}}
+                />
               </div>
               
               <div className="space-y-6">

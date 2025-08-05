@@ -523,11 +523,7 @@ export default function EnhancedProfileDashboard() {
           </TabsContent>
 
           <TabsContent value="portfolio" className="space-y-6">
-            <GTTPortfolioManager
-              userId={profileData.id}
-              gttBalance={profileData.stats?.gttBalance || 0}
-              totalEarned={profileData.stats?.totalYieldEarned || 0}
-            />
+            <GTTPortfolioManager />
           </TabsContent>
 
           <TabsContent value="ai-assistant" className="space-y-6">
