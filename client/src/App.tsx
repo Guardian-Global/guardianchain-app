@@ -44,6 +44,11 @@ const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
 const DAO = lazy(() => import("@/pages/DAO"));
+const DAOConfig = lazy(() => import("@/pages/dao-config"));
+const Assistant = lazy(() => import("@/pages/assistant"));
+const TermsOfService = lazy(() => import("@/pages/legal/terms"));
+const PrivacyPolicy = lazy(() => import("@/pages/legal/privacy"));
+const DisclosurePolicy = lazy(() => import("@/pages/legal/disclosure"));
 const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
 const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
@@ -149,6 +154,11 @@ function Router() {
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
               <Route path="/dao" component={DAO} />
+              <Route path="/dao-config" component={DAOConfig} />
+              <Route path="/assistant" component={Assistant} />
+              <Route path="/legal/terms" component={TermsOfService} />
+              <Route path="/legal/privacy" component={PrivacyPolicy} />
+              <Route path="/legal/disclosure" component={DisclosurePolicy} />
               <Route path="/profile" component={EnhancedProfilePage} />
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />

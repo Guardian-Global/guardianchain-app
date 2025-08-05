@@ -1,0 +1,93 @@
+// ✅ Finalized /api/bulk-mint.ts — file → IPFS → tokenURI → NFT mint
+import formidable from 'formidable';
+import { NFTStorage, File } from 'nft.storage';
+import { ethers } from 'ethers';
+import fs from 'fs';
+import CapsuleNFT from '@/contracts/CapsuleNFT.json';
+
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
+export default async function handler(req, res) {
+  const form = new formidable.IncomingForm({ multiples: true });
+  const files = await new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err);
+      else resolve(files.files);
+    });
+  });
+
+  const nftClient = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
+  const provider = new ethers.JsonRpcProvider(process.env.ALCHEMY_URL);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  const contract = new ethers.Contract(process.env.NFT_CONTRACT_ADDR, CapsuleNFT.abi, wallet);
+
+  let minted = 0;
+  for (const file of Array.isArray(files) ? files : [files]) {
+    const buffer = fs.readFileSync(file.filepath);
+    const ipfsAsset = await nftClient.store({
+      name: file.originalFilename,
+      description: 'GuardianChain Capsule',
+      image: new File([buffer], file.originalFilename, { type: file.mimetype })
+    });
+    const uri = `https://ipfs.io/ipfs/${ipfsAsset.ipnft}/metadata.json`;
+    await contract.mint(wallet.address, uri);
+    minted++;
+  }
+
+  res.status(200).json({ minted });
+}
+
+// ✅ VoiceRecall hook with OpenAI + embedding match
+// lib/voiceMatch.ts
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { supabase } from './supabase';
+
+export async function matchVoiceQuery(query) {
+  const embedding = await new OpenAIEmbeddings({ openAIApiKey: process.env.OPENAI_API_KEY }).embedQuery(query);
+  const { data, error } = await supabase.rpc('match_capsule_embeddings', { query_embedding: embedding, match_threshold: 0.75, match_count: 5 });
+  return data || [];
+}
+
+// ✅ User Media Gallery with Recall — pages/profile/[wallet].tsx
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import VoiceRecall from '@/components/VoiceRecall';
+import { matchVoiceQuery } from '@/lib/voiceMatch';
+
+export default function ProfilePage() {
+  const { query } = useRouter();
+  const wallet = query.wallet;
+  const [media, setMedia] = useState([]);
+
+  const loadMedia = async () => {
+    const res = await fetch(`/api/user-media?wallet=${wallet}`);
+    const data = await res.json();
+    setMedia(data);
+  };
+
+  const handleVoiceSearch = async (phrase) => {
+    const results = await matchVoiceQuery(phrase);
+    setMedia(results);
+  };
+
+  useEffect(() => { if (wallet) loadMedia(); }, [wallet]);
+
+  return (
+    <div className="max-w-6xl mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-6 text-white">🎞️ {wallet}'s Capsule Gallery</h1>
+      <VoiceRecall onSearch={handleVoiceSearch} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+        {media.map((m, idx) => (
+          <div key={idx} className="bg-slate-900 p-2 rounded-xl shadow-xl">
+            <img src={m.image_url} alt={m.title || 'Capsule'} className="rounded w-full h-48 object-cover" />
+            <p className="text-sm text-white mt-2 truncate">{m.name}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

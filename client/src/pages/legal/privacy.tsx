@@ -20,37 +20,49 @@ export default function PrivacyPolicy() {
           <BrandedText size="3xl" />
         </div>
 
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
+        <div className="prose prose-invert max-w-none bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 p-8">
           <h1 className="text-3xl font-bold mb-6 text-white">Privacy Policy</h1>
-          <p className="text-slate-300 mb-6">Last Updated: January 19, 2025</p>
+          <p className="text-slate-300 mb-6">GuardianChain does not sell or share your memory capsules. All authorship and metadata are sovereign by design.</p>
 
           <div className="space-y-8 text-slate-300">
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
-                1. Information We Collect
+              <h2 className="text-2xl font-semibold mb-4 text-primary">
+                Data Protection Principles
               </h2>
-              <p className="mb-4">
-                GUARDIANCHAIN is committed to protecting your privacy and
-                digital sovereignty. We collect minimal information necessary to
-                provide our decentralized truth verification services:
-              </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Wallet addresses for blockchain interactions</li>
-                <li>Email addresses for notifications (encrypted)</li>
-                <li>Truth capsule content (stored on IPFS)</li>
-                <li>Usage analytics (anonymized)</li>
+                <li>No ad tracking or third-party behavioral collection</li>
+                <li>Encrypted storage via IPFS + SealChain</li>
+                <li>Veritas Capsule access is opt-in</li>
+                <li>User-controlled data sovereignty at all times</li>
+                <li>Zero-knowledge verification protocols</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
-                2. How We Use Your Information
+              <h2 className="text-2xl font-semibold mb-4 text-primary">
+                Information Collection
+              </h2>
+              <p className="mb-4">
+                We collect only essential data required for blockchain verification:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Wallet addresses for blockchain interactions</li>
+                <li>Capsule content metadata (encrypted on IPFS)</li>
+                <li>Verification timestamps and signatures</li>
+                <li>Anonymized usage analytics for platform improvement</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-primary">
+                Data Usage & Rights
               </h2>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Process truth verification and GTT token transactions</li>
-                <li>Send notification emails via ProtonMail encryption</li>
-                <li>Improve platform performance and user experience</li>
-                <li>Comply with regulatory requirements</li>
+                <li>Maintain blockchain integrity and consensus</li>
+                <li>Enable DAO governance and community features</li>
+                <li>Provide technical support and platform improvements</li>
+                <li>Full user control over data deletion and export</li>
               </ul>
             </section>
 

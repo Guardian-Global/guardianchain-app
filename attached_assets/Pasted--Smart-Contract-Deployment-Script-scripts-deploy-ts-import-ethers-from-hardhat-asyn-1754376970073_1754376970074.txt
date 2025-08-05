@@ -1,0 +1,100 @@
+// ✅ Smart Contract Deployment Script — scripts/deploy.ts
+import { ethers } from 'hardhat';
+
+async function main() {
+  const CapsuleNFT = await ethers.getContractFactory('CapsuleNFT');
+  const contract = await CapsuleNFT.deploy();
+  await contract.deployed();
+  console.log('✅ CapsuleNFT deployed to:', contract.address);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+
+// ✅ Veritas Attestation Viewer — pages/veritas/[id].tsx
+import { useRouter } from 'next/router';
+
+export default function VeritasAttestation() {
+  const { query } = useRouter();
+  const { id } = query;
+
+  return (
+    <div className="max-w-4xl mx-auto p-10">
+      <h1 className="text-3xl font-bold text-primary mb-4">🔏 Veritas Attestation</h1>
+      <p className="text-white">Certificate ID: <span className="text-cyan-400 font-mono">{id}</span></p>
+      <p className="mt-4 text-slate-300">This attestation is cryptographically sealed on GuardianChain. View the full history, mint event, validator signatures, and capsule contents below.</p>
+      <div className="mt-6 bg-slate-900 p-6 rounded-xl text-sm text-white font-mono">
+        [🔒 Placeholder for attestation JSON, on-chain metadata, witness signatures]
+      </div>
+    </div>
+  );
+}
+
+// ✅ ERC721 Metadata JSON Schema Generator — pages/api/metadata.ts
+export default async function handler(req, res) {
+  const { id, name, description, image } = req.query;
+  res.status(200).json({
+    name: name || `Capsule #${id}`,
+    description: description || `A sovereign memory capsule permanently sealed in GuardianChain.`,
+    image: image || `https://gateway.ipfs.io/ipfs/default.png`,
+    attributes: [
+      { trait_type: 'Capsule ID', value: id },
+      { trait_type: 'Immutable', value: true },
+      { trait_type: 'Veritas Score', value: 100 }
+    ]
+  });
+}
+
+// ✅ Bulk Capsule Minting w/ AI Voice Recall System (scaffold)
+// pages/upload-bulk.tsx
+import { useState } from 'react';
+
+export default function BulkMintPage() {
+  const [files, setFiles] = useState([]);
+  const [status, setStatus] = useState('');
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    files.forEach(f => formData.append('files', f));
+    const res = await fetch('/api/bulk-mint', { method: 'POST', body: formData });
+    const data = await res.json();
+    setStatus(`✅ ${data.minted} capsules minted`);
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto p-10">
+      <h1 className="text-3xl font-bold mb-6">📦 Bulk Capsule Mint</h1>
+      <input type="file" multiple onChange={(e) => setFiles([...e.target.files])} className="text-white" />
+      <button onClick={handleUpload} className="mt-4 px-6 py-3 bg-primary text-black rounded-xl">Mint Capsules</button>
+      <p className="mt-4 text-green-400">{status}</p>
+    </div>
+  );
+}
+
+// Voice Recall Button UI — components/VoiceRecall.tsx
+import { useState } from 'react';
+
+export default function VoiceRecall({ onSearch }) {
+  const [recording, setRecording] = useState(false);
+  const recognition = typeof window !== 'undefined' ? new window.webkitSpeechRecognition() : null;
+
+  const handleVoiceSearch = () => {
+    if (!recognition) return alert('Voice not supported');
+    recognition.lang = 'en-US';
+    recognition.start();
+    setRecording(true);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      onSearch(transcript);
+      setRecording(false);
+    };
+  };
+
+  return (
+    <button onClick={handleVoiceSearch} className="bg-cyan-600 text-white px-6 py-3 rounded-xl mt-6">
+      🎙️ {recording ? 'Listening...' : 'Voice Recall'}
+    </button>
+  );
+}

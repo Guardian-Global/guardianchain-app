@@ -12,6 +12,7 @@ import { registerGTTContractRoutes } from "./routes/gttContract";
 import { setupDebugAuth, isDebugAuthenticated } from "./debugAuth";
 import { setupEnhancedAuth, enhancedAuth } from "./auth/enhancedAuth";
 import aiRoutes from "./routes/ai";
+import assistantRoutes from "./routes/assistant";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
 import ipfsRouter from "./routes/ipfs";
@@ -9243,6 +9244,9 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     const { getCertificateRegistry } = await import("./api/notarize");
     await getCertificateRegistry(req, res);
   });
+
+  // AI Assistant routes
+  app.use(assistantRoutes);
 
   return httpServer;
 }
