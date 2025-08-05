@@ -191,6 +191,9 @@ export const capsules = pgTable(
     likes: text("likes").default("0"),
     comments: text("comments").default("0"),
     shares: text("shares").default("0"),
+    daoCertified: boolean("dao_certified").default(false),
+    certificationDate: timestamp("certification_date"),
+    restrictedContent: boolean("restricted_content").default(false),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },
@@ -208,6 +211,75 @@ export const capsules = pgTable(
     index("idx_capsules_created_at").on(table.createdAt),
   ],
 );
+
+// Capsule lineage tracking for provenance history
+export const capsuleLineage = pgTable("capsule_lineage", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  parentCapsule: uuid("parent_capsule")
+    .references(() => capsules.id, { onDelete: "cascade" }),
+  childCapsule: uuid("child_capsule")
+    .notNull()
+    .references(() => capsules.id, { onDelete: "cascade" }),
+  action: varchar("action").notNull(), // 'fork', 'merge', 'edit', 'derive'
+  metadata: jsonb("metadata"), // Additional lineage data
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_capsule_lineage_parent").on(table.parentCapsule),
+  index("idx_capsule_lineage_child").on(table.childCapsule),
+  index("idx_capsule_lineage_action").on(table.action),
+]);
+
+// DAO certification tracking
+export const daoCertifications = pgTable("dao_certifications", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id")
+    .notNull()
+    .references(() => capsules.id, { onDelete: "cascade" }),
+  certifiedBy: uuid("certified_by")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: varchar("status").notNull().default("pending"), // pending, approved, rejected
+  reason: text("reason"),
+  votesFor: varchar("votes_for").default("0"),
+  votesAgainst: varchar("votes_against").default("0"),
+  certificationDate: timestamp("certification_date"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_dao_certifications_capsule").on(table.capsuleId),
+  index("idx_dao_certifications_status").on(table.status),
+  index("idx_dao_certifications_certified_by").on(table.certifiedBy),
+]);
+
+// Capsule mint logs for tracking NFT minting
+export const capsuleMintLogs = pgTable("capsule_mint_logs", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id")
+    .notNull()
+    .references(() => capsules.id, { onDelete: "cascade" }),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  mintingFee: varchar("minting_fee").notNull(),
+  paymentMethod: varchar("payment_method").notNull(), // stripe, gtt, free
+  stripeSessionId: varchar("stripe_session_id"),
+  txHash: varchar("tx_hash"),
+  status: varchar("status").notNull().default("pending"), // pending, payment_pending, payment_completed, minted, failed
+  userTier: varchar("user_tier").notNull(),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_capsule_mint_logs_capsule").on(table.capsuleId),
+  index("idx_capsule_mint_logs_user").on(table.userId),
+  index("idx_capsule_mint_logs_status").on(table.status),
+  index("idx_capsule_mint_logs_payment_method").on(table.paymentMethod),
+]);
 
 // DAO Proposals table for governance voting
 export const proposals = pgTable("proposals", {
@@ -345,6 +417,18 @@ export type InsertNewsletterSubscriberType = z.infer<
 export type InsertCapsuleType = z.infer<typeof insertCapsuleSchema>;
 export type InsertCapsuleVoteType = z.infer<typeof insertCapsuleVoteSchema>;
 export type InsertTruthAuctionType = z.infer<typeof insertTruthAuctionSchema>;
+
+// Capsule lineage types
+export type CapsuleLineage = typeof capsuleLineage.$inferSelect;
+export type InsertCapsuleLineage = typeof capsuleLineage.$inferInsert;
+
+// DAO certification types  
+export type DaoCertification = typeof daoCertifications.$inferSelect;
+export type InsertDaoCertification = typeof daoCertifications.$inferInsert;
+
+// Capsule mint log types
+export type CapsuleMintLog = typeof capsuleMintLogs.$inferSelect;
+export type InsertCapsuleMintLog = typeof capsuleMintLogs.$inferInsert;
 
 // Lineage tracking tables for capsule relationships
 export const lineageNodes = pgTable("lineage_nodes", {

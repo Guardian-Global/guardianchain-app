@@ -9962,6 +9962,14 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
     await getCertificateRegistry(req, res);
   });
 
+  // Register DAO routes
+  app.use('/api/dao', (await import('./routes/dao')).default);
+  console.log('✅ DAO API routes registered successfully');
+  
+  // Register capsule minting routes  
+  app.use('/api/mint', (await import('./routes/capsuleMint')).default);
+  console.log('✅ Capsule minting API routes registered successfully');
+
   return httpServer;
 }
 

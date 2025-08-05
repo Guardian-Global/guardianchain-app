@@ -1,224 +1,338 @@
-import { Router } from "express";
-import type { Request, Response } from "express";
+import { Router } from 'express';
+import { requireAdmin, requireSovereign } from '../middleware/requireAdmin';
+import { adminRateLimiter } from '../middleware/rateLimiter';
+import { db } from '../db';
+import { capsules, daoCertifications, capsuleLineage, users } from '@shared/schema';
+import { eq, desc, count, and } from 'drizzle-orm';
 
 const router = Router();
 
-// Mock DAO data - in production this would connect to blockchain and database
-const mockProposals = [
-  {
-    id: "prop_001",
-    title: "Increase Truth Verification Rewards",
-    description: "Proposal to increase GTT rewards for verified truth capsules by 25% to incentivize more community participation.",
-    status: "active",
-    votesFor: 1250,
-    votesAgainst: 340,
-    totalVotes: 1590,
-    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
-    requiredGTT: 100,
-    proposer: "0x1234...5678",
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-  },
-  {
-    id: "prop_002", 
-    title: "Community Treasury Allocation",
-    description: "Allocate 10% of treasury funds to community-driven truth verification initiatives and bounty programs.",
-    status: "active",
-    votesFor: 890,
-    votesAgainst: 120,
-    totalVotes: 1010,
-    endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
-    requiredGTT: 50,
-    proposer: "0xabcd...efgh",
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-  },
-  {
-    id: "prop_003",
-    title: "New Capsule Category: Environmental Truth",
-    description: "Add environmental impact verification as a new capsule category with specialized validation protocols.",
-    status: "passed",
-    votesFor: 2100,
-    votesAgainst: 450,
-    totalVotes: 2550,
-    endDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // ended yesterday
-    requiredGTT: 75,
-    proposer: "0x9876...4321",
-    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days ago
-  }
-];
+// Apply admin rate limiting to all DAO routes
+router.use(adminRateLimiter);
 
-const mockStats = {
-  totalMembers: 12847,
-  totalGTT: 8945672,
-  activeProposals: 2,
-  treasuryBalance: 2890456,
-  totalProposals: 47,
-  passedProposals: 32,
-  rejectedProposals: 13,
-  averageParticipation: 67.5
-};
-
-// Get all DAO proposals
-router.get("/proposals", (req: Request, res: Response) => {
+// DAO Certification Management
+router.post('/certify/:capsuleId', requireAdmin, async (req, res) => {
   try {
-    const { status, limit = 10, offset = 0 } = req.query;
-    
-    let filteredProposals = mockProposals;
-    
-    if (status && status !== 'all') {
-      filteredProposals = mockProposals.filter(p => p.status === status);
-    }
-    
-    const startIndex = parseInt(offset as string);
-    const endIndex = startIndex + parseInt(limit as string);
-    
-    const paginatedProposals = filteredProposals.slice(startIndex, endIndex);
-    
-    res.json({
-      proposals: paginatedProposals,
-      total: filteredProposals.length,
-      hasMore: endIndex < filteredProposals.length
-    });
-  } catch (error) {
-    console.error("Error fetching DAO proposals:", error);
-    res.status(500).json({ error: "Failed to fetch proposals" });
-  }
-});
+    const { capsuleId } = req.params;
+    const { reason, expiresInDays = 365 } = req.body;
+    const certifier = req.user!;
 
-// Get DAO statistics
-router.get("/stats", (req: Request, res: Response) => {
-  try {
-    res.json(mockStats);
-  } catch (error) {
-    console.error("Error fetching DAO stats:", error);
-    res.status(500).json({ error: "Failed to fetch DAO statistics" });
-  }
-});
+    // Check if capsule exists
+    const [capsule] = await db
+      .select()
+      .from(capsules)
+      .where(eq(capsules.id, capsuleId));
 
-// Get single proposal by ID
-router.get("/proposals/:id", (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const proposal = mockProposals.find(p => p.id === id);
-    
-    if (!proposal) {
-      return res.status(404).json({ error: "Proposal not found" });
+    if (!capsule) {
+      return res.status(404).json({ 
+        error: 'Capsule not found',
+        code: 'CAPSULE_NOT_FOUND' 
+      });
     }
-    
-    res.json(proposal);
-  } catch (error) {
-    console.error("Error fetching proposal:", error);
-    res.status(500).json({ error: "Failed to fetch proposal" });
-  }
-});
 
-// Cast vote on proposal
-router.post("/vote", (req: Request, res: Response) => {
-  try {
-    const { proposalId, vote, gttAmount } = req.body;
-    
-    if (!proposalId || !vote || !gttAmount) {
-      return res.status(400).json({ error: "Missing required fields" });
+    // Check if already certified
+    if (capsule.daoCertified) {
+      return res.status(409).json({ 
+        error: 'Capsule already DAO-certified',
+        code: 'ALREADY_CERTIFIED',
+        certificationDate: capsule.certificationDate
+      });
     }
-    
-    if (!['for', 'against'].includes(vote)) {
-      return res.status(400).json({ error: "Vote must be 'for' or 'against'" });
-    }
-    
-    const proposal = mockProposals.find(p => p.id === proposalId);
-    if (!proposal) {
-      return res.status(404).json({ error: "Proposal not found" });
-    }
-    
-    if (proposal.status !== 'active') {
-      return res.status(400).json({ error: "Proposal is not active" });
-    }
-    
-    // In production, this would:
-    // 1. Verify user has enough GTT
-    // 2. Record vote on blockchain
-    // 3. Update proposal vote counts
-    // 4. Lock user's GTT for voting period
-    
-    console.log(`Vote cast: ${vote} on proposal ${proposalId} with ${gttAmount} GTT`);
-    
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + expiresInDays);
+
+    // Create certification record
+    const [certification] = await db
+      .insert(daoCertifications)
+      .values({
+        capsuleId,
+        certifiedBy: certifier.id,
+        status: 'approved',
+        reason: reason || 'DAO approved for minting',
+        votesFor: '1',
+        votesAgainst: '0',
+        certificationDate: new Date(),
+        expiresAt
+      })
+      .returning();
+
+    // Update capsule with certification
+    const [updatedCapsule] = await db
+      .update(capsules)
+      .set({
+        daoCertified: true,
+        certificationDate: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(capsules.id, capsuleId))
+      .returning();
+
+    console.log(`✅ DAO certified capsule ${capsuleId} by admin ${certifier.email}`);
+
     res.json({
       success: true,
-      message: "Vote cast successfully",
-      transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Mock tx hash
-      votingPower: gttAmount
+      message: 'Capsule successfully DAO-certified',
+      capsule: updatedCapsule,
+      certification: certification
     });
+
   } catch (error) {
-    console.error("Error casting vote:", error);
-    res.status(500).json({ error: "Failed to cast vote" });
+    console.error('DAO certification error:', error);
+    res.status(500).json({ 
+      error: 'Failed to certify capsule',
+      code: 'CERTIFICATION_ERROR' 
+    });
   }
 });
 
-// Create new proposal (requires higher GTT threshold)
-router.post("/proposals", (req: Request, res: Response) => {
+// Revoke DAO certification
+router.delete('/certify/:capsuleId', requireSovereign, async (req, res) => {
   try {
-    const { title, description, requiredGTT = 100 } = req.body;
-    
-    if (!title || !description) {
-      return res.status(400).json({ error: "Title and description are required" });
+    const { capsuleId } = req.params;
+    const { reason } = req.body;
+
+    // Update capsule to remove certification
+    const [updatedCapsule] = await db
+      .update(capsules)
+      .set({
+        daoCertified: false,
+        certificationDate: null,
+        updatedAt: new Date()
+      })
+      .where(eq(capsules.id, capsuleId))
+      .returning();
+
+    if (!updatedCapsule) {
+      return res.status(404).json({ 
+        error: 'Capsule not found',
+        code: 'CAPSULE_NOT_FOUND' 
+      });
     }
-    
-    // In production, verify user has enough GTT to create proposal
-    const minimumGTT = 1000; // Minimum GTT to create proposal
-    
-    const newProposal = {
-      id: `prop_${Date.now()}`,
-      title,
-      description,
-      status: "active" as const,
-      votesFor: 0,
-      votesAgainst: 0,
-      totalVotes: 0,
-      endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days
-      requiredGTT,
-      proposer: "0x1234...5678", // Would be actual user address
-      createdAt: new Date().toISOString(),
-    };
-    
-    mockProposals.unshift(newProposal);
-    
-    res.status(201).json({
+
+    // Update certification record
+    await db
+      .update(daoCertifications)
+      .set({
+        status: 'revoked',
+        reason: reason || 'Certification revoked by sovereign admin'
+      })
+      .where(eq(daoCertifications.capsuleId, capsuleId));
+
+    console.log(`❌ DAO certification revoked for capsule ${capsuleId}`);
+
+    res.json({
       success: true,
-      proposal: newProposal,
-      message: "Proposal created successfully"
+      message: 'DAO certification revoked',
+      capsule: updatedCapsule
     });
+
   } catch (error) {
-    console.error("Error creating proposal:", error);
-    res.status(500).json({ error: "Failed to create proposal" });
+    console.error('DAO certification revocation error:', error);
+    res.status(500).json({ 
+      error: 'Failed to revoke certification',
+      code: 'REVOCATION_ERROR' 
+    });
   }
 });
 
-// Get user's voting history
-router.get("/my-votes", (req: Request, res: Response) => {
+// Get pending certifications
+router.get('/certifications/pending', requireAdmin, async (req, res) => {
   try {
-    // Mock voting history - in production would query from blockchain/database
-    const mockVotingHistory = [
-      {
-        proposalId: "prop_001",
-        proposalTitle: "Increase Truth Verification Rewards",
-        vote: "for",
-        gttAmount: 250,
-        timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
-        transactionHash: "0xabc123...",
-      },
-      {
-        proposalId: "prop_003",
-        proposalTitle: "New Capsule Category: Environmental Truth",
-        vote: "for",
-        gttAmount: 500,
-        timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
-        transactionHash: "0xdef456...",
+    const pendingCapsules = await db
+      .select({
+        id: capsules.id,
+        title: capsules.title,
+        author: capsules.author,
+        createdAt: capsules.createdAt,
+        daoCertified: capsules.daoCertified,
+        restrictedContent: capsules.restrictedContent
+      })
+      .from(capsules)
+      .where(eq(capsules.daoCertified, false))
+      .orderBy(desc(capsules.createdAt))
+      .limit(50);
+
+    res.json({
+      pendingCertifications: pendingCapsules,
+      count: pendingCapsules.length
+    });
+
+  } catch (error) {
+    console.error('Pending certifications error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch pending certifications',
+      code: 'PENDING_CERTIFICATIONS_ERROR' 
+    });
+  }
+});
+
+// Get certification history
+router.get('/certifications/history', requireAdmin, async (req, res) => {
+  try {
+    const certifications = await db
+      .select()
+      .from(daoCertifications)
+      .orderBy(desc(daoCertifications.createdAt))
+      .limit(100);
+
+    res.json({
+      certifications,
+      count: certifications.length
+    });
+
+  } catch (error) {
+    console.error('Certification history error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch certification history',
+      code: 'CERTIFICATION_HISTORY_ERROR' 
+    });
+  }
+});
+
+// Capsule Lineage Management
+router.post('/lineage', requireAdmin, async (req, res) => {
+  try {
+    const { parentCapsule, childCapsule, action, metadata } = req.body;
+
+    if (!childCapsule || !action) {
+      return res.status(400).json({ 
+        error: 'Child capsule and action are required',
+        code: 'MISSING_LINEAGE_DATA' 
+      });
+    }
+
+    const [lineage] = await db
+      .insert(capsuleLineage)
+      .values({
+        parentCapsule: parentCapsule || null,
+        childCapsule,
+        action,
+        metadata: metadata || {}
+      })
+      .returning();
+
+    console.log(`📊 Lineage recorded: ${action} for capsule ${childCapsule}`);
+
+    res.json({
+      success: true,
+      lineage
+    });
+
+  } catch (error) {
+    console.error('Lineage creation error:', error);
+    res.status(500).json({ 
+      error: 'Failed to create lineage record',
+      code: 'LINEAGE_ERROR' 
+    });
+  }
+});
+
+// Get capsule lineage graph
+router.get('/lineage/:capsuleId', async (req, res) => {
+  try {
+    const { capsuleId } = req.params;
+
+    // Get all related lineage records
+    const lineageRecords = await db
+      .select()
+      .from(capsuleLineage)
+      .where(
+        eq(capsuleLineage.childCapsule, capsuleId)
+      );
+
+    // Get parent lineage
+    const parentLineage = await db
+      .select()
+      .from(capsuleLineage)
+      .where(
+        eq(capsuleLineage.parentCapsule, capsuleId)
+      );
+
+    const allLineages = [...lineageRecords, ...parentLineage];
+
+    // Build graph data structure
+    const nodes = new Set();
+    const edges = [];
+
+    // Add current capsule as root node
+    nodes.add(capsuleId);
+
+    allLineages.forEach(lineage => {
+      if (lineage.parentCapsule) {
+        nodes.add(lineage.parentCapsule);
+        edges.push({
+          id: lineage.id,
+          source: lineage.parentCapsule,
+          target: lineage.childCapsule,
+          action: lineage.action,
+          metadata: lineage.metadata,
+          createdAt: lineage.createdAt
+        });
       }
-    ];
-    
-    res.json(mockVotingHistory);
+      nodes.add(lineage.childCapsule);
+    });
+
+    res.json({
+      capsuleId,
+      graph: {
+        nodes: Array.from(nodes).map(id => ({ id, type: 'capsule' })),
+        edges
+      },
+      lineageCount: allLineages.length
+    });
+
   } catch (error) {
-    console.error("Error fetching voting history:", error);
-    res.status(500).json({ error: "Failed to fetch voting history" });
+    console.error('Lineage graph error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch capsule lineage',
+      code: 'LINEAGE_FETCH_ERROR' 
+    });
+  }
+});
+
+// DAO Statistics
+router.get('/stats', requireAdmin, async (req, res) => {
+  try {
+    const [totalCertified] = await db
+      .select({ count: count() })
+      .from(capsules)
+      .where(eq(capsules.daoCertified, true));
+
+    const [totalPending] = await db
+      .select({ count: count() })
+      .from(capsules)
+      .where(eq(capsules.daoCertified, false));
+
+    const [totalLineageRecords] = await db
+      .select({ count: count() })
+      .from(capsuleLineage);
+
+    const recentCertifications = await db
+      .select({
+        id: capsules.id,
+        title: capsules.title,
+        certificationDate: capsules.certificationDate
+      })
+      .from(capsules)
+      .where(eq(capsules.daoCertified, true))
+      .orderBy(desc(capsules.certificationDate))
+      .limit(10);
+
+    res.json({
+      certified: totalCertified.count,
+      pending: totalPending.count,
+      lineageRecords: totalLineageRecords.count,
+      recentCertifications,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('DAO stats error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch DAO statistics',
+      code: 'DAO_STATS_ERROR' 
+    });
   }
 });
 

@@ -1,434 +1,379 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-// Table component not available, using div-based layout instead
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Shield, Users, Activity, Settings, Crown, AlertTriangle, CheckCircle } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Shield, CheckCircle, XCircle, Clock, Users, BarChart3, FileText } from 'lucide-react';
+import { CapsuleLineageGraph } from '@/components/CapsuleLineageGraph';
 
-interface AdminStats {
-  totalUsers: number;
-  totalCapsules: number;
-  recentUsers: any[];
-  usersByTier: any[];
+interface PendingCertification {
+  id: string;
+  title: string;
+  author: string;
+  createdAt: string;
+  daoCertified: boolean;
+  restrictedContent: boolean;
 }
 
-interface User {
-  id: string;
-  email: string;
-  tier: 'EXPLORER' | 'SEEKER' | 'CREATOR' | 'SOVEREIGN' | 'ADMIN';
-  role: string;
-  createdAt: string;
-  lastLoginAt?: string;
-  isActive: boolean;
+interface DaoStats {
+  certified: number;
+  pending: number;
+  lineageRecords: number;
+  recentCertifications: Array<{
+    id: string;
+    title: string;
+    certificationDate: string;
+  }>;
 }
 
 export default function AdminPanel() {
-  const { user, isAuthenticated } = useAuth();
-  const { toast } = useToast();
-  const [stats, setStats] = useState<AdminStats | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
+  const [selectedCapsule, setSelectedCapsule] = useState<string>('');
+  const [certificationReason, setCertificationReason] = useState<string>('');
+  const [lineageViewCapsule, setLineageViewCapsule] = useState<string>('');
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (isAuthenticated && ((user as any)?.tier === 'ADMIN' || (user as any)?.tier === 'SOVEREIGN')) {
-      fetchAdminData();
-    } else {
-      setError('Admin access required');
-      setLoading(false);
-    }
-  }, [isAuthenticated, user]);
+  // Query for pending certifications
+  const { data: pendingCertifications, isLoading: loadingPending } = useQuery({
+    queryKey: ['/api/dao/certifications/pending'],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
 
-  const fetchAdminData = async () => {
-    try {
-      setLoading(true);
-      
-      const [statsResponse, usersResponse] = await Promise.all([
-        fetch('/api/admin/stats'),
-        fetch('/api/admin/users')
-      ]);
+  // Query for DAO statistics
+  const { data: daoStats, isLoading: loadingStats } = useQuery({
+    queryKey: ['/api/dao/stats'],
+    refetchInterval: 60000, // Refresh every minute
+  });
 
-      if (!statsResponse.ok || !usersResponse.ok) {
-        throw new Error('Failed to fetch admin data');
-      }
+  // Query for lineage data
+  const { data: lineageData } = useQuery({
+    queryKey: ['/api/dao/lineage', lineageViewCapsule],
+    enabled: !!lineageViewCapsule,
+  });
 
-      const statsData = await statsResponse.json();
-      const usersData = await usersResponse.json();
-
-      setStats(statsData);
-      setUsers(usersData.users);
-    } catch (error) {
-      console.error('Admin data fetch error:', error);
-      setError(error instanceof Error ? error.message : 'Failed to load admin data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const updateUserTier = async (userId: string, newTier: string) => {
-    try {
-      const response = await fetch(`/api/admin/users/${userId}/tier`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tier: newTier }),
+  // Certification mutation
+  const certifyMutation = useMutation({
+    mutationFn: async ({ capsuleId, reason }: { capsuleId: string; reason: string }) => {
+      return await apiRequest(`/api/dao/certify/${capsuleId}`, {
+        method: 'POST',
+        body: JSON.stringify({ reason }),
+        headers: { 'Content-Type': 'application/json' }
       });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/dao/certifications/pending'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dao/stats'] });
+      setSelectedCapsule('');
+      setCertificationReason('');
+    },
+  });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update user tier');
-      }
-
-      const result = await response.json();
-      
-      toast({
-        title: "Tier Updated",
-        description: `User tier updated to ${newTier}`,
+  // Revoke certification mutation
+  const revokeMutation = useMutation({
+    mutationFn: async ({ capsuleId, reason }: { capsuleId: string; reason: string }) => {
+      return await apiRequest(`/api/dao/certify/${capsuleId}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ reason }),
+        headers: { 'Content-Type': 'application/json' }
       });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/dao/certifications/pending'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/dao/stats'] });
+    },
+  });
 
-      // Refresh user data
-      fetchAdminData();
-    } catch (error) {
-      console.error('Update tier error:', error);
-      toast({
-        title: "Update Failed",
-        description: error instanceof Error ? error.message : 'Failed to update user tier',
-        variant: "destructive",
+  const handleCertify = () => {
+    if (selectedCapsule) {
+      certifyMutation.mutate({
+        capsuleId: selectedCapsule,
+        reason: certificationReason || 'DAO approved for minting'
       });
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="container mx-auto p-6">
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Authentication Required</AlertTitle>
-          <AlertDescription>Please log in to access the admin panel.</AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  if ((user as any)?.tier !== 'ADMIN' && (user as any)?.tier !== 'SOVEREIGN') {
-    return (
-      <div className="container mx-auto p-6">
-        <Alert variant="destructive">
-          <Shield className="h-4 w-4" />
-          <AlertTitle>Access Denied</AlertTitle>
-          <AlertDescription>
-            Admin or Sovereign tier required. Current tier: {user?.tier || 'Unknown'}
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto p-6">
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
+  const handleRevoke = (capsuleId: string) => {
+    revokeMutation.mutate({
+      capsuleId,
+      reason: 'Certification revoked by admin'
+    });
+  };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Shield className="h-8 w-8 text-primary" />
-            Admin Panel
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            DAO Admin Panel
           </h1>
-          <p className="text-muted-foreground">
-            Manage users, monitor system health, and oversee platform operations
+          <p className="text-slate-300">
+            Manage capsule certifications, lineage tracking, and governance operations
           </p>
         </div>
-        <Badge variant="outline" className="flex items-center gap-1">
-          <Crown className="h-3 w-3" />
-          {user?.tier}
-        </Badge>
-      </div>
 
-      {/* Stats Overview */}
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalUsers}</div>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="certifications" className="space-y-6">
+          <TabsList className="grid grid-cols-4 w-full max-w-md bg-slate-800">
+            <TabsTrigger value="certifications" className="flex items-center gap-2">
+              <Shield className="w-4 h-4" />
+              Certifications
+            </TabsTrigger>
+            <TabsTrigger value="lineage" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Lineage
+            </TabsTrigger>
+            <TabsTrigger value="stats" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Statistics
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Users
+            </TabsTrigger>
+          </TabsList>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Capsules</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalCapsules}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Recent Users</CardTitle>
-              <CheckCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.recentUsers.length}</div>
-              <p className="text-xs text-muted-foreground">Last 7 days</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">System Health</CardTitle>
-              <Settings className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">Healthy</div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      <Tabs defaultValue="users" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="users">User Management</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          {user?.tier === 'SOVEREIGN' && (
-            <TabsTrigger value="system">System</TabsTrigger>
-          )}
-        </TabsList>
-
-        <TabsContent value="users">
-          <Card>
-            <CardHeader>
-              <CardTitle>User Management</CardTitle>
-              <CardDescription>
-                Manage user accounts, tiers, and permissions
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <Input placeholder="Search users..." className="flex-1" />
-                  <Select>
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Filter by tier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Tiers</SelectItem>
-                      <SelectItem value="EXPLORER">Explorer</SelectItem>
-                      <SelectItem value="SEEKER">Seeker</SelectItem>
-                      <SelectItem value="CREATOR">Creator</SelectItem>
-                      <SelectItem value="SOVEREIGN">Sovereign</SelectItem>
-                      <SelectItem value="ADMIN">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="grid grid-cols-6 gap-4 p-3 bg-muted rounded-lg font-semibold text-sm">
-                    <div>Email</div>
-                    <div>Tier</div>
-                    <div>Role</div>
-                    <div>Status</div>
-                    <div>Last Login</div>
-                    <div>Actions</div>
+          <TabsContent value="certifications" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Pending Certifications */}
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-orange-400" />
+                    Pending Certifications
+                  </CardTitle>
+                  <CardDescription>
+                    {loadingPending ? 'Loading...' : `${pendingCertifications?.count || 0} capsules awaiting certification`}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {pendingCertifications?.pendingCertifications?.map((capsule: PendingCertification) => (
+                      <div
+                        key={capsule.id}
+                        className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                          selectedCapsule === capsule.id
+                            ? 'border-cyan-400 bg-cyan-400/10'
+                            : 'border-slate-600 hover:border-slate-500'
+                        }`}
+                        onClick={() => setSelectedCapsule(capsule.id)}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-semibold text-sm">{capsule.title}</h4>
+                          {capsule.restrictedContent && (
+                            <Badge variant="destructive" className="text-xs">
+                              Restricted
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-400">by {capsule.author}</p>
+                        <p className="text-xs text-slate-500 mt-1">
+                          {new Date(capsule.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                  {users.map((user) => (
-                    <div key={user.id} className="grid grid-cols-6 gap-4 p-3 border rounded-lg">
-                      <div className="text-sm">{user.email}</div>
-                      <div>
-                        <Badge variant={
-                          user.tier === 'SOVEREIGN' ? 'default' :
-                          user.tier === 'ADMIN' ? 'destructive' :
-                          user.tier === 'CREATOR' ? 'secondary' :
-                          'outline'
-                        }>
-                          {user.tier}
-                        </Badge>
-                      </div>
-                      <div className="text-sm">{user.role}</div>
-                      <div>
-                        <Badge variant={user.isActive ? 'default' : 'secondary'}>
-                          {user.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </div>
-                      <div className="text-sm">
-                        {user.lastLoginAt 
-                          ? new Date(user.lastLoginAt).toLocaleDateString()
-                          : 'Never'
-                        }
-                      </div>
-                      <div>
-                        <Select 
-                          onValueChange={(newTier) => updateUserTier(user.id, newTier)}
-                          defaultValue={user.tier}
-                        >
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="EXPLORER">Explorer</SelectItem>
-                            <SelectItem value="SEEKER">Seeker</SelectItem>
-                            <SelectItem value="CREATOR">Creator</SelectItem>
-                            <SelectItem value="SOVEREIGN">Sovereign</SelectItem>
-                            {user?.tier === 'SOVEREIGN' && (
-                              <SelectItem value="ADMIN">Admin</SelectItem>
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+                </CardContent>
+              </Card>
 
-        <TabsContent value="analytics">
-          <Card>
-            <CardHeader>
-              <CardTitle>Platform Analytics</CardTitle>
-              <CardDescription>
-                Monitor platform usage and performance metrics
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {stats?.usersByTier && (
+              {/* Certification Actions */}
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-green-400" />
+                    Certification Actions
+                  </CardTitle>
+                  <CardDescription>
+                    Review and approve capsules for DAO certification
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Users by Tier</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                      {stats.usersByTier.map((tierData) => (
-                        <Card key={tierData.tier}>
-                          <CardContent className="p-4">
-                            <div className="text-center">
-                              <div className="text-2xl font-bold">{tierData.count}</div>
-                              <div className="text-sm text-muted-foreground">{tierData.tier}</div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                    <label className="text-sm font-medium mb-2 block">Selected Capsule</label>
+                    <Input
+                      value={selectedCapsule}
+                      onChange={(e) => setSelectedCapsule(e.target.value)}
+                      placeholder="Enter capsule ID or select from list"
+                      className="bg-slate-700 border-slate-600"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Certification Reason</label>
+                    <Textarea
+                      value={certificationReason}
+                      onChange={(e) => setCertificationReason(e.target.value)}
+                      placeholder="Reason for certification (optional)"
+                      className="bg-slate-700 border-slate-600 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleCertify}
+                      disabled={!selectedCapsule || certifyMutation.isPending}
+                      className="flex-1 bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Certify
+                    </Button>
+                    <Button
+                      onClick={() => selectedCapsule && handleRevoke(selectedCapsule)}
+                      disabled={!selectedCapsule || revokeMutation.isPending}
+                      variant="destructive"
+                      className="flex-1"
+                    >
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Revoke
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="lineage" className="space-y-6">
+            <Card className="bg-slate-800 border-slate-700">
+              <CardHeader>
+                <CardTitle>Capsule Lineage Visualization</CardTitle>
+                <CardDescription>
+                  View provenance history and relationships between capsules
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Capsule ID</label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={lineageViewCapsule}
+                      onChange={(e) => setLineageViewCapsule(e.target.value)}
+                      placeholder="Enter capsule ID to view lineage"
+                      className="bg-slate-700 border-slate-600"
+                    />
+                    <Button
+                      onClick={() => setLineageViewCapsule('')}
+                      variant="outline"
+                      className="border-slate-600"
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </div>
+
+                {lineageData && (
+                  <div className="border border-slate-600 rounded-lg p-4">
+                    <CapsuleLineageGraph
+                      data={lineageData}
+                      height="500px"
+                      onNodeClick={(nodeId) => {
+                        console.log('Node clicked:', nodeId);
+                        // Could navigate to capsule details
+                      }}
+                    />
                   </div>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="security">
-          <Card>
-            <CardHeader>
-              <CardTitle>Security Settings</CardTitle>
-              <CardDescription>
-                Monitor security events and configure protection settings
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Alert>
-                  <CheckCircle className="h-4 w-4" />
-                  <AlertTitle>Security Status: Active</AlertTitle>
-                  <AlertDescription>
-                    Rate limiting, authentication middleware, and admin protection are active.
-                  </AlertDescription>
-                </Alert>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm">Rate Limiting</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">
-                        Login: 10 attempts/15min<br/>
-                        API: 100 requests/min<br/>
-                        Admin: 20 requests/5min<br/>
-                        Mint: 5 attempts/10min
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm">Authentication</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">
-                        JWT tokens<br/>
-                        Session management<br/>
-                        Admin middleware<br/>
-                        Tier verification
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+          <TabsContent value="stats" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-400" />
+                    Certified
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-green-400">
+                    {daoStats?.certified || 0}
+                  </div>
+                  <p className="text-sm text-slate-400 mt-1">Total certified capsules</p>
+                </CardContent>
+              </Card>
 
-        {user?.tier === 'SOVEREIGN' && (
-          <TabsContent value="system">
-            <Card>
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-orange-400" />
+                    Pending
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-orange-400">
+                    {daoStats?.pending || 0}
+                  </div>
+                  <p className="text-sm text-slate-400 mt-1">Awaiting certification</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-purple-400" />
+                    Lineage Records
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-purple-400">
+                    {daoStats?.lineageRecords || 0}
+                  </div>
+                  <p className="text-sm text-slate-400 mt-1">Provenance entries</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {daoStats?.recentCertifications && (
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader>
+                  <CardTitle>Recent Certifications</CardTitle>
+                  <CardDescription>
+                    Latest approved capsules
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {daoStats.recentCertifications.map((cert) => (
+                      <div key={cert.id} className="flex justify-between items-center py-2 border-b border-slate-700 last:border-0">
+                        <div>
+                          <p className="font-medium">{cert.title}</p>
+                          <p className="text-xs text-slate-400">ID: {cert.id}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-green-400">Certified</p>
+                          <p className="text-xs text-slate-500">
+                            {cert.certificationDate ? new Date(cert.certificationDate).toLocaleDateString() : 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="users" className="space-y-6">
+            <Card className="bg-slate-800 border-slate-700">
               <CardHeader>
-                <CardTitle>System Administration</CardTitle>
+                <CardTitle>User Management</CardTitle>
                 <CardDescription>
-                  System-level controls and monitoring (Sovereign only)
+                  Manage user permissions and access levels
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <Alert>
-                    <Crown className="h-4 w-4" />
-                    <AlertTitle>Sovereign Access</AlertTitle>
-                    <AlertDescription>
-                      You have the highest level of system access. Use these controls carefully.
-                    </AlertDescription>
-                  </Alert>
-                  
-                  <div className="flex gap-4">
-                    <Button variant="outline">View System Logs</Button>
-                    <Button variant="outline">Database Health</Button>
-                    <Button variant="outline">Performance Metrics</Button>
-                  </div>
+                <div className="text-center py-8 text-slate-400">
+                  <Users className="w-12 h-12 mx-auto mb-4" />
+                  <p>User management features coming soon</p>
+                  <p className="text-sm mt-2">Will include tier management, permissions, and activity monitoring</p>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
-        )}
-      </Tabs>
+        </Tabs>
+      </div>
     </div>
   );
 }
