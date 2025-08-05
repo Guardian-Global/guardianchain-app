@@ -32,12 +32,36 @@ import {
   ExternalLink,
   Globe,
   Lock,
-  Heart
+  Heart,
+  Camera,
+  Upload,
+  Image,
+  Video,
+  Grid,
+  Clock,
+  MessageCircle,
+  Users,
+  Trophy,
+  Play
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
+
+// Import existing profile components
+import ActivityTimeline from "./ActivityTimeline";
+import ProfileMediaUploader from "./ProfileMediaUploader";
+import { EnhancedSocialProfile } from "./EnhancedSocialProfile";
+import TruthGenomeCard from "./TruthGenomeCard";
+import CapsuleWallToggle from "./CapsuleWallToggle";
+import GTTPortfolioManager from "./GTTPortfolioManager";
+import FeaturedCapsulesManager from "./FeaturedCapsulesManager";
+import VerifiedCapsulesGrid from "./VerifiedCapsulesGrid";
+import ProfileAchievementSystem from "./ProfileAchievementSystem";
+import SovereignAIAssistant from "./SovereignAIAssistant";
+import ProfileThemeSelector from "./ProfileThemeSelector";
+import QuantumSecurityPanel from "./QuantumSecurityPanel";
 
 interface UserProfile {
   id: string;
@@ -244,27 +268,38 @@ export default function UnifiedProfile() {
               </Button>
             </div>
 
-            {/* Profile Header */}
+            {/* Enhanced Profile Header with Photo/Video Upload */}
             <div className="flex items-center space-x-6">
-              <Avatar className="h-24 w-24 border-2 border-[#00ffe1]">
-                <AvatarImage src={user.profileImageUrl} alt={user.firstName} />
-                <AvatarFallback className="bg-[#21262d] text-[#00ffe1] text-2xl">
-                  {user.firstName?.[0]}{user.lastName?.[0]}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative group">
+                <Avatar className="h-32 w-32 border-2 border-[#00ffe1]">
+                  <AvatarImage src={user.profileImageUrl} alt={user.firstName} />
+                  <AvatarFallback className="bg-[#21262d] text-[#00ffe1] text-3xl">
+                    {user.firstName?.[0]}{user.lastName?.[0]}
+                  </AvatarFallback>
+                </Avatar>
+                {isEditing && (
+                  <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <Camera className="h-8 w-8 text-white" />
+                  </div>
+                )}
+              </div>
               
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-2">
-                  <h2 className="text-3xl font-bold">
+                  <h2 className="text-4xl font-bold">
                     {user.firstName} {user.lastName}
                   </h2>
                   <Badge className={`bg-gradient-to-r ${getTierColor(user.tier)} text-white px-3 py-1`}>
                     {getTierIcon(user.tier)}
                     <span className="ml-1">{user.tier}</span>
                   </Badge>
+                  <Badge className="bg-green-500/20 text-green-400 border border-green-500/30">
+                    <Shield className="h-3 w-3 mr-1" />
+                    Verified Guardian
+                  </Badge>
                 </div>
-                <p className="text-[#8b949e] text-lg">@{user.username || user.firstName?.toLowerCase()}</p>
-                <div className="flex items-center space-x-4 mt-2 text-sm text-[#8b949e]">
+                <p className="text-[#8b949e] text-xl">@{user.username || user.firstName?.toLowerCase()}</p>
+                <div className="flex items-center space-x-6 mt-3 text-sm text-[#8b949e]">
                   <span className="flex items-center">
                     <Mail className="h-4 w-4 mr-1" />
                     {user.email}
@@ -275,25 +310,52 @@ export default function UnifiedProfile() {
                       {user.location}
                     </span>
                   )}
+                  <span className="flex items-center">
+                    <Users className="h-4 w-4 mr-1" />
+                    1.2k Followers
+                  </span>
+                  <span className="flex items-center">
+                    <MessageCircle className="h-4 w-4 mr-1" />
+                    Following 847
+                  </span>
                 </div>
+                {user.bio && (
+                  <p className="text-[#f0f6fc] mt-3 text-lg max-w-2xl">{user.bio}</p>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-[#161b22] border border-[#30363d]">
+          <TabsList className="bg-[#161b22] border border-[#30363d] grid grid-cols-8 w-full">
             <TabsTrigger value="overview" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
               <Activity className="h-4 w-4 mr-2" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="media" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Image className="h-4 w-4 mr-2" />
+              Media
+            </TabsTrigger>
+            <TabsTrigger value="capsules" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Vault className="h-4 w-4 mr-2" />
+              Capsules
+            </TabsTrigger>
+            <TabsTrigger value="timeline" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Clock className="h-4 w-4 mr-2" />
+              Timeline
+            </TabsTrigger>
+            <TabsTrigger value="social" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Users className="h-4 w-4 mr-2" />
+              Social
             </TabsTrigger>
             <TabsTrigger value="stats" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
               <TrendingUp className="h-4 w-4 mr-2" />
               Stats
             </TabsTrigger>
-            <TabsTrigger value="activity" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
-              <Calendar className="h-4 w-4 mr-2" />
-              Activity
+            <TabsTrigger value="achievements" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Trophy className="h-4 w-4 mr-2" />
+              Achievements
             </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
               <Settings className="h-4 w-4 mr-2" />
@@ -587,71 +649,144 @@ export default function UnifiedProfile() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="media" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="bg-[#161b22] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#f0f6fc] flex items-center">
+                    <Upload className="h-5 w-5 mr-2" />
+                    Upload Media
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ProfileMediaUploader userId={user.id} />
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-[#161b22] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#f0f6fc] flex items-center">
+                    <Grid className="h-5 w-5 mr-2" />
+                    Media Gallery
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[1,2,3,4,5,6].map(i => (
+                      <div key={i} className="aspect-square bg-[#0d1117] rounded-lg flex items-center justify-center border border-[#30363d] hover:border-[#00ffe1] transition-colors cursor-pointer">
+                        <Image className="h-8 w-8 text-[#8b949e]" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="capsules" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FeaturedCapsulesManager />
+              <VerifiedCapsulesGrid userId={user.id} />
+            </div>
+            <CapsuleWallToggle />
+          </TabsContent>
+
+          <TabsContent value="timeline" className="space-y-6">
+            <ActivityTimeline userId={user.id} />
+          </TabsContent>
+
+          <TabsContent value="social" className="space-y-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <EnhancedSocialProfile />
+                <TruthGenomeCard />
+              </div>
+              <div className="space-y-6">
+                <SovereignAIAssistant />
+                <GTTPortfolioManager />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="achievements" className="space-y-6">
+            <ProfileAchievementSystem />
+          </TabsContent>
+
           <TabsContent value="settings" className="space-y-6">
-            <Card className="bg-[#161b22] border-[#30363d]">
-              <CardHeader>
-                <CardTitle className="text-[#f0f6fc] flex items-center">
-                  <Settings className="h-5 w-5 mr-2" />
-                  Account Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
-                  <div>
-                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
-                      <Mail className="h-4 w-4 mr-2" />
-                      Email Notifications
-                    </h4>
-                    <p className="text-sm text-[#8b949e]">Receive updates about your capsules and verifications</p>
-                  </div>
-                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
-                    Manage
-                  </Button>
-                </div>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <Card className="bg-[#161b22] border-[#30363d]">
+                  <CardHeader>
+                    <CardTitle className="text-[#f0f6fc] flex items-center">
+                      <Settings className="h-5 w-5 mr-2" />
+                      Account Settings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
+                      <div>
+                        <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                          <Mail className="h-4 w-4 mr-2" />
+                          Email Notifications
+                        </h4>
+                        <p className="text-sm text-[#8b949e]">Receive updates about your capsules and verifications</p>
+                      </div>
+                      <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
+                        Manage
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
+                      <div>
+                        <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                          <Lock className="h-4 w-4 mr-2" />
+                          Privacy Settings
+                        </h4>
+                        <p className="text-sm text-[#8b949e]">Control who can see your profile and activity</p>
+                      </div>
+                      <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
+                        Configure
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
+                      <div>
+                        <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                          <Crown className="h-4 w-4 mr-2" />
+                          Subscription
+                        </h4>
+                        <p className="text-sm text-[#8b949e]">Manage your {user.tier} tier subscription</p>
+                      </div>
+                      <Link href="/pricing">
+                        <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
+                          <ExternalLink className="h-4 w-4 mr-2" />
+                          Upgrade
+                        </Button>
+                      </Link>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
+                      <div>
+                        <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                          <Globe className="h-4 w-4 mr-2" />
+                          Public Profile
+                        </h4>
+                        <p className="text-sm text-[#8b949e]">Make your profile visible to other users</p>
+                      </div>
+                      <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
+                        Public
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
                 
-                <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
-                  <div>
-                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
-                      <Lock className="h-4 w-4 mr-2" />
-                      Privacy Settings
-                    </h4>
-                    <p className="text-sm text-[#8b949e]">Control who can see your profile and activity</p>
-                  </div>
-                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
-                    Configure
-                  </Button>
-                </div>
-                
-                <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
-                  <div>
-                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
-                      <Crown className="h-4 w-4 mr-2" />
-                      Subscription
-                    </h4>
-                    <p className="text-sm text-[#8b949e]">Manage your {user.tier} tier subscription</p>
-                  </div>
-                  <Link href="/pricing">
-                    <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Upgrade
-                    </Button>
-                  </Link>
-                </div>
-                
-                <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
-                  <div>
-                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
-                      <Globe className="h-4 w-4 mr-2" />
-                      Public Profile
-                    </h4>
-                    <p className="text-sm text-[#8b949e]">Make your profile visible to other users</p>
-                  </div>
-                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
-                    Public
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                <ProfileThemeSelector />
+              </div>
+              
+              <div className="space-y-6">
+                <QuantumSecurityPanel />
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

@@ -156,6 +156,7 @@ function Router() {
               <Route path="/audit" component={AuditPage} />
               <Route path="/viral-showcase" component={ViralShowcase} />
               <Route path="/social" component={SocialHub} />
+              <Route path="/social-hub" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/dao" component={DAO} />

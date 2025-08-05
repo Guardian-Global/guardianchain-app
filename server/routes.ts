@@ -1050,6 +1050,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile media upload endpoint
+  app.post("/api/profile/media/upload", consolidatedAuth, async (req: any, res) => {
+    try {
+      console.log(`📸 Profile media upload requested for user: ${req.user.id}`);
+      
+      // Mock successful upload - in production this would use object storage
+      const uploadedFiles = [
+        {
+          id: "media-" + Date.now(),
+          filename: "profile_image.jpg",
+          url: "/api/media/profile_image.jpg",
+          type: "image",
+          uploadedAt: new Date().toISOString()
+        }
+      ];
+      
+      res.json({
+        success: true,
+        message: "Media uploaded successfully",
+        files: uploadedFiles,
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log(`✅ Profile media uploaded successfully for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to upload profile media:", error);
+      res.status(500).json({
+        error: "Failed to upload profile media",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Profile media gallery endpoint
+  app.get("/api/profile/:userId/media", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      console.log(`🖼️ Profile media gallery requested for user: ${userId}`);
+      
+      // Mock media gallery data
+      const mediaGallery = [
+        {
+          id: "media-1",
+          type: "image",
+          url: "/api/media/sample1.jpg",
+          thumbnail: "/api/media/thumb1.jpg",
+          uploadedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          title: "Truth Capsule Evidence"
+        },
+        {
+          id: "media-2", 
+          type: "video",
+          url: "/api/media/sample2.mp4",
+          thumbnail: "/api/media/thumb2.jpg",
+          uploadedAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
+          title: "Verification Process"
+        }
+      ];
+      
+      res.json({
+        success: true,
+        media: mediaGallery,
+        count: mediaGallery.length
+      });
+      
+      console.log(`✅ Profile media gallery retrieved for user: ${userId}`);
+    } catch (error) {
+      console.error("❌ Failed to get profile media:", error);
+      res.status(500).json({
+        error: "Failed to get profile media",  
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Activity timeline endpoint  
+  app.get("/api/profile/:userId/activity-timeline", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      console.log(`📅 Activity timeline requested for user: ${userId}`);
+      
+      // Mock timeline data
+      const timelineEvents = [
+        {
+          id: 1,
+          type: "capsule_created",
+          title: "Created Truth Capsule",
+          description: "Environmental Impact Report submitted for verification",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          metadata: { capsuleId: "cap-123", category: "environment" }
+        },
+        {
+          id: 2,
+          type: "capsule_verified",
+          title: "Capsule Verified", 
+          description: "Community Safety Report successfully verified",
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          metadata: { capsuleId: "cap-456", verificationScore: 0.92 }
+        },
+        {
+          id: 3,
+          type: "badge_earned",
+          title: "Truth Seeker Badge Earned",
+          description: "Achieved milestone of 25 verified capsules",
+          timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          metadata: { badgeId: "truth-seeker", milestone: 25 }
+        }
+      ];
+      
+      res.json({
+        success: true,
+        events: timelineEvents,
+        count: timelineEvents.length
+      });
+      
+      console.log(`✅ Activity timeline retrieved for user: ${userId}`);
+    } catch (error) {
+      console.error("❌ Failed to get activity timeline:", error);
+      res.status(500).json({
+        error: "Failed to get activity timeline",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Truth Genome AI analysis endpoint
   app.get("/api/ai/truth-genome/:userId", consolidatedAuth, async (req: any, res) => {
     try {

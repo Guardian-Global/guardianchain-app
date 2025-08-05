@@ -22,14 +22,14 @@ import { useAuth } from "@/hooks/useAuth";
 const navigationItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/create", label: "Mint", icon: Shield },
-  { href: "/replay", label: "Replay", icon: Play },
-  { href: "/unlock", label: "Unlock", icon: Unlock },
-  { href: "/submit", label: "Submit", icon: FileText },
-  { href: "/verify", label: "Verify", icon: CheckCircle },
-  { href: "/dao", label: "DAO", icon: Users },
+  { href: "/social", label: "Social", icon: Users },
+  { href: "/profile", label: "Profile", icon: User },
   { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
-  { href: "/vault", label: "Vault", icon: Vault },
-  { href: "/profile", label: "Profile", icon: User }
+  { href: "/dao", label: "DAO", icon: CheckCircle },
+  { href: "/explorer", label: "Explorer", icon: Vault },
+  { href: "/analytics", label: "Analytics", icon: Play },
+  { href: "/staking", label: "Staking", icon: Unlock },
+  { href: "/pricing", label: "Pricing", icon: FileText }
 ];
 
 export default function Navigation() {
