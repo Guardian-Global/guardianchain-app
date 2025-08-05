@@ -975,6 +975,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Profile stats endpoint
+  app.get("/api/profile/stats", consolidatedAuth, async (req: any, res) => {
+    try {
+      const mockStats = {
+        capsulesCreated: 24,
+        gttEarned: 1247,
+        truthScore: 88,
+        verificationsPerformed: 156,
+        communityRank: 42,
+        streakDays: 12,
+        totalViews: 3245,
+        totalShares: 89,
+        accuracy: 92
+      };
+
+      res.json(mockStats);
+      console.log(`📊 Profile stats retrieved for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to get profile stats:", error);
+      res.status(500).json({
+        error: "Failed to get profile stats",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Profile activities endpoint
+  app.get("/api/profile/activities", consolidatedAuth, async (req: any, res) => {
+    try {
+      const mockActivities = [
+        { id: 1, action: "Created Truth Capsule", timestamp: "2 hours ago", details: "Environmental Impact Report", type: "creation" },
+        { id: 2, action: "Verified Capsule", timestamp: "1 day ago", details: "Community Safety Report", type: "verification" },
+        { id: 3, action: "Earned GTT Reward", timestamp: "2 days ago", details: "+25 GTT from verification", type: "reward" },
+        { id: 4, action: "Profile Updated", timestamp: "1 week ago", details: "Added social links", type: "social" },
+        { id: 5, action: "Joined Community", timestamp: "2 weeks ago", details: "Completed onboarding", type: "social" }
+      ];
+
+      res.json(mockActivities);
+      console.log(`📝 Profile activities retrieved for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to get profile activities:", error);
+      res.status(500).json({
+        error: "Failed to get profile activities",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Profile update endpoint
+  app.put("/api/profile/update", consolidatedAuth, async (req: any, res) => {
+    try {
+      const updateData = req.body;
+      console.log(`📝 Profile update requested for user: ${req.user.id}`);
+      console.log(`📝 Update data:`, updateData);
+      
+      // In production, this would update the database
+      // For now, we'll simulate a successful update
+      
+      res.json({
+        success: true,
+        message: "Profile updated successfully",
+        updatedFields: Object.keys(updateData),
+        timestamp: new Date().toISOString()
+      });
+      
+      console.log(`✅ Profile updated successfully for user: ${req.user.id}`);
+    } catch (error) {
+      console.error("❌ Failed to update profile:", error);
+      res.status(500).json({
+        error: "Failed to update profile",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   // Truth Genome AI analysis endpoint
   app.get("/api/ai/truth-genome/:userId", consolidatedAuth, async (req: any, res) => {
     try {

@@ -24,7 +24,15 @@ import {
   Linkedin,
   Activity,
   TrendingUp,
-  Vault
+  Vault,
+  Zap,
+  Target,
+  Award,
+  Calendar,
+  ExternalLink,
+  Globe,
+  Lock,
+  Heart
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -36,7 +44,7 @@ interface UserProfile {
   email: string;
   firstName: string;
   lastName: string;
-  username: string;
+  username?: string;
   profileImageUrl?: string;
   bio?: string;
   location?: string;
@@ -58,25 +66,39 @@ interface UserStats {
   verificationsPerformed: number;
   communityRank: number;
   streakDays: number;
+  totalViews: number;
+  totalShares: number;
+  accuracy: number;
 }
 
-export default function EnhancedProfile() {
+interface Activity {
+  id: number;
+  action: string;
+  timestamp: string;
+  details: string;
+  type?: 'creation' | 'verification' | 'reward' | 'social';
+}
+
+export default function UnifiedProfile() {
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
   const [profileData, setProfileData] = useState<Partial<UserProfile>>({});
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // Fetch user stats
-  const { data: userStats } = useQuery({
+  const { data: userStats, isLoading: statsLoading } = useQuery({
     queryKey: ["/api/profile/stats"],
-    enabled: !!user
+    enabled: !!user,
+    staleTime: 5 * 60 * 1000 // 5 minutes
   });
 
   // Fetch user activities
-  const { data: activities } = useQuery({
+  const { data: activities, isLoading: activitiesLoading } = useQuery({
     queryKey: ["/api/profile/activities"],
-    enabled: !!user
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000 // 2 minutes
   });
 
   // Update profile mutation
@@ -88,12 +110,14 @@ export default function EnhancedProfile() {
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       queryClient.invalidateQueries({ queryKey: ["/api/profile/stats"] });
       setIsEditing(false);
+      setProfileData({});
       toast({
         title: "Profile Updated",
         description: "Your profile has been successfully updated.",
       });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Profile update error:", error);
       toast({
         title: "Update Failed",
         description: "Failed to update profile. Please try again.",
@@ -103,7 +127,7 @@ export default function EnhancedProfile() {
   });
 
   const handleSaveProfile = () => {
-    if (user) {
+    if (user && Object.keys(profileData).length > 0) {
       updateProfileMutation.mutate({
         ...profileData,
         id: user.id
@@ -136,6 +160,16 @@ export default function EnhancedProfile() {
     }
   };
 
+  const getActivityIcon = (type?: string) => {
+    switch (type) {
+      case 'creation': return <Vault className="h-4 w-4 text-[#00ffe1]" />;
+      case 'verification': return <Shield className="h-4 w-4 text-green-400" />;
+      case 'reward': return <Star className="h-4 w-4 text-[#ff00d4]" />;
+      case 'social': return <Heart className="h-4 w-4 text-red-400" />;
+      default: return <Activity className="h-4 w-4 text-[#00ffe1]" />;
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen bg-[#0d1117] text-[#f0f6fc] flex items-center justify-center">
@@ -153,26 +187,30 @@ export default function EnhancedProfile() {
     );
   }
 
-  const mockUserStats: UserStats = {
+  // Mock stats for display (will be replaced by real data from API)
+  const mockUserStats: UserStats = userStats || {
     capsulesCreated: 24,
     gttEarned: 1247,
     truthScore: 88,
     verificationsPerformed: 156,
     communityRank: 42,
-    streakDays: 12
+    streakDays: 12,
+    totalViews: 3245,
+    totalShares: 89,
+    accuracy: 92
   };
 
-  const mockActivities = [
-    { id: 1, action: "Created Truth Capsule", timestamp: "2 hours ago", details: "Environmental Impact Report" },
-    { id: 2, action: "Verified Capsule", timestamp: "1 day ago", details: "Community Safety Report" },
-    { id: 3, action: "Earned GTT Reward", timestamp: "2 days ago", details: "+25 GTT from verification" },
-    { id: 4, action: "Profile Updated", timestamp: "1 week ago", details: "Added social links" }
+  const mockActivities: Activity[] = activities || [
+    { id: 1, action: "Created Truth Capsule", timestamp: "2 hours ago", details: "Environmental Impact Report", type: "creation" },
+    { id: 2, action: "Verified Capsule", timestamp: "1 day ago", details: "Community Safety Report", type: "verification" },
+    { id: 3, action: "Earned GTT Reward", timestamp: "2 days ago", details: "+25 GTT from verification", type: "reward" },
+    { id: 4, action: "Profile Updated", timestamp: "1 week ago", details: "Added social links", type: "social" }
   ];
 
   return (
     <div className="min-h-screen bg-[#0d1117] text-[#f0f6fc] p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Cyberpunk Hero Header */}
+        {/* Hero Header */}
         <div className="relative mb-8 p-8 rounded-lg bg-gradient-to-br from-[#161b22] to-[#0d1117] border border-[#30363d] overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-[#00ffe1]/5 to-[#ff00d4]/5" />
           <div className="relative z-10">
@@ -181,12 +219,28 @@ export default function EnhancedProfile() {
                 Guardian Profile
               </h1>
               <Button
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={() => {
+                  if (isEditing) {
+                    handleSaveProfile();
+                  } else {
+                    setIsEditing(true);
+                  }
+                }}
                 variant="outline"
                 className="border-[#00ffe1] text-[#00ffe1] hover:bg-[#00ffe1]/10"
+                disabled={updateProfileMutation.isPending}
               >
-                {isEditing ? <Save className="h-4 w-4 mr-2" /> : <Edit2 className="h-4 w-4 mr-2" />}
-                {isEditing ? 'Save Changes' : 'Edit Profile'}
+                {isEditing ? (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    {updateProfileMutation.isPending ? "Saving..." : "Save Changes"}
+                  </>
+                ) : (
+                  <>
+                    <Edit2 className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </>
+                )}
               </Button>
             </div>
 
@@ -209,7 +263,7 @@ export default function EnhancedProfile() {
                     <span className="ml-1">{user.tier}</span>
                   </Badge>
                 </div>
-                <p className="text-[#8b949e] text-lg">@{user.username}</p>
+                <p className="text-[#8b949e] text-lg">@{user.username || user.firstName?.toLowerCase()}</p>
                 <div className="flex items-center space-x-4 mt-2 text-sm text-[#8b949e]">
                   <span className="flex items-center">
                     <Mail className="h-4 w-4 mr-1" />
@@ -227,22 +281,29 @@ export default function EnhancedProfile() {
           </div>
         </div>
 
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-[#161b22] border border-[#30363d]">
             <TabsTrigger value="overview" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Activity className="h-4 w-4 mr-2" />
               Overview
             </TabsTrigger>
+            <TabsTrigger value="stats" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              Stats
+            </TabsTrigger>
             <TabsTrigger value="activity" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Calendar className="h-4 w-4 mr-2" />
               Activity
             </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-[#00ffe1] data-[state=active]:text-black">
+              <Settings className="h-4 w-4 mr-2" />
               Settings
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               <Card className="bg-[#161b22] border-[#30363d]">
                 <CardContent className="p-4 text-center">
                   <Vault className="h-8 w-8 text-[#00ffe1] mx-auto mb-2" />
@@ -269,7 +330,7 @@ export default function EnhancedProfile() {
               
               <Card className="bg-[#161b22] border-[#30363d]">
                 <CardContent className="p-4 text-center">
-                  <Activity className="h-8 w-8 text-purple-400 mx-auto mb-2" />
+                  <Target className="h-8 w-8 text-purple-400 mx-auto mb-2" />
                   <div className="text-2xl font-bold text-[#f0f6fc]">{mockUserStats.verificationsPerformed}</div>
                   <div className="text-sm text-[#8b949e]">Verifications</div>
                 </CardContent>
@@ -277,7 +338,7 @@ export default function EnhancedProfile() {
               
               <Card className="bg-[#161b22] border-[#30363d]">
                 <CardContent className="p-4 text-center">
-                  <TrendingUp className="h-8 w-8 text-[#ff00d4] mx-auto mb-2" />
+                  <Award className="h-8 w-8 text-[#ff00d4] mx-auto mb-2" />
                   <div className="text-2xl font-bold text-[#f0f6fc]">#{mockUserStats.communityRank}</div>
                   <div className="text-sm text-[#8b949e]">Rank</div>
                 </CardContent>
@@ -285,7 +346,7 @@ export default function EnhancedProfile() {
               
               <Card className="bg-[#161b22] border-[#30363d]">
                 <CardContent className="p-4 text-center">
-                  <User className="h-8 w-8 text-[#00ffe1] mx-auto mb-2" />
+                  <Zap className="h-8 w-8 text-[#00ffe1] mx-auto mb-2" />
                   <div className="text-2xl font-bold text-[#f0f6fc]">{mockUserStats.streakDays}</div>
                   <div className="text-sm text-[#8b949e]">Day Streak</div>
                 </CardContent>
@@ -295,7 +356,10 @@ export default function EnhancedProfile() {
             {/* Profile Information */}
             <Card className="bg-[#161b22] border-[#30363d]">
               <CardHeader>
-                <CardTitle className="text-[#f0f6fc]">Profile Information</CardTitle>
+                <CardTitle className="text-[#f0f6fc] flex items-center">
+                  <User className="h-5 w-5 mr-2" />
+                  Profile Information
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isEditing ? (
@@ -325,6 +389,7 @@ export default function EnhancedProfile() {
                         value={profileData.location || user.location || ''}
                         onChange={(e) => handleInputChange('location', e.target.value)}
                         className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]"
+                        placeholder="Enter your location"
                       />
                     </div>
                     <div>
@@ -334,6 +399,7 @@ export default function EnhancedProfile() {
                         value={profileData.website || user.website || ''}
                         onChange={(e) => handleInputChange('website', e.target.value)}
                         className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]"
+                        placeholder="https://your-website.com"
                       />
                     </div>
                     <div className="md:col-span-2">
@@ -344,6 +410,7 @@ export default function EnhancedProfile() {
                         onChange={(e) => handleInputChange('bio', e.target.value)}
                         className="bg-[#0d1117] border-[#30363d] text-[#f0f6fc]"
                         rows={4}
+                        placeholder="Tell us about yourself..."
                       />
                     </div>
                   </div>
@@ -357,7 +424,8 @@ export default function EnhancedProfile() {
                     )}
                     <div className="flex flex-wrap gap-4">
                       {user.website && (
-                        <a href={user.website} target="_blank" rel="noopener noreferrer" 
+                        <a href={user.website.startsWith('http') ? user.website : `https://${user.website}`} 
+                           target="_blank" rel="noopener noreferrer" 
                            className="flex items-center text-[#00ffe1] hover:underline">
                           <LinkIcon className="h-4 w-4 mr-1" />
                           Website
@@ -396,7 +464,7 @@ export default function EnhancedProfile() {
                       disabled={updateProfileMutation.isPending}
                     >
                       <Save className="h-4 w-4 mr-2" />
-                      Save Changes
+                      {updateProfileMutation.isPending ? "Saving..." : "Save Changes"}
                     </Button>
                     <Button 
                       onClick={() => {
@@ -414,24 +482,107 @@ export default function EnhancedProfile() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="stats" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="bg-[#161b22] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#f0f6fc] flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2" />
+                    Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Truth Score</span>
+                    <span className="text-[#00ffe1] font-bold">{mockUserStats.truthScore}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Accuracy</span>
+                    <span className="text-green-400 font-bold">{mockUserStats.accuracy}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Community Rank</span>
+                    <span className="text-[#ff00d4] font-bold">#{mockUserStats.communityRank}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-[#161b22] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#f0f6fc] flex items-center">
+                    <Activity className="h-5 w-5 mr-2" />
+                    Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Total Views</span>
+                    <span className="text-[#00ffe1] font-bold">{mockUserStats.totalViews.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Total Shares</span>
+                    <span className="text-purple-400 font-bold">{mockUserStats.totalShares}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Active Streak</span>
+                    <span className="text-[#ff00d4] font-bold">{mockUserStats.streakDays} days</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-[#161b22] border-[#30363d]">
+                <CardHeader>
+                  <CardTitle className="text-[#f0f6fc] flex items-center">
+                    <Star className="h-5 w-5 mr-2" />
+                    Achievements
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">GTT Earned</span>
+                    <span className="text-[#00ffe1] font-bold">{mockUserStats.gttEarned}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Verifications</span>
+                    <span className="text-green-400 font-bold">{mockUserStats.verificationsPerformed}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#8b949e]">Capsules Created</span>
+                    <span className="text-purple-400 font-bold">{mockUserStats.capsulesCreated}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
           <TabsContent value="activity" className="space-y-6">
             <Card className="bg-[#161b22] border-[#30363d]">
               <CardHeader>
-                <CardTitle className="text-[#f0f6fc]">Recent Activity</CardTitle>
+                <CardTitle className="text-[#f0f6fc] flex items-center">
+                  <Calendar className="h-5 w-5 mr-2" />
+                  Recent Activity
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {mockActivities.map((activity) => (
-                    <div key={activity.id} className="flex items-center space-x-3 p-3 rounded-lg bg-[#0d1117]">
-                      <Activity className="h-5 w-5 text-[#00ffe1] flex-shrink-0" />
-                      <div className="flex-1">
-                        <div className="font-medium text-[#f0f6fc]">{activity.action}</div>
-                        <div className="text-sm text-[#8b949e]">{activity.details}</div>
+                {activitiesLoading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin w-8 h-8 border-4 border-[#00ffe1] border-t-transparent rounded-full mx-auto"></div>
+                    <p className="text-[#8b949e] mt-2">Loading activities...</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {mockActivities.map((activity) => (
+                      <div key={activity.id} className="flex items-center space-x-3 p-3 rounded-lg bg-[#0d1117] hover:bg-[#161b22] transition-colors">
+                        {getActivityIcon(activity.type)}
+                        <div className="flex-1">
+                          <div className="font-medium text-[#f0f6fc]">{activity.action}</div>
+                          <div className="text-sm text-[#8b949e]">{activity.details}</div>
+                        </div>
+                        <div className="text-sm text-[#8b949e]">{activity.timestamp}</div>
                       </div>
-                      <div className="text-sm text-[#8b949e]">{activity.timestamp}</div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -439,39 +590,65 @@ export default function EnhancedProfile() {
           <TabsContent value="settings" className="space-y-6">
             <Card className="bg-[#161b22] border-[#30363d]">
               <CardHeader>
-                <CardTitle className="text-[#f0f6fc]">Account Settings</CardTitle>
+                <CardTitle className="text-[#f0f6fc] flex items-center">
+                  <Settings className="h-5 w-5 mr-2" />
+                  Account Settings
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
                   <div>
-                    <h4 className="font-medium text-[#f0f6fc]">Email Notifications</h4>
+                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Email Notifications
+                    </h4>
                     <p className="text-sm text-[#8b949e]">Receive updates about your capsules and verifications</p>
                   </div>
-                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc]">
+                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
                     Manage
                   </Button>
                 </div>
                 
                 <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
                   <div>
-                    <h4 className="font-medium text-[#f0f6fc]">Privacy Settings</h4>
+                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                      <Lock className="h-4 w-4 mr-2" />
+                      Privacy Settings
+                    </h4>
                     <p className="text-sm text-[#8b949e]">Control who can see your profile and activity</p>
                   </div>
-                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc]">
+                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
                     Configure
                   </Button>
                 </div>
                 
                 <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
                   <div>
-                    <h4 className="font-medium text-[#f0f6fc]">Subscription</h4>
+                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                      <Crown className="h-4 w-4 mr-2" />
+                      Subscription
+                    </h4>
                     <p className="text-sm text-[#8b949e]">Manage your {user.tier} tier subscription</p>
                   </div>
                   <Link href="/pricing">
-                    <Button variant="outline" className="border-[#30363d] text-[#f0f6fc]">
+                    <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
+                      <ExternalLink className="h-4 w-4 mr-2" />
                       Upgrade
                     </Button>
                   </Link>
+                </div>
+                
+                <div className="flex items-center justify-between p-4 rounded-lg bg-[#0d1117]">
+                  <div>
+                    <h4 className="font-medium text-[#f0f6fc] flex items-center">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Public Profile
+                    </h4>
+                    <p className="text-sm text-[#8b949e]">Make your profile visible to other users</p>
+                  </div>
+                  <Button variant="outline" className="border-[#30363d] text-[#f0f6fc] hover:bg-[#161b22]">
+                    Public
+                  </Button>
                 </div>
               </CardContent>
             </Card>
