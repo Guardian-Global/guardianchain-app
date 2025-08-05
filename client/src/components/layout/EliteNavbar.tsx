@@ -39,7 +39,12 @@ export function EliteNavbar() {
 
   return (
     <motion.nav 
-      className="sticky top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10"
+      className="sticky top-0 z-50 backdrop-blur-md border-b"
+      style={{ 
+        background: 'linear-gradient(135deg, hsl(218, 54%, 9%)/80, hsl(215, 23%, 19%)/60)',
+        borderColor: 'hsl(215, 23%, 19%)',
+        color: 'hsl(0, 0%, 98%)'
+      }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}

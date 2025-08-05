@@ -48,26 +48,26 @@
 
 @layer base {
   :root {
-    /* Cyberpunk High-Contrast System */
-    --background: hsl(218, 54%, 6%); /* Dark cyberpunk bg #0d1117 */
-    --foreground: hsl(0, 0%, 98%); /* Very light text #fafbfc */
-    --card: hsl(218, 54%, 9%); /* Card background #161b22 */
-    --card-foreground: hsl(0, 0%, 98%);
-    --popover: hsl(218, 54%, 9%);
-    --popover-foreground: hsl(0, 0%, 98%);
-    --primary: hsl(180, 100%, 50%); /* Cyberpunk cyan #00ffe1 */
-    --primary-foreground: hsl(218, 54%, 6%);
-    --secondary: hsl(330, 100%, 50%); /* Cyberpunk magenta #ff00d4 */
-    --secondary-foreground: hsl(0, 0%, 98%);
-    --muted: hsl(215, 23%, 19%); /* Muted border #30363d */
-    --muted-foreground: hsl(215, 13%, 82%); /* High contrast muted text #e6edf3 */
-    --accent: hsl(285, 100%, 65%); /* Purple accent #7c3aed */
-    --accent-foreground: hsl(218, 54%, 6%);
-    --destructive: hsl(0, 84%, 60%); /* Error Red #f85149 */
-    --destructive-foreground: hsl(0, 0%, 96%);
-    --border: hsl(240, 50%, 20%);
-    --input: hsl(240, 50%, 8%);
-    --ring: hsl(180, 100%, 50%); /* Cyan ring */
+    /* CRITICAL CYBERPUNK SYSTEM - FORCED STYLES */
+    --background: hsl(218, 54%, 6%) !important; /* Dark cyberpunk bg #0d1117 */
+    --foreground: hsl(0, 0%, 98%) !important; /* Very light text #fafbfc */
+    --card: hsl(218, 54%, 9%) !important; /* Card background #161b22 */
+    --card-foreground: hsl(0, 0%, 98%) !important;
+    --popover: hsl(218, 54%, 9%) !important;
+    --popover-foreground: hsl(0, 0%, 98%) !important;
+    --primary: hsl(180, 100%, 50%) !important; /* Cyberpunk cyan #00ffe1 */
+    --primary-foreground: hsl(218, 54%, 6%) !important;
+    --secondary: hsl(330, 100%, 50%) !important; /* Cyberpunk magenta #ff00d4 */
+    --secondary-foreground: hsl(0, 0%, 98%) !important;
+    --muted: hsl(215, 23%, 19%) !important; /* Muted border #30363d */
+    --muted-foreground: hsl(215, 13%, 82%) !important; /* High contrast muted text #e6edf3 */
+    --accent: hsl(285, 100%, 65%) !important; /* Purple accent #7c3aed */
+    --accent-foreground: hsl(218, 54%, 6%) !important;
+    --destructive: hsl(0, 84%, 60%) !important; /* Error Red #f85149 */
+    --destructive-foreground: hsl(0, 0%, 96%) !important;
+    --border: hsl(215, 23%, 19%) !important; /* #30363d */
+    --input: hsl(218, 54%, 9%) !important; /* #161b22 */
+    --ring: hsl(180, 100%, 50%) !important; /* Cyan ring */
     --radius: 0.75rem;
     
     /* Web3 Specific Colors */
@@ -119,9 +119,178 @@
     @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-variation-settings: "slnt" 0;
-    background: linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%));
+    background: linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%)) !important;
     min-height: 100vh;
     color: hsl(0, 0%, 98%) !important; /* Force high contrast text */
+    overflow-x: hidden;
+  }
+  
+  html {
+    background: hsl(218, 54%, 6%) !important; /* Dark cyberpunk bg */
+    color: hsl(0, 0%, 98%) !important;
+  }
+  
+  #root {
+    background: linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%)) !important;
+    min-height: 100vh;
+    color: hsl(0, 0%, 98%) !important;
+  }
+  
+  /* CRITICAL LAYOUT FIXES - FORCE PROPER SPACING */
+  .container {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 0 1.5rem !important;
+  }
+  
+  /* Fix text overlap issues */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    margin-bottom: 0.5rem !important;
+    line-height: 1.6 !important;
+    word-wrap: break-word !important;
+  }
+  
+  h1 { 
+    font-size: 3rem !important; 
+    font-weight: 700 !important; 
+    margin-bottom: 1.5rem !important; 
+    line-height: 1.2 !important;
+  }
+  h2 { 
+    font-size: 2.25rem !important; 
+    font-weight: 600 !important; 
+    margin-bottom: 1.25rem !important; 
+    line-height: 1.3 !important;
+  }
+  h3 { 
+    font-size: 1.875rem !important; 
+    font-weight: 600 !important; 
+    margin-bottom: 1rem !important; 
+    line-height: 1.4 !important;
+  }
+  h4 { 
+    font-size: 1.5rem !important; 
+    font-weight: 500 !important; 
+    margin-bottom: 0.75rem !important; 
+    line-height: 1.4 !important;
+  }
+  
+  /* Force proper card layouts */
+  .card, [class*="card"] {
+    background: hsl(218, 54%, 9%) !important;
+    border: 1px solid hsl(215, 23%, 19%) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    color: hsl(0, 0%, 98%) !important;
+  }
+  
+  /* Fix button styling */
+  button, .button, [class*="button"] {
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+  
+  /* Fix input styling */
+  input, textarea, select {
+    background: hsl(218, 54%, 9%) !important;
+    border: 1px solid hsl(215, 23%, 19%) !important;
+    border-radius: 8px !important;
+    padding: 0.75rem !important;
+    color: hsl(0, 0%, 98%) !important;
+    font-size: 1rem !important;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: hsl(215, 13%, 65%) !important;
+  }
+  
+  /* CRITICAL APP-WIDE STYLE OVERRIDES */
+  
+  /* Fix any white backgrounds */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Override any potential white colors */
+  [style*="white"], [style*="#fff"], [style*="#ffffff"], [style*="rgb(255,255,255)"] {
+    color: hsl(0, 0%, 98%) !important;
+    background: transparent !important;
+  }
+  
+  /* Fix grid and flex layouts */
+  .grid {
+    display: grid !important;
+    gap: 1rem !important;
+  }
+  
+  .flex {
+    display: flex !important;
+    gap: 0.5rem !important;
+  }
+  
+  /* Ensure proper spacing between elements */
+  .space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1.5rem !important;
+  }
+  
+  .space-y-8 > * + * {
+    margin-top: 2rem !important;
+  }
+  
+  /* Fix any layout overlap issues */
+  .relative {
+    position: relative !important;
+  }
+  
+  .absolute {
+    position: absolute !important;
+  }
+  
+  .z-10 {
+    z-index: 10 !important;
+  }
+  
+  .z-20 {
+    z-index: 20 !important;
+  }
+  
+  /* Force proper text colors throughout app */
+  .text-white, .text-gray-50, .text-gray-100 {
+    color: hsl(0, 0%, 98%) !important;
+  }
+  
+  .text-gray-400, .text-gray-500 {
+    color: hsl(215, 13%, 65%) !important;
+  }
+  
+  .text-cyan-400, .text-cyan-500 {
+    color: hsl(180, 100%, 50%) !important;
+  }
+  
+  .text-purple-400, .text-purple-500 {
+    color: hsl(285, 100%, 65%) !important;
+  }
+  
+  .text-green-400, .text-green-500 {
+    color: hsl(158, 64%, 52%) !important;
+  }
+  
+  /* Fix background colors */
+  .bg-gray-900, .bg-gray-800 {
+    background-color: hsl(218, 54%, 9%) !important;
+  }
+  
+  .bg-gray-700, .bg-gray-600 {
+    background-color: hsl(220, 26%, 14%) !important;
   }
   
   /* Next-Gen Typography Suite */
