@@ -85,22 +85,58 @@ export default function MediaUploader({
 
   const uploadFile = async (mediaFile: MediaFile) => {
     try {
-      const formData = new FormData();
-      formData.append('file', mediaFile.file);
-      formData.append('userId', userId);
-      formData.append('type', mediaFile.type);
-
-      const response = await fetch('/api/profile/upload-media', {
+      // Step 1: Get upload URL from backend
+      const uploadResponse = await fetch('/api/profile/upload-media', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
       });
 
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`);
+      if (!uploadResponse.ok) {
+        throw new Error(`Failed to get upload URL: ${uploadResponse.statusText}`);
       }
 
-      const result = await response.json();
+      const { uploadURL } = await uploadResponse.json();
+
+      // Step 2: Upload directly to object storage
+      setFiles(prev => prev.map(f => 
+        f.id === mediaFile.id 
+          ? { ...f, uploadProgress: 50 }
+          : f
+      ));
+
+      const fileUploadResponse = await fetch(uploadURL, {
+        method: 'PUT',
+        body: mediaFile.file,
+        headers: {
+          'Content-Type': mediaFile.file.type
+        }
+      });
+
+      if (!fileUploadResponse.ok) {
+        throw new Error(`File upload failed: ${fileUploadResponse.statusText}`);
+      }
+
+      // Step 3: Complete the upload by saving metadata
+      const completeResponse = await fetch('/api/profile/media/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          uploadURL,
+          originalName: mediaFile.file.name,
+          fileSize: mediaFile.file.size.toString(),
+          mimeType: mediaFile.file.type,
+          type: mediaFile.type,
+          title: mediaFile.file.name
+        })
+      });
+
+      if (!completeResponse.ok) {
+        throw new Error(`Failed to complete upload: ${completeResponse.statusText}`);
+      }
+
+      const result = await completeResponse.json();
       
       setFiles(prev => prev.map(f => 
         f.id === mediaFile.id 

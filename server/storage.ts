@@ -62,7 +62,12 @@ export class DatabaseStorage implements IStorage {
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(userData)
+      .values({
+        ...userData,
+        onboardingCompleted: userData.onboardingCompleted || false,
+        tier: userData.tier || 'EXPLORER',
+        subscriptionStatus: userData.subscriptionStatus || 'inactive'
+      })
       .onConflictDoUpdate({
         target: users.id,
         set: {
@@ -70,6 +75,33 @@ export class DatabaseStorage implements IStorage {
           updatedAt: new Date(),
         },
       })
+      .returning();
+    return user;
+  }
+
+  // Complete user onboarding
+  async completeOnboarding(userId: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        onboardingCompleted: true,
+        tier: 'SEEKER', // Upgrade from EXPLORER to SEEKER after onboarding
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
+  // Update user profile
+  async updateUserProfile(userId: string, updates: Partial<User>): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
       .returning();
     return user;
   }

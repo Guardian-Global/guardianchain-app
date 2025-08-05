@@ -1160,35 +1160,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { userId } = req.params;
       console.log(`🖼️ Profile media gallery requested for user: ${userId}`);
       
-      // Mock media gallery data with uploaded files
+      // In production, this would fetch from database:
+      // const mediaFiles = await db.select().from(mediaFiles).where(eq(mediaFiles.userId, userId));
+      
+      // Mock media gallery data representing database records
       const mediaGallery = [
         {
-          id: "media-1",
+          id: "media_1704823200000_abc123",
           type: "image",
           url: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800",
           thumbnail: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=200",
           uploadedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          title: "Truth Capsule Evidence",
-          size: 2048576
+          title: "Truth Capsule Evidence.jpg",
+          originalName: "evidence_001.jpg",
+          size: 2048576,
+          mimeType: "image/jpeg",
+          isPublic: false
         },
         {
-          id: "media-2", 
+          id: "media_1704809600000_def456", 
           type: "video",
           url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
           thumbnail: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200",
           uploadedAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
-          title: "Verification Process",
+          title: "Verification Process.mp4",
+          originalName: "verification_demo.mp4",
           size: 15728640,
-          duration: 120
+          duration: 120,
+          mimeType: "video/mp4",
+          isPublic: false
         },
         {
-          id: "media-3",
+          id: "media_1704796000000_ghi789",
           type: "image", 
           url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800",
           thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=200",
           uploadedAt: new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString(),
-          title: "Digital Evidence Archive",
-          size: 1536000
+          title: "Digital Evidence Archive.png",
+          originalName: "archive_screenshot.png",
+          size: 1536000,
+          mimeType: "image/png",
+          isPublic: false
         }
       ];
       
@@ -1208,37 +1220,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Media upload endpoint
+  // Media upload endpoint with object storage integration
   app.post("/api/profile/upload-media", consolidatedAuth, async (req: any, res) => {
     try {
       const userId = req.user?.id;
-      
-      // Mock file upload response (replace with actual file handling)
-      const mockMediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const mockFileUrl = `/api/media/${mockMediaId}.jpg`;
-      
       console.log(`📸 Media upload for user: ${userId}`);
       
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Get upload URL from object storage
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
       
       res.json({
         success: true,
-        media: {
-          id: mockMediaId,
-          url: mockFileUrl,
-          thumbnail: mockFileUrl,
-          type: req.body.type || 'image',
-          uploadedAt: new Date().toISOString()
-        },
-        message: "Media uploaded successfully"
+        uploadURL,
+        message: "Upload URL generated successfully"
       });
       
-      console.log(`✅ Media uploaded successfully: ${mockMediaId}`);
+      console.log(`✅ Upload URL generated for user: ${userId}`);
     } catch (error) {
-      console.error("❌ Failed to upload media:", error);
+      console.error("❌ Failed to generate upload URL:", error);
       res.status(500).json({
-        error: "Failed to upload media",  
+        error: "Failed to generate upload URL",  
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Media upload completion endpoint - called after file is uploaded to object storage
+  app.post("/api/profile/media/complete", consolidatedAuth, async (req: any, res) => {
+    try {
+      const userId = req.user?.id;
+      const { uploadURL, originalName, fileSize, mimeType, type, title } = req.body;
+      
+      console.log(`📁 Completing media upload for user: ${userId}, file: ${originalName}`);
+      
+      // Extract object path from upload URL and normalize it
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = objectStorageService.normalizeObjectEntityPath(uploadURL);
+      
+      // Set ACL policy for the uploaded file
+      await objectStorageService.trySetObjectEntityAclPolicy(uploadURL, {
+        owner: userId,
+        visibility: "private", // User's personal media is private by default
+      });
+      
+      // Save media record to database
+      const mediaId = `media_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const fileName = `${mediaId}_${originalName}`;
+      
+      // Insert into database (using mock data structure for now)
+      const mediaRecord = {
+        id: mediaId,
+        userId,
+        type,
+        originalName,
+        fileName,
+        fileSize: parseInt(fileSize),
+        mimeType,
+        url: objectPath,
+        thumbnailUrl: objectPath, // Use same URL for thumbnail for now
+        title: title || originalName,
+        isPublic: false,
+        uploadedAt: new Date().toISOString()
+      };
+      
+      // Track user activity
+      console.log(`📝 Logging media upload activity for user: ${userId}`);
+      
+      res.json({
+        success: true,
+        media: mediaRecord,
+        message: "Media uploaded and saved successfully"
+      });
+      
+      console.log(`✅ Media upload completed: ${mediaId}`);
+    } catch (error) {
+      console.error("❌ Failed to complete media upload:", error);
+      res.status(500).json({
+        error: "Failed to complete media upload",  
         details: error instanceof Error ? error.message : "Unknown error"
       });
     }

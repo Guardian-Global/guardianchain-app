@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
 import EnhancedMegaNavigation from '@/components/EnhancedMegaNavigation';
+import { useAuth } from '@/hooks/useAuth';
 import { 
   Menu, 
   X, 
@@ -13,30 +14,45 @@ import {
   Crown,
   ChevronDown,
   Handshake,
-  Search
+  Search,
+  User,
+  Shield,
+  LogOut,
+  Bell
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-  { href: '/explorer', label: 'Capsule Explorer', icon: Search },
-  { href: '/truth-genome', label: 'Truth Genome', icon: Sparkles },
-  { href: '/social', label: 'Social Hub', icon: Users },
+  { href: '/explorer', label: 'Explorer', icon: Search },
+  { href: '/create', label: 'Create', icon: Vault },
+  { href: '/social', label: 'Social', icon: Users },
   { href: '/dao', label: 'DAO', icon: Crown },
-  { href: '/profile', label: 'Profile', icon: Settings },
-  { href: '/partners', label: 'Partners', icon: Handshake },
+];
+
+const toolsItems = [
+  { href: '/truth-genome', label: 'Truth Genome', icon: Sparkles },
+  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/lineage', label: 'Lineage Graph', icon: Search },
+  { href: '/staking', label: 'Staking Hub', icon: Crown },
+  { href: '/rewards', label: 'Rewards', icon: Sparkles },
+  { href: '/metrics', label: 'Metrics', icon: BarChart3 },
+  { href: '/audit', label: 'Audit Trail', icon: Shield },
 ];
 
 export function EliteNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [location] = useLocation();
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <motion.nav 
@@ -107,22 +123,87 @@ export function EliteNavbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-black/90 backdrop-blur-md border-white/10">
-                <DropdownMenuItem asChild>
-                  <Link href="/veritas-node">Veritas Node</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/timeline">Timeline</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/analytics">Analytics</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/lineage">Lineage Graph</Link>
-                </DropdownMenuItem>
+                {toolsItems.map((tool) => (
+                  <DropdownMenuItem key={tool.href} asChild>
+                    <Link href={tool.href} className="flex items-center space-x-2">
+                      <tool.icon className="h-4 w-4" />
+                      <span>{tool.label}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Connect Button */}
+            {/* User Profile Section */}
+            {isAuthenticated && user ? (
+              <div className="flex items-center space-x-4">
+                {/* User Tier Badge */}
+                <Badge 
+                  variant="outline" 
+                  className="bg-gradient-to-r from-yellow-400/20 to-amber-500/20 border-yellow-400/30 text-yellow-400"
+                >
+                  {user.tier || 'SEEKER'}
+                </Badge>
+
+                {/* Notifications */}
+                <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white relative">
+                  <Bell className="h-4 w-4" />
+                  <Badge className="absolute -top-1 -right-1 h-2 w-2 p-0 bg-red-500" />
+                </Button>
+
+                {/* User Menu */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center space-x-2 text-gray-300 hover:text-white">
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={user.profileImageUrl} alt={user.firstName || 'User'} />
+                        <AvatarFallback className="bg-yellow-400/20 text-yellow-400 text-xs">
+                          {user.firstName?.[0] || user.email?.[0] || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="hidden md:block">
+                        {user.firstName || user.email?.split('@')[0] || 'Guardian'}
+                      </span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="bg-black/90 backdrop-blur-md border-white/10 w-48">
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="flex items-center space-x-2">
+                        <User className="h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/settings" className="flex items-center space-x-2">
+                        <Settings className="h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-white/10" />
+                    <DropdownMenuItem asChild>
+                      <Link href="/auth/logout" className="flex items-center space-x-2 text-red-400">
+                        <LogOut className="h-4 w-4" />
+                        <span>Sign Out</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link href="/auth/login">
+                  <Button variant="ghost" className="text-gray-300 hover:text-white">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/auth/signup">
+                  <Button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-500 hover:to-amber-600">
+                    Get Started
+                  </Button>
+                </Link>
+              </div>
+            )}
             <Button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-semibold hover:from-yellow-500 hover:to-amber-600 transition-all duration-200">
               Connect Wallet
             </Button>

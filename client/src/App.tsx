@@ -69,6 +69,13 @@ const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Settings = lazy(() => import("./pages/Settings"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Admin = lazy(() => import("./pages/Admin"));
+const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
+const CapsuleBrowser = lazy(() => import("./pages/CapsuleBrowser"));
+const CapsuleDetail = lazy(() => import("./pages/CapsuleDetail"));
+const Claim = lazy(() => import("./pages/Claim"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
 
@@ -131,6 +138,12 @@ function Router() {
               <Route path="/create" component={CreateCapsule} />
               <Route path="/bulk-upload" component={BulkUpload} />
               <Route path="/profile" component={Profile} />
+              <Route path="/settings" component={Settings} />
+              <Route path="/admin-dashboard" component={AdminDashboard} />
+              <Route path="/admin" component={Admin} />
+              <Route path="/capsule-stats" component={CapsuleStats} />
+              <Route path="/capsule-browser" component={CapsuleBrowser} />
+              <Route path="/claim" component={Claim} />
               <Route path="/profile/ultimate" component={UltimateProfile} />
               <Route path="/profile/enhanced" component={EnhancedProfilePage} />
               <Route path="/truth-genome" component={TruthGenome} />

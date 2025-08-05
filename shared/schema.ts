@@ -85,6 +85,53 @@ export const userActivities = pgTable("user_activities", {
   index("idx_user_activities_created_at").on(table.createdAt),
 ]);
 
+// Media files table for user photo/video uploads
+export const mediaFiles = pgTable("media_files", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  type: varchar("type").notNull(), // 'image' or 'video'
+  originalName: varchar("original_name").notNull(),
+  fileName: varchar("file_name").notNull(),
+  fileSize: numeric("file_size").notNull(),
+  mimeType: varchar("mime_type").notNull(),
+  url: varchar("url").notNull(), // Object storage URL
+  thumbnailUrl: varchar("thumbnail_url"),
+  width: numeric("width"),
+  height: numeric("height"),
+  duration: numeric("duration"), // For videos, in seconds
+  title: varchar("title"),
+  description: text("description"),
+  tags: jsonb("tags").default(sql`'[]'::jsonb`),
+  isPublic: boolean("is_public").default(false),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_media_files_user").on(table.userId),
+  index("idx_media_files_type").on(table.type),
+  index("idx_media_files_uploaded_at").on(table.uploadedAt),
+]);
+
+// User social links table
+export const userSocialLinks = pgTable("user_social_links", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  platform: varchar("platform").notNull(),
+  username: varchar("username").notNull(),
+  url: varchar("url").notNull(),
+  verified: boolean("verified").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_user_social_links_user").on(table.userId),
+]);
+
 // Newsletter subscribers table for email subscriptions
 export const newsletterSubscribers = pgTable("newsletter_subscribers", {
   id: uuid("id")
@@ -274,6 +321,16 @@ export const userProfileUpdateSchema = z.object({
   linkedin: z.string().max(100, "LinkedIn profile must be less than 100 characters").optional(),
   profileImageUrl: z.string().url("Invalid profile image URL").optional(),
 });
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type UpdateUser = Partial<InsertUser>;
+export type UpsertUser = typeof users.$inferInsert;
+
+export type MediaFile = typeof mediaFiles.$inferSelect;
+export type InsertMediaFile = typeof mediaFiles.$inferInsert;
+export type UserSocialLink = typeof userSocialLinks.$inferSelect;
+export type InsertUserSocialLink = typeof userSocialLinks.$inferInsert;
 
 export type InsertUserType = z.infer<typeof insertUserSchema>;
 export type InsertNewsletterSubscriberType = z.infer<
