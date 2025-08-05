@@ -334,6 +334,18 @@ export const truthAuctions = pgTable(
 );
 
 // Type definitions
+// Capsule stats table for engagement analytics  
+export const capsuleStats = pgTable("capsule_stats", {
+  capsuleId: varchar("capsule_id").primaryKey(),
+  views: numeric("views").default("0"),
+  shares: numeric("shares").default("0"), 
+  unlocks: numeric("unlocks").default("0"),
+  lastViewedAt: timestamp("last_viewed_at").defaultNow(),
+}, (table) => [
+  index("idx_capsule_stats_views").on(table.views),
+  index("idx_capsule_stats_last_viewed").on(table.lastViewedAt),
+]);
+
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;
 export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect;
@@ -349,6 +361,10 @@ export type CapsuleVote = typeof capsuleVotes.$inferSelect;
 export type InsertCapsuleVote = typeof capsuleVotes.$inferInsert;
 export type TruthAuction = typeof truthAuctions.$inferSelect;
 export type InsertTruthAuction = typeof truthAuctions.$inferInsert;
+
+// Capsule stats types
+export type CapsuleStats = typeof capsuleStats.$inferSelect;
+export type InsertCapsuleStats = typeof capsuleStats.$inferInsert;
 
 // Extended types for UI compatibility
 export interface EnhancedCapsuleData extends Omit<Capsule, 'content'> {
@@ -400,10 +416,7 @@ export const userProfileUpdateSchema = z.object({
   profileImageUrl: z.string().url("Invalid profile image URL").optional(),
 });
 
-export type User = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
-export type UpdateUser = Partial<InsertUser>;
-export type UpsertUser = typeof users.$inferInsert;
+// Remove duplicate user type definitions - they are already defined above
 
 export type MediaFile = typeof mediaFiles.$inferSelect;
 export type InsertMediaFile = typeof mediaFiles.$inferInsert;

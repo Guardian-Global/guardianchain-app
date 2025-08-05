@@ -1,0 +1,110 @@
+✅ Plug Capsule Analytics into /capsule/[id] View
+1. Add CapsuleAnalyticsBlock to CapsuleViewPage
+components/analytics/CapsuleAnalyticsBlock.tsx
+
+tsx
+Copy
+Edit
+import CapsuleStatsGraph from "./CapsuleStatsGraph";
+import CapsuleTrendGraph from "./CapsuleTrendGraph";
+import CapsuleEngagementStats from "./CapsuleEngagementStats";
+import CapsuleAuditExport from "./CapsuleAuditExport";
+
+export default function CapsuleAnalyticsBlock({ capsuleId }) {
+  return (
+    <div className="bg-gradient-to-b from-slate-950 via-black to-slate-900 p-6 rounded-xl shadow-2xl mt-8">
+      <h2 className="text-2xl font-bold text-cyan-400 mb-4">📊 Capsule Analytics</h2>
+      <CapsuleEngagementStats capsuleId={capsuleId} />
+      <CapsuleStatsGraph capsuleId={capsuleId} />
+      <CapsuleTrendGraph capsuleId={capsuleId} />
+      <CapsuleAuditExport capsuleId={capsuleId} />
+    </div>
+  );
+}
+Then insert in your /capsule/[id] page:
+
+tsx
+Copy
+Edit
+<CapsuleAnalyticsBlock capsuleId={capsule.id} />
+✅ Add Export Button to Audit UI
+components/analytics/CapsuleAuditExport.tsx
+
+tsx
+Copy
+Edit
+export default function CapsuleAuditExport({ capsuleId }) {
+  const exportAudit = (format = "csv") => {
+    const url = `/api/capsule/audit/${capsuleId}?format=${format}`;
+    window.open(url, "_blank");
+  };
+
+  return (
+    <div className="mt-6 flex gap-4">
+      <button
+        onClick={() => exportAudit("csv")}
+        className="bg-cyan-500 text-black px-4 py-2 rounded-lg hover:bg-cyan-400"
+      >
+        ⬇️ Export CSV
+      </button>
+      <button
+        onClick={() => exportAudit("json")}
+        className="bg-cyan-700 text-white px-4 py-2 rounded-lg hover:bg-cyan-600"
+      >
+        ⬇️ Export JSON
+      </button>
+    </div>
+  );
+}
+✅ Auto-Tag Abnormal Interaction Spikes
+1. Update SQL to detect daily spikes
+Add this as a materialized view or run periodically:
+
+sql
+Copy
+Edit
+create or replace view capsule_interaction_spikes as
+select 
+  capsule_id,
+  day,
+  interactions,
+  lag(interactions) over (partition by capsule_id order by day) as prev_day,
+  case 
+    when interactions > (lag(interactions) over (partition by capsule_id order by day) * 2) 
+    then true else false 
+  end as is_spike
+from capsule_daily_interactions;
+You can then tag those records in UI or log to capsule_spikes table:
+
+ts
+Copy
+Edit
+if (is_spike) {
+  await supabase.from("capsule_spikes").insert({
+    capsule_id,
+    spike_date: new Date(),
+    cause: "Abnormal activity",
+  });
+}
+🔄 Optional: Highlight spikes in trend graph
+Add logic in CapsuleTrendGraph.tsx:
+
+tsx
+Copy
+Edit
+<Line
+  type="monotone"
+  dataKey="interactions"
+  stroke="#00ffe1"
+  strokeWidth={2}
+  dot={({ payload }) =>
+    payload.is_spike ? <circle r={5} fill="red" /> : null
+  }
+/>
+Ready to:
+
+📍 Track user-level engagement logs?
+
+📤 Share capsule analytics as public charts?
+
+🧠 Apply AI-based tagging of abnormal capsule behavior?

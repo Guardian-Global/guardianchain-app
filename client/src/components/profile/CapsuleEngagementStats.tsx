@@ -1,5 +1,8 @@
+// CapsuleEngagementStats.tsx — Real-time Capsule Analytics
+
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import useSWR from 'swr';
+import axios from 'axios';
 
 interface CapsuleEngagementStatsProps {
   capsuleId: string;
@@ -9,21 +12,21 @@ interface CapsuleStats {
   views: number;
   shares: number;
   unlocks: number;
-  gttEarned: number;
-  verifications: number;
-  lastActivity: string;
+  last_viewed_at: string;
 }
 
 export default function CapsuleEngagementStats({ capsuleId }: CapsuleEngagementStatsProps) {
-  const { data, error, isLoading } = useQuery<CapsuleStats>({
-    queryKey: [`/api/capsule/stats/${capsuleId}`],
-    enabled: !!capsuleId,
-    refetchInterval: 30000, // Refresh every 30 seconds
+  const { data, error } = useSWR<CapsuleStats>(`/api/capsule/stats/${capsuleId}`, async (url) => {
+    const res = await axios.get(url);
+    return res.data;
+  }, {
+    refreshInterval: 5000, // Refresh every 5 seconds for real-time updates
+    revalidateOnFocus: true,
   });
 
   if (error) return <div className="text-red-500">Error loading capsule stats</div>;
   
-  if (isLoading || !data) {
+  if (!data) {
     return (
       <div className="p-6 bg-[#0f0f0f] text-white rounded-xl shadow-md animate-pulse space-y-3">
         <div className="h-4 w-2/3 bg-[#1c1c1c] rounded"></div>
@@ -34,29 +37,37 @@ export default function CapsuleEngagementStats({ capsuleId }: CapsuleEngagementS
   }
 
   return (
-    <div className="bg-black p-6 rounded-xl text-white shadow-lg border border-[#30363d]">
-      <h3 className="text-xl font-semibold mb-2">Capsule Engagement</h3>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <span className="text-gray-400">Views</span>
-          <span className="text-[#00ffe1] font-bold">{data.views.toLocaleString()}</span>
+    <div className="bg-black p-6 rounded-xl text-white shadow-lg border border-slate-700 hover:border-cyan-500/50 transition-all duration-300">
+      <h3 className="text-xl font-semibold mb-4 text-cyan-400">Capsule Engagement</h3>
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400 flex items-center gap-2">
+            <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+            Views
+          </span>
+          <span className="text-[#00ffe1] font-bold text-lg">{data.views.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-gray-400">Shares</span>
-          <span className="text-[#00ffe1] font-bold">{data.shares.toLocaleString()}</span>
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400 flex items-center gap-2">
+            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+            Shares
+          </span>
+          <span className="text-[#00ffe1] font-bold text-lg">{data.shares.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-gray-400">Unlocks</span>
-          <span className="text-[#00ffe1] font-bold">{data.unlocks.toLocaleString()}</span>
+        <div className="flex justify-between items-center">
+          <span className="text-gray-400 flex items-center gap-2">
+            <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+            Unlocks
+          </span>
+          <span className="text-[#00ffe1] font-bold text-lg">{data.unlocks.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-gray-400">GTT Earned</span>
-          <span className="text-[#ff00d4] font-bold">{data.gttEarned?.toLocaleString() || 0}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-gray-400">Verifications</span>
-          <span className="text-purple-400 font-bold">{data.verifications?.toLocaleString() || 0}</span>
-        </div>
+        {data.last_viewed_at && (
+          <div className="mt-4 pt-3 border-t border-slate-600">
+            <span className="text-xs text-gray-500">
+              Last viewed: {new Date(data.last_viewed_at).toLocaleString()}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

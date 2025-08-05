@@ -53,6 +53,7 @@ import { Link } from "wouter";
 // Import existing profile components
 import ActivityTimeline from "./ActivityTimeline";
 import ProfileMediaUploader from "./ProfileMediaUploader";
+import CapsuleEngagementStats from './CapsuleEngagementStats';
 import { EnhancedSocialProfile } from "./EnhancedSocialProfile";
 
 // Import new interactive components

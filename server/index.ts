@@ -142,6 +142,10 @@ app.get("/api/logout", (req, res) => {
 import aiRoutes from "./routes/ai.js";
 app.use("/api/ai", aiRoutes);
 
+// Capsule stats routes for engagement analytics
+import capsuleStatsRoutes from "./routes/capsule/stats.js";
+app.use("/api/capsule", capsuleStatsRoutes);
+
 // Stripe checkout routes
 import checkoutRoutes from "./routes/checkout.js";
 app.use("/api/checkout", checkoutRoutes);

@@ -68,6 +68,7 @@ const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
+const CapsuleAnalyticsDemo = lazy(() => import("./pages/CapsuleAnalyticsDemo"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -180,6 +181,7 @@ function Router() {
               <Route path="/social-hub" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
+              <Route path="/analytics-demo" component={CapsuleAnalyticsDemo} />
               <Route path="/dao" component={DAO} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />
