@@ -1458,7 +1458,11 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
-  // Auth middleware - Setup Debug Auth for immediate testing
+  // Auth middleware - Setup consolidated authentication system
+  const { setupConsolidatedAuth } = await import("./auth/authConsolidation.js");
+  setupConsolidatedAuth(app);
+  
+  // Legacy auth systems for compatibility
   setupDebugAuth(app);
   setupEnhancedAuth(app);
 

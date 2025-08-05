@@ -63,6 +63,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
 const MascotDebug = lazy(() => import("@/components/MascotDebug"));
+const AuthDebugPanel = lazy(() => import("@/components/auth/AuthDebugPanel"));
+const OnboardingStatusChecker = lazy(() => import("@/components/onboarding/OnboardingStatusChecker"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -203,6 +205,16 @@ export default function App() {
                           {/* Debug Mascot to test visibility */}
                           <Suspense fallback={null}>
                             <MascotDebug />
+                          </Suspense>
+                          
+                          {/* Auth Debug Panel for development */}
+                          <Suspense fallback={null}>
+                            <AuthDebugPanel />
+                          </Suspense>
+                          
+                          {/* Onboarding Status Checker */}
+                          <Suspense fallback={null}>
+                            <OnboardingStatusChecker />
                           </Suspense>
                           <Suspense fallback={<div className="h-20 bg-slate-900" />}>
                             <GuardianMascotFooter />
