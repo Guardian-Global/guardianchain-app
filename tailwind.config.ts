@@ -23,14 +23,14 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        background: "#000814",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#00FFE0",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#1E293B",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -42,7 +42,7 @@ const config: Config = {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
+          DEFAULT: "#38BDF8",
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
@@ -53,7 +53,7 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Cyberpunk theme colors
+        // Enhanced cyberpunk theme colors
         "cyber-cyan": "#00ffe1",
         "cyber-magenta": "#ff00d4", 
         "cyber-purple": "#7c3aed",
@@ -63,6 +63,7 @@ const config: Config = {
         "truth-primary": "#00ffe1",
         "truth-secondary": "#ff00d4",
         "gtt-gold": "#ffd700",
+        "highlight": "#10B981",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -109,14 +110,23 @@ const config: Config = {
         "holographic": "holographic 4s ease-in-out infinite",
       },
       fontFamily: {
+        sans: ["Geist Variable", "Space Grotesk", "sans-serif"],
         mono: ["JetBrains Mono", "Fira Code", "Consolas", "monospace"],
+      },
+      boxShadow: {
+        glow: "0 0 25px #00FFE0",
+        inset: "inset 0 2px 12px #00FFE088",
       },
       backdropBlur: {
         xs: "2px",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/forms"), 
+    require("@tailwindcss/typography")
+  ],
 } satisfies Config;
 
 export default config;

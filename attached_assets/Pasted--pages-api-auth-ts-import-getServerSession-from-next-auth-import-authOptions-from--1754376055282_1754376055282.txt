@@ -1,0 +1,108 @@
+// pages/api/auth.ts
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
+
+export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ error: 'Not authenticated' });
+  res.status(200).json({ user: session.user });
+}
+
+// lib/authOptions.ts
+import { NextAuthOptions } from 'next-auth';
+import GitHubProvider from 'next-auth/providers/github';
+
+export const authOptions: NextAuthOptions = {
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET
+    })
+  ],
+  pages: {
+    signIn: '/onboarding'
+  }
+};
+
+// pages/onboarding.tsx
+import { signIn } from 'next-auth/react';
+
+export default function Onboarding() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#090909] to-[#161616] text-white">
+      <div className="p-10 bg-secondary rounded-2xl shadow-glow max-w-lg w-full text-center">
+        <img src="/guardian-mascot.png" alt="Mascot" className="h-20 mx-auto mb-6" />
+        <h1 className="text-3xl font-bold mb-4">Welcome to GuardianChain</h1>
+        <p className="mb-6 text-slate-300">Authenticate to preserve memory, access capsules, and control sovereignty.</p>
+        <button onClick={() => signIn('github')} className="px-6 py-3 bg-primary text-black font-semibold rounded-xl hover:bg-highlight transition">
+          Sign in with GitHub
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// lib/markdown.ts
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+
+export function getSectionContent(id) {
+  const filePath = path.join(process.cwd(), 'content', `section-${id}.mdx`);
+  const fileContent = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContent);
+  return { metadata: data, content };
+}
+
+// updated pages/section-[id].tsx
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+
+export default function SectionPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    if (id) {
+      fetch(`/api/mdx/${id}`).then(res => res.json()).then(data => setContent(data.content));
+    }
+  }, [id]);
+
+  return (
+    <div className="prose prose-invert max-w-4xl mx-auto bg-black bg-opacity-60 p-10 rounded-2xl shadow-xl">
+      <ReactMarkdown>{content}</ReactMarkdown>
+    </div>
+  );
+}
+
+// pages/api/mdx/[id].ts
+import { getSectionContent } from '@/lib/markdown';
+
+export default function handler(req, res) {
+  const {
+    query: { id }
+  } = req;
+  try {
+    const { content } = getSectionContent(id);
+    res.status(200).json({ content });
+  } catch (e) {
+    res.status(404).json({ error: 'Not found' });
+  }
+}
+
+// content/section-1.mdx (example)
+---
+title: "Memory Sovereignty"
+---
+
+GuardianChain is the first protocol to turn human memory into a sovereign digital asset. This section covers the framework behind digital authorship rights.
+
+> Your memory, your control. Forever.
+
+You can include **bold text**, `code`, and all Markdown features here.
+
+---
+
+// ✅ Now ready to be bundled for Replit ZIP export with authentication, dynamic nav, and mdx-driven capsule sections

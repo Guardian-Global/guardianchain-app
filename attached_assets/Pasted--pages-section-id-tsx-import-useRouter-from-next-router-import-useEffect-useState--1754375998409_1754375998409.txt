@@ -1,0 +1,82 @@
+// pages/section-[id].tsx
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+export default function SectionPage() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [sectionContent, setSectionContent] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      fetch(`/api/sections/${id}`)
+        .then(res => res.json())
+        .then(data => setSectionContent(data.content))
+        .catch(() => setSectionContent("Error loading section."));
+    }
+  }, [id]);
+
+  return (
+    <div className="p-10 max-w-4xl mx-auto bg-gradient-to-br from-black to-background rounded-3xl shadow-2xl">
+      <h1 className="text-4xl font-extrabold text-primary mb-6">Section {id}</h1>
+      <p className="text-slate-200 text-lg leading-relaxed whitespace-pre-wrap">
+        {sectionContent || "Loading..."}
+      </p>
+    </div>
+  );
+}
+
+// components/Sidebar.tsx
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+
+export default function Sidebar() {
+  const [sections, setSections] = useState<number[]>([]);
+
+  useEffect(() => {
+    fetch('/api/sidebar')
+      .then(res => res.json())
+      .then(data => setSections(data.ids))
+      .catch(() => setSections([]));
+  }, []);
+
+  return (
+    <aside className="w-72 bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-slate-100 p-6 border-r border-slate-800 hidden lg:block">
+      <h2 className="text-xl font-bold text-cyan-400 mb-4">🧭 Navigation</h2>
+      <ul className="space-y-2 overflow-y-auto max-h-[90vh] scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
+        {sections.map(id => (
+          <li key={id}>
+            <Link href={`/section-${id}`} className="block py-2 px-4 rounded-lg hover:bg-cyan-800 hover:text-white transition">
+              📘 Section {id}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
+// api/sidebar.ts
+export default function handler(req, res) {
+  const sectionIds = Array.from({ length: 200 }, (_, i) => i + 1);
+  res.status(200).json({ ids: sectionIds });
+}
+
+// api/sections/[id].ts
+export default function handler(req, res) {
+  const {
+    query: { id }
+  } = req;
+  res.status(200).json({ content: `This is the dynamically loaded content for Section ${id}. You can extend this from Supabase, markdown files, or CMS.` });
+}
+
+// mascott placeholder in Footer
+// components/Footer.tsx
+export default function Footer() {
+  return (
+    <footer className="py-6 px-6 text-sm text-slate-400 text-center border-t border-slate-700 flex flex-col gap-2 items-center">
+      <img src="/guardian-mascot.png" alt="Guardian Mascot" className="h-10" />
+      &copy; 2025 GuardianChain. Sovereign Memory Infrastructure.
+    </footer>
+  );
+}

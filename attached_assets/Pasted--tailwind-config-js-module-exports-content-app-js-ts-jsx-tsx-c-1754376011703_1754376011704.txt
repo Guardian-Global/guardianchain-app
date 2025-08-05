@@ -1,0 +1,168 @@
+// tailwind.config.js
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "#000814",
+        primary: "#00FFE0",
+        secondary: "#1E293B",
+        accent: "#38BDF8",
+        highlight: "#10B981"
+      },
+      fontFamily: {
+        sans: ["Geist Variable", "Space Grotesk", "sans-serif"]
+      },
+      boxShadow: {
+        glow: "0 0 25px #00FFE0",
+        inset: "inset 0 2px 12px #00FFE088"
+      },
+      container: {
+        center: true,
+        padding: "2rem"
+      }
+    }
+  },
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")]
+};
+
+// styles/globals.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-background text-white font-sans antialiased;
+}
+
+// app/_app.tsx
+import "@/styles/globals.css";
+import Layout from "@/components/Layout";
+
+export default function App({ Component, pageProps }) {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+}
+
+// components/Layout.tsx
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import Footer from "./Footer";
+
+export default function Layout({ children }) {
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Navbar />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 px-8 py-12 overflow-y-auto max-w-7xl mx-auto">
+          {children}
+        </main>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+// components/Navbar.tsx
+export default function Navbar() {
+  return (
+    <header className="w-full py-5 px-10 shadow-glow flex justify-between items-center">
+      <h1 className="text-3xl font-bold text-primary tracking-wide">GUARDIANCHAIN</h1>
+      <nav className="space-x-6 text-sm">
+        <a href="/" className="hover:text-highlight">Home</a>
+        <a href="/about" className="hover:text-highlight">About</a>
+        <a href="/features" className="hover:text-highlight">Features</a>
+        <a href="/capsules" className="hover:text-highlight">Capsules</a>
+        <a href="/dao" className="hover:text-highlight">DAO</a>
+      </nav>
+    </header>
+  );
+}
+
+// components/Sidebar.tsx
+export default function Sidebar() {
+  return (
+    <aside className="w-64 bg-secondary text-slate-300 p-6 space-y-4 border-r border-slate-800 hidden lg:block">
+      <h2 className="text-lg font-semibold text-accent">Site Navigation</h2>
+      <ul className="space-y-2 text-sm">
+        {[...Array(20)].map((_, i) => (
+          <li key={i}>
+            <a href={`/section-${i + 1}`} className="hover:text-primary">
+              Section {i + 1}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
+// components/Footer.tsx
+export default function Footer() {
+  return (
+    <footer className="py-6 px-6 text-sm text-slate-400 text-center border-t border-slate-700">
+      &copy; 2025 GuardianChain. Sovereign Memory Infrastructure. All rights reserved.
+    </footer>
+  );
+}
+
+// components/HeroSection.tsx
+export default function HeroSection() {
+  return (
+    <section className="text-center mt-24 max-w-4xl mx-auto">
+      <h2 className="text-5xl font-extrabold text-primary drop-shadow-glow tracking-tight">
+        GuardianChain
+      </h2>
+      <p className="mt-6 text-2xl text-slate-300 leading-relaxed">
+        The sovereign memory chain. Immutable. AI-powered. Yours forever.
+      </p>
+    </section>
+  );
+}
+
+// components/CoreFeatures.tsx
+export default function CoreFeatures() {
+  return (
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-20 text-center">
+      <div className="bg-secondary p-8 rounded-xl shadow-inset hover:shadow-glow transition">
+        <h3 className="text-2xl font-bold text-accent">Quantum Truth</h3>
+        <p className="text-slate-300 mt-4">
+          Quantum-secured truth preservation & zero-trust testimony logs.
+        </p>
+      </div>
+      <div className="bg-secondary p-8 rounded-xl shadow-inset hover:shadow-glow transition">
+        <h3 className="text-2xl font-bold text-accent">AI Authorship</h3>
+        <p className="text-slate-300 mt-4">
+          Veritas-powered capsule authorship with grief score authentication.
+        </p>
+      </div>
+      <div className="bg-secondary p-8 rounded-xl shadow-inset hover:shadow-glow transition">
+        <h3 className="text-2xl font-bold text-accent">Multi-Chain</h3>
+        <p className="text-slate-300 mt-4">
+          Deployed across Base, Polygon, and Arbitrum with GTT-powered yield.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// pages/index.tsx
+import HeroSection from "@/components/HeroSection";
+import CoreFeatures from "@/components/CoreFeatures";
+
+export default function HomePage() {
+  return (
+    <>
+      <HeroSection />
+      <CoreFeatures />
+    </>
+  );
+}

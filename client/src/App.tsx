@@ -37,7 +37,7 @@ const Terms = lazy(() => import("@/pages/terms"));
 const Pricing = lazy(() => import("@/pages/pricing"));
 const Subscribe = lazy(() => import("@/pages/Subscribe"));
 const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
-const Tokenomics = lazy(() => import("@/pages/tokenomics"));
+const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
 const RevenueExplainer = lazy(() => import("@/pages/RevenueExplainer"));
 const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
@@ -59,6 +59,7 @@ const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
+const SectionPage = lazy(() => import("@/pages/section/[id]"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
@@ -67,6 +68,15 @@ const AuthDebugPanel = lazy(() => import("@/components/auth/AuthDebugPanel"));
 const OnboardingStatusChecker = lazy(() => import("@/components/onboarding/OnboardingStatusChecker"));
 const ComprehensiveAuthFlow = lazy(() => import("@/components/auth/ComprehensiveAuthFlow"));
 const FullAppDebugger = lazy(() => import("@/components/debug/FullAppDebugger"));
+
+// Lazy load specific components
+const LandingPage = lazy(() => import("@/pages/LandingPage"));
+const OnboardingFlow = lazy(() => import("@/pages/OnboardingFlow"));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const CapsulePreviewTest = lazy(() => import("@/pages/CapsulePreviewTest"));
+const EnhancementShowcase = lazy(() => import("@/pages/EnhancementShowcase"));
+const UserProfile = lazy(() => import("@/pages/UserProfile"));
+const EnhancedOnboarding = lazy(() => import("@/pages/enhanced-onboarding"));
 
 function Router() {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -84,16 +94,16 @@ function Router() {
   if (!isAuthenticated) {
     return (
       <Switch>
-        <Route path="/" component={() => import("@/pages/LandingPage").then(m => m.default)} />
-        <Route path="/onboarding" component={() => import("@/pages/OnboardingFlow").then(m => m.default)} />
-        <Route path="/login" component={() => import("@/pages/LoginPage").then(m => m.default)} />
+        <Route path="/" component={LandingPage} />
+        <Route path="/onboarding" component={OnboardingFlow} />
+        <Route path="/login" component={LoginPage} />
         <Route path="/elite" component={EliteHomepage} />
         <Route path="/explorer" component={Explorer} />
         <Route path="/terms" component={Terms} />
         <Route path="/start" component={Start} />
         <Route path="/pricing" component={Pricing} />
         <Route path="/subscribe/:tier" component={Subscribe} />
-        <Route component={() => import("@/pages/LandingPage").then(m => m.default)} />
+        <Route component={LandingPage} />
       </Switch>
     );
   }
@@ -120,7 +130,7 @@ function Router() {
             }
           >
             <Switch>
-              <Route path="/enhanced-onboarding" component={() => import("@/pages/enhanced-onboarding").then(m => m.default)} />
+              <Route path="/enhanced-onboarding" component={EnhancedOnboarding} />
               <Route path="/dashboard" component={EnhancedDashboard} />
               <Route path="/enterprise" component={EnterpriseCenter} />
               <Route path="/tokenomics" component={Tokenomics} />
@@ -156,9 +166,10 @@ function Router() {
               <Route path="/social" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
-              <Route path="/test-preview" component={() => import("@/pages/CapsulePreviewTest").then(m => m.default)} />
-              <Route path="/enhancements" component={() => import("@/pages/EnhancementShowcase").then(m => m.default)} />
-              <Route path="/profile" component={() => import("@/pages/UserProfile").then(m => m.default)} />
+              <Route path="/section/:id" component={SectionPage} />
+              <Route path="/test-preview" component={CapsulePreviewTest} />
+              <Route path="/enhancements" component={EnhancementShowcase} />
+              <Route path="/profile" component={UserProfile} />
               <Route path="/social-profile">
                 {() => {
                   const EnhancedSocialProfile = lazy(() => import("@/components/profile/EnhancedSocialProfile").then(m => ({ default: m.EnhancedSocialProfile })));

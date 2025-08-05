@@ -1,0 +1,114 @@
+// ✅ NFT Minting Smart Contract (Solidity)
+// contracts/CapsuleNFT.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract CapsuleNFT is ERC721URIStorage, Ownable {
+    uint256 public nextTokenId;
+
+    constructor() ERC721("GuardianCapsule", "GCAP") {}
+
+    function mint(address to, string memory tokenURI) public onlyOwner returns (uint256) {
+        uint256 tokenId = nextTokenId;
+        _mint(to, tokenId);
+        _setTokenURI(tokenId, tokenURI);
+        nextTokenId++;
+        return tokenId;
+    }
+}
+
+// ✅ Capsule Mint API
+// pages/api/mint.ts
+import { ethers } from 'ethers';
+import CapsuleNFT from '@/contracts/CapsuleNFT.json';
+
+export default async function handler(req, res) {
+  const { to, tokenURI } = req.body;
+  const provider = new ethers.JsonRpcProvider(process.env.ALCHEMY_URL);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  const contract = new ethers.Contract(process.env.NFT_CONTRACT_ADDR, CapsuleNFT.abi, wallet);
+
+  try {
+    const tx = await contract.mint(to, tokenURI);
+    await tx.wait();
+    res.status(200).json({ success: true, txHash: tx.hash });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// ✅ IPFS Audit Log Viewer — pages/audit.tsx
+import { useEffect, useState } from 'react';
+
+export default function AuditLog() {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    fetch('https://api.nft.storage/check/guardian-audit-logs')
+      .then(res => res.json())
+      .then(data => setLogs(data.value || []));
+  }, []);
+
+  return (
+    <div className="max-w-5xl mx-auto py-10 px-6">
+      <h1 className="text-3xl font-bold mb-6">📜 IPFS Capsule Audit Logs</h1>
+      <ul className="space-y-4 text-sm">
+        {logs.map((log, idx) => (
+          <li key={idx} className="bg-slate-800 p-4 rounded-lg text-white">
+            <p><strong>Capsule:</strong> {log.name}</p>
+            <p><strong>Uploaded:</strong> {new Date(log.created).toLocaleString()}</p>
+            <p><strong>IPFS:</strong> <a className="text-cyan-400 underline" href={`https://ipfs.io/ipfs/${log.cid}`} target="_blank">{log.cid}</a></p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// ✅ Capsule Unlock Transaction Explorer — pages/unlocks.tsx
+import { useEffect, useState } from 'react';
+
+export default function UnlockExplorer() {
+  const [txs, setTxs] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/unlocks').then(res => res.json()).then(data => setTxs(data));
+  }, []);
+
+  return (
+    <div className="max-w-6xl mx-auto p-10">
+      <h1 className="text-3xl font-bold mb-6">🔓 Capsule Unlock Explorer</h1>
+      <table className="w-full text-left text-white">
+        <thead>
+          <tr className="border-b border-slate-600">
+            <th className="py-2">Capsule ID</th>
+            <th className="py-2">Unlocker</th>
+            <th className="py-2">Date</th>
+            <th className="py-2">Tx Hash</th>
+          </tr>
+        </thead>
+        <tbody>
+          {txs.map((tx, idx) => (
+            <tr key={idx} className="border-b border-slate-700">
+              <td className="py-2">{tx.capsuleId}</td>
+              <td className="py-2">{tx.user}</td>
+              <td className="py-2">{new Date(tx.timestamp).toLocaleString()}</td>
+              <td className="py-2 text-cyan-400"><a href={`https://polygonscan.com/tx/${tx.txHash}`} target="_blank">{tx.txHash.slice(0, 12)}...</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ✅ /api/unlocks.ts (Simulated data, ready for db/smart contract logging)
+export default function handler(req, res) {
+  res.status(200).json([
+    { capsuleId: '42', user: '0xF2...8E9', timestamp: Date.now(), txHash: '0xa8b3...' },
+    { capsuleId: '77', user: '0xD3...1B0', timestamp: Date.now() - 86400000, txHash: '0xbf34...' }
+  ]);
+}

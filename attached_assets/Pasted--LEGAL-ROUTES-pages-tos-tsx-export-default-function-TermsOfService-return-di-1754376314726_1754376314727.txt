@@ -1,0 +1,140 @@
+// ✅ LEGAL ROUTES
+// pages/tos.tsx
+export default function TermsOfService() {
+  return (
+    <div className="prose prose-invert max-w-5xl mx-auto p-10">
+      <h1>Terms of Service</h1>
+      <p>By using GuardianChain, you agree to uphold all community trust, sovereign truth principles, and capsule integrity outlined in Veritas Protocol.</p>
+      <ul>
+        <li>No tampering of chain-stored memory</li>
+        <li>Zero tolerance for impersonation or forgery</li>
+        <li>Usage is subject to immutable authorship records</li>
+      </ul>
+    </div>
+  );
+}
+
+// pages/privacy.tsx
+export default function PrivacyPolicy() {
+  return (
+    <div className="prose prose-invert max-w-5xl mx-auto p-10">
+      <h1>Privacy Policy</h1>
+      <p>GuardianChain does not sell or share your memory capsules. All authorship and metadata are sovereign by design.</p>
+      <ul>
+        <li>No ad tracking or third-party behavioral collection</li>
+        <li>Encrypted storage via IPFS + SealChain</li>
+        <li>Veritas Capsule access is opt-in</li>
+      </ul>
+    </div>
+  );
+}
+
+// pages/disclosure.tsx
+export default function DisclosurePolicy() {
+  return (
+    <div className="prose prose-invert max-w-5xl mx-auto p-10">
+      <h1>Transparency Disclosure</h1>
+      <p>All system logic, validator rewards, capsule claims, and tokenomics are disclosed under Veritas Certificate ID: VCW–00000.</p>
+      <ul>
+        <li>DAO votes are publicly logged and signed</li>
+        <li>All protocol emissions are on-chain auditable</li>
+        <li>Revenue share flows visible in DAO config</li>
+      </ul>
+    </div>
+  );
+}
+
+// ✅ DAO CONFIG DASHBOARD
+// pages/dao.tsx
+import { useState } from 'react';
+
+const initialConfig = {
+  voteQuorum: 66,
+  payoutSplit: {
+    authors: 60,
+    witnesses: 10,
+    treasury: 30
+  },
+  maxCapsuleSizeMB: 500,
+  emergencyUnlockThreshold: 3
+};
+
+export default function DAODashboard() {
+  const [config, setConfig] = useState(initialConfig);
+
+  const updateValue = (path, value) => {
+    const keys = path.split('.');
+    const newConfig = { ...config };
+    let obj = newConfig;
+    while (keys.length > 1) obj = obj[keys.shift()];
+    obj[keys[0]] = value;
+    setConfig({ ...newConfig });
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto p-10">
+      <h1 className="text-3xl font-bold mb-4">🗳 DAO Configuration Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <label className="block">
+          <span className="text-slate-300">Vote Quorum (%)</span>
+          <input
+            type="number"
+            value={config.voteQuorum}
+            onChange={(e) => updateValue('voteQuorum', parseInt(e.target.value))}
+            className="mt-1 w-full rounded bg-slate-900 border border-slate-700 text-white px-4 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-slate-300">Max Capsule Size (MB)</span>
+          <input
+            type="number"
+            value={config.maxCapsuleSizeMB}
+            onChange={(e) => updateValue('maxCapsuleSizeMB', parseInt(e.target.value))}
+            className="mt-1 w-full rounded bg-slate-900 border border-slate-700 text-white px-4 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-slate-300">Emergency Unlock Threshold</span>
+          <input
+            type="number"
+            value={config.emergencyUnlockThreshold}
+            onChange={(e) => updateValue('emergencyUnlockThreshold', parseInt(e.target.value))}
+            className="mt-1 w-full rounded bg-slate-900 border border-slate-700 text-white px-4 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-slate-300">Author Split (%)</span>
+          <input
+            type="number"
+            value={config.payoutSplit.authors}
+            onChange={(e) => updateValue('payoutSplit.authors', parseInt(e.target.value))}
+            className="mt-1 w-full rounded bg-slate-900 border border-slate-700 text-white px-4 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-slate-300">Witness Split (%)</span>
+          <input
+            type="number"
+            value={config.payoutSplit.witnesses}
+            onChange={(e) => updateValue('payoutSplit.witnesses', parseInt(e.target.value))}
+            className="mt-1 w-full rounded bg-slate-900 border border-slate-700 text-white px-4 py-2"
+          />
+        </label>
+
+        <label className="block">
+          <span className="text-slate-300">Treasury Split (%)</span>
+          <input
+            type="number"
+            value={config.payoutSplit.treasury}
+            onChange={(e) => updateValue('payoutSplit.treasury', parseInt(e.target.value))}
+            className="mt-1 w-full rounded bg-slate-900 border border-slate-700 text-white px-4 py-2"
+          />
+        </label>
+      </div>
+    </div>
+  );
+}

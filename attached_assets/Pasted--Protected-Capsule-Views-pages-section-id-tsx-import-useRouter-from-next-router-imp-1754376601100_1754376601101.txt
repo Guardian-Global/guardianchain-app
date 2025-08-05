@@ -1,0 +1,71 @@
+// ✅ Protected Capsule Views — pages/section-[id].tsx
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+
+export default function SectionPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const { id } = router.query;
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    if (!id || status !== 'authenticated') return;
+    fetch(`/api/mdx/${id}`).then(res => res.json()).then(data => setContent(data.content));
+  }, [id, status]);
+
+  if (status === 'loading') return <p className="text-center text-white">🔐 Checking session...</p>;
+  if (status === 'unauthenticated') return <p className="text-center text-red-500">⛔ Login required to view this capsule.</p>;
+
+  return (
+    <div className="prose prose-invert max-w-4xl mx-auto bg-black bg-opacity-60 p-10 rounded-2xl shadow-xl">
+      <ReactMarkdown>{content}</ReactMarkdown>
+    </div>
+  );
+}
+
+// ✅ Supabase → Local File Sync — pages/api/sync.ts
+import fs from 'fs';
+import path from 'path';
+import { supabase } from '@/lib/supabase';
+
+export default async function handler(req, res) {
+  const { data, error } = await supabase.from('capsules').select('*');
+  if (error) return res.status(500).json({ error: error.message });
+
+  data.forEach(({ id, content }) => {
+    const filePath = path.join(process.cwd(), 'content', `section-${id}.mdx`);
+    fs.writeFileSync(filePath, `---\ntitle: Capsule ${id}\n---\n\n${content}`);
+  });
+
+  res.status(200).json({ success: true, synced: data.length });
+}
+
+// ✅ Export Capsule as PDF/NFT/IPFS — pages/api/export.ts
+import { PDFDocument } from 'pdf-lib';
+import { supabase } from '@/lib/supabase';
+import { NFTStorage, File } from 'nft.storage';
+
+export default async function handler(req, res) {
+  const { id } = req.query;
+  const { data, error } = await supabase.from('capsules').select('*').eq('id', id).single();
+  if (error) return res.status(500).json({ error: error.message });
+
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([600, 800]);
+  page.drawText(data.content || 'Empty capsule', { x: 50, y: 750, size: 12 });
+  const pdfBytes = await pdfDoc.save();
+
+  const nftClient = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
+  const ipfsFile = await nftClient.store({
+    name: `Capsule-${id}`,
+    description: 'GuardianChain Capsule Export',
+    image: new File([pdfBytes], `capsule-${id}.pdf`, { type: 'application/pdf' })
+  });
+
+  res.status(200).json({ ipfsUrl: `https://ipfs.io/ipfs/${ipfsFile.ipnft}/capsule-${id}.pdf` });
+}
+
+// 📩 Optional: Email PDF using external service like Resend, Mailgun, or Postmark
+// → This can be added with secure SMTP or email API bindings as next step.
