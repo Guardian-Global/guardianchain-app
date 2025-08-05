@@ -32,9 +32,10 @@ interface MediaFile {
 
 interface MediaGalleryProps {
   userId: string;
+  showUploadButton?: boolean;
 }
 
-export default function MediaGallery({ userId }: MediaGalleryProps) {
+export default function MediaGallery({ userId, showUploadButton = true }: MediaGalleryProps) {
   const [showUploader, setShowUploader] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaFile | null>(null);
   const { toast } = useToast();

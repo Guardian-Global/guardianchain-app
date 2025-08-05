@@ -1948,6 +1948,54 @@ Verification Status: Authenticated via Veritas Certificate Engine
     }
   });
 
+  // Get public profile by username (no auth required)
+  app.get('/api/profile/public/:username', async (req, res) => {
+    try {
+      const username = req.params.username;
+      
+      // Mock profile data - in production this would query the database
+      const mockProfile = {
+        id: "public-user-" + username,
+        email: `${username}@guardianchain.com`,
+        firstName: username.charAt(0).toUpperCase() + username.slice(1),
+        lastName: "Guardian",
+        profileImageUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
+        bio: `Guardian ${username} is a truth seeker and blockchain enthusiast dedicated to preserving authentic information for future generations.`,
+        tier: "CREATOR",
+        gttBalance: Math.floor(Math.random() * 5000) + 1000,
+        truthScore: Math.floor(Math.random() * 100) + 50,
+        verifiedCapsules: Math.floor(Math.random() * 50) + 10,
+        createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+        location: "Global Guardian Network",
+        website: `https://${username}.guardianchain.com`,
+        socialLinks: {
+          twitter: `https://twitter.com/${username}`,
+          github: `https://github.com/${username}`,
+          linkedin: `https://linkedin.com/in/${username}`
+        },
+        achievements: [
+          "Truth Keeper",
+          "Blockchain Pioneer", 
+          "Community Guardian",
+          "Verified Creator"
+        ],
+        isPublic: true
+      };
+
+      res.json({ 
+        success: true, 
+        profile: mockProfile 
+      });
+      console.log(`👤 Public profile served for username: ${username}`);
+    } catch (error) {
+      console.error('Error fetching public profile:', error);
+      res.status(404).json({ 
+        success: false, 
+        error: 'Profile not found' 
+      });
+    }
+  });
+
   // Media API endpoints for profile gallery
   app.post('/api/media', consolidatedAuth, async (req: any, res) => {
     try {

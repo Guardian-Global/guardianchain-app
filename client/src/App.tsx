@@ -75,6 +75,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
 const CapsuleBrowser = lazy(() => import("./pages/CapsuleBrowser"));
 const CapsuleDetail = lazy(() => import("./pages/CapsuleDetail"));
+const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 const Claim = lazy(() => import("./pages/Claim"));
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
@@ -146,6 +147,7 @@ function Router() {
               <Route path="/claim" component={Claim} />
               <Route path="/profile/ultimate" component={UltimateProfile} />
               <Route path="/profile/enhanced" component={EnhancedProfilePage} />
+              <Route path="/profile/:username" component={PublicProfile} />
               <Route path="/truth-genome" component={TruthGenome} />
               <Route path="/truth-net" component={TruthNet} />
               <Route path="/start" component={Start} />
