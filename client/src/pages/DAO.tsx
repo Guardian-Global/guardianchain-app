@@ -272,21 +272,38 @@ export default function DAO() {
                     GUARDIAN DAO
                   </motion.h1>
                   <motion.div 
-                    className="text-xs text-[#00ffe1] font-mono tracking-[0.3em] mb-3 opacity-80"
+                    className="text-xs text-[#00ffe1] font-mono tracking-[0.2em] mb-4 opacity-80"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.8 }}
                     transition={{ duration: 1, delay: 0.7 }}
                   >
-                    QUANTUM • GOVERNANCE • PROTOCOL
+                    <span className="inline-block mr-2">QUANTUM</span>
+                    <span className="opacity-60 mr-2">•</span>
+                    <span className="inline-block mr-2">GOVERNANCE</span>
+                    <span className="opacity-60 mr-2">•</span>
+                    <span className="inline-block">PROTOCOL</span>
                   </motion.div>
-                  <motion.p 
-                    className="text-xl text-[#8b949e] max-w-3xl leading-relaxed"
+                  <motion.div 
+                    className="space-y-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 0.9 }}
                   >
-                    Decentralized sovereign governance for the truth vault ecosystem. Cast quantum-verified votes, shape protocol evolution, and earn rewards for your participation in the future of truth.
-                  </motion.p>
+                    <p className="text-lg text-[#8b949e] max-w-3xl leading-relaxed font-light">
+                      Decentralized sovereign governance for the truth vault ecosystem.
+                    </p>
+                    <div className="flex flex-wrap gap-2 text-sm">
+                      <span className="px-3 py-1 rounded-full bg-[#00ffe1]/10 text-[#00ffe1] border border-[#00ffe1]/20 font-medium">
+                        Quantum-Verified Votes
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-[#ff00d4]/10 text-[#ff00d4] border border-[#ff00d4]/20 font-medium">
+                        Protocol Evolution
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-[#7c3aed]/10 text-[#7c3aed] border border-[#7c3aed]/20 font-medium">
+                        Truth Rewards
+                      </span>
+                    </div>
+                  </motion.div>
                 </div>
               </div>
               
@@ -354,28 +371,42 @@ export default function DAO() {
                   boxShadow: `0 0 30px ${stat.color}40`
                 }}
               >
-                <Card className={`bg-gradient-to-br ${stat.gradient} backdrop-blur-sm border border-[#30363d] hover:border-[${stat.color}]/50 transition-all duration-300 group overflow-hidden relative`}>
+                <Card className="bg-gradient-to-br from-[#161b22]/80 to-[#0d1117]/80 backdrop-blur-sm border border-[#30363d] hover:border-[#30363d]/80 transition-all duration-300 group overflow-hidden relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20" />
                   <CardContent className="p-6 relative z-10">
                     <div className="flex items-center justify-between mb-4">
                       <motion.div
-                        className={`w-12 h-12 rounded-xl bg-gradient-to-br from-[${stat.color}]/20 to-[${stat.color}]/40 flex items-center justify-center`}
-                        whileHover={{ rotate: 360 }}
+                        className="w-12 h-12 rounded-xl bg-[#161b22]/60 border border-[#30363d]/50 flex items-center justify-center backdrop-blur-sm"
+                        whileHover={{ rotate: 360, scale: 1.1 }}
                         transition={{ duration: 0.8 }}
+                        style={{ 
+                          boxShadow: `0 0 20px ${stat.color}30`
+                        }}
                       >
-                        <stat.icon className={`w-6 h-6 text-[${stat.color}]`} />
+                        <stat.icon 
+                          className="w-6 h-6" 
+                          style={{ color: stat.color }}
+                        />
                       </motion.div>
                       <TrendingUp className="w-4 h-4 text-[#10b981] opacity-60" />
                     </div>
                     <div>
-                      <p className="text-sm text-[#8b949e] mb-1 font-medium">{stat.label}</p>
-                      <p className={`text-3xl font-bold text-[${stat.color}] font-[Orbitron] mb-1`}>{stat.value}</p>
+                      <p className="text-sm text-[#8b949e] mb-2 font-medium">{stat.label}</p>
+                      <p 
+                        className="text-3xl font-bold font-[Orbitron] mb-2"
+                        style={{ color: stat.color }}
+                      >
+                        {stat.value}
+                      </p>
                       <p className="text-xs text-[#8b949e] opacity-80">{stat.subtext}</p>
                     </div>
                     
-                    {/* Pulse effect */}
+                    {/* Enhanced pulse effect */}
                     <motion.div 
-                      className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r from-[${stat.color}] to-transparent`}
+                      className="absolute bottom-0 left-0 h-1 rounded-full"
+                      style={{ 
+                        background: `linear-gradient(to right, ${stat.color}, transparent)`
+                      }}
                       animate={{ width: ["0%", "100%", "0%"] }}
                       transition={{ duration: 3, repeat: Infinity, delay: index * 0.5 }}
                     />
@@ -403,18 +434,24 @@ export default function DAO() {
                     <TabsTrigger 
                       key={tab.value}
                       value={tab.value} 
-                      className={`
-                        relative px-6 py-3 rounded-lg transition-all duration-300 
-                        data-[state=active]:bg-gradient-to-r data-[state=active]:from-[${tab.color}]/20 data-[state=active]:to-[${tab.color}]/10
-                        data-[state=active]:text-[${tab.color}] data-[state=active]:shadow-[0_0_20px_${tab.color}40]
-                        text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#30363d]/50
-                      `}
+                      className="relative px-6 py-3 rounded-lg transition-all duration-300 text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#30363d]/50"
+                      style={{
+                        ...(selectedTab === tab.value && {
+                          background: `linear-gradient(135deg, ${tab.color}20, ${tab.color}10)`,
+                          borderColor: `${tab.color}60`,
+                          boxShadow: `0 0 20px ${tab.color}30`,
+                          color: tab.color
+                        })
+                      }}
                     >
-                      <tab.icon className="w-5 h-5 mr-2" />
-                      {tab.label}
+                      <div className="flex items-center gap-2">
+                        <tab.icon className="w-5 h-5" />
+                        <span>{tab.label}</span>
+                      </div>
                       {selectedTab === tab.value && (
                         <motion.div 
-                          className={`absolute bottom-0 left-0 right-0 h-0.5 bg-[${tab.color}] rounded-full`}
+                          className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                          style={{ backgroundColor: tab.color }}
                           layoutId="activeTab"
                         />
                       )}
