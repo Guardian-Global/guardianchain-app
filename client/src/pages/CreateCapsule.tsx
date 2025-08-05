@@ -7,6 +7,7 @@ import CapsuleCreationWizard from '@/components/capsule/CapsuleCreationWizard';
 import QuickCreateCapsule from '@/components/capsule/QuickCreateCapsule';
 import CapsulePreviewModal from '@/components/capsule/CapsulePreviewModal';
 import CapsuleAnalytics from '@/components/capsule/CapsuleAnalytics';
+import CapsuleEnhancementAnalyzer from '@/components/capsule/CapsuleEnhancementAnalyzer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -102,6 +103,7 @@ const CreateCapsule: React.FC = () => {
   const [showModeSelection, setShowModeSelection] = useState(true);
   const [activeTab, setActiveTab] = useState('create');
   const [analyticsTimeframe, setAnalyticsTimeframe] = useState<'week' | 'month' | 'year'>('week');
+  const [currentContent, setCurrentContent] = useState<string>('');
   
   const { user } = useAuth();
   const { toast } = useToast();
@@ -278,7 +280,7 @@ const CreateCapsule: React.FC = () => {
             </motion.div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-gray-800/50">
+              <TabsList className="grid w-full grid-cols-5 bg-gray-800/50">
                 <TabsTrigger 
                   value="create" 
                   className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300"
@@ -294,6 +296,14 @@ const CreateCapsule: React.FC = () => {
                 >
                   <Brain className="w-4 h-4 mr-2" />
                   AI Insights
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="enhance" 
+                  className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-300"
+                  data-testid="tab-enhance"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  Enhance
                 </TabsTrigger>
                 <TabsTrigger 
                   value="analytics" 
@@ -573,6 +583,16 @@ const CreateCapsule: React.FC = () => {
                       ))}
                     </CardContent>
                   </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="enhance" className="space-y-6">
+                <motion.div variants={itemVariants}>
+                  <CapsuleEnhancementAnalyzer
+                    content={currentContent || ''}
+                    onEnhancementApplied={(enhanced) => setCurrentContent(enhanced)}
+                    autoAnalyze={true}
+                  />
                 </motion.div>
               </TabsContent>
 
