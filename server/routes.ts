@@ -22,6 +22,7 @@ import { registerSubscriptionRoutes } from "./routes/subscription";
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
+import ultraBulkRoutes from "./routes/ultra-bulk";
 import { runCapsuleClustering, getCachedClusteringResults, generateClusterInsights } from "./api/capsule-clustering";
 import multer from "multer";
 import {
@@ -1462,6 +1463,9 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   // Register super bulk routes
   app.use('/api/bulk', superBulkRoutes);
+  
+  // Register ultra bulk routes
+  app.use('/api/bulk', ultraBulkRoutes);
 
   // Simple subscription status - no database calls
   app.get(
