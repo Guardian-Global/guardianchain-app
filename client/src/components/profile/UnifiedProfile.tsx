@@ -54,6 +54,13 @@ import { Link } from "wouter";
 import ActivityTimeline from "./ActivityTimeline";
 import ProfileMediaUploader from "./ProfileMediaUploader";
 import { EnhancedSocialProfile } from "./EnhancedSocialProfile";
+
+// Import new interactive components
+import { InteractiveAchievementBadges } from "./InteractiveAchievementBadges";
+import { AnimatedStatsSparklines } from "./AnimatedStatsSparklines";
+import { MicroInteractions } from "./MicroInteractions";
+import { DynamicPersonalizationWizard } from "./DynamicPersonalizationWizard";
+import { SocialConnectionEngine } from "./SocialConnectionEngine";
 import TruthGenomeCard from "./TruthGenomeCard";
 import CapsuleWallToggle from "./CapsuleWallToggle";
 import GTTPortfolioManager from "./GTTPortfolioManager";
@@ -332,6 +339,20 @@ export default function UnifiedProfile() {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Enhanced Interactive Features */}
+        <div className="space-y-6 mb-8">
+          {/* Real-time Stats Sparklines */}
+          <AnimatedStatsSparklines />
+          
+          {/* Interactive Features Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <MicroInteractions onInteraction={(type, value) => {
+              console.log(`Profile interaction: ${type} = ${value}`);
+            }} />
+            <InteractiveAchievementBadges />
           </div>
         </div>
 
@@ -730,6 +751,7 @@ export default function UnifiedProfile() {
               <div className="space-y-6">
                 <EnhancedSocialProfile />
                 <TruthGenomeCard />
+                <SocialConnectionEngine />
               </div>
               <div className="space-y-6">
                 <SovereignAIAssistant 
@@ -753,6 +775,9 @@ export default function UnifiedProfile() {
           <TabsContent value="settings" className="space-y-6">
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               <div className="space-y-6">
+                {/* Dynamic Personalization Wizard */}
+                <DynamicPersonalizationWizard />
+                
                 <Card className="bg-[#161b22] border-[#30363d]">
                   <CardHeader>
                     <CardTitle className="text-[#f0f6fc] flex items-center">
@@ -817,14 +842,12 @@ export default function UnifiedProfile() {
                     </div>
                   </CardContent>
                 </Card>
-                
-                <ProfileThemeSelector 
-                  currentTheme="dark"
-                  onThemeChange={(theme) => {}}
-                />
               </div>
               
               <div className="space-y-6">
+                {/* Social Connection Engine */}
+                <SocialConnectionEngine />
+                
                 <QuantumSecurityPanel />
               </div>
             </div>
