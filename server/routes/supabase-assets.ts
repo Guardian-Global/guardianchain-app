@@ -160,7 +160,7 @@ function categorizeAsset(
   value: number;
   recommendedUsage: string[];
 } {
-  const ext = filename.toLowerCase().split(".").pop() || "";
+  const ext = filename.toLowerCase().split(".").pop() || ";
   const name = filename.toLowerCase();
 
   let type = "unknown";

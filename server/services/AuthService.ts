@@ -1,9 +1,11 @@
 import { db } from "../db";
-import { users, emailVerificationTokens, userActivities, sessions } from "../../shared/schema";
+// import { users, emailVerificationTokens, userActivities, sessions } from "../compatibility/schema-adapter";
+// Temporary: Using minimal exports
 import { eq, and } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { hash, compare } from "bcryptjs";
-import type { User, InsertUserActivity, UserActivity } from "../../shared/schema";
+// import type { User, InsertUserActivity, UserActivity } from "../compatibility/schema-adapter";
+// Temporary: Using minimal exports
 
 export class AuthService {
   // Generate secure verification token

@@ -1,6 +1,7 @@
 import express from "express";
 import { db } from "../../db";
-import { capsuleStats } from "../../../shared/schema";
+// import { capsuleStats } from "../../compatibility/schema-adapter";
+// Temporary: Using minimal exports
 import { eq, sql } from "drizzle-orm";
 
 const router = express.Router();

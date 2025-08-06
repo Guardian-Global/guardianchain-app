@@ -1,0 +1,153 @@
+// server/compatibility/schema-adapter.ts
+// Temporary compatibility layer for Drizzle table operations
+
+import { pgTable, uuid, text, timestamp, boolean, integer, jsonb } from 'drizzle-orm/pg-core';
+
+// Simple mock exports for development
+export const newsletterSubscribers = pgTable('newsletter_subscribers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull(),
+  name: text('name'),
+  subscribed_at: timestamp('subscribed_at').defaultNow()
+});
+
+export const capsuleVotes = pgTable('capsule_votes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  capsule_id: uuid('capsule_id').notNull(),
+  voter_wallet: text('voter_wallet').notNull(),
+  vote_type: text('vote_type').notNull(),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+// User table for compatibility with AuthService
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  wallet_address: text('wallet_address').notNull(),
+  email: text('email'),
+  username: text('username'),
+  display_name: text('display_name'),
+  avatar_url: text('avatar_url'),
+  bio: text('bio'),
+  location: text('location'),
+  website: text('website'),
+  social_links: jsonb('social_links'),
+  tier: text('tier', { enum: ['SEEKER', 'EXPLORER', 'CREATOR', 'SOVEREIGN', 'ADMIN'] }).default('SEEKER'),
+  subscription_status: text('subscription_status', { enum: ['free', 'active', 'canceled', 'expired'] }).default('free'),
+  onboarding_completed: boolean('onboarding_completed').default(false),
+  preferences: jsonb('preferences'),
+  email_verified: boolean('email_verified').default(false),
+  password_hash: text('password_hash'),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+// Email verification tokens table
+export const emailVerificationTokens = pgTable('email_verification_tokens', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').notNull(),
+  token: text('token').notNull(),
+  expires_at: timestamp('expires_at').notNull(),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+// User activities table
+export const userActivities = pgTable('user_activities', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  user_wallet_address: text('user_wallet_address').notNull(),
+  activity_type: text('activity_type').notNull(),
+  activity_data: jsonb('activity_data'),
+  ip_address: text('ip_address'),
+  user_agent: text('user_agent'),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+// Sessions table
+export const sessions = pgTable('sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  user_wallet_address: text('user_wallet_address').notNull(),
+  session_token: text('session_token').notNull(),
+  expires_at: timestamp('expires_at').notNull(),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+// Capsules table
+export const capsules = pgTable('capsules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  owner_wallet_address: text('owner_wallet_address').notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  content: text('content'),
+  grief_score: integer('grief_score').default(0),
+  gtt_reward: integer('gtt_reward').default(0),
+  visibility: text('visibility', { enum: ['private', 'friends', 'public', 'unlockable'] }).default('private'),
+  unlock_conditions: jsonb('unlock_conditions'),
+  time_locked_until: timestamp('time_locked_until'),
+  is_sealed: boolean('is_sealed').default(false),
+  is_minted: boolean('is_minted').default(false),
+  nft_token_id: text('nft_token_id'),
+  ipfs_hash: text('ipfs_hash'),
+  media_urls: jsonb('media_urls'),
+  tags: jsonb('tags'),
+  emotional_tags: jsonb('emotional_tags'),
+  lineage_parent_id: uuid('lineage_parent_id'),
+  remix_count: integer('remix_count').default(0),
+  view_count: integer('view_count').default(0),
+  unlock_count: integer('unlock_count').default(0),
+  verification_status: text('verification_status', { enum: ['pending', 'verified', 'rejected'] }).default('pending'),
+  metadata: jsonb('metadata'),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow()
+});
+
+// DAO Certifications table
+export const daoCertifications = pgTable('dao_certifications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  capsule_id: uuid('capsule_id').notNull(),
+  certifier_wallet_address: text('certifier_wallet_address').notNull(),
+  certification_type: text('certification_type', { enum: ['verified', 'disputed', 'endorsed'] }).notNull(),
+  certification_data: jsonb('certification_data'),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+// Capsule Lineage table
+export const capsuleLineage = pgTable('capsule_lineage', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  child_capsule_id: uuid('child_capsule_id').notNull(),
+  parent_capsule_id: uuid('parent_capsule_id').notNull(),
+  relationship_type: text('relationship_type', { enum: ['remix', 'response', 'reference', 'evolution'] }).notNull(),
+  influence_score: integer('influence_score').default(0),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+// Capsule Stats table
+export const capsuleStats = pgTable('capsule_stats', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  capsule_id: uuid('capsule_id').notNull(),
+  daily_views: integer('daily_views').default(0),
+  daily_unlocks: integer('daily_unlocks').default(0),
+  total_views: integer('total_views').default(0),
+  total_unlocks: integer('total_unlocks').default(0),
+  engagement_score: integer('engagement_score').default(0),
+  last_updated: timestamp('last_updated').defaultNow(),
+  created_at: timestamp('created_at').defaultNow()
+});
+
+// Export types for compatibility
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type UserActivity = typeof userActivities.$inferSelect;
+export type InsertUserActivity = typeof userActivities.$inferInsert;
+export type EmailVerificationToken = typeof emailVerificationTokens.$inferSelect;
+export type InsertEmailVerificationToken = typeof emailVerificationTokens.$inferInsert;
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
+export type CapsuleVote = typeof capsuleVotes.$inferSelect;
+export type InsertCapsuleVote = typeof capsuleVotes.$inferInsert;
+export type UpsertUser = InsertUser;
+
+// Additional table exports for analytics compatibility
+export const capsuleActivityLog = userActivities; // Alias for compatibility
+export const userCapsuleInteractions = userActivities; // Alias for compatibility  
+export const capsuleBehaviorLabels = capsuleStats; // Alias for compatibility
+export const capsuleInteractionSpikes = capsuleStats; // Alias for compatibility

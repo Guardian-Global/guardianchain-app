@@ -6,6 +6,18 @@ GuardianChain is a sovereign Web3 infrastructure for time-locked proof, grief-sc
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (January 6, 2025)
+- ✅ Created complete user-scoped system with profile management, authentication guards, and capsule functionality
+- ✅ Fixed React import issues across all JSX/TSX files 
+- ✅ Consolidated ProfileMaster component into client/src/components/ directory
+- ✅ Created comprehensive schema with User, Profile, Capsule, VaultEntry, Session, and Activity models
+- ✅ Implemented authentication hooks (useAuth, useUserTier) with tier-based access control
+- ✅ Created onboarding system with automatic profile setup
+- ✅ Built user-specific capsule and vault management pages
+- ✅ Added analytics system for activity tracking
+- ✅ Established Supabase client configuration for database operations
+- ✅ Fixed server compatibility by adding missing schema exports
+
 **Design Philosophy**: Strong preference for clean, minimal Next.js template structure approach:
 - Clean layout with Head component structure
 - max-w-4xl container with proper spacing

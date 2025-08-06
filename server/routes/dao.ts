@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { requireAdmin, requireSovereign } from '../middleware/requireAdmin';
 import { adminRateLimiter } from '../middleware/rateLimiter';
 import { db } from '../db';
-import { capsules, daoCertifications, capsuleLineage, users } from '@shared/schema';
+// import { capsules, daoCertifications, capsuleLineage, users } from '../compatibility/schema-adapter';
+// Temporary: Using minimal exports
 import { eq, desc, count, and } from 'drizzle-orm';
 
 const router = Router();

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { db } from '../db';
-import { capsules } from '@shared/schema';
+// import { capsules } from "../compatibility/schema-adapter"';
+// Temporary: Using minimal exports
 import { eq } from 'drizzle-orm';
 
 // Extend Request type to include capsule

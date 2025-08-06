@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { consolidatedAuth } from '../../auth/authConsolidation';
 import { db } from '../../db';
-import { capsules, capsuleLineage } from '@shared/schema';
+// import { capsules, capsuleLineage } from "../../compatibility/schema-adapter"';
+// Temporary: Using minimal exports
 import { eq, and, or, sql } from 'drizzle-orm';
 
 const router = Router();

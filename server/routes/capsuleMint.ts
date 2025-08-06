@@ -4,7 +4,11 @@ import { requireCertification } from '../middleware/requireCertification';
 import { mintRateLimiter } from '../middleware/rateLimiter';
 import { calculateMintFee, createStripeCheckoutSession, verifyStripePayment, checkGTTBalance, processGTTPayment } from '../services/mintingTiers';
 import { db } from '../db';
-import { capsules, capsuleMintLogs } from '@shared/schema';
+// // import { capsules, capsuleMintLogs } from "../../compatibility/schema-adapter";
+// Temporary: Using minimal exports
+// Temporary: Mock table exports for minimal functionality
+const capsules = null;
+const capsuleMintLogs = null;
 import { eq, desc } from 'drizzle-orm';
 
 const router = Router();

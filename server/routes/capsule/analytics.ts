@@ -5,7 +5,7 @@ import {
   userCapsuleInteractions, 
   capsuleBehaviorLabels,
   capsuleInteractionSpikes
-} from "@shared/schema";
+} from "../../compatibility/schema-adapter";
 import { eq, sql, desc, and, gte } from "drizzle-orm";
 // Note: json2csv would need to be installed, using simple JSON export for now
 

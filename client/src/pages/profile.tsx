@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MasterProfile from "@/components/MasterProfile";
+import ProfileMaster from "@/components/ProfileMaster";
 // Components consolidated during Phase 2 cleanup
 // ProfileCapsulesView consolidated into MasterProfile
 import { useAuth } from "@/hooks/useAuth";
@@ -105,37 +105,7 @@ export default function Profile() {
           </TabsList>
 
           <TabsContent value="profile" className="space-y-6">
-            <MasterProfile 
-              profile={{
-                id: user?.id || "dev-user-123",
-                wallet: user?.walletAddress || "0x1234...abcd",
-                username: user?.email?.split('@')[0] || "Guardian",
-                displayName: `${user?.firstName || "Guardian"} ${user?.lastName || "User"}`.trim(),
-                bio: "Guardian of Truth in the digital realm",
-                avatar: user?.profileImageUrl || "/guardian-mascot.png",
-                truthScore: 88,
-                reputation: 2450,
-                joinedAt: "2024-01-15",
-                isVerified: true,
-                badges: 12,
-                capsuleCount: 47,
-                friendCount: 234,
-                gttEarned: 12850,
-                totalViews: 5670,
-                recentActivity: 15
-              }}
-              capsuleStats={{
-                totalCapsules: 47,
-                verifiedCapsules: 42,
-                timeSealedCapsules: 8,
-                weeklyActivity: 12,
-                avgTruthScore: 85,
-                totalGTT: 12850,
-                totalViews: 5670,
-                engagementRate: 78
-              }}
-              isOwnProfile={true}
-            />
+            <ProfileMaster />
           </TabsContent>
 
           <TabsContent value="capsules" className="space-y-6">
