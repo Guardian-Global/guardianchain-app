@@ -1,215 +1,180 @@
-import { Router } from "express";
-import { storage } from "../storage";
-import { consolidatedAuth } from "../auth/authConsolidation";
+import { Router } from 'express';
+import { pool } from '../db';
+import { consolidatedAuth } from '../auth/authConsolidation';
 
 const router = Router();
 
-// Get detailed user profile
-router.get(
-  "/detailed/:userId?",
-  consolidatedAuth,
-  async (req: any, res) => {
-    try {
-      const userId = req.params.userId || req.user?.id;
+// Get user profile
+router.get('/api/profile', consolidatedAuth, async (req: any, res) => {
+  try {
+    const userId = req.user.id;
+    
+    const client = await pool.connect();
+    const result = await client.query(`
+      SELECT 
+        id,
+        email,
+        first_name,
+        last_name,
+        username,
+        bio,
+        avatar,
+        profile_image_url,
+        wallet_address,
+        tier,
+        gtt_balance,
+        total_capsules,
+        verified_capsules,
+        social_links,
+        is_verified,
+        created_at,
+        updated_at
+      FROM users 
+      WHERE id = $1
+    `, [userId]);
+    client.release();
 
-      if (!userId) {
-        return res.status(400).json({ error: "User ID required" });
-      }
-
-      // Get base user data
-      const user = await storage.getUser(userId);
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      // Get user statistics
-      const stats = await storage.getUserStats(userId);
-
-      // Get user reputation
-      const reputation = await storage.getUserReputation(userId);
-
-      // Get user achievements
-      const achievements = await storage.getUserAchievements(userId);
-
-      const profile = {
-        ...user,
-        stats,
-        reputation,
-        achievements,
-      };
-
-      res.json(profile);
-    } catch (error) {
-      console.error("Error fetching detailed profile:", error);
-      res.status(500).json({ error: "Failed to fetch profile" });
+    if (result.rows && result.rows.length > 0) {
+      const user = result.rows[0];
+      res.json({
+        success: true,
+        profile: {
+          id: user.id,
+          email: user.email,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          username: user.username,
+          bio: user.bio,
+          avatar: user.avatar || user.profile_image_url,
+          walletAddress: user.wallet_address,
+          tier: user.tier,
+          gttBalance: user.gtt_balance || 0,
+          totalCapsules: user.total_capsules || 0,
+          verifiedCapsules: user.verified_capsules || 0,
+          socialLinks: user.social_links || {},
+          isVerified: user.is_verified || false,
+          createdAt: user.created_at,
+          updatedAt: user.updated_at
+        }
+      });
+    } else {
+      res.status(404).json({ success: false, message: 'Profile not found' });
     }
-  },
-);
+  } catch (error) {
+    console.error('Profile fetch error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+  }
+});
 
 // Update user profile
-router.put("/update", consolidatedAuth, async (req: any, res) => {
+router.patch('/api/profile', consolidatedAuth, async (req: any, res) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user.id;
+    const {
+      firstName,
+      lastName,
+      username,
+      bio,
+      walletAddress,
+      socialLinks
+    } = req.body;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized" });
+    const client = await pool.connect();
+    const result = await client.query(`
+      UPDATE users 
+      SET 
+        first_name = COALESCE($2, first_name),
+        last_name = COALESCE($3, last_name),
+        username = COALESCE($4, username),
+        bio = COALESCE($5, bio),
+        wallet_address = COALESCE($6, wallet_address),
+        social_links = COALESCE($7, social_links),
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING 
+        id, email, first_name, last_name, username, bio, 
+        avatar, profile_image_url, wallet_address, tier,
+        gtt_balance, total_capsules, verified_capsules, 
+        social_links, is_verified, created_at, updated_at
+    `, [
+      userId,
+      firstName,
+      lastName,
+      username,
+      bio,
+      walletAddress,
+      socialLinks ? JSON.stringify(socialLinks) : null
+    ]);
+    client.release();
+
+    if (result.rows && result.rows.length > 0) {
+      const user = result.rows[0];
+      res.json({
+        success: true,
+        message: 'Profile updated successfully',
+        profile: {
+          id: user.id,
+          email: user.email,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          username: user.username,
+          bio: user.bio,
+          avatar: user.avatar || user.profile_image_url,
+          walletAddress: user.wallet_address,
+          tier: user.tier,
+          gttBalance: user.gtt_balance || 0,
+          totalCapsules: user.total_capsules || 0,
+          verifiedCapsules: user.verified_capsules || 0,
+          socialLinks: user.social_links || {},
+          isVerified: user.is_verified || false,
+          createdAt: user.created_at,
+          updatedAt: user.updated_at
+        }
+      });
+    } else {
+      res.status(404).json({ success: false, message: 'Profile not found' });
     }
-
-    const updateData = req.body;
-
-    // Validate required fields
-    if (!updateData.firstName || !updateData.lastName) {
-      return res
-        .status(400)
-        .json({ error: "First name and last name are required" });
-    }
-
-    const updatedUser = await storage.updateUserProfile(userId, updateData);
-
-    res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).json({ error: "Failed to update profile" });
+    console.error('Profile update error:', error);
+    res.status(500).json({ success: false, message: 'Failed to update profile' });
   }
 });
 
-// Upload profile image
-router.post("/upload-image", consolidatedAuth, async (req: any, res) => {
+// Update profile avatar
+router.patch('/api/profile/avatar', consolidatedAuth, async (req: any, res) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user.id;
+    const { avatarUrl } = req.body;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized" });
+    if (!avatarUrl) {
+      return res.status(400).json({ success: false, message: 'Avatar URL is required' });
     }
 
-    // In a real implementation, this would handle file upload
-    // For now, return a placeholder response
-    const imageUrl = "/assets/profile/default-avatar.jpg";
+    const client = await pool.connect();
+    const result = await client.query(`
+      UPDATE users 
+      SET 
+        avatar = $2,
+        profile_image_url = $2,
+        updated_at = NOW()
+      WHERE id = $1
+      RETURNING id, avatar, profile_image_url
+    `, [userId, avatarUrl]);
+    client.release();
 
-    await storage.updateUserProfile(userId, {
-      profileImageUrl: imageUrl,
-    });
-
-    res.json({ imageUrl });
+    if (result.rows && result.rows.length > 0) {
+      const user = result.rows[0];
+      res.json({
+        success: true,
+        message: 'Avatar updated successfully',
+        avatar: user.avatar || user.profile_image_url
+      });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
   } catch (error) {
-    console.error("Error uploading profile image:", error);
-    res.status(500).json({ error: "Failed to upload image" });
-  }
-});
-
-// Get user achievements
-router.get(
-  "/achievements/:userId?",
-  consolidatedAuth,
-  async (req: any, res) => {
-    try {
-      const userId = req.params.userId || req.user?.id;
-
-      if (!userId) {
-        return res.status(400).json({ error: "User ID required" });
-      }
-
-      const achievements = await storage.getUserAchievements(userId);
-
-      res.json(achievements);
-    } catch (error) {
-      console.error("Error fetching achievements:", error);
-      res.status(500).json({ error: "Failed to fetch achievements" });
-    }
-  },
-);
-
-// Award achievement to user
-router.post(
-  "/award-achievement",
-  consolidatedAuth,
-  async (req: any, res) => {
-    try {
-      const userId = req.user?.id;
-      const { achievementId } = req.body;
-
-      if (!userId || !achievementId) {
-        return res
-          .status(400)
-          .json({ error: "User ID and achievement ID required" });
-      }
-
-      const achievement = await storage.awardAchievement(userId, achievementId);
-
-      res.json(achievement);
-    } catch (error) {
-      console.error("Error awarding achievement:", error);
-      res.status(500).json({ error: "Failed to award achievement" });
-    }
-  },
-);
-
-// Get user activity feed
-router.get(
-  "/activity/:userId?",
-  consolidatedAuth,
-  async (req: any, res) => {
-    try {
-      const userId = req.params.userId || req.user?.id;
-      const limit = parseInt(req.query.limit as string) || 20;
-      const offset = parseInt(req.query.offset as string) || 0;
-
-      if (!userId) {
-        return res.status(400).json({ error: "User ID required" });
-      }
-
-      const activities = await storage.getUserActivity(userId, limit, offset);
-
-      res.json(activities);
-    } catch (error) {
-      console.error("Error fetching user activity:", error);
-      res.status(500).json({ error: "Failed to fetch activity" });
-    }
-  },
-);
-
-// Get user connections/followers
-router.get(
-  "/connections/:userId?",
-  consolidatedAuth,
-  async (req: any, res) => {
-    try {
-      const userId = req.params.userId || req.user?.id;
-
-      if (!userId) {
-        return res.status(400).json({ error: "User ID required" });
-      }
-
-      const connections = await storage.getUserConnections(userId);
-
-      res.json(connections);
-    } catch (error) {
-      console.error("Error fetching connections:", error);
-      res.status(500).json({ error: "Failed to fetch connections" });
-    }
-  },
-);
-
-// Follow/unfollow user
-router.post("/follow", consolidatedAuth, async (req: any, res) => {
-  try {
-    const userId = req.user?.id;
-    const { targetUserId, action } = req.body; // action: 'follow' | 'unfollow'
-
-    if (!userId || !targetUserId) {
-      return res.status(400).json({ error: "User IDs required" });
-    }
-
-    if (userId === targetUserId) {
-      return res.status(400).json({ error: "Cannot follow yourself" });
-    }
-
-    const result = await storage.toggleUserFollow(userId, targetUserId, action);
-
-    res.json(result);
-  } catch (error) {
-    console.error("Error toggling follow:", error);
-    res.status(500).json({ error: "Failed to update follow status" });
+    console.error('Avatar update error:', error);
+    res.status(500).json({ success: false, message: 'Failed to update avatar' });
   }
 });
 

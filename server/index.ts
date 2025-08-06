@@ -69,6 +69,10 @@ app.use(
   }),
 );
 
+// Import profile and upload routes
+import profileRoutes from "./routes/profile";
+import uploadRoutes from "./routes/upload";
+
 // Serve uploaded files (avatars, capsules)
 app.use("/uploads", express.static("uploads", {
   setHeaders: (res, path) => {
@@ -147,6 +151,10 @@ app.get("/api/logout", (req, res) => {
     res.redirect("/");
   }
 });
+
+// Register profile and upload routes
+app.use(profileRoutes);
+app.use(uploadRoutes);
 
 // AI Routes for enhanced capsule experience
 import aiRoutes from "./routes/ai.js";

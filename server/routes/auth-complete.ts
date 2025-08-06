@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authService } from "../services/AuthService";
-import { userRegistrationSchema, userProfileUpdateSchema } from "../../shared/schema";
+import { insertUserSchema, updateUserSchema } from "../../shared/schema";
 import type { Request, Response } from "express";
 import { z } from "zod";
 import "../types/session";
@@ -10,7 +10,7 @@ const router = Router();
 // User registration endpoint
 router.post("/register", async (req: Request, res: Response) => {
   try {
-    const validatedData = userRegistrationSchema.parse(req.body);
+    const validatedData = insertUserSchema.parse(req.body);
     
     // Check if user already exists
     const existingUser = await authService.getUserByEmail(validatedData.email);

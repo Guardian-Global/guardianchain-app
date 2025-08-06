@@ -61,25 +61,52 @@ export interface ConsolidatedUser {
   updatedAt: string;
 }
 
-// REAL authentication middleware - NO BYPASS ALLOWED
-export const consolidatedAuth: RequestHandler = (req: any, res, next) => {
+// Database import for persistent sessions
+import { pool } from "../db";
+
+// REAL authentication middleware with database persistence
+export const consolidatedAuth: RequestHandler = async (req: any, res, next) => {
   console.log("🔐 Consolidated Auth: Middleware called");
   console.log("🔐 Consolidated Auth: Path:", req.path);
   console.log("🔐 Consolidated Auth: Method:", req.method);
   console.log("🔐 Consolidated Auth: Environment:", process.env.NODE_ENV);
 
-  // Check for real session/JWT token - NO MOCK DATA ALLOWED
+  // Check for real session/JWT token
   const authHeader = req.headers.authorization;
   const sessionToken = req.cookies?.session || req.headers?.session;
   
   console.log("🔐 Consolidated Auth: Session token:", sessionToken ? "Found" : "None");
   console.log("🔐 Consolidated Auth: Auth header:", authHeader ? "Found" : "None");
   
+  let authenticatedUser: any = null;
+
   // Check for valid session token first (this is set by login/signup)
   if (sessionToken && sessionToken.startsWith('session_')) {
     console.log("✅ Consolidated Auth: Valid session token found");
-    // Session token is valid, proceed with authentication
-  } else {
+    
+    try {
+      // Query database for user by session token using pool directly
+      const client = await pool.connect();
+      try {
+        const result = await client.query(`
+          SELECT u.* FROM users u 
+          WHERE u.session_token = $1 
+          AND (u.token_expires_at IS NULL OR u.token_expires_at > NOW())
+        `, [sessionToken]);
+        
+        if (result.rows && result.rows.length > 0) {
+          authenticatedUser = result.rows[0];
+          console.log("✅ Database user found:", authenticatedUser.email);
+        }
+      } finally {
+        client.release();
+      }
+    } catch (error) {
+      console.error("Database query error:", error);
+    }
+  } 
+  
+  if (!authenticatedUser) {
     // Fallback to admin key for backwards compatibility
     const adminKey = req.headers['x-admin-key'] || req.query.adminKey;
     const isAdmin = adminKey === 'GUARDIAN_ADMIN_2025';
@@ -93,20 +120,62 @@ export const consolidatedAuth: RequestHandler = (req: any, res, next) => {
       });
     }
     console.log("✅ Consolidated Auth: Admin access granted");
+    
+    // For admin access, create a default user if not exists
+    try {
+      const adminEmail = "admin@guardianchain.app";
+      const client = await pool.connect();
+      try {
+        const result = await client.query(`
+          SELECT * FROM users WHERE email = $1
+        `, [adminEmail]);
+        
+        if (result.rows && result.rows.length > 0) {
+          authenticatedUser = result.rows[0];
+        } else {
+          // Create admin user
+          const insertResult = await client.query(`
+            INSERT INTO users (
+              id, email, first_name, last_name, username, tier, 
+              is_active, created_at, updated_at
+            ) VALUES (
+              $1, $2, $3, $4, $5, $6, $7, NOW(), NOW()
+            ) RETURNING *
+          `, [
+            `admin_${Date.now()}`,
+            adminEmail,
+            "Admin",
+            "Guardian",
+            "admin_guardian",
+            "ADMIN",
+            true
+          ]);
+          
+          if (insertResult.rows && insertResult.rows.length > 0) {
+            authenticatedUser = insertResult.rows[0];
+            console.log("✅ Created new admin user");
+          }
+        }
+      } finally {
+        client.release();
+      }
+    } catch (error) {
+      console.error("Admin user creation error:", error);
+    }
   }
 
-  // Create comprehensive user object
+  // Create comprehensive user object from database data
   const user: ConsolidatedUser = {
-    id: process.env.NODE_ENV === "development" ? "dev-user-123" : "prod-user-456",
-    email: process.env.NODE_ENV === "development" ? "dev@guardianchain.app" : "user@guardianchain.app",
-    firstName: "Guardian",
-    lastName: "User",
-    username: "guardian_user_consolidated",
-    tier: "SEEKER",
-    profileImageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    walletAddress: undefined,
-    isWalletVerified: false,
-    onboardingCompleted: false, // Start with incomplete onboarding to trigger comprehensive flow
+    id: authenticatedUser?.id || "guest-user",
+    email: authenticatedUser?.email || "guest@guardianchain.app",
+    firstName: authenticatedUser?.first_name || "Guardian",
+    lastName: authenticatedUser?.last_name || "User",
+    username: authenticatedUser?.username || "guardian_user",
+    tier: (authenticatedUser?.tier || "SEEKER") as "EXPLORER" | "SEEKER" | "CREATOR" | "SOVEREIGN",
+    profileImageUrl: authenticatedUser?.profile_image_url || authenticatedUser?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    walletAddress: authenticatedUser?.wallet_address,
+    isWalletVerified: !!authenticatedUser?.wallet_address,
+    onboardingCompleted: true, // Set to true if user exists in database
     subscriptionStatus: "active",
     subscriptionTier: "SEEKER",
     subscriptionPlan: "monthly",

@@ -1,274 +1,190 @@
 // shared/schema.ts
-// Database schema definitions and validation
+// Database schema definitions using Drizzle ORM
 
+import { pgTable, text, uuid, timestamp, boolean, json, integer, decimal } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
-// User Profile Schema
-export const ProfileSchema = z.object({
-  id: z.string().uuid(),
-  wallet_address: z.string(),
-  email: z.string().email().optional(),
-  username: z.string().min(3).max(50).optional(),
-  display_name: z.string().max(100).optional(),
-  avatar_url: z.string().url().optional(),
-  bio: z.string().max(500).optional(),
-  location: z.string().max(100).optional(),
-  website: z.string().url().optional(),
-  social_links: z.record(z.string()).optional(),
-  tier: z.enum(['SEEKER', 'EXPLORER', 'CREATOR', 'SOVEREIGN', 'ADMIN']).default('SEEKER'),
-  subscription_status: z.enum(['free', 'active', 'canceled', 'expired']).default('free'),
-  onboarding_completed: z.boolean().default(false),
-  preferences: z.record(z.any()).optional(),
-  created_at: z.string(),
-  updated_at: z.string()
+// Users table - stores authentication and profile data
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  email: text('email').unique().notNull(),
+  username: text('username').unique(),
+  displayName: text('display_name'),
+  bio: text('bio'),
+  location: text('location'),
+  website: text('website'),
+  profileImage: text('profile_image'),
+  coverImage: text('cover_image'),
+  socialLinks: json('social_links').$type<Record<string, string>>(),
+  tier: text('tier').notNull().default('SEEKER'),
+  subscriptionStatus: text('subscription_status').notNull().default('free'),
+  onboardingCompleted: boolean('onboarding_completed').notNull().default(false),
+  preferences: json('preferences').$type<Record<string, any>>(),
+  lastActiveAt: timestamp('last_active_at').defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const CreateProfileSchema = ProfileSchema.omit({
+// User sessions table - stores authentication sessions
+export const userSessions = pgTable('user_sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  sessionToken: text('session_token').unique().notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// User activity log table - tracks user actions and data
+export const userActivities = pgTable('user_activities', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  sessionId: uuid('session_id').references(() => userSessions.id, { onDelete: 'set null' }),
+  activityType: text('activity_type').notNull(), // login, logout, profile_update, capsule_create, etc.
+  activityData: json('activity_data').$type<Record<string, any>>(),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+// Capsules table - stores user-generated content capsules
+export const capsules = pgTable('capsules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  content: text('content'),
+  grieveScore: integer('grieve_score').notNull().default(0),
+  gttReward: decimal('gtt_reward', { precision: 18, scale: 8 }).notNull().default('0'),
+  visibility: text('visibility').notNull().default('private'),
+  unlockConditions: json('unlock_conditions').$type<Record<string, any>>(),
+  timeLockedUntil: timestamp('time_locked_until'),
+  isSealed: boolean('is_sealed').notNull().default(false),
+  isMinted: boolean('is_minted').notNull().default(false),
+  nftTokenId: text('nft_token_id'),
+  ipfsHash: text('ipfs_hash'),
+  mediaUrls: json('media_urls').$type<string[]>(),
+  tags: json('tags').$type<string[]>(),
+  emotionalTags: json('emotional_tags').$type<Record<string, any>>(),
+  lineageParentId: uuid('lineage_parent_id').references(() => capsules.id),
+  remixCount: integer('remix_count').notNull().default(0),
+  viewCount: integer('view_count').notNull().default(0),
+  unlockCount: integer('unlock_count').notNull().default(0),
+  verificationStatus: text('verification_status').notNull().default('pending'),
+  metadata: json('metadata').$type<Record<string, any>>(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// User stats table - aggregated user statistics
+export const userStats = pgTable('user_stats', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).unique(),
+  totalCapsules: integer('total_capsules').notNull().default(0),
+  sealedCapsules: integer('sealed_capsules').notNull().default(0),
+  verifiedCapsules: integer('verified_capsules').notNull().default(0),
+  gttBalance: decimal('gtt_balance', { precision: 18, scale: 8 }).notNull().default('0'),
+  totalGttEarned: decimal('total_gtt_earned', { precision: 18, scale: 8 }).notNull().default('0'),
+  totalGttSpent: decimal('total_gtt_spent', { precision: 18, scale: 8 }).notNull().default('0'),
+  truthScore: integer('truth_score').notNull().default(0),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Relations
+export const usersRelations = relations(users, ({ many, one }) => ({
+  sessions: many(userSessions),
+  activities: many(userActivities),
+  capsules: many(capsules),
+  stats: one(userStats),
+}));
+
+export const userSessionsRelations = relations(userSessions, ({ one, many }) => ({
+  user: one(users, {
+    fields: [userSessions.userId],
+    references: [users.id],
+  }),
+  activities: many(userActivities),
+}));
+
+export const userActivitiesRelations = relations(userActivities, ({ one }) => ({
+  user: one(users, {
+    fields: [userActivities.userId],
+    references: [users.id],
+  }),
+  session: one(userSessions, {
+    fields: [userActivities.sessionId],
+    references: [userSessions.id],
+  }),
+}));
+
+export const capsulesRelations = relations(capsules, ({ one, many }) => ({
+  user: one(users, {
+    fields: [capsules.userId],
+    references: [users.id],
+  }),
+  parentCapsule: one(capsules, {
+    fields: [capsules.lineageParentId],
+    references: [capsules.id],
+  }),
+  childCapsules: many(capsules),
+}));
+
+export const userStatsRelations = relations(userStats, ({ one }) => ({
+  user: one(users, {
+    fields: [userStats.userId],
+    references: [users.id],
+  }),
+}));
+
+// Zod schemas for validation
+export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
-  created_at: true,
-  updated_at: true
+  createdAt: true,
+  updatedAt: true,
 });
 
-export const UpdateProfileSchema = CreateProfileSchema.partial();
+export const selectUserSchema = createSelectSchema(users);
+export const updateUserSchema = insertUserSchema.partial();
 
-// Capsule Schema
-export const CapsuleSchema = z.object({
-  id: z.string().uuid(),
-  owner_wallet_address: z.string(),
-  title: z.string().min(1).max(200),
-  description: z.string().max(1000).optional(),
-  content: z.string().optional(),
-  grief_score: z.number().int().min(0).max(10).default(0),
-  gtt_reward: z.number().default(0),
-  visibility: z.enum(['private', 'friends', 'public', 'unlockable']).default('private'),
-  unlock_conditions: z.record(z.any()).optional(),
-  time_locked_until: z.string().optional(),
-  is_sealed: z.boolean().default(false),
-  is_minted: z.boolean().default(false),
-  nft_token_id: z.string().optional(),
-  ipfs_hash: z.string().optional(),
-  media_urls: z.array(z.string()).optional(),
-  tags: z.array(z.string()).optional(),
-  emotional_tags: z.record(z.any()).optional(),
-  lineage_parent_id: z.string().uuid().optional(),
-  remix_count: z.number().int().default(0),
-  view_count: z.number().int().default(0),
-  unlock_count: z.number().int().default(0),
-  verification_status: z.enum(['pending', 'verified', 'rejected']).default('pending'),
-  metadata: z.record(z.any()).optional(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
-
-export const CreateCapsuleSchema = CapsuleSchema.omit({
+export const insertUserSessionSchema = createInsertSchema(userSessions).omit({
   id: true,
-  owner_wallet_address: true,
-  remix_count: true,
-  view_count: true,
-  unlock_count: true,
-  created_at: true,
-  updated_at: true
+  createdAt: true,
+  updatedAt: true,
 });
 
-// Vault Entry Schema
-export const VaultEntrySchema = z.object({
-  id: z.string().uuid(),
-  owner_wallet_address: z.string(),
-  title: z.string().min(1).max(200),
-  content: z.string().optional(),
-  entry_type: z.enum(['memory', 'document', 'media', 'note']).default('memory'),
-  is_encrypted: z.boolean().default(false),
-  encryption_key_hash: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  metadata: z.record(z.any()).optional(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
-
-export const CreateVaultEntrySchema = VaultEntrySchema.omit({
+export const insertUserActivitySchema = createInsertSchema(userActivities).omit({
   id: true,
-  owner_wallet_address: true,
-  created_at: true,
-  updated_at: true
+  createdAt: true,
 });
 
-// GTT Balance Schema
-export const GTTBalanceSchema = z.object({
-  id: z.string().uuid(),
-  wallet_address: z.string(),
-  balance: z.number().default(0),
-  total_earned: z.number().default(0),
-  total_spent: z.number().default(0),
-  last_calculated_at: z.string(),
-  updated_at: z.string()
-});
-
-// Activity Schema
-export const UserActivitySchema = z.object({
-  id: z.string().uuid(),
-  user_wallet_address: z.string(),
-  activity_type: z.string(),
-  activity_data: z.record(z.any()).optional(),
-  ip_address: z.string().optional(),
-  user_agent: z.string().optional(),
-  created_at: z.string()
-});
-
-export const CreateUserActivitySchema = UserActivitySchema.omit({
+export const insertCapsuleSchema = createInsertSchema(capsules).omit({
   id: true,
-  created_at: true
+  userId: true,
+  remixCount: true,
+  viewCount: true,
+  unlockCount: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
-// Session Schema
-export const SessionSchema = z.object({
-  id: z.string().uuid(),
-  user_wallet_address: z.string(),
-  session_token: z.string(),
-  expires_at: z.string(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
+// TypeScript types
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type UpdateUser = Partial<InsertUser>;
 
-export const CreateSessionSchema = SessionSchema.omit({
-  id: true,
-  created_at: true,
-  updated_at: true
-});
+export type UserSession = typeof userSessions.$inferSelect;
+export type InsertUserSession = typeof userSessions.$inferInsert;
 
-// Email Verification Token Schema
-export const EmailVerificationTokenSchema = z.object({
-  id: z.string().uuid(),
-  email: z.string().email(),
-  token: z.string(),
-  expires_at: z.string(),
-  created_at: z.string()
-});
+export type UserActivity = typeof userActivities.$inferSelect;
+export type InsertUserActivity = typeof userActivities.$inferInsert;
 
-export const CreateEmailVerificationTokenSchema = EmailVerificationTokenSchema.omit({
-  id: true,
-  created_at: true
-});
+export type Capsule = typeof capsules.$inferSelect;
+export type InsertCapsule = typeof capsules.$inferInsert;
 
-// User Schema for compatibility
-export const UserSchema = ProfileSchema.extend({
-  email_verified: z.boolean().default(false),
-  password_hash: z.string().optional()
-});
-
-export const CreateUserSchema = UserSchema.omit({
-  id: true,
-  created_at: true,
-  updated_at: true
-});
-
-// Registration and update schemas for server compatibility
-export const userRegistrationSchema = z.object({
-  email: z.string().email(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  username: z.string().min(3),
-  password: z.string().min(8).optional()
-});
-
-export const userProfileUpdateSchema = z.object({
-  display_name: z.string().max(100).optional(),
-  bio: z.string().max(500).optional(),
-  location: z.string().max(100).optional(),
-  website: z.string().url().optional(),
-  avatar_url: z.string().url().optional()
-});
-
-// Legacy field mappings for server compatibility
-export const userLoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1)
-});
-
-// Additional schemas for DAO and lineage functionality
-export const DAOCertificationSchema = z.object({
-  id: z.string().uuid(),
-  capsule_id: z.string().uuid(),
-  certifier_wallet_address: z.string(),
-  certification_type: z.enum(['verified', 'disputed', 'endorsed']),
-  certification_data: z.record(z.any()).optional(),
-  created_at: z.string()
-});
-
-export const CapsuleLineageSchema = z.object({
-  id: z.string().uuid(),
-  child_capsule_id: z.string().uuid(),
-  parent_capsule_id: z.string().uuid(),
-  relationship_type: z.enum(['remix', 'response', 'reference', 'evolution']),
-  influence_score: z.number().default(0),
-  created_at: z.string()
-});
-
-// Drizzle table exports for server compatibility
-export const users = UserSchema;
-export const profiles = ProfileSchema;
-export const capsules = CapsuleSchema;
-export const sessions = SessionSchema;
-export const emailVerificationTokens = EmailVerificationTokenSchema;
-export const userActivities = UserActivitySchema;
-export const vaultEntries = VaultEntrySchema;
-export const gttBalances = GTTBalanceSchema;
-export const daoCertifications = DAOCertificationSchema;
-export const capsuleLineage = CapsuleLineageSchema;
-
-// Additional schemas for stats and analytics
-export const CapsuleStatsSchema = z.object({
-  id: z.string().uuid(),
-  capsule_id: z.string().uuid(),
-  daily_views: z.number().default(0),
-  daily_unlocks: z.number().default(0),
-  total_views: z.number().default(0),
-  total_unlocks: z.number().default(0),
-  engagement_score: z.number().default(0),
-  last_updated: z.string(),
-  created_at: z.string()
-});
-
-export const capsuleStats = CapsuleStatsSchema;
-
-// Type exports
-export type Profile = z.infer<typeof ProfileSchema>;
-export type CreateProfile = z.infer<typeof CreateProfileSchema>;
-export type UpdateProfile = z.infer<typeof UpdateProfileSchema>;
-
-export type User = z.infer<typeof UserSchema>;
-export type CreateUser = z.infer<typeof CreateUserSchema>;
-
-export type Capsule = z.infer<typeof CapsuleSchema>;
-export type CreateCapsule = z.infer<typeof CreateCapsuleSchema>;
-
-export type VaultEntry = z.infer<typeof VaultEntrySchema>;
-export type CreateVaultEntry = z.infer<typeof CreateVaultEntrySchema>;
-
-export type Session = z.infer<typeof SessionSchema>;
-export type CreateSession = z.infer<typeof CreateSessionSchema>;
-
-export type EmailVerificationToken = z.infer<typeof EmailVerificationTokenSchema>;
-export type CreateEmailVerificationToken = z.infer<typeof CreateEmailVerificationTokenSchema>;
-
-export type GTTBalance = z.infer<typeof GTTBalanceSchema>;
-export type UserActivity = z.infer<typeof UserActivitySchema>;
-export type CreateUserActivity = z.infer<typeof CreateUserActivitySchema>;
-
-// Additional type exports for server compatibility
-export type UserRegistration = z.infer<typeof userRegistrationSchema>;
-export type UserProfileUpdate = z.infer<typeof userProfileUpdateSchema>;
-export type UserLogin = z.infer<typeof userLoginSchema>;
-
-// Legacy interface for AuthService compatibility
-export interface InsertUserActivity {
-  user_wallet_address: string;
-  activity_type: string;
-  activity_data?: Record<string, any>;
-  ip_address?: string;
-  user_agent?: string;
-}
-
-// Additional type exports
-export type DAOCertification = z.infer<typeof DAOCertificationSchema>;
-export type CapsuleLineage = z.infer<typeof CapsuleLineageSchema>;
-export type CapsuleStats = z.infer<typeof CapsuleStatsSchema>;
+export type UserStats = typeof userStats.$inferSelect;
+export type InsertUserStats = typeof userStats.$inferInsert;

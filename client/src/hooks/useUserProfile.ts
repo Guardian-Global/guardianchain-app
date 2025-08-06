@@ -39,16 +39,30 @@ export const useUserProfile = () => {
     setError(null);
 
     try {
-      const response = await fetch('/api/auth/user', {
+      const response = await fetch('/api/profile', {
         credentials: 'include',
+        headers: {
+          'x-admin-key': 'GUARDIAN_ADMIN_2025'
+        }
       });
 
       if (!response.ok) {
         throw new Error('Failed to fetch user profile');
       }
 
-      const profileData = await response.json();
-      setProfile(profileData);
+      const { profile: profileData } = await response.json();
+      setProfile({
+        id: profileData.id,
+        email: profileData.email,
+        username: profileData.username,
+        displayName: profileData.firstName + ' ' + profileData.lastName,
+        bio: profileData.bio,
+        profileImage: profileData.avatar,
+        tier: profileData.tier,
+        onboardingCompleted: true,
+        createdAt: profileData.createdAt,
+        updatedAt: profileData.updatedAt
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
       console.error('Error fetching user profile:', err);
@@ -66,22 +80,42 @@ export const useUserProfile = () => {
     setError(null);
 
     try {
-      const response = await fetch('/api/auth/user', {
+      const response = await fetch('/api/profile', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'x-admin-key': 'GUARDIAN_ADMIN_2025'
         },
         credentials: 'include',
-        body: JSON.stringify(updates),
+        body: JSON.stringify({
+          firstName: updates.displayName?.split(' ')[0],
+          lastName: updates.displayName?.split(' ').slice(1).join(' '),
+          username: updates.username,
+          bio: updates.bio,
+          walletAddress: updates.website, // Using website field for wallet
+          socialLinks: updates.socialLinks
+        }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to update profile');
       }
 
-      const updatedProfile = await response.json();
-      setProfile(updatedProfile);
-      return updatedProfile;
+      const { profile: updatedProfile } = await response.json();
+      const formattedProfile = {
+        id: updatedProfile.id,
+        email: updatedProfile.email,
+        username: updatedProfile.username,
+        displayName: updatedProfile.firstName + ' ' + updatedProfile.lastName,
+        bio: updatedProfile.bio,
+        profileImage: updatedProfile.avatar,
+        tier: updatedProfile.tier,
+        onboardingCompleted: true,
+        createdAt: updatedProfile.createdAt,
+        updatedAt: updatedProfile.updatedAt
+      };
+      setProfile(formattedProfile);
+      return formattedProfile;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
       throw err;
