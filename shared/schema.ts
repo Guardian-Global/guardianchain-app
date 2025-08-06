@@ -6,7 +6,7 @@ import { relations } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
-// Users table - stores authentication and profile data
+// Users table - stores authentication and profile data with enhanced customization
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').unique().notNull(),
@@ -15,9 +15,39 @@ export const users = pgTable('users', {
   bio: text('bio'),
   location: text('location'),
   website: text('website'),
+  company: text('company'),
+  occupation: text('occupation'),
+  pronouns: text('pronouns'),
+  timezone: text('timezone'),
   profileImage: text('profile_image'),
   coverImage: text('cover_image'),
+  profileVideo: text('profile_video'),
+  portfolioImages: json('portfolio_images').$type<string[]>(),
+  portfolioVideos: json('portfolio_videos').$type<string[]>(),
+  profileMusic: text('profile_music'),
+  customCSS: text('custom_css'),
   socialLinks: json('social_links').$type<Record<string, string>>(),
+  customBadges: json('custom_badges').$type<string[]>(),
+  skillTags: json('skill_tags').$type<string[]>(),
+  interests: json('interests').$type<string[]>(),
+  achievements: json('achievements').$type<string[]>(),
+  languages: json('languages').$type<string[]>(),
+  musicPreferences: json('music_preferences').$type<string[]>(),
+  customization: json('customization').$type<{
+    theme?: string;
+    accentColor?: string;
+    backgroundPattern?: string;
+    profileLayout?: string;
+    showActivityFeed?: boolean;
+    showStatsPublic?: boolean;
+    allowDirectMessages?: boolean;
+    statusMessage?: string;
+    availabilityStatus?: string;
+    favoriteQuote?: string;
+    animationsEnabled?: boolean;
+    particleEffects?: boolean;
+    displayMode?: string;
+  }>(),
   tier: text('tier').notNull().default('SEEKER'),
   subscriptionStatus: text('subscription_status').notNull().default('free'),
   onboardingCompleted: boolean('onboarding_completed').notNull().default(false),
@@ -155,6 +185,14 @@ export const userStatsRelations = relations(userStats, ({ one }) => ({
 export const vestingAlertsRelations = relations(vestingAlerts, ({ one }) => ({
   // No relations needed for vesting alerts currently
 }));
+
+// Export types for enhanced profile features
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type UserSession = typeof userSessions.$inferSelect;
+export type UserActivity = typeof userActivities.$inferSelect;
+export type Capsule = typeof capsules.$inferSelect;
+export type UserStats = typeof userStats.$inferSelect;
 
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users).omit({
