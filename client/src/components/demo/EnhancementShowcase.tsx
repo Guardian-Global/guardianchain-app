@@ -24,7 +24,7 @@ export default function EnhancementShowcase() {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-6" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite'}}>
+    <div className="min-h-screen w-full p-4 md:p-6" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite'}}>
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12 p-8 rounded-3xl" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsla(0, 0%, 100%, 0.1)', boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.37), 0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3)', borderColor: 'hsl(180, 100%, 50%)'}}>
           <div className="inline-flex items-center gap-4 mb-6">

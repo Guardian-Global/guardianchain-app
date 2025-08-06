@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
-import EnhancedMegaNavigation from '@/components/EnhancedMegaNavigation';
+// import EnhancedMegaNavigation from '@/components/EnhancedMegaNavigation'; // DISABLED TO FIX LAYOUT
 import { useAuth } from '@/hooks/useAuth';
 import { 
   Menu, 
@@ -81,10 +81,10 @@ export function EliteNavbar() {
             </motion.div>
           </Link>
 
-          {/* Enhanced Mega Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          {/* Enhanced Mega Navigation - DISABLED TO FIX LAYOUT */}
+          {/* <div className="hidden md:flex items-center space-x-6">
             <EnhancedMegaNavigation />
-          </div>
+          </div> */}
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
