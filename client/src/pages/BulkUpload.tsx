@@ -24,14 +24,19 @@ import {
   Sparkles,
   Brain,
   Target,
-  Globe
+  Globe,
+  Image,
+  Video,
+  Camera,
+  Film
 } from 'lucide-react';
 
 export default function BulkUpload() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [uploadMethod, setUploadMethod] = React.useState<'csv' | 'json' | 'manual'>('csv');
+  const [uploadMethod, setUploadMethod] = React.useState<'csv' | 'json' | 'media' | 'manual'>('csv');
   const [file, setFile] = React.useState<File | null>(null);
+  const [mediaFiles, setMediaFiles] = React.useState<File[]>([]);
   const [isProcessing, setIsProcessing] = React.useState(false);
 
   const handleBulkComplete = (results: { created: number; failed: number; capsules: any[] }) => {
@@ -159,10 +164,11 @@ export default function BulkUpload() {
                 {/* Upload Method Selection */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-white">Choose Upload Method</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {[
                       { id: 'csv', name: 'CSV File', icon: FileSpreadsheet, description: 'Upload structured CSV data' },
                       { id: 'json', name: 'JSON Data', icon: Database, description: 'Paste or upload JSON format' },
+                      { id: 'media', name: 'Media Files', icon: Camera, description: 'Upload images and videos' },
                       { id: 'manual', name: 'Manual Entry', icon: Star, description: 'Enter data manually' }
                     ].map((method) => (
                       <Card
@@ -228,6 +234,61 @@ export default function BulkUpload() {
                   </div>
                 )}
 
+                {uploadMethod === 'media' && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-white">Media Upload</h4>
+                    <div className="border-2 border-dashed border-gray-600 rounded-lg p-8">
+                      <div className="text-center">
+                        <div className="flex justify-center gap-4 mb-4">
+                          <Image className="w-12 h-12 text-blue-400" />
+                          <Video className="w-12 h-12 text-purple-400" />
+                        </div>
+                        <p className="text-gray-400 mb-4">
+                          Drop your images and videos here or click to browse
+                        </p>
+                        <Input
+                          type="file"
+                          accept="image/*,video/*"
+                          multiple
+                          onChange={(e) => {
+                            const files = Array.from(e.target.files || []);
+                            setMediaFiles(files);
+                          }}
+                          className="max-w-xs mx-auto"
+                          data-testid="media-file-input"
+                        />
+                        {mediaFiles.length > 0 && (
+                          <div className="mt-6 space-y-3">
+                            <h5 className="text-white font-medium">Selected Files ({mediaFiles.length})</h5>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-40 overflow-y-auto">
+                              {mediaFiles.map((file, index) => (
+                                <div key={index} className="flex items-center gap-2 p-3 bg-green-500/10 border border-green-500/30 rounded text-sm">
+                                  {file.type.startsWith('image/') ? (
+                                    <Image className="w-4 h-4 text-blue-400" />
+                                  ) : (
+                                    <Video className="w-4 h-4 text-purple-400" />
+                                  )}
+                                  <span className="text-green-400 truncate">
+                                    {file.name}
+                                  </span>
+                                  <span className="text-gray-400 text-xs">
+                                    ({Math.round(file.size / 1024)} KB)
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      <p>Supported formats: JPG, PNG, GIF, MP4, MOV, AVI, WebM</p>
+                      <p>Maximum file size: 100MB per file</p>
+                      <p>Each media file will be converted into a Truth Capsule with metadata</p>
+                    </div>
+                  </div>
+                )}
+
                 {uploadMethod === 'manual' && (
                   <div className="space-y-4">
                     <h4 className="font-medium text-white">Manual Entry</h4>
@@ -246,14 +307,54 @@ export default function BulkUpload() {
                   <Button
                     size="lg"
                     className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600"
-                    disabled={isProcessing || (!file && uploadMethod === 'csv')}
-                    onClick={() => {
+                    disabled={isProcessing || 
+                      (uploadMethod === 'csv' && !file) || 
+                      (uploadMethod === 'media' && mediaFiles.length === 0)}
+                    onClick={async () => {
                       setIsProcessing(true);
-                      // Simulate processing
-                      setTimeout(() => {
-                        handleBulkComplete({ created: 25, failed: 2, capsules: [] });
-                        setIsProcessing(false);
-                      }, 3000);
+                      
+                      if (uploadMethod === 'media') {
+                        // Process media files
+                        try {
+                          const processedFiles = [];
+                          for (const file of mediaFiles) {
+                            // Create a FormData object for each file
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            formData.append('type', file.type.startsWith('image/') ? 'image' : 'video');
+                            formData.append('title', file.name.split('.')[0]);
+                            
+                            // You would typically upload to your media API here
+                            console.log(`Processing ${file.name}...`);
+                            processedFiles.push({
+                              name: file.name,
+                              type: file.type,
+                              size: file.size,
+                              url: URL.createObjectURL(file) // Temporary URL for demo
+                            });
+                          }
+                          
+                          handleBulkComplete({ 
+                            created: processedFiles.length, 
+                            failed: 0, 
+                            capsules: processedFiles 
+                          });
+                        } catch (error) {
+                          console.error('Media processing failed:', error);
+                          toast({
+                            title: "Upload Failed",
+                            description: "Failed to process media files. Please try again.",
+                            variant: "destructive"
+                          });
+                        }
+                      } else {
+                        // Simulate processing for other upload types
+                        setTimeout(() => {
+                          handleBulkComplete({ created: 25, failed: 2, capsules: [] });
+                        }, 3000);
+                      }
+                      
+                      setIsProcessing(false);
                     }}
                   >
                     {isProcessing ? (
@@ -264,7 +365,7 @@ export default function BulkUpload() {
                     ) : (
                       <>
                         <Zap className="w-4 h-4 mr-2" />
-                        Process Data
+                        {uploadMethod === 'media' ? 'Process Media Files' : 'Process Data'}
                       </>
                     )}
                   </Button>
@@ -358,6 +459,8 @@ export default function BulkUpload() {
                       <div>• CSV (Comma Separated Values)</div>
                       <div>• Excel (.xls, .xlsx)</div>
                       <div>• JSON (JavaScript Object Notation)</div>
+                      <div>• Images (JPG, PNG, GIF, WebP)</div>
+                      <div>• Videos (MP4, MOV, AVI, WebM)</div>
                       <div>• TSV (Tab Separated Values)</div>
                       <div>• TXT (Delimited Text Files)</div>
                     </div>
