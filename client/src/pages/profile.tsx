@@ -108,9 +108,9 @@ export default function Profile() {
             <MasterProfile 
               profile={{
                 id: user?.id || "dev-user-123",
-                wallet: "0x1234...abcd",
-                username: user?.username || "Guardian",
-                displayName: user?.name || "Guardian User",
+                wallet: user?.walletAddress || "0x1234...abcd",
+                username: user?.email?.split('@')[0] || "Guardian",
+                displayName: `${user?.firstName || "Guardian"} ${user?.lastName || "User"}`.trim(),
                 bio: "Guardian of Truth in the digital realm",
                 avatar: user?.profileImageUrl || "/guardian-mascot.png",
                 truthScore: 88,
