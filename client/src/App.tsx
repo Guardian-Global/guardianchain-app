@@ -16,6 +16,7 @@ import { GuardianBootHook } from "@/components/GuardianBootHook";
 import EliteHomepage from "@/pages/EliteHomepage";
 import CyberHomepage from "@/pages/CyberHomepage";
 import SimpleHomepage from "@/pages/SimpleHomepage";
+import CenteredHomepage from "@/pages/CenteredHomepage";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import { useAuth } from "./hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
@@ -117,12 +118,8 @@ function Router() {
 
   return (
     <Switch>
-      {/* All routes now get the layout wrapper with navigation */}
-      <Route path="/">
-        <EliteLayout>
-          <SimpleHomepage />
-        </EliteLayout>
-      </Route>
+      {/* Homepage with centered layout - no sidebar */}
+      <Route path="/" component={CenteredHomepage} />
       <Route path="/elite">
         <EliteLayout>
           <EliteHomepage />
