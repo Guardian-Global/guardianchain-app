@@ -90,7 +90,7 @@ export default function EnhancementShowcase() {
           <TabsContent value="analytics" className="space-y-8">
             <div className="grid gap-8 lg:grid-cols-2">
               <CapsuleStatsGraph capsuleId="demo-capsule-1" />
-              <Card variant="glass";
+              <Card variant="glass">
                 <CardHeader className="pb-6">
                   <CardTitle className="text-[#00ffe1] font-quantum text-2xl flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite'}}>
