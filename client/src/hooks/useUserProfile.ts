@@ -138,6 +138,9 @@ export const useUserProfile = () => {
 
       const response = await fetch('/api/upload/avatar', {
         method: 'POST',
+        headers: {
+          'x-admin-key': 'GUARDIAN_ADMIN_2025'
+        },
         credentials: 'include',
         body: formData,
       });
@@ -149,8 +152,8 @@ export const useUserProfile = () => {
       const result = await response.json();
       
       // Update profile with new avatar URL
-      if (result.url && profile) {
-        const updatedProfile = { ...profile, profileImage: result.url };
+      if (result.avatarUrl && profile) {
+        const updatedProfile = { ...profile, profileImage: result.avatarUrl };
         setProfile(updatedProfile);
       }
       
