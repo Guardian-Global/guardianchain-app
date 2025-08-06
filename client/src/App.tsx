@@ -198,6 +198,7 @@ function Router() {
               <Route path="/submit" component={SubmitCapsule} />
               <Route path="/mint/:id" component={MintCapsule} />
               <Route path="/admin" component={AdminPage} />
+              <Route path="/veritas/vote" component={lazy(() => import("./pages/veritas/vote"))} />
 
               <Route path="/social" component={SocialHub} />
               <Route path="/social-hub" component={SocialHub} />

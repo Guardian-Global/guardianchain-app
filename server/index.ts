@@ -185,6 +185,9 @@ app.use("/api/upload", uploadRouter);
 import adminRouter from "./routes/api/admin.js";
 app.use("/api/admin", adminRouter);
 
+import veritasRouter from "./routes/api/veritas.js";
+app.use("/api/veritas", veritasRouter);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
