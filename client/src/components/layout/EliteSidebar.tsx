@@ -48,7 +48,7 @@ const analytics: NavItem[] = [
 ];
 
 const advanced: NavItem[] = [
-  { label: 'Enterprise Center', href: '/enterprise', icon: Crown, badge: 'New', tier: 'CREATOR' },
+  { label: 'Enterprise Center', href: '/enterprise', icon: Star, badge: 'New', tier: 'CREATOR' },
   { label: 'Governance', href: '/governance', icon: Users, tier: 'SEEKER' },
   { label: 'Veritas Tools', href: '/veritas-seal', icon: Shield, tier: 'CREATOR' },
   { label: 'Compliance', href: '/compliance', icon: FileText, tier: 'SOVEREIGN' },

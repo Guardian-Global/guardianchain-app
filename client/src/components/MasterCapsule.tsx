@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import {
   Shield,
   Clock,
@@ -68,6 +69,12 @@ interface ReactionData {
   sad: number;
 }
 
+interface TrendDataPoint {
+  day: string;
+  interactions: number;
+  isSpike: boolean;
+}
+
 interface MasterCapsuleProps {
   capsule: CapsuleData;
   metrics: CapsuleMetrics;
@@ -89,6 +96,24 @@ export default function MasterCapsule({
 }: MasterCapsuleProps) {
   const [activeTab, setActiveTab] = useState("content");
   const [userReaction, setUserReaction] = useState<string | null>(null);
+  const [trendData, setTrendData] = useState<TrendDataPoint[]>([]);
+
+  // Fetch trend data for analytics
+  useEffect(() => {
+    if (!capsule.id) return;
+    
+    fetch(`/api/capsule/analytics/trends/${capsule.id}`)
+      .then(res => res.json())
+      .then(data => {
+        const chartData = data.map((item: any) => ({
+          day: new Date(item.day).toLocaleDateString(),
+          interactions: parseInt(item.interactions),
+          isSpike: false // You can add spike detection logic
+        }));
+        setTrendData(chartData);
+      })
+      .catch(err => console.error('Failed to load trend data:', err));
+  }, [capsule.id]);
 
   const getTruthScoreColor = (score: number) => {
     if (score >= 90) return "text-green-400 border-green-400 bg-green-400/10";
@@ -165,6 +190,53 @@ export default function MasterCapsule({
                   Trending #{metrics.trendingRank}
                 </Badge>
               )}
+            </div>
+
+            {/* Emoji Reactions Bar */}
+            <div className="flex items-center gap-2 flex-wrap mb-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleReaction('like')}
+                className={`${userReaction === 'like' ? 'bg-green-500/20 text-green-400 border-green-500' : 'text-brand-text-muted border-brand-surface'}`}
+                data-testid="reaction-like"
+              >
+                <ThumbsUp className="w-4 h-4 mr-1" />
+                {reactions.like}
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleReaction('love')}
+                className={`${userReaction === 'love' ? 'bg-red-500/20 text-red-400 border-red-500' : 'text-brand-text-muted border-brand-surface'}`}
+                data-testid="reaction-love"
+              >
+                <Heart className="w-4 h-4 mr-1" />
+                {reactions.love}
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleReaction('laugh')}
+                className={`${userReaction === 'laugh' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500' : 'text-brand-text-muted border-brand-surface'}`}
+                data-testid="reaction-laugh"
+              >
+                <Smile className="w-4 h-4 mr-1" />
+                {reactions.laugh}
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleReaction('sad')}
+                className={`${userReaction === 'sad' ? 'bg-blue-600/20 text-blue-400 border-blue-600' : 'text-brand-text-muted border-brand-surface'}`}
+                data-testid="reaction-sad"
+              >
+                <Frown className="w-4 h-4 mr-1" />
+                {reactions.sad}
+              </Button>
             </div>
 
             <div className="flex flex-wrap gap-1">
@@ -396,6 +468,9 @@ export default function MasterCapsule({
 
         <TabsContent value="analytics" className="space-y-6">
           <CapsuleAnalytics />
+          <CapsuleTrendGraph />
+          <CapsuleValueCalculator />
+          <CapsuleAuditExport />
         </TabsContent>
       </Tabs>
     </div>

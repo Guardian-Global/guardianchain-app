@@ -15,7 +15,38 @@ import {
 } from "lucide-react";
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
+
+  // Auth protection
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-accent mx-auto mb-4"></div>
+          <p className="text-brand-text-muted">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-brand-dark flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <Shield className="w-16 h-16 text-brand-accent mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">Authentication Required</h2>
+          <p className="text-brand-text-muted mb-6">Please log in to access your profile</p>
+          <button 
+            onClick={() => window.location.href = '/api/login'}
+            className="bg-brand-accent text-brand-dark px-6 py-2 rounded-lg hover:bg-brand-accent/90 transition-colors"
+            data-testid="login-button"
+          >
+            Log In
+          </button>
+        </div>
+      </div>
+    );
+  }
   const [activeTab, setActiveTab] = useState("profile");
 
   return (
