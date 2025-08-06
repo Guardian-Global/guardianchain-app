@@ -13,7 +13,7 @@ interface EliteLayoutProps {
 
 export function EliteLayout({ children, className = '', showBackground = true }: EliteLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-midnight via-black to-midnight text-white font-cyber relative">
+    <div className="min-h-screen bg-slate-900 text-white relative">
       {/* Cyberpunk animated background */}
       {showBackground && (
         <div className="fixed inset-0 bg-cyberpunk bg-[length:400%_400%] animate-gradient-shift opacity-30" />

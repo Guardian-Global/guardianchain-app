@@ -42,7 +42,7 @@ export default function SimpleHomepage() {
         <meta name="description" content="Secure Truth. Your Capsule Platform." />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-midnight via-black to-midnight text-white font-cyber">
+      <div className="min-h-screen bg-slate-900 text-white">
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-16">
           <motion.div

@@ -40,8 +40,14 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-slate-900 text-white;
     font-feature-settings: "rlig" 1, "calt" 1;
+    background: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+  
+  html {
+    background: #1e1e1e !important;
   }
 }
 
