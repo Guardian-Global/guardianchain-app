@@ -8,6 +8,96 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import MasterCapsule from "@/components/MasterCapsule";
+
+// Capsule Card Component for Explorer
+function CapsuleCard({ capsule, viewMode, onView, onLike, onShare, onVerify }: {
+  capsule: any;
+  viewMode: string;
+  onView: (id: string) => void;
+  onLike: (id: string) => void;
+  onShare: (id: string) => void;
+  onVerify: (id: string) => void;
+}) {
+  return (
+    <Card className="bg-[#0d1117] border-[#30363d] hover:border-[#00ffe1] transition-all duration-300 group">
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start">
+          <div className="flex-1">
+            <CardTitle className="text-[#e6edf3] text-lg mb-2 group-hover:text-[#00ffe1] transition-colors">
+              {capsule.title}
+            </CardTitle>
+            <div className="flex items-center gap-2 text-sm text-[#8b949e]">
+              <Badge variant="outline" className="border-[#30363d] text-[#58a6ff] text-xs">
+                {capsule.type}
+              </Badge>
+              <Badge variant="outline" className="border-[#30363d] text-[#7c3aed] text-xs">
+                {capsule.privacy}
+              </Badge>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-right">
+              <div className="text-[#00ffe1] font-mono text-sm">{capsule.truthScore}%</div>
+              <div className="text-[#8b949e] text-xs">Truth Score</div>
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-[#8b949e] text-sm mb-4 line-clamp-3">
+          {capsule.description}
+        </p>
+        
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4 text-xs text-[#8b949e]">
+            <div className="flex items-center gap-1">
+              <Heart className="w-3 h-3" />
+              <span>{capsule.emotionalResonance}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Shield className="w-3 h-3" />
+              <span>{capsule.griefScore}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              <span>{new Date(capsule.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="text-sm text-[#8b949e]">
+              by <span className="text-[#58a6ff]">{capsule.author.name}</span>
+            </div>
+            {capsule.author.verified && (
+              <Shield className="w-4 h-4 text-[#00ffe1]" />
+            )}
+          </div>
+          
+          <div className="flex gap-2">
+            <Button 
+              size="sm" 
+              variant="outline"
+              className="border-[#30363d] text-[#8b949e] hover:border-[#00ffe1] hover:text-[#00ffe1]"
+              onClick={() => onView(capsule.id)}
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline"
+              className="border-[#30363d] text-[#8b949e] hover:border-[#ff6b6b] hover:text-[#ff6b6b]"
+              onClick={() => onLike(capsule.id)}
+            >
+              <Heart className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 import { 
   Search, Filter, Grid3X3, List, Calendar, TrendingUp,
   Clock, Star, Globe, Lock, Shield, Users, Eye, Heart,
@@ -374,14 +464,14 @@ export default function CapsuleExplorer() {
           "grid-cols-1 md:grid-cols-2"
         }`}>
           {filteredCapsules.map((capsule) => (
-            <EnhancedCapsuleCard
+            <CapsuleCard
               key={capsule.id}
               capsule={capsule}
               viewMode={viewMode}
-              onView={(id) => setLocation(`/capsule/${id}`)}
-              onLike={(id) => console.log("Like capsule:", id)}
-              onShare={(id) => console.log("Share capsule:", id)}
-              onVerify={(id) => console.log("Verify capsule:", id)}
+              onView={(id: string) => setLocation(`/capsule/${id}`)}
+              onLike={(id: string) => console.log("Like capsule:", id)}
+              onShare={(id: string) => console.log("Share capsule:", id)}
+              onVerify={(id: string) => console.log("Verify capsule:", id)}
             />
           ))}
         </div>
