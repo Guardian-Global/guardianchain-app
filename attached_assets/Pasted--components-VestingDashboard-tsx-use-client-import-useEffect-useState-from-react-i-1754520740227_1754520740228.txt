@@ -1,0 +1,215 @@
+// components/VestingDashboard.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useSession } from "next-auth/react";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const ABI = [
+  "function vestedAmount() view returns (uint256)",
+  "function releasable() view returns (uint256)",
+  "function released() view returns (uint256)",
+  "function beneficiary() view returns (address)",
+  "function release()",
+  "function cliff() view returns (uint256)",
+  "function start() view returns (uint256)"
+];
+
+const contributors = [
+  {
+    name: "Founder",
+    address: "0xYourFounderWallet",
+    distributor: "0xDistributorAddress1",
+    cliffReached: false
+  },
+  {
+    name: "Core Developer",
+    address: "0xYourDevWallet",
+    distributor: "0xDistributorAddress2",
+    cliffReached: false
+  },
+  {
+    name: "Marketing Lead",
+    address: "0xMarketingWallet",
+    distributor: "0xDistributorAddress3",
+    cliffReached: false
+  }
+];
+
+export default function VestingDashboard() {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.tier === "ADMIN";
+
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const fetchData = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const vestingData = await Promise.all(
+      contributors.map(async (contributor) => {
+        const contract = new ethers.Contract(contributor.distributor, ABI, provider);
+        const vested = await contract.vestedAmount();
+        const released = await contract.released();
+        const releasable = await contract.releasable();
+        const cliff = await contract.cliff();
+        const start = await contract.start();
+        const beneficiary = await contract.beneficiary();
+
+        if (parseFloat(ethers.formatUnits(vested, 18)) > 0 && !contributor.cliffReached) {
+          contributor.cliffReached = true;
+          fetch("/api/webhook/cliff-alert", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contributor: contributor.name, wallet: beneficiary })
+          });
+        }
+
+        return {
+          name: contributor.name,
+          wallet: beneficiary,
+          vested: ethers.formatUnits(vested, 18),
+          released: ethers.formatUnits(released, 18),
+          releasable: ethers.formatUnits(releasable, 18),
+          rawReleasable: releasable.toString(),
+          distributor: contributor.distributor,
+          cliff: Number(cliff),
+          start: Number(start),
+          timeToCliff: Number(cliff) * 1000 - Date.now()
+        };
+      })
+    );
+    setData(vestingData);
+    setLoading(false);
+  };
+
+  const handleExportCSV = () => {
+    const csv = ["Name,Wallet,Vested,Released,Releasable,Cliff Date"];
+    data.forEach(d => {
+      const cliffDate = new Date(d.cliff * 1000).toLocaleString();
+      csv.push(`${d.name},${d.wallet},${d.vested},${d.released},${d.releasable},${cliffDate}`);
+    });
+    const blob = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "vesting_dashboard.csv");
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.text("GTT Contributor Vesting Dashboard", 14, 16);
+    autoTable(doc, {
+      head: [["Name", "Wallet", "Vested", "Released", "Releasable", "Cliff"]],
+      body: data.map(d => [d.name, d.wallet, d.vested, d.released, d.releasable, new Date(d.cliff * 1000).toLocaleDateString()])
+    });
+    doc.save("vesting_dashboard.pdf");
+  };
+
+  const handleClaim = async (distributor: string) => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(distributor, ABI, signer);
+    const tx = await contract.release();
+    await tx.wait();
+    fetchData();
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const chartData = {
+    labels: data.map(d => d.name),
+    datasets: [
+      {
+        label: "Vested",
+        data: data.map(d => parseFloat(d.vested)),
+        backgroundColor: "#6366F1"
+      },
+      {
+        label: "Released",
+        data: data.map(d => parseFloat(d.released)),
+        backgroundColor: "#10B981"
+      }
+    ]
+  };
+
+  if (!isAdmin) {
+    return <div className="text-center p-10">🛑 Access Restricted: Admins Only</div>;
+  }
+
+  const filtered = data.filter(d => {
+    const matchSearch = d.name.toLowerCase().includes(search.toLowerCase());
+    const matchReleasable = filter ? parseFloat(d.releasable) > 0 : true;
+    return matchSearch && matchReleasable;
+  });
+
+  return (
+    <div className="max-w-5xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">📊 GTT Contributor Vesting Dashboard</h1>
+      <div className="mb-4 flex gap-4 flex-wrap">
+        <button onClick={fetchData} className="px-4 py-2 bg-blue-600 text-white rounded">🔄 Refresh</button>
+        <button onClick={handleExportCSV} className="px-4 py-2 bg-green-600 text-white rounded">📤 Export CSV</button>
+        <button onClick={handleExportPDF} className="px-4 py-2 bg-purple-600 text-white rounded">📄 Export PDF</button>
+        <input type="text" placeholder="Search contributor..." value={search} onChange={e => setSearch(e.target.value)} className="px-3 py-2 border rounded" />
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={filter} onChange={() => setFilter(!filter)} />
+          Show Releasable Only
+        </label>
+      </div>
+
+      {loading ? <p>Loading vesting data...</p> : (
+        <>
+          <div className="overflow-x-auto">
+            <table className="w-full border rounded bg-white">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-3 text-left">Contributor</th>
+                  <th className="p-3 text-left">Wallet</th>
+                  <th className="p-3 text-right">Vested</th>
+                  <th className="p-3 text-right">Released</th>
+                  <th className="p-3 text-right">Releasable</th>
+                  <th className="p-3 text-right">Cliff</th>
+                  <th className="p-3 text-right">Time to Cliff</th>
+                  <th className="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((item, i) => (
+                  <tr key={i} className={`border-t ${parseFloat(item.releasable) > 0 ? 'bg-green-50' : ''}`}>
+                    <td className="p-3">{item.name}</td>
+                    <td className="p-3 text-xs">{item.wallet}</td>
+                    <td className="p-3 text-right">{item.vested} GTT</td>
+                    <td className="p-3 text-right">{item.released} GTT</td>
+                    <td className="p-3 text-right">{item.releasable} GTT</td>
+                    <td className="p-3 text-right">{new Date(item.cliff * 1000).toLocaleString()}</td>
+                    <td className="p-3 text-right">{item.timeToCliff < 0 ? "⏱️ Passed" : Math.floor(item.timeToCliff / (1000 * 60 * 60 * 24)) + " days"}</td>
+                    <td className="p-3 text-right">
+                      {window.ethereum?.selectedAddress?.toLowerCase() === item.wallet.toLowerCase() && (
+                        <button
+                          onClick={() => handleClaim(item.distributor)}
+                          className="px-3 py-1 text-white bg-indigo-600 rounded"
+                        >
+                          Claim
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-10">
+            <Bar data={chartData} />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

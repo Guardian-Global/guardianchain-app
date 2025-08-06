@@ -206,6 +206,9 @@ app.use("/api/admin", adminRouter);
 import veritasRouter from "./routes/api/veritas.js";
 app.use("/api/veritas", veritasRouter);
 
+import vestingRouter from "./routes/api/vesting";
+app.use("/api/vesting", vestingRouter);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

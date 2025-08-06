@@ -69,6 +69,7 @@ const StakingPage = lazy(() => import("@/pages/Staking"));
 const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
 const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
+const VestingDashboard = lazy(() => import("@/pages/VestingDashboard"));
 // ViralShowcase archived during consolidation
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
@@ -195,6 +196,7 @@ function Router() {
               <Route path="/metrics" component={MetricsPage} />
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
+              <Route path="/vesting-dashboard" component={VestingDashboard} />
 
               {/* New comprehensive pages */}
               <Route path="/submit" component={SubmitCapsule} />
