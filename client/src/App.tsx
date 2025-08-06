@@ -116,9 +116,20 @@ function Router() {
 
   return (
     <Switch>
-      {/* Homepage - Full screen without layout */}
+      {/* Full screen routes without layout wrapper */}
       <Route path="/" component={CyberHomepage} />
       <Route path="/elite" component={EliteHomepage} />
+      <Route path="/enhancement-demo">
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+              <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full"></div>
+            </div>
+          }
+        >
+          <EnhancementDemo />
+        </Suspense>
+      </Route>
       
       {/* All other routes get the layout wrapper */}
       <Route>
@@ -185,7 +196,6 @@ function Router() {
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/capsule/:id/analytics" component={CapsuleAnalyticsPage} />
               <Route path="/analytics-demo" component={CapsuleAnalyticsDemo} />
-              <Route path="/enhancement-demo" component={EnhancementDemo} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
