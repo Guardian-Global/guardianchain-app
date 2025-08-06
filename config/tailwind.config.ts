@@ -52,8 +52,13 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // 2026 Futuristic High-Contrast Colors
+        // Cyberpunk Theme Colors
+        midnight: {
+          DEFAULT: "hsl(240, 100%, 3%)",
+          200: "hsl(240, 100%, 5%)",
+        },
         neon: {
+          DEFAULT: "hsl(180, 100%, 50%)",
           cyan: "hsl(180, 100%, 50%)",
           purple: "hsl(285, 100%, 65%)",
           green: "hsl(120, 100%, 50%)",
@@ -61,6 +66,7 @@ const config: Config = {
           yellow: "hsl(60, 100%, 60%)",
           blue: "hsl(220, 100%, 60%)",
         },
+        electric: "hsl(285, 100%, 65%)",
         cosmic: {
           void: "hsl(240, 100%, 3%)",
           deep: "hsl(240, 100%, 5%)",
@@ -134,9 +140,15 @@ const config: Config = {
         "slide-in-from-bottom": "slide-in-from-bottom 0.5s ease-out",
         "slide-in-from-left": "slide-in-from-left 0.5s ease-out",
         "slide-in-from-right": "slide-in-from-right 0.5s ease-out",
+        "gradient-shift": "gradient-shift 8s ease infinite",
+        "neon-pulse": "neon-pulse 2s ease-in-out infinite alternate",
+        "morphic-pulse": "morphic-pulse 4s ease-in-out infinite",
+        "prismatic-shift": "prismatic-shift 6s linear infinite",
       },
       backgroundImage: {
         "quantum-gradient": "var(--quantum-gradient)",
+        "cyberpunk": "linear-gradient(to right, #0f0c29, #302b63, #24243e)",
+        "gradient-cyber": "linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%), hsl(260, 80%, 6%))",
       },
       backdropFilter: {
         "glass": "var(--glass-backdrop)",
