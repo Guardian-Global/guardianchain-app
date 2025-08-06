@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import EnhancedLayout from '@/components/layout/EnhancedLayout';
+import Layout from '@/components/layout/Layout';
 import AuthGuard from '@/components/auth/AuthGuard';
-import EnhancedCapsuleCreator from '@/components/capsule/EnhancedCapsuleCreator';
-import CapsuleCreationWizard from '@/components/capsule/CapsuleCreationWizard';
-import QuickCreateCapsule from '@/components/capsule/QuickCreateCapsule';
-import CapsulePreviewModal from '@/components/capsule/CapsulePreviewModal';
-import CapsuleAnalytics from '@/components/capsule/CapsuleAnalytics';
-import CapsuleEnhancementAnalyzer from '@/components/capsule/CapsuleEnhancementAnalyzer';
+import SuperiorCapsuleCreator from '@/components/enhanced/SuperiorCapsuleCreator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -128,28 +123,28 @@ const CreateCapsule: React.FC = () => {
   const quickStats: QuickStat[] = [
     {
       label: 'Capsules Created',
-      value: userStats?.capsulesCreated?.toString() || '0',
+      value: (userStats as any)?.capsulesCreated?.toString() || '0',
       icon: FileText,
       color: 'text-cyan-400',
       trend: '+12%'
     },
     {
       label: 'GTT Earned',
-      value: userStats?.gttEarned?.toString() || '0',
+      value: (userStats as any)?.gttEarned?.toString() || '0',
       icon: Coins,
       color: 'text-yellow-400',
       trend: '+8%'
     },
     {
       label: 'Truth Score',
-      value: `${userStats?.truthScore || 0}%`,
+      value: `${(userStats as any)?.truthScore || 0}%`,
       icon: Shield,
       color: 'text-green-400',
       trend: '+5%'
     },
     {
       label: 'Impact Level',
-      value: userStats?.impactLevel || 'Rising',
+      value: (userStats as any)?.impactLevel || 'Rising',
       icon: TrendingUp,
       color: 'text-purple-400',
       trend: 'New'
@@ -193,42 +188,37 @@ const CreateCapsule: React.FC = () => {
   if (!showModeSelection && selectedMode) {
     return (
       <AuthGuard>
-        <EnhancedLayout variant="dashboard" showNavigation={true}>
-          <div className="lg:ml-72 min-h-screen">
-            <AnimatePresence mode="wait">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="p-6"
-              >
-                {selectedMode === 'wizard' && (
-                  <CapsuleCreationWizard
-                    onComplete={handleCreationComplete}
-                    onCancel={handleCreationCancel}
-                  />
-                )}
-                {selectedMode === 'advanced' && (
-                  <EnhancedCapsuleCreator />
-                )}
-                {selectedMode === 'quick' && (
-                  <QuickCreateCapsule
-                    onComplete={handleCreationComplete}
-                    onCancel={handleCreationCancel}
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </EnhancedLayout>
+        <Layout title="Create Capsule">
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="p-6"
+            >
+              <SuperiorCapsuleCreator 
+                onCapsuleCreated={handleCreationComplete}
+              />
+              <div className="mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={handleCreationCancel}
+                  data-testid="button-back"
+                >
+                  ← Back to Mode Selection
+                </Button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </Layout>
       </AuthGuard>
     );
   }
 
   return (
     <AuthGuard>
-      <EnhancedLayout variant="dashboard" showNavigation={true}>
-        <div className="lg:ml-72 min-h-screen p-6">
+      <Layout title="Create Truth Capsule">
+        <div className="min-h-screen p-6">
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -494,37 +484,37 @@ const CreateCapsule: React.FC = () => {
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Avg. GTT per Capsule</span>
                             <span className="text-cyan-300 font-medium">
-                              {capsuleInsights?.avgGTT || '24.5'}
+                              {(capsuleInsights as any)?.avgGTT || '24.5'}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Best Performing Type</span>
                             <span className="text-green-300 font-medium">
-                              {capsuleInsights?.bestType || 'Truth'}
+                              {(capsuleInsights as any)?.bestType || 'Truth'}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Optimal Length</span>
                             <span className="text-purple-300 font-medium">
-                              {capsuleInsights?.optimalLength || '200-500 chars'}
+                              {(capsuleInsights as any)?.optimalLength || '200-500 chars'}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Peak Activity</span>
                             <span className="text-yellow-300 font-medium">
-                              {capsuleInsights?.peakTime || '6-9 PM'}
+                              {(capsuleInsights as any)?.peakTime || '6-9 PM'}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Success Rate</span>
                             <span className="text-green-300 font-medium">
-                              {capsuleInsights?.successRate || '94.2%'}
+                              {(capsuleInsights as any)?.successRate || '94.2%'}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-400">Community Engagement</span>
                             <span className="text-pink-300 font-medium">
-                              {capsuleInsights?.engagement || '87%'}
+                              {(capsuleInsights as any)?.engagement || '87%'}
                             </span>
                           </div>
                         </div>
@@ -605,29 +595,21 @@ const CreateCapsule: React.FC = () => {
 
               <TabsContent value="enhance" className="space-y-6">
                 <motion.div variants={itemVariants}>
-                  <CapsuleEnhancementAnalyzer
-                    content={currentContent || ''}
-                    onEnhancementApplied={(enhanced) => setCurrentContent(enhanced)}
-                    autoAnalyze={true}
-                  />
+                  <div className="text-center py-12">
+                    <Brain className="w-12 h-12 mx-auto text-purple-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-white mb-2">AI Enhancement</h3>
+                    <p className="text-gray-400">AI-powered capsule enhancement features coming soon...</p>
+                  </div>
                 </motion.div>
               </TabsContent>
 
               <TabsContent value="analytics" className="space-y-6">
                 <motion.div variants={itemVariants}>
-                  {analyticsData ? (
-                    <CapsuleAnalytics
-                      data={analyticsData}
-                      timeframe={analyticsTimeframe}
-                      onTimeframeChange={setAnalyticsTimeframe}
-                    />
-                  ) : (
-                    <div className="text-center py-12">
-                      <BarChart3 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                      <h3 className="text-xl font-semibold text-white mb-2">Analytics Loading</h3>
-                      <p className="text-gray-400">Analyzing your capsule performance data...</p>
-                    </div>
-                  )}
+                  <div className="text-center py-12">
+                    <BarChart3 className="w-12 h-12 mx-auto text-blue-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-white mb-2">Analytics Dashboard</h3>
+                    <p className="text-gray-400">Comprehensive analytics coming soon...</p>
+                  </div>
                 </motion.div>
               </TabsContent>
 
@@ -690,7 +672,7 @@ const CreateCapsule: React.FC = () => {
             </Tabs>
           </motion.div>
         </div>
-      </EnhancedLayout>
+      </Layout>
     </AuthGuard>
   );
 };

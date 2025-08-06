@@ -123,7 +123,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-md"
           >
-            <AdvancedCard variant="warning" className="p-8 text-center">
+            <AdvancedCard variant="gradient" className="p-8 text-center">
               <div className="mb-6">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
                   <Key className="w-8 h-8 text-white" />
@@ -152,7 +152,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
                 </EnhancedButton>
 
                 <EnhancedButton
-                  variant="ghost"
+                  variant="neural"
                   size="sm"
                   className="w-full"
                   onClick={() => setLocation("/dashboard")}
