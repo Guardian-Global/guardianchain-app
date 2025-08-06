@@ -90,6 +90,45 @@ export const useUserProfile = () => {
     }
   };
 
+  const uploadAvatar = async (file: File) => {
+    if (!isAuthenticated || !user) {
+      throw new Error('User not authenticated');
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const response = await fetch('/api/upload/avatar', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload avatar');
+      }
+
+      const result = await response.json();
+      
+      // Update profile with new avatar URL
+      if (result.url && profile) {
+        const updatedProfile = { ...profile, profileImage: result.url };
+        setProfile(updatedProfile);
+      }
+      
+      return result;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchProfile();
   }, [isAuthenticated, user]);
@@ -99,7 +138,14 @@ export const useUserProfile = () => {
     loading,
     error,
     updateProfile,
+    uploadAvatar,
     refetch: fetchProfile,
+    isLoading: loading,
+    isUpdating: loading,
+    isUploadingAvatar: loading,
+    getCapsuleStats: async () => ({ total: 0, sealed: 0, verified: 0, thisMonth: 0, byVisibility: { private: 0, public: 0, friends: 0, unlockable: 0 } }),
+    getGTTBalance: async () => ({ balance: 0, totalEarned: 0, totalSpent: 0 }),
+    getActivitySummary: async () => ({ totalActivities: 0, lastActivity: null }),
   };
 };
 

@@ -69,6 +69,16 @@ app.use(
   }),
 );
 
+// Serve uploaded files (avatars, capsules)
+app.use("/uploads", express.static("uploads", {
+  setHeaders: (res, path) => {
+    // Set appropriate headers for uploaded content
+    if (path.includes("/avatars/")) {
+      res.setHeader("Cache-Control", "public, max-age=86400"); // 1 day cache for avatars
+    }
+  },
+}));
+
 // Demo authentication route (bypasses all other auth)
 app.post("/api/auth/demo-login", (req, res) => {
   console.log("DEMO AUTH HIT:", req.body);

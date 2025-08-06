@@ -3,6 +3,7 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import fs from "fs";
+import { consolidatedAuth } from "../auth/authConsolidation";
 
 const router = express.Router();
 
@@ -222,6 +223,90 @@ router.get("/thumbnail/:id", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to generate thumbnail",
+    });
+  }
+});
+
+// Avatar upload configuration
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = "uploads/avatars";
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    // Generate secure filename with user ID if available
+    const fileId = crypto.randomUUID();
+    const extension = path.extname(file.originalname);
+    cb(null, `avatar_${fileId}${extension}`);
+  },
+});
+
+const avatarUpload = multer({
+  storage: avatarStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max for avatars
+  },
+  fileFilter: (req, file, cb) => {
+    // Only allow image files for avatars
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed for avatars"));
+    }
+  },
+});
+
+// Avatar upload endpoint
+router.post("/avatar", consolidatedAuth, avatarUpload.single("avatar"), async (req: any, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No avatar file provided",
+      });
+    }
+
+    const file = req.file;
+    const userId = req.user?.id || "anonymous";
+
+    // Generate avatar metadata
+    const avatarId = crypto.randomUUID();
+    const avatarUrl = `/uploads/avatars/${file.filename}`;
+
+    // In production, you would save this to your database
+    const avatarMetadata = {
+      id: avatarId,
+      userId,
+      originalName: file.originalname,
+      filename: file.filename,
+      url: avatarUrl,
+      mimeType: file.mimetype,
+      size: file.size,
+      createdAt: new Date().toISOString(),
+    };
+
+    console.log(`✅ Avatar uploaded for user ${userId}:`, avatarMetadata);
+
+    res.json({
+      success: true,
+      url: avatarUrl,
+      metadata: avatarMetadata,
+      message: "Avatar uploaded successfully",
+    });
+  } catch (error: any) {
+    console.error("Avatar upload error:", error);
+
+    // Clean up file if it exists
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(500).json({
+      success: false,
+      message: error.message || "Avatar upload failed",
     });
   }
 });
