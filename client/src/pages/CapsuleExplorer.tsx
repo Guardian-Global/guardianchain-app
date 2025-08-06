@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { EnhancedCapsuleCard } from "@/components/capsules/EnhancedCapsuleCard";
+import MasterCapsule from "@/components/MasterCapsule";
 import { 
   Search, Filter, Grid3X3, List, Calendar, TrendingUp,
   Clock, Star, Globe, Lock, Shield, Users, Eye, Heart,

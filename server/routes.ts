@@ -1,6 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import terminalRoutes from "./routes/terminal";
+import vaultRoutes from "./routes/vault";
+import yieldRoutes from "./routes/yield";
+import valuationRoutes from "./routes/valuation";
+import adminMetricsRoutes from "./routes/admin-metrics";
 import { getCapsuleStats } from "./api/capsule-stats";
 import { getCapsuleTimeline } from "./api/timeline";
 import { getValidatorBids } from "./api/validator-bids";
@@ -2337,6 +2341,14 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   // Register hyperdimensional bulk routes
   app.use('/api/bulk', hyperdimensionalBulkRoutes);
+  
+  // Vault and yield staking routes
+  app.use("/api/vault", vaultRoutes);
+  app.use("/api/yield", yieldRoutes);
+  
+  // Platform valuation and admin routes
+  app.use("/api/valuation", valuationRoutes);
+  app.use("/api/admin", adminMetricsRoutes);
 
   // Simple subscription status - no database calls
   app.get(

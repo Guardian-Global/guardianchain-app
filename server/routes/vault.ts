@@ -1,182 +1,108 @@
-import { Router } from "express";
+import express from "express";
 import { consolidatedAuth } from "../auth/authConsolidation";
-import { calculateCapsuleYield } from "../../client/src/utils/capsuleYield";
 
-const router = Router();
+export const vaultRoutes = express.Router();
 
-// Enhanced Vault API - Get claimable GTT yield for user
-router.get("/claimable", consolidatedAuth, async (req: any, res) => {
+// Get vault capsules for authenticated user
+vaultRoutes.get("/capsules", consolidatedAuth, async (req, res) => {
   try {
-    const userId = req.user?.id;
-    const { owner } = req.query;
-    
-    if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-
-    // Use owner from query if provided, otherwise use authenticated user
-    const targetUserId = owner || userId;
-    
-    console.log("💰 Calculating claimable yield for user:", targetUserId);
-
-    // Mock capsules data - in production this would query Supabase
+    // Mock data for now - replace with actual database queries
     const mockCapsules = [
       {
-        id: "cap_1754140001_abc123",
-        title: "Family Legacy Collection",
-        created_at: "2024-07-15T10:00:00Z",
-        truth_score: 95,
-        has_veritas_seal: true,
-        owner: targetUserId
+        id: "vault_001",
+        title: "Classified Research Findings 2025",
+        creator: "Dr. ResearchGuardian",
+        createdAt: "2025-08-01T00:00:00Z",
+        isLocked: true,
+        isTimeSealed: true,
+        unlockDate: "2025-12-31T23:59:59Z",
+        truthScore: 96,
+        gttValue: 150,
+        category: "research",
+        content: "Time-sealed research data...",
+        tags: ["research", "classified", "2025"],
+        isVerified: true,
+        mediaAttachments: [],
+        viewCount: 0
       },
       {
-        id: "cap_1754140002_def456", 
-        title: "Corporate Whistleblower Report",
-        created_at: "2024-06-20T15:30:00Z",
-        truth_score: 98,
-        has_veritas_seal: true,
-        owner: targetUserId
+        id: "vault_002",
+        title: "Personal Memory Capsule - Summer 2025",
+        creator: "MemoryKeeper",
+        createdAt: "2025-07-15T00:00:00Z",
+        isLocked: false,
+        isTimeSealed: false,
+        truthScore: 88,
+        gttValue: 75,
+        category: "personal",
+        content: "Summer memories and experiences...",
+        tags: ["personal", "memories", "summer"],
+        isVerified: false,
+        mediaAttachments: ["image1.jpg", "video1.mp4"],
+        viewCount: 23
       },
       {
-        id: "cap_1754140003_ghi789",
-        title: "Personal Memory Archive",
-        created_at: "2024-08-01T08:15:00Z", 
-        truth_score: 87,
-        has_veritas_seal: false,
-        owner: targetUserId
+        id: "vault_003",
+        title: "Corporate Whistleblower Evidence",
+        creator: "TruthSeeker2025",
+        createdAt: "2025-06-20T00:00:00Z",
+        isLocked: true,
+        isTimeSealed: false,
+        truthScore: 94,
+        gttValue: 500,
+        category: "evidence",
+        content: "Confidential corporate evidence...",
+        tags: ["whistleblower", "corporate", "evidence"],
+        isVerified: true,
+        mediaAttachments: ["document1.pdf", "audio1.mp3"],
+        viewCount: 156
       }
     ];
 
-    // Calculate yield for each capsule using our advanced system
-    const yields = mockCapsules.map(capsule => {
-      const yieldData = calculateCapsuleYield(
-        capsule.created_at,
-        0.12, // 12% base APY
-        capsule.truth_score,
-        capsule.has_veritas_seal
-      );
-      
-      return {
-        capsuleId: capsule.id,
-        title: capsule.title,
-        currentYield: yieldData.currentYield,
-        dailyRate: yieldData.dailyRate,
-        apy: yieldData.apy,
-        daysActive: yieldData.daysActive
-      };
-    });
-
-    const totalYield = yields.reduce((sum, y) => sum + y.currentYield, 0);
-    const averageAPY = yields.reduce((sum, y) => sum + y.apy, 0) / yields.length;
-
-    const response = {
-      amount: totalYield.toFixed(6),
-      totalYield: totalYield,
-      averageAPY: averageAPY,
-      capsuleCount: yields.length,
-      breakdown: yields,
-      lastUpdated: new Date().toISOString()
-    };
-
-    console.log("💰 Claimable yield calculated:", response);
-    res.json(response);
-
+    res.json(mockCapsules);
   } catch (error) {
-    console.error("Error calculating claimable yield:", error);
-    res.status(500).json({ 
-      error: "Failed to calculate claimable yield",
-      details: error instanceof Error ? error.message : "Unknown error"
-    });
+    console.error("Error fetching vault capsules:", error);
+    res.status(500).json({ error: "Failed to fetch vault capsules" });
   }
 });
 
-// Get yield history for analytics
-router.get("/history", consolidatedAuth, async (req: any, res) => {
+// Get unlock trend data
+vaultRoutes.get("/unlock-trend", consolidatedAuth, async (req, res) => {
   try {
-    const userId = req.user?.id;
-    
-    if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-
-    // Mock yield history - in production this would be stored in database
-    const mockHistory = [
-      {
-        date: "2024-08-01",
-        totalYield: 15.234567,
-        capsuleCount: 3,
-        averageAPY: 15.8
-      },
-      {
-        date: "2024-08-02", 
-        totalYield: 15.456789,
-        capsuleCount: 3,
-        averageAPY: 15.9
-      },
-      {
-        date: "2024-08-03",
-        totalYield: 15.678901,
-        capsuleCount: 3,
-        averageAPY: 16.1
-      }
+    // Mock trend data
+    const mockTrendData = [
+      { day: "2025-07-29", unlocks: 12, isSpike: false },
+      { day: "2025-07-30", unlocks: 8, isSpike: false },
+      { day: "2025-07-31", unlocks: 15, isSpike: false },
+      { day: "2025-08-01", unlocks: 23, isSpike: true },
+      { day: "2025-08-02", unlocks: 18, isSpike: false },
+      { day: "2025-08-03", unlocks: 27, isSpike: true },
+      { day: "2025-08-04", unlocks: 19, isSpike: false }
     ];
 
-    res.json({
-      history: mockHistory,
-      totalGrown: mockHistory[mockHistory.length - 1].totalYield - mockHistory[0].totalYield,
-      periodDays: mockHistory.length
-    });
-
+    res.json(mockTrendData);
   } catch (error) {
-    console.error("Error fetching yield history:", error);
-    res.status(500).json({ error: "Failed to fetch yield history" });
+    console.error("Error fetching unlock trend:", error);
+    res.status(500).json({ error: "Failed to fetch unlock trend data" });
   }
 });
 
-// Simulate claiming yield (blockchain integration ready)
-router.post("/claim", consolidatedAuth, async (req: any, res) => {
+// Get user's GTT balance
+vaultRoutes.get("/gtt-balance", consolidatedAuth, async (req, res) => {
   try {
-    const userId = req.user?.id;
-    const { amount, capsuleIds } = req.body;
-    
-    if (!userId) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-
-    if (!amount || amount <= 0) {
-      return res.status(400).json({ error: "Invalid claim amount" });
-    }
-
-    console.log("🎯 Processing yield claim:", { userId, amount, capsuleIds });
-
-    // In production, this would:
-    // 1. Verify the claimable amount matches calculation
-    // 2. Call the smart contract to mint GTT tokens
-    // 3. Update database with claim transaction
-    // 4. Send confirmation to user
-
-    // Mock successful claim
-    const mockTransaction = {
-      hash: `0x${Math.random().toString(16).substr(2, 64)}`,
-      amount: parseFloat(amount),
-      gasUsed: "0.001 MATIC",
-      gasPrice: "30 gwei",
-      blockNumber: Math.floor(Math.random() * 1000000) + 45000000,
-      timestamp: new Date().toISOString(),
-      status: "confirmed"
+    // Mock balance data
+    const mockBalance = {
+      amount: 1247.56,
+      staked: 500.00,
+      available: 747.56,
+      pending: 0.00
     };
 
-    res.json({
-      success: true,
-      transaction: mockTransaction,
-      newBalance: parseFloat(amount) + 2547.89, // Mock existing balance
-      message: "GTT yield successfully claimed!"
-    });
-
+    res.json(mockBalance);
   } catch (error) {
-    console.error("Error processing yield claim:", error);
-    res.status(500).json({ error: "Failed to process yield claim" });
+    console.error("Error fetching GTT balance:", error);
+    res.status(500).json({ error: "Failed to fetch GTT balance" });
   }
 });
 
-export default router;
+export default vaultRoutes;

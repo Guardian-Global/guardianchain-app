@@ -121,6 +121,46 @@ export const mediaFiles = pgTable("media_files", {
   index("idx_media_files_uploaded_at").on(table.uploadedAt),
 ]);
 
+// GTT Yield Stakes table for staking vault
+export const yieldStakes = pgTable("yield_stakes", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  gttAmount: numeric("gtt_amount").notNull(),
+  daysLocked: numeric("days_locked").notNull(),
+  multiplier: numeric("multiplier").notNull(),
+  startedAt: timestamp("started_at").defaultNow(),
+  endsAt: timestamp("ends_at").notNull(),
+  claimed: boolean("claimed").default(false),
+  yieldEarned: numeric("yield_earned").default("0"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_yield_stakes_user").on(table.userId),
+  index("idx_yield_stakes_ends_at").on(table.endsAt),
+]);
+
+// Vault unlock timeline for tracking capsule unlocks
+export const vaultUnlocks = pgTable("vault_unlocks", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  capsuleId: uuid("capsule_id").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  unlockType: varchar("unlock_type").notNull(), // "time", "payment", "dao_vote"
+  unlockCost: numeric("unlock_cost").default("0"),
+  gttReward: numeric("gtt_reward").default("0"),
+  unlockedAt: timestamp("unlocked_at").defaultNow(),
+}, (table) => [
+  index("idx_vault_unlocks_capsule").on(table.capsuleId),
+  index("idx_vault_unlocks_user").on(table.userId),
+  index("idx_vault_unlocks_date").on(table.unlockedAt),
+]);
+
 // User social links table
 export const userSocialLinks = pgTable("user_social_links", {
   id: uuid("id")
