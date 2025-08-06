@@ -15,8 +15,6 @@ import WelcomeTour from "@/components/WelcomeTour";
 import { GuardianBootHook } from "@/components/GuardianBootHook";
 import EliteHomepage from "@/pages/EliteHomepage";
 import CyberHomepage from "@/pages/CyberHomepage";
-import SimpleHomepage from "@/pages/SimpleHomepage";
-import CenteredHomepage from "@/pages/CenteredHomepage";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import { useAuth } from "./hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
@@ -75,7 +73,6 @@ const CapsuleAnalyticsPage = lazy(() => import("./pages/CapsuleAnalyticsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const EnhancementDemo = lazy(() => import("./pages/EnhancementDemo"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
@@ -118,24 +115,9 @@ function Router() {
 
   return (
     <Switch>
-      {/* Homepage with centered layout - no sidebar */}
-      <Route path="/" component={CenteredHomepage} />
-      <Route path="/elite">
-        <EliteLayout>
-          <EliteHomepage />
-        </EliteLayout>
-      </Route>
-      <Route path="/enhancement-demo">
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-              <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full"></div>
-            </div>
-          }
-        >
-          <EnhancementDemo />
-        </Suspense>
-      </Route>
+      {/* Homepage - Full screen without layout */}
+      <Route path="/" component={CyberHomepage} />
+      <Route path="/elite" component={EliteHomepage} />
       
       {/* All other routes get the layout wrapper */}
       <Route>
@@ -202,6 +184,8 @@ function Router() {
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/capsule/:id/analytics" component={CapsuleAnalyticsPage} />
               <Route path="/analytics-demo" component={CapsuleAnalyticsDemo} />
+              <Route path="/dao" component={DAO} />
+              <Route path="/profile" component={Profile} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>
@@ -252,39 +236,35 @@ export default function App() {
                             <OfflineIndicator />
                           </main>
                           
-                          {/* Global components - conditionally render to avoid conflicts */}
-                          {!window.location.pathname.includes('/enhancement-demo') && (
-                            <>
-                              {/* Guardian Mascot - Available on all pages except enhancement demo */}
-                              <Suspense fallback={null}>
-                                <GuardianMascot />
-                              </Suspense>
-                              
-                              {/* Auth Debug Panel for development */}
-                              <Suspense fallback={null}>
-                                <AuthDebugPanel />
-                              </Suspense>
-                              
-                              {/* Comprehensive Authentication Flow */}
-                              <Suspense fallback={null}>
-                                <ComprehensiveAuthFlow />
-                              </Suspense>
-                              
-                              {/* Onboarding Status Checker */}
-                              <Suspense fallback={null}>
-                                <OnboardingStatusChecker />
-                              </Suspense>
+                          {/* Guardian Mascot - Available on all pages */}
+                          <Suspense fallback={null}>
+                            <GuardianMascot />
+                          </Suspense>
+                          
 
-                              {/* Full App Debugger */}
-                              <Suspense fallback={null}>
-                                <FullAppDebugger />
-                              </Suspense>
-                              
-                              <Suspense fallback={<div className="h-20 bg-slate-900" />}>
-                                <GuardianMascotFooter />
-                              </Suspense>
-                            </>
-                          )}
+                          
+                          {/* Auth Debug Panel for development */}
+                          <Suspense fallback={null}>
+                            <AuthDebugPanel />
+                          </Suspense>
+                          
+                          {/* Comprehensive Authentication Flow */}
+                          <Suspense fallback={null}>
+                            <ComprehensiveAuthFlow />
+                          </Suspense>
+                          
+                          {/* Onboarding Status Checker */}
+                          <Suspense fallback={null}>
+                            <OnboardingStatusChecker />
+                          </Suspense>
+
+                          {/* Full App Debugger */}
+                          <Suspense fallback={null}>
+                            <FullAppDebugger />
+                          </Suspense>
+                          <Suspense fallback={<div className="h-20 bg-slate-900" />}>
+                            <GuardianMascotFooter />
+                          </Suspense>
                         </NotificationProvider>
                         <Toaster />
                       </TooltipProvider>

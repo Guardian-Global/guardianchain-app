@@ -3,11 +3,10 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./index.html",
-    "./client/src/**/*.{js,ts,jsx,tsx,mdx}",
-    "./client/src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./client/src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./client/src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./client/src/**/*.{js,ts,jsx,tsx}",
+    "./client/src/pages/**/*.{js,ts,jsx,tsx}",
+    "./client/src/components/**/*.{js,ts,jsx,tsx}",
+    "./client/src/app/**/*.{js,ts,jsx,tsx}",
   ],
   prefix: "",
   theme: {
@@ -20,7 +19,6 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Core shadcn/ui variables
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -54,61 +52,44 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-
-        // GuardianChain cyberpunk colors
-        'neon': {
-          DEFAULT: '#00ffe1',
-          cyan: '#00ffe1',
-          magenta: '#ff00d4',
-          purple: '#7c3aed',
-          green: '#10b981',
-          orange: '#f79009',
+        // 2026 Futuristic High-Contrast Colors
+        neon: {
+          cyan: "hsl(180, 100%, 50%)",
+          purple: "hsl(285, 100%, 65%)",
+          green: "hsl(120, 100%, 50%)",
+          pink: "hsl(315, 100%, 70%)",
+          yellow: "hsl(60, 100%, 60%)",
+          blue: "hsl(220, 100%, 60%)",
         },
-        'midnight': {
-          DEFAULT: '#0a0f2c',
-          100: '#161b22',
-          200: '#21262d',
-          300: '#30363d',
-          400: '#484f58',
-          500: '#6e7681',
+        cosmic: {
+          void: "hsl(240, 100%, 3%)",
+          deep: "hsl(240, 100%, 5%)",
+          nebula: "hsl(260, 80%, 6%)",
+          surface: "hsl(240, 50%, 8%)",
+          border: "hsl(240, 50%, 20%)",
         },
-        'cyber': {
-          cyan: 'hsl(180, 100%, 50%)',
-          magenta: 'hsl(320, 100%, 50%)', 
-          purple: 'hsl(285, 100%, 65%)',
-          green: 'hsl(158, 64%, 52%)',
-          orange: 'hsl(32, 95%, 55%)',
-          blue: 'hsl(210, 100%, 60%)',
-          red: 'hsl(348, 100%, 61%)',
-          yellow: 'hsl(50, 100%, 60%)',
-          pink: 'hsl(330, 100%, 70%)',
+        glass: {
+          light: "hsla(240, 50%, 15%, 0.8)",
+          medium: "hsla(260, 40%, 12%, 0.9)",
+          dark: "hsla(240, 100%, 5%, 0.95)",
         },
-      },
-      fontFamily: {
-        cyber: ['"Orbitron"', '"Space Grotesk"', 'sans-serif'],
-        quantum: ['"Space Grotesk"', '"Inter"', 'sans-serif'], 
-        code: ['"Fira Code"', '"JetBrains Mono"', 'monospace'],
-        display: ['"Space Grotesk"', 'sans-serif'],
-        web3: ['"Inter"', '"Space Grotesk"', 'sans-serif'],
-      },
-      backgroundImage: {
-        'gradient-cyber': 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)',
-        'gradient-cosmic': 'linear-gradient(135deg, hsl(240, 100%, 5%), hsl(280, 100%, 8%))',
-        'gradient-void': 'linear-gradient(135deg, hsl(240, 100%, 3%), hsl(260, 80%, 6%))',
-      },
-      boxShadow: {
-        'neon': '0 0 20px hsl(180, 100%, 50%), 0 0 40px hsl(180, 100%, 50%)',
-        'neon-magenta': '0 0 20px hsl(330, 100%, 50%), 0 0 40px hsl(330, 100%, 50%)',
-        'neon-purple': '0 0 20px hsl(285, 100%, 65%), 0 0 40px hsl(285, 100%, 65%)',
-        'glass': '0 8px 32px hsla(0, 0%, 0%, 0.37)',
-      },
-      backdropBlur: {
-        'glass': '12px',
+        viral: {
+          electric: "hsl(285, 100%, 65%)",
+          quantum: "hsl(120, 100%, 50%)",
+          plasma: "hsl(315, 100%, 70%)",
+          laser: "hsl(180, 100%, 50%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["Fira Code", "JetBrains Mono", "monospace"],
+        display: ["Space Grotesk", "system-ui", "sans-serif"],
+        cyber: ["Orbitron", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -119,34 +100,50 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "gradient-shift": {
-          '0%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-          '100%': { backgroundPosition: '0% 50%' },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
-        "neon-pulse": {
-          'from': { boxShadow: '0 0 10px hsla(180, 100%, 50%, 0.5)' },
-          'to': { boxShadow: '0 0 30px hsla(180, 100%, 50%, 0.8), 0 0 60px hsla(180, 100%, 50%, 0.4)' },
+        "fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
         },
-        "glow-pulse": {
-          '0%, 100%': { boxShadow: '0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor' },
-          '50%': { boxShadow: '0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor' },
+        "slide-in-from-top": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-in-from-bottom": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-in-from-left": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-in-from-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "gradient-shift": "gradient-shift 8s ease infinite",
-        "neon-pulse": "neon-pulse 2s ease-in-out infinite alternate",
-        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
-        "spin-slow": "spin 8s linear infinite",
+        "fade-in": "fade-in 0.5s ease-out",
+        "fade-out": "fade-out 0.5s ease-out",
+        "slide-in-from-top": "slide-in-from-top 0.5s ease-out",
+        "slide-in-from-bottom": "slide-in-from-bottom 0.5s ease-out",
+        "slide-in-from-left": "slide-in-from-left 0.5s ease-out",
+        "slide-in-from-right": "slide-in-from-right 0.5s ease-out",
+      },
+      backgroundImage: {
+        "quantum-gradient": "var(--quantum-gradient)",
+      },
+      backdropFilter: {
+        "glass": "var(--glass-backdrop)",
       },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    require("@tailwindcss/typography"),
-  ],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
 
 export default config;

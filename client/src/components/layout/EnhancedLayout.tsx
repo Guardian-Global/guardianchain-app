@@ -6,7 +6,7 @@ import { Helmet } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { NotificationProvider } from "@/components/ui/notification-system";
 import InteractiveBackground from "@/components/ui/interactive-background";
-// import EnhancedNavigation from "@/components/navigation/EnhancedNavigation"; // DISABLED TO FIX LAYOUT
+import EnhancedNavigation from "@/components/navigation/EnhancedNavigation";
 import FloatingActionMenu from "@/components/layout/FloatingActionMenu";
 import { LiveTokenTracker } from "@/components/live/LiveTokenTracker";
 import { cn } from "@/lib/utils";
@@ -120,10 +120,10 @@ const EnhancedLayout: React.FC<EnhancedLayoutProps> = ({
           </div>
         )}
 
-        {/* Navigation - DISABLED TO FIX LAYOUT */}
-        {/* {showNavigation && isAuthenticated && (
+        {/* Navigation */}
+        {showNavigation && isAuthenticated && (
           <EnhancedNavigation />
-        )} */}
+        )}
 
         {/* Live Token Tracker */}
         {isAuthenticated && variant !== "auth" && (

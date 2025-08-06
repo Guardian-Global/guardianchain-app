@@ -153,12 +153,12 @@ export default function FullAppDebugger() {
   };
 
   return (
-    <div className="fixed inset-4 z-50 bg-cosmic-void/95 backdrop-blur-sm rounded-xl border border-neon-cyan/30 overflow-hidden shadow-2xl">
-      <div className="flex items-center justify-between p-4 border-b border-neon-cyan/20 bg-cosmic-surface/50">
+    <div className="fixed inset-4 z-50 bg-slate-900/95 backdrop-blur-sm rounded-lg border border-slate-700 overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-slate-700 bg-slate-800/50">
         <div className="flex items-center gap-2">
-          <Bug className="w-5 h-5 text-neon-cyan" />
-          <h2 className="text-white font-cyber font-bold">🛡️ GuardianChain Debug Panel</h2>
-          <Badge className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/50 font-cyber">
+          <Bug className="w-5 h-5 text-red-400" />
+          <h2 className="text-white font-semibold">GuardianChain Full App Debugger</h2>
+          <Badge className="bg-red-500/20 text-red-300 border-red-500/50">
             DEVELOPMENT
           </Badge>
         </div>
@@ -168,7 +168,7 @@ export default function FullAppDebugger() {
             size="sm"
             variant="outline"
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`border-neon-cyan/40 font-cyber ${autoRefresh ? 'bg-neon-green/20 text-neon-green border-neon-green/50' : 'text-neon-cyan hover:bg-neon-cyan/10'}`}
+            className={`border-slate-600 ${autoRefresh ? 'bg-green-500/20 text-green-300' : 'text-slate-300'}`}
           >
             <Activity className={`w-4 h-4 mr-1 ${autoRefresh ? 'animate-pulse' : ''}`} />
             Auto Refresh
@@ -181,7 +181,7 @@ export default function FullAppDebugger() {
               refetch();
               setDebugLogs([]);
             }}
-            className="border-neon-purple/40 text-neon-purple hover:bg-neon-purple/10 font-cyber"
+            className="border-slate-600 text-slate-300"
           >
             <RefreshCw className="w-4 h-4 mr-1" />
             Refresh
@@ -191,7 +191,7 @@ export default function FullAppDebugger() {
             size="sm"
             variant="ghost"
             onClick={() => setIsVisible(false)}
-            className="text-neon-pink hover:text-white hover:bg-neon-pink/10 font-cyber"
+            className="text-slate-400 hover:text-white"
           >
             <EyeOff className="w-4 h-4" />
           </Button>
@@ -230,30 +230,30 @@ export default function FullAppDebugger() {
           {/* Authentication Tab */}
           <TabsContent value="auth" className="p-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card className="bg-cosmic-surface/50 border-neon-cyan/30 shadow-lg">
+              <Card className="bg-slate-800/50 border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-neon-cyan text-sm flex items-center gap-2 font-cyber">
-                    <Shield className="w-4 h-4 text-neon-cyan" />
+                  <CardTitle className="text-white text-sm flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-cyan-400" />
                     Authentication Status
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-neon-cyan/70">Authenticated:</span>
-                    <Badge className={isAuthenticated ? "bg-neon-green/20 text-neon-green border-neon-green/50" : "bg-red-500/20 text-red-300 border-red-500/50"}>
-                      {isAuthenticated ? "✅ Yes" : "❌ No"}
+                    <span className="text-slate-400">Authenticated:</span>
+                    <Badge className={isAuthenticated ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}>
+                      {isAuthenticated ? "Yes" : "No"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-neon-cyan/70">Loading:</span>
-                    <Badge className={isLoading ? "bg-neon-yellow/20 text-neon-yellow border-neon-yellow/50" : "bg-cosmic-border/20 text-white border-cosmic-border/50"}>
-                      {isLoading ? "🔄 Yes" : "✅ No"}
+                    <span className="text-slate-400">Loading:</span>
+                    <Badge className={isLoading ? "bg-yellow-500/20 text-yellow-300" : "bg-slate-500/20 text-slate-300"}>
+                      {isLoading ? "Yes" : "No"}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-neon-cyan/70">Needs Onboarding:</span>
-                    <Badge className={needsOnboarding ? "bg-neon-pink/20 text-neon-pink border-neon-pink/50" : "bg-neon-green/20 text-neon-green border-neon-green/50"}>
-                      {needsOnboarding ? "⚠️ Yes" : "✅ No"}
+                    <span className="text-slate-400">Needs Onboarding:</span>
+                    <Badge className={needsOnboarding ? "bg-orange-500/20 text-orange-300" : "bg-green-500/20 text-green-300"}>
+                      {needsOnboarding ? "Yes" : "No"}
                     </Badge>
                   </div>
                 </CardContent>

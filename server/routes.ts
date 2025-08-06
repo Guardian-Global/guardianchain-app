@@ -23,10 +23,6 @@ import vaultRouter from "./routes/vault";
 import { analyzeVoiceFile } from "./ai/voice-analysis";
 import { composeCapsule } from "./ai/capsule-composer";
 import { registerSubscriptionRoutes } from "./routes/subscription";
-import capsuleStatsRoutes from "./routes/capsule/stats";
-import capsuleReactionsRoutes from "./routes/capsule/reactions";
-import userInteractionRoutes from "./routes/users/interactions";
-import leaderboardRoutes from "./routes/leaderboard/capsules";
 
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import { ObjectStorageService } from "./objectStorage";
@@ -137,19 +133,6 @@ function getReplayLogs(filters: any = {}) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register new enhancement routes first
-  app.use("/api/capsule", capsuleStatsRoutes);
-  app.use("/api/capsule", capsuleReactionsRoutes);
-  app.use("/api/users", userInteractionRoutes);
-  app.use("/api/leaderboard", leaderboardRoutes);
-  
-  // Register playlist routes
-  app.use("/api/playlist", (await import("./routes/playlist/create")).default);
-  app.use("/api/playlist", (await import("./routes/playlist/mint")).default);
-  
-  // Register remix routes
-  app.use("/api/capsule", (await import("./routes/capsule/remix")).default);
-  app.use("/api/remix/contest", (await import("./routes/remix/contest")).default);
   // Configure multer for file uploads
   const upload = multer({ 
     storage: multer.memoryStorage(),

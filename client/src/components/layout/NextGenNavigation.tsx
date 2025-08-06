@@ -267,10 +267,9 @@ const MobileNavigation: React.FC = () => {
 export const NextGenNavigation: React.FC = () => {
   return (
     <>
-      {/* Temporarily disable desktop sidebar to fix layout overlap */}
-      {/* <div className="hidden lg:block">
+      <div className="hidden lg:block">
         <DesktopSidebar />
-      </div> */}
+      </div>
       <div className="lg:hidden">
         <MobileNavigation />
       </div>
