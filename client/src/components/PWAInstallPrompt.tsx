@@ -1,160 +1,125 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { X, Download, Smartphone, Monitor } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { X, Download, Smartphone } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
 }
 
 export default function PWAInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Check if already installed
-    if (window.matchMedia("(display-mode: standalone)").matches) {
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
       return;
     }
 
-    // Check for iOS
-    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    setIsIOS(isIOSDevice);
-
-    // Listen for beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+    // Listen for the beforeinstallprompt event
+    const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
-
-      // Show prompt after a delay if user hasn't dismissed it
-      const hasBeenDismissed = localStorage.getItem("pwa-install-dismissed");
-      if (!hasBeenDismissed) {
-        setTimeout(() => setIsVisible(true), 3000);
-      }
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+      
+      // Show prompt after a delay
+      setTimeout(() => {
+        if (!localStorage.getItem('pwa-prompt-dismissed')) {
+          setShowPrompt(true);
+        }
+      }, 10000); // Show after 10 seconds
     };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Listen for app installed event
-    const handleAppInstalled = () => {
+    window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
-      setIsVisible(false);
-      setDeferredPrompt(null);
-      localStorage.removeItem("pwa-install-dismissed");
-    };
-
-    window.addEventListener(
-      "beforeinstallprompt",
-      handleBeforeInstallPrompt as EventListener,
-    );
-    window.addEventListener("appinstalled", handleAppInstalled);
+      setShowPrompt(false);
+      console.log('PWA was installed');
+    });
 
     return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt as EventListener,
-      );
-      window.removeEventListener("appinstalled", handleAppInstalled);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
 
-  const handleInstallClick = async () => {
+  const handleInstall = async () => {
     if (!deferredPrompt) return;
 
-    try {
-      await deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-
-      if (outcome === "accepted") {
-        console.log("✅ User accepted PWA install");
-      } else {
-        console.log("❌ User dismissed PWA install");
-        localStorage.setItem("pwa-install-dismissed", "true");
-      }
-
-      setDeferredPrompt(null);
-      setIsVisible(false);
-    } catch (error) {
-      console.error("❌ PWA install error:", error);
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+    } else {
+      console.log('User dismissed the install prompt');
     }
+    
+    setDeferredPrompt(null);
+    setShowPrompt(false);
   };
 
   const handleDismiss = () => {
-    setIsVisible(false);
-    localStorage.setItem("pwa-install-dismissed", "true");
+    setShowPrompt(false);
+    localStorage.setItem('pwa-prompt-dismissed', 'true');
+    
+    // Show again after 7 days
+    setTimeout(() => {
+      localStorage.removeItem('pwa-prompt-dismissed');
+    }, 7 * 24 * 60 * 60 * 1000);
   };
 
-  // Don't show if already installed or not visible
-  if (isInstalled || !isVisible) {
+  // Don't show if already installed or no prompt available
+  if (isInstalled || !showPrompt || !deferredPrompt) {
     return null;
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
-      <Card className="bg-gradient-to-r from-purple-900/95 to-blue-900/95 backdrop-blur-xl border-purple-500/30 shadow-2xl">
+    <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-96">
+      <Card className="bg-gradient-to-r from-hsl(217,33%,17%) to-hsl(220,39%,11%) border-[#00ffe1]/30 shadow-2xl">
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <Download className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h3 className="text-white font-semibold text-sm">
-                  Install GuardianChain
-                </h3>
-                <p className="text-purple-200 text-xs">
-                  Get the app experience
-                </p>
-              </div>
+            <div className="flex items-center">
+              <Smartphone className="w-6 h-6 text-[#00ffe1] mr-2" />
+              <h3 className="font-semibold text-[#00ffe1]">Install GuardianChain</h3>
             </div>
-            <Button
-              variant="ghost"
+            <Button 
+              variant="ghost" 
               size="sm"
               onClick={handleDismiss}
-              className="text-purple-200 hover:text-white h-6 w-6 p-0"
+              className="text-hsl(180,100%,70%) hover:text-[#ff00d4] p-1"
             >
               <X className="w-4 h-4" />
             </Button>
           </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center space-x-3 text-xs text-purple-200">
-              <div className="flex items-center space-x-1">
-                <Smartphone className="w-3 h-3" />
-                <span>Offline access</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Monitor className="w-3 h-3" />
-                <span>Desktop app</span>
-              </div>
-            </div>
-
-            {isIOS ? (
-              <div className="text-xs text-purple-200">
-                <p className="mb-2">To install on iOS:</p>
-                <ol className="list-decimal list-inside space-y-1 text-purple-300">
-                  <li>Tap the Share button</li>
-                  <li>Select "Add to Home Screen"</li>
-                  <li>Tap "Add" to confirm</li>
-                </ol>
-              </div>
-            ) : deferredPrompt ? (
-              <Button
-                onClick={handleInstallClick}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Install App
-              </Button>
-            ) : null}
-
-            <div className="text-xs text-purple-300">
-              • Faster loading • Push notifications • Offline mode
-            </div>
+          
+          <p className="text-sm text-hsl(180,100%,70%) mb-4">
+            Install our app for faster access, offline support, and native mobile experience.
+          </p>
+          
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleInstall}
+              className="flex-1 bg-gradient-to-r from-[#00ffe1] to-[#ff00d4] hover:opacity-90 text-black font-semibold"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Install
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={handleDismiss}
+              className="border-hsl(217,33%,24%) text-hsl(180,100%,70%) hover:bg-hsl(220,39%,11%)/50"
+            >
+              Later
+            </Button>
           </div>
         </CardContent>
       </Card>

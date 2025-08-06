@@ -44,9 +44,12 @@ const Explorer = lazy(() => import("@/pages/Explorer"));
 const Start = lazy(() => import("@/pages/Start"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
-const Subscribe = lazy(() => import("@/pages/Subscribe"));
+const Subscribe = lazy(() => import("@/pages/subscribe"));
 const Checkout = lazy(() => import("@/pages/checkout"));
-const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
+const Tokenomics = lazy(() => import("@/pages/tokenomics"));
+const LandingPage = lazy(() => import("@/pages/landing"));
+const WhitepaperPage = lazy(() => import("@/pages/whitepaper"));
+const CapsuleRemixPage = lazy(() => import("@/pages/capsule/remix"));
 const RevenueExplainer = lazy(() => import("@/pages/RevenueExplainer"));
 const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
@@ -146,6 +149,9 @@ function Router() {
               <Route path="/admin/metrics" component={AdminMetrics} />
               <Route path="/valuation" component={lazy(() => import("@/pages/valuation"))} />
               <Route path="/tokenomics" component={Tokenomics} />
+              <Route path="/landing" component={LandingPage} />
+              <Route path="/whitepaper" component={WhitepaperPage} />
+              <Route path="/capsule/:id/remix" component={CapsuleRemixPage} />
               <Route path="/revenue-explainer" component={RevenueExplainer} />
               <Route path="/create" component={CreateCapsule} />
               <Route path="/bulk-upload" component={BulkUpload} />
@@ -167,7 +173,7 @@ function Router() {
               <Route path="/terms" component={Terms} />
               <Route path="/pricing" component={Pricing} />
               <Route path="/subscribe" component={Subscribe} />
-              <Route path="/checkout" component={Checkout} />
+              <Route path="/checkout/:amount?/:description?" component={Checkout} />
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
               <Route path="/dao" component={DAO} />

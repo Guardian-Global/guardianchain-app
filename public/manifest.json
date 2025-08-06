@@ -1,21 +1,166 @@
 {
   "name": "GuardianChain",
-  "short_name": "Guardian",
+  "short_name": "GuardianChain",
+  "description": "The First Sovereign Memory Network for Truth Verification and Decentralized Governance",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0d0d",
-  "theme_color": "#6b21a8",
-  "orientation": "portrait",
+  "background_color": "#0f0f23",
+  "theme_color": "#00ffe1",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "social", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
   "icons": [
     {
-      "src": "/logo192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
     },
     {
-      "src": "/logo512.png",
+      "src": "/icons/icon-96x96.png", 
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128", 
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable any"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Capsule",
+      "short_name": "Create",
+      "description": "Quickly create a new Veritas Capsule",
+      "url": "/create",
+      "icons": [
+        {
+          "src": "/icons/shortcut-create.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Vault",
+      "short_name": "Vault",
+      "description": "Access your capsule vault",
+      "url": "/vault",
+      "icons": [
+        {
+          "src": "/icons/shortcut-vault.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Staking",
+      "short_name": "Stake",
+      "description": "Stake GTT tokens for yield",
+      "url": "/vault/stake",
+      "icons": [
+        {
+          "src": "/icons/shortcut-stake.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "GuardianChain Home Dashboard"
+    },
+    {
+      "src": "/screenshots/mobile-vault.png", 
+      "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile Vault Interface"
+    },
+    {
+      "src": "/screenshots/desktop-create.png",
+      "sizes": "1280x720", 
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Capsule Creation Interface"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "file_handlers": [
+    {
+      "action": "/create",
+      "accept": {
+        "image/*": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
+        "video/*": [".mp4", ".webm", ".mov"],
+        "audio/*": [".mp3", ".wav", ".ogg"],
+        "text/*": [".txt", ".md"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+guardianchain",
+      "url": "/capsule/%s"
+    }
+  ],
+  "share_target": {
+    "action": "/create", 
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["image/*", "video/*", "audio/*"]
+        }
+      ]
+    }
+  }
 }
