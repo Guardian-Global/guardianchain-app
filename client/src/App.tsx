@@ -71,6 +71,7 @@ const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 // CapsuleAnalyticsDemo moved to archive during consolidation
 const CapsuleAnalyticsPage = lazy(() => import("./pages/CapsuleAnalyticsPage"));
+const InvestorDemo = lazy(() => import("@/pages/demo"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -108,6 +109,7 @@ function Router() {
       <Switch>
         <Route path="/auth/signup" component={Signup} />
         <Route path="/auth/login" component={Login} />
+        <Route path="/demo" component={InvestorDemo} />
         <Route path="/terms" component={Terms} />
         <Route path="*" component={SimpleLanding} />
       </Switch>
@@ -119,6 +121,7 @@ function Router() {
       {/* Homepage - Full screen without layout */}
       <Route path="/" component={CyberHomepage} />
       <Route path="/elite" component={EliteHomepage} />
+      <Route path="/demo" component={InvestorDemo} />
       
       {/* All other routes get the layout wrapper */}
       <Route>

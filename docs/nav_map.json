@@ -1,0 +1,260 @@
+{
+  "navigation_structure": {
+    "public_routes": [
+      {
+        "path": "/",
+        "component": "CyberHomepage",
+        "auth_required": false,
+        "description": "Main landing page with authentication options"
+      },
+      {
+        "path": "/elite", 
+        "component": "EliteHomepage",
+        "auth_required": false,
+        "description": "Premium landing experience"
+      },
+      {
+        "path": "/demo",
+        "component": "InvestorDemo",
+        "auth_required": false,
+        "description": "Investor demonstration mode"
+      },
+      {
+        "path": "/capsule/:id",
+        "component": "CapsuleViewer", 
+        "auth_required": false,
+        "description": "Public capsule viewing with engagement metrics"
+      },
+      {
+        "path": "/valuation",
+        "component": "Valuation",
+        "auth_required": false,
+        "description": "Live platform metrics and GTT token data"
+      },
+      {
+        "path": "/terms",
+        "component": "Terms",
+        "auth_required": false,
+        "description": "Terms of service and legal information"
+      },
+      {
+        "path": "/pricing",
+        "component": "Pricing", 
+        "auth_required": false,
+        "description": "Subscription tiers and pricing information"
+      }
+    ],
+    "authenticated_routes": [
+      {
+        "path": "/onboarding",
+        "component": "NewUserOnboarding",
+        "min_tier": "EXPLORER",
+        "description": "New user setup and tier selection"
+      },
+      {
+        "path": "/profile",
+        "component": "Profile",
+        "min_tier": "SEEKER",
+        "description": "User profile with stats, reactions, and playlists"
+      },
+      {
+        "path": "/profile/:username",
+        "component": "PublicProfile", 
+        "min_tier": "EXPLORER",
+        "description": "Public user profile viewing"
+      },
+      {
+        "path": "/vault",
+        "component": "VaultClean",
+        "min_tier": "SEEKER", 
+        "description": "Capsule archive with unlock functionality"
+      },
+      {
+        "path": "/vault/stake",
+        "component": "StakeVault",
+        "min_tier": "SEEKER",
+        "description": "GTT staking interface with yield tracking"
+      },
+      {
+        "path": "/create",
+        "component": "CreateCapsule",
+        "min_tier": "SEEKER",
+        "description": "Capsule creation with AI analysis"
+      },
+      {
+        "path": "/bulk-upload", 
+        "component": "BulkUpload",
+        "min_tier": "CREATOR",
+        "description": "Mass capsule creation system"
+      },
+      {
+        "path": "/settings",
+        "component": "Settings",
+        "min_tier": "EXPLORER", 
+        "description": "User account and preference management"
+      },
+      {
+        "path": "/badges",
+        "component": "VeritasBadges",
+        "min_tier": "SEEKER",
+        "description": "Achievement and verification badges"
+      }
+    ],
+    "dao_routes": [
+      {
+        "path": "/dao",
+        "component": "DAO",
+        "min_tier": "SEEKER",
+        "description": "DAO governance dashboard"
+      },
+      {
+        "path": "/dao/vote/:id",
+        "component": "VotePage", 
+        "min_tier": "DAO_MEMBER",
+        "description": "Governance voting interface"
+      },
+      {
+        "path": "/validator",
+        "component": "ValidatorPage",
+        "min_tier": "CREATOR",
+        "description": "Validator tools and rewards tracking"
+      }
+    ],
+    "admin_routes": [
+      {
+        "path": "/admin",
+        "component": "Admin", 
+        "min_tier": "ADMIN",
+        "description": "Main admin interface"
+      },
+      {
+        "path": "/admin/metrics",
+        "component": "AdminMetrics",
+        "min_tier": "ADMIN",
+        "description": "System health and user analytics"
+      },
+      {
+        "path": "/admin/panel",
+        "component": "AdminPanel",
+        "min_tier": "ADMIN", 
+        "description": "User management and system controls"
+      },
+      {
+        "path": "/dashboard",
+        "component": "EnhancedDashboard",
+        "min_tier": "ADMIN",
+        "description": "Internal performance analytics"
+      },
+      {
+        "path": "/audit",
+        "component": "AuditPage",
+        "min_tier": "ADMIN",
+        "description": "Comprehensive audit trail viewer"
+      }
+    ],
+    "analytics_routes": [
+      {
+        "path": "/analytics",
+        "component": "AnalyticsPage",
+        "min_tier": "CREATOR",
+        "description": "User analytics and engagement metrics"
+      },
+      {
+        "path": "/metrics", 
+        "component": "MetricsPage",
+        "min_tier": "SEEKER",
+        "description": "Personal performance metrics"
+      },
+      {
+        "path": "/capsule/:id/analytics",
+        "component": "CapsuleAnalyticsPage",
+        "min_tier": "SEEKER",
+        "description": "Individual capsule performance data"
+      }
+    ],
+    "social_routes": [
+      {
+        "path": "/social",
+        "component": "SocialHub",
+        "min_tier": "SEEKER",
+        "description": "Social networking and community features"
+      },
+      {
+        "path": "/explorer",
+        "component": "CapsuleExplorer", 
+        "min_tier": "EXPLORER",
+        "description": "Public capsule discovery interface"
+      },
+      {
+        "path": "/lineage",
+        "component": "LineagePage",
+        "min_tier": "SEEKER",
+        "description": "Capsule lineage and inheritance tracking"
+      }
+    ],
+    "financial_routes": [
+      {
+        "path": "/staking",
+        "component": "StakingPage",
+        "min_tier": "SEEKER", 
+        "description": "Multi-chain staking interface"
+      },
+      {
+        "path": "/rewards",
+        "component": "RewardsPage",
+        "min_tier": "SEEKER",
+        "description": "Reward tracking and distribution"
+      },
+      {
+        "path": "/subscribe",
+        "component": "Subscribe",
+        "min_tier": "EXPLORER",
+        "description": "Subscription management interface"
+      },
+      {
+        "path": "/checkout",
+        "component": "Checkout",
+        "min_tier": "EXPLORER", 
+        "description": "Payment processing interface"
+      }
+    ],
+    "utility_routes": [
+      {
+        "path": "/redeem",
+        "component": "RedeemPage",
+        "min_tier": "SEEKER",
+        "description": "Capsule redemption and unlock interface"
+      },
+      {
+        "path": "/claim",
+        "component": "Claim",
+        "min_tier": "SEEKER",
+        "description": "Reward claiming interface"
+      },
+      {
+        "path": "/truth-genome",
+        "component": "TruthGenome",
+        "min_tier": "CREATOR",
+        "description": "Truth DNA analysis and visualization"
+      },
+      {
+        "path": "/partners",
+        "component": "PartnersPage", 
+        "min_tier": "EXPLORER",
+        "description": "Partnership and integration information"
+      }
+    ]
+  },
+  "route_protection": {
+    "middleware_applied": true,
+    "session_validation": true,
+    "tier_enforcement": true,
+    "rate_limiting": true
+  },
+  "authentication_flow": {
+    "unauthenticated_redirect": "/",
+    "post_login_redirect": "/onboarding", 
+    "tier_upgrade_required": "/subscribe",
+    "admin_access_denied": "/unauthorized"
+  }
+}
