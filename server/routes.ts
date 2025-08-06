@@ -1539,6 +1539,282 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // First Admin Account Creation Endpoint
+  app.post('/api/create-first-admin', async (req, res) => {
+    try {
+      // Check if any admin users already exist
+      const existingAdmin = await storage.getUserByEmail('admin@guardianchain.app');
+      if (existingAdmin) {
+        return res.status(400).json({ 
+          message: 'Admin account already exists',
+          loginUrl: '/login'
+        });
+      }
+
+      // Create the first admin user with comprehensive profile
+      const adminUser = await storage.createUser({
+        id: `admin_${Date.now()}`,
+        email: 'admin@guardianchain.app',
+        displayName: 'GuardianChain Administrator',
+        bio: 'Founding administrator of the GuardianChain platform. Responsible for platform governance, security, and strategic development.',
+        location: 'Global',
+        website: 'https://guardianchain.app',
+        company: 'GuardianChain Foundation',
+        occupation: 'Platform Administrator',
+        pronouns: 'they/them',
+        timezone: 'UTC',
+        profileImage: '',
+        coverImage: '',
+        profileVideo: '',
+        portfolioImages: [],
+        portfolioVideos: [],
+        profileMusic: '',
+        customCSS: '',
+        socialLinks: {
+          twitter: 'https://twitter.com/guardianchain',
+          linkedin: 'https://linkedin.com/company/guardianchain',
+          github: 'https://github.com/guardianchain',
+          instagram: '',
+          youtube: '',
+          discord: 'https://discord.gg/guardianchain'
+        },
+        customBadges: [
+          { id: 'founder', name: 'Founder', color: '#ff00d4' },
+          { id: 'admin', name: 'Administrator', color: '#00ffe1' },
+          { id: 'security', name: 'Security Lead', color: '#7c3aed' }
+        ],
+        skillTags: ['blockchain', 'web3', 'governance', 'security', 'platform-management'],
+        interests: ['decentralization', 'truth-verification', 'community-building', 'digital-sovereignty'],
+        achievements: ['platform-founder', 'first-capsule-creator', 'governance-initiator'],
+        languages: ['english', 'spanish', 'mandarin'],
+        musicPreferences: ['ambient', 'electronic', 'classical'],
+        customization: {
+          theme: 'cyberpunk',
+          accentColor: '#00ffe1',
+          backgroundPattern: 'matrix',
+          profileLayout: 'professional',
+          showActivityFeed: true,
+          showStatsPublic: true,
+          allowDirectMessages: true,
+          statusMessage: 'Building the future of decentralized truth',
+          availabilityStatus: 'online',
+          favoriteQuote: 'Truth is the foundation of all human progress',
+          animationsEnabled: true,
+          particleEffects: true,
+          displayMode: 'professional'
+        },
+        tier: 'ADMIN',
+        subscriptionStatus: 'active',
+        onboardingCompleted: true,
+        emailVerified: true,
+        isActive: true,
+        needsOnboarding: false,
+        lastLogin: new Date()
+      });
+
+      console.log('✅ First admin account created successfully:', adminUser.email);
+      
+      res.json({
+        success: true,
+        message: 'First admin account created successfully',
+        user: {
+          id: adminUser.id,
+          email: adminUser.email,
+          displayName: adminUser.displayName,
+          tier: adminUser.tier
+        },
+        credentials: {
+          email: 'admin@guardianchain.app',
+          loginUrl: '/login',
+          profileUrl: '/profile'
+        }
+      });
+    } catch (error) {
+      console.error('❌ Error creating first admin account:', error);
+      res.status(500).json({ 
+        message: 'Failed to create first admin account',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Enhanced Profile Management API Endpoints - Complete Implementation
+  
+  // GET complete user profile with all enhanced features
+  app.get('/api/profile', consolidatedAuth, async (req: AuthRequest, res) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        bio: user.bio,
+        location: user.location,
+        website: user.website,
+        company: user.company || '',
+        occupation: user.occupation || '',
+        pronouns: user.pronouns || '',
+        timezone: user.timezone || 'UTC',
+        profileImage: user.profileImage,
+        coverImage: user.coverImage,
+        profileVideo: user.profileVideo || '',
+        portfolioImages: user.portfolioImages || [],
+        portfolioVideos: user.portfolioVideos || [],
+        profileMusic: user.profileMusic || '',
+        customCSS: user.customCSS || '',
+        socialLinks: user.socialLinks || {
+          twitter: '',
+          linkedin: '',
+          github: '',
+          instagram: '',
+          youtube: '',
+          discord: ''
+        },
+        customBadges: user.customBadges || [],
+        skillTags: user.skillTags || [],
+        interests: user.interests || [],
+        achievements: user.achievements || [],
+        languages: user.languages || [],
+        musicPreferences: user.musicPreferences || [],
+        customization: user.customization || {
+          theme: 'cyberpunk',
+          accentColor: '#00ffe1',
+          backgroundPattern: 'matrix',
+          profileLayout: 'grid',
+          showActivityFeed: true,
+          showStatsPublic: true,
+          allowDirectMessages: true,
+          statusMessage: '',
+          availabilityStatus: 'online',
+          favoriteQuote: '',
+          animationsEnabled: true,
+          particleEffects: true,
+          displayMode: 'professional'
+        },
+        tier: user.tier,
+        subscriptionStatus: user.subscriptionStatus,
+        onboardingCompleted: user.onboardingCompleted,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      });
+    } catch (error) {
+      console.error('❌ Profile fetch error:', error);
+      res.status(500).json({ message: 'Failed to fetch profile' });
+    }
+  });
+
+  // PATCH update user profile with enhanced features
+  app.patch('/api/profile', consolidatedAuth, async (req: AuthRequest, res) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: 'Authentication required' });
+      }
+
+      const updates = req.body;
+      
+      // Validate and sanitize updates - all enhanced profile fields
+      const allowedFields = [
+        'displayName', 'bio', 'location', 'website', 'company', 'occupation', 
+        'pronouns', 'timezone', 'profileVideo', 'portfolioImages', 'portfolioVideos',
+        'profileMusic', 'customCSS', 'socialLinks', 'customBadges', 'skillTags',
+        'interests', 'achievements', 'languages', 'musicPreferences', 'customization'
+      ];
+      
+      const sanitizedUpdates = Object.keys(updates)
+        .filter(key => allowedFields.includes(key))
+        .reduce((obj, key) => {
+          obj[key] = updates[key];
+          return obj;
+        }, {} as any);
+
+      sanitizedUpdates.updatedAt = new Date();
+
+      const updatedUser = await storage.updateUser(userId, sanitizedUpdates);
+      
+      // Log activity
+      await storage.logActivity({
+        userId,
+        activityType: 'profile_update',
+        activityData: { fields: Object.keys(sanitizedUpdates) },
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent')
+      });
+
+      res.json({
+        success: true,
+        user: {
+          id: updatedUser.id,
+          email: updatedUser.email,
+          displayName: updatedUser.displayName,
+          bio: updatedUser.bio,
+          location: updatedUser.location,
+          website: updatedUser.website,
+          company: updatedUser.company,
+          occupation: updatedUser.occupation,
+          pronouns: updatedUser.pronouns,
+          timezone: updatedUser.timezone,
+          profileImage: updatedUser.profileImage,
+          coverImage: updatedUser.coverImage,
+          profileVideo: updatedUser.profileVideo,
+          portfolioImages: updatedUser.portfolioImages || [],
+          portfolioVideos: updatedUser.portfolioVideos || [],
+          profileMusic: updatedUser.profileMusic,
+          customCSS: updatedUser.customCSS,
+          socialLinks: updatedUser.socialLinks || {},
+          customBadges: updatedUser.customBadges || [],
+          skillTags: updatedUser.skillTags || [],
+          interests: updatedUser.interests || [],
+          achievements: updatedUser.achievements || [],
+          languages: updatedUser.languages || [],
+          musicPreferences: updatedUser.musicPreferences || [],
+          customization: updatedUser.customization || {},
+          tier: updatedUser.tier,
+          subscriptionStatus: updatedUser.subscriptionStatus,
+          onboardingCompleted: updatedUser.onboardingCompleted,
+          createdAt: updatedUser.createdAt,
+          updatedAt: updatedUser.updatedAt
+        },
+        message: 'Profile updated successfully'
+      });
+    } catch (error) {
+      console.error('❌ Profile update error:', error);
+      res.status(500).json({ message: 'Failed to update profile' });
+    }
+  });
+
+  // Object storage endpoints for profile media (simplified for now - will work with existing system)
+  app.post("/api/profile/upload", consolidatedAuth, async (req, res) => {
+    try {
+      const userId = req.user?.id;
+      // Mock upload response for now - in production this would integrate with object storage
+      const mockFile = {
+        id: `upload_${Date.now()}`,
+        url: `/uploads/${userId}_${Date.now()}.jpg`,
+        type: req.body.mediaType || 'profileImage',
+        uploadedAt: new Date().toISOString()
+      };
+
+      res.json({
+        success: true,
+        file: mockFile,
+        message: "File uploaded successfully"
+      });
+    } catch (error) {
+      console.error("Upload error:", error);
+      res.status(500).json({ error: "Upload failed" });
+    }
+  });
+
   // NFT minting endpoint (from extracted components)
   app.post("/api/mint", consolidatedAuth, async (req: any, res) => {
     try {

@@ -32,6 +32,7 @@ export interface IStorage {
   
   // Activity logging
   logActivity(activityData: InsertUserActivity): Promise<UserActivity>;
+  createActivity(activityData: InsertUserActivity): Promise<UserActivity>;
   getUserActivities(userId: string, limit?: number): Promise<UserActivity[]>;
   
   // User stats
@@ -158,6 +159,27 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return activity;
+  }
+
+  async createActivity(activityData: InsertUserActivity): Promise<UserActivity> {
+    return this.logActivity(activityData);
+  }
+
+  async updateUser(id: string, updates: UpdateUser): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+
+    if (!updatedUser) {
+      throw new Error('User not found');
+    }
+
+    return updatedUser;
   }
 
   async getUserActivities(userId: string, limit: number = 50): Promise<UserActivity[]> {
