@@ -1,0 +1,88 @@
+# 📊 GTT Tokenomics v2 — Finalized Model for Maximum Adoption, Transparency & Base/Polygon Grant Eligibility
+
+## 🪙 Total Supply
+
+* **Fixed Supply:** 2,500,000,000 GTT (2.5 Billion)
+* **No inflation, no minting post-deployment**
+
+---
+
+## 🎯 Strategic Allocation
+
+| Category                               | Amount (GTT)  | % Supply | Vesting & Access Control                              |
+| -------------------------------------- | ------------- | -------- | ----------------------------------------------------- |
+| **Deployer Founder**                   | 1,250,000,000 | 50.00%   | ✅ 4-year vesting w/ 6-mo cliff via GTTDistributor.sol |
+| **Community & Ecosystem**              | 400,000,000   | 16.00%   | 🔓 Gradual airdrops, LP rewards, remix incentives     |
+| **Base/Polygon Ecosystem Fund**        | 300,000,000   | 12.00%   | 🔒 2-year multisig vesting, DAO-controlled grants     |
+| **Validator & Contributor Rewards**    | 200,000,000   | 8.00%    | 🔓 Released monthly via on-chain module               |
+| **GuardianChain Treasury**             | 300,000,000   | 12.00%   | ✅ DAO multisig-controlled (VeritasDAO)                |
+| **Initial Vault Funding (TruthVault)** | 50,000,000    | 2.00%    | 🔓 1% daily APY yield engine (fixed cap)              |
+
+---
+
+## 🗳️ Governance Parameters
+
+| Parameter            | Value             |
+| -------------------- | ----------------- |
+| Proposal Threshold   | 10,000 GTT        |
+| Quorum Requirement   | 500,000 GTT       |
+| Voting Period        | 7 days            |
+| Execution Delay      | 24 hours          |
+| Execution Authority  | VeritasDAO        |
+| DAO Contract Address | \[to be deployed] |
+
+---
+
+## 🔐 Transparency & Control
+
+* **GTTDistributor.sol**: Manages vesting, unlocks, and founder lock-up schedule
+* **DAO-controlled upgrades**: All governance flows require token quorum and cannot be unilaterally altered
+* **On-chain revenue**: Future revenue-sharing will occur via `/api/revenue-share` + GTT staking
+
+---
+
+## 🌐 Multi-Chain Launch Plan
+
+| Chain   | Purpose             | Launch Method                 |
+| ------- | ------------------- | ----------------------------- |
+| Polygon | Primary market + LP | ✅ Hardhat mainnet deploy      |
+| Base    | Grant visibility    | ✅ Simultaneous mainnet deploy |
+
+**Both deployments use identical GTT token logic and DAO governance structure.**
+
+---
+
+## 💸 Grant, Investor & Partnership Eligibility
+
+✅ Structured to qualify for:
+
+* Base Ecosystem Fund
+* Polygon Ecosystem Grants
+* Gitcoin RetroPGF
+* Coinbase Ventures & Onchain Summer
+* Ethereum Foundation Layer 2 track
+* AngelDAO / SeedClub DAO launches
+
+### 🧾 Grant-Ready Features
+
+* Fully transparent founder vesting (no instant liquidity)
+* DAO-controlled token treasury
+* Immutable fixed supply
+* Real-world memory preservation & grief equity use case
+* On-chain governance, identity, and attestation systems
+
+---
+
+## 📈 Growth Model Summary
+
+* **Liquidity Rewards:** 100M GTT allocated to Quickswap + BaseSwap pools
+* **Remix-to-Earn Incentives:** Weekly capsule remix payouts via DAO
+* **Proof-of-Memory Mining:** Earn GTT for uploading capsules, grief scans, remix interactions
+* **Capsule NFTs:** Can be staked to TruthVault for yield
+* **Social Unlocks:** Share-to-earn mechanics integrated
+
+---
+
+## 🧑‍💻 Founder’s Fairness Guarantee
+
+> “While I maintain majority rights to steer GuardianChain’s vision, I’ve voluntarily committed to a 4-year vesting schedule, no token mint authority, and DAO-controlled treasury to ensure long-term fairness, trust, and eligibility for the most impactful global grants, partnerships, and market adoption.”
