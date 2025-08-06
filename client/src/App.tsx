@@ -44,10 +44,10 @@ const Explorer = lazy(() => import("@/pages/Explorer"));
 const Start = lazy(() => import("@/pages/Start"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
-const Subscribe = lazy(() => import("@/pages/subscribe"));
+const Subscribe = lazy(() => import("@/pages/Subscribe"));
 const Checkout = lazy(() => import("@/pages/checkout"));
 const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
-const Tokenomics = lazy(() => import("@/pages/tokenomics"));
+const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
 const RevenueExplainer = lazy(() => import("@/pages/RevenueExplainer"));
 const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
 const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
@@ -69,7 +69,7 @@ const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
-const CapsuleAnalyticsDemo = lazy(() => import("./pages/CapsuleAnalyticsDemo"));
+// CapsuleAnalyticsDemo moved to archive during consolidation
 const CapsuleAnalyticsPage = lazy(() => import("./pages/CapsuleAnalyticsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
@@ -184,7 +184,7 @@ function Router() {
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/capsule/:id/analytics" component={CapsuleAnalyticsPage} />
-              <Route path="/analytics-demo" component={CapsuleAnalyticsDemo} />
+              {/* Analytics demo route removed during consolidation */}
               <Route path="/dao" component={DAO} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />

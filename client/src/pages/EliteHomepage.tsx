@@ -37,7 +37,7 @@ import GlowButton from '@/components/ui/GlowButton';
 import CardGlass from '@/components/ui/CardGlass';
 import QuantumCard from '@/components/ui/QuantumCard';
 import Web3Button from '@/components/ui/Web3Button';
-import EnhancedButton from '@/components/ui/EnhancedButton';
+// EnhancedButton moved to archive during consolidation
 import AdvancedCard from '@/components/ui/AdvancedCard';
 import CapsuleLauncherButton from '@/components/ui/CapsuleLauncherButton';
 import PWAInstallButton from '@/components/ui/PWAInstallButton';
@@ -190,24 +190,23 @@ function HeroSection() {
 
           {/* Enhanced Action Buttons */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
-            <EnhancedButton
-              variant="quantum"
+            <Button
+              variant="default"
               size="lg"
-              shimmer
-              glow
-              rightIcon={<ArrowRight className="w-5 h-5" />}
+              className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
             >
               {isAuthenticated ? "Enter Dashboard" : "Start Journey"}
-            </EnhancedButton>
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
             
-            <EnhancedButton
-              variant="neural"
+            <Button
+              variant="outline"
               size="lg"
-              pulse
-              rightIcon={<Play className="w-5 h-5" />}
+              className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
             >
               Watch Demo
-            </EnhancedButton>
+              <Play className="w-5 h-5 ml-2" />
+            </Button>
             
             <div className="flex items-center gap-4">
               <CapsuleLauncherButton />

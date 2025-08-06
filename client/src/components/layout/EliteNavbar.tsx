@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { motion } from 'framer-motion';
-import EnhancedMegaNavigation from '@/components/EnhancedMegaNavigation';
+// EnhancedMegaNavigation moved to archive during consolidation
 import { useAuth } from '@/hooks/useAuth';
 import { 
   Menu, 
@@ -83,7 +83,7 @@ export function EliteNavbar() {
 
           {/* Enhanced Mega Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <EnhancedMegaNavigation />
+            {/* Enhanced navigation replaced with standard navigation during consolidation */}
           </div>
 
           {/* Desktop Navigation */}

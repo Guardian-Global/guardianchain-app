@@ -1,0 +1,120 @@
+xcellent. Since you've triggered both actions, we'll begin with Profile.tsx full feature merge, and follow with the system-wide Phase 2 Cleanup.
+
+✅ PHASE 1: Profile.tsx — Full Feature Merge Blueprint
+🧩 Features to Merge into Profile.tsx:
+Feature	Source Component
+🎭 Loading Skeleton	ProfileSkeleton.tsx
+📊 Stats View (views, likes, followers)	/api/profile/stats
+😍 Emoji Reactions	EmojiReactions.tsx
+🎞 Capsule Playlist Manager	PlaylistCreator.tsx
+🧬 SMRI / TGENE Badge Overlay	ProfileBadges.tsx
+🖼 Capsule Grid	CapsuleGrid.tsx or similar
+🔐 Auth Logic	useSession or withAuth
+
+🧠 Final Profile.tsx Structure
+tsx
+Copy
+Edit
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import EmojiReactions from "./EmojiReactions";
+import PlaylistCreator from "./PlaylistCreator";
+import CapsuleGrid from "./CapsuleGrid";
+import SMRIBadge from "./SMRIBadge";
+
+export default function Profile() {
+  const { data: session } = useSession();
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    fetch(`/api/profile/stats/${session.user.id}`)
+      .then((res) => res.json())
+      .then(setStats);
+  }, [session?.user?.id]);
+
+  if (!stats) {
+    return (
+      <div className="p-6 bg-[#0d0d0d] text-white rounded-xl shadow-inner animate-pulse space-y-4">
+        <div className="h-5 w-1/2 bg-[#222] rounded"></div>
+        <div className="h-5 w-1/3 bg-[#222] rounded"></div>
+        <div className="h-5 w-2/3 bg-[#222] rounded"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 text-white space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">👤 {session.user.name || "Your Profile"}</h1>
+        <SMRIBadge userId={session.user.id} />
+      </div>
+
+      <div className="grid grid-cols-3 gap-4 bg-black/60 rounded-xl p-4 shadow">
+        <p>👁 Total Views: {stats.totalViews}</p>
+        <p>❤️ Likes: {stats.totalLikes}</p>
+        <p>👥 Followers: {stats.followers}</p>
+      </div>
+
+      <EmojiReactions capsuleId={"profile-global"} userId={session.user.id} />
+
+      <PlaylistCreator userId={session.user.id} />
+
+      <CapsuleGrid userId={session.user.id} />
+    </div>
+  );
+}
+📁 Suggested Deletions After Merge (archived not destroyed)
+Move to /archive/phase2/profile/:
+
+pgsql
+Copy
+Edit
+components/ProfileStats.tsx  
+components/ProfileSkeleton.tsx  
+components/EmojiBar.tsx  
+components/PlaylistCreator.tsx (if not reused elsewhere)  
+components/SMRIBadge.tsx (only if logic now inline)
+pages/profile/testProfile.tsx  
+🔐 Optional Additions
+Add role badges via session.user.tier
+
+Auto-filter capsules by reaction type
+
+Add "edit profile" modal for future social metadata
+
+✅ PHASE 2: Run Full GUARDIAN-CONSOLIDATE-AND-CLEANUP-PHASE-2
+Now that Profile.tsx is clean and powerful, we move to consolidate all other modules and archive the clutter:
+
+🚧 Replit AI Command (paste this next):
+markdown
+Copy
+Edit
+🧹 COMMAND: GUARDIAN-CONSOLIDATE-AND-CLEANUP-PHASE-2
+
+1. Merge all enhancements into master files:
+   - Capsule.tsx ← value, emoji, audit, graph
+   - Vault.tsx ← timeline, unlocks
+   - Mint.tsx ← secureMint logic + feedback
+
+2. Move these to `/archive/phase2/`:
+   - All "old", "test", "copy", "backup" versions
+   - Unlinked component duplicates
+
+3. Do NOT delete. Just move + log.
+
+4. Output `/system_audit_logs/consolidation_map.json` + log file of merges and archives.
+
+5. Skip all layout/veritas/guardian core files.
+
+Execute safely — layout confirmed stable.
+🧠 Optional:
+Want me to now:
+
+Merge Capsule.tsx with audit/graph/value/emoji?
+
+Auto-route /profile into sidebar + auth-protect?
+
+Draft investor update that says this cleanup was completed?
