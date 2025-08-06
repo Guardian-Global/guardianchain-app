@@ -15,6 +15,7 @@ import WelcomeTour from "@/components/WelcomeTour";
 import { GuardianBootHook } from "@/components/GuardianBootHook";
 import EliteHomepage from "@/pages/EliteHomepage";
 import CyberHomepage from "@/pages/CyberHomepage";
+import SimpleHomepage from "@/pages/SimpleHomepage";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import { useAuth } from "./hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
@@ -119,7 +120,7 @@ function Router() {
       {/* All routes now get the layout wrapper with navigation */}
       <Route path="/">
         <EliteLayout>
-          <CyberHomepage />
+          <SimpleHomepage />
         </EliteLayout>
       </Route>
       <Route path="/elite">
