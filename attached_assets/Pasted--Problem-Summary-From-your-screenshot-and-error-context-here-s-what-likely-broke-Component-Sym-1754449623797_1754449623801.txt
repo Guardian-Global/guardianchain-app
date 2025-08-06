@@ -1,0 +1,126 @@
+🛠️ Problem Summary
+From your screenshot and error context, here’s what likely broke:
+
+Component	Symptom	Likely Root Cause
+AuthDebugPanel	Layout flattened, icons lost, badge styles gone	Missing shadcn/ui, invalid Tailwind classes, or font/cyber theme dropped
+EnhancementSuite	Gradient background lost, icons missing, real-time stats misaligned	Layout class dropped or broken component import
+Global App Theme	Cyberpunk/gradient UI disappeared	tailwind.config.ts, theme-provider.tsx, or layout wrapper broken
+
+✅ Step-by-Step Fix (Full Restore, Clean + Modern + Cyberpunk)
+✅ 1. Fix Tailwind Theme (tailwind.config.ts)
+Make sure you restore this:
+
+ts
+Copy
+Edit
+// tailwind.config.ts
+import { fontFamily } from "tailwindcss/defaultTheme"
+
+export default {
+  darkMode: "class",
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        cyber: ["Orbitron", ...fontFamily.sans],
+      },
+      colors: {
+        midnight: "#0a0f2c",
+        neon: "#00ffe1",
+        electric: "#7f00ff",
+      },
+      backgroundImage: {
+        cyberpunk: "linear-gradient(to right, #0f0c29, #302b63, #24243e)",
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/forms"), require("tailwind-scrollbar")],
+}
+✅ 2. Fix Global Theme Wrapper (ThemeProvider + EliteLayout.tsx)
+tsx
+Copy
+Edit
+// components/layout/EliteLayout.tsx
+export default function EliteLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-midnight via-electric to-black text-white font-cyber">
+      {children}
+    </main>
+  )
+}
+✅ 3. Fix AuthDebugPanel.tsx Component (Make it Beautiful Again)
+tsx
+Copy
+Edit
+// components/debug/AuthDebugPanel.tsx
+import { Badge } from "@/components/ui/badge"
+
+export default function AuthDebugPanel({ user }) {
+  return (
+    <div className="p-4 bg-[#121826] rounded-xl shadow-xl text-white space-y-2">
+      <h2 className="text-xl font-bold border-b border-gray-700 pb-2">🛡️ Auth Debug Panel</h2>
+      <p>✅ Authentication Status: <Badge variant="success">Ready</Badge></p>
+      <p>👤 User Info: <span className="text-neon">{user.email}</span></p>
+      <p>📜 Tier: <Badge variant="outline">{user.tier}</Badge></p>
+      <p>⚙️ Plan: <Badge>{user.plan}</Badge></p>
+    </div>
+  )
+}
+✅ 4. Fix EnhancementSuite.tsx Layout
+tsx
+Copy
+Edit
+// components/dashboard/EnhancementSuite.tsx
+export default function EnhancementSuite({ stats }) {
+  return (
+    <section className="p-6 rounded-2xl bg-gradient-to-br from-purple-800 via-pink-500 to-red-400 text-white shadow-2xl">
+      <h2 className="text-3xl font-cyber mb-4">🚀 Enhancement Suite</h2>
+      <p className="mb-2">Revolutionary AI-powered remixing, NFT minting, and engagement.</p>
+      <div className="grid grid-cols-3 gap-4 text-center font-bold text-lg">
+        <div>
+          <span className="block text-neon">{stats.views.toLocaleString()}</span>
+          Views
+        </div>
+        <div>
+          <span className="block text-neon">{stats.engagementRate}%</span>
+          Engagement
+        </div>
+        <div>
+          <span className="block text-neon">{stats.weeklyGrowth}%</span>
+          Weekly Growth
+        </div>
+      </div>
+    </section>
+  )
+}
+✅ 5. Update Your vite.config.ts for Live Theme Reload
+ts
+Copy
+Edit
+// vite.config.ts
+export default defineConfig({
+  server: {
+    hmr: {
+      overlay: true,
+    },
+  },
+})
+✅ 6. Replit AI Fix Command (Copy This)
+Paste this into Replit AI prompt to repair all styling:
+
+pgsql
+Copy
+Edit
+Search for and restore all Tailwind, shadcn/ui, and theme-provider files. Fix missing font, layout, and UI component styles. Rebuild AuthDebugPanel and EnhancementSuite using neon gradients, soft shadows, Orbitron font, and badge components. Ensure Vite compiles correctly and dark mode is active. Reapply EliteLayout globally.
+🔁 Optional: Add Fallback Skeletons While Stats Load
+tsx
+Copy
+Edit
+{!stats ? (
+  <div className="animate-pulse h-20 w-full bg-gray-700 rounded-xl" />
+) : (
+  <EnhancementSuite stats={stats} />
+)}
