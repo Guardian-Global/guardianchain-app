@@ -46,7 +46,6 @@ const Terms = lazy(() => import("@/pages/Terms"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
 const Subscribe = lazy(() => import("@/pages/Subscribe"));
 const Checkout = lazy(() => import("@/pages/checkout"));
-const EnterpriseCenter = lazy(() => import("@/pages/EnterpriseCenter"));
 const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
 const RevenueExplainer = lazy(() => import("@/pages/RevenueExplainer"));
 const ValidatorPage = lazy(() => import("@/pages/ValidatorPage"));
@@ -54,8 +53,9 @@ const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
 const DAO = lazy(() => import("@/pages/DAO"));
-const EnhancedProfilePage = lazy(() => import("@/pages/enhanced-profile"));
-const AdminTimelineView = lazy(() => import("@/pages/admin-timeline"));
+// Consolidated master pages
+const VaultClean = lazy(() => import("@/pages/vault-clean"));
+const AdminMetrics = lazy(() => import("@/pages/admin-metrics"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
 const VotePage = lazy(() => import("@/pages/Vote"));
 const StreamPage = lazy(() => import("@/pages/Stream"));
@@ -65,7 +65,7 @@ const MetricsPage = lazy(() => import("@/pages/Metrics"));
 const StakingPage = lazy(() => import("@/pages/Staking"));
 const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
-const ViralShowcase = lazy(() => import("@/pages/ViralShowcase"));
+// ViralShowcase archived during consolidation
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
@@ -139,14 +139,15 @@ function Router() {
             <Switch>
               <Route path="/onboarding" component={NewUserOnboarding} />
               <Route path="/dashboard" component={EnhancedDashboard} />
-              <Route path="/enterprise" component={EnterpriseCenter} />
+              <Route path="/vault" component={VaultClean} />
+              <Route path="/admin/metrics" component={AdminMetrics} />
+              <Route path="/valuation" component={lazy(() => import("@/pages/valuation"))} />
               <Route path="/tokenomics" component={Tokenomics} />
               <Route path="/revenue-explainer" component={RevenueExplainer} />
               <Route path="/create" component={CreateCapsule} />
               <Route path="/bulk-upload" component={BulkUpload} />
               <Route path="/profile" component={Profile} />
               <Route path="/profile/ultimate" component={UltimateProfile} />
-              <Route path="/profile/enhanced" component={EnhancedProfilePage} />
               <Route path="/profile/:username" component={PublicProfile} />
               <Route path="/badges" component={VeritasBadges} />
               <Route path="/veritas-badges" component={VeritasBadges} />
@@ -169,7 +170,6 @@ function Router() {
               <Route path="/dao" component={DAO} />
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />
-              <Route path="/admin/timeline" component={AdminTimelineView} />
               <Route path="/analytics" component={AnalyticsPage} />
               <Route path="/vote" component={VotePage} />
               <Route path="/stream" component={StreamPage} />
@@ -178,7 +178,7 @@ function Router() {
               <Route path="/metrics" component={MetricsPage} />
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
-              <Route path="/viral-showcase" component={ViralShowcase} />
+
               <Route path="/social" component={SocialHub} />
               <Route path="/social-hub" component={SocialHub} />
               <Route path="/explorer" component={CapsuleExplorer} />
