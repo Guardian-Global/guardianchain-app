@@ -40,6 +40,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 interface OnboardingProfile {
   displayName: string;
@@ -123,10 +124,10 @@ export default function NewUserOnboarding() {
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState(1);
   const [profile, setProfile] = useState<OnboardingProfile>({
-    displayName: user?.firstName || "",
+    displayName: (user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : user?.firstName || "",
     bio: "",
     interests: [],
-    tier: "EXPLORER",
+    tier: user?.tier || "EXPLORER",
     preferences: {
       theme: "dark",
       language: "en",

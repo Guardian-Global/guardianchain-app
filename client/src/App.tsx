@@ -68,6 +68,7 @@ const MetricsPage = lazy(() => import("@/pages/Metrics"));
 const StakingPage = lazy(() => import("@/pages/Staking"));
 const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
+const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
 // ViralShowcase archived during consolidation
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
@@ -149,7 +150,8 @@ function Router() {
             }
           >
             <Switch>
-              <Route path="/onboarding" component={NewUserOnboarding} />
+              <Route path="/onboarding" component={OnboardingPage} />
+              <Route path="/onboarding-legacy" component={NewUserOnboarding} />
               <Route path="/dashboard" component={EnhancedDashboard} />
               <Route path="/vault" component={VaultClean} />
               <Route path="/admin/metrics" component={AdminMetrics} />

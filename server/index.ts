@@ -71,7 +71,7 @@ app.use(
 
 // Import profile and upload routes
 import profileRoutes from "./routes/profile";
-import uploadRoutes from "./routes/upload";
+import authRegisterRoutes from "./routes/auth-register";
 
 // Serve uploaded files (avatars, capsules)
 app.use("/uploads", express.static("uploads", {
@@ -154,7 +154,7 @@ app.get("/api/logout", (req, res) => {
 
 // Register profile and upload routes
 app.use(profileRoutes);
-app.use(uploadRoutes);
+app.use("/api/auth", authRegisterRoutes);
 
 // AI Routes for enhanced capsule experience
 import aiRoutes from "./routes/ai.js";

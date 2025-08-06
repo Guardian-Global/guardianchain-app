@@ -1,0 +1,88 @@
+// components/VestingDashboard.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+
+const ABI = [
+  "function vestedAmount() view returns (uint256)",
+  "function releasable() view returns (uint256)",
+  "function released() view returns (uint256)",
+  "function beneficiary() view returns (address)",
+];
+
+const contributors = [
+  {
+    name: "Founder",
+    address: "0xYourFounderWallet",
+    distributor: "0xDistributorAddress1"
+  },
+  {
+    name: "Core Developer",
+    address: "0xYourDevWallet",
+    distributor: "0xDistributorAddress2"
+  },
+  {
+    name: "Marketing Lead",
+    address: "0xMarketingWallet",
+    distributor: "0xDistributorAddress3"
+  }
+];
+
+export default function VestingDashboard() {
+  const [data, setData] = useState<any[]>([]);
+
+  const fetchData = async () => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const vestingData = await Promise.all(
+      contributors.map(async (contributor) => {
+        const contract = new ethers.Contract(contributor.distributor, ABI, provider);
+        const vested = await contract.vestedAmount();
+        const released = await contract.released();
+        const releasable = await contract.releasable();
+        const beneficiary = await contract.beneficiary();
+
+        return {
+          name: contributor.name,
+          wallet: beneficiary,
+          vested: ethers.formatUnits(vested, 18),
+          released: ethers.formatUnits(released, 18),
+          releasable: ethers.formatUnits(releasable, 18),
+        };
+      })
+    );
+    setData(vestingData);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">📊 GTT Contributor Vesting Dashboard</h1>
+      <table className="w-full border rounded bg-white">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-3 text-left">Contributor</th>
+            <th className="p-3 text-left">Wallet</th>
+            <th className="p-3 text-right">Vested</th>
+            <th className="p-3 text-right">Released</th>
+            <th className="p-3 text-right">Releasable</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, i) => (
+            <tr key={i} className="border-t">
+              <td className="p-3">{item.name}</td>
+              <td className="p-3 text-xs">{item.wallet}</td>
+              <td className="p-3 text-right">{item.vested}</td>
+              <td className="p-3 text-right">{item.released}</td>
+              <td className="p-3 text-right">{item.releasable}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
