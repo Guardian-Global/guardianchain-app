@@ -1,8 +1,33 @@
-// Simple Card components for the new pages
-export function Card({ children, className = "", ...props }: any) {
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+// Cyberpunk Card components with glass morphism and neon effects
+export function Card({ 
+  children, 
+  className = "", 
+  variant = "default",
+  ...props 
+}: {
+  children: React.ReactNode,
+  className?: string,
+  variant?: "default" | "glass" | "neon-cyan" | "neon-magenta" | "neon-purple",
+  [key: string]: any
+}) {
+  const variantStyles = {
+    default: "bg-card text-card-foreground border border-border shadow-glass",
+    glass: "bg-card/80 backdrop-blur-glass border border-white/10 shadow-glass",
+    "neon-cyan": "bg-card/80 backdrop-blur-glass border border-neon-cyan shadow-neon text-card-foreground",
+    "neon-magenta": "bg-card/80 backdrop-blur-glass border border-neon-magenta shadow-neon-magenta text-card-foreground",
+    "neon-purple": "bg-card/80 backdrop-blur-glass border border-neon-purple shadow-neon-purple text-card-foreground"
+  };
+
   return (
     <div
-      className={`rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm ${className}`}
+      className={cn(
+        "rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl",
+        variantStyles[variant],
+        className
+      )}
       {...props}
     >
       {children}
@@ -12,7 +37,7 @@ export function Card({ children, className = "", ...props }: any) {
 
 export function CardHeader({ children, className = "", ...props }: any) {
   return (
-    <div className={`flex flex-col space-y-1.5 p-6 ${className}`} {...props}>
+    <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props}>
       {children}
     </div>
   );
@@ -21,7 +46,7 @@ export function CardHeader({ children, className = "", ...props }: any) {
 export function CardTitle({ children, className = "", ...props }: any) {
   return (
     <h3
-      className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
+      className={cn("text-2xl font-display font-semibold leading-none tracking-tight bg-gradient-to-r from-neon-cyan via-neon-magenta to-neon-purple bg-clip-text text-transparent", className)}
       {...props}
     >
       {children}
@@ -31,7 +56,7 @@ export function CardTitle({ children, className = "", ...props }: any) {
 
 export function CardDescription({ children, className = "", ...props }: any) {
   return (
-    <p className={`text-sm text-muted-foreground ${className}`} {...props}>
+    <p className={cn("text-sm text-muted-foreground font-web3", className)} {...props}>
       {children}
     </p>
   );
@@ -39,7 +64,7 @@ export function CardDescription({ children, className = "", ...props }: any) {
 
 export function CardContent({ children, className = "", ...props }: any) {
   return (
-    <div className={`p-6 pt-0 ${className}`} {...props}>
+    <div className={cn("p-6 pt-0", className)} {...props}>
       {children}
     </div>
   );

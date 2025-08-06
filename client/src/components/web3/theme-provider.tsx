@@ -22,7 +22,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme = "dark", // Always default to dark for cyberpunk theme
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
@@ -46,6 +46,13 @@ export function ThemeProvider({
     }
 
     root.classList.add(theme)
+    
+    // Force cyberpunk dark theme styling
+    if (theme === "dark") {
+      root.style.setProperty('--background', 'hsl(218, 54%, 6%)')
+      root.style.setProperty('--foreground', 'hsl(0, 0%, 98%)')
+      root.style.setProperty('--primary', 'hsl(180, 100%, 50%)')
+    }
   }, [theme])
 
   const value = {

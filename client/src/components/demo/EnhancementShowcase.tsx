@@ -53,76 +53,44 @@ export default function EnhancementShowcase() {
 
         <Tabs defaultValue="analytics" className="space-y-10">
           <div className="flex justify-center mb-8">
-            <TabsList className="inline-flex h-16 items-center justify-center rounded-2xl p-2" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(180, 100%, 50%)', boxShadow: '0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3), 0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
-              <div className="grid grid-cols-5 lg:grid-cols-10 gap-2">
-                <TabsTrigger 
-                  value="analytics" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
-                >
-                  📊 Analytics
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="reactions" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-magenta hover:glass-card rounded-xl"
-                >
-                  😍 Reactions
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="leaderboard" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-purple hover:glass-card rounded-xl"
-                >
-                  🏆 Leaders
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="reputation" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
-                >
-                  ⭐ Reputation
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="value" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-magenta hover:glass-card rounded-xl"
-                >
-                  💎 Value
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="playlist" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-purple hover:glass-card rounded-xl"
-                >
-                  🎵 Playlists
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="remix" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
-                >
-                  🎨 AI Remix
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="contest" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-magenta hover:glass-card rounded-xl"
-                >
-                  🏅 Contest
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="interactions" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-purple hover:glass-card rounded-xl"
-                >
-                  📈 Activity
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="sentiment" 
-                  className="enhanced-tab-trigger px-6 py-3 text-base font-quantum transition-all data-[state=active]:animated-gradient data-[state=active]:text-black data-[state=active]:shadow-2xl data-[state=active]:neon-glow-cyan hover:glass-card rounded-xl"
-                >
-                  🤖 AI Insights
-                </TabsTrigger>
-              </div>
+            <TabsList className="grid grid-cols-5 lg:grid-cols-10 gap-2">
+              <TabsTrigger value="analytics">
+                📊 Analytics
+              </TabsTrigger>
+              <TabsTrigger value="reactions">
+                😍 Reactions
+              </TabsTrigger>
+              <TabsTrigger value="leaderboard">
+                🏆 Leaders
+              </TabsTrigger>
+              <TabsTrigger value="reputation">
+                ⭐ Reputation
+              </TabsTrigger>
+              <TabsTrigger value="value">
+                💎 Value
+              </TabsTrigger>
+              <TabsTrigger value="playlist">
+                🎵 Playlists
+              </TabsTrigger>
+              <TabsTrigger value="remix">
+                🎨 AI Remix
+              </TabsTrigger>
+              <TabsTrigger value="contest">
+                🏅 Contest
+              </TabsTrigger>
+              <TabsTrigger value="interactions">
+                📈 Activity
+              </TabsTrigger>
+              <TabsTrigger value="sentiment">
+                🤖 AI Insights
+              </TabsTrigger>
             </TabsList>
           </div>
 
           <TabsContent value="analytics" className="space-y-8">
             <div className="grid gap-8 lg:grid-cols-2">
               <CapsuleStatsGraph capsuleId="demo-capsule-1" />
-              <Card className="transition-all duration-300 hover:scale-105" style={{background: 'hsla(240, 10%, 3.9%, 0.8)', backdropFilter: 'blur(12px)', border: '1px solid hsl(180, 100%, 50%)', boxShadow: '0 0 20px hsla(180, 100%, 50%, 0.5), 0 0 40px hsla(180, 100%, 50%, 0.3), 0 8px 32px hsla(0, 0%, 0%, 0.37)'}}>
+              <Card variant="glass";
                 <CardHeader className="pb-6">
                   <CardTitle className="text-[#00ffe1] font-quantum text-2xl flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background: 'linear-gradient(135deg, hsl(180, 100%, 50%) 0%, hsl(285, 100%, 65%) 35%, hsl(330, 100%, 50%) 70%, hsl(180, 100%, 50%) 100%)', backgroundSize: '400% 400%', animation: 'gradient-shift 8s ease infinite'}}>
