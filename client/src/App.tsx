@@ -116,9 +116,17 @@ function Router() {
 
   return (
     <Switch>
-      {/* Full screen routes without layout wrapper */}
-      <Route path="/" component={CyberHomepage} />
-      <Route path="/elite" component={EliteHomepage} />
+      {/* All routes now get the layout wrapper with navigation */}
+      <Route path="/">
+        <EliteLayout>
+          <CyberHomepage />
+        </EliteLayout>
+      </Route>
+      <Route path="/elite">
+        <EliteLayout>
+          <EliteHomepage />
+        </EliteLayout>
+      </Route>
       <Route path="/enhancement-demo">
         <Suspense
           fallback={
