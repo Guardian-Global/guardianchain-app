@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -88,6 +89,13 @@ const config: Config = {
           plasma: "hsl(315, 100%, 70%)",
           laser: "hsl(180, 100%, 50%)",
         },
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -132,6 +140,22 @@ const config: Config = {
         "slide-in-from-right": {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(0)" },
+        },
+        "gradient-shift": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        "neon-pulse": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        "morphic-pulse": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" },
+        },
+        "prismatic-shift": {
+          "0%": { filter: "hue-rotate(0deg)" },
+          "100%": { filter: "hue-rotate(360deg)" },
         },
       },
       animation: {
