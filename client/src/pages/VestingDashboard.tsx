@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-// @ts-ignore - Chart.js types compatibility
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -22,8 +18,17 @@ import {
   TrendingUp,
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
+  Search,
+  Filter
 } from "lucide-react";
+
+// Global types for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -89,6 +94,8 @@ export default function VestingDashboard() {
   const [data, setData] = useState<VestingData[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showReleasableOnly, setShowReleasableOnly] = useState(false);
   const [totalStats, setTotalStats] = useState({
     totalVested: "0",
     totalReleased: "0",
@@ -138,7 +145,7 @@ export default function VestingDashboard() {
 
             // Send cliff alert if just reached
             if (cliffReached && parseFloat(releasableAmount) > 0) {
-              fetch("/api/webhook/cliff-alert", {
+              fetch("/api/vesting/webhook/cliff-alert", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
@@ -382,6 +389,34 @@ export default function VestingDashboard() {
           </div>
         </div>
 
+        {/* Filters and Search */}
+        <Card className="bg-white/5 border-white/10">
+          <CardContent className="p-6">
+            <div className="flex flex-wrap gap-4 items-center">
+              <div className="flex items-center gap-2">
+                <Search className="h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search contributors..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-white/5 border-white/10 text-white placeholder:text-gray-400 w-64"
+                  data-testid="input-search-contributors"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="releasable-filter"
+                  checked={showReleasableOnly}
+                  onCheckedChange={(checked) => setShowReleasableOnly(checked as boolean)}
+                />
+                <label htmlFor="releasable-filter" className="text-sm text-gray-300 cursor-pointer">
+                  Show Releasable Only
+                </label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="bg-white/5 border-white/10">
@@ -458,16 +493,22 @@ export default function VestingDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.map((item, i) => {
-                        const hasReleasable = parseFloat(item.releasable) > 0;
-                        const canClaim = window.ethereum?.selectedAddress?.toLowerCase() === item.wallet.toLowerCase();
-                        
-                        return (
-                          <tr 
-                            key={i} 
-                            className={`border-b border-white/5 ${hasReleasable ? 'bg-green-500/10' : ''}`}
-                            data-testid={`row-contributor-${i}`}
-                          >
+                      {data
+                        .filter(item => {
+                          const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+                          const matchesFilter = showReleasableOnly ? parseFloat(item.releasable) > 0 : true;
+                          return matchesSearch && matchesFilter;
+                        })
+                        .map((item, i) => {
+                          const hasReleasable = parseFloat(item.releasable) > 0;
+                          const canClaim = window.ethereum?.selectedAddress?.toLowerCase() === item.wallet.toLowerCase();
+                          
+                          return (
+                            <tr 
+                              key={i} 
+                              className={`border-b border-white/5 ${hasReleasable ? 'bg-green-500/10' : ''}`}
+                              data-testid={`row-contributor-${i}`}
+                            >
                             <td className="py-3 px-4">
                               <div className="text-white font-medium">{item.name}</div>
                               <div className="text-xs text-gray-400 truncate max-w-32">{item.wallet}</div>

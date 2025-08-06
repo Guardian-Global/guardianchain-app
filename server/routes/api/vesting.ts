@@ -4,7 +4,7 @@ import type { Request, Response } from "express";
 
 const router = Router();
 
-// Store vesting alert webhook endpoint
+// Store vesting alert webhook endpoint - matches the format expected by frontend
 router.post("/webhook/cliff-alert", async (req: Request, res: Response) => {
   try {
     const { contributor, wallet, releasable } = req.body;
@@ -24,10 +24,10 @@ router.post("/webhook/cliff-alert", async (req: Request, res: Response) => {
         ) VALUES ($1, $2, $3, NOW(), 'sent')
         ON CONFLICT (contributor_name, wallet_address) 
         DO UPDATE SET 
-          releasable_amount = $2,
+          releasable_amount = $3,
           alert_timestamp = NOW(),
           status = 'updated'
-      `, [contributor, wallet, releasable]);
+      `, [contributor, wallet, parseFloat(releasable)]);
       
     } finally {
       client.release();

@@ -95,6 +95,17 @@ export const userStats = pgTable('user_stats', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+// Vesting alerts table - tracks GTT cliff alerts
+export const vestingAlerts = pgTable('vesting_alerts', {
+  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+  contributorName: text('contributor_name').notNull(),
+  walletAddress: text('wallet_address').notNull(),
+  releasableAmount: decimal('releasable_amount', { precision: 28, scale: 18 }).notNull(),
+  alertTimestamp: timestamp('alert_timestamp').defaultNow(),
+  status: text('status').notNull().default('sent'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
   sessions: many(userSessions),

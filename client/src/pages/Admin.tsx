@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
-import AdminModerationPanel from "@/components/AdminModerationPanel";
+// import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+// import AdminModerationPanel from "@/components/AdminModerationPanel";
 import { Shield, BarChart3, Settings, Users } from "lucide-react";
 
 export default function Admin() {
@@ -193,11 +193,31 @@ export default function Admin() {
         </TabsContent>
 
         <TabsContent value="moderation" className="space-y-6">
-          <AdminModerationPanel />
+          <Card>
+            <CardHeader>
+              <CardTitle>Moderation Panel</CardTitle>
+              <CardDescription>
+                Content moderation and user management tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">Moderation panel will be integrated here.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          <AnalyticsDashboard />
+          <Card>
+            <CardHeader>
+              <CardTitle>Analytics Dashboard</CardTitle>
+              <CardDescription>
+                Platform analytics and metrics (component integration pending)
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">Analytics dashboard will be integrated here.</p>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="system" className="space-y-6">
