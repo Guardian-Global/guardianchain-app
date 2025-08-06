@@ -1,8 +1,10 @@
 import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config: Config = {
   darkMode: ["class"],
   content: [
+    "./client/index.html",
     "./client/src/**/*.{js,ts,jsx,tsx}",
     "./client/src/pages/**/*.{js,ts,jsx,tsx}",
     "./client/src/components/**/*.{js,ts,jsx,tsx}",
@@ -54,19 +56,20 @@ const config: Config = {
         },
         // Cyberpunk Theme Colors
         midnight: {
-          DEFAULT: "hsl(240, 100%, 3%)",
+          DEFAULT: "#0a0f2c",
           200: "hsl(240, 100%, 5%)",
         },
         neon: {
-          DEFAULT: "hsl(180, 100%, 50%)",
-          cyan: "hsl(180, 100%, 50%)",
+          DEFAULT: "#00ffe1",
+          cyan: "#00ffe1",
           purple: "hsl(285, 100%, 65%)",
           green: "hsl(120, 100%, 50%)",
           pink: "hsl(315, 100%, 70%)",
           yellow: "hsl(60, 100%, 60%)",
           blue: "hsl(220, 100%, 60%)",
         },
-        electric: "hsl(285, 100%, 65%)",
+        electric: "#7f00ff",
+        pinkpunk: "#ff2dd5",
         cosmic: {
           void: "hsl(240, 100%, 3%)",
           deep: "hsl(240, 100%, 5%)",
@@ -95,7 +98,7 @@ const config: Config = {
         sans: ["Inter", "system-ui", "sans-serif"],
         mono: ["Fira Code", "JetBrains Mono", "monospace"],
         display: ["Space Grotesk", "system-ui", "sans-serif"],
-        cyber: ["Orbitron", "monospace"],
+        cyber: ["Orbitron", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
@@ -149,6 +152,11 @@ const config: Config = {
         "quantum-gradient": "var(--quantum-gradient)",
         "cyberpunk": "linear-gradient(to right, #0f0c29, #302b63, #24243e)",
         "gradient-cyber": "linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%), hsl(260, 80%, 6%))",
+      },
+      boxShadow: {
+        neon: "0 0 25px #00ffe1",
+        electric: "0 0 25px #7f00ff",
+        glass: "0 8px 32px rgba(0, 0, 0, 0.37)",
       },
       backdropFilter: {
         "glass": "var(--glass-backdrop)",

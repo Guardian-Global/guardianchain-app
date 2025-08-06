@@ -1,0 +1,110 @@
+ Root Causes
+Your Tailwind theme config was wiped or overridden
+(You're seeing bg-black, broken font-cyber, missing gradient and animation classes)
+
+Global layout file (EliteLayout.tsx, globals.css, or tailwind.config.ts) was overwritten, deleted, or is no longer being applied
+
+Missing Orbitron or other fonts you previously used (cyberpunk-styled) due to a fontFamily config loss
+
+The component structure broke: layout wrappers like CoreFeatureCard or CapsuleSection.tsx might be unmounted or not importing the right theme
+
+✅ Full Fix Plan: Cyberpunk Restore 🔧
+✅ 1. Restore tailwind.config.ts (Theme Setup)
+Paste this as-is if it was lost:
+
+ts
+Copy
+Edit
+// tailwind.config.ts
+import { fontFamily } from "tailwindcss/defaultTheme"
+
+export default {
+  darkMode: "class",
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        cyber: ["Orbitron", ...fontFamily.sans],
+      },
+      colors: {
+        neon: "#00ffe1",
+        midnight: "#0a0f2c",
+        electric: "#7f00ff",
+        pinkpunk: "#ff2dd5",
+      },
+      backgroundImage: {
+        'cyberpunk': "linear-gradient(to right, #0f0c29, #302b63, #24243e)",
+      },
+      boxShadow: {
+        neon: "0 0 25px #00ffe1",
+        electric: "0 0 25px #7f00ff",
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/forms"), require("tailwind-scrollbar")],
+}
+✅ 2. Fix Layout Wrapper (EliteLayout.tsx or Layout.tsx)
+Ensure this wraps your page correctly:
+
+tsx
+Copy
+Edit
+// components/layout/EliteLayout.tsx
+export default function EliteLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-midnight via-black to-[#0a0f2c] text-white font-cyber">
+      {children}
+    </div>
+  )
+}
+✅ This will give your app a dark-futuristic cyberpunk gradient base
+
+✅ 3. Restore Missing Fonts in index.html
+If your Orbitron or other web fonts are missing:
+
+html
+Copy
+Edit
+<!-- public/index.html -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+✅ 4. Patch globals.css (to make buttons/cards glow)
+css
+Copy
+Edit
+/* styles/globals.css */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  @apply bg-black text-white font-cyber;
+}
+
+.glow-card {
+  @apply rounded-xl p-4 shadow-neon border border-neon bg-opacity-10;
+}
+✅ 5. Fix Core Feature Cards Layout
+Your <CoreFeatureCard /> component may be rendering blank or using fallback divs.
+
+Here’s a fixed example:
+
+tsx
+Copy
+Edit
+// components/CoreFeatureCard.tsx
+export default function CoreFeatureCard({ icon, title, description }) {
+  return (
+    <div className="glow-card w-full max-w-xs hover:scale-105 transition-transform">
+      <div className="text-center mb-2 text-neon text-4xl">{icon}</div>
+      <h3 className="text-xl font-bold">{title}</h3>
+      <p className="text-sm text-gray-300">{description}</p>
+    </div>
+  )
+}
+✅ 6. Replit AI Fix Prompt (Paste this if you need AI to help)
+pgsql
+Copy
+Edit
+Find and fix all broken theme wrappers. Reapply cyberpunk layout using EliteLayout.tsx and tailwind.co

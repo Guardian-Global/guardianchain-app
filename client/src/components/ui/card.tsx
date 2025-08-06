@@ -15,10 +15,10 @@ export function Card({
 }) {
   const variantStyles = {
     default: "bg-card text-card-foreground border border-border shadow-glass",
-    glass: "bg-card/80 backdrop-blur-glass border border-white/10 shadow-glass",
-    "neon-cyan": "bg-card/80 backdrop-blur-glass border border-neon-cyan shadow-neon text-card-foreground",
-    "neon-magenta": "bg-card/80 backdrop-blur-glass border border-neon-magenta shadow-neon-magenta text-card-foreground",
-    "neon-purple": "bg-card/80 backdrop-blur-glass border border-neon-purple shadow-neon-purple text-card-foreground"
+    glass: "bg-card/80 backdrop-blur border border-white/10 shadow-glass",
+    "neon-cyan": "bg-card/80 backdrop-blur border border-neon-cyan shadow-neon text-card-foreground",
+    "neon-magenta": "bg-card/80 backdrop-blur border border-pinkpunk shadow-electric text-card-foreground",
+    "neon-purple": "bg-card/80 backdrop-blur border border-electric shadow-electric text-card-foreground"
   };
 
   return (

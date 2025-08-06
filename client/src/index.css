@@ -117,12 +117,16 @@
   }
   
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-black text-white font-cyber antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-variation-settings: "slnt" 0;
-    background: linear-gradient(135deg, hsl(240, 100%, 3%), hsl(280, 100%, 5%)) !important;
+    background: linear-gradient(135deg, #0a0f2c, #000000, #0a0f2c) !important;
     min-height: 100vh !important;
-    color: hsl(0, 0%, 98%) !important; /* Force high contrast text */
+    color: #ffffff !important; /* Force high contrast text */
+  }
+  
+  .glow-card {
+    @apply rounded-xl p-4 shadow-neon border border-neon bg-opacity-10;
   }
   
   /* Next-Gen Typography Suite */
