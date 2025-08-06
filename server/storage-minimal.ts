@@ -1,112 +1,179 @@
 // server/storage-minimal.ts
-// Minimal storage interface for server startup
+// Minimal storage implementation for comprehensive functionality
 
-import { db } from "./db-minimal";
-
-// Simple type definitions
-export interface User {
+interface User {
   id: string;
   email: string;
   username?: string;
-  [key: string]: any;
+  displayName?: string;
+  tier?: string;
+  onboardingCompleted?: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface Capsule {
+interface Capsule {
   id: string;
   user_id: string;
-  title?: string;
-  content?: string;
-  [key: string]: any;
+  title: string;
+  description?: string;
+  content: string;
+  visibility: 'private' | 'public' | 'friends' | 'unlockable';
+  grief_score?: number;
+  media_url?: string;
+  minted?: boolean;
+  mint_transaction?: string;
+  ipfs_hash?: string;
+  veritas_id?: string;
+  created_at: string;
+  updated_at: string;
 }
 
-// Minimal storage implementation
-export interface IStorage {
-  // User operations
-  getUser(id: string): Promise<User | undefined>;
-  getUserByEmail(email: string): Promise<User | undefined>;
-  upsertUser(user: any): Promise<User>;
-  updateUser(id: string, updates: Partial<User>): Promise<User>;
+class MinimalStorage {
+  private users: Map<string, User> = new Map();
+  private capsules: Map<string, Capsule> = new Map();
 
-  // Capsule operations
-  getCapsule(id: string): Promise<Capsule | undefined>;
-  getCapsulesByUser(userId: string): Promise<Capsule[]>;
-  getAllCapsules(): Promise<Capsule[]>;
-  createCapsule(capsule: any): Promise<Capsule>;
-  updateCapsule(id: string, capsule: Partial<Capsule>): Promise<Capsule>;
-  deleteCapsule(id: string): Promise<void>;
-
-  // Vote operations
-  recordVote(vote: any): Promise<any>;
-  getVotesByCapsule(capsuleId: string): Promise<any[]>;
-  getUserVote(capsuleId: string, wallet: string): Promise<any>;
-
-  // Newsletter operations
-  subscribeToNewsletter(subscriber: any): Promise<any>;
-  getNewsletterSubscribers(): Promise<any[]>;
-}
-
-// Mock implementation for development
-class MinimalStorage implements IStorage {
-  async getUser(id: string): Promise<User | undefined> {
-    return undefined;
+  constructor() {
+    // Initialize with some sample data
+    this.initializeSampleData();
   }
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    return undefined;
+  private initializeSampleData() {
+    // Add a sample user
+    const sampleUser: User = {
+      id: 'dev-user-123',
+      email: 'dev@guardianchain.app',
+      username: 'dev-user',
+      displayName: 'Developer User',
+      tier: 'SEEKER',
+      onboardingCompleted: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    this.users.set(sampleUser.id, sampleUser);
+
+    // Add sample capsules
+    const sampleCapsules: Capsule[] = [
+      {
+        id: 'capsule-1',
+        user_id: 'dev-user-123',
+        title: 'My First Memory',
+        description: 'A beautiful summer day',
+        content: 'I remember the warmth of that perfect summer afternoon...',
+        visibility: 'private',
+        grief_score: 25,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      {
+        id: 'capsule-2',
+        user_id: 'dev-user-123',
+        title: 'Childhood Dreams',
+        description: 'Dreams of becoming an astronaut',
+        content: 'When I was young, I always dreamed of touching the stars...',
+        visibility: 'public',
+        grief_score: 15,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+    ];
+
+    sampleCapsules.forEach(capsule => {
+      this.capsules.set(capsule.id, capsule);
+    });
   }
 
-  async upsertUser(user: any): Promise<User> {
-    return { id: "mock-id", email: user.email, ...user };
+  // User methods
+  async getUser(id: string): Promise<User | null> {
+    return this.users.get(id) || null;
   }
 
-  async updateUser(id: string, updates: Partial<User>): Promise<User> {
-    return { id, email: "mock@example.com", ...updates };
+  async createUser(userData: Partial<User>): Promise<User> {
+    const id = userData.id || `user-${Date.now()}`;
+    const user: User = {
+      id,
+      email: userData.email || '',
+      username: userData.username,
+      displayName: userData.displayName,
+      tier: userData.tier || 'SEEKER',
+      onboardingCompleted: userData.onboardingCompleted || false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    this.users.set(id, user);
+    return user;
   }
 
-  async getCapsule(id: string): Promise<Capsule | undefined> {
-    return undefined;
+  async updateUser(id: string, updates: Partial<User>): Promise<User | null> {
+    const user = this.users.get(id);
+    if (!user) return null;
+
+    const updatedUser = {
+      ...user,
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  // Capsule methods
+  async getCapsule(id: string): Promise<Capsule | null> {
+    return this.capsules.get(id) || null;
   }
 
   async getCapsulesByUser(userId: string): Promise<Capsule[]> {
-    return [];
+    return Array.from(this.capsules.values()).filter(
+      capsule => capsule.user_id === userId
+    );
+  }
+
+  async createCapsule(capsuleData: Partial<Capsule>): Promise<Capsule> {
+    const id = `capsule-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const capsule: Capsule = {
+      id,
+      user_id: capsuleData.user_id || '',
+      title: capsuleData.title || '',
+      description: capsuleData.description,
+      content: capsuleData.content || '',
+      visibility: capsuleData.visibility || 'private',
+      grief_score: capsuleData.grief_score,
+      media_url: capsuleData.media_url,
+      minted: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    this.capsules.set(id, capsule);
+    return capsule;
+  }
+
+  async updateCapsule(id: string, updates: Partial<Capsule>): Promise<Capsule | null> {
+    const capsule = this.capsules.get(id);
+    if (!capsule) return null;
+
+    const updatedCapsule = {
+      ...capsule,
+      ...updates,
+      updated_at: new Date().toISOString(),
+    };
+    this.capsules.set(id, updatedCapsule);
+    return updatedCapsule;
+  }
+
+  async deleteCapsule(id: string): Promise<boolean> {
+    return this.capsules.delete(id);
   }
 
   async getAllCapsules(): Promise<Capsule[]> {
-    return [];
+    return Array.from(this.capsules.values());
   }
 
-  async createCapsule(capsule: any): Promise<Capsule> {
-    return { id: "mock-capsule-id", user_id: capsule.user_id, ...capsule };
-  }
-
-  async updateCapsule(id: string, capsule: Partial<Capsule>): Promise<Capsule> {
-    return { id, user_id: "mock-user-id", ...capsule };
-  }
-
-  async deleteCapsule(id: string): Promise<void> {
-    // Mock deletion
-  }
-
-  async recordVote(vote: any): Promise<any> {
-    return { id: "mock-vote-id", ...vote };
-  }
-
-  async getVotesByCapsule(capsuleId: string): Promise<any[]> {
-    return [];
-  }
-
-  async getUserVote(capsuleId: string, wallet: string): Promise<any> {
-    return undefined;
-  }
-
-  async subscribeToNewsletter(subscriber: any): Promise<any> {
-    return { id: "mock-sub-id", ...subscriber };
-  }
-
-  async getNewsletterSubscribers(): Promise<any[]> {
-    return [];
+  async getPublicCapsules(): Promise<Capsule[]> {
+    return Array.from(this.capsules.values()).filter(
+      capsule => capsule.visibility === 'public'
+    );
   }
 }
 
+// Export singleton instance
 export const storage = new MinimalStorage();
-export default storage;

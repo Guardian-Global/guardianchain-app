@@ -75,6 +75,12 @@ const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
 // CapsuleAnalyticsDemo moved to archive during consolidation
 const CapsuleAnalyticsPage = lazy(() => import("./pages/CapsuleAnalyticsPage"));
 const InvestorDemo = lazy(() => import("@/pages/demo"));
+
+// New comprehensive pages
+const SubmitCapsule = lazy(() => import("./pages/submit"));
+const MintCapsule = lazy(() => import("./pages/mint/[id]"));
+const AdminPage = lazy(() => import("./pages/admin"));
+
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -187,6 +193,11 @@ function Router() {
               <Route path="/metrics" component={MetricsPage} />
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
+
+              {/* New comprehensive pages */}
+              <Route path="/submit" component={SubmitCapsule} />
+              <Route path="/mint/:id" component={MintCapsule} />
+              <Route path="/admin" component={AdminPage} />
 
               <Route path="/social" component={SocialHub} />
               <Route path="/social-hub" component={SocialHub} />

@@ -175,6 +175,16 @@ app.use("/api/capsules", capsuleVoteRouter);
 
 // Capsule routes are integrated directly in routes.ts
 
+// New comprehensive API routes
+import capsulesRouter from "./routes/api/capsules.js";
+app.use("/api/capsules", capsulesRouter);
+
+import uploadRouter from "./routes/api/upload.js";
+app.use("/api/upload", uploadRouter);
+
+import adminRouter from "./routes/api/admin.js";
+app.use("/api/admin", adminRouter);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

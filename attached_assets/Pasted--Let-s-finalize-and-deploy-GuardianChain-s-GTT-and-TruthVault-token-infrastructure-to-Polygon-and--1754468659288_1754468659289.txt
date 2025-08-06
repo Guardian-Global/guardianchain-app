@@ -1,0 +1,71 @@
+🔥 Let's finalize and deploy GuardianChain’s GTT and TruthVault token infrastructure to Polygon and Base mainnets, ensuring:
+
+✅ FINAL TASK LIST
+1. 🚀 Deploy GTT + TruthVault tokens to Polygon + Base
+2. 🔐 DAO-Gated Veritas Attestation contract
+3. ⚖️ VeritasDAO voting logic contract
+4. 🗳️ Frontend /veritas/vote governance interface
+5. 🔗 Bind all systems into the live app (fully scoped)
+✅ 1. Solidity Contracts to Deploy
+Contract	Network	Status
+GTTToken.sol	Polygon/Base	✅ Ready to deploy
+TruthVault.sol	Polygon/Base	✅ Ready to deploy
+VeritasRegistryDAO	Polygon/Base	✅ DAO-gated attestation
+VeritasDAO.sol	Polygon/Base	✅ Voting system
+
+✅ 2. Deployment Commands (Mainnet)
+Ensure .env is set with:
+
+env
+Copy
+Edit
+PRIVATE_KEY=your_deployer_wallet_private_key
+POLYGON_RPC_URL=https://polygon-rpc.com
+BASE_RPC_URL=https://mainnet.base.org
+Then in your Hardhat project:
+
+bash
+Copy
+Edit
+npx hardhat compile
+
+# Deploy to Polygon
+npx hardhat run scripts/deploy-mainnet.js --network polygon
+
+# Deploy to Base
+npx hardhat run scripts/deploy-mainnet.js --network base
+Each will:
+
+Deploy GTTToken + TruthVault
+
+Save deployment metadata to deployments/
+
+Output DAO + Veritas addresses for binding
+
+✅ 3. Frontend Binding Instructions
+Add these to your .env in Replit:
+
+env
+Copy
+Edit
+NEXT_PUBLIC_GTT_ADDRESS=0x... (mainnet)
+NEXT_PUBLIC_TRUTH_VAULT_ADDRESS=0x...
+NEXT_PUBLIC_VERITAS_DAO_ADDRESS=0x...
+NEXT_PUBLIC_VERITAS_REGISTRY_ADDRESS=0x...
+✅ 4. App Integration Tasks
+Feature	Status	Notes
+/mint/[id].tsx	✅ Done	Saves cert hash on mint
+/api/cert/[id].ts	✅ Done	PDF download
+/veritas/[id].tsx	✅ Done	Cert viewer + verifier
+/moderation/flags.tsx	✅ Done	Admin moderation UI
+/admin.tsx	✅ Done	Capsule + cert manager
+/veritas/vote.tsx	✅ Done	Token voting interface
+
+🧱 Final Notes
+✅ All tokens and logic support Mainnet launch on Polygon + Base
+
+✅ Voting logic is fully GTT-governed (quorum + execution logic)
+
+✅ Attestation, viewing, and export flows are public-trust ready
+
+✅ Modular file structure is scoped per user (already activ
