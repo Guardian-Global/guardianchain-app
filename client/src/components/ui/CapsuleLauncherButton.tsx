@@ -1,19 +1,29 @@
-"use client";
-import { DownloadCloud } from "lucide-react";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus, Sparkles } from 'lucide-react';
 
-export default function CapsuleLauncherButton() {
-  const handleDownload = () => {
-    window.open("/downloads/capsule-launcher-v1.zip", "_blank");
-  };
+interface CapsuleLauncherButtonProps {
+  onClick?: () => void;
+  variant?: 'default' | 'outline' | 'secondary';
+  size?: 'sm' | 'default' | 'lg';
+  className?: string;
+}
 
+export default function CapsuleLauncherButton({
+  onClick,
+  variant = 'default',
+  size = 'default',
+  className = ''
+}: CapsuleLauncherButtonProps) {
   return (
-    <button
-      onClick={handleDownload}
-      className="inline-flex items-center px-6 py-3 text-lg font-bold rounded-xl bg-gradient-to-br from-indigo-600 to-fuchsia-700 text-white dark:text-white shadow-md hover:shadow-xl hover:from-indigo-500 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
-      data-testid="button-capsule-launcher-download"
+    <Button
+      onClick={onClick}
+      variant={variant}
+      size={size}
+      className={`bg-gradient-to-r from-brand-primary to-brand-accent hover:from-brand-primary/80 hover:to-brand-accent/80 ${className}`}
     >
-      <DownloadCloud className="mr-2" size={20} /> 
-      Capsule Launcher v1.0
-    </button>
+      <Sparkles className="w-4 h-4 mr-2" />
+      Create Capsule
+    </Button>
   );
 }

@@ -452,10 +452,11 @@ export default function MasterCapsule({
       <CapsuleHeader />
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="reactions">Reactions</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="advanced">Advanced</TabsTrigger>
         </TabsList>
 
         <TabsContent value="content" className="space-y-6">
@@ -468,11 +469,167 @@ export default function MasterCapsule({
 
         <TabsContent value="analytics" className="space-y-6">
           <CapsuleAnalytics />
-          <CapsuleTrendGraph />
-          <CapsuleValueCalculator />
-          <CapsuleAuditExport />
+        </TabsContent>
+
+        <TabsContent value="advanced" className="space-y-6">
+          <CapsuleAdvanced />
         </TabsContent>
       </Tabs>
     </div>
   );
 }
+
+// Advanced Capsule Management Component (Consolidates CapsuleForge, CapsuleDrawer, etc.)
+const CapsuleAdvanced = () => {
+  const [uploadMode, setUploadMode] = useState<'standard' | 'forge' | 'ai'>('standard');
+  const [forgeData, setForgeData] = useState({
+    content: '',
+    metadata: {},
+    aiAssistance: false,
+    progressStep: 1
+  });
+
+  const ForgeControls = () => (
+    <Card className="bg-brand-secondary border-brand-surface">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Zap className="w-5 h-5" />
+          Capsule Forge Controls
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-3 gap-2">
+          <Button 
+            variant={uploadMode === 'standard' ? 'default' : 'outline'}
+            onClick={() => setUploadMode('standard')}
+            size="sm"
+          >
+            Standard
+          </Button>
+          <Button 
+            variant={uploadMode === 'forge' ? 'default' : 'outline'}
+            onClick={() => setUploadMode('forge')}
+            size="sm"
+          >
+            Forge Mode
+          </Button>
+          <Button 
+            variant={uploadMode === 'ai' ? 'default' : 'outline'}
+            onClick={() => setUploadMode('ai')}
+            size="sm"
+          >
+            AI Assist
+          </Button>
+        </div>
+        
+        {uploadMode === 'forge' && (
+          <div className="mt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Progress Tracker</span>
+              <span className="text-sm text-brand-text-muted">Step {forgeData.progressStep}/5</span>
+            </div>
+            <Progress value={(forgeData.progressStep / 5) * 100} className="h-2" />
+          </div>
+        )}
+
+        {uploadMode === 'ai' && (
+          <div className="mt-4 p-3 bg-brand-surface rounded-lg">
+            <div className="flex items-center gap-2 text-purple-400 mb-2">
+              <Star className="w-4 h-4" />
+              <span className="text-sm font-medium">AI Assistant Active</span>
+            </div>
+            <p className="text-xs text-brand-text-muted">
+              AI will help optimize your capsule content, suggest metadata, and enhance truth scoring.
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+
+  const IntelligentPreview = () => (
+    <Card className="bg-brand-secondary border-brand-surface">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Eye className="w-5 h-5" />
+          Intelligent Preview & Analysis
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="aspect-video bg-brand-surface rounded-lg flex items-center justify-center">
+            <div className="text-center">
+              <FileText className="w-8 h-8 text-brand-text-muted mx-auto mb-2" />
+              <p className="text-sm text-brand-text-muted">Preview will appear here</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-brand-surface rounded-lg">
+              <p className="text-lg font-bold text-white">85%</p>
+              <p className="text-xs text-brand-text-muted">Estimated Truth Score</p>
+            </div>
+            <div className="text-center p-3 bg-brand-surface rounded-lg">
+              <p className="text-lg font-bold text-green-400">12.5 GTT</p>
+              <p className="text-xs text-brand-text-muted">Projected Yield</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const MetadataPreview = () => (
+    <Card className="bg-brand-secondary border-brand-surface">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Calendar className="w-5 h-5" />
+          Metadata & Lineage
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs text-brand-text-muted">Creation Date</label>
+              <p className="text-sm text-white">{new Date().toLocaleDateString()}</p>
+            </div>
+            <div>
+              <label className="text-xs text-brand-text-muted">Blockchain Hash</label>
+              <p className="text-xs text-brand-accent font-mono">0x...pending</p>
+            </div>
+          </div>
+          
+          <div>
+            <label className="text-xs text-brand-text-muted">Lineage Tracking</label>
+            <div className="mt-1 p-2 bg-brand-surface rounded text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span>Genesis Capsule (No Parent)</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-brand-text-muted">Contextual Features</label>
+            <div className="mt-1 flex gap-1 flex-wrap">
+              <Badge variant="outline" className="text-xs">Truth Verification</Badge>
+              <Badge variant="outline" className="text-xs">AI Analysis</Badge>
+              <Badge variant="outline" className="text-xs">Community Rating</Badge>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <div className="space-y-6">
+      <ForgeControls />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <IntelligentPreview />
+        <MetadataPreview />
+      </div>
+    </div>
+  );
+};

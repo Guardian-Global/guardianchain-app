@@ -1,0 +1,82 @@
+🚨 GUARDIANCHAIN | FULL INTELLIGENT REFACTOR + ENHANCEMENT MODE 🚨
+
+Your mission is to enhance the GuardianChain Replit project by executing a **multi-layered refactor, feature expansion, security hardening, and dynamic rendering pass**, with full system-wide synchronization.
+
+🧩 COMPONENT CONSOLIDATION
+1. Merge redundant and overlapping files into **centralized master components**:
+   - `ProfileMaster.tsx`: profile UI, user stats, emoji reactions, playlist management, SMRI badges, skeleton loaders, capsule audit trail, remix history
+   - `CapsuleMaster.tsx`: capsule creation, playback, AI remix, SMRI + grief score tagging, audit export, graph rendering, unlock status, remix leaderboard
+   - `VaultMaster.tsx`: capsule unlocks, staking overview, unlock history, GTT APY simulation, archive viewer
+   - `DashboardCore.tsx`: system metrics, DAO votes, user heatmap, tier breakdowns, performance graphs, capsule velocity leaderboard
+   - `AdminPanel.tsx`: API error logs, rate limits, last login table, email verification status, banned IPs
+   - `StakeCenter.tsx`: GTT stake input, duration slider, yield output, staking transaction tracker, validator rewards
+   - `CapsuleAI.tsx`: grief scoring, truth vectorizer, emotion clustering, capsule remix assistant (GPT-4o), AI prompt-to-capsule composer
+   - `NavSidebar.tsx`: all dynamic routes auto-linked with role-based visibility (Explorer → Admin)
+
+🔄 AUTO-IMPORT + ROUTE SYNC
+2. Auto-update all `import` statements across `/pages`, `/components`, `/lib`, `/layout`, and `/dashboard` to reflect new component paths.
+   - Fix all broken imports
+   - Flatten folder structure where logical
+   - Eliminate redundant paths or symbols
+
+🧠 INTELLIGENT FEATURE EXPANSION
+3. Multiply app options and capabilities 3×:
+   - Enable full access to all profile customization, remix, playlist, capsule tools
+   - Make every capsule feature usable from `/profile`, `/vault`, `/capsule`, `/dashboard`, and vice versa
+   - Expose SMRI + grief scoring badges sitewide
+   - Add `/capsule/reel`, `/profile/[wallet]/timeline`, `/dashboard/emotion-map`, `/stake/analytics`, `/capsule/remix-contest`
+   - Enable capsule AI remix button from any capsule view
+
+🔐 SECURITY + AUTH HARDENING
+4. Apply full-stack tier-based access control:
+   - `/admin/*`, `/stake/*`, `/vault/unlocks`, `/capsule/export`, `/dashboard/*` → `requireTier('ADMIN')` middleware
+   - `/capsule/mint`, `/capsule/create`, `/profile/edit`, `/vault/stake` → `requireAuth()` middleware
+   - Confirm session-based access with JWT cookie fallback
+   - Auto-lock suspicious IPs after 5 failed login attempts
+   - Trigger audit log + email on first-time login or capsule unlock
+
+🧪 DATABASE ENHANCEMENTS
+5. Confirm and auto-generate Supabase schemas:
+   - `capsule_activity_log`, `capsule_mint_logs`, `capsule_reactions`, `capsule_playlists`, `capsule_smri_tags`, `capsule_grief_scores`, `gtt_stakes`, `user_sessions`, `profile_stats`, `admin_audit_logs`, `capsule_remixes`
+   - Ensure every action updates its table via backend function
+
+📦 SYSTEM HEALTH + STORAGE OPTIMIZATION
+6. Consolidate duplicate files & cleanup:
+   - Archive unused `.tsx`, `.ts`, `.test.ts`, `.old.ts`, `.copy.tsx` → `/archive/refactor_<timestamp>/`
+   - Remove test scripts, export zips, legacy dashboards
+   - Log file diff in `/system_audit_logs/final_consolidation.json`
+
+🧱 LAYOUT + THEME POLISH
+7. Refactor layout system for max visual UX:
+   - Gradient hero blocks + animated text headers
+   - Auto-darkmode toggle
+   - Translucent glass panel UI (for cyberpunk effect)
+   - Unified layout for `/profile`, `/capsule`, `/vault`, `/dashboard`, `/admin`, `/stake`
+   - Animated capsule open/reveal UI
+   - Add AI-assistant modal to all pages (GPT-4o capsule coach)
+
+📈 PERFORMANCE & BUILD INTEGRITY
+8. Optimize bundle size + build tree:
+   - Run tree-shaking and static analysis
+   - Deduplicate component imports
+   - Confirm no code-splitting failures
+   - Ensure zero runtime console errors
+
+📌 HARD RULES:
+- ❌ DO NOT DELETE ANY FUNCTIONAL CODE
+- ❌ DO NOT RESET DATABASE CONNECTION
+- ✅ PRESERVE ALL USER DATA & SESSION STATE
+- ✅ ENHANCE ONLY — NO FUNCTIONALITY LOSS
+- ✅ WORK IN REPLIT ONLY — NO GITHUB PUSH
+- ✅ PRESERVE CURRENT THEME + VISUAL LANGUAGE
+
+🧠 FINAL GOAL:
+→ Turn GuardianChain into the most advanced, AI-assisted, user-owned digital memory vault ever deployed on Replit.
+
+🧪 Output:
+- ✅ Merged master components
+- ✅ Fully working UI/UX
+- ✅ Updated sidebar with all routes
+- ✅ Hardened routes with proper tier-gating
+- ✅ Final audit logs in `/system_audit_logs/`
+- ✅ Clean, deploy-ready Replit app with zero dead weight

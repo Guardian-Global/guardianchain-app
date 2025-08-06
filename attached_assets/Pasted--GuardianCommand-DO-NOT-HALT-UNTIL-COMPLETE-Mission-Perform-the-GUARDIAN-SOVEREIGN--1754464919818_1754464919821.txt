@@ -1,0 +1,69 @@
+👁️‍🗨️ GuardianCommand // DO NOT HALT UNTIL COMPLETE
+
+🚨 Mission: Perform the GUARDIAN-SOVEREIGN-REFRACTOR-REAL-EXECUTION (Phase FINAL)
+📍 Environment: Replit (do not push to GitHub)
+🛡️ Outcome: Harden, Consolidate, Expand, and Connect the Entire App into GuardianCore v1.0
+
+🔧 STEP 1: Core Refactor & Cleanup
+- Scan entire project for *.tsx and *.ts files, recursively.
+- Archive all files with these markers: "test", "temp", "backup", "old", "deprecated", "copy", or unused components/pages.
+- Verify that only 1 master component exists per domain:
+  - Profile.tsx, Capsule.tsx, Vault.tsx, StakeVault.tsx, Dashboard.tsx, AdminMetrics.tsx, Valuation.tsx
+- Merge logic and UI from duplicates into master files.
+- Consolidate all unique enhancements (emoji, audit, trend, grief-score, verification, etc.)
+- Log every file moved or archived into `/system_audit_logs/final_refactor_phase.json`
+
+🧱 STEP 2: Master Layout & Page Tree Expansion
+- Auto-generate `/NavSidebar.tsx` with intelligent grouping:
+   - Public
+   - Authenticated (Explorer / Seeker)
+   - Creator / Sovereign
+   - Admin
+- Create `middleware/requireTier.ts` to enforce tier access via Supabase or session logic.
+- Attach to all protected routes.
+
+📡 STEP 3: Capsule & Profile Intelligence Enhancements
+- Create `/capsule/AIAssistant.tsx`
+   - Auto-remix assistant with GPT-4o
+   - Emotion classifier
+   - Grief scoring engine
+   - Suggest title, tags, tone, context
+- Attach to Capsule.tsx conditionally for Admin + Creators
+- Enable full-size image/video upload with drag-drop + progress bar
+- Render capsule reel viewer with autoplay, time navigation, and badge overlay
+
+👤 STEP 4: Sovereign Profile Activation
+- Secure and lock first profile: VCW–00000 (admin) — Troy Cronin
+   - Enable edit bio, profile pic, social tags, private key veritas proof
+   - Route to `/profile/guardian`
+- Log all changes, preferences, uploads, and creations to profile state table in Supabase
+
+🎯 STEP 5: AI Autonomy Enhancement
+- Attach live AI observer script to:
+   - Recommend tag clustering
+   - Alert if duplicate capsule type is attempted
+   - Assist in grief classification and memory lineage trace
+   - Inject emotional metadata into capsule on creation
+
+📈 STEP 6: Global Optimizations
+- Refactor for ES Module compatibility if not already
+- Optimize imports, exports, route hierarchy
+- Eliminate dead code paths, flatten any fragmented folder trees
+- Remove duplicate dependencies
+- Auto-run `vite build --analyze` and confirm output < 9MB
+
+🧪 STEP 7: Guardian Final QA
+- Verify no .tsx throws TypeScript or runtime error
+- Confirm capsule minting works for large images/video
+- Confirm navigation to 20+ routes is smooth with protected routes functional
+- Ensure AI assistant loads correctly with GPT API key
+- Confirm GTT + TruthVault token minting readiness on Polygon Mainnet
+- Confirm Base Network integration readiness
+- Confirm Supabase profiles table writes + updates for new users
+
+📦 Final Output:
+- `/GuardianCore_FullExport.zip` → Replit Projects download
+- `/GuardianChain_NavMap_Enhanced.json`
+- `/Final_Component_Merge_Proof.md`
+- `/VCW–00000_Profile.json` (sovereign profile seed)
+- `/capsule/sample_proof_001.json` (grief-score sealed)
