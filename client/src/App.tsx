@@ -246,35 +246,39 @@ export default function App() {
                             <OfflineIndicator />
                           </main>
                           
-                          {/* Guardian Mascot - Available on all pages */}
-                          <Suspense fallback={null}>
-                            <GuardianMascot />
-                          </Suspense>
-                          
+                          {/* Global components - conditionally render to avoid conflicts */}
+                          {!window.location.pathname.includes('/enhancement-demo') && (
+                            <>
+                              {/* Guardian Mascot - Available on all pages except enhancement demo */}
+                              <Suspense fallback={null}>
+                                <GuardianMascot />
+                              </Suspense>
+                              
+                              {/* Auth Debug Panel for development */}
+                              <Suspense fallback={null}>
+                                <AuthDebugPanel />
+                              </Suspense>
+                              
+                              {/* Comprehensive Authentication Flow */}
+                              <Suspense fallback={null}>
+                                <ComprehensiveAuthFlow />
+                              </Suspense>
+                              
+                              {/* Onboarding Status Checker */}
+                              <Suspense fallback={null}>
+                                <OnboardingStatusChecker />
+                              </Suspense>
 
-                          
-                          {/* Auth Debug Panel for development */}
-                          <Suspense fallback={null}>
-                            <AuthDebugPanel />
-                          </Suspense>
-                          
-                          {/* Comprehensive Authentication Flow */}
-                          <Suspense fallback={null}>
-                            <ComprehensiveAuthFlow />
-                          </Suspense>
-                          
-                          {/* Onboarding Status Checker */}
-                          <Suspense fallback={null}>
-                            <OnboardingStatusChecker />
-                          </Suspense>
-
-                          {/* Full App Debugger */}
-                          <Suspense fallback={null}>
-                            <FullAppDebugger />
-                          </Suspense>
-                          <Suspense fallback={<div className="h-20 bg-slate-900" />}>
-                            <GuardianMascotFooter />
-                          </Suspense>
+                              {/* Full App Debugger */}
+                              <Suspense fallback={null}>
+                                <FullAppDebugger />
+                              </Suspense>
+                              
+                              <Suspense fallback={<div className="h-20 bg-slate-900" />}>
+                                <GuardianMascotFooter />
+                              </Suspense>
+                            </>
+                          )}
                         </NotificationProvider>
                         <Toaster />
                       </TooltipProvider>
