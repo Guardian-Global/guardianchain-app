@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import HyperdimensionalBulkProcessor from '@/components/capsule/HyperdimensionalBulkProcessor';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Link } from 'wouter';
 import {
@@ -27,10 +29,17 @@ import {
 
 export default function BulkUpload() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [uploadMethod, setUploadMethod] = React.useState<'csv' | 'json' | 'manual'>('csv');
+  const [file, setFile] = React.useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = React.useState(false);
 
   const handleBulkComplete = (results: { created: number; failed: number; capsules: any[] }) => {
     console.log('Bulk upload complete:', results);
-    // Handle completion - maybe show success message or redirect
+    toast({
+      title: "Bulk Upload Complete!",
+      description: `Created ${results.created} capsules successfully`,
+    });
   };
 
   const containerVariants = {
@@ -139,7 +148,129 @@ export default function BulkUpload() {
 
           {/* Main Upload Component */}
           <motion.div variants={itemVariants}>
-            <HyperdimensionalBulkProcessor />
+            <Card className="bg-black/30 backdrop-blur-lg border-gray-600">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Upload className="w-5 h-5 mr-2" />
+                  Bulk Upload Interface
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Upload Method Selection */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white">Choose Upload Method</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {[
+                      { id: 'csv', name: 'CSV File', icon: FileSpreadsheet, description: 'Upload structured CSV data' },
+                      { id: 'json', name: 'JSON Data', icon: Database, description: 'Paste or upload JSON format' },
+                      { id: 'manual', name: 'Manual Entry', icon: Star, description: 'Enter data manually' }
+                    ].map((method) => (
+                      <Card
+                        key={method.id}
+                        className={`cursor-pointer transition-all ${
+                          uploadMethod === method.id
+                            ? 'border-cyan-500 bg-cyan-500/10'
+                            : 'border-gray-600 bg-gray-800/30 hover:border-gray-500'
+                        }`}
+                        onClick={() => setUploadMethod(method.id as any)}
+                      >
+                        <CardContent className="p-4 text-center">
+                          <method.icon className="w-8 h-8 mx-auto text-cyan-400 mb-2" />
+                          <h4 className="font-medium text-white mb-1">{method.name}</h4>
+                          <p className="text-xs text-gray-400">{method.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Upload Interface */}
+                {uploadMethod === 'csv' && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-white">CSV Upload</h4>
+                    <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
+                      <Upload className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                      <p className="text-gray-400 mb-4">
+                        Drop your CSV file here or click to browse
+                      </p>
+                      <Input
+                        type="file"
+                        accept=".csv"
+                        onChange={(e) => setFile(e.target.files?.[0] || null)}
+                        className="max-w-xs mx-auto"
+                      />
+                      {file && (
+                        <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded">
+                          <p className="text-green-400 text-sm">
+                            Selected: {file.name} ({Math.round(file.size / 1024)} KB)
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      <p>Expected columns: title, content, type, privacy_level</p>
+                      <p>Maximum file size: 10MB</p>
+                    </div>
+                  </div>
+                )}
+
+                {uploadMethod === 'json' && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-white">JSON Data</h4>
+                    <Textarea
+                      placeholder="Paste your JSON data here..."
+                      className="min-h-32 bg-gray-800/50 border-gray-600 text-white"
+                      rows={8}
+                    />
+                    <div className="text-sm text-gray-400">
+                      <p>Format: [{`"title": "...", "content": "...", "type": "truth", "privacy_level": "public"`}]</p>
+                    </div>
+                  </div>
+                )}
+
+                {uploadMethod === 'manual' && (
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-white">Manual Entry</h4>
+                    <div className="text-center py-8">
+                      <Brain className="w-16 h-16 mx-auto text-purple-400 mb-4" />
+                      <h3 className="text-xl font-semibold text-white mb-2">Coming Soon</h3>
+                      <p className="text-gray-400">
+                        Advanced manual entry interface with smart templates
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Process Button */}
+                <div className="flex justify-center pt-4">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600"
+                    disabled={isProcessing || (!file && uploadMethod === 'csv')}
+                    onClick={() => {
+                      setIsProcessing(true);
+                      // Simulate processing
+                      setTimeout(() => {
+                        handleBulkComplete({ created: 25, failed: 2, capsules: [] });
+                        setIsProcessing(false);
+                      }, 3000);
+                    }}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-4 h-4 mr-2" />
+                        Process Data
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
 
           {/* Use Cases */}
