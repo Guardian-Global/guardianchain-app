@@ -52,6 +52,22 @@ export const connectWallet = async (): Promise<WalletConnection> => {
   }
 
   try {
+    // Wait for ethereum provider to be ready
+    await new Promise(resolve => {
+      if (window.ethereum.isConnected && window.ethereum.isConnected()) {
+        resolve(true);
+      } else {
+        const checkConnection = () => {
+          if (window.ethereum.isConnected && window.ethereum.isConnected()) {
+            resolve(true);
+          } else {
+            setTimeout(checkConnection, 100);
+          }
+        };
+        checkConnection();
+      }
+    });
+
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
