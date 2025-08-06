@@ -152,6 +152,10 @@ export const userStatsRelations = relations(userStats, ({ one }) => ({
   }),
 }));
 
+export const vestingAlertsRelations = relations(vestingAlerts, ({ one }) => ({
+  // No relations needed for vesting alerts currently
+}));
+
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,

@@ -35,7 +35,8 @@ const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
-const Profile = lazy(() => import("@/pages/profile"));
+const ProfileOld = lazy(() => import("@/pages/profile"));
+const Profile = lazy(() => import("@/pages/Profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const VeritasBadges = lazy(() => import("@/pages/VeritasBadges"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));

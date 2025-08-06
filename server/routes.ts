@@ -71,6 +71,133 @@ function getReplayLogs(filters: any = {}) {
     return true;
   });
 
+  // ===================
+  // PROFILE ENDPOINTS
+  // ===================
+  
+  // Get user profile (using database instead of mock data)
+  app.get("/api/profile", consolidatedAuth, async (req: any, res) => {
+    try {
+      const user = await storage.getUser(req.user.id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json(user);
+    } catch (error) {
+      console.error("Profile fetch error:", error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
+  // Update user profile
+  app.patch("/api/profile", consolidatedAuth, async (req: any, res) => {
+    try {
+      const updatedUser = await storage.updateUser(req.user.id, req.body);
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Profile update error:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  // Object storage upload endpoint
+  app.post("/api/objects/upload", consolidatedAuth, async (req: any, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Upload URL generation error:", error);
+      res.status(500).json({ message: "Failed to generate upload URL" });
+    }
+  });
+
+  // Profile avatar update endpoint
+  app.patch("/api/profile/avatar", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { profileImageURL } = req.body;
+
+      if (!profileImageURL) {
+        return res.status(400).json({ message: "Profile image URL is required" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
+        profileImageURL,
+        {
+          owner: req.user.id,
+          visibility: "public", // Profile images are public
+        }
+      );
+
+      const updatedUser = await storage.updateUser(req.user.id, {
+        profileImage: objectPath,
+      });
+
+      res.json({ success: true, objectPath, user: updatedUser });
+    } catch (error) {
+      console.error("Avatar update error:", error);
+      res.status(500).json({ message: "Failed to update profile image" });
+    }
+  });
+
+  // Profile cover image update endpoint
+  app.patch("/api/profile/cover", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { coverImageURL } = req.body;
+
+      if (!coverImageURL) {
+        return res.status(400).json({ message: "Cover image URL is required" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
+        coverImageURL,
+        {
+          owner: req.user.id,
+          visibility: "public", // Cover images are public
+        }
+      );
+
+      const updatedUser = await storage.updateUser(req.user.id, {
+        coverImage: objectPath,
+      });
+
+      res.json({ success: true, objectPath, user: updatedUser });
+    } catch (error) {
+      console.error("Cover image update error:", error);
+      res.status(500).json({ message: "Failed to update cover image" });
+    }
+  });
+
+  // Serve private objects with ACL checks
+  app.get("/objects/:objectPath(*)", consolidatedAuth, async (req: any, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      
+      const canAccess = await objectStorageService.canAccessObjectEntity({
+        objectFile,
+        userId: req.user.id,
+        requestedPermission: "read" as any,
+      });
+      
+      if (!canAccess) {
+        return res.sendStatus(403);
+      }
+      
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Object access error:", error);
+      if (error.constructor.name === "ObjectNotFoundError") {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
   // Admin login endpoint - switch to admin user
   app.post("/api/auth/admin-login", (req: any, res) => {
     console.log("🔐 Admin Login: Switching to admin user");
