@@ -30,6 +30,7 @@ import { registerSubscriptionRoutes } from "./routes/subscription";
 
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import { ObjectStorageService } from "./objectStorage";
+import { storage } from './storage';
 import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
 import ultraBulkRoutes from "./routes/ultra-bulk";
@@ -1792,26 +1793,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Object storage endpoints for profile media (simplified for now - will work with existing system)
-  app.post("/api/profile/upload", consolidatedAuth, async (req, res) => {
+  // Object storage endpoints for profile media - FULLY FUNCTIONAL
+  app.get("/public-objects/:filePath(*)", async (req, res) => {
+    const filePath = req.params.filePath;
+    const objectStorageService = new ObjectStorageService();
     try {
-      const userId = req.user?.id;
-      // Mock upload response for now - in production this would integrate with object storage
-      const mockFile = {
-        id: `upload_${Date.now()}`,
-        url: `/uploads/${userId}_${Date.now()}.jpg`,
-        type: req.body.mediaType || 'profileImage',
-        uploadedAt: new Date().toISOString()
-      };
+      const file = await objectStorageService.searchPublicObject(filePath);
+      if (!file) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      objectStorageService.downloadObject(file, res);
+    } catch (error) {
+      console.error("Error searching for public object:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
 
-      res.json({
-        success: true,
-        file: mockFile,
-        message: "File uploaded successfully"
+  app.get("/objects/:objectPath(*)", consolidatedAuth, async (req, res) => {
+    const userId = req.user?.id;
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error accessing object:", error);
+      return res.status(500).json({ error: "Object access failed" });
+    }
+  });
+
+  app.post("/api/objects/upload", consolidatedAuth, async (req, res) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Upload URL generation error:", error);
+      res.status(500).json({ error: "Failed to generate upload URL" });
+    }
+  });
+
+  app.put("/api/profile-media", consolidatedAuth, async (req: any, res) => {
+    if (!req.body.mediaURL) {
+      return res.status(400).json({ error: "mediaURL is required" });
+    }
+
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "User ID not found" });
+    }
+
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = objectStorageService.normalizeObjectEntityPath(req.body.mediaURL);
+
+      // Update user profile with new media path
+      const mediaType = req.body.mediaType || 'profileImage';
+      const updates = { [mediaType]: objectPath };
+      
+      await storage.updateUser(userId, updates);
+
+      console.log(`✅ Updated ${mediaType} for user ${userId}: ${objectPath}`);
+
+      res.status(200).json({
+        objectPath: objectPath,
+        message: "Profile media updated successfully"
       });
     } catch (error) {
-      console.error("Upload error:", error);
-      res.status(500).json({ error: "Upload failed" });
+      console.error("Error setting profile media:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

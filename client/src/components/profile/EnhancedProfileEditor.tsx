@@ -475,8 +475,68 @@ export default function EnhancedProfileEditor() {
                       <ObjectUploader
                         maxNumberOfFiles={1}
                         maxFileSize={5 * 1024 * 1024} // 5MB
-                        onGetUploadParameters={getUploadParameters}
-                        onComplete={(result) => handleImageUpload(result, 'profile')}
+                        onGetUploadParameters={async () => {
+                          try {
+                            const response = await fetch('/api/objects/upload', {
+                              method: 'POST',
+                              headers: { 
+                                'Content-Type': 'application/json'
+                              },
+                              credentials: 'include'
+                            });
+                            
+                            if (!response.ok) {
+                              throw new Error(`Failed to get upload URL: ${response.status}`);
+                            }
+                            
+                            const { uploadURL } = await response.json();
+                            return { method: 'PUT' as const, url: uploadURL };
+                          } catch (error) {
+                            console.error("Upload URL error:", error);
+                            throw error;
+                          }
+                        }}
+                        onComplete={async (result) => {
+                          try {
+                            if (result.successful[0]) {
+                              const imageUrl = result.successful[0].uploadURL;
+                              
+                              // Update profile media via backend API
+                              const response = await fetch('/api/profile-media', {
+                                method: 'PUT',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify({
+                                  mediaURL: imageUrl,
+                                  mediaType: 'profileImage'
+                                })
+                              });
+
+                              if (response.ok) {
+                                const { objectPath } = await response.json();
+                                // Update local profile state
+                                setProfileData(prev => prev ? { ...prev, profileImage: objectPath } : null);
+                                
+                                toast({
+                                  title: "Profile Picture Updated",
+                                  description: "Your profile picture has been updated successfully",
+                                });
+                              } else {
+                                throw new Error('Failed to update profile');
+                              }
+                            }
+                          } catch (error) {
+                            console.error("Profile update error:", error);
+                            toast({
+                              title: "Update Failed",
+                              description: "Failed to update your profile picture",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                        accept="image/*"
                       >
                         <Upload className="w-4 h-4 mr-2" />
                         Upload Profile Picture
@@ -497,8 +557,68 @@ export default function EnhancedProfileEditor() {
                       <ObjectUploader
                         maxNumberOfFiles={1}
                         maxFileSize={10 * 1024 * 1024} // 10MB
-                        onGetUploadParameters={getUploadParameters}
-                        onComplete={(result) => handleImageUpload(result, 'cover')}
+                        onGetUploadParameters={async () => {
+                          try {
+                            const response = await fetch('/api/objects/upload', {
+                              method: 'POST',
+                              headers: { 
+                                'Content-Type': 'application/json'
+                              },
+                              credentials: 'include'
+                            });
+                            
+                            if (!response.ok) {
+                              throw new Error(`Failed to get upload URL: ${response.status}`);
+                            }
+                            
+                            const { uploadURL } = await response.json();
+                            return { method: 'PUT' as const, url: uploadURL };
+                          } catch (error) {
+                            console.error("Upload URL error:", error);
+                            throw error;
+                          }
+                        }}
+                        onComplete={async (result) => {
+                          try {
+                            if (result.successful[0]) {
+                              const imageUrl = result.successful[0].uploadURL;
+                              
+                              // Update profile media via backend API
+                              const response = await fetch('/api/profile-media', {
+                                method: 'PUT',
+                                headers: {
+                                  'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify({
+                                  mediaURL: imageUrl,
+                                  mediaType: 'coverImage'
+                                })
+                              });
+
+                              if (response.ok) {
+                                const { objectPath } = await response.json();
+                                // Update local profile state
+                                setProfileData(prev => prev ? { ...prev, coverImage: objectPath } : null);
+                                
+                                toast({
+                                  title: "Cover Image Updated",
+                                  description: "Your cover image has been updated successfully",
+                                });
+                              } else {
+                                throw new Error('Failed to update profile');
+                              }
+                            }
+                          } catch (error) {
+                            console.error("Profile update error:", error);
+                            toast({
+                              title: "Update Failed",
+                              description: "Failed to update your cover image",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                        accept="image/*"
                       >
                         <Upload className="w-4 h-4 mr-2" />
                         Upload Cover Image
