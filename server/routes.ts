@@ -19,6 +19,7 @@ import { consolidatedAuth } from "./auth/authConsolidation";
 import authCompleteRoutes from "./routes/auth-complete";
 import daoRoutes from "./routes/dao";
 import aiRoutes from "./routes/ai";
+import aiEnhancementRoutes from "./routes/ai-enhancement";
 import nftRoutes from "./routes/nft";
 import airdropRoutes from "./routes/airdrop";
 import ipfsRouter from "./routes/ipfs";
@@ -10273,6 +10274,7 @@ Recommendation: ${wordCount > 50 && hasTitle ? "Ready for sealing" : "Consider a
 
   // Register AI and NFT routes
   app.use("/api/ai", aiRoutes);
+  app.use("/api/ai", aiEnhancementRoutes);
   app.use("/api/nft", nftRoutes);
   app.use("/api/airdrop", airdropRoutes);
 

@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ObjectUploader } from "@/components/ObjectUploader";
+import AIBackgroundEnhancer from "@/components/ai/AIBackgroundEnhancer";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -301,7 +302,7 @@ export default function EnhancedProfileEditor() {
         </div>
 
         <Tabs value={activeSection} onValueChange={setActiveSection} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 bg-slate-800/50 border border-cyan-500/20">
+          <TabsList className="grid w-full grid-cols-7 bg-slate-800/50 border border-cyan-500/20">
             <TabsTrigger value="basic" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400">
               <User className="w-4 h-4 mr-2" />
               Basic
@@ -321,6 +322,10 @@ export default function EnhancedProfileEditor() {
             <TabsTrigger value="theme" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400">
               <Palette className="w-4 h-4 mr-2" />
               Theme
+            </TabsTrigger>
+            <TabsTrigger value="ai-enhance" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Enhancement
             </TabsTrigger>
             <TabsTrigger value="advanced" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400">
               <Code className="w-4 h-4 mr-2" />
@@ -560,7 +565,7 @@ export default function EnhancedProfileEditor() {
                           />
                         ) : (
                           <div className="w-full h-32 rounded-lg bg-gradient-to-r from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center">
-                            <ImageIcon className="h-8 w-8 text-slate-400" />
+                            <Camera className="h-8 w-8 text-slate-400" />
                           </div>
                         )}
                       </div>
@@ -1066,6 +1071,22 @@ export default function EnhancedProfileEditor() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* AI Enhancement */}
+          <TabsContent value="ai-enhance" className="space-y-6">
+            <AIBackgroundEnhancer
+              originalImage={profileData.profileImage || ''}
+              onEnhancedImage={(enhancedImageUrl) => {
+                // Update the profile image with the enhanced version
+                setProfileData(prev => prev ? { ...prev, profileImage: enhancedImageUrl } : null);
+                queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+                toast({
+                  title: "Profile Enhanced!",
+                  description: "Your profile picture has been enhanced with AI",
+                });
+              }}
+            />
           </TabsContent>
 
           {/* Advanced Settings */}
