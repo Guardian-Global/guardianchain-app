@@ -231,6 +231,65 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return capsule;
   }
+
+  // Password reset methods
+  async setResetToken(userId: string, token: string, expiresAt: Date): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        resetToken: token,
+        resetTokenExpiresAt: expiresAt,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+
+  async getUserByResetToken(token: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(and(
+        eq(users.resetToken, token),
+        sql`${users.resetTokenExpiresAt} > NOW()`
+      ));
+    return user;
+  }
+
+  async clearResetToken(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        resetToken: null,
+        resetTokenExpiresAt: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
+  // Session management
+  async terminateSession(sessionId: string): Promise<void> {
+    await db
+      .update(userSessions)
+      .set({
+        isActive: false,
+        updatedAt: new Date(),
+      })
+      .where(eq(userSessions.id, sessionId));
+  }
+
+  async getUserActiveSessions(userId: string): Promise<UserSession[]> {
+    return await db
+      .select()
+      .from(userSessions)
+      .where(and(
+        eq(userSessions.userId, userId),
+        eq(userSessions.isActive, true),
+        sql`${userSessions.expiresAt} > NOW()`
+      ))
+      .orderBy(desc(userSessions.createdAt));
+  }
 }
 
 export const storage = new DatabaseStorage();

@@ -32,6 +32,7 @@ import { registerSubscriptionRoutes } from "./routes/subscription";
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import { ObjectStorageService } from "./objectStorage";
 import { storage } from './storage';
+import { registerAuthRoutes } from "./routes/auth";
 import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
 import ultraBulkRoutes from "./routes/ultra-bulk";
@@ -4487,6 +4488,9 @@ Verification Status: Authenticated via Veritas Certificate Engine
 
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
+  
+  // Register authentication routes
+  registerAuthRoutes(app);
 
   // Register metadata routes
   const { registerMetadataRoutes } = await import("./routes/metadata");

@@ -52,6 +52,8 @@ export const users = pgTable('users', {
   subscriptionStatus: text('subscription_status').notNull().default('free'),
   onboardingCompleted: boolean('onboarding_completed').notNull().default(false),
   preferences: json('preferences').$type<Record<string, any>>(),
+  resetToken: text('reset_token'),
+  resetTokenExpiresAt: timestamp('reset_token_expires_at'),
   lastActiveAt: timestamp('last_active_at').defaultNow(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
@@ -68,6 +70,28 @@ export const userSessions = pgTable('user_sessions', {
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// Login history table - tracks user login attempts and locations
+export const loginHistory = pgTable('login_history', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  ipAddress: text('ip_address'),
+  city: text('city'),
+  region: text('region'),
+  country: text('country'),
+  device: text('device'),
+  success: boolean('success').notNull().default(true),
+  loginTime: timestamp('login_time').notNull().defaultNow(),
+});
+
+// Capsule audit log table - tracks all capsule operations
+export const capsuleAudit = pgTable('capsule_audit', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  capsuleId: uuid('capsule_id').references(() => capsules.id, { onDelete: 'cascade' }),
+  action: text('action').notNull(),
+  metadata: json('metadata').$type<Record<string, any>>(),
+  timestamp: timestamp('timestamp').notNull().defaultNow(),
 });
 
 // User activity log table - tracks user actions and data
@@ -241,3 +265,11 @@ export type InsertCapsule = typeof capsules.$inferInsert;
 
 export type UserStats = typeof userStats.$inferSelect;
 export type InsertUserStats = typeof userStats.$inferInsert;
+
+// Login History types
+export type InsertLoginHistory = typeof loginHistory.$inferInsert;
+export type LoginHistory = typeof loginHistory.$inferSelect;
+
+// Capsule Audit types  
+export type InsertCapsuleAudit = typeof capsuleAudit.$inferInsert;
+export type CapsuleAudit = typeof capsuleAudit.$inferSelect;

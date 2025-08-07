@@ -35,6 +35,7 @@ const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
+const Settings = lazy(() => import("@/pages/Settings"));
 const ProfileOld = lazy(() => import("@/pages/profile"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
@@ -85,7 +86,6 @@ const MintCapsule = lazy(() => import("./pages/mint/[id]"));
 const AdminPage = lazy(() => import("./pages/admin"));
 
 const NotFound = lazy(() => import("./pages/NotFound"));
-const Settings = lazy(() => import("./pages/Settings"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -213,6 +213,7 @@ function Router() {
               {/* Analytics demo route removed during consolidation */}
               <Route path="/dao" component={DAO} />
               <Route path="/profile" component={Profile} />
+              <Route path="/settings" component={Settings} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

@@ -1,0 +1,68 @@
+// pages/admin/sessions.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import { formatDistanceToNow } from "date-fns";
+import { ShieldCheck, MapPin, Globe } from "lucide-react";
+
+const GeoHeatmap = dynamic(() => import("@/components/GeoHeatmap"), { ssr: false });
+
+export default function AdminSessionsPage() {
+  const [sessions, setSessions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      const res = await fetch("/api/admin/sessions", {
+        headers: {
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_KEY || "GUARDIAN_ADMIN_2025"
+        }
+      });
+      const data = await res.json();
+      setSessions(data);
+    };
+
+    fetchSessions();
+  }, []);
+
+  return (
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">🛡️ Live Session Tracker</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <table className="w-full border bg-white rounded shadow">
+            <thead className="bg-slate-100">
+              <tr>
+                <th className="p-3 text-left">Email</th>
+                <th className="p-3 text-left">Location</th>
+                <th className="p-3 text-left">Device</th>
+                <th className="p-3 text-right">Last Active</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sessions.map((s, i) => (
+                <tr key={i} className="border-t text-sm">
+                  <td className="p-3">{s.email}</td>
+                  <td className="p-3 flex items-center gap-1">
+                    <MapPin className="w-4 h-4 text-slate-500" />
+                    {s.city}, {s.country}
+                  </td>
+                  <td className="p-3">{s.device}</td>
+                  <td className="p-3 text-right text-xs text-slate-500">
+                    {formatDistanceToNow(new Date(s.lastActive), { addSuffix: true })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+            <Globe className="w-5 h-5" /> Login Origin Heatmap
+          </h2>
+          <GeoHeatmap sessions={sessions} />
+        </div>
+      </div>
+    </div>
+  );
+}
