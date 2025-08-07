@@ -1,0 +1,4 @@
+Feature,Description,Tech Stack,Security
+/mint/RegisterReward.tsx,"Automatically mints a reward NFT (e.g., GTT commemorative) immediately after successful user onboarding/registration.",Next.js + ethers.js + IPFS (or NFT.Storage) + Supabase (for mint trigger),User wallet address must match session key. Minter role must verify.
+/api/auth/recovery,"Provides secure email-based password recovery plus single-use backup codes. Includes token issuance, expiration, and verification endpoints.","Node.js (Express) + PostgreSQL + JWT for token flow, with React UI modals",Tokens expire after 15 min. Backup codes are hashed + one-time only.
+<GeoHeatmap />,"Dynamically visualizes login origins using Leaflet.js. Supports city-level geolocation, zoom, and session heat mapping.",React + Leaflet.js + OpenStreetMap + D3 (for heatmap overlay if needed),Admin key required to query session data. Public view disables exact IPs.

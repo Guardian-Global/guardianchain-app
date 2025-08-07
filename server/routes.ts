@@ -4496,6 +4496,118 @@ Verification Status: Authenticated via Veritas Certificate Engine
   const { registerAdminRoutes } = await import('./routes/admin');
   registerAdminRoutes(app);
 
+  // Registration reward endpoints
+  app.get("/api/capsule/user-reward-check/:userId", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Check if user already has registration reward NFT
+      const userCapsules = await storage.getUserCapsules(userId);
+      const registrationReward = userCapsules.find((capsule: any) => 
+        capsule.capsuleType === "reward" && 
+        capsule.metadata?.rewardType === "registration"
+      );
+
+      if (registrationReward) {
+        res.json({
+          hasRegistrationReward: true,
+          rewardDetails: {
+            title: registrationReward.title,
+            tokenId: registrationReward.tokenId,
+            transactionHash: registrationReward.transactionHash,
+            createdAt: registrationReward.createdAt
+          }
+        });
+      } else {
+        res.json({ hasRegistrationReward: false });
+      }
+    } catch (error) {
+      console.error("Error checking registration reward:", error);
+      res.status(500).json({ error: "Failed to check registration reward" });
+    }
+  });
+
+  app.post("/api/capsule/mint-reward", consolidatedAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const rewardData = req.body;
+
+      // Check if user already has this reward type
+      const userCapsules = await storage.getUserCapsules(userId);
+      const existingReward = userCapsules.find((capsule: any) => 
+        capsule.capsuleType === "reward" && 
+        capsule.metadata?.rewardType === rewardData.rewardType
+      );
+
+      if (existingReward) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "User already has this reward type" 
+        });
+      }
+
+      // Create the reward NFT capsule
+      const capsule = await storage.createCapsule(userId, {
+        ...rewardData,
+        tokenId: `reward_${Date.now()}_${userId.slice(-6)}`,
+        transactionHash: `0x${Math.random().toString(16).slice(2, 66)}`, // Mock hash
+        isReward: true,
+        mintedAt: new Date(),
+        blockchain: "polygon", // Default to Polygon
+        contractAddress: process.env.CAPSULE_CONTRACT_ADDRESS || "0x...",
+      });
+
+      console.log(`🎁 Registration reward minted for user: ${userId}`);
+
+      res.json({
+        success: true,
+        nftDetails: {
+          title: capsule.title,
+          tokenId: capsule.tokenId,
+          transactionHash: capsule.transactionHash,
+          capsuleId: capsule.id,
+          createdAt: capsule.createdAt
+        }
+      });
+    } catch (error) {
+      console.error("Error minting registration reward:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to mint registration reward" 
+      });
+    }
+  });
+
+  app.post("/api/gtt/award-registration-bonus", consolidatedAuth, async (req: any, res) => {
+    try {
+      const { userId, amount } = req.body;
+      
+      // In production, this would interact with the GTT smart contract
+      // For now, we'll update the user's stats
+      const userStats = await storage.getUserStats(userId);
+      if (userStats) {
+        await storage.updateUserStats(userId, {
+          gttBalance: (userStats.gttBalance || 0) + amount,
+          totalEarnings: (userStats.totalEarnings || 0) + amount
+        });
+      }
+
+      console.log(`💰 GTT registration bonus awarded: ${amount} tokens to ${userId}`);
+
+      res.json({
+        success: true,
+        amount,
+        message: `${amount} GTT tokens awarded as registration bonus`
+      });
+    } catch (error) {
+      console.error("Error awarding GTT bonus:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to award GTT bonus" 
+      });
+    }
+  });
+
   // Register metadata routes
   const { registerMetadataRoutes } = await import("./routes/metadata");
   registerMetadataRoutes(app);

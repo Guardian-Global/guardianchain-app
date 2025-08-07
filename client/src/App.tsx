@@ -177,6 +177,10 @@ function Router() {
                 const AdminSessions = lazy(() => import("./pages/admin/sessions"));
                 return <AdminSessions />;
               }} />
+              <Route path="/mint/register-reward" component={() => {
+                const RegisterReward = lazy(() => import("./pages/mint/RegisterReward"));
+                return <RegisterReward />;
+              }} />
               <Route path="/admin/panel" component={AdminPanel} />
               <Route path="/capsule-stats" component={CapsuleStats} />
               <Route path="/capsule-browser" component={CapsuleBrowser} />
