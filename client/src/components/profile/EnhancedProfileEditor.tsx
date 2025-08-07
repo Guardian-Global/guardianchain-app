@@ -453,13 +453,23 @@ export default function EnhancedProfileEditor() {
                   <div className="space-y-2">
                     <Label className="text-slate-200">Profile Picture</Label>
                     <div className="flex items-center space-x-4">
-                      {profileData.profileImage && (
-                        <img 
-                          src={profileData.profileImage} 
-                          alt="Profile" 
-                          className="w-16 h-16 rounded-full object-cover border-2 border-cyan-400"
-                        />
-                      )}
+                      <div className="relative w-16 h-16">
+                        {profileData.profileImage ? (
+                          <img 
+                            src={profileData.profileImage} 
+                            alt="Profile" 
+                            className="w-16 h-16 rounded-full object-cover border-2 border-cyan-400"
+                            onError={(e) => {
+                              console.log('Profile image failed to load:', profileData.profileImage);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center border-2 border-cyan-400">
+                            <User className="h-8 w-8 text-white" />
+                          </div>
+                        )}
+                      </div>
                       <ObjectUploader
                         maxNumberOfFiles={1}
                         maxFileSize={5 * 1024 * 1024} // 5MB
@@ -504,8 +514,10 @@ export default function EnhancedProfileEditor() {
 
                               if (response.ok) {
                                 const { objectPath } = await response.json();
-                                // Update local profile state
-                                setProfileData(prev => prev ? { ...prev, profileImage: objectPath } : null);
+                                // Update local profile state immediately
+                                setProfileData(prev => prev ? { ...prev, profileImage: imageUrl } : null);
+                                // Also refresh profile data from server
+                                queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
                                 
                                 toast({
                                   title: "Profile Picture Updated",
@@ -535,13 +547,23 @@ export default function EnhancedProfileEditor() {
                   <div className="space-y-2">
                     <Label className="text-slate-200">Cover Image</Label>
                     <div className="space-y-2">
-                      {profileData.coverImage && (
-                        <img 
-                          src={profileData.coverImage} 
-                          alt="Cover" 
-                          className="w-full h-32 rounded-lg object-cover border border-cyan-400"
-                        />
-                      )}
+                      <div className="relative w-full h-32">
+                        {profileData.coverImage ? (
+                          <img 
+                            src={profileData.coverImage} 
+                            alt="Cover" 
+                            className="w-full h-32 rounded-lg object-cover border border-cyan-400"
+                            onError={(e) => {
+                              console.log('Cover image failed to load:', profileData.coverImage);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-32 rounded-lg bg-gradient-to-r from-slate-700 to-slate-800 border border-slate-600 flex items-center justify-center">
+                            <ImageIcon className="h-8 w-8 text-slate-400" />
+                          </div>
+                        )}
+                      </div>
                       <ObjectUploader
                         maxNumberOfFiles={1}
                         maxFileSize={10 * 1024 * 1024} // 10MB
@@ -586,8 +608,10 @@ export default function EnhancedProfileEditor() {
 
                               if (response.ok) {
                                 const { objectPath } = await response.json();
-                                // Update local profile state
-                                setProfileData(prev => prev ? { ...prev, coverImage: objectPath } : null);
+                                // Update local profile state immediately  
+                                setProfileData(prev => prev ? { ...prev, coverImage: imageUrl } : null);
+                                // Also refresh profile data from server
+                                queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
                                 
                                 toast({
                                   title: "Cover Image Updated",
