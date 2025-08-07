@@ -151,11 +151,7 @@ export default function EnhancedProfileEditor() {
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (updates: Partial<ProfileData>) => {
-      return apiRequest('/api/profile', {
-        method: 'PATCH',
-        body: JSON.stringify(updates),
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return apiRequest('/api/profile', 'PATCH', updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
@@ -175,18 +171,10 @@ export default function EnhancedProfileEditor() {
     
     try {
       if (type === 'profile') {
-        const response = await apiRequest('/api/profile/avatar', {
-          method: 'PATCH',
-          body: JSON.stringify({ profileImageURL: uploadUrl }),
-          headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await apiRequest('/api/profile/avatar', 'PATCH', { profileImageURL: uploadUrl });
         setProfileData(prev => prev ? { ...prev, profileImage: response.objectPath } : null);
       } else if (type === 'cover') {
-        const response = await apiRequest('/api/profile/cover', {
-          method: 'PATCH',
-          body: JSON.stringify({ coverImageURL: uploadUrl }),
-          headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await apiRequest('/api/profile/cover', 'PATCH', { coverImageURL: uploadUrl });
         setProfileData(prev => prev ? { ...prev, coverImage: response.objectPath } : null);
       } else if (type === 'portfolio') {
         const newImages = [...(profileData?.portfolioImages || []), uploadUrl];
