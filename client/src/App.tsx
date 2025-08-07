@@ -173,6 +173,10 @@ function Router() {
               <Route path="/settings" component={Settings} />
               <Route path="/admin-dashboard" component={AdminDashboard} />
               <Route path="/admin" component={Admin} />
+              <Route path="/admin/sessions" component={() => {
+                const AdminSessions = lazy(() => import("./pages/admin/sessions"));
+                return <AdminSessions />;
+              }} />
               <Route path="/admin/panel" component={AdminPanel} />
               <Route path="/capsule-stats" component={CapsuleStats} />
               <Route path="/capsule-browser" component={CapsuleBrowser} />

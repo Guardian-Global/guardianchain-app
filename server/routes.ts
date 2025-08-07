@@ -4491,6 +4491,10 @@ Verification Status: Authenticated via Veritas Certificate Engine
   
   // Register authentication routes
   registerAuthRoutes(app);
+  
+  // Register admin routes
+  const { registerAdminRoutes } = await import('./routes/admin');
+  registerAdminRoutes(app);
 
   // Register metadata routes
   const { registerMetadataRoutes } = await import("./routes/metadata");

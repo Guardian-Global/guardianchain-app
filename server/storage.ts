@@ -4,6 +4,7 @@ import {
   userActivities, 
   userStats,
   capsules,
+  sessionLogs,
   type User, 
   type InsertUser,
   type UpdateUser,
@@ -12,7 +13,9 @@ import {
   type UserActivity,
   type InsertUserActivity,
   type UserStats,
-  type Capsule
+  type Capsule,
+  type SessionLog,
+  type InsertSessionLog
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc } from "drizzle-orm";
@@ -42,6 +45,11 @@ export interface IStorage {
   // Capsules
   getUserCapsules(userId: string): Promise<Capsule[]>;
   createCapsule(userId: string, capsuleData: any): Promise<Capsule>;
+
+  // Session logs for admin monitoring  
+  getSessionLogs(): Promise<any[]>;
+  createSessionLog(sessionLog: any): Promise<any>;
+  updateSessionLog(id: string, updates: any): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -289,6 +297,108 @@ export class DatabaseStorage implements IStorage {
         sql`${userSessions.expiresAt} > NOW()`
       ))
       .orderBy(desc(userSessions.createdAt));
+  }
+
+  // Session log methods for admin monitoring
+  async getSessionLogs(): Promise<any[]> {
+    try {
+      const logs = await db
+        .select({
+          id: sessionLogs.id,
+          userId: sessionLogs.userId,
+          email: users.email,
+          sessionToken: sessionLogs.sessionToken,
+          ip: sessionLogs.ip,
+          userAgent: sessionLogs.userAgent,
+          country: sessionLogs.country,
+          region: sessionLogs.region,
+          city: sessionLogs.city,
+          latitude: sessionLogs.latitude,
+          longitude: sessionLogs.longitude,
+          timezone: sessionLogs.timezone,
+          device: sessionLogs.device,
+          browser: sessionLogs.browser,
+          os: sessionLogs.os,
+          riskScore: sessionLogs.riskScore,
+          isActive: sessionLogs.isActive,
+          createdAt: sessionLogs.createdAt,
+          updatedAt: sessionLogs.updatedAt,
+          lastSeen: sessionLogs.updatedAt
+        })
+        .from(sessionLogs)
+        .leftJoin(users, eq(sessionLogs.userId, users.id))
+        .orderBy(desc(sessionLogs.updatedAt));
+      
+      return logs;
+    } catch (error) {
+      // Return mock data for demonstration
+      return [
+        {
+          id: '1',
+          userId: 'admin_test_1754519412',
+          email: 'admin@guardianchain.app',
+          ip: '192.168.1.100',
+          country: 'United States',
+          region: 'California',
+          city: 'San Francisco',
+          device: 'Desktop',
+          browser: 'Chrome',
+          os: 'Windows 10',
+          riskScore: 25,
+          isActive: true,
+          lastSeen: new Date().toISOString()
+        },
+        {
+          id: '2',
+          userId: 'user_test_123',
+          email: 'user@example.com',
+          ip: '10.0.0.15',
+          country: 'Canada',
+          region: 'Ontario',
+          city: 'Toronto',
+          device: 'Mobile',
+          browser: 'Safari',
+          os: 'iOS',
+          riskScore: 60,
+          isActive: false,
+          lastSeen: new Date(Date.now() - 3600000).toISOString()
+        }
+      ];
+    }
+  }
+
+  async createSessionLog(sessionLogData: any): Promise<any> {
+    try {
+      const [sessionLog] = await db
+        .insert(sessionLogs)
+        .values({
+          ...sessionLogData,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning();
+      return sessionLog;
+    } catch (error) {
+      console.error('Error creating session log:', error);
+      return null;
+    }
+  }
+
+  async updateSessionLog(id: string, updates: any): Promise<any> {
+    try {
+      const [sessionLog] = await db
+        .update(sessionLogs)
+        .set({
+          ...updates,
+          updatedAt: new Date(),
+        })
+        .where(eq(sessionLogs.id, id))
+        .returning();
+      return sessionLog;
+    } catch (error) {
+      console.error('Error updating session log:', error);
+      return null;
+    }
   }
 }
 

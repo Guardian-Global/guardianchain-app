@@ -1,7 +1,8 @@
 // shared/schema.ts
 // Database schema definitions using Drizzle ORM
 
-import { pgTable, text, uuid, timestamp, boolean, json, integer, decimal } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid, timestamp, boolean, json, integer, decimal, varchar } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 import { relations } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
@@ -273,3 +274,35 @@ export type LoginHistory = typeof loginHistory.$inferSelect;
 // Capsule Audit types  
 export type InsertCapsuleAudit = typeof capsuleAudit.$inferInsert;
 export type CapsuleAudit = typeof capsuleAudit.$inferSelect;
+
+// Session logs table for admin monitoring
+export const sessionLogs = pgTable("session_logs", {
+  id: varchar("id", { length: 255 }).primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id", { length: 255 }).references(() => users.id),
+  sessionToken: varchar("session_token", { length: 255 }).notNull(),
+  ip: varchar("ip", { length: 45 }).notNull(),
+  userAgent: text("user_agent"),
+  
+  // Geolocation data
+  country: varchar("country", { length: 100 }),
+  region: varchar("region", { length: 100 }),
+  city: varchar("city", { length: 100 }),
+  latitude: varchar("latitude", { length: 20 }),
+  longitude: varchar("longitude", { length: 20 }),
+  timezone: varchar("timezone", { length: 50 }),
+  
+  // Device information
+  device: varchar("device", { length: 100 }),
+  browser: varchar("browser", { length: 100 }),
+  os: varchar("os", { length: 100 }),
+  
+  // Security metrics
+  riskScore: integer("risk_score").default(0),
+  isActive: boolean("is_active").default(true),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type SessionLog = typeof sessionLogs.$inferSelect;
+export type InsertSessionLog = typeof sessionLogs.$inferInsert;
