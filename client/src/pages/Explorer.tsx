@@ -1,5 +1,5 @@
 import React from "react";
-import EnhancedTruthExplorer from "@/components/enhanced/EnhancedTruthExplorer";
+import EnhancedTruthExplorer from "@/../components/enhanced/EnhancedTruthExplorer";
 import DisclaimerBlock from "@/components/DisclaimerBlock";
 
 export default function Explorer() {
