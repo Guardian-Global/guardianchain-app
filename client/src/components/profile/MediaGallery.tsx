@@ -6,9 +6,11 @@ import { createClient } from "@supabase/supabase-js";
 
 type MediaItem = {
   id: string;
-  type: "image" | "video";
+  type: "image" | "video" | "audio";
   url: string;
   title?: string;
+  grief_score?: number;
+  unlocks?: number;
   uploaded_at: string;
 };
 
@@ -17,7 +19,13 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export default function MediaGallery({ wallet }: { wallet: string }) {
+export default function MediaGallery({
+  wallet,
+  filter
+}: {
+  wallet: string;
+  filter: "all" | "image" | "video" | "audio";
+}) {
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,37 +45,60 @@ export default function MediaGallery({ wallet }: { wallet: string }) {
       return;
     }
 
-    setMedia(
-      (data || []).map((item: any) => ({
+    const parsed = (data || []).map((item: any) => {
+      const ext = item.url?.split(".").pop()?.toLowerCase();
+      let type: MediaItem["type"] = "image";
+      if (["mp4", "webm"].includes(ext)) type = "video";
+      if (["mp3", "wav", "ogg"].includes(ext)) type = "audio";
+
+      return {
         id: item.id,
-        type: item.url.match(/\.(mp4|webm)$/i) ? "video" : "image",
+        type,
         url: item.url,
         title: item.title,
-        uploaded_at: item.uploaded_at,
-      }))
-    );
+        grief_score: item.grief_score,
+        unlocks: item.unlocks,
+        uploaded_at: item.uploaded_at
+      };
+    });
+
+    setMedia(parsed);
     setLoading(false);
   }
 
+  const filtered = filter === "all" ? media : media.filter((m) => m.type === filter);
+
   if (loading) return <p className="text-gray-500">Loading media...</p>;
 
-  if (media.length === 0)
-    return <p className="text-gray-400">No media uploaded yet.</p>;
+  if (filtered.length === 0)
+    return <p className="text-gray-400">No {filter} media found.</p>;
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-      {media.map((item) => (
-        <div key={item.id} className="rounded overflow-hidden shadow-md bg-white">
-          {item.type === "image" ? (
-            <img src={item.url} alt={item.title} className="w-full h-48 object-cover" />
-          ) : (
+      {filtered.map((item) => (
+        <div key={item.id} className="relative rounded overflow-hidden shadow bg-white">
+          {item.type === "image" && (
+            <img src={item.url} className="w-full h-48 object-cover" />
+          )}
+          {item.type === "video" && (
             <video controls className="w-full h-48 object-cover">
               <source src={item.url} />
             </video>
           )}
-          {item.title && (
-            <div className="px-2 py-1 text-xs text-gray-600">{item.title}</div>
+          {item.type === "audio" && (
+            <audio controls className="w-full px-2 py-4 bg-gray-100">
+              <source src={item.url} />
+            </audio>
           )}
+          <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs px-2 py-1 flex justify-between">
+            <span>{item.title || "Untitled"}</span>
+            {item.grief_score !== undefined && (
+              <span className="text-yellow-300">⚡ {item.grief_score.toFixed(1)}</span>
+            )}
+            {item.unlocks !== undefined && (
+              <span className="text-green-300">🔓 {item.unlocks}</span>
+            )}
+          </div>
         </div>
       ))}
     </div>
