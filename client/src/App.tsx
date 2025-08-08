@@ -35,7 +35,7 @@ const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
-const Settings = lazy(() => import("@/pages/Settings"));
+// Settings imported dynamically to avoid conflicts
 const ProfileOld = lazy(() => import("@/pages/profile"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
@@ -170,7 +170,10 @@ function Router() {
               <Route path="/profile/:username" component={PublicProfile} />
               <Route path="/badges" component={VeritasBadges} />
               <Route path="/veritas-badges" component={VeritasBadges} />
-              <Route path="/settings" component={Settings} />
+              <Route path="/settings" component={() => {
+                const SettingsPage = lazy(() => import("./pages/Settings"));
+                return <SettingsPage />;
+              }} />
               <Route path="/admin-dashboard" component={AdminDashboard} />
               <Route path="/admin" component={Admin} />
               <Route path="/admin/sessions" component={() => {
@@ -221,7 +224,6 @@ function Router() {
               {/* Analytics demo route removed during consolidation */}
               <Route path="/dao" component={DAO} />
               <Route path="/profile" component={Profile} />
-              <Route path="/settings" component={Settings} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

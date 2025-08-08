@@ -53,6 +53,129 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // Password reset methods
+  async getUserByResetToken(token: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.resetToken, token));
+    return user;
+  }
+
+  async updateUser(userId: string, data: Partial<User>): Promise<void> {
+    await db.update(users).set(data).where(eq(users.id, userId));
+  }
+
+  // Session management
+  async getUserSessions(userId: string): Promise<any[]> {
+    const sessions = await db.select().from(userSessions).where(eq(userSessions.userId, userId));
+    return sessions;
+  }
+
+  async getSessionById(sessionId: string): Promise<any | undefined> {
+    const [session] = await db.select().from(userSessions).where(eq(userSessions.id, sessionId));
+    return session;
+  }
+
+  async revokeSession(sessionId: string): Promise<void> {
+    await db.delete(userSessions).where(eq(userSessions.id, sessionId));
+  }
+
+  async revokeAllOtherSessions(userId: string, currentToken: string): Promise<number> {
+    const result = await db.delete(userSessions)
+      .where(and(eq(userSessions.userId, userId), ne(userSessions.sessionToken, currentToken)));
+    return result.rowCount || 0;
+  }
+
+  async revokeAllUserSessions(userId: string): Promise<number> {
+    const result = await db.delete(userSessions).where(eq(userSessions.userId, userId));
+    return result.rowCount || 0;
+  }
+
+  async getUserSessionCount(userId: string): Promise<number> {
+    const result = await db.select({ count: sql`count(*)` }).from(userSessions).where(eq(userSessions.userId, userId));
+    return parseInt(result[0]?.count || '0');
+  }
+
+  // Login history and geolocation
+  async createLoginHistory(data: any): Promise<any> {
+    const [record] = await db.insert(loginHistory).values(data).returning();
+    return record;
+  }
+
+  async getUserLoginHistory(userId: string, limit: number = 50): Promise<any[]> {
+    const history = await db.select()
+      .from(loginHistory)
+      .where(eq(loginHistory.userId, userId))
+      .orderBy(desc(loginHistory.loginTime))
+      .limit(limit);
+    return history;
+  }
+
+  async getAllLoginActivity(limit: number = 100, onlySuccessful?: boolean): Promise<any[]> {
+    let query = db.select()
+      .from(loginHistory)
+      .orderBy(desc(loginHistory.loginTime))
+      .limit(limit);
+      
+    if (onlySuccessful) {
+      query = query.where(eq(loginHistory.success, true));
+    }
+    
+    return await query;
+  }
+
+  async getUserLoginStats(userId: string): Promise<any> {
+    const totalLogins = await db.select({ count: sql`count(*)` })
+      .from(loginHistory)
+      .where(and(eq(loginHistory.userId, userId), eq(loginHistory.success, true)));
+
+    const recentLogin = await db.select()
+      .from(loginHistory)
+      .where(and(eq(loginHistory.userId, userId), eq(loginHistory.success, true)))
+      .orderBy(desc(loginHistory.loginTime))
+      .limit(1);
+
+    const uniqueLocations = await db.select({ count: sql`count(distinct city || ',' || country)` })
+      .from(loginHistory)
+      .where(and(eq(loginHistory.userId, userId), eq(loginHistory.success, true)));
+
+    return {
+      totalLogins: parseInt(totalLogins[0]?.count || '0'),
+      lastLogin: recentLogin[0]?.loginTime || null,
+      uniqueLocations: parseInt(uniqueLocations[0]?.count || '0')
+    };
+  }
+
+  // Session logs
+  async createSessionLog(data: any): Promise<any> {
+    const [record] = await db.insert(sessionLogs).values(data).returning();
+    return record;
+  }
+
+  // Capsule audit
+  async createCapsuleAudit(data: any): Promise<any> {
+    const [record] = await db.insert(capsuleAudit).values(data).returning();
+    return record;
+  }
+
+  async getCapsuleAuditHistory(capsuleId: string): Promise<any[]> {
+    const history = await db.select()
+      .from(capsuleAudit)
+      .where(eq(capsuleAudit.capsuleId, capsuleId))
+      .orderBy(desc(capsuleAudit.timestamp));
+    return history;
+  }
+
+  async getAllCapsuleAuditActivity(limit: number = 100, action?: string): Promise<any[]> {
+    let query = db.select()
+      .from(capsuleAudit)
+      .orderBy(desc(capsuleAudit.timestamp))
+      .limit(limit);
+      
+    if (action) {
+      query = query.where(eq(capsuleAudit.action, action));
+    }
+    
+    return await query;
+  }
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;

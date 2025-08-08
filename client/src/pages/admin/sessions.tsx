@@ -1,239 +1,298 @@
+// pages/admin/sessions.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  MapPin, 
-  Monitor, 
-  Smartphone, 
-  Shield, 
-  AlertTriangle,
-  Search,
-  RefreshCw
-} from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
+import { ShieldCheck, MapPin, Globe, Users, Activity, AlertTriangle, Monitor } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { useToast } from "../../hooks/use-toast";
+import { apiRequest } from "../../lib/queryClient";
 
-interface SessionLog {
+interface SessionData {
+  id: string;
+  userId: string;
+  email: string;
+  sessionToken: string;
+  ip: string;
+  userAgent: string;
+  country?: string;
+  region?: string;
+  city?: string;
+  device?: string;
+  browser?: string;
+  os?: string;
+  riskScore?: number;
+  isActive: boolean;
+  lastActivity: Date;
+  createdAt: Date;
+}
+
+interface LoginActivity {
   id: string;
   userId: string;
   email: string;
   ip: string;
-  city: string;
-  country: string;
-  region: string;
-  device: string;
-  browser: string;
-  os: string;
-  lastSeen: string;
-  isActive: boolean;
-  sessionToken: string;
-  riskScore: number;
-  loginAttempts: number;
+  success: boolean;
+  country?: string;
+  city?: string;
+  device?: string;
+  browser?: string;
+  riskScore?: number;
+  loginTime: Date;
 }
 
-export default function AdminSessions() {
-  const { user } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const { data: sessionLogs, isLoading, refetch } = useQuery({
-    queryKey: ['/api/admin/sessions'],
-    enabled: user?.tier === 'ADMIN'
+export default function AdminSessionsPage() {
+  const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [loginActivity, setLoginActivity] = useState<LoginActivity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalSessions: 0,
+    activeSessions: 0,
+    uniqueLocations: 0,
+    highRiskSessions: 0
   });
+  const { toast } = useToast();
 
-  const filteredLogs = sessionLogs?.filter((log: SessionLog) =>
-    log.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    log.ip.includes(searchTerm) ||
-    log.city.toLowerCase().includes(searchTerm.toLowerCase())
-  ) || [];
+  useEffect(() => {
+    fetchSessionData();
+  }, []);
 
-  const getDeviceIcon = (device: string) => {
-    if (device.toLowerCase().includes('mobile') || device.toLowerCase().includes('phone')) {
-      return <Smartphone className="w-4 h-4 text-blue-500" />;
+  const fetchSessionData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch active sessions
+      const sessionsResponse = await apiRequest("/api/admin/sessions", {
+        method: "GET",
+        headers: {
+          "x-admin-key": "GUARDIAN_ADMIN_2025"
+        }
+      });
+
+      // Fetch recent login activity
+      const activityResponse = await apiRequest("/api/admin/login-activity?limit=50", {
+        method: "GET",
+        headers: {
+          "x-admin-key": "GUARDIAN_ADMIN_2025"
+        }
+      });
+
+      setSessions(sessionsResponse || []);
+      setLoginActivity(activityResponse || []);
+
+      // Calculate stats
+      const totalSessions = sessionsResponse?.length || 0;
+      const activeSessions = sessionsResponse?.filter((s: SessionData) => s.isActive).length || 0;
+      const uniqueLocations = new Set(sessionsResponse?.map((s: SessionData) => `${s.city},${s.country}`)).size;
+      const highRiskSessions = sessionsResponse?.filter((s: SessionData) => (s.riskScore || 0) > 50).length || 0;
+
+      setStats({
+        totalSessions,
+        activeSessions,
+        uniqueLocations,
+        highRiskSessions
+      });
+
+    } catch (error) {
+      console.error("Error fetching session data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch session data",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
-    return <Monitor className="w-4 h-4 text-green-500" />;
   };
 
-  const getRiskBadge = (riskScore: number) => {
-    if (riskScore >= 80) {
-      return <Badge className="bg-red-500/20 text-red-400 border-red-500/40">High Risk</Badge>;
-    } else if (riskScore >= 50) {
-      return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/40">Medium Risk</Badge>;
+  const forceLogoutUser = async (userId: string) => {
+    try {
+      await apiRequest(`/api/admin/force-logout/${userId}`, {
+        method: "POST",
+        headers: {
+          "x-admin-key": "GUARDIAN_ADMIN_2025"
+        }
+      });
+
+      toast({
+        title: "Success",
+        description: "User logged out successfully",
+      });
+
+      // Refresh data
+      fetchSessionData();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to logout user",
+        variant: "destructive",
+      });
     }
-    return <Badge className="bg-green-500/20 text-green-400 border-green-500/40">Low Risk</Badge>;
   };
 
-  if (user?.tier !== 'ADMIN') {
+  const getRiskBadgeVariant = (riskScore: number = 0) => {
+    if (riskScore >= 75) return "destructive";
+    if (riskScore >= 50) return "secondary";
+    if (riskScore >= 25) return "outline";
+    return "default";
+  };
+
+  const getRiskLabel = (riskScore: number = 0) => {
+    if (riskScore >= 75) return "High Risk";
+    if (riskScore >= 50) return "Medium Risk";
+    if (riskScore >= 25) return "Low Risk";
+    return "Normal";
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <Card className="bg-slate-800/50 border-red-500/20">
-          <CardContent className="p-8 text-center">
-            <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-red-400 mb-2">Access Denied</h2>
-            <p className="text-slate-400">Admin privileges required to view session logs</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-hsl(218,54%,9%) via-hsl(220,39%,11%) to-hsl(222,47%,11%) flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Shield className="w-8 h-8 text-cyan-400" />
-              <div>
-                <h1 className="text-3xl font-bold text-white">Active Sessions & Geo Logs</h1>
-                <p className="text-slate-400">Monitor user sessions and security events</p>
-              </div>
-            </div>
-            <Button
-              onClick={() => refetch()}
-              className="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border-cyan-500/40"
-              data-testid="button-refresh-sessions"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </Button>
-          </div>
+    <div className="p-6 max-w-7xl mx-auto space-y-6 bg-gradient-to-br from-hsl(218,54%,9%) via-hsl(220,39%,11%) to-hsl(222,47%,11%) min-h-screen">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-hsl(180,100%,90%) mb-2">🛡️ Live Session Monitor</h1>
+          <p className="text-hsl(220,17%,64%)">Real-time session tracking and security monitoring</p>
         </div>
+        <Button onClick={fetchSessionData} variant="outline" className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%) text-hsl(180,100%,90%)">
+          <Activity className="w-4 h-4 mr-2" />
+          Refresh
+        </Button>
+      </div>
 
-        {/* Search and Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-slate-800/50 border-cyan-500/20">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Search className="w-4 h-4 text-slate-400" />
-                <Input
-                  placeholder="Search sessions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="bg-transparent border-0 text-white placeholder-slate-400 focus-visible:ring-0"
-                  data-testid="input-search-sessions"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-cyan-500/20">
-            <CardContent className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-cyan-400">
-                  {filteredLogs.filter((log: SessionLog) => log.isActive).length}
-                </div>
-                <div className="text-sm text-slate-400">Active Sessions</div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-cyan-500/20">
-            <CardContent className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">
-                  {filteredLogs.filter((log: SessionLog) => log.riskScore >= 50).length}
-                </div>
-                <div className="text-sm text-slate-400">Risk Alerts</div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-slate-800/50 border-cyan-500/20">
-            <CardContent className="p-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-400">
-                  {new Set(filteredLogs.map((log: SessionLog) => log.country)).size}
-                </div>
-                <div className="text-sm text-slate-400">Countries</div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sessions Table */}
-        <Card className="bg-slate-800/50 border-cyan-500/20">
-          <CardHeader>
-            <CardTitle className="text-cyan-400">Session Activity Log</CardTitle>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%)">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-hsl(220,17%,64%)">Total Sessions</CardTitle>
+            <Monitor className="h-4 w-4 text-hsl(220,17%,64%)" />
           </CardHeader>
           <CardContent>
-            {isLoading ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" />
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm" data-testid="table-sessions">
-                  <thead className="border-b border-slate-700">
-                    <tr>
-                      <th className="p-3 text-left text-slate-200">User</th>
-                      <th className="p-3 text-left text-slate-200">Location</th>
-                      <th className="p-3 text-left text-slate-200">Device</th>
-                      <th className="p-3 text-left text-slate-200">Status</th>
-                      <th className="p-3 text-left text-slate-200">Risk</th>
-                      <th className="p-3 text-left text-slate-200">Last Seen</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredLogs.map((log: SessionLog, i: number) => (
-                      <tr key={i} className="border-b border-slate-800 hover:bg-slate-800/30" data-testid={`row-session-${i}`}>
-                        <td className="p-3">
-                          <div>
-                            <div className="text-white font-medium">{log.email}</div>
-                            <div className="text-xs text-slate-400">{log.ip}</div>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="w-4 h-4 text-cyan-400" />
-                            <div>
-                              <div className="text-slate-200">{log.city}, {log.region}</div>
-                              <div className="text-xs text-slate-400">{log.country}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <div className="flex items-center space-x-2">
-                            {getDeviceIcon(log.device)}
-                            <div>
-                              <div className="text-slate-200">{log.browser}</div>
-                              <div className="text-xs text-slate-400">{log.os}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          {log.isActive ? (
-                            <Badge className="bg-green-500/20 text-green-400 border-green-500/40">
-                              Active
-                            </Badge>
-                          ) : (
-                            <Badge className="bg-slate-500/20 text-slate-400 border-slate-500/40">
-                              Inactive
-                            </Badge>
-                          )}
-                        </td>
-                        <td className="p-3">
-                          {getRiskBadge(log.riskScore)}
-                        </td>
-                        <td className="p-3 text-slate-200">
-                          {new Date(log.lastSeen).toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div className="text-2xl font-bold text-hsl(180,100%,90%)">{stats.totalSessions}</div>
+          </CardContent>
+        </Card>
 
-                {filteredLogs.length === 0 && !isLoading && (
-                  <div className="text-center py-8 text-slate-400">
-                    No session logs found
+        <Card className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%)">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-hsl(220,17%,64%)">Active Sessions</CardTitle>
+            <Users className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-500">{stats.activeSessions}</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%)">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-hsl(220,17%,64%)">Unique Locations</CardTitle>
+            <Globe className="h-4 w-4 text-cyan-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-cyan-500">{stats.uniqueLocations}</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%)">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-hsl(220,17%,64%)">High Risk</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-500">{stats.highRiskSessions}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Active Sessions */}
+        <Card className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%)">
+          <CardHeader>
+            <CardTitle className="text-hsl(180,100%,90%) flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5" />
+              Active Sessions
+            </CardTitle>
+            <CardDescription className="text-hsl(220,17%,64%)">
+              Currently logged in users
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {sessions.filter(s => s.isActive).map((session) => (
+                <div key={session.id} className="p-4 rounded-lg border border-hsl(215,20%,65%) bg-hsl(218,54%,9%)">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="font-medium text-hsl(180,100%,90%)">{session.email}</p>
+                      <p className="text-sm text-hsl(220,17%,64%) flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {session.city}, {session.country}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Badge variant={getRiskBadgeVariant(session.riskScore || 0)} className="text-xs">
+                        {getRiskLabel(session.riskScore || 0)}
+                      </Badge>
+                      <Button 
+                        size="sm" 
+                        variant="destructive"
+                        onClick={() => forceLogoutUser(session.userId)}
+                      >
+                        Force Logout
+                      </Button>
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
+                  <div className="text-xs text-hsl(220,17%,64%) space-y-1">
+                    <p>Device: {session.device} • Browser: {session.browser}</p>
+                    <p>IP: {session.ip}</p>
+                    <p>Last Active: {formatDistanceToNow(new Date(session.lastActivity), { addSuffix: true })}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Login Activity */}
+        <Card className="bg-hsl(222,47%,11%) border-hsl(215,20%,65%)">
+          <CardHeader>
+            <CardTitle className="text-hsl(180,100%,90%) flex items-center gap-2">
+              <Activity className="w-5 h-5" />
+              Recent Login Activity
+            </CardTitle>
+            <CardDescription className="text-hsl(220,17%,64%)">
+              Latest login attempts (success and failed)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {loginActivity.map((activity) => (
+                <div key={activity.id} className="flex items-center justify-between p-3 rounded-lg border border-hsl(215,20%,65%) bg-hsl(218,54%,9%)">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${activity.success ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <div>
+                      <p className="text-sm font-medium text-hsl(180,100%,90%)">{activity.email}</p>
+                      <p className="text-xs text-hsl(220,17%,64%)">
+                        {activity.city}, {activity.country} • {activity.device}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <Badge variant={getRiskBadgeVariant(activity.riskScore || 0)} className="text-xs mb-1">
+                      Risk: {activity.riskScore || 0}
+                    </Badge>
+                    <p className="text-xs text-hsl(220,17%,64%)">
+                      {formatDistanceToNow(new Date(activity.loginTime), { addSuffix: true })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
