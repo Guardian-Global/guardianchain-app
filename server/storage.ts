@@ -5,6 +5,8 @@ import {
   userStats,
   capsules,
   sessionLogs,
+  loginHistory,
+  capsuleAudit,
   type User, 
   type InsertUser,
   type UpdateUser,
@@ -18,7 +20,7 @@ import {
   type InsertSessionLog
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, ne, desc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User management
@@ -54,14 +56,7 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   // Password reset methods
-  async getUserByResetToken(token: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.resetToken, token));
-    return user;
-  }
 
-  async updateUser(userId: string, data: Partial<User>): Promise<void> {
-    await db.update(users).set(data).where(eq(users.id, userId));
-  }
 
   // Session management
   async getUserSessions(userId: string): Promise<any[]> {
@@ -90,8 +85,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserSessionCount(userId: string): Promise<number> {
-    const result = await db.select({ count: sql`count(*)` }).from(userSessions).where(eq(userSessions.userId, userId));
-    return parseInt(result[0]?.count || '0');
+  const result = await db.select({ count: sql`count(*)` }).from(userSessions).where(eq(userSessions.userId, userId));
+  const count = (result[0] && typeof result[0].count === 'string') ? result[0].count : '0';
+  return parseInt(count);
   }
 
   // Login history and geolocation
@@ -110,37 +106,42 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAllLoginActivity(limit: number = 100, onlySuccessful?: boolean): Promise<any[]> {
-    let query = db.select()
-      .from(loginHistory)
-      .orderBy(desc(loginHistory.loginTime))
-      .limit(limit);
-      
     if (onlySuccessful) {
-      query = query.where(eq(loginHistory.success, true));
+      return await db.select()
+        .from(loginHistory)
+        .where(eq(loginHistory.success, true))
+        .orderBy(desc(loginHistory.loginTime))
+        .limit(limit);
+    } else {
+      return await db.select()
+        .from(loginHistory)
+        .orderBy(desc(loginHistory.loginTime))
+        .limit(limit);
     }
-    
-    return await query;
   }
 
   async getUserLoginStats(userId: string): Promise<any> {
-    const totalLogins = await db.select({ count: sql`count(*)` })
+    const totalLoginsResult = await db.select({ count: sql`count(*)` })
       .from(loginHistory)
       .where(and(eq(loginHistory.userId, userId), eq(loginHistory.success, true)));
+    const totalLogins = (totalLoginsResult[0] && typeof totalLoginsResult[0].count === 'string') ? totalLoginsResult[0].count : '0';
 
-    const recentLogin = await db.select()
+    const recentLoginResult = await db.select()
       .from(loginHistory)
       .where(and(eq(loginHistory.userId, userId), eq(loginHistory.success, true)))
       .orderBy(desc(loginHistory.loginTime))
       .limit(1);
+    const lastLogin = recentLoginResult[0]?.loginTime || null;
 
-    const uniqueLocations = await db.select({ count: sql`count(distinct city || ',' || country)` })
+    const uniqueLocationsResult = await db.select({ count: sql`count(distinct city || ',' || country)` })
       .from(loginHistory)
       .where(and(eq(loginHistory.userId, userId), eq(loginHistory.success, true)));
+    const uniqueLocations = (uniqueLocationsResult[0] && typeof uniqueLocationsResult[0].count === 'string') ? uniqueLocationsResult[0].count : '0';
 
     return {
-      totalLogins: parseInt(totalLogins[0]?.count || '0'),
-      lastLogin: recentLogin[0]?.loginTime || null,
-      uniqueLocations: parseInt(uniqueLocations[0]?.count || '0')
+      totalLogins: parseInt(totalLogins),
+      lastLogin,
+      uniqueLocations: parseInt(uniqueLocations)
     };
   }
 
@@ -165,16 +166,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getAllCapsuleAuditActivity(limit: number = 100, action?: string): Promise<any[]> {
-    let query = db.select()
-      .from(capsuleAudit)
-      .orderBy(desc(capsuleAudit.timestamp))
-      .limit(limit);
-      
     if (action) {
-      query = query.where(eq(capsuleAudit.action, action));
+      return await db.select()
+        .from(capsuleAudit)
+        .where(eq(capsuleAudit.action, action))
+        .orderBy(desc(capsuleAudit.timestamp))
+        .limit(limit);
+    } else {
+      return await db.select()
+        .from(capsuleAudit)
+        .orderBy(desc(capsuleAudit.timestamp))
+        .limit(limit);
     }
-    
-    return await query;
   }
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
@@ -205,34 +208,7 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUser(id: string, updates: UpdateUser): Promise<User> {
-    const [user] = await db
-      .update(users)
-      .set({
-        ...updates,
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, id))
-      .returning();
-    
-    if (!user) {
-      throw new Error("User not found");
-    }
-    
-    return user;
-  }
 
-  async updateUser(id: string, updates: UpdateUser): Promise<User> {
-    const [user] = await db
-      .update(users)
-      .set({
-        ...updates,
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, id))
-      .returning();
-    return user;
-  }
 
   async createSession(sessionData: InsertUserSession): Promise<UserSession> {
     const [session] = await db
@@ -343,15 +319,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserCapsules(userId: string): Promise<Capsule[]> {
-    return await db
+    const result = await db
       .select()
       .from(capsules)
       .where(eq(capsules.userId, userId))
       .orderBy(desc(capsules.createdAt));
+    return result as Capsule[];
   }
 
   async createCapsule(userId: string, capsuleData: any): Promise<Capsule> {
-    const [capsule] = await db
+    const result = await db
       .insert(capsules)
       .values({
         ...capsuleData,
@@ -360,7 +337,7 @@ export class DatabaseStorage implements IStorage {
         updatedAt: new Date(),
       })
       .returning();
-    return capsule;
+    return (result as Capsule[])[0];
   }
 
   // Password reset methods
@@ -490,22 +467,6 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async createSessionLog(sessionLogData: any): Promise<any> {
-    try {
-      const [sessionLog] = await db
-        .insert(sessionLogs)
-        .values({
-          ...sessionLogData,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .returning();
-      return sessionLog;
-    } catch (error) {
-      console.error('Error creating session log:', error);
-      return null;
-    }
-  }
 
   async updateSessionLog(id: string, updates: any): Promise<any> {
     try {
