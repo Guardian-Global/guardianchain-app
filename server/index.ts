@@ -1,3 +1,7 @@
+// Load environment variables first
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+
 // Set development environment
 process.env.NODE_ENV = 'development';
 

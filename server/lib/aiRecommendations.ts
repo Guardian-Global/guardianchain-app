@@ -1,12 +1,12 @@
 import OpenAI from "openai";
 
 if (!process.env.OPENAI_API_KEY) {
-  throw new Error("Missing required OpenAI API key: OPENAI_API_KEY");
+  console.warn("⚠️ OPENAI_API_KEY not found. AI recommendations will not work.");
 }
 
-const openai = new OpenAI({
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+}) : null;
 
 export interface CapsuleData {
   id: number;

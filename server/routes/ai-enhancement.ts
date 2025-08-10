@@ -10,9 +10,9 @@ if (!process.env.OPENAI_API_KEY) {
   console.warn('⚠️ OPENAI_API_KEY not found. AI background enhancement will not work.');
 }
 
-const openai = new OpenAI({ 
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY 
-});
+}) : null;
 
 // AI-powered profile picture background enhancement
 router.post('/enhance-profile-background', consolidatedAuth, async (req, res) => {
@@ -23,7 +23,7 @@ router.post('/enhance-profile-background', consolidatedAuth, async (req, res) =>
       return res.status(400).json({ error: 'Original image URL is required' });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.OPENAI_API_KEY || !openai) {
       return res.status(503).json({ 
         error: 'AI enhancement service is not available. Please configure OPENAI_API_KEY.' 
       });

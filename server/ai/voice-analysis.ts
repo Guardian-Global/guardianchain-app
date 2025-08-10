@@ -3,9 +3,9 @@ import formidable from "formidable";
 import fs from "fs";
 import path from "path";
 
-const openai = new OpenAI({ 
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ 
   apiKey: process.env.OPENAI_API_KEY 
-});
+}) : null;
 
 export interface VoiceAnalysisResult {
   transcription: string;
