@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserCapsules } from '@/hooks/useUserCapsules';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,7 +15,7 @@ import { Upload, FileText, Eye, Lock, Users, DollarSign } from 'lucide-react';
 const SubmitCapsulePage: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
   const { createCapsule } = useUserCapsules();
-  const navigate = useNavigate();
+  const [, navigate] = useLocation();
   const { toast } = useToast();
 
   const [title, setTitle] = useState('');
@@ -98,7 +98,7 @@ const SubmitCapsulePage: React.FC = () => {
         description: description.trim(),
         content: content.trim(),
         visibility,
-        grief_score: griefScore,
+  grief_score: griefScore === null ? undefined : griefScore,
         media_url: mediaUrl,
       };
 
