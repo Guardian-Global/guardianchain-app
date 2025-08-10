@@ -10,11 +10,21 @@ import {
  * Handles token minting operations and yield claiming
  */
 
+
+import { RarityTier } from "../../client/src/hooks/useNFT";
+
 interface MintRequest {
   amount: number;
   wallet: string;
   capsuleId?: string;
   reason?: string;
+  rarity?: RarityTier;
+  boostedAPY?: number; // basis points
+  earlyDAOAccess?: boolean;
+  stakingMultiplier?: number; // basis points
+  tierName?: string;
+  mintTime?: number;
+  metadata?: Record<string, unknown>;
 }
 
 interface ClaimRequest {
@@ -39,7 +49,8 @@ interface MintResponse {
 async function simulateGTTMint(
   amount: number,
   wallet: string,
-): Promise<MintResponse> {
+  options?: Partial<Omit<MintRequest, "amount" | "wallet">>
+): Promise<MintResponse & { options?: Partial<Omit<MintRequest, "amount" | "wallet">> }> {
   // Validate inputs
   if (amount <= 0) {
     throw new Error("Amount must be greater than 0");
@@ -56,6 +67,9 @@ async function simulateGTTMint(
   const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
 
   console.log(`[GTT MINT] Minting ${amount} GTT to wallet: ${wallet}`);
+  if (options) {
+    console.log(`[GTT MINT] Advanced NFT/Capsule options:`, options);
+  }
   console.log(`[GTT MINT] Transaction hash: ${transactionHash}`);
 
   return {
@@ -63,6 +77,7 @@ async function simulateGTTMint(
     amount,
     wallet,
     transactionHash,
+    ...(options ? { options } : {}),
   };
 }
 
@@ -93,7 +108,7 @@ export function registerMintRoutes(app: Express) {
   // Direct GTT minting endpoint (admin only)
   app.post("/api/mint/gtt", async (req, res) => {
     try {
-      const { amount, wallet, reason } = req.body as MintRequest;
+      const { amount, wallet, reason, ...options } = req.body as MintRequest;
 
       if (!amount || !wallet) {
         return res.status(400).json({
@@ -106,13 +121,14 @@ export function registerMintRoutes(app: Express) {
       //   return res.status(403).json({ error: "Admin access required" });
       // }
 
-      const result = await simulateGTTMint(amount, wallet);
+      const result = await simulateGTTMint(amount, wallet, options);
 
       // Log the mint operation
       console.log(
         `[ADMIN MINT] ${amount} GTT minted to ${wallet}. Reason: ${
           reason || "Manual mint"
         }`,
+        options ? `Options: ${JSON.stringify(options)}` : ""
       );
 
       res.status(200).json(result);
@@ -184,16 +200,16 @@ export function registerMintRoutes(app: Express) {
 
       for (const recipient of recipients) {
         try {
-          const result = await simulateGTTMint(
-            recipient.amount,
-            recipient.wallet,
-          );
-          results.push({ ...result, recipient: recipient.wallet });
+          const { amount, wallet, ...options } = recipient;
+          const result = await simulateGTTMint(amount, wallet, options);
+          results.push({ ...result, recipient: wallet });
         } catch (error: any) {
           results.push({
             success: false,
             error: error.message,
             recipient: recipient.wallet,
+            amount: 0,
+            wallet: recipient.wallet,
           });
         }
       }
