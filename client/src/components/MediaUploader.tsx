@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
+import type { NFTMintRequest, RarityTier } from "@/hooks/useNFT";
 import Uppy from "@uppy/core";
 import { DashboardModal } from "@uppy/react";
 import "@uppy/core/dist/style.min.css";
@@ -14,9 +15,10 @@ interface MediaUploaderProps {
   maxNumberOfFiles?: number;
   maxFileSize?: number;
   acceptedFileTypes?: string[];
-  onUploadComplete?: (uploadedFiles: any[]) => void;
+  onUploadComplete?: (uploadedFiles: any[], mintOptions?: NFTMintRequest) => void;
   buttonClassName?: string;
   children: ReactNode;
+  enableNFTMinting?: boolean;
 }
 
 /**
@@ -38,6 +40,7 @@ export function MediaUploader({
   onUploadComplete,
   buttonClassName = "",
   children,
+  enableNFTMinting = false,
 }: MediaUploaderProps) {
   const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
@@ -145,7 +148,7 @@ export function MediaUploader({
             uploadType,
           }));
 
-          onUploadComplete?.(uploadedFiles);
+          onUploadComplete?.(uploadedFiles, enableNFTMinting ? mintOptions : undefined);
           setShowModal(false);
 
           toast({
