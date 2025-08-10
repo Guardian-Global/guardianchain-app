@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
-import type { NFTMintRequest, RarityTier } from "@/hooks/useNFT";
+import type { NFTMintRequest } from "@/hooks/useNFT";
+import { RarityTier } from "@/hooks/useNFT";
 import Uppy from "@uppy/core";
 import { DashboardModal } from "@uppy/react";
 import "@uppy/core/dist/style.min.css";
@@ -44,6 +45,8 @@ export function MediaUploader({
 }: MediaUploaderProps) {
   const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
+  // NFT minting options state
+  const [mintOptions, setMintOptions] = useState<NFTMintRequest>({});
 
   const [uppy] = useState(() =>
     new Uppy({
@@ -97,8 +100,9 @@ export function MediaUploader({
           }
         },
       })
-      .on("upload-success", async (file, response) => {
+  .on("upload-success", async (file, response) => {
         try {
+          if (!file) return;
           // Notify backend that upload is complete
           const completeResponse = await fetch("/api/media/upload-complete", {
             method: "POST",
@@ -121,7 +125,7 @@ export function MediaUploader({
           const result = await completeResponse.json();
 
           // Store normalized URL for the file
-          file.uploadURL = result.mediaUrl;
+          (file as any).uploadURL = result.mediaUrl;
 
           toast({
             title: "Upload Successful",
@@ -138,13 +142,13 @@ export function MediaUploader({
         }
       })
       .on("complete", (result) => {
-        if (result.successful.length > 0) {
+        if (result.successful && result.successful.length > 0) {
           const uploadedFiles = result.successful.map((file) => ({
             id: file.id,
             name: file.name,
             type: file.type,
             size: file.size,
-            url: file.uploadURL,
+            url: (file as any).uploadURL,
             uploadType,
           }));
 
@@ -157,7 +161,7 @@ export function MediaUploader({
           });
         }
 
-        if (result.failed.length > 0) {
+        if (result.failed && result.failed.length > 0) {
           toast({
             title: "Upload Failed",
             description: `${result.failed.length} file(s) failed to upload.`,
@@ -215,6 +219,83 @@ export function MediaUploader({
         {children}
       </Button>
 
+      {enableNFTMinting && (
+        <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+          <h4 className="font-semibold mb-2">NFT Minting Options</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Rarity</label>
+              <select
+                className="w-full p-2 rounded border"
+                value={mintOptions.rarity || ''}
+                onChange={e => setMintOptions({ ...mintOptions, rarity: e.target.value as RarityTier })}
+              >
+                <option value="">Select Rarity</option>
+                {Object.values(RarityTier).map((rarity) => (
+                  <option key={rarity} value={rarity}>{rarity}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">APY Boost (basis points)</label>
+              <input
+                type="number"
+                className="w-full p-2 rounded border"
+                value={mintOptions.boostedAPY || ''}
+                onChange={e => setMintOptions({ ...mintOptions, boostedAPY: Number(e.target.value) })}
+                min={0}
+                max={10000}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Staking Multiplier (basis points)</label>
+              <input
+                type="number"
+                className="w-full p-2 rounded border"
+                value={mintOptions.stakingMultiplier || ''}
+                onChange={e => setMintOptions({ ...mintOptions, stakingMultiplier: Number(e.target.value) })}
+                min={0}
+                max={10000}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Tier Name</label>
+              <input
+                type="text"
+                className="w-full p-2 rounded border"
+                value={mintOptions.tierName || ''}
+                onChange={e => setMintOptions({ ...mintOptions, tierName: e.target.value })}
+              />
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="earlyDAOAccess"
+                checked={!!mintOptions.earlyDAOAccess}
+                onChange={e => setMintOptions({ ...mintOptions, earlyDAOAccess: e.target.checked })}
+              />
+              <label htmlFor="earlyDAOAccess" className="text-sm">Early DAO Access</label>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Custom Metadata (JSON)</label>
+              <textarea
+                className="w-full p-2 rounded border font-mono"
+                rows={3}
+                value={mintOptions.metadata ? JSON.stringify(mintOptions.metadata, null, 2) : ''}
+                onChange={e => {
+                  try {
+                    setMintOptions({ ...mintOptions, metadata: JSON.parse(e.target.value) });
+                  } catch {
+                    // Ignore parse errors for now
+                  }
+                }}
+                placeholder={'{\n  "key": "value"\n}'}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <DashboardModal
         uppy={uppy}
         open={showModal}
@@ -229,14 +310,12 @@ export function MediaUploader({
         hideCancelButton={false}
         hideProgressAfterFinish={false}
         note={getUploadTypeDescription()}
-        height={350}
+  // height prop removed (not supported by DashboardModal)
         theme="auto"
         browserBackButtonClose={true}
         locale={{
           strings: {
-            browseFilesTitle: `Select ${getUploadTypeLabel()}`,
             browseFiles: `Browse ${getUploadTypeLabel()}`,
-            dropFilesHere: `Drop ${getUploadTypeLabel().toLowerCase()} here`,
           },
         }}
       />
