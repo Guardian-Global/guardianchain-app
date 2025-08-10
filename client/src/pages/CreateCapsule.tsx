@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Layout from '@/components/layout/Layout';
 import AuthGuard from '@/components/auth/AuthGuard';
-import SuperiorCapsuleCreator from '@/components/enhanced/SuperiorCapsuleCreator';
+import SuperiorCapsuleCreator from '@/components/enhanced/superiorcapsulecreator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
