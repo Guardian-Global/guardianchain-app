@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Microphone, Upload, Share2, Users, Edit3, Zap, Image, Video, CheckCircle, Lock, Unlock } from "lucide-react";
+import { Upload, Share2, Users, Edit3, Zap, Image, Video, CheckCircle, Lock, Unlock } from "lucide-react";
+import BulkDataDumpAIRecallPanel from "./BulkDataDumpAIRecallPanel";
 
 /**
  * BulkDataDumpCapsule
@@ -91,9 +92,10 @@ export default function BulkDataDumpCapsule() {
           {/* AI Assist Tab */}
           <TabsContent value="ai">
             <div className="space-y-4">
-              <Button onClick={() => setAiActive(!aiActive)} variant={aiActive ? "default" : "outline"}>
-                <Microphone className="w-4 h-4 mr-2" /> {aiActive ? "Stop Voice Assistant" : "Start Voice Assistant"}
-              </Button>
+               <Button onClick={() => setAiActive(!aiActive)} variant={aiActive ? "default" : "outline"}>
+                 {/* Voice icon unavailable in lucide-react; use emoji as placeholder */}
+                 <span className="w-4 h-4 mr-2" role="img" aria-label="mic">🎤</span> {aiActive ? "Stop Voice Assistant" : "Start Voice Assistant"}
+               </Button>
               {aiActive && (
                 <div className="mt-2 p-3 bg-brand-surface rounded-lg border border-brand-primary/20">
                   <p className="text-sm text-brand-text-muted mb-2">Say commands like "Recall all Paris 2023 photos", "Remix my birthday videos", "Organize by location", "Edit last video".</p>
@@ -133,6 +135,8 @@ export default function BulkDataDumpCapsule() {
             </div>
           </TabsContent>
         </Tabs>
+  {/* AI Recall Panel */}
+  <BulkDataDumpAIRecallPanel onCommand={cmd => alert(`AI Command: ${cmd}`)} />
       </CardContent>
     </Card>
   );
