@@ -19,7 +19,7 @@ export interface AIRecommendation {
 export function useGuardianAI() {
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const generateInsights = async (data: any): Promise<AIInsight[]> => {
+  const generateInsights = async (data: Record<string, unknown>): Promise<AIInsight[]> => {
     setIsGenerating(true);
 
     // Simulate AI processing

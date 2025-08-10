@@ -13,7 +13,7 @@ export function usePWA(): PWAHook {
   const [isInstalled, setIsInstalled] = useState(false);
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [isLoading, setIsLoading] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<unknown>(null);
 
   useEffect(() => {
     // Check if app is already installed
@@ -63,8 +63,19 @@ export function usePWA(): PWAHook {
     setIsLoading(true);
 
     try {
-      await deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+      if (
+        deferredPrompt &&
+        typeof deferredPrompt === "object" &&
+        "prompt" in deferredPrompt &&
+        typeof (deferredPrompt as any).prompt === "function" &&
+        "userChoice" in deferredPrompt
+      ) {
+        await (deferredPrompt as any).prompt();
+        const userChoice = await (deferredPrompt as any).userChoice;
+        if (userChoice && userChoice.outcome === "accepted") {
+          // App was installed
+        }
+      }
 
       if (outcome === "accepted") {
         console.log("✅ User accepted PWA install");

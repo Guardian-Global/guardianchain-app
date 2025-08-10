@@ -1,9 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../../lib/apiClient";
 
+export enum RarityTier {
+  Common = 'Common',
+  Uncommon = 'Uncommon',
+  Rare = 'Rare',
+  Epic = 'Epic',
+  Legendary = 'Legendary',
+}
+
 export interface NFTMintRequest {
-  capsuleId: string;
-  metadata?: Record<string, any>;
+  capsuleId?: string;
+  rarity?: RarityTier;
+  boostedAPY?: number; // basis points
+  earlyDAOAccess?: boolean;
+  stakingMultiplier?: number; // basis points
+  tierName?: string;
+  mintTime?: number;
+  metadata?: Record<string, unknown>;
 }
 
 export function useMintNFT() {

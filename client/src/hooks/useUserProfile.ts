@@ -13,7 +13,7 @@ interface UserProfile {
   profileImageUrl?: string;
   tier: string;
   interests?: string[];
-  socialLinks?: Record<string, any>;
+  socialLinks?: Record<string, unknown>;
   onboardingCompleted: boolean;
   createdAt: string;
   updatedAt: string;

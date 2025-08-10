@@ -31,7 +31,7 @@ export function useSendTimeMessage() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (messageData: any) => api.timeMessages.send(messageData),
+    mutationFn: (messageData: Partial<TimeMessage>) => api.timeMessages.send(messageData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/time-messages/sent"] });
     },

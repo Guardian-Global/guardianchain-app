@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface RealtimeUpdate {
   type: 'cluster_vote' | 'yield_update' | 'theme_change';
-  payload: any;
+  payload: Record<string, unknown>;
 }
 
 export function useRealtimeRewards() {

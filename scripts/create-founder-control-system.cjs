@@ -1,8 +1,19 @@
+
 const fs = require("fs");
+const path = require("path");
+
+// Simple enterprise-grade logger
+const logger = {
+    info: (msg) => console.log(`[INFO] ${msg}`),
+    success: (msg) => console.log(`[SUCCESS] ${msg}`),
+    warn: (msg) => console.warn(`[WARN] ${msg}`),
+    error: (msg) => console.error(`[ERROR] ${msg}`),
+};
+
 
 function createFounderControlSystem() {
-  console.log("👑 CREATING FOUNDER CONTROL SYSTEM");
-  console.log("=================================");
+    logger.info("👑 CREATING FOUNDER CONTROL SYSTEM");
+    logger.info("=================================");
 
   const founderControlContract = `
 // SPDX-License-Identifier: MIT
@@ -300,26 +311,39 @@ export default function FounderControlDashboard() {
     );
 }`;
 
-  // Save files
-  fs.writeFileSync(
-    "contracts/GTTTokenWithFounderControl.sol",
-    founderControlContract,
-  );
-  fs.writeFileSync(
-    "client/src/components/FounderControlDashboard.tsx",
-    founderDashboard,
-  );
 
-  console.log("✅ Founder control system created");
-  console.log("📄 Smart contract: contracts/GTTTokenWithFounderControl.sol");
-  console.log(
-    "🖥️ Dashboard: client/src/components/FounderControlDashboard.tsx",
-  );
-
-  return {
-    contractPath: "contracts/GTTTokenWithFounderControl.sol",
-    dashboardPath: "client/src/components/FounderControlDashboard.tsx",
-  };
+    // Save files with error handling
+    try {
+        const contractPath = path.resolve("contracts/GTTTokenWithFounderControl.sol");
+        const dashboardPath = path.resolve("client/src/components/FounderControlDashboard.tsx");
+        fs.mkdirSync(path.dirname(contractPath), { recursive: true });
+        fs.mkdirSync(path.dirname(dashboardPath), { recursive: true });
+        fs.writeFileSync(contractPath, founderControlContract);
+        fs.writeFileSync(dashboardPath, founderDashboard);
+        logger.success("Founder control system created");
+        logger.info(`📄 Smart contract: ${contractPath}`);
+        logger.info(`🖥️ Dashboard: ${dashboardPath}`);
+        return {
+            contractPath,
+            dashboardPath,
+        };
+    } catch (err) {
+        if (err instanceof Error) {
+            logger.error(`Failed to create founder control system: ${err.message}`);
+        } else {
+            logger.error(`Failed to create founder control system: ${JSON.stringify(err)}`);
+        }
+        process.exit(1);
+    }
 }
 
-createFounderControlSystem();
+try {
+    createFounderControlSystem();
+} catch (err) {
+    if (err instanceof Error) {
+        logger.error(`Unhandled error: ${err.message}`);
+    } else {
+        logger.error(`Unhandled error: ${JSON.stringify(err)}`);
+    }
+    process.exit(1);
+}

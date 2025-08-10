@@ -100,16 +100,17 @@ This action will not incur any gas fees.`;
         description: `Successfully connected ${address.slice(0, 8)}...${address.slice(-6)}`,
       });
 
-    } catch (error: any) {
-      const errorMessage = error.message || "Failed to authenticate wallet";
+    } catch (error: unknown) {
+      let errorMessage = "Failed to authenticate wallet";
+      if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
       setError(errorMessage);
-      
       toast({
         title: "Authentication Failed",
         description: errorMessage,
         variant: "destructive",
       });
-      
       throw error;
     } finally {
       setIsAuthenticating(false);
@@ -135,7 +136,7 @@ This action will not incur any gas fees.`;
 
       // Authenticate the connected wallet
       await authenticateWallet();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Connect and authenticate failed:", error);
     } finally {
       setIsConnecting(false);

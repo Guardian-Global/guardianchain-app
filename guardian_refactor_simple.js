@@ -1,8 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 
-// GUARDIAN INTELLIGENT REFACTOR - ACTUAL EXECUTION
-console.log('🚀 Starting ACTUAL GuardianChain Refactor...');
+
+// Enterprise-grade logger
+const logger = {
+  info: (msg) => console.log(`[INFO] ${msg}`),
+  success: (msg) => console.log(`[SUCCESS] ${msg}`),
+  warn: (msg) => console.warn(`[WARN] ${msg}`),
+  error: (msg) => console.error(`[ERROR] ${msg}`),
+};
+
+logger.info('🚀 Starting ACTUAL GuardianChain Refactor...');
 
 // 1. Find and archive test/spec/backup files
 const archiveUnusedFiles = () => {

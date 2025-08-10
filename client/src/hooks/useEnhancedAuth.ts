@@ -103,7 +103,8 @@ export function useEnhancedAuth() {
 
   // Login mutation
   const loginMutation = useMutation({
-    mutationFn: async (credentials?: any) => {
+  // FIXME: Replace 'any' with a proper credentials interface if available
+  mutationFn: async (credentials?: Record<string, unknown>) => {
       const response = await fetch("/api/auth/login", {
         method: "GET",
         credentials: "include",
@@ -129,10 +130,12 @@ export function useEnhancedAuth() {
         window.location.href = data.redirectTo;
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      let message = "Failed to sign in.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Login Failed",
-        description: error.message || "Failed to sign in.",
+        description: message,
         variant: "destructive",
       });
     },
@@ -164,10 +167,12 @@ export function useEnhancedAuth() {
       // Redirect to home or login page
       window.location.href = data.redirectTo || "/";
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      let message = "Failed to log out.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Logout Failed",
-        description: error.message || "Failed to log out.",
+        description: message,
         variant: "destructive",
       });
     },
@@ -187,10 +192,12 @@ export function useEnhancedAuth() {
       // Refresh user data
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      let message = "Failed to update profile.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Update Failed",
-        description: error.message || "Failed to update profile.",
+        description: message,
         variant: "destructive",
       });
     },
@@ -210,10 +217,12 @@ export function useEnhancedAuth() {
       // Refresh user data
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      let message = "Failed to update preferences.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Update Failed",
-        description: error.message || "Failed to update preferences.",
+        description: message,
         variant: "destructive",
       });
     },
@@ -233,10 +242,12 @@ export function useEnhancedAuth() {
       // Refresh user data
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      let message = "Failed to verify email.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Verification Failed",
-        description: error.message || "Failed to verify email.",
+        description: message,
         variant: "destructive",
       });
     },
@@ -256,10 +267,12 @@ export function useEnhancedAuth() {
       // Refresh user data
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      let message = "Failed to connect wallet.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Connection Failed",
-        description: error.message || "Failed to connect wallet.",
+        description: message,
         variant: "destructive",
       });
     },
@@ -267,8 +280,10 @@ export function useEnhancedAuth() {
 
   // Complete onboarding mutation
   const completeOnboardingMutation = useMutation({
-    mutationFn: async (onboardingData: any) => {
-      console.log("🔐 useEnhancedAuth: Starting onboarding completion...", onboardingData);
+    // FIXME: Replace 'any' with a proper onboarding data interface if available
+    mutationFn: async (onboardingData: Record<string, unknown>) => {
+      // Optionally replace with logger
+      // logger.info("🔐 useEnhancedAuth: Starting onboarding completion...", onboardingData);
       return apiRequest("POST", "/api/auth/complete-onboarding", onboardingData);
     },
     onSuccess: (data) => {
@@ -292,11 +307,14 @@ export function useEnhancedAuth() {
         }, 2000);
       }
     },
-    onError: (error: any) => {
-      console.error("❌ useEnhancedAuth: Onboarding failed:", error);
+    onError: (error: unknown) => {
+      // Optionally replace with logger
+      // logger.error("❌ useEnhancedAuth: Onboarding failed:", error);
+      let message = "Failed to complete onboarding.";
+      if (error instanceof Error) message = error.message;
       toast({
         title: "Setup Failed",
-        description: error.message || "Failed to complete onboarding.",
+        description: message,
         variant: "destructive",
       });
     },

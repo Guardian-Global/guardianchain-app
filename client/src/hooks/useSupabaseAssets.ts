@@ -12,7 +12,7 @@ interface SupabaseAsset {
   category: string;
   value: number;
   recommendedUsage: string[];
-  metadata: any;
+  metadata: Record<string, unknown>;
 }
 
 interface AssetRecommendations {
@@ -51,29 +51,28 @@ export function useSupabaseAssets() {
       if (!response.ok) {
         throw new Error("Failed to discover assets");
       }
-      return response.json();
+      return response.json() as Promise<AssetsDiscoveryResponse>;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
   });
 
   // Helper functions for easy asset access
   const getAssetsByCategory = (category: string): SupabaseAsset[] => {
     return (
-      assetsData?.assets.filter((asset) => asset.category === category) || []
+      (assetsData?.assets?.filter((asset: SupabaseAsset) => asset.category === category)) || []
     );
   };
 
   const getAssetsByType = (type: string): SupabaseAsset[] => {
-    return assetsData?.assets.filter((asset) => asset.type === type) || [];
+    return assetsData?.assets?.filter((asset: SupabaseAsset) => asset.type === type) || [];
   };
 
   const getHighestValueAssets = (count: number = 10): SupabaseAsset[] => {
-    return assetsData?.assets.slice(0, count) || [];
+    return assetsData?.assets?.slice(0, count) || [];
   };
 
   const getAssetForUsage = (usage: string): SupabaseAsset | null => {
-    const asset = assetsData?.assets.find((asset) =>
+    const asset = assetsData?.assets?.find((asset: SupabaseAsset) =>
       asset.recommendedUsage.includes(usage),
     );
     return asset || null;
@@ -122,10 +121,10 @@ export function useSupabaseAssets() {
 
   return {
     // Data
-    assets: assetsData?.assets || [],
+    assets: assetsData?.assets ?? [],
     recommendations: assetsData?.recommendations,
-    totalAssets: assetsData?.totalAssets || 0,
-    buckets: assetsData?.buckets || 0,
+    totalAssets: assetsData?.totalAssets ?? 0,
+    buckets: assetsData?.buckets ?? 0,
 
     // Status
     isLoading,

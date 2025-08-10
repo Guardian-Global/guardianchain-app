@@ -8,7 +8,7 @@ export interface WalletState {
   isConnected: boolean;
   isConnecting: boolean;
   isReconnecting: boolean;
-  connector?: any;
+  connector?: unknown;
   chainId?: number;
   chainName?: string;
   isCorrectChain: boolean;

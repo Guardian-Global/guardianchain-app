@@ -14,7 +14,7 @@ export function useUploadAsset() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ file, metadata }: { file: File; metadata?: any }) =>
+    mutationFn: ({ file, metadata }: { file: File; metadata?: Record<string, unknown> }) =>
       api.supabase.uploadAsset(file, metadata),
     onSuccess: () => {
       queryClient.invalidateQueries({
