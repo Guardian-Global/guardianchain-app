@@ -34,6 +34,10 @@ export default function Topbar() {
           <Archive className="h-4 w-4" />
           Explorer
         </Link>
+        <Link href="/BulkDump" className="flex items-center gap-2 hover:text-cyan-400 transition-colors font-semibold bg-cyan-900/30 px-3 py-1 rounded-lg border border-cyan-500/20">
+          <Zap className="h-4 w-4" />
+          Bulk Dump
+        </Link>
         <Link href="/redeem" className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
           <Vault className="h-4 w-4" />
           Vault
@@ -83,6 +87,14 @@ export default function Topbar() {
             >
               <Archive className="h-4 w-4" />
               Explorer
+            </Link>
+            <Link 
+              href="/BulkDump" 
+              className="flex items-center gap-2 hover:text-cyan-400 transition-colors py-2 font-semibold bg-cyan-900/30 px-3 rounded-lg border border-cyan-500/20"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Zap className="h-4 w-4" />
+              Bulk Dump
             </Link>
             <Link 
               href="/redeem" 
