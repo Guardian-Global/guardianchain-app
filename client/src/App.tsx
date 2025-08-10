@@ -36,8 +36,7 @@ const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
 // Settings imported dynamically to avoid conflicts
-const ProfileOld = lazy(() => import("@/pages/profile"));
-const Profile = lazy(() => import("@/pages/Profile"));
+const Profile = lazy(() => import("@/pages/profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const VeritasBadges = lazy(() => import("@/pages/VeritasBadges"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
@@ -87,7 +86,7 @@ const AdminPage = lazy(() => import("./pages/admin"));
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const Admin = lazy(() => import("./pages/Admin"));
+const Admin = lazy(() => import("./pages/admin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
 const CapsuleBrowser = lazy(() => import("./pages/CapsuleBrowser"));
@@ -256,6 +255,33 @@ export default function App() {
     }
   }, []);
 
+  // Runtime check for Tailwind/CSS loading
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const test = document.createElement('div');
+      test.className = 'hidden text-[rgb(0,255,225)]';
+      document.body.appendChild(test);
+      const style = getComputedStyle(test).color;
+      if (style !== 'rgb(0, 255, 225)') {
+        // Show warning if Tailwind/critical CSS is missing
+        const warn = document.createElement('div');
+        warn.style.position = 'fixed';
+        warn.style.top = '0';
+        warn.style.left = '0';
+        warn.style.right = '0';
+        warn.style.zIndex = '9999';
+        warn.style.background = '#ff00d4';
+        warn.style.color = '#fff';
+        warn.style.fontWeight = 'bold';
+        warn.style.textAlign = 'center';
+        warn.style.padding = '12px 0';
+        warn.textContent = '⚠️ Critical CSS not loaded! Please check your deployment/build settings.';
+        document.body.appendChild(warn);
+      }
+      document.body.removeChild(test);
+    }
+  }, []);
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
@@ -273,29 +299,22 @@ export default function App() {
                             <PWAInstallPrompt />
                             <OfflineIndicator />
                           </main>
-                          
                           {/* Guardian Mascot - Available on all pages */}
                           <Suspense fallback={null}>
                             <GuardianMascot />
                           </Suspense>
-                          
-
-                          
                           {/* Auth Debug Panel for development */}
                           <Suspense fallback={null}>
                             <AuthDebugPanel />
                           </Suspense>
-                          
                           {/* Comprehensive Authentication Flow */}
                           <Suspense fallback={null}>
                             <ComprehensiveAuthFlow />
                           </Suspense>
-                          
                           {/* Onboarding Status Checker */}
                           <Suspense fallback={null}>
                             <OnboardingStatusChecker />
                           </Suspense>
-
                           {/* Full App Debugger */}
                           <Suspense fallback={null}>
                             <FullAppDebugger />

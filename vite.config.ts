@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     runtimeErrorOverlay(),
+    // Remove Replit-specific plugins for production
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
@@ -25,8 +26,17 @@ export default defineConfig({
   },
   root: path.resolve(import.meta.dirname, "client"),
   build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
+    // Output to 'dist' for universal compatibility (Vercel, Netlify, etc.)
+    outDir: path.resolve(import.meta.dirname, "dist"),
     emptyOutDir: true,
+    assetsDir: "assets", // Ensure assets are copied to /dist/assets
+    rollupOptions: {
+      output: {
+        // Ensure entry file is index.html for static hosts
+        entryFileNames: "[name].js",
+        assetFileNames: "assets/[name].[ext]"
+      }
+    }
   },
   server: {
     fs: {
@@ -34,4 +44,5 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
+  // Add comment: If deploying to Vercel/Netlify, set output directory to 'dist' in project settings
 });
