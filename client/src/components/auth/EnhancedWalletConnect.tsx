@@ -1,34 +1,20 @@
 // client/src/components/auth/EnhancedWalletConnect.tsx
 "use client";
 
-import { useAccount, useConnect, useDisconnect, useNetwork } from "wagmi";
-import { InjectedConnector } from "@wagmi/connectors";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+
+import { useAccount, useConnect, useDisconnect, useChainId } from "wagmi";
 import { useEffect } from "react";
 
 export default function EnhancedWalletConnect() {
   const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
-    connector: new InjectedConnector()
-  });
-
-  const { connect: wcConnect } = useConnect({
-    connector: new WalletConnectConnector({
-      options: {
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID!,
-        showQrModal: true
-      }
-    })
-  });
-
   const { disconnect } = useDisconnect();
-  const { chain } = useNetwork();
+  const chainId = useChainId();
+  const { connect, connectors: availableConnectors, error: connectError, isPending: isConnecting } = useConnect();
 
   useEffect(() => {
-    if (chain?.unsupported) {
-      alert("Please switch to a supported network like Polygon or Base.");
-    }
-  }, [chain]);
+    // You may want to check for supported networks here
+    // Example: if (!isSupportedNetwork(chainId)) { ... }
+  }, [chainId]);
 
   return (
     <div className="p-4 rounded border bg-gray-50 shadow-md text-sm">
@@ -44,18 +30,19 @@ export default function EnhancedWalletConnect() {
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          <button
-            onClick={() => connect()}
-            className="bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700"
-          >
-            Connect MetaMask
-          </button>
-          <button
-            onClick={() => wcConnect()}
-            className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
-          >
-            Connect WalletConnect
-          </button>
+          {availableConnectors.map((connector) => (
+            <button
+              key={connector.id}
+              onClick={() => connect({ connector })}
+              className="bg-indigo-600 text-white px-4 py-1 rounded hover:bg-indigo-700 disabled:opacity-50"
+              disabled={isConnecting}
+            >
+              {isConnecting ? `Connecting...` : `Connect ${connector.name}`}
+            </button>
+          ))}
+          {connectError && (
+            <p className="text-red-600 text-xs mt-2">{connectError.message}</p>
+          )}
         </div>
       )}
     </div>
