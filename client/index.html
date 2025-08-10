@@ -75,8 +75,9 @@
     <meta name="msapplication-TileImage" content="/assets/logo.png" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <div id="root"></div>
+  <!-- Vite injects the correct JS/CSS entry points in production -->
+  <script type="module" src="/main.tsx"></script>
 
     <!-- Service Worker will be registered via TypeScript module -->
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
