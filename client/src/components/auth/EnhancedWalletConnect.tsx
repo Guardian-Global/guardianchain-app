@@ -2,7 +2,7 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect, useNetwork } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
+import { InjectedConnector } from "@wagmi/connectors";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { useEffect } from "react";
 

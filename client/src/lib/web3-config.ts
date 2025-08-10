@@ -1,6 +1,6 @@
 import { createConfig, http } from "wagmi";
 import { mainnet, sepolia, polygon, polygonAmoy } from "wagmi/chains";
-import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
+import { coinbaseWallet, injected, walletConnect } from "@wagmi/connectors";
 import { baseMainnet, baseTestnet } from "./base.config";
 
 // Local Hardhat development chain

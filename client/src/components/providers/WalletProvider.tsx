@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { polygon, base, polygonMumbai, baseGoerli } from "wagmi/chains";
-import { injected, metaMask, walletConnect, coinbaseWallet } from "wagmi/connectors";
+import { injected, metaMask, walletConnect, coinbaseWallet } from "@wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Enhanced multi-chain configuration for GuardianChain using Wagmi v2
