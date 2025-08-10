@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Capsule, NotarizationStatus, EvidenceLevel } from "@/hooks/useCapsules";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -55,7 +56,7 @@ export default function CapsuleDetail() {
   const { toast } = useToast();
   const [isSharing, setIsSharing] = useState(false);
 
-  const { data: capsule, isLoading, error } = useQuery({
+  const { data: capsule, isLoading, error } = useQuery<Capsule>({
     queryKey: ["/api/capsules", id],
     queryFn: async () => {
       const response = await fetch(`/api/capsules/${id}`, {
