@@ -74,7 +74,7 @@ function sanitizeObject(obj: any): void {
       obj[key] = obj[key]
         .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
         .replace(/javascript:/gi, "")
-        .replace(/on\w+\s*=\s*["\'][^"\']*["\']/gi, ");
+        .replace(/on\w+\s*=\s*["\'][^"\']*["\']/gi, "");
     } else if (typeof obj[key] === "object" && obj[key] !== null) {
       sanitizeObject(obj[key]);
     }
