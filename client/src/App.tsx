@@ -1,23 +1,3 @@
-const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
-              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
-const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
-              <Route path="/partners" component={BrandPartnerships} />
-const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
-              <Route path="/rewards" component={GamificationDashboard} />
-const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
-              <Route path="/mobile" component={MobileAppComingSoon} />
-const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
-              <Route path="/referrals" component={ReferralDashboard} />
-const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
-              <Route path="/ai-analytics" component={AiAnalyticsDashboard} />
-const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
-              <Route path="/api-dashboard" component={ApiDashboard} />
-const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
-              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
-const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
-              <Route path="/staking-dashboard" component={StakingDashboard} />
-const Marketplace = lazy(() => import("@/pages/Marketplace"));
-              <Route path="/marketplace" component={Marketplace} />
 import React, { lazy, Suspense, useEffect } from "react";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { Switch, Route } from "wouter";
@@ -38,6 +18,17 @@ import { GuardianBootHook } from "@/components/GuardianBootHook";
 import EliteHomepage from "@/pages/EliteHomepage";
 import CyberHomepage from "@/pages/CyberHomepage";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
+// Optional pages (kept lazy, routes added below only if needed)
+const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
+const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
+const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
+const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
+const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
+const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
+const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
+const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
+const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
+const Marketplace = lazy(() => import("@/pages/Marketplace"));
 import { useAuth } from "./hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
 import { TierProvider } from "./context/TierContext";
@@ -57,7 +48,8 @@ const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
 // Settings imported dynamically to avoid conflicts
-const Profile = lazy(() => import("@/pages/profile"));
+// Use exact casing to avoid duplicate module entries on case-sensitive FS
+const Profile = lazy(() => import("@/pages/Profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const VeritasBadges = lazy(() => import("@/pages/VeritasBadges"));
 const TruthGenome = lazy(() => import("@/pages/TruthGenome"));
@@ -66,10 +58,10 @@ const Explorer = lazy(() => import("@/pages/Explorer"));
 const Start = lazy(() => import("@/pages/Start"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
-const Subscribe = lazy(() => import("@/pages/subscribe"));
+const Subscribe = lazy(() => import("@/pages/Subscribe"));
 const Subscription = lazy(() => import("@/pages/Subscription"));
 const Checkout = lazy(() => import("@/pages/checkout"));
-const Tokenomics = lazy(() => import("@/pages/tokenomics"));
+const Tokenomics = lazy(() => import("@/pages/Tokenomics"));
 const LandingPage = lazy(() => import("@/pages/landing"));
 const WhitepaperPage = lazy(() => import("@/pages/whitepaper"));
 const CapsuleRemixPage = lazy(() => import("@/pages/capsule/remix"));
@@ -104,11 +96,11 @@ const InvestorDemo = lazy(() => import("@/pages/demo"));
 // New comprehensive pages
 const SubmitCapsule = lazy(() => import("./pages/submit"));
 const MintCapsule = lazy(() => import("./pages/mint/[id]"));
-const AdminPage = lazy(() => import("./pages/admin"));
+const AdminPage = lazy(() => import("./pages/Admin"));
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const Admin = lazy(() => import("./pages/admin"));
+const Admin = lazy(() => import("./pages/Admin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CapsuleStats = lazy(() => import("./pages/CapsuleStats"));
 const CapsuleBrowser = lazy(() => import("./pages/CapsuleBrowser"));
@@ -216,9 +208,15 @@ function Router() {
               <Route path="/start" component={Start} />
               <Route path="/terms" component={Terms} />
               <Route path="/pricing" component={Pricing} />
-              <Route path="/subscribe" component={Subscribe} />
+              {/* Wrap Subscribe to match Route's expected signature */}
+              <Route path="/subscribe" component={() => <Subscribe />} />
               <Route path="/subscription" component={Subscription} />
-              <Route path="/checkout/:amount?/:description?" component={Checkout} />
+              {/* Parse params and pass to Checkout as props */}
+              <Route path="/checkout/:amount?/:description?" component={({ params }) => {
+                const amount = params?.amount ? Number(params.amount) : undefined;
+                const description = params?.description;
+                return <Checkout amount={amount} description={description} />;
+              }} />
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
               <Route path="/dao" component={DAO} />
@@ -264,22 +262,7 @@ export default function App() {
     safeWeb3Provider.safeInit().catch(console.warn);
   });
 
-  // Register service worker for PWA features
-  React.useEffect(() => {
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        if (location.protocol === 'https:' || location.hostname === 'localhost') {
-          navigator.serviceWorker.register('/sw.js').then(registration => {
-            console.log('✅ Service Worker registered:', registration);
-          }).catch(err => {
-            console.warn('❌ Service Worker registration failed:', err);
-          });
-        } else {
-          console.warn('⚠️ Skipping service worker — insecure origin');
-        }
-      });
-    }
-  }, []);
+  // Service worker is registered centrally via registerServiceWorker() in main.tsx
 
   // Runtime check for Tailwind/CSS loading
   React.useEffect(() => {

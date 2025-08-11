@@ -1,6 +1,16 @@
 {
   "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "**/*.test.ts",
+    // Exclude lowercase duplicates that conflict on case-sensitive file systems
+    "client/src/pages/profile.tsx",
+    "client/src/pages/subscribe.tsx",
+    "client/src/pages/tokenomics.tsx",
+    "client/src/pages/admin.tsx"
+  ],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
