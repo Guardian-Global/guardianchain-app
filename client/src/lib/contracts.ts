@@ -1,5 +1,35 @@
 import { ethers } from "ethers";
-import { CONTRACT_ADDRESSES } from "@shared/constants";
+// Contract Addresses (copied from shared/constants for client safety)
+const CONTRACT_ADDRESSES = {
+  // Live Mumbai Testnet Contracts
+  80002: {
+    chainId: 80002,
+    name: "Mumbai Testnet",
+    GTTToken: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // ✅ LIVE ON MUMBAI
+    TruthVault: "0xd1Ad81D7A2e954B5D2A543b67287B16f3c030d72", // ✅ LIVE ON MUMBAI
+    dao: "0x0000000000000000000000000000000000000001", // Placeholder DAO address
+    gtt: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // Alias for GTTToken
+    rpcUrl: "https://rpc-mumbai.maticvigil.com",
+  },
+  MUMBAI: {
+    chainId: 80002,
+    GTTToken: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // ✅ LIVE ON MUMBAI
+    TruthVault: "0xd1Ad81D7A2e954B5D2A543b67287B16f3c030d72", // ✅ LIVE ON MUMBAI
+    dao: "0x0000000000000000000000000000000000000001", // Placeholder DAO address
+    gtt: "0x948051E40bc1A9b4e2861D8B7fC5640485d2ad83", // Alias for GTTToken
+    rpcUrl: "https://rpc-mumbai.maticvigil.com",
+  },
+  // Production Polygon Mainnet (future)
+  137: {
+    chainId: 137,
+    name: "Polygon Mainnet",
+    GTTToken: "0x0000000000000000000000000000000000000000", // To be deployed
+    TruthVault: "0x0000000000000000000000000000000000000000", // To be deployed
+    dao: "0x0000000000000000000000000000000000000000", // To be deployed
+    gtt: "0x0000000000000000000000000000000000000000", // Alias for GTTToken
+    rpcUrl: "https://polygon-rpc.com",
+  },
+};
 
 // Mumbai Testnet Configuration
 export const MUMBAI_CHAIN_ID = 80002;

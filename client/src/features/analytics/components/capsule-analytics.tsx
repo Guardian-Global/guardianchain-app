@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import CapsuleClaimButton from "@/components/web3/capsule-claim-button";
 import { apiRequest } from "@/lib/queryClient";
-import { getYieldTier } from "@shared/utils/roi";
+import type { Capsule } from "@/types/schema";
+import { getYieldTier } from "@/lib/roi";
 import {
   Eye,
   Share2,
@@ -18,7 +19,7 @@ import {
   Target,
   Wallet,
 } from "lucide-react";
-import type { Capsule } from "@shared/schema";
+import type { Capsule } from "@/types/schema";
 
 interface CapsuleAnalyticsProps {
   capsule: Capsule;

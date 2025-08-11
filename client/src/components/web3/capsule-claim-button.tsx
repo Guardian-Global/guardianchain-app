@@ -25,7 +25,7 @@ import {
   AlertTriangle,
   ExternalLink,
 } from "lucide-react";
-import type { Capsule } from "@shared/schema";
+import type { Capsule } from "@/types/schema";
 
 interface CapsuleClaimButtonProps {
   capsule: Capsule;
