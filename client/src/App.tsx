@@ -1,3 +1,5 @@
+const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
+              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
 const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
               <Route path="/staking-dashboard" component={StakingDashboard} />
 const Marketplace = lazy(() => import("@/pages/Marketplace"));
