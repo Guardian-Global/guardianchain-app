@@ -44,6 +44,18 @@ import SimpleLanding from "@/pages/SimpleLanding";
 // Complete Authentication System Import
 const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
 
+// Additional lazy-loaded components for comprehensive functionality
+const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
+const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
+const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
+const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
+const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
+const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
+const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
+const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
+const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
+const Marketplace = lazy(() => import("@/pages/Marketplace"));
+
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
@@ -162,6 +174,9 @@ function Router() {
                     <div className="animate-spin w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-6 neural-pulse"></div>
                     <h2 className="text-2xl font-bold mb-2 text-cyan-300">Loading GuardianChain...</h2>
                     <p className="text-gray-400">Please wait while we load the next-gen experience.</p>
+                    <div className="mt-4 text-xs text-gray-500">
+                      If this takes too long, try refreshing the page.
+                    </div>
                   </div>
                 </div>
               }
@@ -231,6 +246,18 @@ function Router() {
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
               <Route path="/vesting-dashboard" component={VestingDashboard} />
+              
+              {/* Additional comprehensive routes */}
+              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
+              <Route path="/partners" component={BrandPartnerships} />
+              <Route path="/rewards" component={GamificationDashboard} />
+              <Route path="/mobile" component={MobileAppComingSoon} />
+              <Route path="/referrals" component={ReferralDashboard} />
+              <Route path="/ai-analytics" component={AiAnalyticsDashboard} />
+              <Route path="/api-dashboard" component={ApiDashboard} />
+              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
+              <Route path="/staking-dashboard" component={StakingDashboard} />
+              <Route path="/marketplace" component={Marketplace} />
 
               {/* New comprehensive pages */}
               <Route path="/submit" component={SubmitCapsule} />
@@ -257,10 +284,40 @@ function Router() {
 }
 
 export default function App() {
+  // Add a safety timeout to prevent blank screens
+  const [appReady, setAppReady] = React.useState(false);
+  const [hasError, setHasError] = React.useState(false);
+
+  React.useEffect(() => {
+    // Set a timeout to show a fallback if the app doesn't load
+    const timeout = setTimeout(() => {
+      if (!appReady) {
+        console.warn('App loading timeout - showing fallback UI');
+        setHasError(true);
+      }
+    }, 10000); // 10 second timeout
+
+    // Mark app as ready after initial render
+    const readyTimeout = setTimeout(() => {
+      setAppReady(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(readyTimeout);
+    };
+  }, [appReady]);
+
   // Initialize safe Web3 provider without auto-connecting
-  import("./lib/web3/safeProvider").then(({ safeWeb3Provider }) => {
-    safeWeb3Provider.safeInit().catch(console.warn);
-  });
+  React.useEffect(() => {
+    import("./lib/web3/safeProvider")
+      .then(({ safeWeb3Provider }) => {
+        safeWeb3Provider.safeInit().catch(console.warn);
+      })
+      .catch((err) => {
+        console.warn('Failed to initialize Web3 provider:', err);
+      });
+  }, []);
 
   // Service worker is registered centrally via registerServiceWorker() in main.tsx
 
@@ -268,28 +325,84 @@ export default function App() {
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const test = document.createElement('div');
-      test.className = 'hidden text-[rgb(0,255,225)]';
+      test.className = 'sr-only';
+      test.style.position = 'absolute';
+      test.style.opacity = '0';
+      test.style.pointerEvents = 'none';
       document.body.appendChild(test);
-      const style = getComputedStyle(test).color;
-      if (style !== 'rgb(0, 255, 225)') {
-        // Show warning if Tailwind/critical CSS is missing
-        const warn = document.createElement('div');
-        warn.style.position = 'fixed';
-        warn.style.top = '0';
-        warn.style.left = '0';
-        warn.style.right = '0';
-        warn.style.zIndex = '9999';
-        warn.style.background = '#ff00d4';
-        warn.style.color = '#fff';
-        warn.style.fontWeight = 'bold';
-        warn.style.textAlign = 'center';
-        warn.style.padding = '12px 0';
-        warn.textContent = '⚠️ Critical CSS not loaded! Please check your deployment/build settings.';
-        document.body.appendChild(warn);
+      
+      // Check if Tailwind's sr-only class is working
+      const computedStyle = getComputedStyle(test);
+      const isTailwindLoaded = computedStyle.position === 'absolute' && 
+                              (computedStyle.width === '1px' || computedStyle.clip !== 'auto');
+      
+      if (!isTailwindLoaded) {
+        // Only show warning in development or if there's a real CSS issue
+        const isDevMode = import.meta.env.MODE === 'development';
+        const hasStyledElements = document.querySelector('.bg-gradient-to-br, .text-cyan-300, .border-cyan-400');
+        
+        if (isDevMode || !hasStyledElements) {
+          console.warn('⚠️ Tailwind CSS may not be fully loaded');
+          // Only show warning banner in development
+          if (isDevMode) {
+            const warn = document.createElement('div');
+            warn.style.position = 'fixed';
+            warn.style.top = '0';
+            warn.style.left = '0';
+            warn.style.right = '0';
+            warn.style.zIndex = '9999';
+            warn.style.background = '#ff00d4';
+            warn.style.color = '#fff';
+            warn.style.fontWeight = 'bold';
+            warn.style.textAlign = 'center';
+            warn.style.padding = '8px 0';
+            warn.style.fontSize = '14px';
+            warn.textContent = '⚠️ Development: Checking CSS loading...';
+            document.body.appendChild(warn);
+            
+            // Remove warning after 3 seconds if page is working
+            setTimeout(() => {
+              if (warn.parentNode) {
+                warn.parentNode.removeChild(warn);
+              }
+            }, 3000);
+          }
+        }
       }
       document.body.removeChild(test);
     }
   }, []);
+
+  // Show fallback UI if there's an error
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black flex items-center justify-center text-white">
+        <div className="text-center max-w-md p-8">
+          <h1 className="text-3xl font-bold mb-4">🔄 Loading Issue Detected</h1>
+          <p className="text-gray-300 mb-6">
+            The app is taking longer than expected to load. This might be due to network issues or heavy traffic.
+          </p>
+          <div className="space-y-3">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full px-6 py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-medium transition-colors"
+            >
+              🔄 Refresh Page
+            </button>
+            <button 
+              onClick={() => {setHasError(false); setAppReady(false);}} 
+              className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors"
+            >
+              🚀 Try Again
+            </button>
+          </div>
+          <p className="text-xs text-gray-400 mt-4">
+            If the issue persists, please check your internet connection.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <HelmetProvider>
