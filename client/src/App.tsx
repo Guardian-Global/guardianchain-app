@@ -1,3 +1,5 @@
+const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
+              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
 const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
               <Route path="/partners" component={BrandPartnerships} />
 const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
