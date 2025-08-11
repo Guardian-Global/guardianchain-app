@@ -4,13 +4,18 @@ export type {
   InsertUser,
   Capsule,
   InsertCapsule,
-  Verification,
-  InsertVerification,
-  Transaction,
-  InsertTransaction,
-  Achievement,
-  InsertAchievement,
-} from "@shared/schema";
+  Proposal,
+  InsertProposal,
+  Vote,
+  InsertVote,
+  Subscription,
+  InsertSubscription,
+  SelectUser,
+  SelectCapsule,
+  SelectProposal,
+  SelectVote,
+  SelectSubscription
+} from "./schema";
 
 // Frontend-specific types
 export interface WalletState {

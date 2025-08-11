@@ -13,7 +13,7 @@ import {
   BarChart3,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import type { Proposal, Vote } from "@shared/schema";
+import type { Proposal, Vote } from "@/types/schema";
 
 interface ProposalWithVotes extends Proposal {
   votes: Vote[];

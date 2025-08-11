@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { api } from "../../../lib/apiClient";
+import { api } from "@/lib/queryClient";
 
 export interface TranslationRequest {
   text: string;

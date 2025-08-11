@@ -1,23 +1,3 @@
-const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
-              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
-const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
-              <Route path="/partners" component={BrandPartnerships} />
-const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
-              <Route path="/rewards" component={GamificationDashboard} />
-const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
-              <Route path="/mobile" component={MobileAppComingSoon} />
-const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
-              <Route path="/referrals" component={ReferralDashboard} />
-const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
-              <Route path="/ai-analytics" component={AiAnalyticsDashboard} />
-const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
-              <Route path="/api-dashboard" component={ApiDashboard} />
-const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
-              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
-const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
-              <Route path="/staking-dashboard" component={StakingDashboard} />
-const Marketplace = lazy(() => import("@/pages/Marketplace"));
-              <Route path="/marketplace" component={Marketplace} />
 import React, { lazy, Suspense, useEffect } from "react";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { Switch, Route } from "wouter";
@@ -50,13 +30,20 @@ import Signup from "@/pages/auth/Signup";
 import Login from "@/pages/auth/Login";
 import SimpleLanding from "@/pages/SimpleLanding";
 
-// Complete Authentication System Import
+// Lazy load pages for better code splitting
 const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
-
-// Lazy load common pages
+const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
+const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
+const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
+const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
+const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
+const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
+const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
+const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
+const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
+const Marketplace = lazy(() => import("@/pages/Marketplace"));
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
 const BulkUpload = lazy(() => import("@/pages/BulkUpload"));
-// Settings imported dynamically to avoid conflicts
 const Profile = lazy(() => import("@/pages/profile"));
 const UltimateProfile = lazy(() => import("@/pages/UltimateProfile"));
 const VeritasBadges = lazy(() => import("@/pages/VeritasBadges"));
@@ -79,7 +66,6 @@ const RedeemPage = lazy(() => import("@/pages/RedeemPage"));
 const VerifiersPage = lazy(() => import("@/pages/explorer/VerifiersPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
 const DAO = lazy(() => import("@/pages/DAO"));
-// Consolidated master pages
 const VaultClean = lazy(() => import("@/pages/vault-clean"));
 const AdminMetrics = lazy(() => import("@/pages/admin-metrics"));
 const AnalyticsPage = lazy(() => import("@/pages/analytics"));
@@ -93,19 +79,14 @@ const AuditPage = lazy(() => import("@/pages/Audit"));
 const NewUserOnboarding = lazy(() => import("@/pages/NewUserOnboarding"));
 const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
 const VestingDashboard = lazy(() => import("@/pages/VestingDashboard"));
-// ViralShowcase archived during consolidation
 const SocialHub = lazy(() => import("@/pages/SocialHub"));
 const CapsuleExplorer = lazy(() => import("@/pages/CapsuleExplorer"));
 const CapsuleViewer = lazy(() => import("@/pages/CapsuleViewer"));
-// CapsuleAnalyticsDemo moved to archive during consolidation
 const CapsuleAnalyticsPage = lazy(() => import("./pages/CapsuleAnalyticsPage"));
 const InvestorDemo = lazy(() => import("@/pages/demo"));
-
-// New comprehensive pages
 const SubmitCapsule = lazy(() => import("./pages/submit"));
 const MintCapsule = lazy(() => import("./pages/mint/[id]"));
 const AdminPage = lazy(() => import("./pages/admin"));
-
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Admin = lazy(() => import("./pages/admin"));
@@ -115,9 +96,10 @@ const CapsuleBrowser = lazy(() => import("./pages/CapsuleBrowser"));
 const CapsuleDetail = lazy(() => import("./pages/CapsuleDetail"));
 const PublicProfile = lazy(() => import("./pages/PublicProfile"));
 const Claim = lazy(() => import("./pages/Claim"));
+
+// Lazy load debugging components
 const GuardianMascotFooter = lazy(() => import("@/components/GuardianMascotFooter"));
 const GuardianMascot = lazy(() => import("@/components/GuardianMascot"));
-
 const AuthDebugPanel = lazy(() => import("@/components/auth/AuthDebugPanel"));
 const OnboardingStatusChecker = lazy(() => import("@/components/onboarding/OnboardingStatusChecker"));
 const ComprehensiveAuthFlow = lazy(() => import("@/components/auth/ComprehensiveAuthFlow"));
@@ -131,7 +113,11 @@ function Router() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-hsl(218,54%,9%) via-hsl(220,39%,11%) to-hsl(222,47%,11%) flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full" />
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-cyan-300 text-lg">Loading GuardianChain...</p>
+          <p className="text-gray-400 text-sm mt-2">Initializing secure environment</p>
+        </div>
       </div>
     );
   }
@@ -168,8 +154,11 @@ function Router() {
                 <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black">
                   <div className="text-center">
                     <div className="animate-spin w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-6 neural-pulse"></div>
-                    <h2 className="text-2xl font-bold mb-2 text-cyan-300">Loading GuardianChain...</h2>
-                    <p className="text-gray-400">Please wait while we load the next-gen experience.</p>
+                    <h2 className="text-2xl font-bold mb-2 text-cyan-300">Loading Component...</h2>
+                    <p className="text-gray-400">Preparing your secure experience</p>
+                    <div className="mt-4 text-xs text-gray-500">
+                      If this takes too long, please check your network connection
+                    </div>
                   </div>
                 </div>
               }
@@ -177,6 +166,7 @@ function Router() {
               <Switch>
               <Route path="/onboarding" component={OnboardingPage} />
               <Route path="/onboarding-legacy" component={NewUserOnboarding} />
+              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
               <Route path="/dashboard" component={EnhancedDashboard} />
               <Route path="/vault" component={VaultClean} />
               <Route path="/admin/metrics" component={AdminMetrics} />
@@ -224,11 +214,20 @@ function Router() {
               <Route path="/dao" component={DAO} />
               <Route path="/explorer/verifiers" component={VerifiersPage} />
               <Route path="/partners" component={PartnersPage} />
+              <Route path="/brand-partnerships" component={BrandPartnerships} />
+              <Route path="/rewards" component={GamificationDashboard} />
+              <Route path="/mobile" component={MobileAppComingSoon} />
+              <Route path="/referrals" component={ReferralDashboard} />
+              <Route path="/ai-analytics" component={AiAnalyticsDashboard} />
+              <Route path="/api-dashboard" component={ApiDashboard} />
+              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
+              <Route path="/staking-dashboard" component={StakingDashboard} />
+              <Route path="/marketplace" component={Marketplace} />
               <Route path="/analytics" component={AnalyticsPage} />
               <Route path="/vote" component={VotePage} />
               <Route path="/stream" component={StreamPage} />
               <Route path="/lineage" component={LineagePage} />
-              <Route path="/rewards" component={RewardsPage} />
+              <Route path="/rewards-page" component={RewardsPage} />
               <Route path="/metrics" component={MetricsPage} />
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
@@ -237,7 +236,6 @@ function Router() {
               {/* New comprehensive pages */}
               <Route path="/submit" component={SubmitCapsule} />
               <Route path="/mint/:id" component={MintCapsule} />
-              <Route path="/admin" component={AdminPage} />
               <Route path="/veritas/vote" component={lazy(() => import("./pages/veritas/vote"))} />
 
               <Route path="/social" component={SocialHub} />
@@ -245,9 +243,6 @@ function Router() {
               <Route path="/explorer" component={CapsuleExplorer} />
               <Route path="/capsule/:id" component={CapsuleViewer} />
               <Route path="/capsule/:id/analytics" component={CapsuleAnalyticsPage} />
-              {/* Analytics demo route removed during consolidation */}
-              <Route path="/dao" component={DAO} />
-              <Route path="/profile" component={Profile} />
               <Route component={NotFound} />
               </Switch>
             </Suspense>

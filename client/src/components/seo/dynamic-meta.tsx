@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import type { Capsule } from "@shared/schema";
+import type { Capsule } from "@/types/schema";
 
 interface DynamicMetaProps {
   capsule?: Capsule;
