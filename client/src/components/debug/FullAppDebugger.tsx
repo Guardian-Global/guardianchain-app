@@ -64,9 +64,12 @@ export default function FullAppDebugger() {
   const { data: authStatus, isLoading: authLoading, error: authError } = useQuery({
     queryKey: ["/api/auth/status"],
     queryFn: async () => {
-      const response = await fetch("/api/auth/status");
+      const token = localStorage.getItem('gc_jwt');
+      const response = await fetch("/api/auth/status", {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        credentials: 'include'
+      });
       const data = await response.json();
-      
       const debugInfo: DebugInfo = {
         timestamp: new Date().toISOString(),
         endpoint: "/api/auth/status",
@@ -74,9 +77,7 @@ export default function FullAppDebugger() {
         data,
         error: response.ok ? undefined : `HTTP ${response.status}`,
       };
-      
       setDebugLogs(prev => [debugInfo, ...prev.slice(0, 19)]);
-      
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return data;
     },
@@ -332,12 +333,7 @@ export default function FullAppDebugger() {
                             {user.isWalletVerified ? "Yes" : "No"}
                           </Badge>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">2FA Enabled:</span>
-                          <Badge className={user.twoFactorEnabled ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}>
-                            {user.twoFactorEnabled ? "Yes" : "No"}
-                          </Badge>
-                        </div>
+                        {/* 2FA field removed for minimal JWT user */}
                         <div className="flex justify-between">
                           <span className="text-slate-400">Onboarding:</span>
                           <Badge className={user.onboardingCompleted ? "bg-green-500/20 text-green-300" : "bg-orange-500/20 text-orange-300"}>
@@ -351,33 +347,7 @@ export default function FullAppDebugger() {
               </Card>
             )}
 
-            {user?.usage && (
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white text-sm">Usage Statistics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div className="text-center">
-                      <div className="text-white font-bold text-lg">{user.usage.capsulesCreated}</div>
-                      <div className="text-slate-400">Capsules Created</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-white font-bold text-lg">{user.usage.gttEarned.toFixed(1)}</div>
-                      <div className="text-slate-400">GTT Earned</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-white font-bold text-lg">{user.usage.truthScore}</div>
-                      <div className="text-slate-400">Truth Score</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-white font-bold text-lg">{user.usage.verificationCount}</div>
-                      <div className="text-slate-400">Verifications</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* Usage statistics panel removed */}
           </TabsContent>
 
           {/* Subscription Tab */}
@@ -390,24 +360,7 @@ export default function FullAppDebugger() {
                 <CardContent className="space-y-2">
                   {user && (
                     <>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Status:</span>
-                        <Badge className={
-                          user.subscriptionStatus === "active" 
-                            ? "bg-green-500/20 text-green-300" 
-                            : "bg-red-500/20 text-red-300"
-                        }>
-                          {user.subscriptionStatus || "None"}
-                        </Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Plan:</span>
-                        <span className="text-white">{user.subscriptionTier || "None"}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">Billing:</span>
-                        <span className="text-white">{user.subscriptionPlan || "None"}</span>
-                      </div>
+                      <div className="text-slate-400 text-sm">No subscription data available (minimal auth mode)</div>
                     </>
                   )}
                 </CardContent>

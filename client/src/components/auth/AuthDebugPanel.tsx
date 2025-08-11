@@ -38,7 +38,11 @@ export default function AuthDebugPanel() {
   const { data: authStatus, isLoading: statusLoading } = useQuery({
     queryKey: ["/api/auth/status"],
     queryFn: async () => {
-      const response = await fetch("/api/auth/status");
+      const token = localStorage.getItem('gc_jwt');
+      const response = await fetch("/api/auth/status", {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        credentials: 'include'
+      });
       if (!response.ok) throw new Error("Auth status fetch failed");
       return response.json();
     },
@@ -182,27 +186,7 @@ export default function AuthDebugPanel() {
           )}
 
           {/* Subscription Status */}
-          {user?.subscription && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Settings className="w-4 h-4 text-cyan-400" />
-                <span className="text-white font-medium">Subscription</span>
-              </div>
-              
-              <div className="bg-slate-900/50 rounded p-2 space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Plan:</span>
-                  <span className="text-white">{user.subscription.plan}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Status:</span>
-                  <Badge className={getStatusColor(user.subscription.status === "active")}>
-                    {user.subscription.status}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          )}
+            {/* Subscription section removed: not available in EnhancedUser shape */}
 
           {/* Subscription Plans Available */}
           {subscriptionPlans && !plansLoading && (

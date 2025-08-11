@@ -34,7 +34,7 @@ router.post("/register", async (req: Request, res: Response) => {
   res.status(201).json({ message: "User registered" });
 });
 
-// Login
+// Login (sets httpOnly cookie + returns token)
 router.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = users.find(u => u.email === email);
@@ -42,15 +42,30 @@ router.post("/login", async (req: Request, res: Response) => {
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(401).json({ error: "Invalid credentials" });
   const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+  // Set cookie for legacy fetches using credentials: 'include'
+  res.cookie("gc_jwt", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
   res.json({ token, user: { id: user.id, email: user.email, name: user.name, walletAddress: user.walletAddress } });
 });
 
 // Middleware to check JWT
+function extractToken(req: Request): string | null {
+  const header = req.headers.authorization;
+  if (header && header.startsWith("Bearer ")) return header.slice(7);
+  // Fallback to cookie
+  const cookieToken = (req as any).cookies?.gc_jwt;
+  return cookieToken || null;
+}
+
 function requireAuth(req: Request, res: Response, next: NextFunction) {
-  const auth = req.headers.authorization;
-  if (!auth) return res.status(401).json({ error: "No token" });
+  const token = extractToken(req);
+  if (!token) return res.status(401).json({ error: "No token" });
   try {
-    const decoded = jwt.verify(auth.replace("Bearer ", ""), JWT_SECRET) as { id: number; email: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; email: string };
     (req as any).user = decoded;
     next();
   } catch {
@@ -62,7 +77,59 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
 router.get("/me", requireAuth, (req: Request, res: Response) => {
   const user = users.find(u => u.id === (req as any).user.id);
   if (!user) return res.status(404).json({ error: "User not found" });
-  res.json({ id: user.id, email: user.email, name: user.name, walletAddress: user.walletAddress, createdAt: user.createdAt, updatedAt: user.updatedAt });
+  res.json({
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    walletAddress: user.walletAddress,
+    tier: "EXPLORER",
+    onboardingCompleted: true,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  });
+});
+
+// Compatibility: /status endpoint
+router.get("/status", (req: Request, res: Response) => {
+  const token = extractToken(req);
+  if (!token) return res.json({ status: "ok", authenticated: false });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; email: string };
+    const user = users.find(u => u.id === decoded.id);
+    return res.json({ status: "ok", authenticated: !!user, userId: user?.id });
+  } catch {
+    return res.json({ status: "ok", authenticated: false });
+  }
+});
+
+// Compatibility: /user endpoint
+router.get("/user", (req: Request, res: Response) => {
+  const token = extractToken(req);
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; email: string };
+    const user = users.find(u => u.id === decoded.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    return res.json({
+      id: user.id,
+      email: user.email,
+      tier: "EXPLORER",
+      onboardingCompleted: true,
+      walletAddress: user.walletAddress,
+      firstName: user.firstName || user.name?.split(" ")[0] || "",
+      lastName: user.lastName || user.name?.split(" ")[1] || "",
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
+  } catch {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+});
+
+// Logout (clear cookie on server side)
+router.post("/logout", (req: Request, res: Response) => {
+  res.clearCookie("gc_jwt", { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production" });
+  res.json({ message: "Logged out" });
 });
 
 // Update profile (name parts)
