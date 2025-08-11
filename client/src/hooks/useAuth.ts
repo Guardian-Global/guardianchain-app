@@ -51,13 +51,15 @@ export function useAuth() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (profileData: Partial<User>) => {
+      const token = localStorage.getItem('gc_jwt');
+      if (!token) throw new Error('Not authenticated');
       const response = await fetch("/api/user/profile", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(profileData),
-        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Profile update failed");
@@ -65,21 +67,21 @@ export function useAuth() {
       return response.json();
     },
     onSuccess: () => {
-      // Refetch user data after profile update
       refetch();
-  queryClient.invalidateQueries({ queryKey: ["/api/auth-complete/me"] });
     },
   });
 
   const linkWalletMutation = useMutation({
     mutationFn: async (walletAddress: string) => {
+      const token = localStorage.getItem('gc_jwt');
+      if (!token) throw new Error('Not authenticated');
       const response = await fetch("/api/user/link-wallet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ walletAddress }),
-        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Wallet linking failed");
@@ -88,7 +90,6 @@ export function useAuth() {
     },
     onSuccess: () => {
       refetch();
-  queryClient.invalidateQueries({ queryKey: ["/api/auth-complete/me"] });
     },
   });
 
@@ -97,10 +98,11 @@ export function useAuth() {
       if (!user?.walletAddress) {
         throw new Error("No wallet linked");
       }
-      
+      const token = localStorage.getItem('gc_jwt');
+      if (!token) throw new Error('Not authenticated');
       const response = await fetch(`/api/auth/unlink/${user.walletAddress}`, {
         method: "DELETE",
-        credentials: "include",
+        headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) {
         throw new Error("Wallet unlinking failed");
@@ -109,7 +111,6 @@ export function useAuth() {
     },
     onSuccess: () => {
       refetch();
-  queryClient.invalidateQueries({ queryKey: ["/api/auth-complete/me"] });
     },
   });
 
@@ -118,15 +119,11 @@ export function useAuth() {
     isLoading,
     isAuthenticated: !!user && !error,
     error,
-    
-    // Actions
     logout: logoutMutation.mutate,
     updateProfile: updateProfileMutation.mutate,
     linkWallet: linkWalletMutation.mutate,
     unlinkWallet: unlinkWalletMutation.mutate,
     refetchUser: refetch,
-    
-    // Mutation states
     isLoggingOut: logoutMutation.isPending,
     isUpdatingProfile: updateProfileMutation.isPending,
     isLinkingWallet: linkWalletMutation.isPending,

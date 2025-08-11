@@ -16,7 +16,6 @@ import { unlockCapsule } from "./api/capsule-unlock";
 import { registerGTTContractRoutes } from "./routes/gttContract";
 // All legacy authentication systems removed - only consolidated auth remains
 import { consolidatedAuth } from "./auth/authConsolidation";
-import authCompleteRoutes from "./routes/auth-complete";
 import daoRoutes from "./routes/dao";
 import aiRoutes from "./routes/ai";
 import aiEnhancementRoutes from "./routes/ai-enhancement";
@@ -2764,7 +2763,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   setupConsolidatedAuth(app);
   
   // Complete authentication system
-  app.use("/api/auth-complete", authCompleteRoutes);
+  // Removed legacy /api/auth-complete routes (replaced by JWT /api/auth)
   
   // DAO routes with authentication
   app.use("/api/dao", consolidatedAuth, daoRoutes);
