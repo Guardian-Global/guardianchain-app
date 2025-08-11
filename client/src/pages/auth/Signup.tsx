@@ -11,8 +11,7 @@ import { Eye, EyeOff, Mail, User, Lock, Shield } from "lucide-react";
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
-    firstName: '',
-    lastName: '',
+    name: '',
     password: '',
     confirmPassword: ''
   });
@@ -36,54 +35,40 @@ const SignupPage: React.FC = () => {
     setError('');
 
     // Basic validation
-    if (!formData.email || !formData.firstName || !formData.lastName || !formData.password) {
+    if (!formData.email || !formData.name || !formData.password) {
       setError('Please fill in all required fields');
       setIsLoading(false);
       return;
     }
-
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       setIsLoading(false);
       return;
     }
-
     if (formData.password.length < 8) {
       setError('Password must be at least 8 characters long');
       setIsLoading(false);
       return;
     }
-
     try {
-  const response = await fetch('/api/auth-complete/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
+          name: formData.name,
           password: formData.password
-        }),
-        credentials: 'include'
+        })
       });
-
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Signup failed');
+        throw new Error(errorData.error || errorData.message || 'Signup failed');
       }
-
-      const data = await response.json();
-      
       toast({
         title: "Account Created Successfully!",
-        description: "Welcome to GuardianChain. You can now access all features.",
+        description: "Welcome to GUARDIANCHAIN. You can now access all features.",
       });
-
-      // Redirect to dashboard or onboarding
-      window.location.href = data.redirectTo || '/dashboard';
-      
+      window.location.href = '/auth/login';
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Signup failed. Please try again.';
       setError(errorMessage);
@@ -143,41 +128,22 @@ const SignupPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-hsl(180,100%,90%)">
-                    First Name *
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-hsl(180,100%,90%)/50" />
-                    <Input
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      required
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="pl-10 bg-hsl(220,39%,11%) border-hsl(180,100%,90%)/20 text-hsl(180,100%,90%) focus:border-cyan-500"
-                      placeholder="John"
-                      data-testid="input-firstName"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="text-hsl(180,100%,90%)">
-                    Last Name *
-                  </Label>
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-hsl(180,100%,90%)">
+                  Name *
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-hsl(180,100%,90%)/50" />
                   <Input
-                    id="lastName"
-                    name="lastName"
+                    id="name"
+                    name="name"
                     type="text"
                     required
-                    value={formData.lastName}
+                    value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-hsl(220,39%,11%) border-hsl(180,100%,90%)/20 text-hsl(180,100%,90%) focus:border-cyan-500"
-                    placeholder="Doe"
-                    data-testid="input-lastName"
+                    className="pl-10 bg-hsl(220,39%,11%) border-hsl(180,100%,90%)/20 text-hsl(180,100%,90%) focus:border-cyan-500"
+                    placeholder="Your Name"
+                    data-testid="input-name"
                   />
                 </div>
               </div>

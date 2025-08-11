@@ -30,38 +30,28 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
     if (!formData.email || !formData.password) {
       setError('Please fill in all fields');
       setIsLoading(false);
       return;
     }
-
     try {
-  const response = await fetch('/api/auth-complete/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include'
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
       });
-
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(errorData.error || errorData.message || 'Login failed');
       }
-
       const data = await response.json();
-      
+      localStorage.setItem('gc_jwt', data.token);
       toast({
         title: "Welcome Back!",
-        description: "Successfully logged into GuardianChain.",
+        description: "Successfully logged into GUARDIANCHAIN.",
       });
-
-      // Redirect to dashboard
-      window.location.href = data.redirectTo || '/dashboard';
-      
+      window.location.href = '/dashboard';
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed. Please try again.';
       setError(errorMessage);

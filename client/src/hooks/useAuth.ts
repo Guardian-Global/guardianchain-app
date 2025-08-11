@@ -17,44 +17,34 @@ export interface User {
 
 export function useAuth() {
   const queryClient = useQueryClient();
-  
   const { data: user, isLoading, error, refetch } = useQuery({
-    queryKey: ["/api/auth-complete/me"],
+    queryKey: ["/api/auth/me"],
     queryFn: async () => {
-      const response = await fetch("/api/auth-complete/me", {
-        credentials: "include",
-        // No admin key - require real authentication
+      const token = localStorage.getItem('gc_jwt');
+      if (!token) return null;
+      const response = await fetch("/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) {
-        // Return null for 401 to indicate no authenticated user
-        if (response.status === 401) {
-          return null;
-        }
+        if (response.status === 401) return null;
         throw new Error(`${response.status}: ${response.statusText}`);
       }
       return response.json();
     },
     retry: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch("/api/auth-complete/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error("Logout failed");
-      }
-      return response.json();
+      localStorage.removeItem('gc_jwt');
+      queryClient.clear();
+      window.location.href = "/";
     },
     onSuccess: () => {
-      // Clear all cached data on logout
       queryClient.clear();
-      // Redirect to home page
       window.location.href = "/";
     },
   });
