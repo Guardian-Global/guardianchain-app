@@ -1,109 +1,55 @@
-import { Express } from 'express';
-import crypto from 'crypto';
-import { storage } from '../storage';
-import { consolidatedAuth } from '../auth/authConsolidation';
 
-export function registerAuthRoutes(app: Express) {
-  // Password reset request
-  app.post('/api/auth/request-reset', async (req, res) => {
-    try {
-      const { email } = req.body;
-      
-      if (!email) {
-        return res.status(400).json({ message: 'Email is required' });
-      }
+import { Router } from "express";
+import type { Request, Response, NextFunction } from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-      const user = await storage.getUserByEmail(email);
-      if (!user) {
-        // Don't reveal whether email exists for security
-        return res.json({ message: 'If an account with that email exists, a reset link has been sent' });
-      }
+// In-memory user store for demo (replace with DB in production)
+const users: any[] = [];
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-      // Generate reset token
-      const resetToken = crypto.randomBytes(32).toString('hex');
-      const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+const router = Router();
 
-      await storage.setResetToken(user.id, resetToken, expiresAt);
+// Register
+router.post("/register", async (req: Request, res: Response) => {
+  const { email, password, name } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+  if (users.find(u => u.email === email)) return res.status(400).json({ error: "User already exists" });
+  const hashed = await bcrypt.hash(password, 10);
+  const user = { id: users.length + 1, email, password: hashed, name };
+  users.push(user);
+  res.status(201).json({ message: "User registered" });
+});
 
-      // In a real app, you would send an email here
-      // For development, just log the token
-      console.log(`Password reset token for ${email}: ${resetToken}`);
-      console.log(`Reset URL: http://localhost:5000/auth/reset-password?token=${resetToken}`);
+// Login
+router.post("/login", async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const user = users.find(u => u.email === email);
+  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+  const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: "7d" });
+  res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
+});
 
-      res.json({ message: 'If an account with that email exists, a reset link has been sent' });
-    } catch (error) {
-      console.error('Password reset request error:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-  // Get user's active sessions
-  app.get('/api/auth/sessions', consolidatedAuth, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      const sessions = await storage.getUserActiveSessions(userId);
-      res.json(sessions);
-    } catch (error) {
-      console.error('Error fetching sessions:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-  // Terminate a specific session
-  app.delete('/api/auth/sessions/:sessionId', consolidatedAuth, async (req: any, res) => {
-    try {
-      const { sessionId } = req.params;
-      const userId = req.user.id;
-      
-      // Verify the session belongs to the user
-      const sessions = await storage.getUserActiveSessions(userId);
-      const sessionExists = sessions.some(session => session.id === sessionId);
-      
-      if (!sessionExists) {
-        return res.status(404).json({ message: 'Session not found' });
-      }
-
-      await storage.terminateSession(sessionId);
-      res.json({ message: 'Session terminated successfully' });
-    } catch (error) {
-      console.error('Error terminating session:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
-  // Get user's login history
-  app.get('/api/auth/login-history', consolidatedAuth, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      
-      // Mock data for now - in production you'd implement proper login tracking
-      const mockHistory = [
-        {
-          id: '1',
-          ipAddress: '192.168.1.1',
-          city: 'New York',
-          region: 'NY',
-          country: 'US',
-          device: 'Chrome on Windows',
-          success: true,
-          loginTime: new Date().toISOString()
-        },
-        {
-          id: '2',
-          ipAddress: '10.0.0.1',
-          city: 'San Francisco',
-          region: 'CA',
-          country: 'US',
-          device: 'Safari on Mac',
-          success: true,
-          loginTime: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-        }
-      ];
-      
-      res.json(mockHistory);
-    } catch (error) {
-      console.error('Error fetching login history:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
+// Middleware to check JWT
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const auth = req.headers.authorization;
+  if (!auth) return res.status(401).json({ error: "No token" });
+  try {
+    const decoded = jwt.verify(auth.replace("Bearer ", ""), JWT_SECRET);
+    (req as any).user = decoded;
+    next();
+  } catch {
+    res.status(401).json({ error: "Invalid token" });
+  }
 }
+
+// Get current user
+router.get("/me", requireAuth, (req: Request, res: Response) => {
+  const user = users.find(u => u.id === (req as any).user.id);
+  if (!user) return res.status(404).json({ error: "User not found" });
+  res.json({ id: user.id, email: user.email, name: user.name });
+});
+
+export default router;
