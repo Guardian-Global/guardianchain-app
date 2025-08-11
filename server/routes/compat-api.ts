@@ -4,49 +4,34 @@ import fetch from "node-fetch";
 
 const router = Router();
 
-// Proxy to /api/auth-complete/me
-router.get("/auth/user", async (req: Request, res: Response) => {
-  try {
-    // If you use sessions, you can call the handler directly instead of fetch
-    const response = await fetch("http://localhost:3000/api/auth-complete/me", {
-      headers: req.headers as any
-    });
-    const data = await response.json();
-    if (!response.ok) return res.status(response.status).json(data);
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch user info" });
-  }
+
+// Return static user info
+router.get("/auth/user", (req: Request, res: Response) => {
+  res.json({
+    id: "user123",
+    email: "user@example.com",
+    name: "Demo User",
+    role: "user",
+    onboarded: true
+  });
 });
 
-// Auth status endpoint
-router.get("/auth/status", async (req: Request, res: Response) => {
-  try {
-    const response = await fetch("http://localhost:3000/api/auth-complete/me", {
-      headers: req.headers as any
-    });
-    if (response.status === 401) return res.json({ authenticated: false });
-    res.json({ authenticated: true });
-  } catch (err) {
-    res.json({ authenticated: false });
-  }
+// Return static auth status
+router.get("/auth/status", (req: Request, res: Response) => {
+  res.json({ authenticated: true });
 });
 
-// Debug user endpoint (returns user or stub)
-router.get("/debug/user", async (req: Request, res: Response) => {
-  try {
-    const response = await fetch("http://localhost:3000/api/auth-complete/me", {
-      headers: req.headers as any
-    });
-    const data = await response.json();
-    if (!response.ok) return res.status(response.status).json(data);
-    res.json(data);
-  } catch (err) {
-    res.status(200).json({ id: "debug", email: "debug@example.com", debug: true });
-  }
+// Return static debug user
+router.get("/debug/user", (req: Request, res: Response) => {
+  res.json({
+    id: "debug",
+    email: "debug@example.com",
+    debug: true,
+    name: "Debug User"
+  });
 });
 
-// Subscription plans stub
+// Return static subscription plans
 router.get("/subscription/plans", (req: Request, res: Response) => {
   res.json({
     plans: [
