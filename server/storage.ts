@@ -7,6 +7,8 @@ import {
   sessionLogs,
   loginHistory,
   capsuleAudit,
+  votes,
+  transactions,
   type User, 
   type InsertUser,
   type UpdateUser,
@@ -484,6 +486,44 @@ export class DatabaseStorage implements IStorage {
       return null;
     }
   }
+
+  // Capsule methods for API endpoints
+  async getCapsule(id: string): Promise<Capsule | undefined> {
+    const [capsule] = await db.select().from(capsules).where(eq(capsules.id, id));
+    if (!capsule) return undefined;
+    return capsule as Capsule;
+  }
+
+  async updateCapsule(id: string, updates: Partial<Capsule>): Promise<Capsule> {
+    const [updated] = await db.update(capsules)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(capsules.id, id))
+      .returning();
+    if (!updated) throw new Error('Capsule not found');
+    return updated as Capsule;
+  }
+
+  // Vote methods for API endpoints
+  async recordVote(vote: { capsuleId: string, voterWallet: string, voteType: string, createdAt: Date }): Promise<any> {
+    const [record] = await db.insert(votes).values(vote).returning();
+    return record;
+  }
+
+  async getVotesByCapsule(capsuleId: string): Promise<any[]> {
+    return await db.select().from(votes).where(eq(votes.capsuleId, capsuleId));
+  }
+
+  async getUserVote(capsuleId: string, wallet: string): Promise<any | undefined> {
+    const [vote] = await db.select().from(votes).where(and(eq(votes.capsuleId, capsuleId), eq(votes.voterWallet, wallet)));
+    return vote || undefined;
+  }
+
+  // Transaction method for analytics API
+  async createTransaction(tx: any): Promise<any> {
+    const [record] = await db.insert(transactions).values(tx).returning();
+    return record;
+  }
+
 }
 
 export const storage = new DatabaseStorage();

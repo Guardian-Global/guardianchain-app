@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import { z } from "zod";
 import { storage } from "../storage";
 
@@ -10,7 +11,7 @@ const voteSchema = z.object({
 });
 
 // POST /api/capsules/:id/vote - Vote on a capsule
-router.post("/:id/vote", async (req, res) => {
+router.post("/:id/vote", consolidatedAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const validatedData = voteSchema.parse(req.body);
@@ -38,19 +39,16 @@ router.post("/:id/vote", async (req, res) => {
       createdAt: new Date(),
     });
 
-    // Update capsule vote counts
-    const currentLikes = parseInt(capsule.likes || "0");
-    const updatedLikes =
-      vote_type === "upvote" ? currentLikes + 1 : Math.max(0, currentLikes - 1);
-
-    await storage.updateCapsule(id, {
-      likes: updatedLikes.toString(),
-    });
-
+    // No likes property in schema; just return updated vote stats
+    const votes = await storage.getVotesByCapsule(id);
+    const upvotes = votes.filter((v) => v.voteType === "upvote").length;
+    const downvotes = votes.filter((v) => v.voteType === "downvote").length;
     res.status(200).json({
       message: "Vote recorded successfully",
       vote,
-      updatedLikes,
+      upvotes,
+      downvotes,
+      score: upvotes - downvotes,
     });
   } catch (error) {
     console.error("Vote recording error:", error);
@@ -64,13 +62,13 @@ router.post("/:id/vote", async (req, res) => {
 
     res.status(500).json({
       error: "Failed to record vote",
-      message: error.message,
+      message: error instanceof Error ? error.message : String(error),
     });
   }
 });
 
 // GET /api/capsules/:id/votes - Get vote statistics for a capsule
-router.get("/:id/votes", async (req, res) => {
+router.get("/:id/votes", consolidatedAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -106,13 +104,13 @@ router.get("/:id/votes", async (req, res) => {
     console.error("Vote retrieval error:", error);
     res.status(500).json({
       error: "Failed to retrieve votes",
-      message: error.message,
+      message: error instanceof Error ? error.message : String(error),
     });
   }
 });
 
 // GET /api/capsules/:id/user-vote/:wallet - Check if user has voted on a capsule
-router.get("/:id/user-vote/:wallet", async (req, res) => {
+router.get("/:id/user-vote/:wallet", consolidatedAuth, async (req, res) => {
   try {
     const { id, wallet } = req.params;
 
@@ -133,7 +131,7 @@ router.get("/:id/user-vote/:wallet", async (req, res) => {
     console.error("User vote check error:", error);
     res.status(500).json({
       error: "Failed to check user vote",
-      message: error.message,
+      message: error instanceof Error ? error.message : String(error),
     });
   }
 });

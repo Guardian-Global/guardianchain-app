@@ -136,6 +136,26 @@ export const capsules = pgTable('capsules', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+// Votes table - stores votes on capsules
+export const votes = pgTable('votes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  capsuleId: uuid('capsule_id').notNull().references(() => capsules.id, { onDelete: 'cascade' }),
+  voterWallet: text('voter_wallet').notNull(),
+  voteType: text('vote_type').notNull(), // e.g. 'upvote', 'downvote', etc.
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+// Transactions table - stores analytics and reward transactions
+export const transactions = pgTable('transactions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  capsuleId: uuid('capsule_id').references(() => capsules.id, { onDelete: 'set null' }),
+  type: text('type').notNull(), // e.g. 'reward', 'purchase', 'transfer', etc.
+  amount: decimal('amount', { precision: 18, scale: 8 }).notNull().default('0'),
+  metadata: json('metadata').$type<Record<string, any>>(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
 // User stats table - aggregated user statistics
 export const userStats = pgTable('user_stats', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -212,12 +232,6 @@ export const vestingAlertsRelations = relations(vestingAlerts, ({ one }) => ({
 }));
 
 // Export types for enhanced profile features
-export type User = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
-export type UserSession = typeof userSessions.$inferSelect;
-export type UserActivity = typeof userActivities.$inferSelect;
-export type Capsule = typeof capsules.$inferSelect;
-export type UserStats = typeof userStats.$inferSelect;
 
 // Zod schemas for validation
 export const insertUserSchema = createInsertSchema(users).omit({

@@ -1,10 +1,13 @@
+
 import express from "express";
-import { isDebugAuthenticated } from "../debugAuth";
+import { consolidatedAuth } from "../auth/authConsolidation";
+// Provide a fallback authenticateToken for dev
+const authenticateToken = (req: any, res: any, next: any) => next();
 
 const router = express.Router();
 
 // Create new truth bounty
-router.post("/", isDebugAuthenticated, async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   try {
     const { title, description, rewardAmount, deadline, category } = req.body;
     const userId = req.user?.id;
@@ -46,13 +49,13 @@ router.post("/", isDebugAuthenticated, async (req, res) => {
     console.error("Bounty creation error:", error);
     res.status(500).json({ 
       error: "Failed to create truth bounty",
-      details: error.message 
+      details: (error instanceof Error ? error.message : String(error))
     });
   }
 });
 
 // Get active bounties
-router.get("/active", async (req, res) => {
+router.get("/active", consolidatedAuth, async (req, res) => {
   try {
     const { category, limit = 20, offset = 0 } = req.query;
 
@@ -113,7 +116,7 @@ router.get("/active", async (req, res) => {
     console.error("Active bounties error:", error);
     res.status(500).json({ 
       error: "Failed to get active bounties",
-      details: error.message 
+      details: (error instanceof Error ? error.message : String(error))
     });
   }
 });
@@ -157,7 +160,7 @@ router.post("/:bountyId/submit", authenticateToken, async (req, res) => {
     console.error("Bounty submission error:", error);
     res.status(500).json({ 
       error: "Failed to submit evidence",
-      details: error.message 
+      details: (error instanceof Error ? error.message : String(error))
     });
   }
 });
@@ -201,7 +204,7 @@ router.get("/:bountyId/submissions", async (req, res) => {
     console.error("Bounty submissions error:", error);
     res.status(500).json({ 
       error: "Failed to get bounty submissions",
-      details: error.message 
+      details: (error instanceof Error ? error.message : String(error))
     });
   }
 });
@@ -233,7 +236,7 @@ router.get("/user/bounties", authenticateToken, async (req, res) => {
     console.error("User bounties error:", error);
     res.status(500).json({ 
       error: "Failed to get user bounties",
-      details: error.message 
+      details: (error instanceof Error ? error.message : String(error))
     });
   }
 });

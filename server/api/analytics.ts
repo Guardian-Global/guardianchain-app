@@ -1,14 +1,15 @@
 import express from "express";
+import { consolidatedAuth } from "../auth/authConsolidation";
 import { storage } from "../storage";
 import { calculateTruthYield, calculateGTTReward } from "@shared/utils/roi";
 
 const router = express.Router();
 
 // Increment view count for a capsule
-router.post("/:id/view", async (req, res) => {
+router.post("/:id/view", consolidatedAuth, async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
-    const capsule = await storage.getCapsule(capsuleId);
+  const capsuleId = req.params.id;
+  const capsule = await storage.getCapsule(capsuleId);
 
     if (!capsule) {
       return res.status(404).json({ message: "Capsule not found" });
@@ -25,8 +26,12 @@ router.post("/:id/view", async (req, res) => {
 
     // Update yield and GTT reward
     await storage.updateCapsule(capsuleId, {
-      truthYield: newYield.toString(),
-      gttReward: gttReward.toString(),
+      // truthYield and gttReward are not in schema, skip or store in metadata if needed
+      metadata: {
+        ...capsule.metadata,
+        truthYield: newYield.toString(),
+        gttReward: gttReward.toString(),
+      },
     });
 
     res.json({
@@ -37,17 +42,17 @@ router.post("/:id/view", async (req, res) => {
     });
   } catch (error: any) {
     console.error("View tracking error:", error);
-    res.status(500).json({ error: error.message });
+  res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
   }
 });
 
 // Increment share count for a capsule
-router.post("/:id/share", async (req, res) => {
+router.post("/:id/share", consolidatedAuth, async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
+  const capsuleId = req.params.id;
     const { platform } = req.body; // twitter, facebook, linkedin, etc.
 
-    const capsule = await storage.getCapsule(capsuleId);
+  const capsule = await storage.getCapsule(capsuleId);
 
     if (!capsule) {
       return res.status(404).json({ message: "Capsule not found" });
@@ -55,7 +60,11 @@ router.post("/:id/share", async (req, res) => {
 
     // Update share count
     const updatedCapsule = await storage.updateCapsule(capsuleId, {
-      shareCount: (capsule.shareCount || 0) + 1,
+      // shareCount not in schema, store in metadata
+      metadata: {
+        ...capsule.metadata,
+        shareCount: (capsule.metadata?.shareCount || 0) + 1,
+      },
     });
 
     // Recalculate truth yield
@@ -64,8 +73,11 @@ router.post("/:id/share", async (req, res) => {
 
     // Update yield and GTT reward
     await storage.updateCapsule(capsuleId, {
-      truthYield: newYield.toString(),
-      gttReward: gttReward.toString(),
+      metadata: {
+        ...capsule.metadata,
+        truthYield: newYield.toString(),
+        gttReward: gttReward.toString(),
+      },
     });
 
     // Log the share event
@@ -73,7 +85,7 @@ router.post("/:id/share", async (req, res) => {
 
     res.json({
       success: true,
-      shareCount: updatedCapsule.shareCount,
+      shareCount: updatedCapsule.metadata?.shareCount || 0,
       truthYield: newYield,
       gttReward,
       platform,
@@ -87,15 +99,15 @@ router.post("/:id/share", async (req, res) => {
 // Get capsule analytics
 router.get("/:id/analytics", async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
-    const capsule = await storage.getCapsule(capsuleId);
+  const capsuleId = req.params.id;
+  const capsule = await storage.getCapsule(capsuleId);
 
     if (!capsule) {
       return res.status(404).json({ message: "Capsule not found" });
     }
 
-    const truthYield = parseFloat(capsule.truthYield || "0");
-    const gttReward = parseFloat(capsule.gttReward || "0");
+  const truthYield = parseFloat(capsule.metadata?.truthYield || "0");
+  const gttReward = parseFloat(capsule.metadata?.gttReward || "0");
 
     // Calculate growth rates (mock for now - in production, track historical data)
     const daysActive = Math.max(
@@ -106,19 +118,19 @@ router.get("/:id/analytics", async (req, res) => {
       ),
     );
     const dailyViewRate = (capsule.viewCount || 0) / daysActive;
-    const dailyShareRate = (capsule.shareCount || 0) / daysActive;
+    const dailyShareRate = (capsule.metadata?.shareCount || 0) / daysActive;
 
     res.json({
       capsuleId,
       metrics: {
         views: capsule.viewCount || 0,
-        shares: capsule.shareCount || 0,
-        verifications: capsule.verificationCount || 0,
+        shares: capsule.metadata?.shareCount || 0,
+        // verifications: not in schema
         truthYield,
         gttReward,
-        griefScore: parseFloat(capsule.griefScore || "0"),
-        status: capsule.status,
-        minted: capsule.minted || false,
+        griefScore: capsule.grieveScore || 0,
+        status: capsule.verificationStatus,
+        minted: capsule.isMinted || false,
       },
       growth: {
         daysActive,
@@ -140,21 +152,21 @@ router.get("/:id/analytics", async (req, res) => {
 // Claim yield for a capsule (placeholder for smart contract integration)
 router.post("/:id/claim-yield", async (req, res) => {
   try {
-    const capsuleId = parseInt(req.params.id);
+  const capsuleId = req.params.id;
     const { walletAddress } = req.body;
 
     if (!walletAddress) {
       return res.status(400).json({ error: "Wallet address required" });
     }
 
-    const capsule = await storage.getCapsule(capsuleId);
+  const capsule = await storage.getCapsule(capsuleId);
 
     if (!capsule) {
       return res.status(404).json({ message: "Capsule not found" });
     }
 
     // In production, this would interact with the TruthYield smart contract
-    const truthYield = parseFloat(capsule.truthYield || "0");
+  const truthYield = parseFloat(capsule.metadata?.truthYield || "0");
 
     if (truthYield < 1.0) {
       return res
@@ -170,7 +182,7 @@ router.post("/:id/claim-yield", async (req, res) => {
 
     // Create transaction record
     await storage.createTransaction({
-      userId: capsule.creatorId,
+      userId: capsule.userId,
       type: "yield_claim",
       amount: claimAmount.toString(),
       capsuleId,
@@ -180,8 +192,11 @@ router.post("/:id/claim-yield", async (req, res) => {
 
     // Reset capsule yield after claim
     await storage.updateCapsule(capsuleId, {
-      truthYield: "0.00",
-      gttReward: "0.00",
+      metadata: {
+        ...capsule.metadata,
+        truthYield: "0.00",
+        gttReward: "0.00",
+      },
     });
 
     res.json({
