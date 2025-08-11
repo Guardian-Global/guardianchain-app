@@ -4,12 +4,12 @@ import { z } from "zod";
 import { consolidatedAuth } from "../auth/authConsolidation";
 
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+  console.warn('⚠️ STRIPE_SECRET_KEY not found. Subscription features will not work.');
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-07-30.basil",
-});
+}) : null;
 
 // Subscription plan configurations
 const SUBSCRIPTION_PLANS = {
