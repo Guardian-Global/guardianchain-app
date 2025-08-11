@@ -1,7 +1,7 @@
 // server/routes/api/capsules.ts
 import { Router } from 'express';
 import { consolidatedAuth } from '../../auth/authConsolidation';
-import { storage } from '../../storage-minimal.js';
+import { storage } from '../../storage-minimal';
 
 const router = Router();
 

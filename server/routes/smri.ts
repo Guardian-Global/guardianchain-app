@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { consolidatedAuth } from '../auth/authConsolidation.js';
+import { consolidatedAuth } from '../auth/authConsolidation';
 
 const router = Router();
 
