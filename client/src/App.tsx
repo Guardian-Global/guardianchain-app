@@ -1,3 +1,5 @@
+const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
+              <Route path="/mobile" component={MobileAppComingSoon} />
 const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
               <Route path="/referrals" component={ReferralDashboard} />
 const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
