@@ -3,7 +3,6 @@ import { consolidatedAuth } from "../auth/authConsolidation";
 import multer from 'multer';
 import csv from 'csv-parser';
 import { Readable } from 'stream';
-import * as XLSX from 'xlsx';
 
 // Configure multer for file uploads
 const upload = multer({
@@ -116,10 +115,8 @@ async function parseCSV(buffer: Buffer): Promise<Record<string, any>[]> {
 }
 
 function parseExcel(buffer: Buffer): Record<string, any>[] {
-  const workbook = XLSX.read(buffer, { type: 'buffer' });
-  const sheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[sheetName];
-  return XLSX.utils.sheet_to_json(worksheet);
+  // XLSX support removed for security
+  throw new Error('XLSX import is disabled for security reasons.');
 }
 
 function parseJSON(buffer: Buffer): Record<string, any>[] {

@@ -1,7 +1,6 @@
 import express from 'express';
 import multer from 'multer';
 import csvParser from 'csv-parser';
-import xlsx from 'xlsx';
 import { createReadStream } from 'fs';
 import { pipeline } from 'stream/promises';
 import { consolidatedAuth } from '../auth/authConsolidation';
@@ -210,11 +209,7 @@ router.post('/super-upload', consolidatedAuth, upload.single('file'), async (req
         }
       );
     } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
-      const workbook = xlsx.readFile(filePath);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = xlsx.utils.sheet_to_json(worksheet);
-      data.push(...jsonData);
+  return res.status(501).json({ error: 'XLSX import is disabled for security reasons.' });
     } else if (fileExtension === 'json') {
       const fileContent = require('fs').readFileSync(filePath, 'utf8');
       const jsonData = JSON.parse(fileContent);
