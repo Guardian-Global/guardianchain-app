@@ -1,3 +1,5 @@
+const Marketplace = lazy(() => import("@/pages/Marketplace"));
+              <Route path="/marketplace" component={Marketplace} />
 import React, { lazy, Suspense, useEffect } from "react";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { Switch, Route } from "wouter";
