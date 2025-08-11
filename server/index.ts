@@ -1,7 +1,4 @@
-// Compatibility API for legacy/missing endpoints
-import compatApiRoutes from "./routes/compat-api";
-app.use("/api", compatApiRoutes);
-// Set development environment
+// Set development environment early
 process.env.NODE_ENV = 'development';
 
 import express from "express";
@@ -21,7 +18,12 @@ import { setupVite, serveStatic, log } from "./vite";
 // import { complianceMiddleware } from "./middleware/compliance";
 // import { assetMiddleware } from "./middleware/assets";
 
+// Initialize express app before applying any routes/middleware
 const app = express();
+
+// Compatibility API for legacy/missing endpoints (mounted after app creation)
+import compatApiRoutes from "./routes/compat-api";
+app.use("/api", compatApiRoutes);
 
 // Trust proxy for Replit environment
 app.set("trust proxy", true);
@@ -160,53 +162,53 @@ app.use(profileRoutes);
 app.use("/api/auth", authRoutes);
 
 // AI Routes for enhanced capsule experience
-import aiRoutes from "./routes/ai.js";
+import aiRoutes from "./routes/ai";
 app.use("/api/ai", aiRoutes);
 
 // Capsule stats routes for engagement analytics
-import capsuleStatsRoutes from "./routes/capsule/stats.js";
+import capsuleStatsRoutes from "./routes/capsule/stats";
 app.use("/api/capsule", capsuleStatsRoutes);
 
 // Advanced capsule analytics routes
-import capsuleAnalyticsRoutes from "./routes/capsule/analytics.js";
+import capsuleAnalyticsRoutes from "./routes/capsule/analytics";
 app.use("/api/capsule/analytics", capsuleAnalyticsRoutes);
 
 // Stripe checkout routes
-import checkoutRoutes from "./routes/checkout.js";
+import checkoutRoutes from "./routes/checkout";
 app.use("/api/checkout", checkoutRoutes);
 
 // Secure upload routes
-import uploadRoutes from "./routes/upload.js";
+import uploadRoutes from "./routes/upload";
 app.use("/api/upload", uploadRoutes);
 
 // Web3 testing routes
-import web3Routes from "./routes/web3.js";
+import web3Routes from "./routes/web3";
 app.use("/api/web3", web3Routes);
 
 // Enhanced blockchain routes with Alchemy integration
 app.use("/api/blockchain", enhancedBlockchainRoutes);
 
 // Search routes
-import searchRoutes from "./api/search.js";
+import searchRoutes from "./api/search";
 app.use("/api/search", searchRoutes);
 
 // Capsule vote routes
-import capsuleVoteRouter from "./api/capsule-vote.js";
+import capsuleVoteRouter from "./api/capsule-vote";
 app.use("/api/capsules", capsuleVoteRouter);
 
 // Capsule routes are integrated directly in routes.ts
 
 // New comprehensive API routes
-import capsulesRouter from "./routes/api/capsules.js";
+import capsulesRouter from "./routes/api/capsules";
 app.use("/api/capsules", capsulesRouter);
 
-import uploadRouter from "./routes/api/upload.js";
+import uploadRouter from "./routes/api/upload";
 app.use("/api/upload", uploadRouter);
 
-import adminRouter from "./routes/api/admin.js";
+import adminRouter from "./routes/api/admin";
 app.use("/api/admin", adminRouter);
 
-import veritasRouter from "./routes/api/veritas.js";
+import veritasRouter from "./routes/api/veritas";
 app.use("/api/veritas", veritasRouter);
 
 import vestingRouter from "./routes/api/vesting";
