@@ -32,7 +32,6 @@ import { registerSubscriptionRoutes } from "./routes/subscription";
 import { handleMediaRemix, handleMediaRemixStatus } from "./media-remix";
 import { ObjectStorageService } from "./objectStorage";
 import { storage } from './storage';
-import { registerAuthRoutes } from "./routes/auth";
 import { registerBulkRoutes } from "./routes/bulk";
 import superBulkRoutes from "./routes/super-bulk";
 import ultraBulkRoutes from "./routes/ultra-bulk";
@@ -4489,8 +4488,7 @@ Verification Status: Authenticated via Veritas Certificate Engine
   // Register GTT Contract routes
   registerGTTContractRoutes(app);
   
-  // Register authentication routes
-  registerAuthRoutes(app);
+  // Authentication routes now mounted in server/index.ts using new JWT system
   
   // Register admin routes
   const { registerAdminRoutes } = await import('./routes/admin');
