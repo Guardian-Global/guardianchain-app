@@ -1,242 +1,65 @@
-import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Clock, Calendar, Zap } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Clock, Eye, Heart, MessageCircle, Share2, Filter } from "lucide-react";
-import { useState } from "react";
-
-interface TimelineEvent {
-  id: string;
-  type:
-    | "capsule_created"
-    | "capsule_verified"
-    | "capsule_liked"
-    | "comment_added"
-    | "capsule_shared";
-  timestamp: string;
-  capsule: {
-    id: string;
-    title: string;
-    content: string;
-    author: string;
-    category: string;
-    verificationStatus: "verified" | "pending" | "rejected";
-    griefScore: number;
-    stats: {
-      views: number;
-      likes: number;
-      comments: number;
-      shares: number;
-    };
-  };
-  actor?: string;
-  metadata?: Record<string, any>;
-}
-
-interface TimelineData {
-  events: TimelineEvent[];
-  totalEvents: number;
-  hasMore: boolean;
-}
-
-const eventIcons = {
-  capsule_created: "🆕",
-  capsule_verified: "✅",
-  capsule_liked: "❤️",
-  comment_added: "💬",
-  capsule_shared: "🔄",
-};
-
-const eventLabels = {
-  capsule_created: "Capsule Created",
-  capsule_verified: "Verification Complete",
-  capsule_liked: "Capsule Liked",
-  comment_added: "Comment Added",
-  capsule_shared: "Capsule Shared",
-};
 
 export default function Timeline() {
-  const [filter, setFilter] = useState<string>("all");
-  const [page, setPage] = useState(1);
-
-  const { data: timeline, isLoading } = useQuery<TimelineData>({
-    queryKey: ["/api/capsules/timeline", { filter, page }],
-  });
-
-  const formatTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const eventTime = new Date(timestamp);
-    const diffInHours = Math.floor(
-      (now.getTime() - eventTime.getTime()) / (1000 * 60 * 60),
-    );
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return `${Math.floor(diffInHours / 168)}w ago`;
-  };
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto p-6 space-y-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="h-32 bg-gray-200 dark:bg-gray-700 rounded"
-            ></div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Capsule Timeline
-        </h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 py-20">
+      <div className="max-w-4xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded-2xl mb-6">
+            <Clock className="w-8 h-8 text-black" />
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            Truth Timeline
+          </h1>
+          
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+            Explore the chronological flow of truth preservation and verification across the GuardianChain network.
+          </p>
+        </motion.div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant={filter === "all" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilter("all")}
-            className="text-xs"
-          >
-            All Events
-          </Button>
-          <Button
-            variant={filter === "capsule_created" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilter("capsule_created")}
-            className="text-xs"
-          >
-            New Capsules
-          </Button>
-          <Button
-            variant={filter === "capsule_verified" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilter("capsule_verified")}
-            className="text-xs"
-          >
-            Verified
-          </Button>
-          <Filter className="w-4 h-4 text-gray-500" />
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {timeline?.events.map((event, index) => (
-          <Card
-            key={event.id}
-            className="bg-white dark:bg-gray-800 transition-all hover:shadow-lg"
-          >
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4">
-                {/* Event Icon */}
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-lg">
-                  {eventIcons[event.type]}
-                </div>
-
-                {/* Event Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {eventLabels[event.type]}
-                      </Badge>
-                      <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {formatTimeAgo(event.timestamp)}
-                      </span>
-                    </div>
-                    <Badge
-                      variant={
-                        event.capsule.verificationStatus === "verified"
-                          ? "default"
-                          : event.capsule.verificationStatus === "pending"
-                            ? "secondary"
-                            : "destructive"
-                      }
-                      className="text-xs"
-                    >
-                      {event.capsule.verificationStatus}
-                    </Badge>
-                  </div>
-
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 truncate">
-                    {event.capsule.title}
-                  </h3>
-
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                    {event.capsule.content}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
-                      <span>by {event.capsule.author}</span>
-                      <span>•</span>
-                      <span>{event.capsule.category}</span>
-                      <span>•</span>
-                      <span>Grief Score: {event.capsule.griefScore}</span>
-                    </div>
-
-                    <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="flex items-center">
-                        <Eye className="w-4 h-4 mr-1" />
-                        {event.capsule.stats.views}
-                      </span>
-                      <span className="flex items-center">
-                        <Heart className="w-4 h-4 mr-1" />
-                        {event.capsule.stats.likes}
-                      </span>
-                      <span className="flex items-center">
-                        <MessageCircle className="w-4 h-4 mr-1" />
-                        {event.capsule.stats.comments}
-                      </span>
-                      <span className="flex items-center">
-                        <Share2 className="w-4 h-4 mr-1" />
-                        {event.capsule.stats.shares}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Card className="bg-black/40 border-white/10 backdrop-blur-xl">
+            <CardHeader>
+              <CardTitle className="flex items-center text-[#FFD700]">
+                <Calendar className="w-6 h-6 mr-3" />
+                Timeline Module
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 text-center">
+              <div className="flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full mb-6 mx-auto">
+                <Zap className="w-10 h-10 text-blue-400" />
+              </div>
+              
+              <h3 className="text-2xl font-semibold text-white mb-4">
+                Feature Under Construction
+              </h3>
+              
+              <p className="text-slate-400 mb-6 leading-relaxed">
+                The Truth Timeline will showcase the chronological evolution of capsules, 
+                verifications, and truth discoveries across the network. This powerful 
+                visualization tool is currently being developed to provide unprecedented 
+                insights into truth flow patterns.
+              </p>
+              
+              <div className="text-sm text-slate-500">
+                🚧 Stay tuned for GuardianChain's next truth module
               </div>
             </CardContent>
           </Card>
-        ))}
+        </motion.div>
       </div>
-
-      {/* Load More */}
-      {timeline?.hasMore && (
-        <div className="flex justify-center pt-6">
-          <Button
-            variant="outline"
-            onClick={() => setPage((prev) => prev + 1)}
-            className="w-full sm:w-auto"
-          >
-            Load More Events
-          </Button>
-        </div>
-      )}
-
-      {timeline?.events.length === 0 && (
-        <Card className="bg-white dark:bg-gray-800">
-          <CardContent className="text-center py-12">
-            <Clock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No Timeline Events
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Timeline events will appear here as capsules are created and
-              interactions occur.
-            </p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
