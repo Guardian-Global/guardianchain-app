@@ -1,23 +1,3 @@
-const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
-              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
-const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
-              <Route path="/partners" component={BrandPartnerships} />
-const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
-              <Route path="/rewards" component={GamificationDashboard} />
-const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
-              <Route path="/mobile" component={MobileAppComingSoon} />
-const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
-              <Route path="/referrals" component={ReferralDashboard} />
-const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
-              <Route path="/ai-analytics" component={AiAnalyticsDashboard} />
-const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
-              <Route path="/api-dashboard" component={ApiDashboard} />
-const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
-              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
-const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
-              <Route path="/staking-dashboard" component={StakingDashboard} />
-const Marketplace = lazy(() => import("@/pages/Marketplace"));
-              <Route path="/marketplace" component={Marketplace} />
 import React, { lazy, Suspense, useEffect } from "react";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { Switch, Route } from "wouter";
@@ -52,6 +32,18 @@ import SimpleLanding from "@/pages/SimpleLanding";
 
 // Complete Authentication System Import
 const CompleteAuthPage = lazy(() => import("@/pages/auth/CompleteAuthPage"));
+
+// Additional lazy-loaded components for comprehensive functionality
+const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
+const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
+const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
+const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
+const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
+const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
+const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
+const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
+const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
+const Marketplace = lazy(() => import("@/pages/Marketplace"));
 
 // Lazy load common pages
 const CreateCapsule = lazy(() => import("@/pages/CreateCapsule"));
@@ -170,6 +162,9 @@ function Router() {
                     <div className="animate-spin w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-6 neural-pulse"></div>
                     <h2 className="text-2xl font-bold mb-2 text-cyan-300">Loading GuardianChain...</h2>
                     <p className="text-gray-400">Please wait while we load the next-gen experience.</p>
+                    <div className="mt-4 text-xs text-gray-500">
+                      If this takes too long, try refreshing the page.
+                    </div>
                   </div>
                 </div>
               }
@@ -233,6 +228,18 @@ function Router() {
               <Route path="/staking" component={StakingPage} />
               <Route path="/audit" component={AuditPage} />
               <Route path="/vesting-dashboard" component={VestingDashboard} />
+              
+              {/* Additional comprehensive routes */}
+              <Route path="/onboarding-personal" component={PersonalizedOnboarding} />
+              <Route path="/partners" component={BrandPartnerships} />
+              <Route path="/rewards" component={GamificationDashboard} />
+              <Route path="/mobile" component={MobileAppComingSoon} />
+              <Route path="/referrals" component={ReferralDashboard} />
+              <Route path="/ai-analytics" component={AiAnalyticsDashboard} />
+              <Route path="/api-dashboard" component={ApiDashboard} />
+              <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
+              <Route path="/staking-dashboard" component={StakingDashboard} />
+              <Route path="/marketplace" component={Marketplace} />
 
               {/* New comprehensive pages */}
               <Route path="/submit" component={SubmitCapsule} />
@@ -259,10 +266,40 @@ function Router() {
 }
 
 export default function App() {
+  // Add a safety timeout to prevent blank screens
+  const [appReady, setAppReady] = React.useState(false);
+  const [hasError, setHasError] = React.useState(false);
+
+  React.useEffect(() => {
+    // Set a timeout to show a fallback if the app doesn't load
+    const timeout = setTimeout(() => {
+      if (!appReady) {
+        console.warn('App loading timeout - showing fallback UI');
+        setHasError(true);
+      }
+    }, 10000); // 10 second timeout
+
+    // Mark app as ready after initial render
+    const readyTimeout = setTimeout(() => {
+      setAppReady(true);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(readyTimeout);
+    };
+  }, [appReady]);
+
   // Initialize safe Web3 provider without auto-connecting
-  import("./lib/web3/safeProvider").then(({ safeWeb3Provider }) => {
-    safeWeb3Provider.safeInit().catch(console.warn);
-  });
+  React.useEffect(() => {
+    import("./lib/web3/safeProvider")
+      .then(({ safeWeb3Provider }) => {
+        safeWeb3Provider.safeInit().catch(console.warn);
+      })
+      .catch((err) => {
+        console.warn('Failed to initialize Web3 provider:', err);
+      });
+  }, []);
 
   // Register service worker for PWA features
   React.useEffect(() => {
@@ -307,6 +344,37 @@ export default function App() {
       document.body.removeChild(test);
     }
   }, []);
+
+  // Show fallback UI if there's an error
+  if (hasError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black flex items-center justify-center text-white">
+        <div className="text-center max-w-md p-8">
+          <h1 className="text-3xl font-bold mb-4">🔄 Loading Issue Detected</h1>
+          <p className="text-gray-300 mb-6">
+            The app is taking longer than expected to load. This might be due to network issues or heavy traffic.
+          </p>
+          <div className="space-y-3">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full px-6 py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-medium transition-colors"
+            >
+              🔄 Refresh Page
+            </button>
+            <button 
+              onClick={() => {setHasError(false); setAppReady(false);}} 
+              className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors"
+            >
+              🚀 Try Again
+            </button>
+          </div>
+          <p className="text-xs text-gray-400 mt-4">
+            If the issue persists, please check your internet connection.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <HelmetProvider>
