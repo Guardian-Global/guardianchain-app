@@ -14,11 +14,13 @@ export default async function handler(req: any, res: any) {
   return res.status(200).json({
     id: row.id,
     email: row.email,
-    firstName: row.firstName,
-    lastName: row.lastName,
-    profileImageUrl: row.profileImageUrl,
+    displayName: row.displayName,
     tier: row.tier,
+    subscriptionPlan: row.subscriptionPlan,
+    onboardingCompleted: row.onboardingCompleted,
     walletAddress: row.walletAddress,
+    agreementAcceptedAt: row.agreementAcceptedAt,
+    capsuleSettings: row.capsuleSettings,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   });
