@@ -1,3 +1,6 @@
+// Compatibility API for legacy/missing endpoints
+import compatApiRoutes from "./routes/compat-api";
+app.use("/api", compatApiRoutes);
 // Set development environment
 process.env.NODE_ENV = 'development';
 
