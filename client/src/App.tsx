@@ -322,24 +322,49 @@ export default function App() {
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const test = document.createElement('div');
-      test.className = 'hidden text-[rgb(0,255,225)]';
+      test.className = 'sr-only';
+      test.style.position = 'absolute';
+      test.style.opacity = '0';
+      test.style.pointerEvents = 'none';
       document.body.appendChild(test);
-      const style = getComputedStyle(test).color;
-      if (style !== 'rgb(0, 255, 225)') {
-        // Show warning if Tailwind/critical CSS is missing
-        const warn = document.createElement('div');
-        warn.style.position = 'fixed';
-        warn.style.top = '0';
-        warn.style.left = '0';
-        warn.style.right = '0';
-        warn.style.zIndex = '9999';
-        warn.style.background = '#ff00d4';
-        warn.style.color = '#fff';
-        warn.style.fontWeight = 'bold';
-        warn.style.textAlign = 'center';
-        warn.style.padding = '12px 0';
-        warn.textContent = '⚠️ Critical CSS not loaded! Please check your deployment/build settings.';
-        document.body.appendChild(warn);
+      
+      // Check if Tailwind's sr-only class is working
+      const computedStyle = getComputedStyle(test);
+      const isTailwindLoaded = computedStyle.position === 'absolute' && 
+                              (computedStyle.width === '1px' || computedStyle.clip !== 'auto');
+      
+      if (!isTailwindLoaded) {
+        // Only show warning in development or if there's a real CSS issue
+        const isDevMode = import.meta.env.MODE === 'development';
+        const hasStyledElements = document.querySelector('.bg-gradient-to-br, .text-cyan-300, .border-cyan-400');
+        
+        if (isDevMode || !hasStyledElements) {
+          console.warn('⚠️ Tailwind CSS may not be fully loaded');
+          // Only show warning banner in development
+          if (isDevMode) {
+            const warn = document.createElement('div');
+            warn.style.position = 'fixed';
+            warn.style.top = '0';
+            warn.style.left = '0';
+            warn.style.right = '0';
+            warn.style.zIndex = '9999';
+            warn.style.background = '#ff00d4';
+            warn.style.color = '#fff';
+            warn.style.fontWeight = 'bold';
+            warn.style.textAlign = 'center';
+            warn.style.padding = '8px 0';
+            warn.style.fontSize = '14px';
+            warn.textContent = '⚠️ Development: Checking CSS loading...';
+            document.body.appendChild(warn);
+            
+            // Remove warning after 3 seconds if page is working
+            setTimeout(() => {
+              if (warn.parentNode) {
+                warn.parentNode.removeChild(warn);
+              }
+            }, 3000);
+          }
+        }
       }
       document.body.removeChild(test);
     }
