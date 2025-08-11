@@ -52,9 +52,9 @@ export async function sendGuardianEmail({
       }
     }
 
-    // Generate HTML content
-    const finalHtml = html || renderMarkdown(markdown || "");
-    const plainText = text || (markdown || "").replace(/[#_*`]/g, ");
+  // Generate HTML content
+  const finalHtml = html || renderMarkdown(markdown || "");
+  const plainText = text || (markdown || "").replace(/[#_*`]/g, "");
 
     // Add tracking pixel
     const htmlWithTracking =

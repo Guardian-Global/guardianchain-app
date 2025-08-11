@@ -99,7 +99,7 @@ router.get("/discover", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to discover assets",
-      error: error.message,
+      error: (error instanceof Error ? error.message : String(error)),
     });
   }
 });
@@ -145,7 +145,7 @@ router.get("/optimized/:bucket/:filename", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to optimize asset",
-      error: error.message,
+      error: (error instanceof Error ? error.message : String(error)),
     });
   }
 });
@@ -160,7 +160,7 @@ function categorizeAsset(
   value: number;
   recommendedUsage: string[];
 } {
-  const ext = filename.toLowerCase().split(".").pop() || ";
+  const ext = filename.toLowerCase().split(".").pop() || "";
   const name = filename.toLowerCase();
 
   let type = "unknown";
