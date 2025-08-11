@@ -19,16 +19,6 @@ import EliteHomepage from "@/pages/EliteHomepage";
 import CyberHomepage from "@/pages/CyberHomepage";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 // Optional pages (kept lazy, routes added below only if needed)
-const PersonalizedOnboarding = lazy(() => import("@/pages/PersonalizedOnboarding"));
-const BrandPartnerships = lazy(() => import("@/pages/BrandPartnerships"));
-const GamificationDashboard = lazy(() => import("@/pages/GamificationDashboard"));
-const MobileAppComingSoon = lazy(() => import("@/pages/MobileAppComingSoon"));
-const ReferralDashboard = lazy(() => import("@/pages/ReferralDashboard"));
-const AiAnalyticsDashboard = lazy(() => import("@/pages/AiAnalyticsDashboard"));
-const ApiDashboard = lazy(() => import("@/pages/ApiDashboard"));
-const EnterpriseDashboard = lazy(() => import("@/pages/EnterpriseDashboard"));
-const StakingDashboard = lazy(() => import("@/pages/StakingDashboard"));
-const Marketplace = lazy(() => import("@/pages/Marketplace"));
 import { useAuth } from "./hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
 import { TierProvider } from "./context/TierContext";
