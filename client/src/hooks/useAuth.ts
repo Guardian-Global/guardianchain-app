@@ -19,9 +19,9 @@ export function useAuth() {
   const queryClient = useQueryClient();
   
   const { data: user, isLoading, error, refetch } = useQuery({
-    queryKey: ["/api/auth/user"],
+    queryKey: ["/api/auth-complete/me"],
     queryFn: async () => {
-      const response = await fetch("/api/auth/user", {
+      const response = await fetch("/api/auth-complete/me", {
         credentials: "include",
         // No admin key - require real authentication
       });
@@ -42,7 +42,7 @@ export function useAuth() {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch("/api/auth/signout", {
+      const response = await fetch("/api/auth-complete/logout", {
         method: "POST",
         credentials: "include",
       });
@@ -77,7 +77,7 @@ export function useAuth() {
     onSuccess: () => {
       // Refetch user data after profile update
       refetch();
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/auth-complete/me"] });
     },
   });
 
@@ -98,7 +98,7 @@ export function useAuth() {
     },
     onSuccess: () => {
       refetch();
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/auth-complete/me"] });
     },
   });
 
@@ -119,7 +119,7 @@ export function useAuth() {
     },
     onSuccess: () => {
       refetch();
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/auth-complete/me"] });
     },
   });
 

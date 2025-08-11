@@ -55,7 +55,7 @@ const SignupPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/auth/signup', {
+  const response = await fetch('/api/auth-complete/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
