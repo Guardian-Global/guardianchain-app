@@ -47,6 +47,7 @@ const Start = lazy(() => import("@/pages/Start"));
 const Terms = lazy(() => import("@/pages/Terms"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
 const Subscribe = lazy(() => import("@/pages/subscribe"));
+const Subscription = lazy(() => import("@/pages/Subscription"));
 const Checkout = lazy(() => import("@/pages/checkout"));
 const Tokenomics = lazy(() => import("@/pages/tokenomics"));
 const LandingPage = lazy(() => import("@/pages/landing"));
@@ -196,6 +197,7 @@ function Router() {
               <Route path="/terms" component={Terms} />
               <Route path="/pricing" component={Pricing} />
               <Route path="/subscribe" component={Subscribe} />
+              <Route path="/subscription" component={Subscription} />
               <Route path="/checkout/:amount?/:description?" component={Checkout} />
               <Route path="/validator" component={ValidatorPage} />
               <Route path="/redeem" component={RedeemPage} />
