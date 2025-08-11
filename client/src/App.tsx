@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, useEffect } from "react";
+import { ErrorBoundary } from "./ErrorBoundary";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -140,17 +141,19 @@ function Router() {
           <WelcomeTour />
           <LiveTokenTracker position="top" />
           <PWAInstallPrompt />
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                  <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-                  <p>Loading...</p>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black">
+                  <div className="text-center">
+                    <div className="animate-spin w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-6 neural-pulse"></div>
+                    <h2 className="text-2xl font-bold mb-2 text-cyan-300">Loading GuardianChain...</h2>
+                    <p className="text-gray-400">Please wait while we load the next-gen experience.</p>
+                  </div>
                 </div>
-              </div>
-            }
-          >
-            <Switch>
+              }
+            >
+              <Switch>
               <Route path="/onboarding" component={OnboardingPage} />
               <Route path="/onboarding-legacy" component={NewUserOnboarding} />
               <Route path="/dashboard" component={EnhancedDashboard} />
@@ -224,8 +227,9 @@ function Router() {
               <Route path="/dao" component={DAO} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />
-            </Switch>
-          </Suspense>
+              </Switch>
+            </Suspense>
+          </ErrorBoundary>
         </EliteLayout>
       </Route>
     </Switch>
